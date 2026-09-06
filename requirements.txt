@@ -1,0 +1,9 @@
+dspy
+gepa
+litellm
+streamlit
+pandas
+matplotlib
+pyyaml
+python-dotenv
+pytest
