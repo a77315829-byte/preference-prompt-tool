@@ -1,0 +1,16 @@
+doc,condition,score
+0,A_no_prompt,0.5
+0,B_custom_instruction,0.5
+0,D_our_tool,1.0
+1,A_no_prompt,0.5
+1,B_custom_instruction,0.5
+1,D_our_tool,1.0
+2,A_no_prompt,1.0
+2,B_custom_instruction,1.0
+2,D_our_tool,1.0
+3,A_no_prompt,0.5
+3,B_custom_instruction,0.85
+3,D_our_tool,1.0
+4,A_no_prompt,0.5
+4,B_custom_instruction,0.4903846153846154
+4,D_our_tool,0.9782608695652174

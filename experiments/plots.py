@@ -36,5 +36,34 @@ def plot_convergence(
     print(f"saved plot to {out_path}")
 
 
+def plot_baseline_comparison(
+    csv_path: str = "experiments/results/baseline_comparison.csv",
+    out_path: str = "experiments/results/baseline_comparison.png",
+) -> None:
+    df = pd.read_csv(csv_path)
+    labels = {"A_no_prompt": "A\n(프롬프트 없음)", "B_custom_instruction": "B\n(사용자 커스텀 지침)", "D_our_tool": "D\n(본 도구)"}
+    order = ["A_no_prompt", "B_custom_instruction", "D_our_tool"]
+
+    stats = df.groupby("condition")["score"].agg(["mean", "std"]).reindex(order)
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+    ax.bar(
+        [labels[c] for c in order],
+        stats["mean"],
+        yerr=stats["std"],
+        capsize=6,
+        color=["#9e9e9e", "#4c72b0", "#55a868"],
+    )
+    ax.set_ylabel("페르소나 축값 일치 점수 (0~1)")
+    ax.set_title("비교군별 페르소나 선호 일치도")
+    ax.set_ylim(0, 1.15)
+    ax.grid(axis="y", alpha=0.3)
+
+    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    print(f"saved plot to {out_path}")
+
+
 if __name__ == "__main__":
     plot_convergence()
+    plot_baseline_comparison()
