@@ -12,10 +12,18 @@
 # 표면적 수치·고유명사 밀도가 아닌 다른 성질(질적 서술 정밀도로 추정)을
 # 반영하는 것으로 보이며, 100% topic 축과 동반 출현해 독립 축으로도 보기
 # 어렵다. 코드로 재현 가능하게 잴 수 없는 축은 넣지 않는다 (절대 규칙 6).
+#
+# 8주차 점검에서 발견: task_description이 한국어라 출력 언어가 축조합에
+# 따라 들쭉날쭉했다 (extractiveness=fully일 땐 원문을 그대로 베껴 영어로,
+# 그 외엔 한국어로). MACSum 원문·정답 요약이 전부 영어라 lexical_overlap/
+# keyword_presence/persona.choose가 전부 언어 불일치로 왜곡됐다. 출력
+# 언어를 영어로 명시 고정한다.
 
 domain: summarization
 task_description: >-
-  아래 원문을 지침에 따라 요약하라.
+  아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로
+  작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로
+  답하라.
 
 checks_module: checks.summarization
 
