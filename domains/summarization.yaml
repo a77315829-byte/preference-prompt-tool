@@ -2,6 +2,16 @@
 # engine/ 은 이 파일을 통해서만 축 이름·값·프롬프트 문구·검사 함수를 안다.
 # 여기 적힌 값은 data/macsum 의 control_attribute 실측값과 정확히 일치해야
 # experiments/persona.py 가 MACSum 정답 요약을 답안지로 매칭할 수 있다.
+#
+# length/extractiveness의 target 수치는 MACSum train+val 실측 분포(6주차,
+# checks/summarization.py 작성 시 분석)에 맞춰 보정했다.
+#
+# specificity 축은 제외했다: 정규식 휴리스틱은 물론 spaCy NER로 측정해도
+# normal(0.217)과 high(0.228) 사이에 실질적 차이가 없었다 (val split,
+# 숫자·고유명사류 엔티티 토큰 밀도 기준). MACSum의 specificity 라벨은
+# 표면적 수치·고유명사 밀도가 아닌 다른 성질(질적 서술 정밀도로 추정)을
+# 반영하는 것으로 보이며, 100% topic 축과 동반 출현해 독립 축으로도 보기
+# 어렵다. 코드로 재현 가능하게 잴 수 없는 축은 넣지 않는다 (절대 규칙 6).
 
 domain: summarization
 task_description: >-
@@ -15,55 +25,40 @@ axes:
     description: 요약 길이
     values:
       - value: short
-        prompt: 3문장 이내로 짧게 요약하라.
+        prompt: 2문장 이내로 아주 짧게 요약하라.
         check:
           fn: sentence_count
-          target: { max_sentences: 3 }
+          target: { max_sentences: 2 }
       - value: normal
-        prompt: 4~6문장 정도의 분량으로 요약하라.
+        prompt: 3~4문장 정도의 분량으로 요약하라.
         check:
           fn: sentence_count
-          target: { min_sentences: 4, max_sentences: 6 }
+          target: { min_sentences: 3, max_sentences: 4 }
       - value: long
-        prompt: 7문장 이상으로 상세하게 요약하라.
+        prompt: 5문장 이상으로 상세하게 요약하라.
         check:
           fn: sentence_count
-          target: { min_sentences: 7 }
+          target: { min_sentences: 5 }
 
   - name: extractiveness
     type: enum
-    description: 원문 표현을 그대로 가져오는 정도
+    description: 원문 표현을 그대로 가져오는 정도 (원문과의 연속 2단어 겹침 비율로 측정)
     values:
       - value: normal
         prompt: 대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.
         check:
           fn: lexical_overlap
-          target: { min_overlap: 0.2, max_overlap: 0.5 }
+          target: { max_overlap: 0.5 }
       - value: high
         prompt: 가능한 한 원문의 단어와 구절을 그대로 사용해 요약하라.
         check:
           fn: lexical_overlap
-          target: { min_overlap: 0.5, max_overlap: 0.8 }
+          target: { min_overlap: 0.5, max_overlap: 0.75 }
       - value: fully
         prompt: 원문 문장을 그대로 발췌해 이어붙이는 방식으로 요약하라. 문장을 새로 쓰지 마라.
         check:
           fn: lexical_overlap
-          target: { min_overlap: 0.8 }
-
-  - name: specificity
-    type: enum
-    description: 숫자·고유명사 등 구체적 정보의 밀도
-    values:
-      - value: normal
-        prompt: 일반적인 수준의 구체성으로 요약하라. 세부 수치나 고유명사 나열에 치우치지 마라.
-        check:
-          fn: entity_density
-          target: { max_density: 0.15 }
-      - value: high
-        prompt: 숫자, 날짜, 고유명사 등 구체적인 정보를 최대한 포함해 요약하라.
-        check:
-          fn: entity_density
-          target: { min_density: 0.15 }
+          target: { min_overlap: 0.75 }
 
   - name: topic
     type: freeform_keyword

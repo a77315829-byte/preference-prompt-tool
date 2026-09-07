@@ -37,7 +37,7 @@ def run(selector_cls, domain, hidden_combo: dict, n_rounds: int, seed: int = 0) 
 
 def main() -> None:
     domain = load_domain("domains/summarization.yaml")
-    hidden_combo = {"length": "short", "extractiveness": "fully", "specificity": "high"}
+    hidden_combo = {"length": "short", "extractiveness": "fully"}
     n_axes = len(hidden_combo)
     n_rounds = 15
 
