@@ -1,0 +1,77 @@
+# 도메인: 문서 요약 (MACSum 기반)
+# engine/ 은 이 파일을 통해서만 축 이름·값·프롬프트 문구·검사 함수를 안다.
+# 여기 적힌 값은 data/macsum 의 control_attribute 실측값과 정확히 일치해야
+# experiments/persona.py 가 MACSum 정답 요약을 답안지로 매칭할 수 있다.
+
+domain: summarization
+task_description: >-
+  아래 원문을 지침에 따라 요약하라.
+
+checks_module: checks.summarization
+
+axes:
+  - name: length
+    type: enum
+    description: 요약 길이
+    values:
+      - value: short
+        prompt: 3문장 이내로 짧게 요약하라.
+        check:
+          fn: sentence_count
+          target: { max_sentences: 3 }
+      - value: normal
+        prompt: 4~6문장 정도의 분량으로 요약하라.
+        check:
+          fn: sentence_count
+          target: { min_sentences: 4, max_sentences: 6 }
+      - value: long
+        prompt: 7문장 이상으로 상세하게 요약하라.
+        check:
+          fn: sentence_count
+          target: { min_sentences: 7 }
+
+  - name: extractiveness
+    type: enum
+    description: 원문 표현을 그대로 가져오는 정도
+    values:
+      - value: normal
+        prompt: 대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.
+        check:
+          fn: lexical_overlap
+          target: { min_overlap: 0.2, max_overlap: 0.5 }
+      - value: high
+        prompt: 가능한 한 원문의 단어와 구절을 그대로 사용해 요약하라.
+        check:
+          fn: lexical_overlap
+          target: { min_overlap: 0.5, max_overlap: 0.8 }
+      - value: fully
+        prompt: 원문 문장을 그대로 발췌해 이어붙이는 방식으로 요약하라. 문장을 새로 쓰지 마라.
+        check:
+          fn: lexical_overlap
+          target: { min_overlap: 0.8 }
+
+  - name: specificity
+    type: enum
+    description: 숫자·고유명사 등 구체적 정보의 밀도
+    values:
+      - value: normal
+        prompt: 일반적인 수준의 구체성으로 요약하라. 세부 수치나 고유명사 나열에 치우치지 마라.
+        check:
+          fn: entity_density
+          target: { max_density: 0.15 }
+      - value: high
+        prompt: 숫자, 날짜, 고유명사 등 구체적인 정보를 최대한 포함해 요약하라.
+        check:
+          fn: entity_density
+          target: { min_density: 0.15 }
+
+  - name: topic
+    type: freeform_keyword
+    description: >-
+      요약이 초점을 맞춰야 할 주제/키워드. 값이 비어 있으면 이 축은 적용하지
+      않는다 (원문 전체를 다루는 일반 요약).
+    empty_means_inactive: true
+    prompt_template: '"{value}"라는 주제/측면에 초점을 맞춰 요약하라. 원문의 다른 부분은 생략해도 된다.'
+    check:
+      fn: keyword_presence
+      target: {}
