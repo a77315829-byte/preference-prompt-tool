@@ -45,7 +45,7 @@ def main() -> None:
         combo_a, combo_b = selector.next_pair(estimator)
         cand_a = generate(domain, source, combo_a, model=MODEL)
         cand_b = generate(domain, source, combo_b, model=MODEL)
-        winner = choose(persona, cand_a, cand_b)
+        winner = choose(domain, persona, cand_a, cand_b, source)
         estimator.update(Comparison(combo_a, combo_b, winner))
 
         so_far = {n: estimator.preferred_value(n) for n in estimator.enum_axis_names()}

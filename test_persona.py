@@ -37,8 +37,8 @@ def main() -> None:
     print("[long candidate]", long_candidate)
     print()
 
-    pick_for_short_persona = choose(short_persona, short_candidate, long_candidate)
-    pick_for_long_persona = choose(long_persona, short_candidate, long_candidate)
+    pick_for_short_persona = choose(domain, short_persona, short_candidate, long_candidate, source_text)
+    pick_for_long_persona = choose(domain, long_persona, short_candidate, long_candidate, source_text)
 
     print("short persona picks:", pick_for_short_persona, "(expect a)")
     print("long persona picks:", pick_for_long_persona, "(expect b)")

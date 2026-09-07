@@ -1,12 +1,16 @@
-"""MACSum 속성 조합을 페르소나로 삼아, 두 후보 중 정답 요약에 더 가까운
-쪽을 고르는 선택 대행. 사람 없이 선택 루프 실험을 돌리기 위한 도구다.
+"""MACSum 속성 조합을 페르소나로 삼아, 두 후보 중 페르소나의 진짜 축값에
+더 부합하는 쪽을 고르는 선택 대행. 사람 없이 선택 루프 실험을 돌리기
+위한 도구다.
 
 engine/ 과 달리 이 모듈은 MACSum을 알아도 된다 - 실험 도구이지 엔진이 아니다.
 """
 
 from __future__ import annotations
 
+import importlib
 from dataclasses import dataclass
+
+from engine.domain_loader import Domain
 
 
 @dataclass
@@ -25,24 +29,29 @@ def load_personas(macsum_record: dict) -> list[Persona]:
     ]
 
 
-def _word_overlap(a: str, b: str) -> float:
-    """단어 집합의 F1(Dice 계수: 2*교집합/(|A|+|B|)). LLM 판정 없이 코드로
-    재현 가능하게 재는 쪽을 우선한다.
+def choose(domain: Domain, persona: Persona, candidate_a: str, candidate_b: str, source: str) -> str:
+    """페르소나의 실제 축값에 대해 checks/*.py의 검사 함수를 두 후보에 각각
+    적용해, 총점이 더 높은 쪽을 고른다.
 
-    자카드(교집합/합집합) 대신 이걸 쓰는 이유: 자카드는 두 텍스트 길이가
-    다르면 합집합이 커져 점수가 낮아지는 구조적 편향이 있었다 (8주차
-    점검에서 발견 - 페르소나가 명백히 더 가까운 후보 대신 우연히 길이가
-    비슷한 후보를 고르는 오류). Dice는 두 집합 크기를 합으로 정규화해
-    이 편향이 훨씬 덜하다.
+    9주차 발견: 정답 요약과의 단어 겹침으로 판단했더니, "fully"(원문 그대로
+    발췌) 후보가 원문 고유명사를 그대로 가져와 정답 요약과 우연히 어휘가
+    더 겹쳐버려 엉뚱한 축으로 수렴하는 문제가 있었다 (내용 겹침과 문체
+    겹침을 구분 못 함). checks/summarization.py는 6주차에 실제 MACSum
+    데이터로 판별력을 검증해뒀으므로, 정답 요약 텍스트 대신 이걸로
+    "페르소나의 축값에 더 부합하는 구조인가"를 직접 재는 쪽이 더 낫다.
     """
-    words_a, words_b = set(a.lower().split()), set(b.lower().split())
-    if not words_a or not words_b:
-        return 0.0
-    return 2 * len(words_a & words_b) / (len(words_a) + len(words_b))
+    checks_module = importlib.import_module(domain.checks_module)
+    score_a = score_b = 0.0
 
+    for axis in domain.axes:
+        if axis.type != "enum" or axis.name not in persona.combo:
+            continue
+        value = persona.combo[axis.name]
+        check_spec = axis.check_for(value)
+        check_fn = getattr(checks_module, check_spec.fn)
+        s_a, _ = check_fn(candidate_a, source, value, check_spec.target)
+        s_b, _ = check_fn(candidate_b, source, value, check_spec.target)
+        score_a += s_a
+        score_b += s_b
 
-def choose(persona: Persona, candidate_a: str, candidate_b: str) -> str:
-    """정답 요약과의 어휘 겹침이 더 높은 후보를 고른다. "a" 또는 "b"를 반환."""
-    score_a = _word_overlap(persona.reference_summary, candidate_a)
-    score_b = _word_overlap(persona.reference_summary, candidate_b)
     return "a" if score_a >= score_b else "b"
