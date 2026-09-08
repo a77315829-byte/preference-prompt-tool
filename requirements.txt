@@ -7,3 +7,4 @@ matplotlib
 pyyaml
 python-dotenv
 pytest
+rouge-score

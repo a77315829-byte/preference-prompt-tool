@@ -40,24 +40,34 @@ def plot_baseline_comparison(
     csv_path: str = "experiments/results/baseline_comparison.csv",
     out_path: str = "experiments/results/baseline_comparison.png",
 ) -> None:
+    """checks_score(최적화에 쓰인 지표)와 independent_score(ROUGE-L, 최적화와
+    무관한 지표)를 나란히 그려서 순환 논증 우려를 시각적으로도 보완한다."""
     df = pd.read_csv(csv_path)
     labels = {"A_no_prompt": "A\n(프롬프트 없음)", "B_custom_instruction": "B\n(사용자 커스텀 지침)", "D_our_tool": "D\n(본 도구)"}
     order = ["A_no_prompt", "B_custom_instruction", "D_our_tool"]
+    colors = ["#9e9e9e", "#4c72b0", "#55a868"]
 
-    stats = df.groupby("condition")["score"].agg(["mean", "std"]).reindex(order)
+    stats = df.groupby("condition")[["checks_score", "independent_score"]].agg(["mean", "std"]).reindex(order)
 
-    fig, ax = plt.subplots(figsize=(6, 5))
-    ax.bar(
-        [labels[c] for c in order],
-        stats["mean"],
-        yerr=stats["std"],
-        capsize=6,
-        color=["#9e9e9e", "#4c72b0", "#55a868"],
-    )
-    ax.set_ylabel("페르소나 축값 일치 점수 (0~1)")
-    ax.set_title("비교군별 페르소나 선호 일치도")
-    ax.set_ylim(0, 1.15)
-    ax.grid(axis="y", alpha=0.3)
+    fig, axes = plt.subplots(1, 2, figsize=(11, 5))
+    metric_titles = [
+        ("checks_score", "checks/ 기반 (최적화에 쓰인 지표)"),
+        ("independent_score", "ROUGE-L (최적화와 무관한 독립 지표)"),
+    ]
+    for ax, (metric, title) in zip(axes, metric_titles):
+        ax.bar(
+            [labels[c] for c in order],
+            stats[(metric, "mean")],
+            yerr=stats[(metric, "std")],
+            capsize=6,
+            color=colors,
+        )
+        ax.set_title(title)
+        ax.set_ylim(0, max(1.15, stats[(metric, "mean")].max() + stats[(metric, "std")].max() + 0.1))
+        ax.grid(axis="y", alpha=0.3)
+
+    axes[0].set_ylabel("점수")
+    fig.suptitle("비교군별 페르소나 선호 일치도 - 최적화 지표 vs 독립 지표")
 
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=150, bbox_inches="tight")

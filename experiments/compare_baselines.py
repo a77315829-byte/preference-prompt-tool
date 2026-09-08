@@ -5,6 +5,12 @@ CLAUDE.md 평가계획의 "최소 달성(반드시)" 항목 - 각 조건의 산�
 비교한다. 정답 축값을 알고 있는 상태로 재는 것이므로 estimator의 확신도
 가중치는 쓰지 않고 단순 평균을 쓴다 (metric_builder.py는 "추정된" 선호를
 다루지만, 여기서는 "진짜" 선호를 알고 채점하는 평가 스크립트라 다르다).
+
+독립 채점자(experiments/independent_grader.py, ROUGE-L)도 같이 보고한다.
+checks_score는 D의 최적화에 쓰인 것과 같은 계열의 함수로 D 자신을
+채점하는 구조라 순환 논증 지적을 받을 수 있다 - independent_score는
+최적화에 전혀 관여하지 않은 별도 알고리즘(LCS 기반)으로, MACSum 사람
+작성 정답 요약과 직접 비교해 이 우려를 보완한다.
 """
 
 from __future__ import annotations
@@ -22,6 +28,7 @@ from engine.domain_loader import Domain, load_domain
 from engine.estimator import Comparison, Estimator
 from engine.generator import generate
 from engine.selector import UncertaintySelector
+from experiments.independent_grader import rouge_l_score
 from experiments.persona import choose
 from experiments.run_all import pick_documents_with_personas
 from optimize.run_gepa import build_seed_prompt
@@ -110,9 +117,20 @@ def main() -> None:
         }
 
         for condition, output in outputs.items():
-            score = score_against_combo(domain, target_combo, output, source)
-            rows.append({"doc": doc_idx, "condition": condition, "score": score})
-            print(f"doc={doc_idx} condition={condition} target={target_combo} score={score:.3f}")
+            checks_score = score_against_combo(domain, target_combo, output, source)
+            independent_score = rouge_l_score(output, persona.reference_summary)
+            rows.append(
+                {
+                    "doc": doc_idx,
+                    "condition": condition,
+                    "checks_score": checks_score,
+                    "independent_score": independent_score,
+                }
+            )
+            print(
+                f"doc={doc_idx} condition={condition} target={target_combo} "
+                f"checks_score={checks_score:.3f} independent_score(ROUGE-L)={independent_score:.3f}"
+            )
 
     df = pd.DataFrame(rows)
     out_path = Path("experiments/results/baseline_comparison.csv")
@@ -120,7 +138,7 @@ def main() -> None:
     df.to_csv(out_path, index=False)
 
     print()
-    print(df.groupby("condition")["score"].agg(["mean", "std"]).round(3))
+    print(df.groupby("condition")[["checks_score", "independent_score"]].agg(["mean", "std"]).round(3))
     print(f"saved to {out_path}")
 
 
