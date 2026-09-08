@@ -394,6 +394,15 @@ checks/summarization_ko.py
 
 보고 시 "정량 실험은 영어, 언어 이식성은 한국어로 확인"이라고 명시한다.
 
+**구현 완료** (`domains/summarization_ko.yaml`, `checks/summarization_ko.py`,
+`test_korean_extensibility.py`): 형태소 분석기는 Kiwi(`kiwipiepy`)를 썼다.
+`checks/summarization_ko.py`의 `lexical_overlap`은 명사·동사·형용사·부사·
+어근 형태소만 뽑아 연속 2개 겹침 비율을 잰다 (조사·어미는 버림). 스팟
+체크 결과 short+fully 조합은 원문과 형태소 겹침 94%, long+normal 조합은
+40%로 명확히 갈렸다. 6회 선택 루프로 가상 선호(short+fully)도 정확히
+학습했고, 출력이 한국어로 안정적으로 고정됨을 확인했다(8주차에 겪은
+언어 혼재 버그 재발 없음). `engine/` 코드는 한 줄도 안 고쳤다.
+
 ---
 
 ## 3. 하이브리드 판정 계층

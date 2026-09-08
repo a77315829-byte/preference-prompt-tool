@@ -67,6 +67,14 @@
 특정 단어가 등장하지 않는다 - 축 이름·값·프롬프트 문구·검사 함수는 전부
 `domains/*.yaml`에서 읽는다.
 
+**언어 이식성도 같은 방식으로 검증**: `domains/summarization_ko.yaml` +
+`checks/summarization_ko.py`(Kiwi 형태소 분석기로 조사·어미를 제거하고
+비교)만 추가해 한국어 요약 도메인도 `engine/` 무수정으로 동작함을 확인
+(`test_korean_extensibility.py`). 다만 한국어는 MACSum 같은 사람 주석
+답안지가 없어 정량 복원율은 내지 않고, 파이프라인 완주와 검사 함수
+스팟 체크로 범위를 제한했다 - short+fully 조합은 원문과 형태소 겹침
+94%, long+normal 조합은 40%로 명확히 갈렸다.
+
 ### 진행 중 발견한 주요 함정
 
 개발 과정에서 겉보기엔 그럴듯하지만 결과를 왜곡시키는 문제를 몇 차례
