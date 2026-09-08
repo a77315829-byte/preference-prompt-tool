@@ -115,6 +115,35 @@ terse(점수만)로 바꿔 같은 호출 예산(40회) 안에서 도달하는 �
 
 재현: `python -m experiments.feedback_richness_ablation`
 
+### 6. 도메인 온보딩 에이전트 (MVP) — 안전한 축 발견은 성공, 사람 답안 재현은 실패
+
+사람이 `domains/*.yaml` + `checks/*.py`를 손으로 쓰는 대신, **라벨 없는**
+원문+결과물 예시만 보고 에이전트가 축을 제안하고, 검사 코드를 직접 짜서
+실제 데이터에 돌려 판별력을 재고, 안 되면 재시도하거나 버리는 루프
+(`agents/`). 3번(실행 결과)에 따라 4번(재시도 vs 포기)이 갈리고 반복
+횟수를 미리 정할 수 없어 워크플로우가 아니라 에이전트다.
+
+**안전장치**: LLM이 쓴 코드는 AST 정적 검증(import 전면 금지, 던더 패턴
+전체 차단) 후 별도 프로세스에서 타임아웃을 걸고 실행한다. `os` 접근·무한
+루프·`__builtins__` 유출·클래스 계층 우회·`getattr` 우회 6가지 공격
+사례로 실제 검증했다 - 처음엔 `__builtins__`를 이름으로 직접 접근하는
+우회를 놓쳤다가 던더 패턴 전체 차단으로 막았다.
+
+**MACSum으로 평가**: 라벨 없이 문서 6개(문서당 결과물 5~7개)를 주자
+conciseness·formality·sentence_complexity·focus_on_entities 4개 축을
+제안했고, 전부 실제 판별력 기준을 통과해 살아남았다 - specificity 같은
+판별 불가능한 축은 제안도 채택도 하지 않았다. 다만 사람이 고른
+length/extractiveness와는 문자열로도, LLM 의미 판정으로도 일치하지
+않았다("conciseness"조차 "length"와 다른 개념으로 판정됨). extractiveness
+류(원문 대비 그대로 베끼는 정도)는 아예 제안되지 않았다.
+
+**결론**: "라벨 없이도 실제 판별력 있는 축을 안전하게 찾고 나쁜 축은
+스스로 거른다"는 핵심 루프는 작동한다. 다만 "사람의 답안을 재현한다"는
+아니었다 - 정답이 하나가 아니라 여러 타당한 축 분해가 있을 수 있다는
+뜻으로 보는 게 더 정확하다.
+
+재현: `python -m agents.evaluate_domain_onboarding`
+
 ### 진행 중 발견한 주요 함정
 
 개발 과정에서 겉보기엔 그럴듯하지만 결과를 왜곡시키는 문제를 몇 차례
@@ -147,6 +176,7 @@ engine/             도메인을 모르는 코어 - domains/*.yaml만 바꾸면 
   metric_builder.py   추정된 선호 → GEPA용 평가 함수(점수+자연어 피드백) 조립
 optimize/run_gepa.py  위 metric을 GEPA의 Evaluator로 감싸 최적화 실행
 experiments/         MACSum 페르소나 기반 실험·집계·시각화
+agents/              도메인 온보딩 에이전트 (engine/domains/checks와 분리된 별도 패키지)
 app.py               Streamlit UI (원문 입력 → 8회 비교 → 개인화 프롬프트)
 ```
 
