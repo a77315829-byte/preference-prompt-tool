@@ -97,6 +97,24 @@ specificity 축은 표면적 신호로 복원 불가능하다는 결론을 강�
 재현: `python -m experiments.train_specificity_classifier` →
 `python -m experiments.hybrid_routing_eval`
 
+### 5. GEPA 피드백 풍부도 어블레이션
+
+`engine/metric_builder.py`가 만드는 축별 자연어 피드백("길이 위반: 6문장
+(목표 2문장 이하)...")이 GEPA 성찰에 실제로 도움이 되는지 검증했다
+(`experiments/feedback_richness_ablation.py`). 점수 계산은 완전히
+동일하게 두고, GEPA에게 보이는 피드백 텍스트만 rich(축별 위반 내역) vs
+terse(점수만)로 바꿔 같은 호출 예산(40회) 안에서 도달하는 검증 점수를
+비교했다.
+
+![피드백 풍부도 어블레이션](experiments/results/feedback_richness_ablation.png)
+
+**rich 0.98 vs terse 0.44** - rich는 8회 만에 급격히 수렴해 그 수준을
+유지하는 반면, terse는 40회 내내 정체된다. "우리는 축을 명시적으로
+갖고 있어서 구조화된 피드백을 줄 수 있고, 범용 최적화 도구는 못 하는
+부분"이라는 이 프로젝트의 기여 주장에 대한 가장 직접적인 실증이다.
+
+재현: `python -m experiments.feedback_richness_ablation`
+
 ### 진행 중 발견한 주요 함정
 
 개발 과정에서 겉보기엔 그럴듯하지만 결과를 왜곡시키는 문제를 몇 차례

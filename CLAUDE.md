@@ -542,6 +542,28 @@ MACSum의 specificity 라벨이 표면적 신호로는 원문을 줘도 복원�
 
 ---
 
+## 보너스: GEPA 피드백 풍부도 어블레이션 (구현 완료)
+
+`experiments/feedback_richness_ablation.py`. metric_builder.py가 만드는
+축별 자연어 피드백("길이 위반: 6문장...")이 GEPA 성찰에 실제로 도움이
+되는지 검증. 점수 계산 로직은 완전히 동일하게 두고 GEPA에게 보이는
+피드백 텍스트만 rich(축별 위반 내역) vs terse(점수만, `f"Score: {score:.2f}"`)
+로 바꿔 같은 호출 예산(40회) 안에서 도달하는 val 점수를 비교했다.
+
+1차 시도는 시드 프롬프트를 `build_seed_prompt()`(estimator의 추정 선호로
+조립)로 썼는데, 그러면 시드가 이미 metric에 최적화돼 있어 val 점수가
+처음부터 1.0으로 포화되고 두 조건 다 개선할 여지가 없었다 - 무의미한
+비교였다. 시드를 일부러 못 맞는 것("Summarize the following text.")으로
+바꿔 재시도.
+
+**결과**: rich 0.98 vs terse 0.44 (같은 40회 예산). rich는 8회 만에
+0.36→0.96으로 뛰고 그 이후 그 언저리를 유지하는데, terse는 40회 내내
+0.44 근처에서 못 벗어난다 (`experiments/results/feedback_richness_ablation.png`).
+"우리는 축을 명시적으로 갖고 있어서 구조화된 피드백을 줄 수 있고, 범용
+최적화 도구는 못 하는 부분"이라는 기여 주장에 대한 직접적인 실증이다.
+
+---
+
 ## 발표 서술 방향
 
 강조할 것:
