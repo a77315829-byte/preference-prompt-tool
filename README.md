@@ -67,10 +67,17 @@ terse(점수만)로 바꿔 같은 호출 예산(40회) 안에서 도달하는 �
 
 checks_score는 D의 최적화 목표와 동일 계열의 함수이므로 D에 유리하다.
 이를 보완하기 위해 최적화에 전혀 쓰이지 않은 ROUGE-L로 재채점했고,
-**절대값은 크게 낮아지지만(0.996 → 0.207) A·B 대비 우위는 유지된다**
-(checks 기준 B 대비 +49%p, ROUGE-L 기준 +23%p). 절대값이 낮아지는 걸
-감추지 않고 두 지표를 나란히 보고한다 - 이게 0.996만 내세우는 것보다
-방어 가능한 주장이다.
+**절대값은 크게 낮아진다** (D 기준 0.996 → 0.207, B 대비 상대적으로는
+checks 기준 +49%, ROUGE-L 기준 +23% - 두 지표 다 B 대비 %p 차이 자체는
+작다: checks +32.8%p, ROUGE-L +3.9%p).
+
+ROUGE-L에서 D(0.207 ± 0.057)와 B(0.168 ± 0.060)의 차이(0.039)는 표준편차
+보다 작아 평균만으로 "우위"라 단정하기엔 근거가 약하다. 문서 5개
+각각에서 D와 B를 직접 비교(페어드)하면 **D가 5개 중 4개에서 B보다
+높았다** (나머지 1개는 -0.0012로 사실상 동률). 표본이 5개뿐이라
+통계적 유의성을 주장하지는 않지만, 평균 비교보다는 이 페어드 결과가
+더 설득력 있는 근거다. 절대값이 낮아지는 것도 감추지 않고 두 지표를
+나란히 보고한다 - 이게 0.996만 내세우는 것보다 방어 가능한 주장이다.
 
 재현: `python -m experiments.compare_baselines`
 
@@ -125,14 +132,37 @@ checks_score는 D의 최적화 목표와 동일 계열의 함수이므로 D에 �
 | 대형 LLM | 0.464 | 0.514 |
 
 이는 구현 미비가 아니라 **해당 축이 이 데이터에서 표면적으로 판별 가능한
-형태로 존재하지 않음을 시사한다.** 다만 라우팅 임계값 스윕 자체는
-재사용 가능한 결과를 냈다: 확신도 0.85에서 정확도가 최고점을 찍고, 대형
-모델에 전부 맡기면(임계값 1.0) 오히려 정확도가 떨어지며 비용만 5배가 된다.
+형태로 존재하지 않음을 시사한다.**
 
 ![하이브리드 라우팅 비용-정확도 곡선](experiments/results/hybrid_routing_curve.png)
 
+확신도 0.85에서 정확도가 최고점을 찍고 대형 모델에 전부 맡기면(임계값
+1.0) 오히려 떨어지는 이 곡선은 **판별력이 확인되지 않은 축에서 잰
+것이라 최적 임계값 자체를 그대로 믿기는 어렵다** - 우연 근방(0.46~0.56)
+에서의 봉우리는 노이즈일 가능성이 크다.
+
+이 곡선이 노이즈인지 확인하려고, 판별력이 이미 확인된 축(length, short
+vs long)에 **완전히 독립적으로 작성한 같은 구조의 라우팅 스윕**을
+대조군으로 돌려봤다 (`experiments/hybrid_routing_eval_length.py`).
+
+![length 축 대조군 라우팅 곡선](experiments/results/hybrid_routing_curve_length.png)
+
+여기서는 분류기 단독 0.736, 소형 LLM 0.428, 대형 LLM 0.272로 **LLM에
+맡길수록 단조롭게 나빠진다** - specificity 곡선의 "중간에서 피크"와는
+완전히 다른, 훨씬 해석하기 쉬운 모양이다. 실제 텍스트를 보면 원인도
+드러난다: MACSum이 "short"라고 라벨링한 2문장짜리 요약을 대형 LLM은
+1.000에 가까운 확신도로 "long"이라고 판정한다 - 기준점(anchor) 없이
+"짧다/길다"만 물으면 LLM이 이 데이터셋 고유의 라벨링 관례 대신 자기
+내부 기준을 적용해버린다. **제로샷 LLM 판정이 값싼 학습형 분류기보다도
+못할 수 있다**는, specificity 실패와는 또 다른 유효한 결론이다.
+
+정리하면 하이브리드 라우팅 곡선은 두 가지를 보여준다: specificity처럼
+판별력 자체가 없는 축에서는 임계값 곡선을 해석에 쓰지 말 것, 그리고
+length처럼 판별력이 있어도 LLM 판정이 항상 분류기보다 낫지는 않다는 것.
+
 재현: `python -m experiments.train_specificity_classifier` →
-`python -m experiments.hybrid_routing_eval`
+`python -m experiments.hybrid_routing_eval` (specificity) /
+`python -m experiments.hybrid_routing_eval_length` (대조군)
 
 #### 6. 도메인 온보딩 에이전트 (MVP): 안전한 발견은 성공, 사람과는 다른 축을 찾음
 
@@ -160,17 +190,20 @@ conciseness·formality·sentence_complexity·focus_on_entities 4개 축을
 것을 찾은 것"인지는 이름 비교만으로는 알 수 없어서, 에이전트가 만든
 검사 함수와 사람이 만든 검사 함수(`checks/summarization.py`의 문장 수·
 bigram 겹침)를 **같은 텍스트 36개에 돌려 피어슨 상관을 쟀다**
-(`agents/correlate_with_human_axes.py`):
+(`agents/correlate_with_human_axes.py`). 사람 축은 2개만 비교한다 -
+`topic`은 열거형이 아니라 자유 키워드 축이라 연속값 상관 비교 자체가
+설계상 성립하지 않는다.
 
-| 사람 축 | 가장 가까운 에이전트 축 | 상관계수 |
-|---|---|---|
-| length (문장 수) | formality | r = -0.45 |
-| extractiveness (bigram 겹침) | focus_on_entities | r = 0.26 |
+| 사람 축 \\ 에이전트 축 | conciseness | formality | sentence_complexity | focus_on_entities |
+|---|---|---|---|---|
+| length (문장 수) | 0.121 | **-0.453** | 0.062 | -0.088 |
+| extractiveness (bigram 겹침) | 0.012 | 0.113 | -0.112 | **0.261** |
 
-전부 "같은 축"으로 볼 임계값(\|r\| ≥ 0.7)에 크게 못 미친다 - **명명이
-다른 게 아니라 정말 다른 축을 찾은 것으로 정량 확인됐다.** length와
-가장 가까운 것도 conciseness(직관적 예상)가 아니라 formality였고 그마저
-약한 음의 상관이다.
+**2×4 = 8개 조합 전부 "같은 축"으로 볼 임계값(\|r\| ≥ 0.7)에 크게 못
+미친다** - 최댓값도 0.453이다. 명명이 다른 게 아니라 정말 다른 축을
+찾은 것으로 정량 확인됐다. length와 가장 가까운 것도 직관적으로
+예상했던 conciseness(r=0.121)가 아니라 formality(r=-0.453)였고
+그마저 절반에 못 미치는 약한 음의 상관이다.
 
 **결론**: "라벨 없이도 실제 판별력 있는 축을 안전하게 찾고 나쁜 축은
 스스로 거른다"는 핵심 루프는 작동한다 - 이건 사람이 만든 것과 독립적인
@@ -187,9 +220,8 @@ bigram 겹침)를 **같은 텍스트 36개에 돌려 피어슨 상관을 쟀다*
 개발 과정에서 겉보기엔 그럴듯하지만 결과를 왜곡시키는 문제를 몇 차례
 발견하고 고쳤다 (자세한 경위는 `CLAUDE.md` 참고).
 
-- **specificity(구체성) 축 제외**: 정규식은 물론 spaCy NER로 측정해도
-  MACSum 데이터에서 판별력이 없었다. 코드로 재현 가능하게 잴 수 없는
-  축은 애초에 넣지 않는다는 원칙에 따라 제외했다 (4축 → 3축).
+- **specificity(구체성) 축 제외** → 다섯 가지 방법을 다 시도하고 전부
+  실패한 경위는 위 "한계" 5번 참고.
 - **출력 언어 불일치**: 시스템 프롬프트가 한국어라 축조합에 따라 출력
   언어가 한국어/영어로 들쭉날쭉했다. MACSum 원문·정답이 전부 영어라
   겹침 기반 검사들이 전부 왜곡되고 있었다. 출력 언어를 명시 고정해 해결.
@@ -198,20 +230,6 @@ bigram 겹침)를 **같은 텍스트 36개에 돌려 피어슨 상관을 쟀다*
   우연히 어휘가 더 겹쳐 엉뚱한 축으로 수렴하는 문제가 있었다. 정답
   텍스트 대신 검증된 `checks/` 함수로 실제 축값을 직접 재는 방식으로
   교체하자 5문서 평균 완전복원율이 0~8% → 80%로 뛰었다.
-
-### 발표 서사
-
-> 선택 기반 개인화는 작동한다. 다만 모든 취향 축이 측정 가능한 것은
-> 아니며, 우리는 어떤 축이 그러한지를 실험으로 구분했다.
-
-성공(개인화·수렴·이식성·피드백 효과)과 한계(specificity·에이전트의 축
-발견)를 나란히 놓고, 한계에서 무엇을 알게 됐는지를 말하는 구성이다.
-"우리 도구가 항상 이긴다"가 아니라 "어디까지 되고 어디부터 안 되는지를
-직접 측정했다"는 게 이 프로젝트가 실제로 보여줄 수 있는 것이다.
-
-피할 것: 산출물이 "범용적으로 더 좋은 프롬프트"라는 주장 - 목표는 개인
-적합도이며, 타인에게 안 맞는 게 정상이다. 그리고 순환 논증으로 보이는
-단일 지표(0.996) 단독 보고.
 
 ---
 
@@ -264,9 +282,24 @@ streamlit run app.py
 ### 실험 재현
 
 ```bash
-python -m experiments.run_all              # 알고리즘 3종 수렴 곡선 데이터
-python -m experiments.compare_baselines     # 비교군 A/B/D
-python -m experiments.plots                 # 위 결과를 그래프로
+# 핵심 파이프라인
+python -m experiments.run_all                      # 알고리즘 3종 수렴 곡선 데이터
+python -m experiments.compare_baselines             # 비교군 A/B/D (checks + ROUGE-L)
+python -m experiments.plots                         # 위 결과를 그래프로
+
+# 어블레이션 · 확장성
+python -m experiments.feedback_richness_ablation    # GEPA 피드백 풍부도 어블레이션
+python -m tests.test_extensibility                  # 도메인 확장성 (이메일)
+python -m tests.test_korean_extensibility           # 언어 확장성 (한국어)
+
+# 하이브리드 판정 계층 (specificity 복원 시도 + 대조군)
+python -m experiments.train_specificity_classifier  # 계층 2: 학습형 분류기
+python -m experiments.hybrid_routing_eval           # specificity 축 라우팅 스윕
+python -m experiments.hybrid_routing_eval_length    # length 축 라우팅 스윕 (대조군)
+
+# 도메인 온보딩 에이전트
+python -m agents.evaluate_domain_onboarding         # MACSum으로 축 발견 평가
+python -m agents.correlate_with_human_axes          # 에이전트 축 vs 사람 축 상관분석
 ```
 
 ### 새 도메인 추가하기
@@ -281,7 +314,10 @@ python -m experiments.plots                 # 위 결과를 그래프로
 
 Python 3.12 · [dspy](https://github.com/stanfordnlp/dspy) ·
 [gepa](https://github.com/gepa-ai/gepa) · [litellm](https://github.com/BerriAI/litellm) ·
-streamlit · pandas · matplotlib · pyyaml · python-dotenv · pytest
+streamlit · pandas · matplotlib · pyyaml · python-dotenv · pytest ·
+scikit-learn (하이브리드 판정 계층 분류기) · spaCy (specificity 판별력 검증,
+6주차) · [kiwipiepy](https://github.com/bab2min/kiwipiepy) (한국어 형태소 분석) ·
+rouge-score (독립 채점자)
 
 ## 참고
 
