@@ -67,8 +67,28 @@ class Domain:
         raise ValueError(f"unknown axis '{name}'")
 
 
+def _read_raw(path: Path) -> dict:
+    """YAML을 읽고, 최상위 `extends: <상대경로>` 가 있으면 그 파일을 먼저
+    읽어 병합한다 (axes는 이름 기준으로 자식이 부모를 덮어쓰거나 추가하고,
+    나머지 키는 자식이 있으면 자식 값을 쓴다). 여러 도메인이 축 대부분을
+    공유할 때 YAML을 통째로 복사하지 않고 차이만 적을 수 있게 하기 위함이다."""
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    extends = raw.pop("extends", None)
+    if not extends:
+        return raw
+
+    base = _read_raw(path.parent / extends)
+    axes_by_name = {a["name"]: a for a in base.get("axes", [])}
+    for axis in raw.get("axes", []):
+        axes_by_name[axis["name"]] = axis
+
+    merged = {**base, **raw}
+    merged["axes"] = list(axes_by_name.values())
+    return merged
+
+
 def load_domain(path: str | Path) -> Domain:
-    raw = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+    raw = _read_raw(Path(path))
 
     axes = []
     for raw_axis in raw["axes"]:

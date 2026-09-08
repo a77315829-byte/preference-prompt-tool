@@ -9,3 +9,4 @@ python-dotenv
 pytest
 rouge-score
 kiwipiepy
+scikit-learn

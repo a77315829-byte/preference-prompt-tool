@@ -1,0 +1,31 @@
+# domains/summarization.yaml 에서 파생. length/extractiveness/topic 축은
+# 그대로 상속하고, specificity 축 하나만 추가한다 (CLAUDE.md v2, 우선순위 3).
+#
+# 6주차에 코드(정규식/spaCy)로 판별 못 해 제외했던 축을, 하이브리드 판정
+# 계층(checks/summarization_hybrid.py - 학습형 분류기 -> 소형 LLM -> 대형
+# LLM)으로 복원한다. checks_module만 바꾸고 나머지 축의 정의는 베이스와
+# 100% 동일하게 유지된다(extends로 상속하므로 손으로 다시 안 씀).
+#
+# 기본 파이프라인(summarization.yaml)은 이 파일과 무관하게 무료·즉시로
+# 그대로 남는다 - GEPA 실험은 명시적으로 이 YAML을 골랐을 때만 specificity
+# 판정에 실제 API 비용이 든다.
+
+extends: summarization.yaml
+domain: summarization_hybrid
+checks_module: checks.summarization_hybrid
+
+axes:
+  - name: specificity
+    type: enum
+    description: 숫자·고유명사 등 구체적 정보의 밀도 (하이브리드 LLM 판정)
+    values:
+      - value: normal
+        prompt: 일반적인 수준의 구체성으로 요약하라. 세부 수치나 고유명사 나열에 치우치지 마라.
+        check:
+          fn: specificity_judge
+          target: {}
+      - value: high
+        prompt: 숫자, 날짜, 고유명사 등 구체적인 정보를 최대한 포함해 요약하라.
+        check:
+          fn: specificity_judge
+          target: {}

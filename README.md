@@ -75,6 +75,28 @@
 스팟 체크로 범위를 제한했다 - short+fully 조합은 원문과 형태소 겹침
 94%, long+normal 조합은 40%로 명확히 갈렸다.
 
+### 4. 하이브리드 판정 계층 — specificity 축 복원 시도 (결론: 실패, 그러나 유의미)
+
+6주차에 코드로 판별 못 해 제외한 specificity 축을, 학습형 분류기(TF-IDF+
+로지스틱회귀) → 소형 LLM → 대형 LLM 계층으로 복원 시도했다
+(`domains/summarization_hybrid.yaml`, `checks/summarization_hybrid.py`).
+MACSum 실제 라벨 5,379건으로 진짜 정확도를 측정했다.
+
+| 계층 | 균형정확도 (요약문만) | 균형정확도 (원문 포함) |
+|---|---|---|
+| 학습형 분류기 | 0.500 (우연) | - |
+| 소형 LLM | 0.525 | 0.558 |
+| 대형 LLM | 0.464 | 0.514 |
+
+다섯 가지 방법(정규식·spaCy·학습형 분류기·소형 LLM·대형 LLM) 전부 실패 -
+specificity 축은 표면적 신호로 복원 불가능하다는 결론을 강하게 뒷받침한다.
+다만 **라우팅 임계값 스윕 자체는 재사용 가능한 결과**를 냈다: 확신도
+0.85에서 정확도가 최고점을 찍고, 대형 모델에 전부 맡기면(임계값 1.0)
+오히려 정확도가 떨어지며 비용만 5배가 된다 (`experiments/results/hybrid_routing_curve.png`).
+
+재현: `python -m experiments.train_specificity_classifier` →
+`python -m experiments.hybrid_routing_eval`
+
 ### 진행 중 발견한 주요 함정
 
 개발 과정에서 겉보기엔 그럴듯하지만 결과를 왜곡시키는 문제를 몇 차례
