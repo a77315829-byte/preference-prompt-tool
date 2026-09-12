@@ -112,6 +112,17 @@ ROUGE-L에서 D(0.207 ± 0.057)와 B(0.168 ± 0.060)의 차이(0.039)는 표준�
 스팟 체크로 범위를 제한했다 - short+fully 조합은 원문과 형태소 겹침
 94%, long+normal 조합은 40%로 명확히 갈렸다.
 
+**과제 카테고리 자체도 확장**: 요약(이 프로젝트)·코딩(팀원) 외에 완전히
+다른 과제인 **고객 리뷰 작성**을 추가했다 (`domains/review.yaml` +
+`checks/review.py`). 축은 length(길이)·sentiment(어조)·topic(초점).
+sentiment 축의 어휘 사전·임계값은 실제 Yelp 리뷰 3,000건(별점 기반
+라벨, `experiments/review_dataset.py` - HuggingFace datasets-server를
+HTTP로 직접 호출해 새 라이브러리 없이 받음)으로 먼저 검증했다 - negative
+평균 -0.0022 → neutral 0.019 → positive 0.0392로 단조 증가, specificity
+축(6주차)과 달리 진짜 판별력이 있다. 실제 생성 결과로도 6회 선택 루프가
+선호(short+positive)를 정확히 학습했고 `engine/` 코드는 무수정이다
+(`tests/test_review_domain.py`).
+
 ---
 
 ### 한계 — 모든 축이 측정 가능하지는 않다
@@ -291,6 +302,8 @@ python -m experiments.plots                         # 위 결과를 그래프로
 python -m experiments.feedback_richness_ablation    # GEPA 피드백 풍부도 어블레이션
 python -m tests.test_extensibility                  # 도메인 확장성 (이메일)
 python -m tests.test_korean_extensibility           # 언어 확장성 (한국어)
+python -m experiments.review_dataset                # Yelp 리뷰 데이터 받기/캐싱
+python -m tests.test_review_domain                  # 과제 확장성 (리뷰 작성)
 
 # 하이브리드 판정 계층 (specificity 복원 시도 + 대조군)
 python -m experiments.train_specificity_classifier  # 계층 2: 학습형 분류기

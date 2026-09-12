@@ -1,0 +1,66 @@
+# 도메인: 고객 리뷰 작성 (Yelp Review Full 기반, 요약/코딩과 완전히 다른
+# 과제 카테고리). 사용자가 준 메모(방문 경험 등)를 바탕으로 리뷰를 쓴다.
+#
+# sentiment 축의 어휘 목록·임계값은 Yelp 실제 리뷰 3,000건(별점 파생
+# 라벨)로 검증했다 - negative 평균 -0.0022, neutral 0.019, positive
+# 0.0392로 단조 증가 확인 후 중앙값 사이 중점으로 임계값을 잡았다
+# (checks/review.py 상단 주석 참고).
+
+domain: review
+task_description: >-
+  아래 메모(방문 경험, 제품 사용 후기 등)를 바탕으로 리뷰를 작성하라.
+  리뷰는 반드시 영어(English)로 작성하라.
+
+checks_module: checks.review
+
+axes:
+  - name: length
+    type: enum
+    description: 리뷰 길이
+    values:
+      - value: short
+        prompt: 2문장 이내로 아주 짧게 작성하라.
+        check:
+          fn: sentence_count
+          target: { max_sentences: 2 }
+      - value: normal
+        prompt: 3~5문장 정도의 분량으로 작성하라.
+        check:
+          fn: sentence_count
+          target: { min_sentences: 3, max_sentences: 5 }
+      - value: long
+        prompt: 6문장 이상으로 상세하게 작성하라.
+        check:
+          fn: sentence_count
+          target: { min_sentences: 6 }
+
+  - name: sentiment
+    type: enum
+    description: 리뷰의 전반적 어조 (실제 Yelp 별점 기준 어휘 밀도로 검증됨)
+    values:
+      - value: negative
+        prompt: 부정적이고 비판적인 어조로 작성하라. 불만족스러운 점을 강조하라.
+        check:
+          fn: sentiment
+          target: { max_score: 0.007 }
+      - value: neutral
+        prompt: 중립적이고 담담한 어조로 작성하라. 장단점을 균형있게 서술하라.
+        check:
+          fn: sentiment
+          target: { min_score: 0.007, max_score: 0.02 }
+      - value: positive
+        prompt: 긍정적이고 만족스러운 어조로 작성하라. 좋았던 점을 강조하라.
+        check:
+          fn: sentiment
+          target: { min_score: 0.02 }
+
+  - name: topic
+    type: freeform_keyword
+    description: >-
+      리뷰가 초점을 맞춰야 할 측면(예: 서비스, 음식, 가격). 값이 비어 있으면
+      이 축은 적용하지 않는다.
+    empty_means_inactive: true
+    prompt_template: '"{value}" 측면에 특히 초점을 맞춰 리뷰를 작성하라.'
+    check:
+      fn: keyword_presence
+      target: {}
