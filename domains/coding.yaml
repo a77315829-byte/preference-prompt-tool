@@ -1,0 +1,81 @@
+# TypeScript/React 코딩 스타일 개인화 도메인
+
+domain: coding
+
+task_description: >-
+  아래 개발 요청을 해결하는 TypeScript/React 코드를 작성하라.
+  사용자가 선호하는 코드 구성, 스타일 관리, 타입 작성 방식을
+  일관되게 적용하라.
+
+checks_module: checks.coding
+
+axes:
+  - name: code_structure
+    type: enum
+    description: 코드와 관련 로직을 나누는 방식
+
+    values:
+      - value: compact
+        prompt: >-
+          작은 기능은 한 파일 안에 컴포넌트, 상태 로직, 스타일을
+          함께 두어 간결하게 작성하라.
+        check:
+          fn: file_structure
+          target:
+            max_files: 1
+
+      - value: separated
+        prompt: >-
+          컴포넌트, 상태 로직, 스타일을 역할별 파일로 분리하고
+          각 파일의 이름과 코드를 명확히 구분해 제시하라.
+        check:
+          fn: file_structure
+          target:
+            min_files: 2
+
+  - name: style_management
+    type: enum
+    description: 색상, 간격, 글꼴 같은 디자인 값을 관리하는 방식
+
+    values:
+      - value: direct
+        prompt: >-
+          색상, 간격, 크기 같은 스타일 값은 스타일 파일이나
+          컴포넌트에 직접 작성하여 바로 확인할 수 있게 하라.
+        check:
+          fn: theme_usage
+          target:
+            max_theme_signals: 0
+
+      - value: theme
+        prompt: >-
+          색상, 간격, 글꼴 같은 디자인 값은 theme 또는
+          디자인 토큰으로 모아서 관리하라. 컴포넌트에서는
+          해당 값을 참조하여 전체 디자인을 쉽게 수정할 수 있게 하라.
+        check:
+          fn: theme_usage
+          target:
+            min_theme_signals: 2
+  - name: type_detail
+    type: enum
+    description: TypeScript 타입을 명시하는 정도
+
+    values:
+      - value: inferred
+        prompt: >-
+          TypeScript가 분명하게 추론할 수 있는 지역 변수와
+          단순한 반환값에는 타입을 반복해서 작성하지 마라.
+          꼭 필요한 공개 경계에만 타입을 작성하라.
+        check:
+          fn: type_explicitness
+          target:
+            max_signals: 3
+
+      - value: explicit
+        prompt: >-
+          Props, 함수 매개변수, 반환값, 상태와 주요 데이터 구조의
+          타입을 꼼꼼하게 명시하라.
+        check:
+          fn: type_explicitness
+          target:
+            min_signals: 5
