@@ -274,12 +274,18 @@ app.py               Streamlit UI (원문 입력 → 8회 비교 → 개인화 �
 ```bash
 python -m venv .venv                 # Python 3.12 (3.13/3.14는 패키지 호환성 문제로 비권장)
 .venv\Scripts\activate                # Windows
-pip install -r requirements.txt
+
+pip install -r requirements.txt       # 앱만 돌릴 때 (배포도 이 파일을 씀)
+pip install -r requirements-dev.txt   # 실험·검증 스크립트까지 돌릴 때
 
 git clone --depth 1 https://github.com/psunlpgroup/MACSum.git data/macsum
 
 cp .env.example .env                  # OPENAI_API_KEY 채워넣기
 ```
+
+`requirements.txt`에는 앱이 실제로 쓰는 5개(streamlit·python-dotenv·litellm·
+gepa·pyyaml)만 둔다 - 배포 플랫폼이 이 파일을 읽으므로 실험용 의존성
+(kiwipiepy는 88MB 모델을 받는다)이 섞이면 빌드가 느려지거나 실패한다.
 
 ### 웹 UI로 사용해보기
 

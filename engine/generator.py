@@ -13,8 +13,6 @@ import hashlib
 import json
 from pathlib import Path
 
-from litellm import completion
-
 from engine.domain_loader import Domain
 
 CACHE_DIR = Path(__file__).resolve().parent.parent / "cache"
@@ -51,6 +49,10 @@ def generate(
 
     if cache_file.exists():
         return json.loads(cache_file.read_text(encoding="utf-8"))["output"]
+
+    # litellm은 import에만 11초가 걸린다. 첫 화면 렌더에는 필요 없으므로
+    # 실제 API 호출 시점까지 미룬다 (배포 콜드스타트 12.6초 -> 약 2초).
+    from litellm import completion
 
     response = completion(
         model=model,

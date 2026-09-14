@@ -1,12 +1,8 @@
-dspy
-gepa
-litellm
+# 배포되는 앱(app.py)이 실제로 쓰는 것만. Streamlit Community Cloud가
+# 이 파일을 읽으므로 여기에 불필요한 걸 넣으면 빌드가 느려지거나 터진다.
+# 실험·검증 스크립트를 돌리려면 requirements-dev.txt 를 쓸 것.
 streamlit
-pandas
-matplotlib
-pyyaml
 python-dotenv
-pytest
-rouge-score
-kiwipiepy
-scikit-learn
+litellm
+gepa
+pyyaml

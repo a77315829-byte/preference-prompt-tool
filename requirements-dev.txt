@@ -1,0 +1,11 @@
+# 실험·검증 스크립트용 전체 의존성 (experiments/, tests/, agents/).
+# 배포에는 필요 없다 - 배포용은 requirements.txt.
+-r requirements.txt
+
+dspy          # 현재 코드에선 미사용. 축소선의 "최적화기 교체 검증(GEPA->MIPROv2)"용으로 남겨둠
+pandas
+matplotlib
+pytest
+rouge-score
+kiwipiepy
+scikit-learn
