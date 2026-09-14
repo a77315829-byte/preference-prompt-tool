@@ -29,8 +29,14 @@ if not os.environ.get("OPENAI_API_KEY"):
     if secret_key:
         os.environ["OPENAI_API_KEY"] = secret_key
 
-MODEL = "openai/gpt-4.1-mini"
+# gpt-4.1-mini 대비 입력 50%·출력 25% 저렴하고(0.20/1.20 vs 0.40/1.60 per M),
+# 실제 코딩 프롬프트 생성에서 더 빨랐다(6.3s vs 11.4s, 각 1회 측정).
+# experiments/ 쪽은 README에 보고된 수치가 4.1-mini로 측정된 것이라 안 바꾼다.
+MODEL = "openai/gpt-5.6-luna"
 N_ROUNDS = 8
+
+API_MODE_LABEL = "AI 실시간 생성 (GPT-5.6 Luna)"
+DEMO_MODE_LABEL = "무료 데모 (API 없이 규칙 기반)"
 
 # 공개 배포에서 팀 API 키가 무제한으로 소진되지 않도록 API 모드만 세션당
 # 상한을 건다 (CLAUDE.md 주의사항: "공개 배포 시 사용자가 자기 키를 넣게
@@ -117,10 +123,13 @@ if st.session_state.stage == "input":
     st.write(config["intro"])
     run_mode = st.radio(
         "실행 모드",
-        ("무료 데모 모드", "OpenAI API 모드"),
-        help="무료 데모 모드는 API 키나 결제 비용 없이 실행됩니다.",
+        (API_MODE_LABEL, DEMO_MODE_LABEL),
+        help=(
+            "AI 실시간 생성은 실제로 모델을 호출해 후보를 만듭니다. "
+            "무료 데모는 API 키나 비용 없이 규칙 기반 예시로 흐름만 보여줍니다."
+        ),
     )
-    demo_mode = run_mode == "무료 데모 모드"
+    demo_mode = run_mode == DEMO_MODE_LABEL
     if demo_mode:
         st.info(config["demo_info"])
 
@@ -230,6 +239,8 @@ elif st.session_state.stage == "done":
                         estimator,
                         train_sources=[source],
                         val_sources=[source],
+                        task_lm=MODEL,
+                        reflection_lm=MODEL,
                         max_metric_calls=20,
                     )
                 except Exception as exc:
