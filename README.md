@@ -17,6 +17,22 @@
 - 언어 모델을 학습하거나 파인튜닝하지 않는다. 상용 API를 부품으로 호출만 한다.
 - "범용적으로 좋은 프롬프트"를 목표로 하지 않는다. 개인 적합도가 목표다.
 
+**바로 써보기**: https://preference-prompt-tool-7c9fvm3tb5bfxv8v6648fu.streamlit.app/
+
+API 키 없이도 무료 데모 모드로 전체 흐름을 돌려볼 수 있다. 첫 접속 시
+앱이 절전 상태면 깨우는 데 30초쯤 걸린다.
+
+![카테고리 선택](docs/screenshots/01-categories.png)
+
+카테고리를 고르고 원문을 넣으면, 축 조합이 다른 결과물 두 개가 나온다.
+어느 축이 다른지는 알려주지 않는다 - 사용자는 그냥 마음에 드는 쪽을 고른다.
+
+![두 결과물 비교](docs/screenshots/03-compare.png)
+
+8회를 고르면 추정된 선호와 재사용 가능한 시스템 프롬프트가 나온다.
+
+![결과 화면](docs/screenshots/04-result.png)
+
 프로젝트의 상세한 설계 결정과 그 이유(무엇을 왜 바꿨는지 포함)는
 [`CLAUDE.md`](CLAUDE.md)에 기록되어 있다.
 
@@ -322,6 +338,9 @@ streamlit run app.py
 | 코딩 도움 | 만들고 싶은 기능 | TypeScript/React 코드 | `domains/coding.yaml` |
 | 문서 요약 (영어) | 영어 원문 | 영어 요약 | `domains/summarization.yaml` |
 | 문서 요약 (한국어) | 한국어 원문 | 한국어 요약 | `domains/summarization_ko.yaml` |
+
+화면 캡처는 [`docs/screenshots/`](docs/screenshots)에 있다
+(카테고리 선택 · 원문 입력 · 비교 · 결과).
 
 카테고리를 고르고 8회 비교를 마치면 추정된 선호와 재사용 가능한 시스템
 프롬프트를 보여준다. 무료 데모 모드는 API 키나 비용 없이 전체 흐름을

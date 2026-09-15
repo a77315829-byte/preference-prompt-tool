@@ -155,6 +155,20 @@ def _show_api_error_notice() -> None:
 
 
 def _show_preferences(domain_key: str, preferred: dict[str, str]) -> None:
+    """추정된 선호를 축별로 보여준다.
+
+    축별 확신도를 같이 띄우려다 되돌렸다. estimator.confidence()는
+    1 - 정규화 엔트로피인데, 완벽히 일관되게 골라 선호를 9/9 전부 복원한
+    경우에도 3값 축에서는 0.06에 머물고 비교를 24회까지 늘려도 그대로다
+    (2값인 coding 축은 8회 0.18 -> 24회 0.49로 오르기는 한다). 맞힌
+    경우에 "확신도 6%"라고 적으면 사용자를 오히려 오인시킨다.
+    "추정 결과와 같은 쪽을 고른 비율"도 대안이 못 된다 - 3값 축에서는
+    선호값이 아닌 두 값끼리 붙는 비교가 섞여서, 일관된 사용자 52% vs
+    무작위 55%로 구분이 안 됐다.
+    confidence()는 metric_builder의 축 가중치처럼 축끼리 상대 비교하는
+    원래 용도로는 그대로 쓴다. 사용자에게 보여줄 보정된 확신도는 별도
+    작업이 필요하다.
+    """
     domain_labels = PREFERENCE_LABELS.get(domain_key)
     if not domain_labels:
         st.json(preferred)
