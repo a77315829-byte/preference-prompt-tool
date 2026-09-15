@@ -43,6 +43,12 @@ DEMO_MODE_LABEL = "무료 데모 (API 없이 규칙 기반)"
 # 하거나 호출 상한을 건다"). 데모 모드는 API를 안 쓰므로 제한하지 않는다.
 MAX_API_RUNS_PER_SESSION = 3
 
+# 원문 입력 길이 상한. API 모드에서는 이 원문이 한 세션에 16번(8회 x 후보 2개)
+# 전송되므로, 상한이 없으면 긴 문서 하나로 토큰 비용이 급증한다. 공개 링크에
+# 불특정 트래픽이 들어오는 상황을 가정한 방어선이다. 뉴스 기사 한 편은
+# 보통 6,000자 이내라 실사용을 막지 않는 값으로 잡았다.
+MAX_SOURCE_CHARS = 12000
+
 DOMAIN_OPTIONS = {
     "coding": {
         "label": "코딩 도움",
@@ -120,7 +126,7 @@ def _domain_for(key: str) -> Domain:
 
 
 def _reset_session() -> None:
-    for key in ("stage", "domain_key", "source", "demo_mode", "estimator", "selector", "round", "current_pair", "optimized_prompt"):
+    for key in ("stage", "domain_key", "source", "demo_mode", "estimator", "selector", "round", "current_pair", "optimized_prompt", "api_error", "gepa_error"):
         st.session_state.pop(key, None)
 
 
@@ -132,6 +138,20 @@ def _show_candidate(domain_key: str, candidate: str) -> None:
         st.markdown(candidate)
     else:
         st.write(candidate)
+
+
+def _show_api_error_notice() -> None:
+    """API 호출이 실패해 데모 모드로 내려왔음을 숨기지 않고 알린다."""
+    error = st.session_state.get("api_error")
+    if not error:
+        return
+    st.warning(
+        "AI 실시간 생성에 실패해서 **무료 데모 모드로 전환했습니다.** "
+        "지금까지 고른 선택은 그대로 유지되고, 남은 비교는 규칙 기반 예시로 진행됩니다. "
+        "API 키나 결제 크레딧을 확인한 뒤 처음부터 다시 시작하면 실시간 생성을 쓸 수 있습니다."
+    )
+    with st.expander("오류 내용 보기"):
+        st.caption(error)
 
 
 def _show_preferences(domain_key: str, preferred: dict[str, str]) -> None:
@@ -195,6 +215,7 @@ if st.session_state.stage == "input":
         config["input_label"],
         height=180 if domain_key == "coding" else 250,
         placeholder=config["placeholder"],
+        max_chars=MAX_SOURCE_CHARS,
     )
     if st.button("비교 시작", type="primary", disabled=not source.strip() or api_blocked):
         if not demo_mode:
@@ -228,15 +249,19 @@ elif st.session_state.stage == "compare":
                     candidate_a = generate(domain, source, combo_a, model=MODEL)
                     candidate_b = generate(domain, source, combo_b, model=MODEL)
                 except Exception as exc:
-                    st.error(
-                        "OpenAI API 호출에 실패했습니다. API 키와 결제 크레딧을 확인하거나 "
-                        "처음부터 다시 시작해 무료 데모 모드를 선택하세요."
-                    )
-                    st.caption(str(exc))
-                    st.stop()
+                    # 막다른 길로 끝내지 않는다. 예전에는 st.stop()으로 멈춰서
+                    # 화면에 에러만 남고 여기까지 한 선택이 다 버려졌다 - 키가
+                    # 만료되거나 결제 한도에 걸리면 처음 보는 사람 눈에는 그냥
+                    # 고장난 서비스다. 데모 모드로 내려서 남은 비교를 규칙 기반
+                    # 후보로 이어가고, 지금까지의 선택은 그대로 살린다.
+                    st.session_state.demo_mode = True
+                    st.session_state.api_error = str(exc)
+                    st.rerun()
         st.session_state.current_pair = (combo_a, combo_b, candidate_a, candidate_b)
 
     combo_a, combo_b, candidate_a, candidate_b = st.session_state.current_pair
+
+    _show_api_error_notice()
 
     st.progress(st.session_state.round / N_ROUNDS)
     st.caption(f"{st.session_state.round + 1} / {N_ROUNDS} 번째 비교 · {config['compare_help']}")
@@ -268,6 +293,7 @@ elif st.session_state.stage == "done":
 
     preferred = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
     st.success("선택이 모두 끝났습니다.")
+    _show_api_error_notice()
     st.subheader("내가 선호하는 방식")
     _show_preferences(domain_key, preferred)
 
@@ -281,6 +307,18 @@ elif st.session_state.stage == "done":
         st.caption("무료 데모 결과이며, 추정된 선호를 조립해 프롬프트를 만들었습니다.")
     elif "optimized_prompt" not in st.session_state:
         st.caption("현재는 선택 결과로 만든 기본 프롬프트입니다. 원하면 API로 한 번 더 최적화할 수 있습니다.")
+        # 최적화가 실패해도 위에서 이미 보여준 기본 프롬프트는 쓸 수 있는
+        # 결과물이다. 예전에는 st.stop()으로 멈춰서 "처음부터 다시" 버튼까지
+        # 사라졌는데, 실패를 알리되 결과물과 조작 수단은 남겨둔다.
+        gepa_error = st.session_state.get("gepa_error")
+        if gepa_error:
+            st.warning(
+                "최적화 중 API 호출이 실패했습니다. 위의 기본 프롬프트는 그대로 사용할 수 있습니다. "
+                "API 키와 결제 크레딧을 확인해 주세요."
+            )
+            with st.expander("오류 내용 보기"):
+                st.caption(gepa_error)
+
         if st.button("GEPA로 프롬프트 최적화"):
             with st.spinner("프롬프트를 최적화하는 중... 1~2분 정도 걸립니다."):
                 try:
@@ -294,9 +332,9 @@ elif st.session_state.stage == "done":
                         max_metric_calls=20,
                     )
                 except Exception as exc:
-                    st.error("최적화 중 API 호출에 실패했습니다. API 키와 결제 크레딧을 확인해 주세요.")
-                    st.caption(str(exc))
-                    st.stop()
+                    st.session_state.gepa_error = str(exc)
+                    st.rerun()
+                st.session_state.pop("gepa_error", None)
             st.session_state.optimized_prompt = optimized_prompt
             st.rerun()
     else:
