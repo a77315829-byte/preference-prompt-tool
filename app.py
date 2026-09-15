@@ -86,7 +86,13 @@ def _reset_session() -> None:
 
 
 def _show_candidate(domain_key: str, candidate: str) -> None:
-    st.markdown(candidate) if domain_key == "coding" else st.write(candidate)
+    # 삼항 표현식으로 쓰면 안 된다. Streamlit의 magic이 스크립트의 표현식
+    # 문장을 자동으로 st.write()로 감싸기 때문에, 삼항식이 반환한
+    # DeltaGenerator 객체가 화면에 그대로 찍힌다(배포 후 실제로 발생).
+    if domain_key == "coding":
+        st.markdown(candidate)
+    else:
+        st.write(candidate)
 
 
 def _show_preferences(domain_key: str, preferred: dict[str, str]) -> None:
