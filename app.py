@@ -57,14 +57,30 @@ DOMAIN_OPTIONS = {
         "compare_help": "기능보다 평소 받고 싶은 코드 작성 방식에 가까운 쪽을 골라주세요.",
     },
     "summarization": {
-        "label": "문서 요약",
+        "label": "문서 요약 (영어)",
         "path": "domains/summarization.yaml",
         "intro": (
-            f"원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 {N_ROUNDS}회 골라주세요."
+            f"영어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 {N_ROUNDS}회 골라주세요. "
+            "요약은 영어로 나옵니다."
         ),
         "input_label": "요약할 원문 (영어 뉴스 기사 권장)",
         "placeholder": "영어 원문을 붙여넣어 주세요.",
         "demo_info": "API 없이 규칙 기반 요약 예시로 전체 흐름을 시험합니다.",
+        "compare_help": "내용보다 길이와 표현 방식이 마음에 드는 쪽을 골라주세요.",
+    },
+    # 한국어 요약은 영어와 축 구성(length/extractiveness/topic)이 같고
+    # checks 모듈만 다르다 - 한국어는 조사 때문에 표면형 어휘 겹침이
+    # 겹침을 과소평가하므로 checks/summarization_ko.py 를 쓴다.
+    "summarization_ko": {
+        "label": "문서 요약 (한국어)",
+        "path": "domains/summarization_ko.yaml",
+        "intro": (
+            f"한국어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 {N_ROUNDS}회 골라주세요. "
+            "요약은 한국어로 나옵니다."
+        ),
+        "input_label": "요약할 원문 (한국어 뉴스 기사 권장)",
+        "placeholder": "한국어 원문을 붙여넣어 주세요.",
+        "demo_info": "API 없이 규칙 기반 한국어 요약 예시로 전체 흐름을 시험합니다.",
         "compare_help": "내용보다 길이와 표현 방식이 마음에 드는 쪽을 골라주세요.",
     },
 }
@@ -73,6 +89,29 @@ CODING_PREFERENCE_LABELS = {
     "code_structure": {"title": "코드 구성", "compact": "간결하게 작성", "separated": "역할별 파일로 분리"},
     "style_management": {"title": "디자인 수정 방식", "direct": "스타일 값을 바로 작성", "theme": "나중에 전체 디자인을 쉽게 수정"},
     "type_detail": {"title": "타입 작성", "inferred": "필요한 타입만 작성", "explicit": "타입을 꼼꼼하게 작성"},
+}
+
+# 영어·한국어 요약 도메인은 축 구성이 같으므로 라벨을 공유한다.
+SUMMARIZATION_PREFERENCE_LABELS = {
+    "length": {
+        "title": "요약 길이",
+        "short": "아주 짧게 (2문장 이내)",
+        "normal": "보통 (3~4문장)",
+        "long": "상세하게 (5문장 이상)",
+    },
+    "extractiveness": {
+        "title": "표현 방식",
+        "normal": "내 표현으로 바꿔 쓰기",
+        "high": "원문 표현을 살리기",
+        "fully": "원문 문장을 그대로 발췌",
+    },
+}
+
+# 도메인별 선호 라벨. 없는 도메인은 원시 값을 그대로 보여준다.
+PREFERENCE_LABELS = {
+    "coding": CODING_PREFERENCE_LABELS,
+    "summarization": SUMMARIZATION_PREFERENCE_LABELS,
+    "summarization_ko": SUMMARIZATION_PREFERENCE_LABELS,
 }
 
 
@@ -96,11 +135,16 @@ def _show_candidate(domain_key: str, candidate: str) -> None:
 
 
 def _show_preferences(domain_key: str, preferred: dict[str, str]) -> None:
-    if domain_key != "coding":
+    domain_labels = PREFERENCE_LABELS.get(domain_key)
+    if not domain_labels:
         st.json(preferred)
         return
     for axis_name, value in preferred.items():
-        labels = CODING_PREFERENCE_LABELS[axis_name]
+        labels = domain_labels.get(axis_name)
+        if not labels or value not in labels:
+            # 라벨이 없는 축은 감추지 않고 원시 값이라도 보여준다.
+            st.markdown(f"- **{axis_name}**: {value}")
+            continue
         st.markdown(f"- **{labels['title']}**: {labels[value]}")
 
 st.set_page_config(page_title="선호 기반 프롬프트 생성기", page_icon="✨")

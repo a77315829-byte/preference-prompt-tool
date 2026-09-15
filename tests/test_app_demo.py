@@ -41,7 +41,57 @@ def test_coding_demo_completes_without_api(monkeypatch) -> None:
 
 def test_summarization_category_is_still_available() -> None:
     app = AppTest.from_file(APP_PATH, default_timeout=10).run()
-    app.selectbox[0].select("문서 요약").run()
+    app.selectbox[0].select("문서 요약 (영어)").run()
 
     assert not app.exception
     assert app.text_area[0].label == "요약할 원문 (영어 뉴스 기사 권장)"
+
+
+def test_korean_summarization_category_is_available() -> None:
+    app = AppTest.from_file(APP_PATH, default_timeout=10).run()
+    app.selectbox[0].select("문서 요약 (한국어)").run()
+
+    assert not app.exception
+    assert app.text_area[0].label == "요약할 원문 (한국어 뉴스 기사 권장)"
+
+
+def test_korean_summarization_demo_completes_without_api(monkeypatch) -> None:
+    """한국어 요약도 API 없이 결과 화면까지 완주해야 한다.
+
+    demos/summarization_ko.py 가 없으면 engine/demo_generator.py 가
+    ValueError를 내므로, 데모 경로가 실제로 연결됐는지 확인하는 테스트다.
+    """
+    generator_module = importlib.import_module("engine.generator")
+    gepa_module = importlib.import_module("optimize.run_gepa")
+
+    def fail_if_called(*args, **kwargs):
+        raise AssertionError("무료 데모에서 API 경로를 호출하면 안 됩니다.")
+
+    monkeypatch.setattr(generator_module, "generate", fail_if_called)
+    monkeypatch.setattr(gepa_module, "run", fail_if_called)
+
+    app = AppTest.from_file(APP_PATH, default_timeout=30).run()
+    app.selectbox[0].select("문서 요약 (한국어)").run()
+    app.radio[0].set_value("무료 데모 (API 없이 규칙 기반)").run()
+
+    app.text_area[0].input(
+        "정부는 15일 수도권 주택 공급을 늘리기 위한 대책을 발표했다. "
+        "국토교통부에 따르면 2026년까지 신규 택지 12만 가구가 공급된다. "
+        "전문가들은 이번 대책이 제한적인 효과를 낼 것으로 전망했다. "
+        "시민단체는 임대주택 비중이 낮다고 비판했다."
+    ).run()
+    app.button[0].click().run()
+    assert not app.exception
+    assert app.session_state["stage"] == "compare"
+
+    for _ in range(8):
+        app.button[0].click().run()
+        assert not app.exception
+
+    assert app.session_state["stage"] == "done"
+    assert app.success[0].value == "선택이 모두 끝났습니다."
+
+    # 선호가 원시 JSON이 아니라 한국어 라벨로 표시되는지 확인한다.
+    rendered = " ".join(item.value for item in app.markdown)
+    assert "요약 길이" in rendered
+    assert "표현 방식" in rendered

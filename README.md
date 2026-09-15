@@ -117,6 +117,22 @@ ROUGE-L에서 D(0.207 ± 0.057)와 B(0.168 ± 0.060)의 차이(0.039)는 표준�
 스팟 체크로 범위를 제한했다 - short+fully 조합은 원문과 형태소 겹침
 94%, long+normal 조합은 40%로 명확히 갈렸다.
 
+이 한국어 도메인은 웹 UI에도 "문서 요약 (한국어)" 카테고리로 연결돼
+있다. 배포 환경에는 Kiwi를 넣지 않는데(모델 데이터 88MB가 `Kiwi()`
+생성 시 램에 올라가 Streamlit Community Cloud 무료 티어에 부담), 대신
+사전이 필요 없는 **문자 4-gram 겹침** fallback을 둔다. 사전 없이 어절
+끝 조사를 규칙으로 떼는 방식은 "전문가"의 "가"를 주격 조사로 오인해
+중간 대역에서 겹침을 0.59 -> 0.47로 떨어뜨렸고(임계값 0.5를 잘못 넘음),
+문자 n-gram은 조사가 어절 뒤에 붙는 한국어 특성상 그 문제가 없다.
+n=4가 Kiwi 형태소 bigram 겹침과 가장 잘 맞았다 - 원문 3종 x 발췌
+문장수 4단계 x 어절 누락률 6단계 72케이스에서 임계값 판정 **일치율
+97%**, 평균 오차 0.035, r=0.977이고 Kiwi 값으로의 회귀 기울기가 1.07/
+절편 -0.07로 거의 항등이라 두 백엔드가 같은 YAML 임계값을 공유한다
+(n=2는 57%, n=3은 67%, n=5는 82%). **보고된 한국어 수치는 전부 Kiwi
+기준**이며, 실험 환경이 조용히 fallback으로 내려앉지 않도록
+`tests/test_korean_checks_backends.py`가 Kiwi가 깔린 환경에서는 Kiwi
+백엔드가 쓰이는 것을 검사한다.
+
 **과제 카테고리 자체도 확장**: 요약(이 프로젝트)·코딩(팀원) 외에 완전히
 다른 과제인 **고객 리뷰 작성**을 추가했다 (`domains/review.yaml` +
 `checks/review.py`). 축은 length(길이)·sentiment(어조)·topic(초점).
@@ -299,10 +315,18 @@ gepa·pyyaml)만 둔다 - 배포 플랫폼이 이 파일을 읽으므로 실험�
 streamlit run app.py
 ```
 
-기본 카테고리인 코딩 도움에서 만들 기능을 적고 8회 비교를 마치면, 선택한
-TypeScript/React 작성 스타일과 재사용 가능한 시스템 프롬프트를 보여준다.
-무료 데모 모드는 API 키나 비용 없이 전체 흐름을 실행한다. 문서 요약
-카테고리와 OpenAI API 모드도 계속 사용할 수 있다.
+카테고리는 세 가지다.
+
+| 카테고리 | 입력 | 결과물 언어 | 도메인 정의 |
+|---|---|---|---|
+| 코딩 도움 | 만들고 싶은 기능 | TypeScript/React 코드 | `domains/coding.yaml` |
+| 문서 요약 (영어) | 영어 원문 | 영어 요약 | `domains/summarization.yaml` |
+| 문서 요약 (한국어) | 한국어 원문 | 한국어 요약 | `domains/summarization_ko.yaml` |
+
+카테고리를 고르고 8회 비교를 마치면 추정된 선호와 재사용 가능한 시스템
+프롬프트를 보여준다. 무료 데모 모드는 API 키나 비용 없이 전체 흐름을
+실행하고(`demos/`의 규칙 기반 생성기), OpenAI API 모드는 실제로 모델을
+호출해 후보를 만든다. 세 카테고리 모두 두 모드를 지원한다.
 
 ### 실험 재현
 
@@ -316,6 +340,7 @@ python -m experiments.plots                         # 위 결과를 그래프로
 python -m experiments.feedback_richness_ablation    # GEPA 피드백 풍부도 어블레이션
 python -m tests.test_extensibility                  # 도메인 확장성 (이메일)
 python -m tests.test_korean_extensibility           # 언어 확장성 (한국어)
+python -m pytest tests/test_korean_checks_backends.py  # 한국어 checks 두 백엔드 일치
 python -m experiments.review_dataset                # Yelp 리뷰 데이터 받기/캐싱
 python -m tests.test_review_domain                  # 과제 확장성 (리뷰 작성)
 
