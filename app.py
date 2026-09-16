@@ -12,7 +12,7 @@ from budget import DailyBudget
 from engine.demo_generator import generate_demo
 from engine.domain_loader import Domain, load_domain
 from engine.estimator import Comparison, Estimator
-from engine.generator import generate_all
+from engine.generator import generate_all, generate_all_with_prompts
 from engine.selector import UncertaintySelector
 from optimize.run_gepa import build_seed_prompt, run as run_gepa
 
@@ -52,6 +52,12 @@ MAX_API_RUNS_PER_SESSION = 3
 # 호출에 해당한다. 이 상한은 OpenAI 쪽 월 지출 상한을 대체하지 않는다 -
 # 앱이 재시작되면 카운터도 초기화되기 때문이다. 두 겹으로 둔다.
 MAX_API_RUNS_PER_DAY = 60
+
+# 결과 화면에서 "기본 프롬프트 vs 내 프롬프트"를 새 원문에 적용해 비교하는
+# 기능의 상한. 한 번에 2번 호출이라 비교 실행(16번)보다 훨씬 싸므로 예산을
+# 따로 둔다. 같은 예산에 넣으면 2번 쓰고 16번어치를 차감하게 된다.
+MAX_TRIALS_PER_DAY = 200
+MAX_TRIALS_PER_SESSION = 3
 
 # 원문 입력 길이 상한. API 모드에서는 이 원문이 한 세션에 16번(8회 x 후보 2개)
 # 전송되므로, 상한이 없으면 긴 문서 하나로 토큰 비용이 급증한다. 공개 링크에
@@ -205,12 +211,18 @@ def _daily_api_budget() -> DailyBudget:
     return DailyBudget(MAX_API_RUNS_PER_DAY)
 
 
+@st.cache_resource
+def _daily_trial_budget() -> DailyBudget:
+    """프롬프트 체험(2회 호출)용 하루 상한. 실행 예산과 분리되어 있다."""
+    return DailyBudget(MAX_TRIALS_PER_DAY)
+
+
 def _domain_for(key: str) -> Domain:
     return load_domain(DOMAIN_OPTIONS[key]["path"])
 
 
 def _reset_session() -> None:
-    for key in ("stage", "domain_key", "source", "demo_mode", "estimator", "selector", "round", "current_pair", "optimized_prompt", "api_error", "gepa_error"):
+    for key in ("stage", "domain_key", "source", "demo_mode", "estimator", "selector", "round", "current_pair", "optimized_prompt", "api_error", "gepa_error", "trial_source", "trial_result", "trial_error", "trials_used"):
         st.session_state.pop(key, None)
 
 
@@ -236,6 +248,92 @@ def _show_api_error_notice() -> None:
     )
     with st.expander("오류 내용 보기"):
         st.caption(error)
+
+
+def _show_prompt_trial(domain: Domain, personal_prompt: str) -> None:
+    """만든 프롬프트를 새 원문에 적용해 기본 프롬프트와 나란히 보여준다.
+
+    왜 필요한가: 이 앱의 산출물은 프롬프트 문자열이라, 예전에는 사용자가
+    그걸 복사해 다른 도구로 가야 개인화가 실제로 먹혔는지 알 수 있었다.
+    가치를 확인하는 순간이 앱 밖에 있었던 셈이다.
+
+    기준선은 도메인의 task_description 만 쓴 프롬프트다. 축 지시문이 전부
+    빠진, 개인화되지 않은 상태다. 과제와 출력 언어는 남겨둔다 - 그것까지
+    빼면 기준선이 엉뚱한 언어로 답할 수 있고, 그건 공정한 비교가 아니라
+    이기기 쉬운 비교가 된다.
+    """
+    st.subheader("만든 프롬프트를 새 원문에 적용해보기")
+
+    if st.session_state.demo_mode:
+        st.caption(
+            "무료 데모 모드에서는 이 비교를 쓸 수 없습니다. 실제로 모델을 호출해야 하므로 "
+            "처음부터 다시 시작해 AI 실시간 생성을 고르면 확인할 수 있습니다."
+        )
+        return
+
+    used = st.session_state.get("trials_used", 0)
+    session_left = MAX_TRIALS_PER_SESSION - used
+    if session_left <= 0:
+        st.caption(f"이 비교는 세션당 {MAX_TRIALS_PER_SESSION}회까지 쓸 수 있습니다.")
+        return
+    if _daily_trial_budget().left() <= 0:
+        st.caption("오늘 배정된 비교 횟수를 모두 썼습니다. 내일 다시 열립니다.")
+        return
+
+    st.caption(
+        "개인화하지 않은 기본 프롬프트와 방금 만든 프롬프트를 같은 원문에 적용해 "
+        f"나란히 보여드립니다. 남은 횟수 {session_left}회."
+    )
+
+    trial_source = st.text_area(
+        "새 원문",
+        height=120,
+        placeholder="위에서 쓴 것과 다른 원문을 넣어보세요.",
+        max_chars=MAX_SOURCE_CHARS,
+        key="trial_source",
+    )
+
+    if st.button("두 프롬프트로 생성해 비교", disabled=not trial_source.strip()):
+        if not _daily_trial_budget().consume():
+            st.warning("방금 오늘 배정된 비교 횟수가 소진됐습니다.")
+        else:
+            st.session_state.trials_used = used + 1
+            with st.spinner("두 프롬프트로 생성하는 중..."):
+                try:
+                    baseline, personal = generate_all_with_prompts(
+                        (domain.task_description, personal_prompt),
+                        trial_source,
+                        model=MODEL,
+                    )
+                except Exception as exc:  # noqa: BLE001 - 사용자에게 그대로 알린다
+                    st.session_state.trial_error = str(exc)
+                else:
+                    st.session_state.pop("trial_error", None)
+                    st.session_state.trial_result = (baseline, personal)
+            st.rerun()
+
+    trial_error = st.session_state.get("trial_error")
+    if trial_error:
+        st.warning("생성 중 API 호출이 실패했습니다. API 키와 결제 크레딧을 확인해 주세요.")
+        with st.expander("오류 내용 보기"):
+            st.caption(trial_error)
+
+    result = st.session_state.get("trial_result")
+    if not result:
+        return
+
+    baseline, personal = result
+    col_base, col_personal = st.columns(2)
+    with col_base:
+        with st.container(border=True):
+            st.markdown('<div class="ppt-ab ppt-ab-base">기본</div>', unsafe_allow_html=True)
+            st.caption("개인화 없음")
+            st.write(baseline)
+    with col_personal:
+        with st.container(border=True):
+            st.markdown('<div class="ppt-ab">내 프롬프트</div>', unsafe_allow_html=True)
+            st.caption("8회 선택으로 만든 프롬프트")
+            st.write(personal)
 
 
 def _show_preferences(domain_key: str, preferred: dict[str, str]) -> None:
@@ -379,6 +477,9 @@ STYLES = """
     margin-bottom: .5rem;
 }
 .ppt-ab-b { background: #9B5DE0; }
+/* "기본" / "내 프롬프트" 처럼 글자가 들어가는 칩은 고정 폭이 안 맞는다. */
+.ppt-ab-base { background: #8A90A6; }
+.ppt-ab:not(.ppt-ab-b) { width: auto; padding: 0 .6rem; }
 
 /* 진행 막대를 조금 두껍게 */
 [data-testid="stProgress"] div[role="progressbar"] > div { height: .45rem; }
@@ -617,6 +718,8 @@ elif st.session_state.stage == "done":
             st.rerun()
     else:
         st.caption("API 최적화가 적용된 프롬프트입니다.")
+
+    _show_prompt_trial(domain, prompt)
 
     if st.button("처음부터 다시"):
         _reset_session()

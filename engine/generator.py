@@ -79,8 +79,50 @@ def generate(
     model: str,
     cache_dir: Path = CACHE_DIR,
 ) -> str:
+    """축조합으로 프롬프트를 조립해 결과물을 만든다."""
+    return generate_with_prompt(
+        build_prompt(domain, combo), source_text, model, cache_dir
+    )
+
+
+def generate_all_with_prompts(
+    prompts: Sequence[str],
+    source_text: str,
+    model: str,
+    cache_dir: Path = CACHE_DIR,
+) -> list[str]:
+    """여러 시스템 프롬프트를 같은 원문에 동시에 적용해 순서대로 돌려준다.
+
+    같은 원문에 서로 다른 프롬프트를 적용해 나란히 보여줄 때 쓴다
+    (예: 개인화 전 기본 프롬프트 vs 사용자 프롬프트). generate_all 과 같은
+    이유로 동시에 호출하고, 같은 이유로 순서를 보존한다.
+    """
+    if not prompts:
+        return []
+    if len(prompts) == 1:
+        return [generate_with_prompt(prompts[0], source_text, model, cache_dir)]
+
+    with ThreadPoolExecutor(max_workers=len(prompts)) as pool:
+        futures = [
+            pool.submit(generate_with_prompt, prompt, source_text, model, cache_dir)
+            for prompt in prompts
+        ]
+        return [future.result() for future in futures]
+
+
+def generate_with_prompt(
+    prompt: str,
+    source_text: str,
+    model: str,
+    cache_dir: Path = CACHE_DIR,
+) -> str:
+    """조립이 끝난 시스템 프롬프트로 결과물을 만든다.
+
+    축조합을 거치지 않고 프롬프트 문자열을 직접 받는다. 최종 산출물인
+    프롬프트를 새 원문에 적용해 보여주려면 이 경로가 필요하다 - 그때는
+    축조합이 아니라 프롬프트 텍스트가 입력이다.
+    """
     cache_dir.mkdir(parents=True, exist_ok=True)
-    prompt = build_prompt(domain, combo)
     cache_file = cache_dir / f"{_cache_key(prompt, source_text, model)}.json"
 
     if cache_file.exists():
