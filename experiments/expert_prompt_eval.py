@@ -36,7 +36,12 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from agents.expert_onboarding import ExpertExample, extract_axes, to_domain
+from agents.expert_onboarding import (
+    ExpertExample,
+    corpus_stats,
+    extract_axes,
+    to_domain,
+)
 from engine.generator import build_prompt, generate_all_with_prompts
 from experiments.independent_grader import rouge_l_score
 
@@ -114,6 +119,7 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
     print()
 
     scores: dict[str, list[float]] = {name: [] for name in prompts}
+    generated: dict[str, list[ExpertExample]] = {name: [] for name in prompts}
     order = list(prompts)
     for index, example in enumerate(test, start=1):
         outputs = generate_all_with_prompts(
@@ -123,6 +129,7 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         for name, output in zip(order, outputs):
             score = rouge_l_score(output, example.output)
             scores[name].append(score)
+            generated[name].append(ExpertExample(output=output, task=example.task))
             line.append(f"{name} {score:.3f}")
         print(f"  홀드아웃 {index}/{len(test)}: " + " | ".join(line))
 
@@ -134,6 +141,24 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         means[name] = statistics.fmean(values)
         sd = statistics.stdev(values) if len(values) > 1 else 0.0
         print(f"{name:8} {means[name]:12.3f} {sd:9.3f}")
+
+    # 진단: 생성된 글이 목표 길이에 다가가는지 본다. expert 가 base 를 못
+    # 넘길 때 원인이 두 가지로 갈린다 - (a) 축이 형식을 못 바꿨다,
+    # (b) 형식은 맞췄는데 ROUGE-L 이 보상하는 내용 겹침이 안 올랐다.
+    # 이걸 구분하지 않고 고치려 들면 엉뚱한 곳을 손댄다.
+    target_stats = corpus_stats(test)
+    print()
+    print("길이 진단 (목표에 다가갔는가)")
+    print(f"{'조건':8} {'단어/답변':>10} {'문장/답변':>10} {'목표와 차이':>12}")
+    print(f"{'목표':8} {target_stats['words_per_answer']:10.1f} "
+          f"{target_stats['sentences_per_answer']:10.1f} {'-':>12}")
+    length_gap = {}
+    for name in order:
+        stats = corpus_stats(generated[name])
+        gap = stats["words_per_answer"] - target_stats["words_per_answer"]
+        length_gap[name] = round(gap, 1)
+        print(f"{name:8} {stats['words_per_answer']:10.1f} "
+              f"{stats['sentences_per_answer']:10.1f} {gap:+12.1f}")
 
     wins = sum(1 for e, b in zip(scores["expert"], scores["base"]) if e > b)
     print()
@@ -155,9 +180,19 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         "n_test": n_test,
         "task_description": report.task_description,
         "axes": [
-            {"name": a.name, "author_value": a.author_value, "values": a.value_names()}
+            {
+                "name": a.name,
+                "description": a.description,
+                "author_value": a.author_value,
+                "values": [
+                    {"value": v.value, "instruction": v.instruction} for v in a.values
+                ],
+            }
             for a in report.axes
         ],
+        "prompts": prompts,
+        "target_stats": target_stats,
+        "length_gap": length_gap,
         "means": means,
         "per_document": scores,
         "expert_beats_base_docs": wins,
