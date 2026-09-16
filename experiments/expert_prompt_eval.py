@@ -42,6 +42,7 @@ from agents.expert_onboarding import (
     extract_axes,
     form_anchor,
     form_distance,
+    selective_form_anchor,
     to_domain,
 )
 from engine.generator import build_prompt, generate_all_with_prompts
@@ -113,6 +114,25 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
 
     expert_prompt = build_prompt(domain, report.author_combo())
     anchor = form_anchor(train)
+
+    # 모델 기본 출력의 형식을 직접 잰다. 한 사람의 글만 보면 "무엇에 비해
+    # 긴가"를 알 수 없으니, 과제 서술만 준 프롬프트로 학습 과제를 풀게 해
+    # 기준점을 만든다. 홀드아웃이 아니라 학습 쪽 과제를 쓰므로 누출이 없다.
+    print("모델 기본 출력 측정 중...")
+    default_outputs = [
+        ExpertExample(
+            output=generate_all_with_prompts(
+                [domain.task_description], example.task, model=MODEL, temperature=0.0
+            )[0],
+            task=example.task,
+        )
+        for example in train
+    ]
+    selective, selected_keys = selective_form_anchor(train, default_outputs)
+    print("모델 기본 형식:", corpus_stats(default_outputs))
+    print("저자 형식      :", corpus_stats(train))
+    print("고른 항목      :", selected_keys or "(없음 - 기본값과 차이가 작다)")
+    print("선별 앵커      :", selective or "(없음)")
     prompts = {
         "base": domain.task_description,
         # 어블레이션의 핵심 조건. 과제 서술 + 코드로 잰 수치만 주고 축
@@ -122,6 +142,12 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         "anchor_only": (
             (domain.task_description + "\n" + anchor)
             if anchor
+            else domain.task_description
+        ),
+        # 선별 앵커. 저자가 모델 기본값과 실제로 다른 항목만 지시한다.
+        "selective": (
+            (domain.task_description + "\n" + selective)
+            if selective
             else domain.task_description
         ),
         "expert": expert_prompt,
@@ -203,7 +229,7 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
     print()
     print("어블레이션: 축이 수치 앵커 이상을 하는가")
     print(f"{'조건':12} {'형식 거리':>10} {'ROUGE-L':>9}")
-    for name in ("base", "anchor_only", "anchored", "expert"):
+    for name in ("base", "anchor_only", "selective", "anchored", "expert"):
         print(f"{name:12} {form_dist[name]:10.3f} {means[name]:9.3f}")
     form_gain = form_dist["anchor_only"] - form_dist["anchored"]
     rouge_gain = means["anchored"] - means["anchor_only"]
@@ -248,6 +274,8 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         "target_stats": target_stats,
         "length_gap": length_gap,
         "form_distance": form_dist,
+        "selected_anchor_keys": selected_keys,
+        "selective_anchor": selective,
         "means": means,
         "per_document": scores,
         "expert_beats_base_docs": wins,

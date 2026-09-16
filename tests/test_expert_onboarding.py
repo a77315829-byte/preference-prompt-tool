@@ -103,11 +103,20 @@ def test_stats_handle_missing_task() -> None:
 
 
 def test_stats_on_empty_corpus_do_not_crash() -> None:
-    assert corpus_stats([]) == {
-        "sentences_per_answer": 0.0,
-        "words_per_answer": 0.0,
-        "words_per_sentence": 0.0,
+    """빈 입력에서도 모든 항목이 0으로 채워져야 한다. 키가 빠지면
+    형식 거리와 선별 앵커 계산이 KeyError 로 죽는다."""
+    stats = corpus_stats([])
+    assert set(stats) == {
+        "sentences_per_answer",
+        "words_per_answer",
+        "words_per_sentence",
+        "bullet_line_ratio",
+        "paragraphs_per_answer",
+        "hedges_per_100w",
+        "numerals_per_100w",
+        "first_person_per_100w",
     }
+    assert all(value == 0.0 for value in stats.values())
 
 
 # --- 기존 엔진 재사용 ------------------------------------------------------
@@ -173,3 +182,86 @@ def test_author_combo_reports_the_inferred_settings() -> None:
 def test_extraction_requires_examples() -> None:
     with pytest.raises(ValueError):
         extract_axes([])
+
+
+# --- 넓힌 형식 어휘 --------------------------------------------------------
+# 어블레이션에서 LLM 이 제안한 축이 세 경우 모두 형식을 악화시켰고 코드로
+# 잰 수치만 작동했다. 그래서 LLM 판정을 넓히는 대신 측정 항목을 넓혔다.
+# MACSum 은 길이로만 갈리는 말뭉치라 아래 항목들을 실측으로 시험할 수
+# 없다. 기계 장치가 제대로 재는지는 여기서 고정한다.
+
+from agents.expert_onboarding import (
+    ANCHOR_RELATIVE_THRESHOLD,
+    selective_form_anchor,
+)
+
+_BULLETED = ExpertExample(
+    output="- First point here.\n- Second point here.\n- Third point here.",
+    task="x " * 50,
+)
+_PROSE = ExpertExample(
+    output="The first point is here. The second follows. The third closes it.",
+    task="x " * 50,
+)
+
+
+def test_bullet_ratio_separates_lists_from_prose() -> None:
+    assert corpus_stats([_BULLETED])["bullet_line_ratio"] == 1.0
+    assert corpus_stats([_PROSE])["bullet_line_ratio"] == 0.0
+
+
+def test_paragraph_count_counts_blank_line_blocks() -> None:
+    one = ExpertExample(output="Single block of text here.")
+    three = ExpertExample(output="First block.\n\nSecond block.\n\nThird block.")
+    assert corpus_stats([one])["paragraphs_per_answer"] == 1.0
+    assert corpus_stats([three])["paragraphs_per_answer"] == 3.0
+
+
+def test_hedging_density_is_per_hundred_words() -> None:
+    hedged = ExpertExample(
+        output="This may possibly be likely, and it could perhaps seem apparently true."
+    )
+    blunt = ExpertExample(output="This is true, and it is wrong, and it is done now.")
+    assert corpus_stats([hedged])["hedges_per_100w"] > 30
+    assert corpus_stats([blunt])["hedges_per_100w"] == 0.0
+
+
+def test_numeral_and_first_person_density() -> None:
+    example = ExpertExample(output="I saw 3 people and we counted 12,000 items in 2026.")
+    stats = corpus_stats([example])
+    assert stats["numerals_per_100w"] > 0
+    assert stats["first_person_per_100w"] > 0
+
+    neutral = ExpertExample(output="The team counted the items carefully and then left.")
+    neutral_stats = corpus_stats([neutral])
+    assert neutral_stats["numerals_per_100w"] == 0.0
+    assert neutral_stats["first_person_per_100w"] == 0.0
+
+
+def test_selective_anchor_skips_dimensions_that_already_match() -> None:
+    """이득은 저자가 모델 기본값에서 먼 만큼 나온다는 실측 결과를 코드로
+    옮긴 부분. 이미 같은 항목까지 지시하면 지시문만 길어지고, 긴 글
+    저자에서 그게 과교정으로 돌아왔다."""
+    author = [_PROSE, _PROSE]
+    identical_default = [_PROSE, _PROSE]
+    anchor, selected = selective_form_anchor(author, identical_default)
+    assert anchor == ""
+    assert selected == {}
+
+
+def test_selective_anchor_picks_up_a_real_difference() -> None:
+    bulleted_author = [_BULLETED, _BULLETED]
+    prose_default = [_PROSE, _PROSE]
+    anchor, selected = selective_form_anchor(bulleted_author, prose_default)
+
+    assert "bullet_line_ratio" in selected
+    assert selected["bullet_line_ratio"] >= ANCHOR_RELATIVE_THRESHOLD
+    assert "bulleted list" in anchor
+    assert anchor.startswith("Match this form:")
+
+
+def test_selective_anchor_handles_empty_default() -> None:
+    """기준점 생성이 실패해도 터지지 않아야 한다."""
+    anchor, selected = selective_form_anchor([_PROSE], [])
+    assert isinstance(anchor, str)
+    assert isinstance(selected, dict)

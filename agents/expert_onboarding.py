@@ -167,7 +167,76 @@ def corpus_stats(examples: list[ExpertExample]) -> dict[str, float]:
     }
     if compressions:
         stats["answer_to_task_word_ratio"] = round(mean(compressions), 3)
+    stats.update(_style_densities(examples))
     return stats
+
+
+# 길이 외에 코드로 잴 수 있는 형식 특징. 어블레이션에서 LLM 이 제안한
+# 축(어조·서술 순서)이 세 경우 모두 형식을 악화시켰고, 코드로 잰 수치
+# 앵커만 일관되게 작동했다. 그래서 LLM 판정을 넓히는 대신 측정 항목을
+# 넓힌다. 절대 규칙 6 과 같은 방향이다.
+#
+# 목록은 영어 기준이다. 검증 말뭉치(MACSum)가 영어이고, 한국어까지
+# 정확히 다루려면 형태소 분석이 필요해 범위를 나눈다.
+_HEDGE_WORDS = frozenset(
+    """
+    may might could would seem seems seemed appear appears appeared likely
+    unlikely possibly perhaps probably apparently reportedly allegedly
+    suggests suggested indicates indicated estimated roughly approximately
+    about around somewhat relatively arguably potentially
+    """.split()
+)
+
+_FIRST_PERSON = frozenset("i me my mine we us our ours".split())
+
+_BULLET_START = re.compile(r"^\s*(?:[-*•·]|\d+[.)])\s+")
+_NUMERAL = re.compile(r"\b\d[\d,.]*\b")
+_WORD = re.compile(r"[A-Za-z][A-Za-z'-]*")
+
+
+def _style_densities(examples: list[ExpertExample]) -> dict[str, float]:
+    """100단어당 밀도로 재는 형식 특징들.
+
+    밀도로 재는 이유: 길이가 다른 저자끼리 비교하려면 절대 개수가 아니라
+    비율이어야 한다.
+    """
+    if not examples:
+        return {
+            "bullet_line_ratio": 0.0,
+            "paragraphs_per_answer": 0.0,
+            "hedges_per_100w": 0.0,
+            "numerals_per_100w": 0.0,
+            "first_person_per_100w": 0.0,
+        }
+
+    bullet_ratios, paragraph_counts = [], []
+    hedges, numerals, first_person, totals = 0, 0, 0, 0
+    for example in examples:
+        text = example.output
+        lines = [line for line in text.splitlines() if line.strip()]
+        if lines:
+            bullet_ratios.append(
+                sum(1 for line in lines if _BULLET_START.match(line)) / len(lines)
+            )
+        paragraph_counts.append(
+            len([block for block in re.split(r"\n\s*\n", text.strip()) if block.strip()])
+        )
+
+        words = [w.lower() for w in _WORD.findall(text)]
+        totals += len(words)
+        hedges += sum(1 for w in words if w in _HEDGE_WORDS)
+        first_person += sum(1 for w in words if w in _FIRST_PERSON)
+        numerals += len(_NUMERAL.findall(text))
+
+    mean = lambda xs: sum(xs) / len(xs) if xs else 0.0
+    per_100 = lambda count: round(100 * count / totals, 2) if totals else 0.0
+    return {
+        "bullet_line_ratio": round(mean(bullet_ratios), 3),
+        "paragraphs_per_answer": round(mean(paragraph_counts), 1),
+        "hedges_per_100w": per_100(hedges),
+        "numerals_per_100w": per_100(numerals),
+        "first_person_per_100w": per_100(first_person),
+    }
 
 
 # 형식 거리를 잴 때 쓰는 지표. compression ratio 는 같은 과제를 쓰면
@@ -203,6 +272,60 @@ def form_distance(
             continue
         errors.append(abs(generated_stats.get(key, 0.0) - target_value) / target_value)
     return round(sum(errors) / len(errors), 3) if errors else 0.0
+
+
+# 앵커 문장을 만들 수 있는 항목과 그 문구. 여기 없는 통계는 진단용이다.
+_ANCHOR_TEMPLATES = {
+    "sentences_per_answer": "write about {value:.0f} sentences",
+    "words_per_answer": "use roughly {value:.0f} words in total",
+    "bullet_line_ratio": "put about {pct:.0f}% of your lines in a bulleted list",
+    "paragraphs_per_answer": "break it into about {value:.0f} paragraphs",
+    "hedges_per_100w": "use about {value:.1f} hedging words per 100 words",
+    "numerals_per_100w": "include about {value:.1f} numbers per 100 words",
+    "first_person_per_100w": "use about {value:.1f} first-person words per 100 words",
+}
+
+# 저자와 모델 기본 출력의 상대 차이가 이 값을 넘는 항목만 앵커에 넣는다.
+# 왜 골라 넣는가: 이득은 저자의 형식이 모델 기본값에서 얼마나 먼지에
+# 비례한다는 것이 실측 결과다(base 형식 거리 1.776 / 0.721 / 0.238 순서가
+# 그대로 이득 순서였다). 이미 기본값과 같은 항목까지 지시하면 지시문만
+# 길어지고, 긴 글 저자에서 그게 과교정으로 돌아왔다.
+ANCHOR_RELATIVE_THRESHOLD = 0.25
+
+
+def selective_form_anchor(
+    author: list[ExpertExample], model_default: list[ExpertExample]
+) -> tuple[str, dict[str, float]]:
+    """저자가 모델 기본값과 실제로 다른 항목만 골라 앵커를 만든다.
+
+    model_default 는 과제 서술만 준 프롬프트로 생성한 결과물이다. 모델이
+    가만히 뒀을 때 어떤 형식으로 쓰는지를 측정해 기준점으로 삼는다.
+    한 사람의 글만 보면 "무엇에 비해 긴가"를 알 수 없다는 문제를 코드로
+    푸는 방식이고, LLM 에게 눈대중을 맡기는 것과 반대다.
+
+    돌려주는 것은 (앵커 문장, 고른 항목별 상대 차이)다.
+    """
+    author_stats = corpus_stats(author)
+    default_stats = corpus_stats(model_default)
+
+    selected: dict[str, float] = {}
+    parts = []
+    for key, template in _ANCHOR_TEMPLATES.items():
+        target = author_stats.get(key)
+        baseline = default_stats.get(key)
+        if target is None or baseline is None:
+            continue
+        # 분모가 0에 가까우면 상대 차이가 무의미하므로 절대 차이로 본다.
+        scale = max(abs(baseline), abs(target), 1e-6)
+        relative = abs(target - baseline) / scale
+        if relative < ANCHOR_RELATIVE_THRESHOLD:
+            continue
+        selected[key] = round(relative, 3)
+        parts.append(template.format(value=target, pct=100 * target))
+
+    if not parts:
+        return "", {}
+    return "Match this form: " + ", ".join(parts) + ".", selected
 
 
 def form_anchor(examples: list[ExpertExample]) -> str:
