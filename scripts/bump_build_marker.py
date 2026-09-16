@@ -39,6 +39,10 @@ WATCHED_DIRS = ("engine", "demos", "optimize", "checks")
 # app.py 는 메인 스크립트라 Streamlit 이 항상 새로 읽으므로 제외한다.
 ROOT_EXCLUDE = {"app.py"}
 
+# 파이썬이 아니지만 프로세스를 새로 띄워야 반영되는 파일. Streamlit 은
+# 테마 설정을 기동 시점에만 읽으므로, 이게 바뀌면 재시작이 필요하다.
+WATCHED_FILES = (".streamlit/config.toml",)
+
 MARKER_PREFIX = "# build-marker:"
 
 
@@ -50,6 +54,10 @@ def _watched_files() -> list[Path]:
         target = ROOT / name
         if target.is_dir():
             files.extend(sorted(target.rglob("*.py")))
+    for name in WATCHED_FILES:
+        target = ROOT / name
+        if target.is_file():
+            files.append(target)
     return sorted(set(files))
 
 

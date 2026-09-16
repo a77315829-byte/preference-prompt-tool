@@ -26,11 +26,13 @@ import time
 
 DEFAULT_URL = "https://preference-prompt-tool-7c9fvm3tb5bfxv8v6648fu.streamlit.app/"
 
-# 화면에 반드시 보여야 하는 문구. app.py의 히어로 뱃지에서 온다.
+# 화면에 반드시 보여야 하는 문구. app.py 히어로의 제목이다.
+# 뱃지 문구를 쓰다가 UI 개편에서 바뀌어 한 번 어긋났다 - 제목은
+# 서비스 정체성이라 잘 안 바뀐다.
 # 눈에 보이는 문구를 쓰는 이유: 예전에 입력란의 maxlength 속성을 배포 확인
 # 마커로 썼다가 낭패를 봤다. Streamlit이 max_chars를 DOM 속성으로 찍지
 # 않아서, 존재한 적 없는 표식을 기다린 셈이었다.
-EXPECTED_TEXT = "번의 선택으로 완성"
+EXPECTED_TEXT = "선택으로 만드는 나만의 프롬프트"
 
 WAKE_BUTTON = "text=Yes, get this app back up!"
 

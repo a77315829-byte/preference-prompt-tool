@@ -428,124 +428,181 @@ def _show_preferences(domain_key: str, preferred: dict[str, str]) -> None:
 
 STYLES = """
 <style>
+/* 다크 테크 톤. 색은 .streamlit/config.toml 의 테마와 맞춘다.
+   여기 값을 바꾸면 그쪽도 같이 봐야 한다. */
+:root {
+    --ppt-bg: #0A0B12;
+    --ppt-panel: #14161F;
+    --ppt-line: rgba(124, 108, 255, 0.22);
+    --ppt-line-soft: rgba(231, 233, 242, 0.10);
+    --ppt-violet: #7C6CFF;
+    --ppt-cyan: #4ADEDE;
+    --ppt-text: #E7E9F2;
+    --ppt-muted: rgba(231, 233, 242, 0.58);
+    --ppt-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
 /* 본문 폭을 좁혀 읽기 편하게. 기본값은 와이드해서 텍스트가 늘어진다. */
 [data-testid="stMainBlockContainer"] {
-    max-width: 860px;
-    padding-top: 2.4rem;
-    padding-bottom: 4.5rem;
+    max-width: 880px;
+    padding-top: 2.2rem;
+    padding-bottom: 5.5rem;
+}
+
+/* 배경에 아주 약한 발광을 깔아 평평한 검정을 피한다. */
+[data-testid="stAppViewContainer"] {
+    background:
+        radial-gradient(900px 420px at 12% -8%, rgba(124, 108, 255, 0.16), transparent 60%),
+        radial-gradient(700px 380px at 92% 4%, rgba(74, 222, 222, 0.10), transparent 62%),
+        var(--ppt-bg);
 }
 
 /* --- 히어로 --- */
 .ppt-hero {
-    background: linear-gradient(135deg, #5B54E8 0%, #7C5CE8 55%, #9B5DE0 100%);
-    border-radius: 20px;
-    padding: 1.9rem 1.9rem 1.7rem;
-    margin-bottom: 1.4rem;
-    color: #fff;
+    position: relative;
+    border: 1px solid var(--ppt-line);
+    border-radius: 16px;
+    padding: 1.7rem 1.8rem 1.6rem;
+    margin-bottom: 1.1rem;
+    background:
+        linear-gradient(180deg, rgba(124, 108, 255, 0.10), rgba(10, 11, 18, 0)) ,
+        var(--ppt-panel);
+    overflow: hidden;
 }
-.ppt-hero-badge {
-    display: inline-block;
-    font-size: .76rem;
-    font-weight: 700;
-    letter-spacing: .02em;
-    padding: .3rem .7rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, .18);
-    margin-bottom: .85rem;
+/* 상단에 얇은 네온 라인 */
+.ppt-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ppt-violet), var(--ppt-cyan), transparent);
+}
+.ppt-eyebrow {
+    font-family: var(--ppt-mono);
+    font-size: .72rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ppt-cyan);
+    margin-bottom: .8rem;
 }
 .ppt-hero h1 {
     font-size: 1.95rem;
-    line-height: 1.28;
+    line-height: 1.3;
     font-weight: 800;
-    margin: 0 0 .55rem;
-    color: #fff;
-    letter-spacing: -.01em;
+    letter-spacing: -.015em;
+    margin: 0 0 .7rem;
+    color: var(--ppt-text);
+}
+.ppt-rule {
+    width: 46px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--ppt-violet), var(--ppt-cyan));
+    margin: 0 0 .85rem;
 }
 .ppt-hero p {
     margin: 0;
-    font-size: .97rem;
-    line-height: 1.62;
-    color: rgba(255, 255, 255, .9);
+    font-size: .95rem;
+    line-height: 1.65;
+    color: var(--ppt-muted);
 }
 
-/* --- 3단계 설명 --- */
+/* --- 3단계 --- */
 .ppt-steps {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: .7rem;
-    margin-bottom: 1.9rem;
+    gap: .6rem;
+    margin-bottom: 1.7rem;
 }
 .ppt-step {
-    border: 1px solid rgba(91, 84, 232, .16);
-    background: rgba(91, 84, 232, .04);
-    border-radius: 14px;
-    padding: .85rem .95rem;
+    border: 1px solid var(--ppt-line-soft);
+    border-radius: 12px;
+    padding: .8rem .9rem;
+    background: rgba(255, 255, 255, 0.02);
 }
 .ppt-step-n {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.35rem;
-    height: 1.35rem;
-    border-radius: 999px;
-    background: #5B54E8;
-    color: #fff;
-    font-size: .72rem;
-    font-weight: 700;
-    margin-bottom: .45rem;
+    font-family: var(--ppt-mono);
+    font-size: .68rem;
+    letter-spacing: .1em;
+    color: var(--ppt-violet);
+    margin-bottom: .4rem;
 }
 .ppt-step-t {
     font-weight: 700;
-    font-size: .89rem;
-    margin-bottom: .2rem;
+    font-size: .87rem;
+    margin-bottom: .22rem;
+    color: var(--ppt-text);
 }
 .ppt-step-d {
-    font-size: .78rem;
+    font-size: .76rem;
     line-height: 1.5;
-    opacity: .72;
+    color: var(--ppt-muted);
 }
 
-/* --- 입력 · 버튼 --- */
-.stTextArea textarea {
-    border-radius: 12px !important;
-    font-size: .93rem !important;
+/* --- 위젯 --- */
+.stTextArea textarea, .stTextInput input {
+    border-radius: 10px !important;
+    font-size: .92rem !important;
+    border: 1px solid var(--ppt-line-soft) !important;
+}
+.stTextArea textarea:focus, .stTextInput input:focus {
+    border-color: var(--ppt-violet) !important;
 }
 [data-testid="stBaseButton-primary"] {
-    border-radius: 11px;
+    border-radius: 10px;
     font-weight: 700;
     padding: .55rem 1.5rem;
-    box-shadow: 0 8px 20px rgba(91, 84, 232, .26);
     border: none;
+    background: linear-gradient(135deg, var(--ppt-violet), #9B5DE0);
+    box-shadow: 0 0 0 1px rgba(124, 108, 255, .5), 0 8px 24px rgba(124, 108, 255, .28);
+}
+/* 비활성 상태에서도 발광이 남으면 누를 수 있는 것처럼 보인다. */
+[data-testid="stBaseButton-primary"]:disabled,
+[data-testid="stBaseButton-primary"][disabled] {
+    background: rgba(124, 108, 255, 0.16);
+    box-shadow: none;
+    color: rgba(231, 233, 242, 0.42);
 }
 [data-testid="stBaseButton-secondary"] {
-    border-radius: 11px;
+    border-radius: 10px;
     font-weight: 600;
+    border: 1px solid var(--ppt-line-soft);
+}
+[data-testid="stBaseButton-secondary"]:hover {
+    border-color: var(--ppt-violet);
 }
 
-/* --- A/B 후보 카드 --- */
+/* --- 카드 (A/B 후보, 프롬프트 비교) --- */
 [data-testid="stVerticalBlockBorderWrapper"] {
-    border-radius: 16px;
+    border-radius: 14px;
 }
+
+/* --- 라벨 칩 --- */
 .ppt-ab {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.7rem;
+    min-width: 1.7rem;
     height: 1.7rem;
-    border-radius: 9px;
-    background: #5B54E8;
-    color: #fff;
-    font-weight: 800;
-    font-size: .92rem;
+    padding: 0 .55rem;
+    border-radius: 8px;
+    font-family: var(--ppt-mono);
+    font-weight: 700;
+    font-size: .82rem;
+    letter-spacing: .04em;
     margin-bottom: .5rem;
+    color: #0A0B12;
+    background: var(--ppt-violet);
 }
-.ppt-ab-b { background: #9B5DE0; }
-/* "기본" / "내 프롬프트" 처럼 글자가 들어가는 칩은 고정 폭이 안 맞는다. */
-.ppt-ab-base { background: #8A90A6; }
-.ppt-ab:not(.ppt-ab-b) { width: auto; padding: 0 .6rem; }
+.ppt-ab-b { background: var(--ppt-cyan); }
+.ppt-ab-base {
+    background: transparent;
+    color: var(--ppt-muted);
+    border: 1px solid var(--ppt-line-soft);
+}
 
 /* 진행 막대를 조금 두껍게 */
-[data-testid="stProgress"] div[role="progressbar"] > div { height: .45rem; }
+[data-testid="stProgress"] div[role="progressbar"] > div { height: .4rem; }
 </style>
 """
 
@@ -564,8 +621,9 @@ def _show_hero() -> None:
     st.markdown(
         f"""
         <div class="ppt-hero">
-          <div class="ppt-hero-badge">{N_ROUNDS}번의 선택으로 완성</div>
+          <div class="ppt-eyebrow">Preference Engine &middot; {N_ROUNDS}-shot</div>
           <h1>선택으로 만드는 나만의 프롬프트</h1>
+          <div class="ppt-rule"></div>
           <p>복잡한 프롬프트를 직접 쓰지 않아도 됩니다. 더 마음에 드는 결과를
           고르면, 그 선택에서 취향을 추정해 재사용 가능한 시스템 프롬프트를 만들어 드립니다.</p>
         </div>
@@ -576,7 +634,7 @@ def _show_hero() -> None:
 
 def _show_steps() -> None:
     cards = "".join(
-        f'<div class="ppt-step"><div class="ppt-step-n">{n}</div>'
+        f'<div class="ppt-step"><div class="ppt-step-n">0{n} /</div>'
         f'<div class="ppt-step-t">{title}</div>'
         f'<div class="ppt-step-d">{desc}</div></div>'
         for n, title, desc in STEPS

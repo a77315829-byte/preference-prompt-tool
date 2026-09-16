@@ -1,13 +1,17 @@
-# 배포(Streamlit Community Cloud)와 로컬이 같은 색을 쓰게 고정한다.
-# 안 넣으면 Streamlit 기본 테마를 따라가고, 나중에 기본값이 바뀌면
-# 제출용 스크린샷과 실제 화면이 달라진다.
+# 배포와 로컬이 같은 색을 쓰게 고정한다. 안 넣으면 Streamlit 기본 테마를
+# 따라가고, 나중에 기본값이 바뀌면 제출용 스크린샷과 실제 화면이 달라진다.
 #
-# 표준 5개 키만 쓴다. 이 버전에서 확실히 지원되는 것들이고, 없는 키를
-# 넣으면 기동 시 경고가 나거나 최악의 경우 배포가 깨질 수 있다.
-# 나머지 시각 요소는 app.py의 CSS로 처리한다.
+# 표준 키만 쓴다. 이 버전에서 확실히 지원되는 것들이고, 없는 키를 넣으면
+# 기동 시 경고가 나거나 최악의 경우 배포가 깨질 수 있다. 나머지 시각
+# 요소는 app.py 의 CSS 로 처리한다.
+#
+# 이 파일은 Streamlit 이 기동 시점에만 읽는다. 고친 뒤에는 프로세스를
+# 새로 띄워야 반영되므로 scripts/bump_build_marker.py 의 감시 대상에
+# 들어가 있다.
 [theme]
-primaryColor = "#5B54E8"
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F4F5FB"
-textColor = "#1B1F2E"
+base = "dark"
+primaryColor = "#7C6CFF"
+backgroundColor = "#0A0B12"
+secondaryBackgroundColor = "#14161F"
+textColor = "#E7E9F2"
 font = "sans serif"
