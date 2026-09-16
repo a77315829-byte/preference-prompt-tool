@@ -375,6 +375,21 @@ streamlit run app.py
 실행하고(`demos/`의 규칙 기반 생성기), OpenAI API 모드는 실제로 모델을
 호출해 후보를 만든다. 세 카테고리 모두 두 모드를 지원한다.
 
+### 테스트
+
+```bash
+python -m pytest                    # 전체 (121개)
+python -m pytest -m "not api"       # API 키 없이 (105개)
+```
+
+`api` 마커가 붙은 테스트는 실제 모델을 호출하고, `macsum` 마커는
+`data/macsum` 데이터를 쓴다. 둘 다 없으면 이유를 표시하며 건너뛴다.
+확장성·이식성 검증(이메일·한국어·리뷰 도메인)도 전부 여기에 들어 있다.
+
+`tests/test_reported_results.py` 는 README 에 적힌 수치를 커밋된
+`experiments/results/*.csv` 에서 다시 계산해 맞춘다. 문서가 데이터에서
+멀어지면 실패한다.
+
 ### 실험 재현
 
 ```bash
@@ -383,13 +398,9 @@ python -m experiments.run_all                      # 알고리즘 3종 수렴 �
 python -m experiments.compare_baselines             # 비교군 A/B/D (checks + ROUGE-L)
 python -m experiments.plots                         # 위 결과를 그래프로
 
-# 어블레이션 · 확장성
+# 어블레이션
 python -m experiments.feedback_richness_ablation    # GEPA 피드백 풍부도 어블레이션
-python -m tests.test_extensibility                  # 도메인 확장성 (이메일)
-python -m tests.test_korean_extensibility           # 언어 확장성 (한국어)
-python -m pytest tests/test_korean_checks_backends.py  # 한국어 checks 두 백엔드 일치
 python -m experiments.review_dataset                # Yelp 리뷰 데이터 받기/캐싱
-python -m tests.test_review_domain                  # 과제 확장성 (리뷰 작성)
 
 # 하이브리드 판정 계층 (specificity 복원 시도 + 대조군)
 python -m experiments.train_specificity_classifier  # 계층 2: 학습형 분류기
