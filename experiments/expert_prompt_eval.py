@@ -40,6 +40,8 @@ from agents.expert_onboarding import (
     ExpertExample,
     corpus_stats,
     extract_axes,
+    form_anchor,
+    form_distance,
     to_domain,
 )
 from engine.generator import build_prompt, generate_all_with_prompts
@@ -109,11 +111,19 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         print(f"  [{axis.name}] 이 사람={axis.author_value} / 값={axis.value_names()}")
     print()
 
+    expert_prompt = build_prompt(domain, report.author_combo())
+    anchor = form_anchor(train)
     prompts = {
         "base": domain.task_description,
-        "expert": build_prompt(domain, report.author_combo()),
+        "expert": expert_prompt,
+        # 축 + 측정한 형식 수치. 축 지시문은 LLM 이 수치를 형용사로 번역한
+        # 결과이고 그 번역이 양방향으로 틀렸다. 수치를 직접 주면 그 왕복이
+        # 사라지는지 본다. 길이가 맞는 것은 당연하므로 축의 기여와 반드시
+        # 구분해서 읽어야 한다.
+        "anchored": (expert_prompt + "\n" + anchor) if anchor else expert_prompt,
         "anti": build_prompt(domain, _anti_combo(report)),
     }
+    print("형식 수치 앵커:", anchor or "(없음)")
     print("조립된 전문가 프롬프트:")
     print(prompts["expert"])
     print()
@@ -123,7 +133,10 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
     order = list(prompts)
     for index, example in enumerate(test, start=1):
         outputs = generate_all_with_prompts(
-            [prompts[name] for name in order], example.task, model=MODEL
+            [prompts[name] for name in order],
+            example.task,
+            model=MODEL,
+            temperature=0.0,
         )
         line = []
         for name, output in zip(order, outputs):
@@ -152,19 +165,36 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
     print(f"{'조건':8} {'단어/답변':>10} {'문장/답변':>10} {'목표와 차이':>12}")
     print(f"{'목표':8} {target_stats['words_per_answer']:10.1f} "
           f"{target_stats['sentences_per_answer']:10.1f} {'-':>12}")
-    length_gap = {}
+    length_gap, form_dist = {}, {}
     for name in order:
         stats = corpus_stats(generated[name])
         gap = stats["words_per_answer"] - target_stats["words_per_answer"]
         length_gap[name] = round(gap, 1)
+        form_dist[name] = form_distance(generated[name], test)
         print(f"{name:8} {stats['words_per_answer']:10.1f} "
               f"{stats['sentences_per_answer']:10.1f} {gap:+12.1f}")
+
+    # 형식 거리. 이 방법이 주장하는 것이 형식 복제이므로 여기서 이겨야 한다.
+    print()
+    print("형식 거리 (0에 가까울수록 이 저자의 형식에 가깝다)")
+    for name in order:
+        print(f"  {name:8} {form_dist[name]:.3f}")
+    if form_dist["expert"] < form_dist["base"]:
+        print(f"  -> expert 가 형식을 더 잘 맞췄다 "
+              f"({form_dist['base']:.3f} -> {form_dist['expert']:.3f})")
+    else:
+        print("  -> expert 가 형식조차 못 맞췄다. 축 지시문이 약하다는 뜻이다.")
 
     wins = sum(1 for e, b in zip(scores["expert"], scores["base"]) if e > b)
     print()
     print(f"문서별 비교: expert 가 base 보다 높은 문서 {wins}/{len(test)}개")
     print(f"expert - base = {means['expert'] - means['base']:+.3f}")
     print(f"anti  - base = {means['anti'] - means['base']:+.3f}")
+    print()
+    print()
+    print("앵커 효과 (축만 vs 축+수치)")
+    print(f"  형식 거리 {form_dist['expert']:.3f} -> {form_dist['anchored']:.3f}")
+    print(f"  ROUGE-L  {means['expert']:.3f} -> {means['anchored']:.3f}")
     print()
     if means["expert"] > means["base"] and means["anti"] < means["base"]:
         print("판정: 축이 방향을 갖는다 (expert > base > anti).")
@@ -193,6 +223,7 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         "prompts": prompts,
         "target_stats": target_stats,
         "length_gap": length_gap,
+        "form_distance": form_dist,
         "means": means,
         "per_document": scores,
         "expert_beats_base_docs": wins,

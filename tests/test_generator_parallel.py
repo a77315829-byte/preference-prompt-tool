@@ -106,3 +106,50 @@ def test_empty_and_single(domain, monkeypatch) -> None:
     # 하나뿐이면 스레드를 띄우지 않고 바로 부른다.
     assert generate_all(domain, "원문", COMBOS[:1], model="x") == ["short"]
     assert calls == ["short"]
+
+
+def test_optional_arguments_are_passed_by_keyword(domain, monkeypatch) -> None:
+    """선택 인자는 키워드로 넘어와야 한다.
+
+    위치로 넘기면 인자를 하나 더할 때 호출부와 테스트 대역이 조용히 깨진다.
+    실제로 temperature 를 더한 직후 앱의 프롬프트 비교가 죽었고, app.py 의
+    try/except 가 그 TypeError 를 삼켜서 화면에는 "API 호출 실패"로만
+    보였다. 필수 인자만 위치로 받는 대역으로 그 계약을 고정한다.
+    """
+    calls = []
+
+    def strict_fake(prompt, source_text, model, *, cache_dir=None, temperature=None):
+        calls.append({"temperature": temperature, "cache_dir": cache_dir})
+        return "ok"
+
+    monkeypatch.setattr(generator_module, "generate_with_prompt", strict_fake)
+
+    from engine.generator import generate_all_with_prompts
+
+    # 하나일 때와 여럿일 때 경로가 다르므로 둘 다 본다.
+    assert generate_all_with_prompts(["p1"], "원문", model="x", temperature=0.0) == ["ok"]
+    assert generate_all_with_prompts(["p1", "p2"], "원문", model="x", temperature=0.0) == [
+        "ok",
+        "ok",
+    ]
+    assert len(calls) == 3
+    assert all(call["temperature"] == 0.0 for call in calls)
+
+
+def test_temperature_is_part_of_the_cache_key(domain, tmp_path) -> None:
+    """온도가 다르면 캐시가 갈려야 한다. 안 그러면 결정적 실험이 예전
+    무작위 응답을 그대로 집어온다.
+
+    지정하지 않은 호출의 키는 예전과 같아야 한다 - 그래야 기존 cache/ 가
+    한꺼번에 무효화되지 않는다.
+    """
+    from engine.generator import _cache_key
+
+    plain = _cache_key("prompt", "source", "model")
+    none_explicit = _cache_key("prompt", "source", "model", None)
+    zero = _cache_key("prompt", "source", "model", 0.0)
+    one = _cache_key("prompt", "source", "model", 1.0)
+
+    assert plain == none_explicit
+    assert zero != plain
+    assert zero != one

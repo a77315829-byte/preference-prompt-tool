@@ -72,7 +72,10 @@ def test_trial_shows_both_outputs_side_by_side(monkeypatch) -> None:
 
     seen_prompts = []
 
-    def fake_with_prompt(prompt, source_text, model, cache_dir=None):
+    # 시그니처를 실제와 맞춘다. engine 쪽에 인자가 늘었을 때 대역 함수가
+    # TypeError 를 내고, app.py 가 그걸 잡아 데모로 강등시켜 버려서 이
+    # 테스트가 "호출된 프롬프트 0개"로 실패했다. **kwargs 로 열어둔다.
+    def fake_with_prompt(prompt, source_text, model, cache_dir=None, **kwargs):
         seen_prompts.append(prompt)
         return f"[{'기본' if len(seen_prompts) == 1 else '개인'}] {source_text[:10]}"
 
@@ -102,7 +105,7 @@ def test_trial_respects_session_cap(monkeypatch) -> None:
     monkeypatch.setattr(generator, "generate", lambda *a, **k: "생성된 후보")
     monkeypatch.setattr(
         generator, "generate_with_prompt",
-        lambda prompt, source_text, model, cache_dir=None: "결과",
+        lambda prompt, source_text, model, cache_dir=None, **kwargs: "결과",
     )
 
     app = AppTest.from_file(APP_PATH, default_timeout=90).run()

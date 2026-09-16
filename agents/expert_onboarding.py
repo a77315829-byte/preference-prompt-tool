@@ -112,6 +112,11 @@ def _call_llm_json(system_prompt: str, user_prompt: str, model: str) -> dict:
             {"role": "user", "content": user_prompt},
         ],
         response_format={"type": "json_object"},
+        # 온도를 고정한다. 같은 예시로 두 번 돌렸을 때 축이 완전히 달라져
+        # 실험 결과가 비교 불가능해졌다 - 긴 글 저자에서 한 번은 277단어로
+        # 과교정, 다음 실행은 104단어로 미달이었다. 재현되지 않으면 무엇을
+        # 고쳤는지도 알 수 없다.
+        temperature=0.0,
     )
     return json.loads(response.choices[0].message.content)
 
@@ -163,6 +168,67 @@ def corpus_stats(examples: list[ExpertExample]) -> dict[str, float]:
     if compressions:
         stats["answer_to_task_word_ratio"] = round(mean(compressions), 3)
     return stats
+
+
+# 형식 거리를 잴 때 쓰는 지표. compression ratio 는 같은 과제를 쓰면
+# words_per_answer 에서 파생되므로 중복이라 넣지 않는다.
+FORM_KEYS = ("sentences_per_answer", "words_per_answer", "words_per_sentence")
+
+
+def form_distance(
+    generated: list[ExpertExample], target: list[ExpertExample]
+) -> float:
+    """생성된 글의 형식이 목표 저자의 형식에서 얼마나 떨어져 있는가.
+
+    0 이면 형식이 같고, 클수록 멀다. 지표별 상대 오차의 평균이다.
+
+    왜 이 지표가 필요한가: 이 방법이 주장하는 것은 형식 복제인데, 검증을
+    ROUGE-L 로만 하면 주장과 지표가 어긋난다. 실측에서 그 어긋남이
+    드러났다 - 긴 글을 쓰는 저자에서 expert 조건이 목표 길이에 훨씬
+    가까웠는데도(목표 128.4단어 대비 base +52.0, expert +18.2) ROUGE-L 은
+    거의 같았다(0.177 vs 0.170). ROUGE-L 은 어떤 단어가 겹치는지를 보고,
+    길이를 맞춘 것만으로는 같은 문장이 나오지 않는다.
+
+    그래서 둘을 나란히 본다. 이 지표는 형식을 맞췄는지, ROUGE-L 은 내용이
+    가까워졌는지를 각각 말한다. 형식은 이기고 내용은 못 이긴다면 그대로
+    보고하는 것이 정직하다.
+    """
+    generated_stats = corpus_stats(generated)
+    target_stats = corpus_stats(target)
+
+    errors = []
+    for key in FORM_KEYS:
+        target_value = target_stats.get(key, 0.0)
+        if not target_value:
+            continue
+        errors.append(abs(generated_stats.get(key, 0.0) - target_value) / target_value)
+    return round(sum(errors) / len(errors), 3) if errors else 0.0
+
+
+def form_anchor(examples: list[ExpertExample]) -> str:
+    """측정한 형식을 프롬프트에 그대로 박는 한 줄.
+
+    왜 필요한가: 축 지시문은 LLM 이 수치를 형용사로 번역한 결과다. 그
+    번역이 두 방향으로 다 틀렸다. 긴 글을 쓰는 저자에서 처음엔 길이 축을
+    아예 제안하지 않아 짧게 나왔고(목표 128.4단어, anti 가 base 보다 높음),
+    수치를 사실로 넘긴 뒤에는 "충분히 길게"를 과하게 적용해 277.7단어까지
+    넘어갔다(형식 거리 0.325 -> 0.970).
+
+    번역을 거치지 않고 수치를 직접 주면 그 왕복이 사라진다. 수치는
+    사용자 자신의 예시에서 코드로 잰 것이므로 외부 지식이 아니다.
+
+    이것만으로 길이가 맞는 것은 당연하므로, 축의 기여와 구분해서 보고해야
+    한다. experiments/expert_prompt_eval.py 가 두 조건을 나눠 잰다.
+    """
+    stats = corpus_stats(examples)
+    sentences = stats["sentences_per_answer"]
+    words = stats["words_per_answer"]
+    if not sentences or not words:
+        return ""
+    return (
+        f"Match this length: about {sentences:.0f} sentences and roughly "
+        f"{words:.0f} words in total."
+    )
 
 
 def _stats_block(examples: list[ExpertExample]) -> str:

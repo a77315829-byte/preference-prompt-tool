@@ -31,12 +31,15 @@ def build_prompt(domain: Domain, combo: dict[str, str]) -> str:
     return "\n".join(lines)
 
 
-def _cache_key(prompt: str, source_text: str, model: str) -> str:
-    payload = json.dumps(
-        {"prompt": prompt, "source": source_text, "model": model},
-        ensure_ascii=False,
-        sort_keys=True,
-    )
+def _cache_key(
+    prompt: str, source_text: str, model: str, temperature: float | None = None
+) -> str:
+    key: dict[str, object] = {"prompt": prompt, "source": source_text, "model": model}
+    # temperature 를 지정하지 않은 호출의 캐시 키는 예전과 같아야 한다.
+    # 안 그러면 기존 cache/ 전체가 한 번에 무효화된다.
+    if temperature is not None:
+        key["temperature"] = temperature
+    payload = json.dumps(key, ensure_ascii=False, sort_keys=True)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
@@ -61,11 +64,11 @@ def generate_all(
     if not combos:
         return []
     if len(combos) == 1:
-        return [generate(domain, source_text, combos[0], model, cache_dir)]
+        return [generate(domain, source_text, combos[0], model, cache_dir=cache_dir)]
 
     with ThreadPoolExecutor(max_workers=len(combos)) as pool:
         futures = [
-            pool.submit(generate, domain, source_text, combo, model, cache_dir)
+            pool.submit(generate, domain, source_text, combo, model, cache_dir=cache_dir)
             for combo in combos
         ]
         # 순서를 보존해야 한다. as_completed를 쓰면 A/B가 뒤바뀐다.
@@ -81,7 +84,7 @@ def generate(
 ) -> str:
     """축조합으로 프롬프트를 조립해 결과물을 만든다."""
     return generate_with_prompt(
-        build_prompt(domain, combo), source_text, model, cache_dir
+        build_prompt(domain, combo), source_text, model, cache_dir=cache_dir
     )
 
 
@@ -90,6 +93,7 @@ def generate_all_with_prompts(
     source_text: str,
     model: str,
     cache_dir: Path = CACHE_DIR,
+    temperature: float | None = None,
 ) -> list[str]:
     """여러 시스템 프롬프트를 같은 원문에 동시에 적용해 순서대로 돌려준다.
 
@@ -99,12 +103,24 @@ def generate_all_with_prompts(
     """
     if not prompts:
         return []
+    # 선택 인자는 키워드로 넘긴다. 위치로 넘기면 인자를 하나 더할 때
+    # 호출부와 테스트 대역이 조용히 깨진다 - temperature 를 더한 직후
+    # 앱의 프롬프트 비교가 죽었는데, try/except 가 삼켜서 화면에는
+    # "API 호출 실패"로만 보였다.
     if len(prompts) == 1:
-        return [generate_with_prompt(prompts[0], source_text, model, cache_dir)]
+        return [
+            generate_with_prompt(
+                prompts[0], source_text, model,
+                cache_dir=cache_dir, temperature=temperature,
+            )
+        ]
 
     with ThreadPoolExecutor(max_workers=len(prompts)) as pool:
         futures = [
-            pool.submit(generate_with_prompt, prompt, source_text, model, cache_dir)
+            pool.submit(
+                generate_with_prompt, prompt, source_text, model,
+                cache_dir=cache_dir, temperature=temperature,
+            )
             for prompt in prompts
         ]
         return [future.result() for future in futures]
@@ -115,6 +131,7 @@ def generate_with_prompt(
     source_text: str,
     model: str,
     cache_dir: Path = CACHE_DIR,
+    temperature: float | None = None,
 ) -> str:
     """조립이 끝난 시스템 프롬프트로 결과물을 만든다.
 
@@ -123,7 +140,7 @@ def generate_with_prompt(
     축조합이 아니라 프롬프트 텍스트가 입력이다.
     """
     cache_dir.mkdir(parents=True, exist_ok=True)
-    cache_file = cache_dir / f"{_cache_key(prompt, source_text, model)}.json"
+    cache_file = cache_dir / f"{_cache_key(prompt, source_text, model, temperature)}.json"
 
     if cache_file.exists():
         return json.loads(cache_file.read_text(encoding="utf-8"))["output"]
@@ -132,12 +149,14 @@ def generate_with_prompt(
     # 실제 API 호출 시점까지 미룬다 (배포 콜드스타트 12.6초 -> 약 2초).
     from litellm import completion
 
+    extra = {} if temperature is None else {"temperature": temperature}
     response = completion(
         model=model,
         messages=[
             {"role": "system", "content": prompt},
             {"role": "user", "content": source_text},
         ],
+        **extra,
     )
     output = response.choices[0].message.content
 

@@ -6,92 +6,168 @@
   "axes": [
     {
       "name": "answer_length",
+      "description": "답변의 길이와 밀도를 나타냅니다.",
       "author_value": "concise",
       "values": [
-        "concise",
-        "detailed"
+        {
+          "value": "concise",
+          "instruction": "Write a brief summary using about 1 to 3 sentences and roughly 30 to 40 words."
+        },
+        {
+          "value": "detailed",
+          "instruction": "Write a longer summary using 4 or more sentences and 60 or more words."
+        }
       ]
     },
     {
       "name": "sentence_complexity",
-      "author_value": "moderate",
+      "description": "문장당 단어 수와 문장 구조의 복잡성을 나타냅니다.",
+      "author_value": "moderate_complexity",
       "values": [
-        "simple",
-        "moderate",
-        "complex"
+        {
+          "value": "simple",
+          "instruction": "Use short and simple sentences with fewer than 15 words each."
+        },
+        {
+          "value": "moderate_complexity",
+          "instruction": "Use sentences of moderate length, around 15 to 25 words, with straightforward structure."
+        },
+        {
+          "value": "complex",
+          "instruction": "Use long and complex sentences with multiple clauses and more than 25 words."
+        }
       ]
     },
     {
-      "name": "stance_explicitness",
-      "author_value": "informative",
+      "name": "focus_on_facts",
+      "description": "사실 전달에 집중하는 정도를 나타냅니다.",
+      "author_value": "fact_focused",
       "values": [
-        "informative",
-        "hedged"
+        {
+          "value": "fact_focused",
+          "instruction": "Present only clear, verifiable facts without speculation or opinion."
+        },
+        {
+          "value": "interpretive",
+          "instruction": "Include some interpretation, speculation, or opinion along with facts."
+        }
       ]
     },
     {
-      "name": "domain_specificity",
-      "author_value": "general",
+      "name": "information_density",
+      "description": "한 문장에 포함된 정보량의 정도를 나타냅니다.",
+      "author_value": "medium_density",
       "values": [
-        "general",
-        "technical"
+        {
+          "value": "low_density",
+          "instruction": "Include only one main fact or idea per sentence."
+        },
+        {
+          "value": "medium_density",
+          "instruction": "Include one or two related facts or ideas per sentence."
+        },
+        {
+          "value": "high_density",
+          "instruction": "Include multiple facts or ideas per sentence, making sentences information-rich."
+        }
       ]
     }
   ],
+  "prompts": {
+    "base": "Summarise the given news article in English.",
+    "expert": "Summarise the given news article in English.\nWrite a brief summary using about 1 to 3 sentences and roughly 30 to 40 words.\nUse sentences of moderate length, around 15 to 25 words, with straightforward structure.\nPresent only clear, verifiable facts without speculation or opinion.\nInclude one or two related facts or ideas per sentence.",
+    "anchored": "Summarise the given news article in English.\nWrite a brief summary using about 1 to 3 sentences and roughly 30 to 40 words.\nUse sentences of moderate length, around 15 to 25 words, with straightforward structure.\nPresent only clear, verifiable facts without speculation or opinion.\nInclude one or two related facts or ideas per sentence.\nMatch this length: about 2 sentences and roughly 34 words in total.",
+    "anti": "Summarise the given news article in English.\nWrite a longer summary using 4 or more sentences and 60 or more words.\nUse short and simple sentences with fewer than 15 words each.\nInclude some interpretation, speculation, or opinion along with facts.\nInclude only one main fact or idea per sentence."
+  },
+  "target_stats": {
+    "sentences_per_answer": 2.4,
+    "words_per_answer": 43.1,
+    "words_per_sentence": 18.3,
+    "answer_to_task_word_ratio": 0.052
+  },
+  "length_gap": {
+    "base": 119.3,
+    "expert": 22.4,
+    "anchored": 6.3,
+    "anti": 60.3
+  },
+  "form_distance": {
+    "base": 1.776,
+    "expert": 0.325,
+    "anchored": 0.149,
+    "anti": 1.257
+  },
   "means": {
-    "base": 0.15027817436283514,
-    "expert": 0.21936487668479948,
-    "anti": 0.11182264069690843
+    "base": 0.15743451791520086,
+    "expert": 0.21121366487328747,
+    "anchored": 0.20972996909982397,
+    "anti": 0.16822541601423624
   },
   "per_document": {
     "base": [
-      0.14201183431952663,
-      0.20317460317460315,
-      0.16129032258064516,
-      0.12041884816753926,
-      0.17391304347826086,
-      0.27488151658767773,
-      0.20512820512820515,
-      0.11612903225806452,
-      0.09696969696969697,
-      0.0989010989010989,
-      0.11555555555555556,
-      0.12260536398467432,
-      0.13846153846153847,
-      0.13445378151260506
+      0.18064516129032257,
+      0.29357798165137616,
+      0.1461187214611872,
+      0.1522491349480969,
+      0.15267175572519084,
+      0.2231404958677686,
+      0.1875,
+      0.11392405063291139,
+      0.08484848484848485,
+      0.12903225806451613,
+      0.14606741573033707,
+      0.13675213675213674,
+      0.12030075187969926,
+      0.1372549019607843
     ],
     "expert": [
-      0.1375,
-      0.3913043478260869,
-      0.25210084033613445,
-      0.17218543046357618,
-      0.15602836879432624,
-      0.2748091603053435,
-      0.2916666666666667,
-      0.136986301369863,
-      0.1797752808988764,
-      0.13636363636363638,
-      0.22988505747126436,
-      0.1848739495798319,
-      0.27272727272727276,
-      0.25490196078431376
+      0.16560509554140126,
+      0.359375,
+      0.2782608695652174,
+      0.09523809523809525,
+      0.17567567567567569,
+      0.2657342657342657,
+      0.3010752688172043,
+      0.16279069767441862,
+      0.13636363636363635,
+      0.14893617021276598,
+      0.21333333333333335,
+      0.1911764705882353,
+      0.24324324324324323,
+      0.2201834862385321
+    ],
+    "anchored": [
+      0.15942028985507248,
+      0.3703703703703704,
+      0.17999999999999997,
+      0.11111111111111112,
+      0.1732283464566929,
+      0.22950819672131148,
+      0.3333333333333333,
+      0.15625,
+      0.18181818181818182,
+      0.13793103448275862,
+      0.24242424242424243,
+      0.19819819819819817,
+      0.2181818181818182,
+      0.24444444444444446
     ],
     "anti": [
-      0.14051522248243561,
-      0.15803814713896458,
-      0.11666666666666667,
-      0.12903225806451613,
-      0.1246458923512748,
-      0.16314199395770393,
-      0.12096774193548387,
-      0.0717488789237668,
-      0.06792452830188679,
-      0.09701492537313433,
-      0.07692307692307691,
-      0.10653753026634383,
-      0.09580838323353293,
-      0.09655172413793103
+      0.15135135135135133,
+      0.28395061728395066,
+      0.19999999999999998,
+      0.15450643776824036,
+      0.15204678362573099,
+      0.21965317919075145,
+      0.208695652173913,
+      0.08759124087591243,
+      0.09803921568627451,
+      0.10738255033557047,
+      0.1846153846153846,
+      0.1568627450980392,
+      0.14457831325301204,
+      0.20588235294117646
     ]
   },
-  "expert_beats_base_docs": 11
+  "expert_beats_base_docs": 12
 }
