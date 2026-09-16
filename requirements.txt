@@ -10,6 +10,15 @@
 #
 # 심사가 끝나면 상한을 풀어도 된다. 올릴 때는 requirements-dev.txt로
 # 전체 테스트를 돌린 뒤 한 번에 올릴 것.
+#
+# 배포 동작 메모: 코드만 바꿔 푸시하면 Streamlit Cloud 로그에
+# "Updated app!" 만 찍히고 메인 스크립트만 다시 실행된다. 이때 이미
+# import 된 모듈(engine/, demos/)은 옛 객체가 메모리에 남을 수 있어서,
+# app.py 는 새 코드인데 engine/ 은 옛 코드인 상태가 실제로 발생했다
+# (engine/demo_generator.py 가 지워진 ValueError 를 계속 던졌다).
+# 이 파일이 바뀌면 "Processing dependencies" 를 거쳐 프로세스가 완전히
+# 재시작된다. engine/ 이나 demos/ 를 고친 뒤 배포가 옛 동작을 보이면
+# Streamlit Cloud 콘솔에서 Reboot app 을 누르는 것이 정석이다.
 streamlit==1.63.0
 python-dotenv==1.2.3
 litellm==1.100.0
