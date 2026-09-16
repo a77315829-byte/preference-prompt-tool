@@ -7,10 +7,12 @@ import os
 import streamlit as st
 from dotenv import load_dotenv
 
+from budget import DailyBudget
+
 from engine.demo_generator import generate_demo
 from engine.domain_loader import Domain, load_domain
 from engine.estimator import Comparison, Estimator
-from engine.generator import generate
+from engine.generator import generate_all
 from engine.selector import UncertaintySelector
 from optimize.run_gepa import build_seed_prompt, run as run_gepa
 
@@ -42,6 +44,14 @@ DEMO_MODE_LABEL = "무료 데모 (API 없이 규칙 기반)"
 # 상한을 건다 (CLAUDE.md 주의사항: "공개 배포 시 사용자가 자기 키를 넣게
 # 하거나 호출 상한을 건다"). 데모 모드는 API를 안 쓰므로 제한하지 않는다.
 MAX_API_RUNS_PER_SESSION = 3
+
+# 세션당 상한은 브라우저 세션을 새로 열면 우회된다. 공개 링크에 불특정
+# 트래픽이 들어오는 상황에서는 그것만으로는 팀 API 키를 못 지킨다.
+# 그래서 앱 인스턴스 전체가 공유하는 하루 상한을 따로 둔다.
+# 한 번 실행 = 8회 x 후보 2개 = 16번 호출이므로, 60회는 하루 약 960번
+# 호출에 해당한다. 이 상한은 OpenAI 쪽 월 지출 상한을 대체하지 않는다 -
+# 앱이 재시작되면 카운터도 초기화되기 때문이다. 두 겹으로 둔다.
+MAX_API_RUNS_PER_DAY = 60
 
 # 원문 입력 길이 상한. API 모드에서는 이 원문이 한 세션에 16번(8회 x 후보 2개)
 # 전송되므로, 상한이 없으면 긴 문서 하나로 토큰 비용이 급증한다. 공개 링크에
@@ -119,6 +129,17 @@ PREFERENCE_LABELS = {
     "summarization": SUMMARIZATION_PREFERENCE_LABELS,
     "summarization_ko": SUMMARIZATION_PREFERENCE_LABELS,
 }
+
+
+@st.cache_resource
+def _daily_api_budget() -> DailyBudget:
+    """앱 인스턴스 전체가 공유하는 하루 API 실행 카운터.
+
+    st.cache_resource 는 세션이 아니라 프로세스 단위로 같은 객체를 돌려주므로,
+    서로 다른 방문자의 세션이 이 카운터를 공유한다. 계산 로직은 budget.py 에
+    있고 Streamlit을 모른다 - 그래서 UI 없이 단위 테스트가 된다.
+    """
+    return DailyBudget(MAX_API_RUNS_PER_DAY)
 
 
 def _domain_for(key: str) -> Domain:
@@ -374,13 +395,20 @@ if st.session_state.stage == "input":
     if demo_mode:
         st.info(config["demo_info"])
 
-    api_quota_left = MAX_API_RUNS_PER_SESSION - st.session_state.api_runs_used
-    api_blocked = not demo_mode and api_quota_left <= 0
+    session_quota_left = MAX_API_RUNS_PER_SESSION - st.session_state.api_runs_used
+    daily_quota_left = _daily_api_budget().left()
+    api_blocked = not demo_mode and (session_quota_left <= 0 or daily_quota_left <= 0)
     if api_blocked:
-        st.warning(
-            f"API 모드는 세션당 {MAX_API_RUNS_PER_SESSION}회까지입니다. "
-            "무료 데모 모드는 계속 쓰실 수 있습니다."
-        )
+        if session_quota_left <= 0:
+            st.warning(
+                f"AI 실시간 생성은 세션당 {MAX_API_RUNS_PER_SESSION}회까지입니다. "
+                "무료 데모 모드는 계속 쓰실 수 있습니다."
+            )
+        else:
+            st.warning(
+                "오늘 배정된 AI 실시간 생성 횟수를 모두 썼습니다. "
+                "무료 데모 모드는 계속 쓰실 수 있고, 실시간 생성은 내일 다시 열립니다."
+            )
 
     source = st.text_area(
         config["input_label"],
@@ -390,6 +418,15 @@ if st.session_state.stage == "input":
     )
     if st.button("비교 시작", type="primary", disabled=not source.strip() or api_blocked):
         if not demo_mode:
+            # 하루 예산을 먼저 차감한다. 화면을 그린 뒤 버튼을 누르기까지
+            # 사이에 다른 방문자가 예산을 다 썼을 수 있으므로, 여기서
+            # 실패하면 데모로 돌리지 않고 다시 고르게 한다.
+            if not _daily_api_budget().consume():
+                st.warning(
+                    "방금 오늘 배정된 AI 실시간 생성 횟수가 모두 소진됐습니다. "
+                    "무료 데모 모드로 진행해 주세요."
+                )
+                st.stop()
             st.session_state.api_runs_used += 1
         domain = _domain_for(domain_key)
         st.session_state.domain_key = domain_key
@@ -417,8 +454,11 @@ elif st.session_state.stage == "compare":
         else:
             with st.spinner("두 가지 버전을 생성하는 중..."):
                 try:
-                    candidate_a = generate(domain, source, combo_a, model=MODEL)
-                    candidate_b = generate(domain, source, combo_b, model=MODEL)
+                    # 두 후보는 서로 의존이 없으므로 동시에 생성한다.
+                    # 순차로 부르면 한 라운드 대기가 두 배가 된다.
+                    candidate_a, candidate_b = generate_all(
+                        domain, source, (combo_a, combo_b), model=MODEL
+                    )
                 except Exception as exc:
                     # 막다른 길로 끝내지 않는다. 예전에는 st.stop()으로 멈춰서
                     # 화면에 에러만 남고 여기까지 한 선택이 다 버려졌다 - 키가

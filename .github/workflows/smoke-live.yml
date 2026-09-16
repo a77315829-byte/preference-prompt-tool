@@ -1,0 +1,44 @@
+# 배포된 앱이 깨졌는지 주기적으로 확인한다.
+#
+# 목적은 절전 방지가 아니다. Streamlit Community Cloud는 트래픽이 12시간
+# 없으면 앱을 재우는데, 자는 앱은 방문하면 다시 깨어나므로 그 자체는
+# 치명적이지 않다. 이 워크플로가 잡으려는 것은 "앱이 아예 안 뜨는" 상태다.
+# 심사 기간에는 그걸 빨리 아는 게 중요하고, 실패하면 GitHub가 메일을 보낸다.
+#
+# playwright는 이 워크플로 안에서만 설치한다. requirements.txt(배포)와
+# requirements-dev.txt(실험)는 건드리지 않는다.
+name: Smoke test deployed app
+
+on:
+  schedule:
+    # 6시간마다. 무료 러너의 예약 실행은 수십 분 늦을 수 있지만, 고장을
+    # 알아채는 용도라 그 정도 지연은 무해하다.
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+# 예약 실행이 겹치면 이전 것을 버린다.
+concurrency:
+  group: smoke-live
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Playwright
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install playwright==1.62.0
+          python -m playwright install --with-deps chromium
+
+      - name: Check deployed app
+        run: python -m scripts.smoke_live --url "$APP_URL"
+        env:
+          APP_URL: https://preference-prompt-tool-7c9fvm3tb5bfxv8v6648fu.streamlit.app/
