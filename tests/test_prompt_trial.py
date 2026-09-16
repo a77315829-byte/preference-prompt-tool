@@ -119,3 +119,49 @@ def test_trial_respects_session_cap(monkeypatch) -> None:
     assert not _has_button(app, TRIAL_BUTTON)
     captions = " ".join(c.value for c in app.caption)
     assert "세션당" in captions
+
+
+# --- 실사용자 의견 수집 ----------------------------------------------------
+
+YES_BUTTON = "네, 맞아요"
+NO_BUTTON = "아니요, 아쉬워요"
+
+
+def test_feedback_form_is_offered_after_a_run(monkeypatch) -> None:
+    generator = importlib.import_module("engine.generator")
+    monkeypatch.setattr(generator, "generate", lambda *a, **k: "생성된 후보")
+
+    app = AppTest.from_file(APP_PATH, default_timeout=60).run()
+    _finish_run(app, demo=False)
+
+    assert any("취향에 맞나요" in s.value for s in app.subheader)
+    assert _has_button(app, YES_BUTTON)
+    assert _has_button(app, NO_BUTTON)
+
+
+def test_answering_records_and_thanks(monkeypatch) -> None:
+    generator = importlib.import_module("engine.generator")
+    monkeypatch.setattr(generator, "generate", lambda *a, **k: "생성된 후보")
+
+    app = AppTest.from_file(APP_PATH, default_timeout=60).run()
+    _finish_run(app, demo=False)
+
+    _button(app, YES_BUTTON).click().run()
+    assert not app.exception
+    assert app.session_state["feedback_sent"] is True
+    # 두 번 답하게 두면 표본이 한 사람에게 치우친다.
+    assert not _has_button(app, YES_BUTTON)
+    assert any("의견 감사합니다" in s.value for s in app.success)
+
+
+def test_feedback_is_offered_in_demo_mode_too(monkeypatch) -> None:
+    """데모 모드 응답도 모아둔다. 다만 기록에 모드가 남아 나중에 분리된다."""
+    generator = importlib.import_module("engine.generator")
+    monkeypatch.setattr(
+        generator, "generate",
+        lambda *a, **k: (_ for _ in ()).throw(AssertionError("데모에서 API 호출 금지")),
+    )
+
+    app = AppTest.from_file(APP_PATH, default_timeout=60).run()
+    _finish_run(app, demo=True)
+    assert _has_button(app, YES_BUTTON)

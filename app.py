@@ -8,6 +8,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from budget import DailyBudget
+from feedback import FeedbackLog
 
 from engine.demo_generator import generate_demo
 from engine.domain_loader import Domain, load_domain
@@ -58,6 +59,9 @@ MAX_API_RUNS_PER_DAY = 60
 # 따로 둔다. 같은 예산에 넣으면 2번 쓰고 16번어치를 차감하게 된다.
 MAX_TRIALS_PER_DAY = 200
 MAX_TRIALS_PER_SESSION = 3
+
+# 의견 입력 길이 상한. feedback.py 가 기록 시 한 번 더 자른다.
+MAX_COMMENT_CHARS = 300
 
 # 원문 입력 길이 상한. API 모드에서는 이 원문이 한 세션에 16번(8회 x 후보 2개)
 # 전송되므로, 상한이 없으면 긴 문서 하나로 토큰 비용이 급증한다. 공개 링크에
@@ -212,6 +216,16 @@ def _daily_api_budget() -> DailyBudget:
 
 
 @st.cache_resource
+def _feedback_log() -> FeedbackLog:
+    """앱 인스턴스 전체가 공유하는 응답 기록기.
+
+    print 로 찍으면 Streamlit Cloud 콘솔 로그에 남는다. 저장소가 없어도
+    표본을 모을 수 있고 새 의존성이 0개다 - 자세한 이유는 feedback.py.
+    """
+    return FeedbackLog()
+
+
+@st.cache_resource
 def _daily_trial_budget() -> DailyBudget:
     """프롬프트 체험(2회 호출)용 하루 상한. 실행 예산과 분리되어 있다."""
     return DailyBudget(MAX_TRIALS_PER_DAY)
@@ -222,7 +236,7 @@ def _domain_for(key: str) -> Domain:
 
 
 def _reset_session() -> None:
-    for key in ("stage", "domain_key", "source", "demo_mode", "estimator", "selector", "round", "current_pair", "optimized_prompt", "api_error", "gepa_error", "trial_source", "trial_result", "trial_error", "trials_used"):
+    for key in ("stage", "domain_key", "source", "demo_mode", "estimator", "selector", "round", "current_pair", "optimized_prompt", "api_error", "gepa_error", "trial_source", "trial_result", "trial_error", "trials_used", "feedback_sent", "feedback_comment"):
         st.session_state.pop(key, None)
 
 
@@ -334,6 +348,55 @@ def _show_prompt_trial(domain: Domain, personal_prompt: str) -> None:
             st.markdown('<div class="ppt-ab">내 프롬프트</div>', unsafe_allow_html=True)
             st.caption("8회 선택으로 만든 프롬프트")
             st.write(personal)
+
+
+def _show_feedback_form(domain_key: str, preferred: dict[str, str]) -> None:
+    """이 결과가 취향에 맞았는지 한 줄로 묻는다.
+
+    지금까지의 정량 결과는 전부 MACSum 페르소나 기반이라 "실제 사람도
+    좋아했다"는 근거가 없었다. 공개 링크에 들어오는 방문자가 그 표본이 된다.
+
+    원문과 생성 결과는 기록하지 않는다 - 자세한 이유는 feedback.py.
+    """
+    if st.session_state.get("feedback_sent"):
+        st.success("의견 감사합니다. 개인화 품질을 판단하는 근거로 씁니다.")
+        return
+
+    st.subheader("이 프롬프트가 내 취향에 맞나요?")
+    st.caption(
+        "한 번만 답해주시면 개인화가 실제로 통하는지 판단하는 데 쓰겠습니다. "
+        "원문과 생성 결과는 저장하지 않고, 아래 응답만 익명으로 남깁니다."
+    )
+
+    comment = st.text_input(
+        "덧붙일 말 (선택)",
+        placeholder="예: 길이는 맞는데 표현이 너무 딱딱해요",
+        max_chars=MAX_COMMENT_CHARS,
+        key="feedback_comment",
+    )
+
+    col_yes, col_no = st.columns(2)
+    answered = None
+    with col_yes:
+        if st.button("네, 맞아요", use_container_width=True):
+            answered = True
+    with col_no:
+        if st.button("아니요, 아쉬워요", use_container_width=True):
+            answered = False
+
+    if answered is None:
+        return
+
+    _feedback_log().record(
+        domain=domain_key,
+        demo_mode=bool(st.session_state.demo_mode),
+        fits=answered,
+        preferred=preferred,
+        comment=comment,
+        rounds=N_ROUNDS,
+    )
+    st.session_state.feedback_sent = True
+    st.rerun()
 
 
 def _show_preferences(domain_key: str, preferred: dict[str, str]) -> None:
@@ -720,6 +783,7 @@ elif st.session_state.stage == "done":
         st.caption("API 최적화가 적용된 프롬프트입니다.")
 
     _show_prompt_trial(domain, prompt)
+    _show_feedback_form(domain_key, preferred)
 
     if st.button("처음부터 다시"):
         _reset_session()

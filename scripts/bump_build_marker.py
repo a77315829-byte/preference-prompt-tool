@@ -32,20 +32,25 @@ REQUIREMENTS = ROOT / "requirements.txt"
 
 # 배포된 app.py 가 import 하는 경로. 이 안이 바뀌면 프로세스를 새로
 # 띄워야 옛 모듈이 정리된다.
-WATCHED = ("engine", "demos", "budget.py", "optimize", "checks")
+WATCHED_DIRS = ("engine", "demos", "optimize", "checks")
+
+# 루트의 모듈은 이름을 나열하지 않고 전부 본다. budget.py 를 적어두고
+# feedback.py 를 빼먹는 식의 누락이 곧 링크 사망으로 이어지기 때문이다.
+# app.py 는 메인 스크립트라 Streamlit 이 항상 새로 읽으므로 제외한다.
+ROOT_EXCLUDE = {"app.py"}
 
 MARKER_PREFIX = "# build-marker:"
 
 
 def _watched_files() -> list[Path]:
-    files: list[Path] = []
-    for name in WATCHED:
+    files: list[Path] = [
+        path for path in sorted(ROOT.glob("*.py")) if path.name not in ROOT_EXCLUDE
+    ]
+    for name in WATCHED_DIRS:
         target = ROOT / name
-        if target.is_file():
-            files.append(target)
-        elif target.is_dir():
+        if target.is_dir():
             files.extend(sorted(target.rglob("*.py")))
-    return sorted(files)
+    return sorted(set(files))
 
 
 def compute_marker() -> str:
