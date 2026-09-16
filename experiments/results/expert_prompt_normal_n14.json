@@ -11,15 +11,15 @@
       "values": [
         {
           "value": "short",
-          "instruction": "Write a very brief summary with only one or two sentences."
+          "instruction": "Write a very brief summary with only essential information."
         },
         {
           "value": "medium_length",
-          "instruction": "Write a summary of about three sentences with moderate detail."
+          "instruction": "Write a summary of moderate length, around 60-70 words."
         },
         {
           "value": "long",
-          "instruction": "Write a detailed summary with multiple sentences and extensive information."
+          "instruction": "Write a detailed summary with extensive information."
         }
       ]
     },
@@ -30,11 +30,11 @@
       "values": [
         {
           "value": "simple_sentences",
-          "instruction": "Use short and simple sentences with straightforward structure."
+          "instruction": "Write short and simple sentences with straightforward structure."
         },
         {
           "value": "complex_sentences",
-          "instruction": "Use longer sentences with more complex structure and multiple clauses."
+          "instruction": "Write longer sentences with more complex structure and multiple clauses."
         }
       ]
     },
@@ -49,31 +49,32 @@
         },
         {
           "value": "interpretive",
-          "instruction": "Include interpretations, opinions, or speculative comments along with facts."
+          "instruction": "Include some interpretation or opinion alongside the facts."
         }
       ]
     },
     {
       "name": "use_of_names_and_titles",
-      "description": "인물 이름과 직함 사용 빈도 및 방식입니다.",
-      "author_value": "frequent_names_and_titles",
+      "description": "인물 이름과 직함 사용 빈도를 나타냅니다.",
+      "author_value": "frequent_use",
       "values": [
         {
-          "value": "minimal_names",
-          "instruction": "Use few names or titles, focusing more on general descriptions."
+          "value": "minimal_use",
+          "instruction": "Use names and titles sparingly, focusing more on general information."
         },
         {
-          "value": "frequent_names_and_titles",
-          "instruction": "Include full names and relevant titles or affiliations frequently."
+          "value": "frequent_use",
+          "instruction": "Use full names and titles frequently to specify subjects clearly."
         }
       ]
     }
   ],
   "prompts": {
     "base": "Summarise the given news article in English.",
-    "expert": "Summarise the given news article in English.\nWrite a summary of about three sentences with moderate detail.\nUse longer sentences with more complex structure and multiple clauses.\nFocus on presenting clear, concrete facts without speculation or opinion.\nInclude full names and relevant titles or affiliations frequently.",
-    "anchored": "Summarise the given news article in English.\nWrite a summary of about three sentences with moderate detail.\nUse longer sentences with more complex structure and multiple clauses.\nFocus on presenting clear, concrete facts without speculation or opinion.\nInclude full names and relevant titles or affiliations frequently.\nMatch this length: about 3 sentences and roughly 67 words in total.",
-    "anti": "Summarise the given news article in English.\nWrite a very brief summary with only one or two sentences.\nUse short and simple sentences with straightforward structure.\nInclude interpretations, opinions, or speculative comments along with facts.\nUse few names or titles, focusing more on general descriptions."
+    "anchor_only": "Summarise the given news article in English.\nMatch this length: about 3 sentences and roughly 67 words in total.",
+    "expert": "Summarise the given news article in English.\nWrite a summary of moderate length, around 60-70 words.\nWrite longer sentences with more complex structure and multiple clauses.\nFocus on presenting clear, concrete facts without speculation or opinion.\nUse full names and titles frequently to specify subjects clearly.",
+    "anchored": "Summarise the given news article in English.\nWrite a summary of moderate length, around 60-70 words.\nWrite longer sentences with more complex structure and multiple clauses.\nFocus on presenting clear, concrete facts without speculation or opinion.\nUse full names and titles frequently to specify subjects clearly.\nMatch this length: about 3 sentences and roughly 67 words in total.",
+    "anti": "Summarise the given news article in English.\nWrite a very brief summary with only essential information.\nWrite short and simple sentences with straightforward structure.\nInclude some interpretation or opinion alongside the facts.\nUse names and titles sparingly, focusing more on general information."
   },
   "target_stats": {
     "sentences_per_answer": 3.9,
@@ -83,21 +84,24 @@
   },
   "length_gap": {
     "base": 76.9,
-    "expert": 58.5,
-    "anchored": 41.1,
-    "anti": -40.0
+    "anchor_only": -13.6,
+    "expert": 52.7,
+    "anchored": 27.1,
+    "anti": 1.1
   },
   "form_distance": {
     "base": 0.721,
-    "expert": 0.453,
-    "anchored": 0.312,
-    "anti": 0.313
+    "anchor_only": 0.138,
+    "expert": 0.391,
+    "anchored": 0.219,
+    "anti": 0.179
   },
   "means": {
     "base": 0.18377014253680632,
-    "expert": 0.18568513441891007,
-    "anchored": 0.18992454528504635,
-    "anti": 0.1541285023028805
+    "anchor_only": 0.19173030929936738,
+    "expert": 0.18676998558652302,
+    "anchored": 0.18990882473955217,
+    "anti": 0.15651061419479623
   },
   "per_document": {
     "base": [
@@ -116,54 +120,70 @@
       0.1232876712328767,
       0.18884120171673818
     ],
+    "anchor_only": [
+      0.14960629921259844,
+      0.2436548223350254,
+      0.1728395061728395,
+      0.16363636363636364,
+      0.17307692307692307,
+      0.19323671497584538,
+      0.2857142857142857,
+      0.22448979591836735,
+      0.20634920634920634,
+      0.1313868613138686,
+      0.15517241379310345,
+      0.22222222222222224,
+      0.10526315789473684,
+      0.25757575757575757
+    ],
     "expert": [
-      0.16770186335403725,
-      0.32958801498127344,
-      0.18972332015810278,
-      0.17589576547231273,
-      0.21641791044776118,
-      0.17358490566037735,
-      0.22748815165876776,
-      0.13043478260869565,
-      0.1407035175879397,
-      0.13829787234042554,
-      0.154639175257732,
-      0.23574144486692014,
-      0.12345679012345677,
-      0.19591836734693877
+      0.19047619047619047,
+      0.31999999999999995,
+      0.17857142857142858,
+      0.18000000000000002,
+      0.22077922077922077,
+      0.1716738197424893,
+      0.22680412371134018,
+      0.1435897435897436,
+      0.15384615384615385,
+      0.12903225806451613,
+      0.14358974358974358,
+      0.20149253731343283,
+      0.13043478260869568,
+      0.22448979591836732
     ],
     "anchored": [
-      0.17610062893081763,
-      0.33064516129032256,
-      0.17467248908296942,
-      0.18374558303886926,
-      0.21978021978021978,
-      0.17573221757322174,
-      0.21782178217821785,
-      0.19108280254777069,
-      0.14634146341463417,
-      0.1276595744680851,
-      0.16091954022988506,
-      0.21929824561403508,
-      0.11188811188811187,
-      0.22325581395348837
+      0.16494845360824742,
+      0.336283185840708,
+      0.16113744075829384,
+      0.1811594202898551,
+      0.2139917695473251,
+      0.1825726141078838,
+      0.2458100558659218,
+      0.1794871794871795,
+      0.13924050632911392,
+      0.14942528735632182,
+      0.13333333333333333,
+      0.22026431718061676,
+      0.12030075187969926,
+      0.2307692307692308
     ],
     "anti": [
-      0.12280701754385967,
-      0.1032258064516129,
-      0.12328767123287673,
-      0.09836065573770493,
-      0.14285714285714285,
-      0.1711229946524064,
-      0.15384615384615383,
-      0.2597402597402597,
-      0.0851063829787234,
-      0.08695652173913045,
-      0.2558139534883721,
-      0.1830065359477124,
-      0.15384615384615383,
-      0.21782178217821782
+      0.13127413127413126,
+      0.11167512690355332,
+      0.1515151515151515,
+      0.13559322033898308,
+      0.12037037037037036,
+      0.1552511415525114,
+      0.18300653594771243,
+      0.15625,
+      0.16296296296296295,
+      0.15286624203821655,
+      0.1884057971014493,
+      0.15813953488372093,
+      0.1111111111111111,
+      0.2727272727272727
     ]
   },
-  "expert_beats_base_docs": 9
+  "expert_beats_base_docs": 8
 }

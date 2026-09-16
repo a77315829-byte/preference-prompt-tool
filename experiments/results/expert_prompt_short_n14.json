@@ -30,54 +30,47 @@
         },
         {
           "value": "moderate_complexity",
-          "instruction": "Use sentences of moderate length, around 15 to 25 words, with straightforward structure."
-        },
-        {
-          "value": "complex",
-          "instruction": "Use long and complex sentences with multiple clauses and more than 25 words."
-        }
-      ]
-    },
-    {
-      "name": "focus_on_facts",
-      "description": "사실 전달에 집중하는 정도를 나타냅니다.",
-      "author_value": "fact_focused",
-      "values": [
-        {
-          "value": "fact_focused",
-          "instruction": "Present only clear, verifiable facts without speculation or opinion."
-        },
-        {
-          "value": "interpretive",
-          "instruction": "Include some interpretation, speculation, or opinion along with facts."
+          "instruction": "Use sentences of moderate length, around 15 to 25 words, with clear structure."
         }
       ]
     },
     {
       "name": "information_density",
-      "description": "한 문장에 포함된 정보량의 정도를 나타냅니다.",
+      "description": "답변 내에서 정보가 얼마나 압축되어 있는지를 나타냅니다.",
       "author_value": "medium_density",
       "values": [
         {
           "value": "low_density",
-          "instruction": "Include only one main fact or idea per sentence."
+          "instruction": "Include more background or explanatory information, making the summary less dense."
         },
         {
           "value": "medium_density",
-          "instruction": "Include one or two related facts or ideas per sentence."
+          "instruction": "Include key facts and main points without excessive detail or elaboration."
+        }
+      ]
+    },
+    {
+      "name": "stance_and_objectivity",
+      "description": "답변에서 주관적 의견이나 평가의 포함 여부를 나타냅니다.",
+      "author_value": "neutral",
+      "values": [
+        {
+          "value": "neutral",
+          "instruction": "Present information factually without adding personal opinions or subjective comments."
         },
         {
-          "value": "high_density",
-          "instruction": "Include multiple facts or ideas per sentence, making sentences information-rich."
+          "value": "subjective",
+          "instruction": "Include some evaluative or interpretive comments alongside factual information."
         }
       ]
     }
   ],
   "prompts": {
     "base": "Summarise the given news article in English.",
-    "expert": "Summarise the given news article in English.\nWrite a brief summary using about 1 to 3 sentences and roughly 30 to 40 words.\nUse sentences of moderate length, around 15 to 25 words, with straightforward structure.\nPresent only clear, verifiable facts without speculation or opinion.\nInclude one or two related facts or ideas per sentence.",
-    "anchored": "Summarise the given news article in English.\nWrite a brief summary using about 1 to 3 sentences and roughly 30 to 40 words.\nUse sentences of moderate length, around 15 to 25 words, with straightforward structure.\nPresent only clear, verifiable facts without speculation or opinion.\nInclude one or two related facts or ideas per sentence.\nMatch this length: about 2 sentences and roughly 34 words in total.",
-    "anti": "Summarise the given news article in English.\nWrite a longer summary using 4 or more sentences and 60 or more words.\nUse short and simple sentences with fewer than 15 words each.\nInclude some interpretation, speculation, or opinion along with facts.\nInclude only one main fact or idea per sentence."
+    "anchor_only": "Summarise the given news article in English.\nMatch this length: about 2 sentences and roughly 34 words in total.",
+    "expert": "Summarise the given news article in English.\nWrite a brief summary using about 1 to 3 sentences and roughly 30 to 40 words.\nUse sentences of moderate length, around 15 to 25 words, with clear structure.\nInclude key facts and main points without excessive detail or elaboration.\nPresent information factually without adding personal opinions or subjective comments.",
+    "anchored": "Summarise the given news article in English.\nWrite a brief summary using about 1 to 3 sentences and roughly 30 to 40 words.\nUse sentences of moderate length, around 15 to 25 words, with clear structure.\nInclude key facts and main points without excessive detail or elaboration.\nPresent information factually without adding personal opinions or subjective comments.\nMatch this length: about 2 sentences and roughly 34 words in total.",
+    "anti": "Summarise the given news article in English.\nWrite a longer summary using 4 or more sentences and 60 or more words.\nUse short and simple sentences with fewer than 15 words each.\nInclude more background or explanatory information, making the summary less dense.\nInclude some evaluative or interpretive comments alongside factual information."
   },
   "target_stats": {
     "sentences_per_answer": 2.4,
@@ -87,21 +80,24 @@
   },
   "length_gap": {
     "base": 119.3,
-    "expert": 22.4,
-    "anchored": 6.3,
-    "anti": 60.3
+    "anchor_only": 0.8,
+    "expert": 14.6,
+    "anchored": 4.1,
+    "anti": 81.9
   },
   "form_distance": {
     "base": 1.776,
-    "expert": 0.325,
-    "anchored": 0.149,
-    "anti": 1.257
+    "anchor_only": 0.061,
+    "expert": 0.209,
+    "anchored": 0.114,
+    "anti": 1.562
   },
   "means": {
     "base": 0.15743451791520086,
-    "expert": 0.21121366487328747,
-    "anchored": 0.20972996909982397,
-    "anti": 0.16822541601423624
+    "anchor_only": 0.19799785861049593,
+    "expert": 0.20667598008761862,
+    "anchored": 0.2195138256386522,
+    "anti": 0.15766251355456612
   },
   "per_document": {
     "base": [
@@ -120,53 +116,69 @@
       0.12030075187969926,
       0.1372549019607843
     ],
+    "anchor_only": [
+      0.13043478260869565,
+      0.2975206611570248,
+      0.23404255319148934,
+      0.11666666666666668,
+      0.12962962962962965,
+      0.21238938053097345,
+      0.32,
+      0.1739130434782609,
+      0.1724137931034483,
+      0.1518987341772152,
+      0.28571428571428575,
+      0.15238095238095234,
+      0.0851063829787234,
+      0.3098591549295775
+    ],
     "expert": [
-      0.16560509554140126,
-      0.359375,
-      0.2782608695652174,
-      0.09523809523809525,
-      0.17567567567567569,
-      0.2657342657342657,
-      0.3010752688172043,
+      0.1476510067114094,
+      0.31724137931034485,
+      0.1730769230769231,
+      0.11023622047244096,
+      0.16296296296296298,
+      0.27941176470588236,
+      0.325,
       0.16279069767441862,
-      0.13636363636363635,
-      0.14893617021276598,
-      0.21333333333333335,
-      0.1911764705882353,
-      0.24324324324324323,
-      0.2201834862385321
+      0.14634146341463414,
+      0.15384615384615385,
+      0.2222222222222222,
+      0.19999999999999998,
+      0.2,
+      0.29268292682926833
     ],
     "anchored": [
-      0.15942028985507248,
-      0.3703703703703704,
-      0.17999999999999997,
-      0.11111111111111112,
-      0.1732283464566929,
-      0.22950819672131148,
-      0.3333333333333333,
-      0.15625,
-      0.18181818181818182,
-      0.13793103448275862,
-      0.24242424242424243,
-      0.19819819819819817,
-      0.2181818181818182,
-      0.24444444444444446
+      0.12121212121212123,
+      0.38596491228070173,
+      0.1978021978021978,
+      0.1951219512195122,
+      0.21311475409836067,
+      0.25,
+      0.3611111111111111,
+      0.14492753623188406,
+      0.1492537313432836,
+      0.15584415584415584,
+      0.23529411764705882,
+      0.1886792452830189,
+      0.17857142857142858,
+      0.2962962962962963
     ],
     "anti": [
-      0.15135135135135133,
-      0.28395061728395066,
-      0.19999999999999998,
-      0.15450643776824036,
-      0.15204678362573099,
-      0.21965317919075145,
-      0.208695652173913,
-      0.08759124087591243,
-      0.09803921568627451,
+      0.1675392670157068,
+      0.2857142857142857,
+      0.1865284974093264,
+      0.13991769547325103,
+      0.21164021164021166,
+      0.20454545454545456,
+      0.1761006289308176,
       0.10738255033557047,
-      0.1846153846153846,
-      0.1568627450980392,
-      0.14457831325301204,
-      0.20588235294117646
+      0.08695652173913045,
+      0.10309278350515465,
+      0.0967741935483871,
+      0.16470588235294117,
+      0.1176470588235294,
+      0.15873015873015872
     ]
   },
   "expert_beats_base_docs": 12

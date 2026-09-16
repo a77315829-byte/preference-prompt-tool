@@ -115,6 +115,15 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
     anchor = form_anchor(train)
     prompts = {
         "base": domain.task_description,
+        # 어블레이션의 핵심 조건. 과제 서술 + 코드로 잰 수치만 주고 축
+        # 지시문은 전부 뺀다. 이게 anchored 와 비슷하면 축은 아무것도
+        # 기여하지 않는다는 뜻이고, 그러면 이 기능의 주장은 "저자의 글
+        # 길이를 재서 맞춘다"로 줄어든다.
+        "anchor_only": (
+            (domain.task_description + "\n" + anchor)
+            if anchor
+            else domain.task_description
+        ),
         "expert": expert_prompt,
         # 축 + 측정한 형식 수치. 축 지시문은 LLM 이 수치를 형용사로 번역한
         # 결과이고 그 번역이 양방향으로 틀렸다. 수치를 직접 주면 그 왕복이
@@ -192,9 +201,24 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
     print(f"anti  - base = {means['anti'] - means['base']:+.3f}")
     print()
     print()
-    print("앵커 효과 (축만 vs 축+수치)")
-    print(f"  형식 거리 {form_dist['expert']:.3f} -> {form_dist['anchored']:.3f}")
-    print(f"  ROUGE-L  {means['expert']:.3f} -> {means['anchored']:.3f}")
+    print("어블레이션: 축이 수치 앵커 이상을 하는가")
+    print(f"{'조건':12} {'형식 거리':>10} {'ROUGE-L':>9}")
+    for name in ("base", "anchor_only", "anchored", "expert"):
+        print(f"{name:12} {form_dist[name]:10.3f} {means[name]:9.3f}")
+    form_gain = form_dist["anchor_only"] - form_dist["anchored"]
+    rouge_gain = means["anchored"] - means["anchor_only"]
+    print(f"  축의 기여: 형식 거리 {form_gain:+.3f} / ROUGE-L {rouge_gain:+.3f}")
+    print("  (형식 거리는 낮을수록 좋으므로 양수가 축의 이득)")
+    # 3분기로 읽는다. 처음엔 "기여 없음"과 "해를 끼침"을 한 덩어리로 봐서
+    # 축이 형식을 망친 경우까지 "기여한다"고 찍었다.
+    if form_gain < -0.02:
+        print("  -> 축이 형식을 오히려 망친다. 수치 앵커만 쓰는 쪽이 낫다.")
+        if rouge_gain > 0.01:
+            print("     (다만 ROUGE-L 은 올랐다. 형식을 버리고 내용을 얻은 셈이다.)")
+    elif form_gain <= 0.02 and abs(rouge_gain) <= 0.01:
+        print("  -> 축은 수치 앵커 위에 기여하지 않는다. 주장을 길이 맞추기로 줄여야 한다.")
+    else:
+        print("  -> 축이 수치 앵커 위에 추가로 기여한다.")
     print()
     if means["expert"] > means["base"] and means["anti"] < means["base"]:
         print("판정: 축이 방향을 갖는다 (expert > base > anti).")

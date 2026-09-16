@@ -6,74 +6,75 @@
   "axes": [
     {
       "name": "sentence_length",
-      "description": "문장 길이가 길고 복잡한 편인지 간결한 편인지 나타냅니다.",
+      "description": "문장 길이가 길고 복잡한가, 아니면 짧고 간결한가를 나타냅니다.",
       "author_value": "long",
       "values": [
         {
           "value": "long",
-          "instruction": "Write sentences that are relatively long and contain multiple clauses."
+          "instruction": "Write sentences that are relatively long and contain multiple clauses or detailed information."
         },
         {
           "value": "short",
-          "instruction": "Write short and simple sentences with minimal clauses."
+          "instruction": "Write short, simple sentences with minimal clauses."
         }
       ]
     },
     {
       "name": "detail_density",
-      "description": "문장당 단어 수와 전체 답변 길이 대비 정보량의 밀도를 나타냅니다.",
-      "author_value": "medium",
+      "description": "문장당 포함된 정보량과 세부사항의 밀도를 나타냅니다.",
+      "author_value": "high",
       "values": [
         {
           "value": "high",
-          "instruction": "Include a high density of information with many facts and details per sentence."
-        },
-        {
-          "value": "medium",
-          "instruction": "Include a moderate amount of detail, balancing facts and readability."
+          "instruction": "Include multiple facts and details within each sentence to provide dense information."
         },
         {
           "value": "low",
-          "instruction": "Keep details minimal and focus on broad summary points."
+          "instruction": "Keep sentences light on details, focusing on one fact or idea per sentence."
         }
       ]
     },
     {
-      "name": "structure_ordering",
-      "description": "답변 내에서 정보가 어떻게 배열되는지, 예를 들어 원인-결과, 시간순, 중요도순 등.",
-      "author_value": "fact_then_context",
+      "name": "sentence_count",
+      "description": "답변 내 문장 수가 많은가 적은가를 나타냅니다.",
+      "author_value": "medium",
       "values": [
         {
-          "value": "fact_then_context",
-          "instruction": "Present the main fact or event first, then provide additional context or explanation."
+          "value": "few",
+          "instruction": "Use only a few sentences (2-3) to summarise the content."
         },
         {
-          "value": "context_then_fact",
-          "instruction": "Start with background or context, then state the main fact or event."
+          "value": "medium",
+          "instruction": "Use a moderate number of sentences (around 4) to summarise the content."
+        },
+        {
+          "value": "many",
+          "instruction": "Use many sentences (5 or more) to provide a detailed summary."
         }
       ]
     },
     {
-      "name": "hedging_level",
-      "description": "확실한 진술과 불확실성 또는 추정 표현 사용 정도를 나타냅니다.",
-      "author_value": "some_hedging",
+      "name": "focus_on_facts",
+      "description": "사실 전달에 집중하는지, 아니면 해석이나 평가를 포함하는지 나타냅니다.",
+      "author_value": "fact-focused",
       "values": [
         {
-          "value": "no_hedging",
-          "instruction": "Make definitive statements without hedging or uncertainty."
+          "value": "fact-focused",
+          "instruction": "Focus on reporting factual information without adding personal opinions or interpretations."
         },
         {
-          "value": "some_hedging",
-          "instruction": "Use some hedging language to indicate uncertainty or possibility."
+          "value": "interpretive",
+          "instruction": "Include interpretations, opinions, or evaluations alongside factual information."
         }
       ]
     }
   ],
   "prompts": {
     "base": "Summarise the given news article in English.",
-    "expert": "Summarise the given news article in English.\nWrite sentences that are relatively long and contain multiple clauses.\nInclude a moderate amount of detail, balancing facts and readability.\nPresent the main fact or event first, then provide additional context or explanation.\nUse some hedging language to indicate uncertainty or possibility.",
-    "anchored": "Summarise the given news article in English.\nWrite sentences that are relatively long and contain multiple clauses.\nInclude a moderate amount of detail, balancing facts and readability.\nPresent the main fact or event first, then provide additional context or explanation.\nUse some hedging language to indicate uncertainty or possibility.\nMatch this length: about 4 sentences and roughly 98 words in total.",
-    "anti": "Summarise the given news article in English.\nWrite short and simple sentences with minimal clauses.\nInclude a high density of information with many facts and details per sentence.\nStart with background or context, then state the main fact or event.\nMake definitive statements without hedging or uncertainty."
+    "anchor_only": "Summarise the given news article in English.\nMatch this length: about 4 sentences and roughly 98 words in total.",
+    "expert": "Summarise the given news article in English.\nWrite sentences that are relatively long and contain multiple clauses or detailed information.\nInclude multiple facts and details within each sentence to provide dense information.\nUse a moderate number of sentences (around 4) to summarise the content.\nFocus on reporting factual information without adding personal opinions or interpretations.",
+    "anchored": "Summarise the given news article in English.\nWrite sentences that are relatively long and contain multiple clauses or detailed information.\nInclude multiple facts and details within each sentence to provide dense information.\nUse a moderate number of sentences (around 4) to summarise the content.\nFocus on reporting factual information without adding personal opinions or interpretations.\nMatch this length: about 4 sentences and roughly 98 words in total.",
+    "anti": "Summarise the given news article in English.\nWrite short, simple sentences with minimal clauses.\nKeep sentences light on details, focusing on one fact or idea per sentence.\nUse only a few sentences (2-3) to summarise the content.\nInclude interpretations, opinions, or evaluations alongside factual information."
   },
   "target_stats": {
     "sentences_per_answer": 6.1,
@@ -83,21 +84,24 @@
   },
   "length_gap": {
     "base": 34.0,
-    "expert": 130.6,
-    "anchored": 22.9,
-    "anti": 52.5
+    "anchor_only": -30.5,
+    "expert": 75.6,
+    "anchored": 41.5,
+    "anti": -72.8
   },
   "form_distance": {
     "base": 0.238,
-    "expert": 0.831,
-    "anchored": 0.372,
-    "anti": 0.326
+    "anchor_only": 0.191,
+    "expert": 0.574,
+    "anchored": 0.48,
+    "anti": 0.398
   },
   "means": {
     "base": 0.1846424000998866,
-    "expert": 0.17155331970676627,
-    "anchored": 0.18383374734059243,
-    "anti": 0.1861219928306758
+    "anchor_only": 0.18595148815105894,
+    "expert": 0.18268468298106305,
+    "anchored": 0.17740299045392366,
+    "anti": 0.17783537880446806
   },
   "per_document": {
     "base": [
@@ -116,53 +120,69 @@
       0.19753086419753088,
       0.19157088122605367
     ],
+    "anchor_only": [
+      0.1329639889196676,
+      0.1964912280701754,
+      0.19591836734693877,
+      0.15950920245398775,
+      0.16835016835016833,
+      0.1437908496732026,
+      0.24752475247524752,
+      0.2394366197183098,
+      0.2576687116564417,
+      0.1368421052631579,
+      0.12269938650306748,
+      0.16603773584905662,
+      0.1791044776119403,
+      0.2569832402234637
+    ],
     "expert": [
-      0.16723549488054607,
-      0.20689655172413793,
-      0.17699115044247787,
-      0.16981132075471697,
-      0.18837675350701402,
-      0.20253164556962025,
-      0.2416918429003021,
-      0.13186813186813187,
-      0.14569536423841062,
-      0.14556962025316456,
-      0.11525423728813558,
-      0.16046966731898238,
-      0.1588785046728972,
-      0.1904761904761905
+      0.1694915254237288,
+      0.29411764705882354,
+      0.19484240687679083,
+      0.16822429906542058,
+      0.21374045801526714,
+      0.16666666666666666,
+      0.17307692307692307,
+      0.13636363636363635,
+      0.15807560137457044,
+      0.15533980582524273,
+      0.14234875444839856,
+      0.1942257217847769,
+      0.18779342723004697,
+      0.20327868852459013
     ],
     "anchored": [
-      0.13842482100238665,
-      0.18289085545722714,
-      0.1693811074918567,
-      0.19321148825065274,
-      0.2136986301369863,
-      0.17575757575757578,
-      0.24193548387096772,
-      0.20320855614973263,
-      0.1818181818181818,
-      0.1698841698841699,
-      0.14634146341463414,
-      0.1943573667711599,
-      0.15555555555555556,
-      0.2072072072072072
+      0.14622641509433962,
+      0.1643059490084986,
+      0.18343195266272191,
+      0.1625615763546798,
+      0.2185792349726776,
+      0.1568627450980392,
+      0.20588235294117646,
+      0.17351598173515984,
+      0.1328413284132841,
+      0.1556420233463035,
+      0.1276595744680851,
+      0.2328358208955224,
+      0.16831683168316833,
+      0.25498007968127495
     ],
     "anti": [
-      0.18677042801556418,
-      0.20500000000000002,
-      0.17647058823529413,
-      0.17758985200845667,
-      0.25626740947075205,
-      0.196969696969697,
-      0.20083682008368203,
-      0.22772277227722773,
-      0.14285714285714285,
-      0.1689189189189189,
-      0.14342629482071714,
-      0.16666666666666666,
-      0.16374269005847952,
-      0.19246861924686193
+      0.089171974522293,
+      0.13733905579399142,
+      0.14705882352941177,
+      0.12949640287769784,
+      0.17857142857142855,
+      0.1411764705882353,
+      0.2112676056338028,
+      0.3617021276595745,
+      0.203125,
+      0.13071895424836602,
+      0.18803418803418803,
+      0.15311004784688992,
+      0.18604651162790695,
+      0.23287671232876714
     ]
   },
   "expert_beats_base_docs": 4
