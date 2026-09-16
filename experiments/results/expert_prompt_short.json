@@ -1,0 +1,76 @@
+{
+  "persona": "short",
+  "n_train": 5,
+  "n_test": 6,
+  "task_description": "Summarise the given news article in English.",
+  "axes": [
+    {
+      "name": "sentence_density",
+      "author_value": "medium_density",
+      "values": [
+        "low_density",
+        "medium_density",
+        "high_density"
+      ]
+    },
+    {
+      "name": "detail_level",
+      "author_value": "minimal_detail",
+      "values": [
+        "minimal_detail",
+        "moderate_detail",
+        "rich_detail"
+      ]
+    },
+    {
+      "name": "stance_level",
+      "author_value": "neutral",
+      "values": [
+        "neutral",
+        "mild_opinion",
+        "strong_opinion"
+      ]
+    },
+    {
+      "name": "formality_level",
+      "author_value": "semi_formal",
+      "values": [
+        "informal",
+        "semi_formal",
+        "formal"
+      ]
+    }
+  ],
+  "means": {
+    "base": 0.1533627513715861,
+    "expert": 0.19278120979373428,
+    "anti": 0.1158308128212988
+  },
+  "per_document": {
+    "base": [
+      0.1509433962264151,
+      0.10989010989010989,
+      0.15286624203821655,
+      0.14201183431952663,
+      0.20317460317460315,
+      0.16129032258064516
+    ],
+    "expert": [
+      0.11695906432748539,
+      0.15813953488372096,
+      0.16000000000000003,
+      0.15977961432506887,
+      0.3618090452261306,
+      0.19999999999999998
+    ],
+    "anti": [
+      0.09326424870466321,
+      0.12203389830508472,
+      0.08408408408408408,
+      0.10774410774410775,
+      0.17518248175182483,
+      0.11267605633802817
+    ]
+  },
+  "expert_beats_base_docs": 5
+}

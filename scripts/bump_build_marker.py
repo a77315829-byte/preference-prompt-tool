@@ -62,10 +62,20 @@ def _watched_files() -> list[Path]:
 
 
 def compute_marker() -> str:
+    """감시 대상의 내용을 한 값으로 요약한다.
+
+    원시 바이트를 해싱하면 안 된다. git 이 체크아웃할 때 줄바꿈을 CRLF 로
+    바꿔 쓰는데, git 은 그걸 변경으로 보지 않지만 바이트는 달라진다.
+    실제로 브랜치를 오간 뒤 감시 대상이 하나도 안 바뀌었는데 마커가
+    달라졌다(감시 파일 25개 중 14개가 CRLF, 11개가 LF 였다). 그러면
+    쓸데없는 재배포가 돌고, 기계마다 값이 달라져 마커가 신호 구실을
+    못 한다. 줄바꿈을 정규화해서 내용만 본다.
+    """
     digest = hashlib.sha256()
     for path in _watched_files():
         digest.update(path.relative_to(ROOT).as_posix().encode("utf-8"))
-        digest.update(path.read_bytes())
+        text = path.read_text(encoding="utf-8")
+        digest.update(text.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8"))
     return digest.hexdigest()[:12]
 
 

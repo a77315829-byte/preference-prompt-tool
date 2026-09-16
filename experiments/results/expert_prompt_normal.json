@@ -1,0 +1,72 @@
+{
+  "persona": "normal",
+  "n_train": 5,
+  "n_test": 6,
+  "task_description": "Summarise the given news article in English.",
+  "axes": [
+    {
+      "name": "sentence_complexity",
+      "author_value": "simple_moderate",
+      "values": [
+        "simple_moderate",
+        "complex"
+      ]
+    },
+    {
+      "name": "information_density",
+      "author_value": "moderate",
+      "values": [
+        "moderate",
+        "high"
+      ]
+    },
+    {
+      "name": "domain_terminology_usage",
+      "author_value": "low_to_moderate",
+      "values": [
+        "low_to_moderate",
+        "high"
+      ]
+    },
+    {
+      "name": "stance_expression",
+      "author_value": "neutral_factual",
+      "values": [
+        "neutral_factual",
+        "evaluative_opinionated"
+      ]
+    }
+  ],
+  "means": {
+    "base": 0.19049782766606674,
+    "expert": 0.1944377701661799,
+    "anti": 0.11891572329851752
+  },
+  "per_document": {
+    "base": [
+      0.15544041450777202,
+      0.1764705882352941,
+      0.24468085106382978,
+      0.1588785046728972,
+      0.23243243243243242,
+      0.17508417508417506
+    ],
+    "expert": [
+      0.14574898785425103,
+      0.16489361702127658,
+      0.23529411764705885,
+      0.16032064128256512,
+      0.2705882352941177,
+      0.1897810218978102
+    ],
+    "anti": [
+      0.10683760683760683,
+      0.1170018281535649,
+      0.1329479768786127,
+      0.11832611832611833,
+      0.11954022988505746,
+      0.11884057971014492
+    ]
+  },
+  "expert_beats_base_docs": 3
+}
