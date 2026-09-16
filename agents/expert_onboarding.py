@@ -293,8 +293,15 @@ _ANCHOR_TEMPLATES = {
 ANCHOR_RELATIVE_THRESHOLD = 0.25
 
 
+# 길이 계열 항목만. 넓힌 항목(불릿·문단·유보·숫자·1인칭)의 기여를
+# 분리해 재려면 길이만 쓰는 조건이 필요하다.
+LENGTH_ANCHOR_KEYS = ("sentences_per_answer", "words_per_answer")
+
+
 def selective_form_anchor(
-    author: list[ExpertExample], model_default: list[ExpertExample]
+    author: list[ExpertExample],
+    model_default: list[ExpertExample],
+    keys: tuple[str, ...] | None = None,
 ) -> tuple[str, dict[str, float]]:
     """저자가 모델 기본값과 실제로 다른 항목만 골라 앵커를 만든다.
 
@@ -303,6 +310,9 @@ def selective_form_anchor(
     한 사람의 글만 보면 "무엇에 비해 긴가"를 알 수 없다는 문제를 코드로
     푸는 방식이고, LLM 에게 눈대중을 맡기는 것과 반대다.
 
+    keys 를 주면 그 항목만 후보로 본다. 넓힌 항목의 기여를 길이 계열과
+    분리해 재는 데 쓴다.
+
     돌려주는 것은 (앵커 문장, 고른 항목별 상대 차이)다.
     """
     author_stats = corpus_stats(author)
@@ -310,7 +320,10 @@ def selective_form_anchor(
 
     selected: dict[str, float] = {}
     parts = []
-    for key, template in _ANCHOR_TEMPLATES.items():
+    allowed = _ANCHOR_TEMPLATES if keys is None else {
+        k: v for k, v in _ANCHOR_TEMPLATES.items() if k in keys
+    }
+    for key, template in allowed.items():
         target = author_stats.get(key)
         baseline = default_stats.get(key)
         if target is None or baseline is None:

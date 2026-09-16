@@ -42,6 +42,7 @@ from agents.expert_onboarding import (
     extract_axes,
     form_anchor,
     form_distance,
+    LENGTH_ANCHOR_KEYS,
     selective_form_anchor,
     to_domain,
 )
@@ -129,6 +130,13 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         for example in train
     ]
     selective, selected_keys = selective_form_anchor(train, default_outputs)
+    # 길이 계열만 쓴 앵커. 넓힌 항목(불릿·문단·유보·숫자·1인칭)이 실제로
+    # 보탬이 되는지 두 조건의 차이로 잰다. 저자끼리는 이 항목들이 갈리지
+    # 않지만 모델 기본값과는 갈리므로, 이 말뭉치에서도 비교가 성립한다.
+    selective_len, selected_len_keys = selective_form_anchor(
+        train, default_outputs, keys=LENGTH_ANCHOR_KEYS
+    )
+    print("길이 전용 앵커  :", selective_len or "(없음)")
     print("모델 기본 형식:", corpus_stats(default_outputs))
     print("저자 형식      :", corpus_stats(train))
     print("고른 항목      :", selected_keys or "(없음 - 기본값과 차이가 작다)")
@@ -145,6 +153,11 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
             else domain.task_description
         ),
         # 선별 앵커. 저자가 모델 기본값과 실제로 다른 항목만 지시한다.
+        "selective_len": (
+            (domain.task_description + "\n" + selective_len)
+            if selective_len
+            else domain.task_description
+        ),
         "selective": (
             (domain.task_description + "\n" + selective)
             if selective
@@ -229,7 +242,7 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
     print()
     print("어블레이션: 축이 수치 앵커 이상을 하는가")
     print(f"{'조건':12} {'형식 거리':>10} {'ROUGE-L':>9}")
-    for name in ("base", "anchor_only", "selective", "anchored", "expert"):
+    for name in ("base", "anchor_only", "selective_len", "selective", "anchored", "expert"):
         print(f"{name:12} {form_dist[name]:10.3f} {means[name]:9.3f}")
     form_gain = form_dist["anchor_only"] - form_dist["anchored"]
     rouge_gain = means["anchored"] - means["anchor_only"]
@@ -275,6 +288,7 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         "length_gap": length_gap,
         "form_distance": form_dist,
         "selected_anchor_keys": selected_keys,
+        "selected_length_only_keys": selected_len_keys,
         "selective_anchor": selective,
         "means": means,
         "per_document": scores,

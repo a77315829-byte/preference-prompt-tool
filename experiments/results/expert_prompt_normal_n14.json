@@ -11,64 +11,64 @@
       "values": [
         {
           "value": "short",
-          "instruction": "Write a very brief summary with 1-2 sentences and fewer than 40 words."
+          "instruction": "Write a very brief summary with only one or two sentences."
         },
         {
           "value": "medium_length",
-          "instruction": "Write a summary of about 3 sentences and around 60-70 words."
+          "instruction": "Write a summary of about three sentences with moderate detail."
         },
         {
           "value": "long",
-          "instruction": "Write a detailed summary with 5 or more sentences and over 100 words."
+          "instruction": "Write a detailed summary with multiple sentences and extensive information."
         }
       ]
     },
     {
       "name": "sentence_complexity",
-      "description": "문장당 단어 수로 나타내는 문장 복잡도입니다.",
+      "description": "문장당 단어 수와 문장 구조의 복잡성을 나타냅니다.",
       "author_value": "complex",
       "values": [
         {
           "value": "simple",
-          "instruction": "Use short and simple sentences with fewer than 15 words each."
+          "instruction": "Write short and simple sentences with straightforward structure."
         },
         {
           "value": "complex",
-          "instruction": "Use longer, more complex sentences averaging about 20-25 words."
-        }
-      ]
-    },
-    {
-      "name": "stance_directness",
-      "description": "서술 태도에서 직접적이고 단정적인 표현과 완곡한 표현의 정도입니다.",
-      "author_value": "mostly_direct",
-      "values": [
-        {
-          "value": "hedged",
-          "instruction": "Include cautious or hedging language to soften statements."
-        },
-        {
-          "value": "mostly_direct",
-          "instruction": "Make clear, direct statements with minimal hedging."
+          "instruction": "Write longer sentences with more complex structure and multiple clauses."
         }
       ]
     },
     {
       "name": "use_of_numerals",
-      "description": "숫자 사용 빈도를 나타냅니다.",
-      "author_value": "occasional_numerals",
+      "description": "답변 내에서 숫자 사용 빈도를 나타냅니다.",
+      "author_value": "moderate",
       "values": [
         {
-          "value": "rare_numerals",
-          "instruction": "Avoid using many numerals; use mostly words instead."
+          "value": "none",
+          "instruction": "Avoid using numerals or specific numbers in the summary."
         },
         {
-          "value": "occasional_numerals",
-          "instruction": "Include some numerals naturally when relevant."
+          "value": "moderate",
+          "instruction": "Include some numerals or specific numbers when relevant."
         },
         {
-          "value": "frequent_numerals",
-          "instruction": "Use many numerals to provide detailed quantitative information."
+          "value": "frequent",
+          "instruction": "Use many numerals and specific numbers to provide detailed quantitative information."
+        }
+      ]
+    },
+    {
+      "name": "hedging_level",
+      "description": "확신의 정도를 나타내며, 불확실성 표현 사용 빈도를 의미합니다.",
+      "author_value": "low",
+      "values": [
+        {
+          "value": "low",
+          "instruction": "Write with confident statements and minimal hedging or uncertainty."
+        },
+        {
+          "value": "high",
+          "instruction": "Use hedging expressions to indicate uncertainty or possibility."
         }
       ]
     }
@@ -76,10 +76,11 @@
   "prompts": {
     "base": "Summarise the given news article in English.",
     "anchor_only": "Summarise the given news article in English.\nMatch this length: about 3 sentences and roughly 67 words in total.",
+    "selective_len": "Summarise the given news article in English.\nMatch this form: write about 3 sentences, use roughly 67 words in total.",
     "selective": "Summarise the given news article in English.\nMatch this form: write about 3 sentences, use roughly 67 words in total, use about 0.8 hedging words per 100 words, use about 0.2 first-person words per 100 words.",
-    "expert": "Summarise the given news article in English.\nWrite a summary of about 3 sentences and around 60-70 words.\nUse longer, more complex sentences averaging about 20-25 words.\nMake clear, direct statements with minimal hedging.\nInclude some numerals naturally when relevant.",
-    "anchored": "Summarise the given news article in English.\nWrite a summary of about 3 sentences and around 60-70 words.\nUse longer, more complex sentences averaging about 20-25 words.\nMake clear, direct statements with minimal hedging.\nInclude some numerals naturally when relevant.\nMatch this length: about 3 sentences and roughly 67 words in total.",
-    "anti": "Summarise the given news article in English.\nWrite a very brief summary with 1-2 sentences and fewer than 40 words.\nUse short and simple sentences with fewer than 15 words each.\nInclude cautious or hedging language to soften statements.\nAvoid using many numerals; use mostly words instead."
+    "expert": "Summarise the given news article in English.\nWrite a summary of about three sentences with moderate detail.\nWrite longer sentences with more complex structure and multiple clauses.\nInclude some numerals or specific numbers when relevant.\nWrite with confident statements and minimal hedging or uncertainty.",
+    "anchored": "Summarise the given news article in English.\nWrite a summary of about three sentences with moderate detail.\nWrite longer sentences with more complex structure and multiple clauses.\nInclude some numerals or specific numbers when relevant.\nWrite with confident statements and minimal hedging or uncertainty.\nMatch this length: about 3 sentences and roughly 67 words in total.",
+    "anti": "Summarise the given news article in English.\nWrite a very brief summary with only one or two sentences.\nWrite short and simple sentences with straightforward structure.\nAvoid using numerals or specific numbers in the summary.\nUse hedging expressions to indicate uncertainty or possibility."
   },
   "target_stats": {
     "sentences_per_answer": 3.9,
@@ -95,18 +96,20 @@
   "length_gap": {
     "base": 76.9,
     "anchor_only": -13.6,
+    "selective_len": -18.3,
     "selective": -13.4,
-    "expert": 2.4,
-    "anchored": 0.9,
-    "anti": -56.6
+    "expert": 47.3,
+    "anchored": 26.3,
+    "anti": -42.1
   },
   "form_distance": {
     "base": 0.721,
     "anchor_only": 0.138,
+    "selective_len": 0.146,
     "selective": 0.121,
-    "expert": 0.11,
-    "anchored": 0.066,
-    "anti": 0.501
+    "expert": 0.465,
+    "anchored": 0.213,
+    "anti": 0.33
   },
   "selected_anchor_keys": {
     "sentences_per_answer": 0.633,
@@ -114,14 +117,19 @@
     "hedges_per_100w": 0.342,
     "first_person_per_100w": 0.579
   },
+  "selected_length_only_keys": {
+    "sentences_per_answer": 0.633,
+    "words_per_answer": 0.553
+  },
   "selective_anchor": "Match this form: write about 3 sentences, use roughly 67 words in total, use about 0.8 hedging words per 100 words, use about 0.2 first-person words per 100 words.",
   "means": {
     "base": 0.18377014253680632,
     "anchor_only": 0.19173030929936738,
+    "selective_len": 0.18952562401881484,
     "selective": 0.1808886019544495,
-    "expert": 0.19163244622735504,
-    "anchored": 0.19091787515369552,
-    "anti": 0.15512573851519967
+    "expert": 0.17740172204557023,
+    "anchored": 0.1803119902300571,
+    "anti": 0.15999995235345713
   },
   "per_document": {
     "base": [
@@ -156,6 +164,22 @@
       0.10526315789473684,
       0.25757575757575757
     ],
+    "selective_len": [
+      0.13877551020408163,
+      0.22340425531914893,
+      0.18404907975460122,
+      0.16190476190476188,
+      0.18999999999999997,
+      0.18627450980392157,
+      0.3076923076923077,
+      0.23157894736842105,
+      0.18181818181818182,
+      0.11428571428571428,
+      0.16822429906542055,
+      0.19540229885057472,
+      0.10638297872340424,
+      0.2635658914728682
+    ],
     "selective": [
       0.1411764705882353,
       0.2551020408163265,
@@ -173,53 +197,53 @@
       0.28125
     ],
     "expert": [
-      0.13186813186813187,
-      0.25365853658536586,
-      0.2040816326530612,
-      0.1589958158995816,
-      0.19444444444444445,
-      0.17391304347826086,
-      0.25477707006369427,
-      0.1981981981981982,
-      0.21333333333333332,
-      0.125,
-      0.15267175572519084,
-      0.227979274611399,
-      0.13861386138613863,
-      0.2553191489361702
+      0.18354430379746836,
+      0.2570281124497992,
+      0.18400000000000002,
+      0.16027874564459932,
+      0.1968503937007874,
+      0.15277777777777776,
+      0.25396825396825395,
+      0.13259668508287292,
+      0.14432989690721648,
+      0.12698412698412698,
+      0.14814814814814814,
+      0.22950819672131148,
+      0.08284023668639053,
+      0.2307692307692308
     ],
     "anchored": [
-      0.15602836879432624,
-      0.25120772946859904,
-      0.22797927461139894,
-      0.1862348178137652,
-      0.2,
-      0.1917808219178082,
-      0.27450980392156865,
-      0.17475728155339804,
-      0.18181818181818182,
-      0.1276595744680851,
-      0.15873015873015872,
-      0.17733990147783252,
-      0.13861386138613863,
-      0.2261904761904762
+      0.14569536423841056,
+      0.21818181818181817,
+      0.1826086956521739,
+      0.17490494296577946,
+      0.1680672268907563,
+      0.20967741935483872,
+      0.2555555555555556,
+      0.18309859154929575,
+      0.14723926380368096,
+      0.13793103448275862,
+      0.16666666666666669,
+      0.23893805309734514,
+      0.11023622047244096,
+      0.18556701030927836
     ],
     "anti": [
-      0.07655502392344497,
-      0.19736842105263158,
-      0.11023622047244093,
-      0.0718562874251497,
-      0.09150326797385622,
-      0.12048192771084336,
-      0.1590909090909091,
-      0.21874999999999997,
-      0.21951219512195125,
-      0.08988764044943821,
-      0.3243243243243243,
-      0.15037593984962405,
-      0.15999999999999998,
-      0.1818181818181818
+      0.12556053811659193,
+      0.10256410256410257,
+      0.08955223880597014,
+      0.09375000000000001,
+      0.1257142857142857,
+      0.16216216216216214,
+      0.23076923076923075,
+      0.2,
+      0.13636363636363635,
+      0.1415929203539823,
+      0.2127659574468085,
+      0.15789473684210525,
+      0.1904761904761905,
+      0.2708333333333333
     ]
   },
-  "expert_beats_base_docs": 8
+  "expert_beats_base_docs": 5
 }
