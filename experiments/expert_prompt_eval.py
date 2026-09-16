@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import random
 import statistics
 import sys
@@ -104,6 +105,24 @@ def load_persona_examples(
     return examples[:limit]
 
 
+def sign_test_p(wins: int, total: int) -> float:
+    """문서별 페어드 비교의 양측 부호검정 p 값.
+
+    왜 필요한가: 표본이 작고 표준편차가 평균 차이보다 큰 경우가 많아
+    평균만으로는 우위를 주장할 수 없다. 이 프로젝트는 비교군 A/B/D 에서
+    이미 "5개 중 4개" 같은 페어드 수치를 보고하는데, 그 수치가 우연으로
+    나올 확률까지 적어두면 읽는 사람이 판단할 수 있다.
+
+    새 의존성 없이 이항분포로 정확히 계산한다(귀무가설 p=0.5).
+    """
+    if total == 0:
+        return 1.0
+    # 관측값만큼 또는 그보다 극단적인 경우의 확률을 양쪽으로 더한다.
+    extreme = min(wins, total - wins)
+    tail = sum(math.comb(total, k) for k in range(extreme + 1)) / (2 ** total)
+    return min(1.0, 2 * tail)
+
+
 def _anti_combo(report) -> dict[str, str]:
     """각 축에서 이 사람의 값이 아닌 값을 고른다."""
     combo = {}
@@ -113,7 +132,21 @@ def _anti_combo(report) -> dict[str, str]:
     return combo
 
 
-def run(persona_name: str, n_train: int, n_test: int) -> dict:
+# 조건을 골라 돌릴 수 있게 한다. 표본을 키울 때 전 조건을 다 돌리면
+# 호출 수가 조건 수만큼 곱해진다.
+ALL_CONDITIONS = (
+    "base", "anchor_only", "selective_len", "selective", "calibrated",
+    "ratio", "anchored", "expert",
+)
+CORE_CONDITIONS = ("base", "anchor_only", "ratio")
+
+
+def run(
+    persona_name: str,
+    n_train: int,
+    n_test: int,
+    conditions: tuple[str, ...] = ALL_CONDITIONS,
+) -> dict:
     persona = PERSONAS[persona_name]
     # 섞어서 뽑으므로 후보 전체를 모은 뒤 잘라낸다.
     examples = load_persona_examples(persona, n_train + n_test)
@@ -227,17 +260,25 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         "anchored": (expert_prompt + "\n" + anchor) if anchor else expert_prompt,
         "anti": build_prompt(domain, _anti_combo(report)),
     }
+    prompts = {name: text for name, text in prompts.items() if name in conditions}
+    print("돌리는 조건:", list(prompts) + (["ratio"] if "ratio" in conditions else []))
     print("형식 수치 앵커:", anchor or "(없음)")
-    print("조립된 전문가 프롬프트:")
-    print(prompts["expert"])
+    # --core 로 조건을 걸러내면 expert 가 없을 수 있다. 조건 필터를 넣고
+    # 이 출력을 안 고쳐서 KeyError 로 죽었다.
+    for shown in ("expert", "ratio", "anchor_only", "base"):
+        if shown in prompts:
+            print(f"조립된 프롬프트 ({shown}):")
+            print(prompts[shown])
+            break
     print()
 
     scores: dict[str, list[float]] = {name: [] for name in prompts}
     generated: dict[str, list[ExpertExample]] = {name: [] for name in prompts}
     print("압축률 기반 앵커 예시:", ratio_anchor(train, test[0].task) or "(없음)")
-    order = list(prompts) + ["ratio"]
-    scores["ratio"] = []
-    generated["ratio"] = []
+    order = list(prompts) + (["ratio"] if "ratio" in conditions else [])
+    if "ratio" in conditions:
+        scores["ratio"] = []
+        generated["ratio"] = []
     for index, example in enumerate(test, start=1):
         # ratio 조건만 과제별로 프롬프트가 달라진다. 목표를 원문 길이에
         # 곱해서 구하기 때문이다.
@@ -295,11 +336,13 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
     print("형식 거리 (0에 가까울수록 이 저자의 형식에 가깝다)")
     for name in order:
         print(f"  {name:8} {form_dist[name]:.3f}")
-    if form_dist["expert"] < form_dist["base"]:
-        print(f"  -> expert 가 형식을 더 잘 맞췄다 "
-              f"({form_dist['base']:.3f} -> {form_dist['expert']:.3f})")
-    else:
-        print("  -> expert 가 형식조차 못 맞췄다. 축 지시문이 약하다는 뜻이다.")
+    # 조건 필터(--core)로 걸러진 이름을 참조하면 KeyError 로 죽는다.
+    # 실제로 두 군데에서 그랬고, 표가 다 찍힌 뒤 결과 저장 직전에 죽어서
+    # 눈으로는 성공처럼 보였다.
+    best = min(order, key=lambda name: form_dist[name])
+    print(f"  -> 형식을 가장 잘 맞춘 조건: {best} ({form_dist[best]:.3f})")
+    if best == "base":
+        print("     기준선이 가장 가깝다. 이 저자에게서는 얻을 것이 없다는 뜻이다.")
 
     # 표본이 작고 표준편차가 평균 차이보다 큰 경우가 많아, 평균만으로는
     # 우위를 주장할 수 없다. 이 프로젝트가 비교군 A/B/D 에서 쓴 것과 같은
@@ -312,21 +355,29 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
             continue
         count = sum(1 for x, b in zip(scores[name], scores["base"]) if x > b)
         paired[name] = count
-        print(f"  {name:14} {count:2d}/{len(test)}  평균차 {means[name]-means['base']:+.3f}")
+        p_value = sign_test_p(count, len(test))
+        mark = "유의" if p_value < 0.05 else "판정보류"
+        print(
+            f"  {name:14} {count:2d}/{len(test)}  평균차 {means[name]-means['base']:+.3f}"
+            f"  p={p_value:.4f} {mark}"
+        )
     wins = paired.get("expert", 0)
-    print(f"expert - base = {means['expert'] - means['base']:+.3f}")
-    print(f"anti  - base = {means['anti'] - means['base']:+.3f}")
+    if "expert" in order:
+        print(f"expert - base = {means['expert'] - means['base']:+.3f}")
+    if "anti" in order:
+        print(f"anti  - base = {means['anti'] - means['base']:+.3f}")
     print()
     print()
     print("어블레이션: 축이 수치 앵커 이상을 하는가")
     print(f"{'조건':12} {'형식 거리':>10} {'ROUGE-L':>9}")
-    for name in (
-        "base", "anchor_only", "selective_len", "selective", "calibrated",
-        "ratio", "anchored", "expert",
-    ):
+    for name in order:
         print(f"{name:12} {form_dist[name]:10.3f} {means[name]:9.3f}")
-    form_gain = form_dist["anchor_only"] - form_dist["anchored"]
-    rouge_gain = means["anchored"] - means["anchor_only"]
+    if "anchored" not in order or "anchor_only" not in order:
+        print("  (어블레이션 판정 생략 - 해당 조건을 돌리지 않았다)")
+        form_gain = rouge_gain = 0.0
+    else:
+        form_gain = form_dist["anchor_only"] - form_dist["anchored"]
+        rouge_gain = means["anchored"] - means["anchor_only"]
     print(f"  축의 기여: 형식 거리 {form_gain:+.3f} / ROUGE-L {rouge_gain:+.3f}")
     print("  (형식 거리는 낮을수록 좋으므로 양수가 축의 이득)")
     # 3분기로 읽는다. 처음엔 "기여 없음"과 "해를 끼침"을 한 덩어리로 봐서
@@ -340,7 +391,9 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
     else:
         print("  -> 축이 수치 앵커 위에 추가로 기여한다.")
     print()
-    if means["expert"] > means["base"] and means["anti"] < means["base"]:
+    if "expert" not in order or "anti" not in order:
+        pass
+    elif means["expert"] > means["base"] and means["anti"] < means["base"]:
         print("판정: 축이 방향을 갖는다 (expert > base > anti).")
     elif means["expert"] > means["base"]:
         print("판정: expert 가 base 보다 높지만 anti 도 base 보다 높다.")
@@ -377,6 +430,7 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         "per_document": scores,
         "expert_beats_base_docs": wins,
         "paired_wins_vs_base": paired,
+        "sign_test_p": {k: round(sign_test_p(v, len(test)), 5) for k, v in paired.items()},
     }
 
 
@@ -386,17 +440,30 @@ def main() -> int:
     parser.add_argument("--train", type=int, default=5, help="축 추출에 쓸 예시 수")
     parser.add_argument("--test", type=int, default=6, help="홀드아웃 문서 수")
     parser.add_argument("--out", default=None, help="결과 JSON 경로")
+    parser.add_argument(
+        "--core", action="store_true",
+        help="핵심 조건만 (base / 절대 앵커 / 압축률 앵커). 표본을 키울 때 쓴다.",
+    )
     args = parser.parse_args()
 
     if not MACSUM_VAL.exists():
         raise SystemExit(f"MACSum 데이터가 없다: {MACSUM_VAL}")
 
-    result = run(args.persona, args.train, args.test)
+    result = run(
+        args.persona, args.train, args.test,
+        conditions=CORE_CONDITIONS if args.core else ALL_CONDITIONS,
+    )
 
     RESULTS.mkdir(parents=True, exist_ok=True)
     out = Path(args.out) if args.out else RESULTS / f"expert_prompt_{args.persona}.json"
     out.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"\n결과 저장: {out.relative_to(ROOT)}")
+    # --out 으로 상대 경로를 받으면 relative_to 가 터진다. 파일은 이미
+    # 써진 뒤라서 저장은 됐는데 마지막 출력만 죽어 실패처럼 보였다.
+    try:
+        shown = out.resolve().relative_to(ROOT)
+    except ValueError:
+        shown = out
+    print(f"\n결과 저장: {shown}")
     return 0
 
 

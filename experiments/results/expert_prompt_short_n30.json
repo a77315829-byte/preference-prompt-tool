@@ -1,0 +1,231 @@
+{
+  "persona": "short",
+  "n_train": 12,
+  "n_test": 30,
+  "task_description": "Summarise the given news article in English.",
+  "axes": [
+    {
+      "name": "answer_length",
+      "description": "답변의 길이와 밀도를 나타냅니다.",
+      "author_value": "concise",
+      "values": [
+        {
+          "value": "concise",
+          "instruction": "Write a brief summary using about 2 to 3 sentences and around 40 to 50 words."
+        },
+        {
+          "value": "detailed",
+          "instruction": "Write a longer, more detailed summary using 4 or more sentences and over 70 words."
+        }
+      ]
+    },
+    {
+      "name": "sentence_complexity",
+      "description": "문장당 단어 수와 문장 구조의 복잡성을 나타냅니다.",
+      "author_value": "moderate",
+      "values": [
+        {
+          "value": "simple",
+          "instruction": "Use short and simple sentences with fewer than 15 words each."
+        },
+        {
+          "value": "moderate",
+          "instruction": "Use moderately complex sentences averaging about 18 words each."
+        },
+        {
+          "value": "complex",
+          "instruction": "Use long and complex sentences with more than 25 words each."
+        }
+      ]
+    },
+    {
+      "name": "hedging_level",
+      "description": "확실성 표현(hedging)의 사용 빈도를 나타냅니다.",
+      "author_value": "low",
+      "values": [
+        {
+          "value": "low",
+          "instruction": "Write with high certainty and minimal use of hedging words."
+        },
+        {
+          "value": "high",
+          "instruction": "Include frequent hedging expressions to indicate uncertainty or caution."
+        }
+      ]
+    },
+    {
+      "name": "numerical_density",
+      "description": "숫자 및 구체적 데이터 사용 빈도를 나타냅니다.",
+      "author_value": "low",
+      "values": [
+        {
+          "value": "low",
+          "instruction": "Use few numerals and specific data points sparingly."
+        },
+        {
+          "value": "high",
+          "instruction": "Include many numerals and specific data points to support the summary."
+        }
+      ]
+    }
+  ],
+  "prompts": {
+    "base": "Summarise the given news article in English.",
+    "anchor_only": "Summarise the given news article in English.\nMatch this length: about 2 sentences and roughly 46 words in total."
+  },
+  "target_stats": {
+    "sentences_per_answer": 1.6,
+    "words_per_answer": 28.6,
+    "words_per_sentence": 17.9,
+    "answer_to_task_word_ratio": 0.053,
+    "bullet_line_ratio": 0.0,
+    "paragraphs_per_answer": 1.0,
+    "hedges_per_100w": 0.83,
+    "numerals_per_100w": 1.9,
+    "first_person_per_100w": 0.12
+  },
+  "length_gap": {
+    "base": 107.0,
+    "anchor_only": 17.8,
+    "ratio": 1.1
+  },
+  "form_distance": {
+    "base": 2.267,
+    "anchor_only": 0.382,
+    "ratio": 0.049
+  },
+  "selected_anchor_keys": {
+    "sentences_per_answer": 0.675,
+    "words_per_answer": 0.727,
+    "bullet_line_ratio": 1.0,
+    "paragraphs_per_answer": 0.375,
+    "first_person_per_100w": 1.0
+  },
+  "selected_length_only_keys": {
+    "sentences_per_answer": 0.675,
+    "words_per_answer": 0.727
+  },
+  "calibration_factors": {
+    "sentences_per_answer": 1.136,
+    "words_per_answer": 0.927,
+    "paragraphs_per_answer": 1.0
+  },
+  "calibrated_targets": {
+    "sentences_per_answer": 2.8,
+    "words_per_answer": 42.2,
+    "paragraphs_per_answer": 1.0
+  },
+  "selective_anchor": "Match this form: write about 2 sentences, use roughly 46 words in total, put about 0% of your lines in a bulleted list, break it into about 1 paragraphs, use about 0.0 first-person words per 100 words.",
+  "means": {
+    "base": 0.1483626841116851,
+    "anchor_only": 0.22315270309710408,
+    "ratio": 0.2620718505917498
+  },
+  "per_document": {
+    "base": [
+      0.10144927536231882,
+      0.10191082802547771,
+      0.17171717171717174,
+      0.11811023622047245,
+      0.1134020618556701,
+      0.13675213675213674,
+      0.14634146341463417,
+      0.22009569377990426,
+      0.1461187214611872,
+      0.19318181818181815,
+      0.12328767123287672,
+      0.13756613756613756,
+      0.20588235294117646,
+      0.23008849557522126,
+      0.10256410256410256,
+      0.13333333333333333,
+      0.17435897435897438,
+      0.13414634146341461,
+      0.16326530612244897,
+      0.11818181818181817,
+      0.07142857142857142,
+      0.1837837837837838,
+      0.11851851851851854,
+      0.13953488372093026,
+      0.11940298507462686,
+      0.20134228187919462,
+      0.1875,
+      0.20994475138121546,
+      0.08695652173913042,
+      0.16071428571428573
+    ],
+    "anchor_only": [
+      0.20689655172413793,
+      0.11940298507462686,
+      0.23728813559322037,
+      0.20689655172413793,
+      0.2162162162162162,
+      0.16981132075471697,
+      0.12631578947368421,
+      0.40476190476190477,
+      0.22448979591836735,
+      0.3421052631578948,
+      0.3181818181818182,
+      0.2298850574712644,
+      0.29411764705882354,
+      0.18461538461538457,
+      0.16393442622950818,
+      0.22641509433962267,
+      0.1978021978021978,
+      0.22950819672131145,
+      0.13636363636363635,
+      0.20930232558139536,
+      0.2285714285714286,
+      0.276595744680851,
+      0.21052631578947364,
+      0.24489795918367344,
+      0.20588235294117646,
+      0.22857142857142854,
+      0.3037974683544304,
+      0.29473684210526313,
+      0.0923076923076923,
+      0.16438356164383564
+    ],
+    "ratio": [
+      0.34782608695652173,
+      0.10000000000000002,
+      0.20952380952380956,
+      0.20689655172413793,
+      0.1515151515151515,
+      0.17543859649122806,
+      0.1348314606741573,
+      0.3953488372093023,
+      0.2857142857142857,
+      0.3235294117647059,
+      0.2647058823529412,
+      0.16666666666666669,
+      0.30434782608695654,
+      0.3636363636363636,
+      0.2857142857142857,
+      0.4615384615384615,
+      0.20253164556962025,
+      0.21621621621621623,
+      0.11235955056179774,
+      0.2631578947368421,
+      0.19607843137254902,
+      0.2954545454545454,
+      0.38461538461538464,
+      0.39999999999999997,
+      0.2777777777777778,
+      0.31818181818181823,
+      0.3333333333333333,
+      0.24719101123595508,
+      0.16216216216216214,
+      0.2758620689655172
+    ]
+  },
+  "expert_beats_base_docs": 0,
+  "paired_wins_vs_base": {
+    "anchor_only": 27,
+    "ratio": 27
+  },
+  "sign_test_p": {
+    "anchor_only": 1e-05,
+    "ratio": 1e-05
+  }
+}

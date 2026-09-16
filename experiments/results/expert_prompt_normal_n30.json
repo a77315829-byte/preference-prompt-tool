@@ -1,0 +1,238 @@
+{
+  "persona": "normal",
+  "n_train": 12,
+  "n_test": 30,
+  "task_description": "Summarise the given news article in English.",
+  "axes": [
+    {
+      "name": "answer_length",
+      "description": "답변의 길이와 밀도를 나타냅니다.",
+      "author_value": "medium_length",
+      "values": [
+        {
+          "value": "short",
+          "instruction": "Write a very brief summary with minimal detail."
+        },
+        {
+          "value": "medium_length",
+          "instruction": "Write a summary of moderate length, about 80 words in a single paragraph."
+        },
+        {
+          "value": "long",
+          "instruction": "Write a detailed and lengthy summary with multiple paragraphs."
+        }
+      ]
+    },
+    {
+      "name": "sentence_complexity",
+      "description": "문장당 단어 수와 문장 구조의 복잡성을 나타냅니다.",
+      "author_value": "moderate_complexity",
+      "values": [
+        {
+          "value": "simple",
+          "instruction": "Use short and simple sentences with straightforward structure."
+        },
+        {
+          "value": "moderate_complexity",
+          "instruction": "Use sentences of moderate length with some complexity and detail."
+        },
+        {
+          "value": "complex",
+          "instruction": "Use long and complex sentences with multiple clauses."
+        }
+      ]
+    },
+    {
+      "name": "hedging_frequency",
+      "description": "불확실성 표현(hedging)의 사용 빈도를 나타냅니다.",
+      "author_value": "low_hedging",
+      "values": [
+        {
+          "value": "high_hedging",
+          "instruction": "Use frequent hedging expressions to indicate uncertainty or caution."
+        },
+        {
+          "value": "low_hedging",
+          "instruction": "Use minimal hedging, stating facts and claims directly."
+        }
+      ]
+    },
+    {
+      "name": "paragraph_structure",
+      "description": "답변 내 단락 구성 방식을 나타냅니다.",
+      "author_value": "single_paragraph",
+      "values": [
+        {
+          "value": "single_paragraph",
+          "instruction": "Write the entire summary as a single paragraph."
+        },
+        {
+          "value": "multiple_paragraphs",
+          "instruction": "Divide the summary into multiple paragraphs for clarity."
+        }
+      ]
+    }
+  ],
+  "prompts": {
+    "base": "Summarise the given news article in English.",
+    "anchor_only": "Summarise the given news article in English.\nMatch this length: about 4 sentences and roughly 84 words in total."
+  },
+  "target_stats": {
+    "sentences_per_answer": 2.7,
+    "words_per_answer": 56.0,
+    "words_per_sentence": 20.7,
+    "answer_to_task_word_ratio": 0.105,
+    "bullet_line_ratio": 0.0,
+    "paragraphs_per_answer": 1.0,
+    "hedges_per_100w": 0.91,
+    "numerals_per_100w": 1.88,
+    "first_person_per_100w": 0.24
+  },
+  "length_gap": {
+    "base": 79.6,
+    "anchor_only": 33.5,
+    "ratio": -1.0
+  },
+  "form_distance": {
+    "base": 0.919,
+    "anchor_only": 0.387,
+    "ratio": 0.016
+  },
+  "selected_anchor_keys": {
+    "sentences_per_answer": 0.481,
+    "words_per_answer": 0.495,
+    "bullet_line_ratio": 1.0,
+    "paragraphs_per_answer": 0.375,
+    "hedges_per_100w": 0.613,
+    "first_person_per_100w": 0.25
+  },
+  "selected_length_only_keys": {
+    "sentences_per_answer": 0.481,
+    "words_per_answer": 0.495
+  },
+  "calibration_factors": {
+    "sentences_per_answer": 0.93,
+    "words_per_answer": 0.924,
+    "paragraphs_per_answer": 1.0,
+    "hedges_per_100w": 0.964
+  },
+  "calibrated_targets": {
+    "sentences_per_answer": 3.7,
+    "words_per_answer": 77.8,
+    "paragraphs_per_answer": 1.0,
+    "hedges_per_100w": 0.8
+  },
+  "selective_anchor": "Match this form: write about 4 sentences, use roughly 84 words in total, put about 0% of your lines in a bulleted list, break it into about 1 paragraphs, use about 0.8 hedging words per 100 words, use about 0.2 first-person words per 100 words.",
+  "means": {
+    "base": 0.2005803392490841,
+    "anchor_only": 0.21390484793433492,
+    "ratio": 0.2616391540998875
+  },
+  "per_document": {
+    "base": [
+      0.1891891891891892,
+      0.13559322033898305,
+      0.2113821138211382,
+      0.1473684210526316,
+      0.12987012987012986,
+      0.1888111888111888,
+      0.2436974789915966,
+      0.21513944223107567,
+      0.1791044776119403,
+      0.23300970873786409,
+      0.1797752808988764,
+      0.18750000000000003,
+      0.2802547770700637,
+      0.192,
+      0.15267175572519082,
+      0.22388059701492535,
+      0.20087336244541484,
+      0.19999999999999996,
+      0.20512820512820512,
+      0.20553359683794464,
+      0.11711711711711711,
+      0.2077922077922078,
+      0.1688311688311688,
+      0.23655913978494622,
+      0.14473684210526314,
+      0.2035928143712575,
+      0.3157894736842105,
+      0.24324324324324326,
+      0.18888888888888888,
+      0.2900763358778626
+    ],
+    "anchor_only": [
+      0.25225225225225223,
+      0.1044776119402985,
+      0.23880597014925373,
+      0.2054054054054054,
+      0.16352201257861634,
+      0.22000000000000003,
+      0.27710843373493976,
+      0.21111111111111108,
+      0.16042780748663102,
+      0.261437908496732,
+      0.16049382716049382,
+      0.2138364779874214,
+      0.32116788321167883,
+      0.2,
+      0.17391304347826084,
+      0.1694915254237288,
+      0.19209039548022597,
+      0.2442748091603053,
+      0.15757575757575756,
+      0.2105263157894737,
+      0.1527777777777778,
+      0.22099447513812154,
+      0.22608695652173916,
+      0.26666666666666666,
+      0.17600000000000002,
+      0.21374045801526717,
+      0.267515923566879,
+      0.25396825396825395,
+      0.1889763779527559,
+      0.3125
+    ],
+    "ratio": [
+      0.3333333333333333,
+      0.11904761904761904,
+      0.21800947867298578,
+      0.23529411764705882,
+      0.17054263565891475,
+      0.2280701754385965,
+      0.21656050955414013,
+      0.1951219512195122,
+      0.17708333333333334,
+      0.3174603174603175,
+      0.19402985074626863,
+      0.1954887218045113,
+      0.4367816091954023,
+      0.17857142857142855,
+      0.18181818181818182,
+      0.2857142857142857,
+      0.1884057971014493,
+      0.3013698630136986,
+      0.16049382716049385,
+      0.2222222222222222,
+      0.24,
+      0.2857142857142857,
+      0.3859649122807018,
+      0.8571428571428571,
+      0.2571428571428572,
+      0.2716049382716049,
+      0.31932773109243695,
+      0.2543352601156069,
+      0.18918918918918917,
+      0.23333333333333334
+    ]
+  },
+  "expert_beats_base_docs": 0,
+  "paired_wins_vs_base": {
+    "anchor_only": 22,
+    "ratio": 22
+  },
+  "sign_test_p": {
+    "anchor_only": 0.01612,
+    "ratio": 0.01612
+  }
+}
