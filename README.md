@@ -125,6 +125,17 @@ ROUGE-L에서 D(0.207 ± 0.057)와 B(0.168 ± 0.060)의 차이(0.039)는 표준�
 특정 단어가 등장하지 않는다 - 축 이름·값·프롬프트 문구·검사 함수는 전부
 `domains/*.yaml`에서 읽는다.
 
+**데모 모드까지 자동으로 붙는다**: 전에는 새 도메인을 앱에 노출하려면
+`demos/<도메인명>.py` 를 손으로 써야 했다 - `engine/` 은 안 고쳐도 되지만
+데모 생성기는 짜야 한다는 구멍이 확장성 주장에 남아 있었다. 지금은
+`demos/generic.py` 가 여러 도메인이 공유하는 축(length·sentiment·
+formality·structure)을 실제로 구현하고, 전용 모듈이 없으면 라우터가
+여기로 내려온다. 축을 흉내만 내지 않는 것이 중요하다 - 아무렇게나 다른
+텍스트를 내놓으면 사용자의 선택이 축과 무관해져 추정된 선호가 의미를
+잃는다. 그 덕에 review·email 도메인은 YAML과 checks만으로 앱의 다섯 번째
+카테고리까지 그대로 동작한다
+(`tests/test_all_categories_demo.py` 가 다섯 카테고리 전부 8회 완주를 검사한다).
+
 **언어 이식성도 같은 방식으로 검증**: `domains/summarization_ko.yaml` +
 `checks/summarization_ko.py`(Kiwi 형태소 분석기로 조사·어미를 제거하고
 비교)만 추가해 한국어 요약 도메인도 `engine/` 무수정으로 동작함을 확인
@@ -331,13 +342,15 @@ gepa·pyyaml)만 둔다 - 배포 플랫폼이 이 파일을 읽으므로 실험�
 streamlit run app.py
 ```
 
-카테고리는 세 가지다.
+카테고리는 다섯 가지다.
 
-| 카테고리 | 입력 | 결과물 언어 | 도메인 정의 |
-|---|---|---|---|
-| 코딩 도움 | 만들고 싶은 기능 | TypeScript/React 코드 | `domains/coding.yaml` |
-| 문서 요약 (영어) | 영어 원문 | 영어 요약 | `domains/summarization.yaml` |
-| 문서 요약 (한국어) | 한국어 원문 | 한국어 요약 | `domains/summarization_ko.yaml` |
+| 카테고리 | 입력 | 결과물 언어 | 도메인 정의 | 축 |
+|---|---|---|---|---|
+| 코딩 도움 | 만들고 싶은 기능 | TypeScript/React | `domains/coding.yaml` | 구성·스타일·타입 |
+| 문서 요약 (영어) | 영어 원문 | 영어 | `domains/summarization.yaml` | 길이·추출성·주제 |
+| 문서 요약 (한국어) | 한국어 원문 | 한국어 | `domains/summarization_ko.yaml` | 길이·추출성·주제 |
+| 고객 리뷰 작성 | 방문·사용 메모 | 영어 | `domains/review.yaml` | 길이·어조·주제 |
+| 이메일 초안 | 요청 사항 | 영어 | `domains/email.yaml` | 길이·격식·구조 |
 
 화면 캡처는 [`docs/screenshots/`](docs/screenshots)에 있다
 (카테고리 선택 · 원문 입력 · 비교 · 결과).

@@ -99,6 +99,33 @@ DOMAIN_OPTIONS = {
         "demo_info": "API 없이 규칙 기반 한국어 요약 예시로 전체 흐름을 시험합니다.",
         "compare_help": "내용보다 길이와 표현 방식이 마음에 드는 쪽을 골라주세요.",
     },
+    # review/email 은 전용 데모 생성기가 없다. demos/generic.py 가 공통 축
+    # (length·sentiment·formality·structure)을 실제로 구현해 데모 모드를
+    # 처리한다 - 새 도메인을 YAML만 추가해 붙일 수 있다는 근거다.
+    "review": {
+        "label": "고객 리뷰 작성",
+        "path": "domains/review.yaml",
+        "intro": (
+            f"방문 경험이나 사용 후기를 적으면, 리뷰 두 개 중 마음에 드는 쪽을 {N_ROUNDS}회 "
+            "골라주세요. 리뷰는 영어로 나옵니다."
+        ),
+        "input_label": "리뷰로 만들 메모 (영어 권장)",
+        "placeholder": "예: Visited the new ramen place near the station. Waited 40 minutes. Broth was rich but the room was loud.",
+        "demo_info": "API 없이 규칙 기반 리뷰 예시로 전체 흐름을 시험합니다.",
+        "compare_help": "내용보다 길이와 어조가 마음에 드는 쪽을 골라주세요.",
+    },
+    "email": {
+        "label": "이메일 초안",
+        "path": "domains/email.yaml",
+        "intro": (
+            f"보내려는 내용을 적으면, 작성 방식이 다른 이메일 두 개 중 마음에 드는 쪽을 "
+            f"{N_ROUNDS}회 골라주세요. 이메일은 영어로 나옵니다."
+        ),
+        "input_label": "이메일로 만들 요청 사항 (영어 권장)",
+        "placeholder": "예: Ask the vendor to confirm the Q4 delivery date and share the updated invoice.",
+        "demo_info": "API 없이 규칙 기반 이메일 예시로 전체 흐름을 시험합니다.",
+        "compare_help": "내용보다 길이·격식·구조가 마음에 드는 쪽을 골라주세요.",
+    },
 }
 
 CODING_PREFERENCE_LABELS = {
@@ -123,11 +150,47 @@ SUMMARIZATION_PREFERENCE_LABELS = {
     },
 }
 
+REVIEW_PREFERENCE_LABELS = {
+    "length": {
+        "title": "리뷰 길이",
+        "short": "아주 짧게 (2문장 이내)",
+        "normal": "보통 (3~5문장)",
+        "long": "상세하게 (6문장 이상)",
+    },
+    "sentiment": {
+        "title": "어조",
+        "negative": "비판적으로",
+        "neutral": "담담하게",
+        "positive": "긍정적으로",
+    },
+}
+
+EMAIL_PREFERENCE_LABELS = {
+    "length": {
+        "title": "이메일 길이",
+        "short": "아주 짧게 (2문장 이내)",
+        "normal": "보통 (3~5문장)",
+        "long": "상세하게 (6문장 이상)",
+    },
+    "formality": {
+        "title": "격식",
+        "casual": "편하고 친근한 어조",
+        "formal": "격식 있는 비즈니스 어조",
+    },
+    "structure": {
+        "title": "본문 구조",
+        "prose": "문단 형태의 산문",
+        "bullets": "글머리 기호 목록",
+    },
+}
+
 # 도메인별 선호 라벨. 없는 도메인은 원시 값을 그대로 보여준다.
 PREFERENCE_LABELS = {
     "coding": CODING_PREFERENCE_LABELS,
     "summarization": SUMMARIZATION_PREFERENCE_LABELS,
     "summarization_ko": SUMMARIZATION_PREFERENCE_LABELS,
+    "review": REVIEW_PREFERENCE_LABELS,
+    "email": EMAIL_PREFERENCE_LABELS,
 }
 
 
