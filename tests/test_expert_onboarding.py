@@ -265,3 +265,65 @@ def test_selective_anchor_handles_empty_default() -> None:
     anchor, selected = selective_form_anchor([_PROSE], [])
     assert isinstance(anchor, str)
     assert isinstance(selected, dict)
+
+
+# --- 압축률 기반 앵커 ------------------------------------------------------
+# 저자의 길이는 상수가 아니라 원문 길이에 비례한다. 절대 단어 수로
+# 모델링하다가 학습·홀드아웃 평균이 25단어씩 어긋났고, "모델이 큰 목표에
+# 미달한다"는 잘못된 결론까지 냈다. 실측에서 절대 단어 수의 변동계수는
+# 0.56, 압축률은 0.08 이었다.
+
+from agents.expert_onboarding import ratio_anchor
+
+
+def _example(source_words: int, answer_words: int) -> ExpertExample:
+    return ExpertExample(
+        output=" ".join(["word"] * answer_words) + ".",
+        task=" ".join(["src"] * source_words),
+    )
+
+
+def test_ratio_anchor_scales_with_the_new_source() -> None:
+    """같은 저자라도 긴 원문에는 긴 답을 요구해야 한다."""
+    author = [_example(1000, 100), _example(2000, 200)]  # 압축률 10%
+
+    short_source = " ".join(["s"] * 500)
+    long_source = " ".join(["s"] * 4000)
+
+    short_anchor = ratio_anchor(author, short_source)
+    long_anchor = ratio_anchor(author, long_source)
+
+    assert "roughly 50 words" in short_anchor
+    assert "roughly 400 words" in long_anchor
+
+
+def test_ratio_anchor_needs_tasks() -> None:
+    """task 가 없으면 압축률을 계산할 수 없으므로 빈 문자열이어야 한다.
+    조용히 엉뚱한 목표를 만들면 안 된다."""
+    no_task = [ExpertExample(output="Some answer without a task.")]
+    assert ratio_anchor(no_task, "source text here") == ""
+
+
+def test_ratio_anchor_keeps_at_least_one_sentence() -> None:
+    """아주 짧은 목표에서 0문장을 요구하면 안 된다."""
+    author = [_example(10000, 5)]
+    anchor = ratio_anchor(author, " ".join(["s"] * 20))
+    assert "about 1 sentence" in anchor or "about 1 sentences" in anchor
+
+
+def test_ratio_anchor_is_empty_without_examples() -> None:
+    assert ratio_anchor([], "source") == ""
+
+
+def test_compression_ratio_is_more_stable_than_absolute_length() -> None:
+    """이 방법을 압축률로 바꾼 근거를 고정한다. 같은 저자가 원문 길이에
+    따라 다른 분량을 쓰면, 절대 단어 수는 흔들리고 압축률은 안정적이다."""
+    author = [_example(1000, 100), _example(3000, 300), _example(500, 50)]
+    stats = corpus_stats(author)
+
+    words = [100, 300, 50]
+    mean_words = sum(words) / len(words)
+    spread = (max(words) - min(words)) / mean_words
+
+    assert spread > 1.0, "절대 단어 수는 크게 흔들린다"
+    assert stats["answer_to_task_word_ratio"] == pytest.approx(0.1, abs=0.01)

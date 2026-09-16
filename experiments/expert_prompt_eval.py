@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 import statistics
 import sys
 from pathlib import Path
@@ -43,6 +44,9 @@ from agents.expert_onboarding import (
     form_anchor,
     form_distance,
     LENGTH_ANCHOR_KEYS,
+    anchor_text,
+    calibrate_targets,
+    ratio_anchor,
     selective_form_anchor,
     to_domain,
 )
@@ -66,8 +70,22 @@ PERSONAS = {
 }
 
 
-def load_persona_examples(persona: dict[str, str], limit: int) -> list[ExpertExample]:
-    """이 속성 조합으로 쓰인 (원문, 사람 요약) 쌍을 모은다."""
+# 분할 전에 섞을 때 쓰는 시드. 고정해야 재현된다.
+SPLIT_SEED = 0
+
+
+def load_persona_examples(
+    persona: dict[str, str], limit: int, shuffle: bool = True
+) -> list[ExpertExample]:
+    """이 속성 조합으로 쓰인 (원문, 사람 요약) 쌍을 모은다.
+
+    **섞어서 돌려준다.** 섞지 않고 앞에서 잘라 쓰다가 낭패를 봤다.
+    MACSum 요약 길이는 원문 길이를 따라가고 레코드가 정렬돼 있어서,
+    앞 8개(학습)와 다음 14개(홀드아웃)의 평균 길이가 체계적으로 달랐다
+    (long 에서 98.5 대 128.4 단어). 그 결과 "모델이 큰 길이 목표에
+    미달한다"는 엉뚱한 결론을 냈다 - 실제로는 학습에서 잰 98단어를
+    요청해 97.9단어를 받은, 거의 완벽한 준수였다.
+    """
     records = json.loads(MACSUM_VAL.read_text(encoding="utf-8"))
     examples: list[ExpertExample] = []
     for record in records:
@@ -79,9 +97,11 @@ def load_persona_examples(persona: dict[str, str], limit: int) -> list[ExpertExa
             if all(attribute.get(k) == v for k, v in persona.items()):
                 examples.append(ExpertExample(output=reference["summary"], task=source))
                 break
-        if len(examples) >= limit:
+        if not shuffle and len(examples) >= limit:
             break
-    return examples
+    if shuffle:
+        random.Random(SPLIT_SEED).shuffle(examples)
+    return examples[:limit]
 
 
 def _anti_combo(report) -> dict[str, str]:
@@ -95,6 +115,7 @@ def _anti_combo(report) -> dict[str, str]:
 
 def run(persona_name: str, n_train: int, n_test: int) -> dict:
     persona = PERSONAS[persona_name]
+    # 섞어서 뽑으므로 후보 전체를 모은 뒤 잘라낸다.
     examples = load_persona_examples(persona, n_train + n_test)
     if len(examples) < n_train + n_test:
         raise SystemExit(
@@ -137,6 +158,35 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         train, default_outputs, keys=LENGTH_ANCHOR_KEYS
     )
     print("길이 전용 앵커  :", selective_len or "(없음)")
+
+    # 보정 루프. 학습 과제로 선별 앵커를 한 번 써보고, 요청값 대비 실제
+    # 산출값의 비율로 요청값을 역보정한다. 모델이 큰 목표에 미달하는
+    # 성질을 측정으로 상쇄한다. 학습 과제만 쓰므로 누출이 없다.
+    print("보정 탐침 생성 중...")
+    probe_prompt = (
+        (domain.task_description + "\n" + selective) if selective else domain.task_description
+    )
+    probe_outputs = [
+        ExpertExample(
+            output=generate_all_with_prompts(
+                [probe_prompt], example.task, model=MODEL, temperature=0.0
+            )[0],
+            task=example.task,
+        )
+        for example in train
+    ]
+    author_stats = corpus_stats(train)
+    probe_stats = corpus_stats(probe_outputs)
+    corrected, factors = calibrate_targets(
+        author_stats, probe_stats, tuple(selected_keys) or LENGTH_ANCHOR_KEYS
+    )
+    calibrated = anchor_text(corrected)
+    print(f"  요청 -> 실제: 단어 {author_stats['words_per_answer']:.1f} -> "
+          f"{probe_stats['words_per_answer']:.1f}, 문장 "
+          f"{author_stats['sentences_per_answer']:.1f} -> "
+          f"{probe_stats['sentences_per_answer']:.1f}")
+    print("  보정 배율:", factors)
+    print("  보정 앵커:", calibrated or "(없음)")
     print("모델 기본 형식:", corpus_stats(default_outputs))
     print("저자 형식      :", corpus_stats(train))
     print("고른 항목      :", selected_keys or "(없음 - 기본값과 차이가 작다)")
@@ -153,6 +203,12 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
             else domain.task_description
         ),
         # 선별 앵커. 저자가 모델 기본값과 실제로 다른 항목만 지시한다.
+        # 보정된 앵커. 목표를 맞추려면 얼마를 요청해야 하는지 역산한 값.
+        "calibrated": (
+            (domain.task_description + "\n" + calibrated)
+            if calibrated
+            else domain.task_description
+        ),
         "selective_len": (
             (domain.task_description + "\n" + selective_len)
             if selective_len
@@ -178,10 +234,22 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
 
     scores: dict[str, list[float]] = {name: [] for name in prompts}
     generated: dict[str, list[ExpertExample]] = {name: [] for name in prompts}
-    order = list(prompts)
+    print("압축률 기반 앵커 예시:", ratio_anchor(train, test[0].task) or "(없음)")
+    order = list(prompts) + ["ratio"]
+    scores["ratio"] = []
+    generated["ratio"] = []
     for index, example in enumerate(test, start=1):
+        # ratio 조건만 과제별로 프롬프트가 달라진다. 목표를 원문 길이에
+        # 곱해서 구하기 때문이다.
+        per_task = dict(prompts)
+        ratio_line = ratio_anchor(train, example.task)
+        per_task["ratio"] = (
+            (domain.task_description + "\n" + ratio_line)
+            if ratio_line
+            else domain.task_description
+        )
         outputs = generate_all_with_prompts(
-            [prompts[name] for name in order],
+            [per_task[name] for name in order],
             example.task,
             model=MODEL,
             temperature=0.0,
@@ -233,16 +301,29 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
     else:
         print("  -> expert 가 형식조차 못 맞췄다. 축 지시문이 약하다는 뜻이다.")
 
-    wins = sum(1 for e, b in zip(scores["expert"], scores["base"]) if e > b)
+    # 표본이 작고 표준편차가 평균 차이보다 큰 경우가 많아, 평균만으로는
+    # 우위를 주장할 수 없다. 이 프로젝트가 비교군 A/B/D 에서 쓴 것과 같은
+    # 문서별 페어드 비교를 모든 조건에 대해 낸다.
     print()
-    print(f"문서별 비교: expert 가 base 보다 높은 문서 {wins}/{len(test)}개")
+    print(f"문서별 페어드 비교 (base 보다 높은 문서 / {len(test)})")
+    paired = {}
+    for name in order:
+        if name == "base":
+            continue
+        count = sum(1 for x, b in zip(scores[name], scores["base"]) if x > b)
+        paired[name] = count
+        print(f"  {name:14} {count:2d}/{len(test)}  평균차 {means[name]-means['base']:+.3f}")
+    wins = paired.get("expert", 0)
     print(f"expert - base = {means['expert'] - means['base']:+.3f}")
     print(f"anti  - base = {means['anti'] - means['base']:+.3f}")
     print()
     print()
     print("어블레이션: 축이 수치 앵커 이상을 하는가")
     print(f"{'조건':12} {'형식 거리':>10} {'ROUGE-L':>9}")
-    for name in ("base", "anchor_only", "selective_len", "selective", "anchored", "expert"):
+    for name in (
+        "base", "anchor_only", "selective_len", "selective", "calibrated",
+        "ratio", "anchored", "expert",
+    ):
         print(f"{name:12} {form_dist[name]:10.3f} {means[name]:9.3f}")
     form_gain = form_dist["anchor_only"] - form_dist["anchored"]
     rouge_gain = means["anchored"] - means["anchor_only"]
@@ -289,10 +370,13 @@ def run(persona_name: str, n_train: int, n_test: int) -> dict:
         "form_distance": form_dist,
         "selected_anchor_keys": selected_keys,
         "selected_length_only_keys": selected_len_keys,
+        "calibration_factors": factors,
+        "calibrated_targets": corrected,
         "selective_anchor": selective,
         "means": means,
         "per_document": scores,
         "expert_beats_base_docs": wins,
+        "paired_wins_vs_base": paired,
     }
 
 

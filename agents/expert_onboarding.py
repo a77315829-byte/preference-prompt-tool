@@ -341,6 +341,83 @@ def selective_form_anchor(
     return "Match this form: " + ", ".join(parts) + ".", selected
 
 
+# 보정 배율의 상·하한. 탐침 생성이 이상하게 나왔을 때 요청값이 터무니없이
+# 커지는 것을 막는다.
+CALIBRATION_MIN, CALIBRATION_MAX = 0.5, 3.0
+
+
+def anchor_text(values: dict[str, float]) -> str:
+    """항목별 목표값으로 앵커 문장을 만든다."""
+    parts = [
+        _ANCHOR_TEMPLATES[key].format(value=value, pct=100 * value)
+        for key, value in values.items()
+        if key in _ANCHOR_TEMPLATES
+    ]
+    return "Match this form: " + ", ".join(parts) + "." if parts else ""
+
+
+def ratio_anchor(author: list[ExpertExample], source_text: str) -> str:
+    """원문 길이에 비례해 과제마다 목표를 다시 계산한 앵커.
+
+    왜 절대 단어 수가 아닌가: 저자의 길이는 상수가 아니다. 같은 사람이
+    짧은 기사에는 40단어, 긴 기사에는 258단어를 쓴다. 실측에서 원문
+    길이와 답변 길이의 상관이 0.94~0.995 였고, 절대 단어 수의 변동계수는
+    0.56 인데 원문 대비 압축률의 변동계수는 0.08 이었다. 압축률이 7배
+    안정적이다.
+
+    그래서 학습 예시에서 압축률만 재고, 목표 단어 수는 새 과제의 원문
+    길이에 곱해서 과제마다 따로 구한다. 예시 8개로도 압축률은 잘 잡히지만
+    절대 단어 수는 안 잡힌다 - 그 차이 때문에 학습·홀드아웃 평균이
+    25단어씩 어긋나 실험을 한참 헤맸다.
+    """
+    stats = corpus_stats(author)
+    ratio = stats.get("answer_to_task_word_ratio")
+    words_per_sentence = stats.get("words_per_sentence")
+    if not ratio or not words_per_sentence:
+        return ""
+
+    target_words = ratio * len(source_text.split())
+    target_sentences = max(1.0, target_words / words_per_sentence)
+    return anchor_text(
+        {
+            "sentences_per_answer": target_sentences,
+            "words_per_answer": target_words,
+        }
+    )
+
+
+def calibrate_targets(
+    target: dict[str, float], achieved: dict[str, float], keys
+) -> tuple[dict[str, float], dict[str, float]]:
+    """요청한 값과 실제로 나온 값의 비율로 요청값을 역보정한다.
+
+    왜 필요한가: 모델은 큰 길이 목표에 체계적으로 미달한다. 실측에서
+    43단어를 요청하면 43.9가 나오는데 85단어는 71.9, 128단어는 97.9만
+    나왔다. 요청값이 커질수록 미달 폭이 커진다. 지금까지 모든 실험에서
+    반복된 short/long 비대칭이 여기서 설명된다.
+
+    그러면 요청값을 그대로 넣을 이유가 없다. 학습 과제로 한 번 탐침
+    생성을 해서 "128을 요청하면 98이 나온다"를 측정하고, 목표를 맞추려면
+    얼마를 요청해야 하는지 역산한다. 128 * (128/98) = 167 을 요청하는 식이다.
+
+    측정 결과에 따라 다음 요청이 달라지므로 이건 루프이고, 홀드아웃이
+    아니라 학습 과제로 재므로 누출이 없다.
+
+    돌려주는 것은 (보정된 목표값, 항목별 보정 배율)이다.
+    """
+    corrected: dict[str, float] = {}
+    factors: dict[str, float] = {}
+    for key in keys:
+        wanted = target.get(key)
+        got = achieved.get(key)
+        if not wanted or not got:
+            continue
+        ratio = min(max(wanted / got, CALIBRATION_MIN), CALIBRATION_MAX)
+        corrected[key] = round(wanted * ratio, 1)
+        factors[key] = round(ratio, 3)
+    return corrected, factors
+
+
 def form_anchor(examples: list[ExpertExample]) -> str:
     """측정한 형식을 프롬프트에 그대로 박는 한 줄.
 
