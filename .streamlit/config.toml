@@ -1,0 +1,13 @@
+# 배포(Streamlit Community Cloud)와 로컬이 같은 색을 쓰게 고정한다.
+# 안 넣으면 Streamlit 기본 테마를 따라가고, 나중에 기본값이 바뀌면
+# 제출용 스크린샷과 실제 화면이 달라진다.
+#
+# 표준 5개 키만 쓴다. 이 버전에서 확실히 지원되는 것들이고, 없는 키를
+# 넣으면 기동 시 경고가 나거나 최악의 경우 배포가 깨질 수 있다.
+# 나머지 시각 요소는 app.py의 CSS로 처리한다.
+[theme]
+primaryColor = "#5B54E8"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F4F5FB"
+textColor = "#1B1F2E"
+font = "sans serif"

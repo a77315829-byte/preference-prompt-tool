@@ -181,9 +181,164 @@ def _show_preferences(domain_key: str, preferred: dict[str, str]) -> None:
             continue
         st.markdown(f"- **{labels['title']}**: {labels[value]}")
 
+STYLES = """
+<style>
+/* 본문 폭을 좁혀 읽기 편하게. 기본값은 와이드해서 텍스트가 늘어진다. */
+[data-testid="stMainBlockContainer"] {
+    max-width: 860px;
+    padding-top: 2.4rem;
+    padding-bottom: 4.5rem;
+}
+
+/* --- 히어로 --- */
+.ppt-hero {
+    background: linear-gradient(135deg, #5B54E8 0%, #7C5CE8 55%, #9B5DE0 100%);
+    border-radius: 20px;
+    padding: 1.9rem 1.9rem 1.7rem;
+    margin-bottom: 1.4rem;
+    color: #fff;
+}
+.ppt-hero-badge {
+    display: inline-block;
+    font-size: .76rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    padding: .3rem .7rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .18);
+    margin-bottom: .85rem;
+}
+.ppt-hero h1 {
+    font-size: 1.95rem;
+    line-height: 1.28;
+    font-weight: 800;
+    margin: 0 0 .55rem;
+    color: #fff;
+    letter-spacing: -.01em;
+}
+.ppt-hero p {
+    margin: 0;
+    font-size: .97rem;
+    line-height: 1.62;
+    color: rgba(255, 255, 255, .9);
+}
+
+/* --- 3단계 설명 --- */
+.ppt-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .7rem;
+    margin-bottom: 1.9rem;
+}
+.ppt-step {
+    border: 1px solid rgba(91, 84, 232, .16);
+    background: rgba(91, 84, 232, .04);
+    border-radius: 14px;
+    padding: .85rem .95rem;
+}
+.ppt-step-n {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 999px;
+    background: #5B54E8;
+    color: #fff;
+    font-size: .72rem;
+    font-weight: 700;
+    margin-bottom: .45rem;
+}
+.ppt-step-t {
+    font-weight: 700;
+    font-size: .89rem;
+    margin-bottom: .2rem;
+}
+.ppt-step-d {
+    font-size: .78rem;
+    line-height: 1.5;
+    opacity: .72;
+}
+
+/* --- 입력 · 버튼 --- */
+.stTextArea textarea {
+    border-radius: 12px !important;
+    font-size: .93rem !important;
+}
+[data-testid="stBaseButton-primary"] {
+    border-radius: 11px;
+    font-weight: 700;
+    padding: .55rem 1.5rem;
+    box-shadow: 0 8px 20px rgba(91, 84, 232, .26);
+    border: none;
+}
+[data-testid="stBaseButton-secondary"] {
+    border-radius: 11px;
+    font-weight: 600;
+}
+
+/* --- A/B 후보 카드 --- */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 16px;
+}
+.ppt-ab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 9px;
+    background: #5B54E8;
+    color: #fff;
+    font-weight: 800;
+    font-size: .92rem;
+    margin-bottom: .5rem;
+}
+.ppt-ab-b { background: #9B5DE0; }
+
+/* 진행 막대를 조금 두껍게 */
+[data-testid="stProgress"] div[role="progressbar"] > div { height: .45rem; }
+</style>
+"""
+
+STEPS = (
+    ("1", "주제 선택 &amp; 입력", "요약할 원문이나 만들고 싶은 기능을 적습니다."),
+    ("2", f"A/B 비교 {N_ROUNDS}회", "어느 축이 다른지는 알려주지 않습니다. 마음에 드는 쪽만 고르세요."),
+    ("3", "프롬프트 완성", "추정된 취향을 반영한 시스템 프롬프트를 복사해 갑니다."),
+)
+
+
+def _inject_styles() -> None:
+    st.markdown(STYLES, unsafe_allow_html=True)
+
+
+def _show_hero() -> None:
+    st.markdown(
+        f"""
+        <div class="ppt-hero">
+          <div class="ppt-hero-badge">{N_ROUNDS}번의 선택으로 완성</div>
+          <h1>선택으로 만드는 나만의 프롬프트</h1>
+          <p>복잡한 프롬프트를 직접 쓰지 않아도 됩니다. 더 마음에 드는 결과를
+          고르면, 그 선택에서 취향을 추정해 재사용 가능한 시스템 프롬프트를 만들어 드립니다.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def _show_steps() -> None:
+    cards = "".join(
+        f'<div class="ppt-step"><div class="ppt-step-n">{n}</div>'
+        f'<div class="ppt-step-t">{title}</div>'
+        f'<div class="ppt-step-d">{desc}</div></div>'
+        for n, title, desc in STEPS
+    )
+    st.markdown(f'<div class="ppt-steps">{cards}</div>', unsafe_allow_html=True)
+
+
 st.set_page_config(page_title="선호 기반 프롬프트 생성기", page_icon="✨")
-st.title("선택으로 만드는 나만의 프롬프트")
-st.caption("직접 복잡한 프롬프트를 쓰지 않아도, 더 마음에 드는 결과를 고르면 됩니다.")
+_inject_styles()
+_show_hero()
 
 if "stage" not in st.session_state:
     st.session_state.stage = "input"
@@ -199,12 +354,14 @@ if st.session_state.stage != "input" and (
     st.session_state.stage = "input"
 
 if st.session_state.stage == "input":
+    _show_steps()
+
     labels_to_keys = {config["label"]: key for key, config in DOMAIN_OPTIONS.items()}
     selected_label = st.selectbox("무엇을 도와드릴까요?", list(labels_to_keys))
     domain_key = labels_to_keys[selected_label]
     config = DOMAIN_OPTIONS[domain_key]
 
-    st.write(config["intro"])
+    st.caption(config["intro"])
     run_mode = st.radio(
         "실행 모드",
         (API_MODE_LABEL, DEMO_MODE_LABEL),
@@ -227,7 +384,7 @@ if st.session_state.stage == "input":
 
     source = st.text_area(
         config["input_label"],
-        height=180 if domain_key == "coding" else 250,
+        height=140 if domain_key == "coding" else 190,
         placeholder=config["placeholder"],
         max_chars=MAX_SOURCE_CHARS,
     )
@@ -282,12 +439,16 @@ elif st.session_state.stage == "compare":
 
     col_a, col_b = st.columns(2)
     with col_a:
-        st.subheader("A")
-        _show_candidate(domain_key, candidate_a)
+        # border=True 로 실제 카드 컨테이너를 만든다. 내 div로 감싸도
+        # Streamlit 위젯은 그 안에 들어가지 않아서 공개 API를 쓴다.
+        with st.container(border=True):
+            st.markdown('<div class="ppt-ab">A</div>', unsafe_allow_html=True)
+            _show_candidate(domain_key, candidate_a)
         pick_a = st.button("A가 더 마음에 들어요", use_container_width=True)
     with col_b:
-        st.subheader("B")
-        _show_candidate(domain_key, candidate_b)
+        with st.container(border=True):
+            st.markdown('<div class="ppt-ab ppt-ab-b">B</div>', unsafe_allow_html=True)
+            _show_candidate(domain_key, candidate_b)
         pick_b = st.button("B가 더 마음에 들어요", use_container_width=True)
 
     if pick_a or pick_b:
