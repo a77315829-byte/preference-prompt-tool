@@ -92,3 +92,21 @@ def test_expert_path_does_not_disturb_the_comparison_flow(monkeypatch) -> None:
     assert not app.exception
     assert app.selectbox[0].value == "코딩 도움"
     assert app.session_state["stage"] == "input"
+
+
+def test_prompt_does_not_reference_examples_it_does_not_include(monkeypatch) -> None:
+    """이 경로는 사용자의 글을 프롬프트에 넣지 않는다. 그러니 "아래 예시처럼"
+    같은 문구를 쓰면 모델에게 없는 것을 따르라고 하는 셈이다.
+
+    처음에 정확히 그렇게 써놨다가 실제 렌더를 보고 발견했다.
+    """
+    app = _blocked_app(monkeypatch)
+    app.radio(key="build_path").set_value(EXPERT_PATH_LABEL).run()
+    app.text_area[0].input(_paste(30)).run()
+
+    prompt = app.code[0].value.lower()
+    # "request below" 는 정당하다 - 사용자가 이 프롬프트 뒤에 실제 요청을
+    # 붙인다. 문제는 **예시**를 가리키는 것이다. 처음 테스트가 "below"
+    # 까지 금지해서 정상 문구를 잡아냈다.
+    for phantom in ("example", "sample", "as written above"):
+        assert phantom not in prompt, f"없는 것을 가리킨다: {phantom}"

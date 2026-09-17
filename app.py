@@ -625,8 +625,18 @@ STEPS = (
 
 # 전문가 프롬프트 쪽에 붙이는 과제 서술. 사용자가 무슨 일을 하는지는
 # 우리가 모르므로 분야를 지정하지 않고, 형식 앵커만 그 위에 얹는다.
+#
+# **예시를 가리키면 안 된다.** 처음에 "the way the examples below were
+# written" 으로 썼는데, 이 경로는 사용자의 글을 프롬프트에 넣지 않으므로
+# 가리킬 예시가 없다. 모델에게 존재하지 않는 것을 따르라고 하는 셈이었다.
+#
+# 검증 실험의 문구는 "Answer the following question from an online
+# question-and-answer site" 였다. 여기서는 사용자의 과제가 Q&A 라고
+# 가정할 수 없어 중립적으로 바꿨다 - 비교 실험에서 이 문장은 base 와
+# stable 양쪽에 똑같이 들어갔으므로, 측정된 이득은 앵커의 몫이고
+# 이 문구를 바꿔도 그 귀속은 유지된다.
 EXPERT_TASK_DESCRIPTION = (
-    "Answer the following question the way the examples below were written."
+    "Answer the request below. Write the answer only, with no preamble."
 )
 
 
@@ -677,8 +687,14 @@ def _show_expert_flow() -> None:
 
     st.markdown("**코드로 잰 내 형식**")
     rows = profile_rows(examples)
-    for column, (label, value) in zip(st.columns(len(rows)), rows):
-        column.metric(label, value)
+    # 세 칸씩 끊는다. Streamlit 1.63 의 st.columns 는 좁은 화면에서
+    # 자동으로 쌓이지 않고 줄어들기만 해서, 다섯 칸을 한 줄에 놓으면
+    # 휴대폰에서 라벨이 뭉깬다.
+    per_row = 3
+    for start in range(0, len(rows), per_row):
+        chunk = rows[start : start + per_row]
+        for column, (label, value) in zip(st.columns(per_row), chunk):
+            column.metric(label, value)
 
     anchor, kind, per_task = build_anchor(examples)
     if not anchor:
