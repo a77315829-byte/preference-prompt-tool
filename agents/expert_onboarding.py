@@ -356,7 +356,11 @@ def anchor_text(values: dict[str, float]) -> str:
     return "Match this form: " + ", ".join(parts) + "." if parts else ""
 
 
-def ratio_anchor(author: list[ExpertExample], source_text: str) -> str:
+def ratio_anchor(
+    author: list[ExpertExample],
+    source_text: str,
+    keys: tuple[str, ...] = ("sentences_per_answer", "words_per_answer"),
+) -> str:
     """원문 길이에 비례해 과제마다 목표를 다시 계산한 앵커.
 
     왜 절대 단어 수가 아닌가: 저자의 길이는 상수가 아니다. 같은 사람이
@@ -369,6 +373,12 @@ def ratio_anchor(author: list[ExpertExample], source_text: str) -> str:
     길이에 곱해서 과제마다 따로 구한다. 예시 8개로도 압축률은 잘 잡히지만
     절대 단어 수는 안 잡힌다 - 그 차이 때문에 학습·홀드아웃 평균이
     25단어씩 어긋나 실험을 한참 헤맸다.
+
+    `keys` 로 적을 항목을 고를 수 있다. 문장 수 목표는 단어 목표를
+    문장당 단어 수로 나눈 값인데, 판별력 진단
+    (`experiments/form_feature_spread.py`)에서 문장당 단어 수는 저자를
+    가르지 못했다(평균기준 1.02, 압축률은 165.5). 그러면 문장 절은
+    거의 보편 상수로 나눈 같은 정보의 반복일 수 있다 - 빼고 재본다.
     """
     stats = corpus_stats(author)
     ratio = stats.get("answer_to_task_word_ratio")
@@ -378,12 +388,11 @@ def ratio_anchor(author: list[ExpertExample], source_text: str) -> str:
 
     target_words = ratio * len(source_text.split())
     target_sentences = max(1.0, target_words / words_per_sentence)
-    return anchor_text(
-        {
-            "sentences_per_answer": target_sentences,
-            "words_per_answer": target_words,
-        }
-    )
+    targets = {
+        "sentences_per_answer": target_sentences,
+        "words_per_answer": target_words,
+    }
+    return anchor_text({k: v for k, v in targets.items() if k in keys})
 
 
 def ratio_rule_anchor(author: list[ExpertExample]) -> str:

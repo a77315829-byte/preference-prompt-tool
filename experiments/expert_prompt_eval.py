@@ -137,9 +137,17 @@ def _anti_combo(report) -> dict[str, str]:
 # 호출 수가 조건 수만큼 곱해진다.
 ALL_CONDITIONS = (
     "base", "anchor_only", "selective_len", "selective", "calibrated",
-    "ratio", "ratio_rule", "anchored", "expert",
+    "ratio", "ratio_words", "ratio_rule", "anchored", "expert",
 )
 CORE_CONDITIONS = ("base", "anchor_only", "ratio", "ratio_rule")
+
+# 과제마다 프롬프트가 달라지는 조건. 목표를 그 과제의 원문 길이에
+# 곱해서 구하기 때문에 루프 안에서 조립해야 한다. 여기 안 적으면
+# 앵커가 조용히 빠진 채로 돌아간다.
+PER_TASK_CONDITIONS = ("ratio", "ratio_words")
+
+# ratio_words 가 적는 항목. 문장 수 절을 빼고 단어 목표만 남긴다.
+WORDS_ONLY_KEYS = ("words_per_answer",)
 
 
 def run(
@@ -272,11 +280,12 @@ def run(
         "anti": build_prompt(domain, _anti_combo(report)),
     }
     prompts = {name: text for name, text in prompts.items() if name in conditions}
-    print("돌리는 조건:", list(prompts) + (["ratio"] if "ratio" in conditions else []))
+    per_task_names = [name for name in PER_TASK_CONDITIONS if name in conditions]
+    print("돌리는 조건:", list(prompts) + per_task_names)
     print("형식 수치 앵커:", anchor or "(없음)")
     # --core 로 조건을 걸러내면 expert 가 없을 수 있다. 조건 필터를 넣고
     # 이 출력을 안 고쳐서 KeyError 로 죽었다.
-    for shown in ("expert", "ratio", "anchor_only", "base"):
+    for shown in ("expert", "ratio", "ratio_words", "anchor_only", "base"):
         if shown in prompts:
             print(f"조립된 프롬프트 ({shown}):")
             print(prompts[shown])
@@ -286,20 +295,26 @@ def run(
     scores: dict[str, list[float]] = {name: [] for name in prompts}
     generated: dict[str, list[ExpertExample]] = {name: [] for name in prompts}
     print("압축률 기반 앵커 예시:", ratio_anchor(train, test[0].task) or "(없음)")
-    order = list(prompts) + (["ratio"] if "ratio" in conditions else [])
-    if "ratio" in conditions:
-        scores["ratio"] = []
-        generated["ratio"] = []
+    order = list(prompts) + per_task_names
+    for name in per_task_names:
+        scores[name] = []
+        generated[name] = []
     for index, example in enumerate(test, start=1):
-        # ratio 조건만 과제별로 프롬프트가 달라진다. 목표를 원문 길이에
-        # 곱해서 구하기 때문이다.
+        # 과제마다 프롬프트가 달라지는 조건들. 목표를 그 과제의 원문
+        # 길이에 곱해서 구하기 때문이다.
         per_task = dict(prompts)
-        ratio_line = ratio_anchor(train, example.task)
-        per_task["ratio"] = (
-            (domain.task_description + "\n" + ratio_line)
-            if ratio_line
-            else domain.task_description
-        )
+        lines_by_name = {
+            "ratio": ratio_anchor(train, example.task),
+            # 문장 수 절을 뺀 같은 앵커. 판별력 진단에서 문장당 단어 수가
+            # 저자를 가르지 못했으니(평균기준 1.02) 그 절이 기여하는지 잰다.
+            "ratio_words": ratio_anchor(train, example.task, keys=WORDS_ONLY_KEYS),
+        }
+        for name in per_task_names:
+            per_task[name] = (
+                (domain.task_description + "\n" + lines_by_name[name])
+                if lines_by_name[name]
+                else domain.task_description
+            )
         outputs = generate_all_with_prompts(
             [per_task[name] for name in order],
             example.task,
@@ -455,15 +470,25 @@ def main() -> int:
         "--core", action="store_true",
         help="핵심 조건만 (base / 절대 앵커 / 압축률 앵커). 표본을 키울 때 쓴다.",
     )
+    parser.add_argument(
+        "--conditions", default=None,
+        help="쉼표로 구분한 조건 이름. 지정하면 --core 보다 우선한다. "
+             f"고를 수 있는 것: {','.join(ALL_CONDITIONS)}",
+    )
     args = parser.parse_args()
+
+    if args.conditions:
+        chosen = tuple(name.strip() for name in args.conditions.split(",") if name.strip())
+        unknown = [name for name in chosen if name not in ALL_CONDITIONS]
+        if unknown:
+            raise SystemExit(f"모르는 조건: {', '.join(unknown)}")
+    else:
+        chosen = CORE_CONDITIONS if args.core else ALL_CONDITIONS
 
     if not MACSUM_VAL.exists():
         raise SystemExit(f"MACSum 데이터가 없다: {MACSUM_VAL}")
 
-    result = run(
-        args.persona, args.train, args.test,
-        conditions=CORE_CONDITIONS if args.core else ALL_CONDITIONS,
-    )
+    result = run(args.persona, args.train, args.test, conditions=chosen)
 
     RESULTS.mkdir(parents=True, exist_ok=True)
     out = Path(args.out) if args.out else RESULTS / f"expert_prompt_{args.persona}.json"
