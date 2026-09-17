@@ -65,6 +65,7 @@ from agents.expert_onboarding import (
     PROFILE_KEYS,
     content_leakage,
     corpus_stats,
+    topic_leakage,
     expert_form_metric,
     fewshot_prompt,
     form_distance,
@@ -109,6 +110,26 @@ TASK_DESCRIPTION = (
 # base 0.233 > fewshot 0.201 > stable 0.158 > fewshot_stable 0.121 이다.
 # 즉 이겨야 하는 상대는 stable 이 아니라 fewshot_stable 이다.
 CONDITIONS = ("base", "stable", "fewshot", "fewshot_stable", "gepa")
+
+
+def foreign_corpus(exclude_site: str) -> list[ExpertExample]:
+    """주제 어휘를 가려낼 대조군. 다른 사이트의 저자 전원을 쓴다.
+
+    왜 넉넉히 주는가: 대조군이 작으면 일반 영어 단어까지 "주제 어휘"로
+    잡힌다. 실측에서 40개로 쟀을 때 순수 형식 앵커가 0.105 로 나왔고,
+    세 사이트 전체(1,148개)로 키우니 0.000 이 됐다.
+    """
+    examples: list[ExpertExample] = []
+    for path in sorted(CACHE.glob("*_a*_n*.json")):
+        if path.name.startswith(f"{exclude_site}_"):
+            continue
+        corpus = json.loads(path.read_text(encoding="utf-8"))
+        examples.extend(
+            ExpertExample(output=pair["answer"], task=pair["task"])
+            for author in corpus["authors"]
+            for pair in author["pairs"]
+        )
+    return examples
 
 
 def load_author_examples(site: str, index: int) -> tuple[int, list[ExpertExample]]:
@@ -238,10 +259,25 @@ def run_author(site: str, index: int, n_train: int, n_test: int, budget: int) ->
     # 찾아준 프롬프트가 학습 자료를 얼마나 베꼈는지 코드로 잰다.
     # base·stable 은 0 이어야 하고, GEPA 쪽이 높으면 산출물을 "문체
     # 프롬프트"라고 부를 수 없다.
-    result["content_leakage"] = {
-        "gepa": content_leakage(optimized, train),
-        "fewshot": content_leakage(fewshot_prompt(TASK_DESCRIPTION, train), train),
-        "base": content_leakage(TASK_DESCRIPTION, train),
+    #
+    # 두 가지를 따로 잰다. 축자 겹침만 보면 GEPA 를 놓친다 - 실측에서
+    # GEPA 프롬프트의 4-gram 겹침은 0.000 이었고(few-shot 은 0.959),
+    # 베낀 게 아니라 자기 말로 다시 쓴 것이었다. 주제 어휘 쪽에서
+    # 0.031 로 잡힌다.
+    foreign = foreign_corpus(site)
+    fewshot_text = fewshot_prompt(TASK_DESCRIPTION, train)
+    result["leakage"] = {
+        "foreign_corpus_size": len(foreign),
+        "verbatim": {
+            "base": content_leakage(TASK_DESCRIPTION, train),
+            "fewshot": content_leakage(fewshot_text, train),
+            "gepa": content_leakage(optimized, train),
+        },
+        "topic_vocabulary": {
+            "base": topic_leakage(TASK_DESCRIPTION, train, foreign),
+            "fewshot": topic_leakage(fewshot_text, train, foreign),
+            "gepa": topic_leakage(optimized, train, foreign),
+        },
     }
     result["user_id"] = user_id
     result["train_score"] = round(float(train_score), 3)

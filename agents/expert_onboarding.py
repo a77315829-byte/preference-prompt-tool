@@ -784,6 +784,48 @@ def content_leakage(prompt: str, corpus: list[ExpertExample]) -> float:
     return round(shared / len(set(prompt_grams)), 4)
 
 
+def topic_leakage(
+    prompt: str,
+    own_corpus: list[ExpertExample],
+    foreign_corpus: list[ExpertExample],
+) -> float:
+    """프롬프트에 이 저자의 **주제 어휘**가 얼마나 들어왔는가.
+
+    **왜 `content_leakage` 로는 부족한가.** 축자 겹침(4-gram)을 재보니
+    GEPA 프롬프트는 0.000 이었다 - few-shot 은 0.959 로 나오므로 지표는
+    작동한다. 즉 GEPA 는 학습 자료를 베낀 게 아니라 **자기 말로 다시
+    썼다.** 그런데 프롬프트를 읽으면 suet(신장 주변 지방), 밀가루의 효모
+    같은 도메인 내용이 분명히 들어 있다. 축자 지표로는 잡히지 않는
+    혼입이다.
+
+    그래서 어휘 수준으로 본다. 다만 "요리 단어 목록"을 손으로 만들면
+    도메인마다 다시 만들어야 하고 자의적이다. 대신 **다른 도메인의
+    코퍼스를 대조군으로 쓴다** - 이 저자의 자료에는 나오지만 무관한
+    도메인 자료에는 안 나오는 단어가 곧 주제 어휘다. 목록이 필요 없고
+    도메인을 안 가린다.
+
+    0 이면 주제 어휘가 없는 순수 형식 프롬프트이고, 크면 그 반대다.
+    절대값보다 조건 사이의 비교로 읽는다.
+    """
+    prompt_words = {w.lower() for w in _WORD.findall(prompt) if len(w) >= 4}
+    if not prompt_words:
+        return 0.0
+
+    own = _vocabulary(own_corpus)
+    foreign = _vocabulary(foreign_corpus)
+    topic_words = own - foreign
+    return round(len(prompt_words & topic_words) / len(prompt_words), 4)
+
+
+def _vocabulary(corpus: list[ExpertExample]) -> set[str]:
+    words: set[str] = set()
+    for example in corpus:
+        words |= {w.lower() for w in _WORD.findall(example.output) if len(w) >= 4}
+        if example.task:
+            words |= {w.lower() for w in _WORD.findall(example.task) if len(w) >= 4}
+    return words
+
+
 def _word_ngrams(text: str, n: int) -> list[tuple[str, ...]]:
     """소문자 단어 n-gram. 구두점은 떼고 본다 - 쉼표 하나 차이로 베낀
     문구를 못 잡으면 지표가 쓸모없어진다."""

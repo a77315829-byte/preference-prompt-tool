@@ -20,6 +20,7 @@ from agents.expert_onboarding import (
     expert_form_metric,
     fewshot_prompt,
     profile_targets,
+    topic_leakage,
 )
 
 
@@ -169,3 +170,53 @@ def test_content_leakage_handles_text_shorter_than_the_ngram() -> None:
     corpus = [ExpertExample(output="Some answer text here.", task="A question?")]
     assert content_leakage("Too short", corpus) == 0.0
     assert content_leakage("", corpus) == 0.0
+
+
+def test_topic_leakage_is_zero_for_a_pure_form_prompt() -> None:
+    """형식만 말하는 프롬프트에는 주제 어휘가 없어야 한다.
+
+    대조군이 작으면 일반 영어 단어까지 "주제 어휘"로 잡힌다 - 실측에서
+    대조군 40개로 쟀을 때 순수 형식 앵커가 0.105 로 나왔고, 1,148개로
+    키우니 0.000 이 됐다. 그래서 대조군은 넉넉히 줘야 한다.
+    """
+    own = [
+        ExpertExample(
+            output="Suet is the hard fat around beef kidneys, used in dumplings.",
+            task="What is suet?",
+        )
+    ]
+    foreign = [
+        ExpertExample(
+            output="Write about roughly this many words in total, in a few paragraphs, "
+                   "and match the form of the answer you are given.",
+            task="How should I write an answer, in form and length and sentences?",
+        )
+    ]
+    form_only = (
+        "Match this form: write about 17 sentences, use roughly 356 words in total."
+    )
+    assert topic_leakage(form_only, own, foreign) == 0.0
+
+
+def test_topic_leakage_catches_paraphrased_domain_words() -> None:
+    """축자 지표로는 안 잡히는 혼입을 잡아야 한다.
+
+    GEPA 가 실제로 그랬다 - 4-gram 겹침은 0.000 인데 프롬프트에 suet,
+    dumplings 같은 단어가 들어 있었다.
+    """
+    own = [
+        ExpertExample(
+            output="Suet is the hard fat around beef kidneys, used in dumplings.",
+            task="What is suet?",
+        )
+    ]
+    foreign = [ExpertExample(output="Write clearly and at length.", task="How?")]
+    paraphrased = "Keep in mind that dumplings often rely on suet for texture."
+    assert content_leakage(paraphrased, own) == 0.0
+    assert topic_leakage(paraphrased, own, foreign) > 0.2
+
+
+def test_topic_leakage_handles_empty_inputs() -> None:
+    own = [ExpertExample(output="Some answer.", task="A question?")]
+    assert topic_leakage("", own, []) == 0.0
+    assert topic_leakage("word", own, []) == 0.0  # 4자 미만은 세지 않는다
