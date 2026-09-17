@@ -110,3 +110,34 @@ def test_prompt_does_not_reference_examples_it_does_not_include(monkeypatch) -> 
     # 까지 금지해서 정상 문구를 잡아냈다.
     for phantom in ("example", "sample", "as written above"):
         assert phantom not in prompt, f"없는 것을 가리킨다: {phantom}"
+
+
+def test_expert_feedback_is_logged_separately_and_without_text(monkeypatch) -> None:
+    """이 기능의 만족도를 비교 경로와 합치면 아무 것도 말하지 못한다.
+    그리고 붙여넣은 글이 로그로 새면 안 된다."""
+    lines: list[str] = []
+    feedback_module = importlib.import_module("feedback")
+    original = feedback_module.FeedbackLog
+
+    def capturing(*args, **kwargs):
+        kwargs.pop("sink", None)
+        return original(sink=lines.append, **kwargs)
+
+    monkeypatch.setattr(feedback_module, "FeedbackLog", capturing)
+
+    app = _blocked_app(monkeypatch)
+    app.radio(key="build_path").set_value(EXPERT_PATH_LABEL).run()
+    app.text_area[0].input(_paste(30)).run()
+
+    # 응답 버튼을 누른다. "네, 맞아요" 가 첫 버튼이다.
+    app.button(key="expert_fits_yes").click().run()
+    assert not app.exception
+    assert lines, "응답이 기록되지 않았습니다."
+
+    import json
+
+    record = json.loads(lines[0].split("USER_FEEDBACK ", 1)[1])
+    assert record["mode"] == "expert", "비교 경로와 같은 모드로 집계됩니다."
+    assert record["extra"]["answers"] == 30
+    # 붙여넣은 글의 특징적인 단어가 어디에도 없어야 한다.
+    assert "suet" not in json.dumps(record).lower()

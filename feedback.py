@@ -18,6 +18,10 @@ Streamlit Cloud 콘솔 로그에서 읽을 수 있고 새 의존성이 0개다. 
 로그 한 줄에 누적 집계를 함께 실어 보낸다. 마지막 줄만 봐도 총계를 알 수
 있어서 로그 전체를 파싱하지 않아도 된다. 앱이 재시작되면 누적값은 0으로
 돌아가지만 이전에 찍힌 줄들은 로그에 남는다.
+
+**모드는 기능을 가른다.** demo(규칙 기반 비교) · api(실제 모델 비교) ·
+expert(자기 글에서 프롬프트 만들기) 세 가지이고, 합치지 않고 따로 집계한다 -
+서로 다른 기능의 만족도를 한 숫자로 만들면 아무 것도 말하지 못한다.
 """
 
 from __future__ import annotations
@@ -67,14 +71,28 @@ class FeedbackLog:
         self,
         *,
         domain: str,
-        demo_mode: bool,
+        demo_mode: bool = False,
         fits: bool,
         preferred: dict[str, str] | None = None,
         comment: str = "",
         rounds: int | None = None,
+        mode: str | None = None,
+        extra: dict | None = None,
     ) -> dict:
-        """응답 하나를 기록하고, 찍은 내용을 그대로 돌려준다."""
-        mode = "demo" if demo_mode else "api"
+        """응답 하나를 기록하고, 찍은 내용을 그대로 돌려준다.
+
+        `mode` 를 주면 demo/api 파생을 대신한다. 기능이 둘이 되면서
+        필요해졌다 - 전문가 프롬프트 경로는 모델을 아예 호출하지 않아
+        demo 도 api 도 아니고, 그 응답을 api 에 섞으면 **서로 다른 기능의
+        만족도를 하나로 합치는** 셈이 된다.
+
+        `extra` 는 기능마다 다른 부가 정보다. 전문가 경로는 넣은 답변
+        개수와 잰 형식 수치를 남긴다 - 자료가 적은 사용자가 덜 만족하는지
+        보려면 그게 있어야 한다. **숫자만 받는다** (`_numbers_only`) -
+        문자열을 허용하면 이 구멍으로 원문이 새어 나가고, 그건 규약이
+        아니라 코드로 막아야 한다.
+        """
+        mode = mode or ("demo" if demo_mode else "api")
         key = f"{mode}:{'yes' if fits else 'no'}"
 
         with self._lock:
@@ -89,6 +107,7 @@ class FeedbackLog:
             "preferred": dict(preferred or {}),
             "comment": _clean_comment(comment),
             "rounds": rounds,
+            "extra": _numbers_only(extra),
             "totals": totals,
         }
         # ensure_ascii=True 로 한글을 유니코드 escape 로 바꿔 내보낸다.
@@ -99,6 +118,22 @@ class FeedbackLog:
         # scripts/summarize_feedback.py 가 풀어서 보여준다.
         self._sink(f"{LOG_TAG} {json.dumps(record, ensure_ascii=True, sort_keys=True)}")
         return record
+
+
+def _numbers_only(extra: dict | None) -> dict:
+    """숫자 값만 남긴다.
+
+    부가 정보 칸에 문자열을 허용하면 원문이나 생성 결과가 그리로 새어
+    나갈 수 있다. "넣지 말자"는 규약으로 두지 않고 걸러낸다 - 이 모듈의
+    약속(원문은 기록하지 않는다)을 지키는 유일한 방법이다.
+    """
+    if not extra:
+        return {}
+    return {
+        key: value
+        for key, value in extra.items()
+        if isinstance(value, (int, float)) and not isinstance(value, bool)
+    }
 
 
 def _clean_comment(comment: str) -> str:

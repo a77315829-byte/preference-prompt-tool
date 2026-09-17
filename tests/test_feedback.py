@@ -55,7 +55,8 @@ def test_source_text_is_never_logged(log) -> None:
     )
     parsed = _parse(lines[0])
     assert set(parsed) == {
-        "at", "domain", "mode", "fits", "preferred", "comment", "rounds", "totals"
+        "at", "domain", "mode", "fits", "preferred", "comment", "rounds",
+        "extra", "totals",
     }
     assert parsed["preferred"] == {"length": "short"}
     assert parsed["comment"] == "짧아서 좋았어요"
@@ -161,3 +162,39 @@ def test_line_is_ascii_only_but_round_trips_korean(log) -> None:
     line = lines[0]
     line.encode("ascii")  # 비ASCII가 있으면 여기서 터진다
     assert _parse(line)["comment"] == "표현이 너무 딱딱해요"
+
+
+def test_extra_accepts_numbers_and_drops_text(log) -> None:
+    """부가 정보 칸이 원문 유출 경로가 되면 안 된다.
+
+    "문자열은 넣지 말자"를 규약으로 두면 언젠가 누가 넣는다. 코드로 막고,
+    그 사실을 테스트로 고정한다.
+    """
+    feedback, lines = log
+    feedback.record(
+        domain="expert",
+        mode="expert",
+        fits=True,
+        extra={
+            "answers": 30,
+            "words_per_answer": 320.4,
+            "pasted_text": "사용자가 붙여넣은 원문 전체",  # 새면 안 되는 값
+            "flag": True,  # bool 도 숫자가 아니다
+        },
+    )
+    extra = _parse(lines[0])["extra"]
+    assert extra == {"answers": 30, "words_per_answer": 320.4}
+
+
+def test_expert_mode_is_counted_separately_from_the_comparison_flow(log) -> None:
+    """서로 다른 기능의 만족도를 한 숫자로 합치면 아무 것도 말하지 못한다."""
+    feedback, lines = log
+    feedback.record(domain="review", demo_mode=False, fits=True)
+    feedback.record(domain="expert", mode="expert", fits=False)
+
+    assert feedback.totals() == {"api:yes": 1, "expert:no": 1}
+    assert _parse(lines[1])["mode"] == "expert"
+
+    summary = summarize([_parse(line) for line in lines])
+    assert set(summary) == {"api", "expert"}
+    assert summary["expert"]["yes_rate"] == 0.0

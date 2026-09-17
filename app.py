@@ -8,6 +8,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from budget import DailyBudget
+from agents.expert_onboarding import corpus_stats
 from expert_profile import (
     DELIMITER_HINT,
     MAX_MATERIAL_CHARS,
@@ -640,6 +641,64 @@ EXPERT_TASK_DESCRIPTION = (
 )
 
 
+def _show_expert_feedback_form(answer_count: int, examples: list) -> None:
+    """전문가 경로의 만족도를 묻는다.
+
+    비교 경로와 **따로 집계한다**(mode="expert"). 두 기능은 하는 일이
+    달라서 만족도를 한 숫자로 합치면 아무 것도 말하지 못한다.
+
+    같이 남기는 숫자는 답변 개수와 잰 형식 수치다. 자료가 적은 사용자가
+    덜 만족하는지 보려면 그게 있어야 한다 - 실측에서 12개와 30개의 차이가
+    컸으므로(한 저자는 −0.122 에서 +0.187 로 뒤집혔다) 실사용에서도 그
+    경계가 보이는지 확인할 값이다. `feedback.py` 가 숫자만 받으므로
+    원문이 이 경로로 새지 않는다.
+    """
+    if st.session_state.get("expert_feedback_sent"):
+        st.success("의견 감사합니다. 이 기능이 실제로 통하는지 판단하는 근거로 씁니다.")
+        return
+
+    st.subheader("이 프롬프트가 내 글쓰기 방식에 맞나요?")
+    st.caption(
+        "한 번만 답해주시면 판단 근거로 쓰겠습니다. 붙여넣은 글은 저장하지 않고, "
+        "답변 개수와 측정된 수치만 익명으로 남깁니다."
+    )
+
+    comment = st.text_input(
+        "덧붙일 말 (선택)",
+        placeholder="예: 길이는 맞는데 문단이 너무 잘게 나뉘어요",
+        max_chars=MAX_COMMENT_CHARS,
+        key="expert_feedback_comment",
+    )
+
+    col_yes, col_no = st.columns(2)
+    answered = None
+    with col_yes:
+        if st.button("네, 맞아요", use_container_width=True, key="expert_fits_yes"):
+            answered = True
+    with col_no:
+        if st.button("아니요, 아쉬워요", use_container_width=True, key="expert_fits_no"):
+            answered = False
+
+    if answered is None:
+        return
+
+    stats = corpus_stats(examples)
+    _feedback_log().record(
+        domain="expert",
+        mode="expert",
+        fits=answered,
+        comment=comment,
+        extra={
+            "answers": answer_count,
+            "words_per_answer": stats.get("words_per_answer", 0.0),
+            "sentences_per_answer": stats.get("sentences_per_answer", 0.0),
+            "paragraphs_per_answer": stats.get("paragraphs_per_answer", 0.0),
+        },
+    )
+    st.session_state.expert_feedback_sent = True
+    st.rerun()
+
+
 def _show_expert_flow() -> None:
     """자기 글을 붙여넣으면 그 사람 형식으로 쓰게 하는 프롬프트를 만든다.
 
@@ -734,6 +793,8 @@ def _show_expert_flow() -> None:
                 f"{prompt}\nAlso break it into about {paragraphs.rstrip('문단')} paragraphs.",
                 language="text",
             )
+
+    _show_expert_feedback_form(len(examples), examples)
 
     with st.expander("이 수치는 어떻게 검증했나요?"):
         st.caption(

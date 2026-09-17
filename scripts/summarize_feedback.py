@@ -13,8 +13,13 @@
 없어서 그렇게 했고, 사람이 읽을 형태로 되돌리는 것은 이 스크립트 몫이다.
 한글은 로그에서 유니코드 escape 상태이므로 여기서 풀어 보여준다.
 
-**demo 모드 응답은 합치지 않는다.** 규칙 기반 결과에 대한 평가라서 개인화
-검증 근거로는 약하다. 모드별로 나눠서 보고해야 정직하다.
+**모드는 합치지 않는다.** 세 가지가 서로 다른 것을 평가한다.
+
+  api    : 실제 모델로 8회 비교해 만든 프롬프트. 개인화 검증의 주 근거.
+  demo   : 규칙 기반 예시로 만든 것. 개인화 근거로는 약하다.
+  expert : 자기 글을 붙여넣어 측정으로 만든 프롬프트. 기능이 다르다.
+
+합쳐서 하나의 만족률을 내면 아무 것도 말하지 못한다.
 """
 
 from __future__ import annotations
@@ -60,8 +65,9 @@ def report(records: list[dict]) -> None:
             f"{bucket['no']:6d} {bucket['yes_rate']:7.0%}"
         )
 
-    print("\n모드 설명: api = 실제 모델 생성, demo = 규칙 기반 예시")
-    print("개인화 검증 근거로는 api 행만 쓸 것.")
+    print("\n모드 설명: api = 실제 모델 비교, demo = 규칙 기반 비교, "
+          "expert = 자기 글 측정")
+    print("비교 기반 개인화의 근거는 api 행이고, expert 행은 별개 기능이다.")
 
     by_domain: dict[str, dict[str, int]] = {}
     for record in records:
@@ -74,6 +80,25 @@ def report(records: list[dict]) -> None:
         for domain in sorted(by_domain):
             bucket = by_domain[domain]
             print(f"{domain:20} {bucket['yes']:5d} {bucket['no']:6d}")
+
+    expert = [r for r in records if r.get("mode") == "expert"]
+    if expert:
+        counts = [r.get("extra", {}).get("answers") for r in expert]
+        counts = [c for c in counts if isinstance(c, (int, float))]
+        print(f"\nexpert 모드 상세 ({len(expert)}건)")
+        if counts:
+            print(f"  넣은 답변 개수: 최소 {min(counts):.0f} / 중앙 "
+                  f"{sorted(counts)[len(counts) // 2]:.0f} / 최대 {max(counts):.0f}")
+        # 자료가 적을 때 덜 만족하는지 본다. 실측에서 12개와 30개의 차이가
+        # 컸으므로(한 저자는 -0.122 에서 +0.187 로 뒤집혔다) 실사용에서도
+        # 그 경계가 보이는지 확인할 값이다.
+        thin = [r for r in expert if (r.get("extra", {}).get("answers") or 0) < 30]
+        thick = [r for r in expert if (r.get("extra", {}).get("answers") or 0) >= 30]
+        for label, bucket in (("30개 미만", thin), ("30개 이상", thick)):
+            if bucket:
+                yes = sum(1 for r in bucket if r.get("fits"))
+                print(f"  {label}: {len(bucket)}건 중 맞다 {yes}건 "
+                      f"({yes / len(bucket):.0%})")
 
     comments = [
         (record.get("domain", "?"), record.get("fits"), record["comment"])
