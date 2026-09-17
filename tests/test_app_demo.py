@@ -27,16 +27,20 @@ def test_coding_demo_completes_without_api(monkeypatch) -> None:
     app.radio(key="run_mode").set_value("무료 데모 (API 없이 규칙 기반)").run()
 
     app.text_area[0].input("클릭 횟수를 보여주는 버튼을 만들어 주세요.").run()
-    app.button[0].click().run()
+    app.button(key="start").click().run()
     assert app.session_state["stage"] == "compare"
 
     for _ in range(8):
-        app.button[0].click().run()
+        app.button(key="pick_a").click().run()
         assert not app.exception
 
     assert app.session_state["stage"] == "done"
-    assert app.success[0].value == "선택이 모두 끝났습니다."
-    assert "시스템 프롬프트" in app.subheader[1].value
+    # 완주 여부는 문구가 아니라 **산출물**로 본다. 화면 문구는 개편마다
+    # 바뀌는데 프롬프트가 나왔는지는 바뀌지 않는 조건이다.
+    assert app.code, "결과 화면에 시스템 프롬프트가 없습니다."
+    assert app.code[0].value.strip()
+    # 제목 순서에 기대지 않는다. 화면을 고칠 때마다 깨진다.
+    assert app.code[0].value.strip(), "시스템 프롬프트가 비어 있습니다."
 
 
 def test_summarization_category_is_still_available() -> None:
@@ -80,16 +84,19 @@ def test_korean_summarization_demo_completes_without_api(monkeypatch) -> None:
         "전문가들은 이번 대책이 제한적인 효과를 낼 것으로 전망했다. "
         "시민단체는 임대주택 비중이 낮다고 비판했다."
     ).run()
-    app.button[0].click().run()
+    app.button(key="start").click().run()
     assert not app.exception
     assert app.session_state["stage"] == "compare"
 
     for _ in range(8):
-        app.button[0].click().run()
+        app.button(key="pick_a").click().run()
         assert not app.exception
 
     assert app.session_state["stage"] == "done"
-    assert app.success[0].value == "선택이 모두 끝났습니다."
+    # 완주 여부는 문구가 아니라 **산출물**로 본다. 화면 문구는 개편마다
+    # 바뀌는데 프롬프트가 나왔는지는 바뀌지 않는 조건이다.
+    assert app.code, "결과 화면에 시스템 프롬프트가 없습니다."
+    assert app.code[0].value.strip()
 
     # 선호가 원시 JSON이 아니라 한국어 라벨로 표시되는지 확인한다.
     rendered = " ".join(item.value for item in app.markdown)
@@ -114,7 +121,7 @@ def test_api_failure_degrades_to_demo_instead_of_dead_ending(monkeypatch) -> Non
     app = AppTest.from_file(APP_PATH, default_timeout=30).run()
     # 실행 모드는 건드리지 않는다 - 기본값이 API 모드다.
     app.text_area[0].input("클릭 횟수를 보여주는 버튼을 만들어 주세요.").run()
-    app.button[0].click().run()
+    app.button(key="start").click().run()
 
     assert not app.exception
     # API 모드로 시작했지만 실패 후 데모 모드로 내려와 있어야 한다.
@@ -126,11 +133,14 @@ def test_api_failure_degrades_to_demo_instead_of_dead_ending(monkeypatch) -> Non
 
     # 남은 비교를 끝까지 진행할 수 있어야 한다.
     for _ in range(8):
-        app.button[0].click().run()
+        app.button(key="pick_a").click().run()
         assert not app.exception
 
     assert app.session_state["stage"] == "done"
-    assert app.success[0].value == "선택이 모두 끝났습니다."
+    # 완주 여부는 문구가 아니라 **산출물**로 본다. 화면 문구는 개편마다
+    # 바뀌는데 프롬프트가 나왔는지는 바뀌지 않는 조건이다.
+    assert app.code, "결과 화면에 시스템 프롬프트가 없습니다."
+    assert app.code[0].value.strip()
 
 
 def test_source_input_has_length_cap() -> None:

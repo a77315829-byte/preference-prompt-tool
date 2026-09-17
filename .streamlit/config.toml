@@ -8,10 +8,12 @@
 # 이 파일은 Streamlit 이 기동 시점에만 읽는다. 고친 뒤에는 프로세스를
 # 새로 띄워야 반영되므로 scripts/bump_build_marker.py 의 감시 대상에
 # 들어가 있다.
+# 값은 theme.py 의 TOKENS 와 같아야 한다. 어긋나면 Streamlit 이 그리는
+# 위젯과 우리가 그리는 HTML 의 색이 미묘하게 달라진다.
 [theme]
 base = "dark"
-primaryColor = "#7C6CFF"
-backgroundColor = "#0A0B12"
-secondaryBackgroundColor = "#14161F"
-textColor = "#E7E9F2"
+primaryColor = "#D7FF3E"
+backgroundColor = "#0B0C0E"
+secondaryBackgroundColor = "#141619"
+textColor = "#E8EAED"
 font = "sans serif"

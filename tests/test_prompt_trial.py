@@ -31,9 +31,9 @@ def _finish_run(app, *, demo: bool) -> None:
     if demo:
         app.radio(key="run_mode").set_value(DEMO_MODE).run()
     app.text_area[0].input(SOURCE).run()
-    app.button[0].click().run()
+    app.button(key="start").click().run()
     for _ in range(8):
-        app.button[0].click().run()
+        app.button(key="pick_a").click().run()
         assert not app.exception
     assert app.session_state["stage"] == "done"
 

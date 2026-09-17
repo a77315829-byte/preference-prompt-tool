@@ -70,7 +70,7 @@ def test_category_completes_demo_run(label, monkeypatch) -> None:
     app.selectbox[0].select(label).run()
     app.radio(key="run_mode").set_value(DEMO_MODE).run()
     app.text_area[0].input(SAMPLE_INPUT[label]).run()
-    app.button[0].click().run()
+    app.button(key="start").click().run()
     assert not app.exception, f"{label}: 비교 시작에서 예외"
     assert app.session_state["stage"] == "compare"
 
@@ -78,13 +78,17 @@ def test_category_completes_demo_run(label, monkeypatch) -> None:
         # 두 후보가 같으면 그 선택에서 아무 정보도 얻지 못한다.
         shown = [m.value for m in app.markdown] + [w.value for w in app.text]
         assert shown, f"{label}: {round_index + 1}회차에 후보가 안 그려짐"
-        app.button[0].click().run()
+        app.button(key="pick_a").click().run()
         assert not app.exception, f"{label}: {round_index + 1}회차에서 예외"
 
     assert app.session_state["stage"] == "done", f"{label}: 완주 실패"
-    assert app.success[0].value == "선택이 모두 끝났습니다."
+    # 완주 여부는 문구가 아니라 **산출물**로 본다. 화면 문구는 개편마다
+    # 바뀌는데 프롬프트가 나왔는지는 바뀌지 않는 조건이다.
+    assert app.code, "결과 화면에 시스템 프롬프트가 없습니다."
+    assert app.code[0].value.strip()
 
     # 선호가 원시 JSON이 아니라 사람이 읽을 라벨로 나와야 한다.
     rendered = " ".join(m.value for m in app.markdown)
     assert "**" in rendered, f"{label}: 선호 라벨이 안 보인다"
-    assert "시스템 프롬프트" in app.subheader[1].value
+    # 제목 순서에 기대지 않는다. 화면을 고칠 때마다 깨진다.
+    assert app.code[0].value.strip(), "시스템 프롬프트가 비어 있습니다."

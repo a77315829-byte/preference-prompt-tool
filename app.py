@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import os
+import time
+import threading
+from dataclasses import replace
 
 import streamlit as st
 from dotenv import load_dotenv
@@ -20,6 +23,8 @@ from expert_profile import (
     readiness,
 )
 from feedback import FeedbackLog
+import service
+import theme
 
 from engine.demo_generator import generate_demo
 from engine.domain_loader import Domain, load_domain
@@ -442,13 +447,13 @@ STYLES = """
 /* 다크 테크 톤. 색은 .streamlit/config.toml 의 테마와 맞춘다.
    여기 값을 바꾸면 그쪽도 같이 봐야 한다. */
 :root {
-    --ppt-bg: #0A0B12;
-    --ppt-panel: #14161F;
+    --ppt-bg: var(--bg);
+    --ppt-panel: var(--surface);
     --ppt-line: rgba(124, 108, 255, 0.22);
     --ppt-line-soft: rgba(231, 233, 242, 0.10);
-    --ppt-violet: #7C6CFF;
-    --ppt-cyan: #4ADEDE;
-    --ppt-text: #E7E9F2;
+    --ppt-violet: var(--accent);
+    --ppt-cyan: var(--axis-2);
+    --ppt-text: var(--text-primary);
     --ppt-muted: rgba(231, 233, 242, 0.58);
     --ppt-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 }
@@ -462,10 +467,7 @@ STYLES = """
 
 /* 배경에 아주 약한 발광을 깔아 평평한 검정을 피한다. */
 [data-testid="stAppViewContainer"] {
-    background:
-        radial-gradient(900px 420px at 12% -8%, rgba(124, 108, 255, 0.16), transparent 60%),
-        radial-gradient(700px 380px at 92% 4%, rgba(74, 222, 222, 0.10), transparent 62%),
-        var(--ppt-bg);
+    background: var(--surface);
 }
 
 /* --- 히어로 --- */
@@ -475,9 +477,7 @@ STYLES = """
     border-radius: 16px;
     padding: 1.7rem 1.8rem 1.6rem;
     margin-bottom: 1.1rem;
-    background:
-        linear-gradient(180deg, rgba(124, 108, 255, 0.10), rgba(10, 11, 18, 0)) ,
-        var(--ppt-panel);
+    background: var(--surface);
     overflow: hidden;
 }
 /* 상단에 얇은 네온 라인 */
@@ -486,7 +486,7 @@ STYLES = """
     position: absolute;
     inset: 0 0 auto 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--ppt-violet), var(--ppt-cyan), transparent);
+    background: var(--accent);
 }
 .ppt-eyebrow {
     font-family: var(--ppt-mono);
@@ -508,7 +508,7 @@ STYLES = """
     width: 46px;
     height: 2px;
     border-radius: 2px;
-    background: linear-gradient(90deg, var(--ppt-violet), var(--ppt-cyan));
+    background: var(--accent);
     margin: 0 0 .85rem;
 }
 .ppt-hero p {
@@ -564,8 +564,8 @@ STYLES = """
     font-weight: 700;
     padding: .55rem 1.5rem;
     border: none;
-    background: linear-gradient(135deg, var(--ppt-violet), #9B5DE0);
-    box-shadow: 0 0 0 1px rgba(124, 108, 255, .5), 0 8px 24px rgba(124, 108, 255, .28);
+    background: var(--accent);
+    box-shadow: none;
 }
 /* 비활성 상태에서도 발광이 남으면 누를 수 있는 것처럼 보인다. */
 [data-testid="stBaseButton-primary"]:disabled,
@@ -602,7 +602,7 @@ STYLES = """
     font-size: .82rem;
     letter-spacing: .04em;
     margin-bottom: .5rem;
-    color: #0A0B12;
+    color: var(--bg);
     background: var(--ppt-violet);
 }
 .ppt-ab-b { background: var(--ppt-cyan); }
@@ -838,8 +838,69 @@ def _show_expert_flow() -> None:
         )
 
 
+def _rebuilt_estimator(session):
+    """시드 프롬프트를 만들려면 Estimator 객체가 필요하다.
+
+    `service.SessionState` 는 엔진 객체를 담지 않으므로(직렬화 가능해야
+    한다) 여기서 이력을 재생해 꺼낸다. 재생 비용은 8라운드짜리다.
+    """
+    _, estimator, _ = service._rebuild(session)
+    return estimator
+
+
+def _run_optimize(session) -> None:
+    """GEPA 를 스레드로 돌리고 진행 바로 폴링한다.
+
+    **스피너를 쓰지 않는다.** 게이지와 같은 시각 언어(가느다란 바)로
+    보여주는 게 이 화면의 톤이고, 무엇보다 실제 진행률을 낼 수 있다 -
+    `service.optimize` 가 평가 함수 호출 수를 세서 예산으로 나눈다.
+    gepa 0.1.4 는 진행률 콜백을 주지 않으므로 그렇게 얻는다.
+
+    스레드에서 `st.*` 를 부르지 않는다. 진행률은 공유 dict 에만 쓰고,
+    화면은 여기서 폴링하며 그린다.
+    """
+    shared: dict = {"progress": 0.0, "prompt": None, "error": None}
+
+    def work() -> None:
+        try:
+            shared["prompt"] = service.optimize(
+                session, on_progress=lambda value: shared.__setitem__("progress", value)
+            )
+        except Exception as exc:  # noqa: BLE001 - 실패해도 기본 프롬프트는 쓸 수 있다
+            shared["error"] = str(exc)
+
+    worker = threading.Thread(target=work, daemon=True)
+    worker.start()
+
+    slot = st.empty()
+    while worker.is_alive():
+        with slot.container():
+            st.markdown(
+                theme.progress_html(
+                    shared["progress"],
+                    f"최적화 중 · 평가 {shared['progress'] * 100:.0f}%",
+                ),
+                unsafe_allow_html=True,
+            )
+        time.sleep(1)
+    slot.empty()
+
+    if shared["error"]:
+        st.session_state.gepa_error = shared["error"]
+    else:
+        st.session_state.pop("gepa_error", None)
+        st.session_state.optimized_prompt = shared["prompt"]
+    st.rerun()
+
+
 def _inject_styles() -> None:
+    """옛 스타일(히어로·단계 카드) 다음에 토큰·컴포넌트를 얹는다.
+
+    순서가 중요하다. theme.base_css() 가 뒤에 와야 토큰 기반 규칙이
+    이기고, Streamlit 기본 UI 제거도 거기 들어 있다.
+    """
     st.markdown(STYLES, unsafe_allow_html=True)
+    st.markdown(theme.base_css(), unsafe_allow_html=True)
 
 
 def _show_hero() -> None:
@@ -952,7 +1013,10 @@ if st.session_state.stage == "input":
         placeholder=config["placeholder"],
         max_chars=MAX_SOURCE_CHARS,
     )
-    if st.button("비교 시작", type="primary", disabled=not source.strip() or api_blocked):
+    if st.button(
+        "비교 시작", type="primary", key="start",
+        disabled=not source.strip() or api_blocked,
+    ):
         if not demo_mode:
             # 하루 예산을 먼저 차감한다. 화면을 그린 뒤 버튼을 누르기까지
             # 사이에 다른 방문자가 예산을 다 썼을 수 있으므로, 여기서
@@ -964,95 +1028,177 @@ if st.session_state.stage == "input":
                 )
                 st.stop()
             st.session_state.api_runs_used += 1
-        domain = _domain_for(domain_key)
+        # 상태 관리는 service.py 로 넘긴다. 엔진 객체를 session_state 에
+        # 담지 않으므로 나중에 FastAPI 세션 저장소로 그대로 옮겨진다.
         st.session_state.domain_key = domain_key
-        st.session_state.source = source
         st.session_state.demo_mode = demo_mode
-        st.session_state.estimator = Estimator(domain)
-        st.session_state.selector = UncertaintySelector(domain, seed=0)
-        st.session_state.round = 0
+        try:
+            st.session_state.session = service.start_session(
+                source,
+                domain_key=domain_key,
+                domain_path=config["path"],
+                model=MODEL,
+                demo_mode=demo_mode,
+            )
+        except Exception as exc:  # noqa: BLE001 - 첫 호출 실패는 데모로 내린다
+            st.session_state.api_error = str(exc)
+            st.session_state.demo_mode = True
+            st.session_state.session = service.start_session(
+                source,
+                domain_key=domain_key,
+                domain_path=config["path"],
+                model=MODEL,
+                demo_mode=True,
+            )
+        st.session_state.gauge_prev = [0.0 for _ in st.session_state.session.axes]
         st.session_state.stage = "compare"
         st.rerun()
 
 elif st.session_state.stage == "compare":
-    domain_key = st.session_state.domain_key
-    domain = _domain_for(domain_key)
-    config = DOMAIN_OPTIONS[domain_key]
-    estimator = st.session_state.estimator
-    selector = st.session_state.selector
-    source = st.session_state.source
-
-    if "current_pair" not in st.session_state:
-        combo_a, combo_b = selector.next_pair(estimator)
-        if st.session_state.demo_mode:
-            candidate_a = generate_demo(domain, source, combo_a)
-            candidate_b = generate_demo(domain, source, combo_b)
-        else:
-            with st.spinner("두 가지 버전을 생성하는 중..."):
-                try:
-                    # 두 후보는 서로 의존이 없으므로 동시에 생성한다.
-                    # 순차로 부르면 한 라운드 대기가 두 배가 된다.
-                    candidate_a, candidate_b = generate_all(
-                        domain, source, (combo_a, combo_b), model=MODEL
-                    )
-                except Exception as exc:
-                    # 막다른 길로 끝내지 않는다. 예전에는 st.stop()으로 멈춰서
-                    # 화면에 에러만 남고 여기까지 한 선택이 다 버려졌다 - 키가
-                    # 만료되거나 결제 한도에 걸리면 처음 보는 사람 눈에는 그냥
-                    # 고장난 서비스다. 데모 모드로 내려서 남은 비교를 규칙 기반
-                    # 후보로 이어가고, 지금까지의 선택은 그대로 살린다.
-                    st.session_state.demo_mode = True
-                    st.session_state.api_error = str(exc)
-                    st.rerun()
-        st.session_state.current_pair = (combo_a, combo_b, candidate_a, candidate_b)
-
-    combo_a, combo_b, candidate_a, candidate_b = st.session_state.current_pair
+    session = st.session_state.session
+    config = DOMAIN_OPTIONS[session.domain_key]
 
     _show_api_error_notice()
 
-    st.progress(st.session_state.round / N_ROUNDS)
-    st.caption(f"{st.session_state.round + 1} / {N_ROUNDS} 번째 비교 · {config['compare_help']}")
+    # 좌측 계기판 + 본문 카드. 좌측은 라운드 스테퍼와 축별 게이지다.
+    side, main = st.columns([1, 4], gap="large")
 
-    col_a, col_b = st.columns(2)
-    with col_a:
-        # border=True 로 실제 카드 컨테이너를 만든다. 내 div로 감싸도
-        # Streamlit 위젯은 그 안에 들어가지 않아서 공개 API를 쓴다.
-        with st.container(border=True):
-            st.markdown('<div class="ppt-ab">A</div>', unsafe_allow_html=True)
-            _show_candidate(domain_key, candidate_a)
-        pick_a = st.button("A가 더 마음에 들어요", use_container_width=True)
-    with col_b:
-        with st.container(border=True):
-            st.markdown('<div class="ppt-ab ppt-ab-b">B</div>', unsafe_allow_html=True)
-            _show_candidate(domain_key, candidate_b)
-        pick_b = st.button("B가 더 마음에 들어요", use_container_width=True)
+    with side:
+        st.markdown(
+            f'<div class="ppt-label">round</div>'
+            f'<div class="ppt-mono" style="font-size:28px">'
+            f'{session.round:02d}<span style="color:var(--text-muted)">'
+            f'/{session.total_rounds:02d}</span></div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            theme.stepper_html(session.answered, session.total_rounds),
+            unsafe_allow_html=True,
+        )
+        st.markdown('<div class="ppt-label">갈린 비교</div>', unsafe_allow_html=True)
 
-    if pick_a or pick_b:
-        winner = "a" if pick_a else "b"
-        estimator.update(Comparison(combo_a, combo_b, winner))
-        st.session_state.round += 1
-        del st.session_state["current_pair"]
-        if st.session_state.round >= N_ROUNDS:
+        # 게이지는 확신도가 아니라 "그 축이 갈린 비교 횟수"를 보여준다.
+        # 확신도는 3값 축에서 24회까지 0.06 에 머물러 차오르지 않는다(실측).
+        current = [axis.fill for axis in session.axes]
+        previous = st.session_state.get("gauge_prev") or [0.0] * len(current)
+        if len(previous) != len(current):
+            previous = [0.0] * len(current)
+        st.markdown(
+            theme.gauge_keyframes(previous, current, session.round),
+            unsafe_allow_html=True,
+        )
+        for index, axis in enumerate(session.axes):
+            st.markdown(
+                theme.gauge_html(
+                    axis.name, axis.estimate, axis.fill,
+                    axis.discriminated, axis.total_rounds,
+                    index=index, round_no=session.round,
+                ),
+                unsafe_allow_html=True,
+            )
+        st.session_state.gauge_prev = current
+
+    with main:
+        st.markdown(
+            f'<div class="ppt-label">{config["compare_help"]}</div>',
+            unsafe_allow_html=True,
+        )
+        col_a, col_b = st.columns(2, gap="medium")
+        pair = session.pair
+        for column, badge, candidate, key in (
+            (col_a, "A", pair.a, "pick_a"),
+            (col_b, "B", pair.b, "pick_b"),
+        ):
+            with column:
+                # 높이를 st.container 로 고정한다. 넘치면 안에서 스크롤되고
+                # 두 카드 높이가 절대 달라지지 않는다 - 후보 길이가
+                # 레이아웃을 흔들면 사용자가 내용이 아니라 흔들림을 보고
+                # 고르게 되고, 그게 length 축 판단 오염이다.
+                #
+                # 본문은 Streamlit 이 직접 그린다. HTML 로 넣으면 코딩
+                # 도메인의 마크다운 코드 펜스가 이중 이스케이프돼
+                # `&quot;` 가 글자로 보인다(실제로 겪음).
+                with st.container(border=True, height=theme.CARD_MIN_HEIGHT):
+                    st.markdown(
+                        theme.card_badge_html(badge), unsafe_allow_html=True
+                    )
+                    _show_candidate(session.domain_key, candidate.text)
+                st.button(f"{badge} 선택", key=key, use_container_width=True)
+        st.markdown(
+            '<div class="ppt-keyhint" style="margin-top:12px">'
+            "왼쪽·오른쪽 카드 중 마음에 드는 쪽의 버튼을 누르세요</div>",
+            unsafe_allow_html=True,
+        )
+
+    chosen = "a" if st.session_state.get("pick_a") else (
+        "b" if st.session_state.get("pick_b") else None
+    )
+    if chosen:
+        try:
+            st.session_state.session = service.submit_choice(
+                session, session.pair.pair_id, chosen
+            )
+        except service.StaleChoiceError:
+            # 중복 클릭이나 뒤로 가기로 지난 쌍의 선택이 늦게 도착한 경우.
+            # 조용히 무시한다 - 그걸 받으면 엉뚱한 비교가 이력에 들어간다.
+            st.rerun()
+        except Exception as exc:  # noqa: BLE001 - API 실패는 데모로 내린다
+            # 막다른 길로 끝내지 않는다. 키가 만료되거나 결제 한도에 걸리면
+            # 처음 보는 사람 눈에는 그냥 고장난 서비스다. 데모로 내려 남은
+            # 비교를 이어가고 지금까지의 선택은 살린다.
+            st.session_state.api_error = str(exc)
+            st.session_state.demo_mode = True
+            degraded = replace(session, demo_mode=True)
+            st.session_state.session = service.submit_choice(
+                degraded, degraded.pair.pair_id, chosen
+            )
+
+        if st.session_state.session.done:
             st.session_state.stage = "done"
         st.rerun()
 
+
 elif st.session_state.stage == "done":
-    domain_key = st.session_state.domain_key
+    session = st.session_state.session
+    domain_key = session.domain_key
     domain = _domain_for(domain_key)
-    estimator = st.session_state.estimator
-    source = st.session_state.source
+    source = session.source_text
 
-    preferred = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
-    st.success("선택이 모두 끝났습니다.")
+    preferred = {axis.name: axis.estimate for axis in session.axes if axis.estimate}
     _show_api_error_notice()
-    st.subheader("내가 선호하는 방식")
-    _show_preferences(domain_key, preferred)
 
-    seed_prompt = build_seed_prompt(domain, estimator)
+    st.markdown(
+        '<div class="ppt-eyebrow">converged</div>', unsafe_allow_html=True
+    )
+    st.markdown(
+        theme.stepper_html(session.answered, session.total_rounds),
+        unsafe_allow_html=True,
+    )
+
+    # 축별 추정값을 배지로. 옆에 그 축이 몇 번 갈렸는지 같이 적는다 -
+    # 근거가 얼마나 모였는지가 추정값만큼 중요하다.
+    st.markdown('<div class="ppt-label">추정된 선호</div>', unsafe_allow_html=True)
+    st.markdown(
+        theme.badges_html(
+            [
+                (axis.name, f"{axis.estimate} · 갈린 비교 {axis.discriminated}/{axis.total_rounds}")
+                for axis in session.axes
+                if axis.estimate
+            ]
+        ),
+        unsafe_allow_html=True,
+    )
+    with st.expander("사람이 읽는 말로 보기"):
+        _show_preferences(domain_key, preferred)
+
+    seed_prompt = build_seed_prompt(domain, _rebuilt_estimator(session))
     prompt = st.session_state.get("optimized_prompt", seed_prompt)
-    st.subheader("재사용 가능한 시스템 프롬프트")
+    st.markdown(
+        '<div class="ppt-label" style="margin-top:24px">시스템 프롬프트</div>',
+        unsafe_allow_html=True,
+    )
     st.code(prompt, language=None)
-    st.caption("코드 블록 오른쪽 위의 복사 아이콘으로 프롬프트를 복사할 수 있습니다.")
+    st.caption("코드 블록 오른쪽 위의 복사 아이콘으로 복사할 수 있습니다.")
 
     if st.session_state.demo_mode:
         st.caption("무료 데모 결과이며, 추정된 선호를 조립해 프롬프트를 만들었습니다.")
@@ -1071,23 +1217,7 @@ elif st.session_state.stage == "done":
                 st.caption(gepa_error)
 
         if st.button("GEPA로 프롬프트 최적화"):
-            with st.spinner("프롬프트를 최적화하는 중... 1~2분 정도 걸립니다."):
-                try:
-                    optimized_prompt, _ = run_gepa(
-                        domain,
-                        estimator,
-                        train_sources=[source],
-                        val_sources=[source],
-                        task_lm=MODEL,
-                        reflection_lm=MODEL,
-                        max_metric_calls=20,
-                    )
-                except Exception as exc:
-                    st.session_state.gepa_error = str(exc)
-                    st.rerun()
-                st.session_state.pop("gepa_error", None)
-            st.session_state.optimized_prompt = optimized_prompt
-            st.rerun()
+            _run_optimize(session)
     else:
         st.caption("API 최적화가 적용된 프롬프트입니다.")
 
