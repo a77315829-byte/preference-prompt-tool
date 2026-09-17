@@ -848,7 +848,7 @@ def _rebuilt_estimator(session):
     return estimator
 
 
-def _run_optimize(session) -> None:
+def _run_optimize(session, seed_prompt: str) -> None:
     """GEPA 를 스레드로 돌리고 진행 바로 폴링한다.
 
     **스피너를 쓰지 않는다.** 게이지와 같은 시각 언어(가느다란 바)로
@@ -890,6 +890,17 @@ def _run_optimize(session) -> None:
     else:
         st.session_state.pop("gepa_error", None)
         st.session_state.optimized_prompt = shared["prompt"]
+        # **바뀌지 않는 경우가 정상적으로 일어난다.** 시드는 추정된 선호로
+        # 조립되고 평가 함수는 그 같은 선호를 검사하므로, 시드가 처음부터
+        # 만점을 받아 GEPA 가 변이를 건너뛴다 (로그: "All subsample scores
+        # perfect for parent 0. Skipping."). 피드백 풍부도 어블레이션 1차
+        # 시도에서 이미 겪은 것과 같은 구조다.
+        #
+        # 그때 "최적화했습니다"라고 말하면 거짓이다. 같은지 여부를 기록해
+        # 화면이 사실을 말하게 한다.
+        st.session_state.optimize_changed = (
+            shared["prompt"].strip() != seed_prompt.strip()
+        )
     st.rerun()
 
 
@@ -1217,9 +1228,16 @@ elif st.session_state.stage == "done":
                 st.caption(gepa_error)
 
         if st.button("GEPA로 프롬프트 최적화"):
-            _run_optimize(session)
-    else:
+            _run_optimize(session, seed_prompt)
+    elif st.session_state.get("optimize_changed"):
         st.caption("API 최적화가 적용된 프롬프트입니다.")
+    else:
+        # 정직하게 적는다. 최적화를 돌렸지만 프롬프트가 그대로다.
+        st.caption(
+            "최적화를 돌렸지만 프롬프트는 그대로입니다. 선택으로 조립한 시드가 "
+            "이미 평가 기준을 만점으로 통과해서 GEPA 가 바꿀 여지를 찾지 못했습니다 "
+            "- 실패가 아니라 이미 기준을 충족한 상태입니다."
+        )
 
     _show_prompt_trial(domain, prompt)
     _show_feedback_form(domain_key, preferred)
