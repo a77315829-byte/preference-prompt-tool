@@ -21,17 +21,29 @@
 평균의 분산(표준오차의 제곱 = 개별분산/n)이어야 한다. 둘 다 출력하되
 판정은 평균 기준으로 한다.
 
+MACSum 이 아닌 코퍼스도 같은 잣대로 볼 수 있게 해뒀다. MACSum 에서
+"신호가 없다"는 판정을 내렸으면 신호가 있는 곳에서 같은 지표가 살아나는지
+확인해야 판정이 완성된다.
+
 실행:
     python -m experiments.form_feature_spread
+    python -m experiments.form_feature_spread --macsum-part macdial
+    python -m experiments.form_feature_spread --site cooking
 """
 
 from __future__ import annotations
 
+import argparse
+import collections
+import json
 import statistics
 import sys
+from pathlib import Path
 
 from agents.expert_onboarding import ExpertExample, corpus_stats
 from experiments.expert_prompt_eval import PERSONAS, load_persona_examples
+
+ROOT = Path(__file__).resolve().parent.parent
 
 # 저자마다 쓰는 예시 수. 학습 12개보다 넉넉히 잡아야 저자 안 분산이
 # 표본 부족으로 과대평가되지 않는다.
@@ -87,13 +99,77 @@ def spread_ratios(groups: list[list[float]]) -> tuple[float, float]:
     return between / within, between / (within / TRAIN_N)
 
 
-def main() -> int:
-    corpora = {
-        name: load_persona_examples(persona, PER_PERSONA)
-        for name, persona in PERSONAS.items()
+def macsum_corpora(part: str) -> dict[str, list[ExpertExample]]:
+    """MACSum 페르소나별 코퍼스.
+
+    macdoc 은 검증에 쓴 그 분할을 그대로 쓴다(누출 없음 - 여기서는
+    생성을 하지 않고 사람 요약만 재므로 학습·홀드아웃 구분이 의미 없다).
+    macdial 은 topic·speaker 가 항상 붙어 있어 조합을 고정할 수 없으므로
+    length 로만 묶는다 - 그 안의 주제 변동은 노이즈로 들어간다.
+    """
+    if part == "macdoc":
+        return {
+            name: load_persona_examples(persona, PER_PERSONA)
+            for name, persona in PERSONAS.items()
+        }
+
+    groups: dict[str, list[ExpertExample]] = collections.defaultdict(list)
+    for split in ("train", "val", "test"):
+        path = ROOT / "data" / "macsum" / "dataset" / part / f"{split}.json"
+        if not path.exists():
+            continue
+        for record in json.loads(path.read_text(encoding="utf-8")):
+            source = " ".join(record["source"])
+            for reference in record["references"]:
+                length = reference["control_attribute"].get("length")
+                if length:
+                    groups[length].append(
+                        ExpertExample(output=reference["summary"], task=source)
+                    )
+    return {name: groups[name] for name in ("short", "normal", "long") if name in groups}
+
+
+def stackexchange_corpora(site: str) -> dict[str, list[ExpertExample]]:
+    """Stack Exchange 저자별 코퍼스. `expert_corpus_se.py` 가 받아둔 캐시."""
+    matches = sorted((ROOT / "data" / "stackexchange").glob(f"{site}_a*_n*.json"))
+    if not matches:
+        raise SystemExit(
+            f"{site} 코퍼스가 없다. 먼저 받을 것: "
+            f"python -m experiments.expert_corpus_se --site {site}"
+        )
+    corpus = json.loads(matches[-1].read_text(encoding="utf-8"))
+    print(f"코퍼스: {matches[-1].relative_to(ROOT)}")
+    return {
+        f"u{author['user_id']}": [
+            ExpertExample(output=pair["answer"], task=pair["task"])
+            for pair in author["pairs"]
+        ]
+        for author in corpus["authors"]
     }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--macsum-part", default="macdoc", choices=("macdoc", "macdial"),
+        help="MACSum 의 어느 쪽을 볼지",
+    )
+    parser.add_argument(
+        "--site", default=None,
+        help="주면 MACSum 대신 이 Stack Exchange 코퍼스를 본다",
+    )
+    args = parser.parse_args()
+
+    if args.site:
+        corpora = stackexchange_corpora(args.site)
+        label = f"Stack Exchange {args.site} (저자별)"
+    else:
+        corpora = macsum_corpora(args.macsum_part)
+        label = f"MACSum {args.macsum_part} (페르소나별)"
+
+    print(f"{label}")
     for name, examples in corpora.items():
-        print(f"{name}: 예시 {len(examples)}개")
+        print(f"  {name}: 예시 {len(examples)}개")
     print()
 
     names = list(corpora)
@@ -105,8 +181,8 @@ def main() -> int:
     verdicts: dict[str, float] = {}
     flat: list[str] = []
 
-    for label, keys in (("길이 계열 (대조군)", LENGTH_KEYS), ("넓힌 지표", WIDENED_KEYS)):
-        print(f"[{label}]")
+    for group_label, keys in (("길이 계열 (대조군)", LENGTH_KEYS), ("넓힌 지표", WIDENED_KEYS)):
+        print(f"[{group_label}]")
         print(header)
         for key in keys:
             groups = [per_example_values(corpora[name], key) for name in names]
@@ -137,10 +213,10 @@ def main() -> int:
 
     if not control:
         print("판정 불가. 대조군인 길이 계열조차 안 갈린다 - 측정 코드나")
-        print("페르소나 구성을 먼저 의심해야 한다.")
+        print("코퍼스 구성을 먼저 의심해야 한다.")
     elif passing:
-        print("가설 (가). 넓힌 지표 중 일부는 이 데이터에서도 저자를 가른다.")
-        print("앵커가 안 나아진 원인은 데이터 균질성이 아니라 앵커 쪽에 있다.")
+        print("가설 (가). 넓힌 지표 중 일부가 이 코퍼스에서 저자를 가른다.")
+        print(f"앵커에 넣어 시험할 값이 있다: {', '.join(passing)}")
     else:
         print("가설 (나). 길이 계열은 갈리는데 넓힌 지표는 하나도 안 갈린다.")
         print("지표가 나쁘다는 증거가 아니라, 이 코퍼스에 걸릴 문체 신호가")
