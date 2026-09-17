@@ -24,7 +24,7 @@ def test_coding_demo_completes_without_api(monkeypatch) -> None:
     assert app.selectbox[0].value == "코딩 도움"
 
     # 기본 실행 모드는 API 모드이므로 무료 데모를 명시적으로 고른다.
-    app.radio[0].set_value("무료 데모 (API 없이 규칙 기반)").run()
+    app.radio(key="run_mode").set_value("무료 데모 (API 없이 규칙 기반)").run()
 
     app.text_area[0].input("클릭 횟수를 보여주는 버튼을 만들어 주세요.").run()
     app.button[0].click().run()
@@ -72,7 +72,7 @@ def test_korean_summarization_demo_completes_without_api(monkeypatch) -> None:
 
     app = AppTest.from_file(APP_PATH, default_timeout=30).run()
     app.selectbox[0].select("문서 요약 (한국어)").run()
-    app.radio[0].set_value("무료 데모 (API 없이 규칙 기반)").run()
+    app.radio(key="run_mode").set_value("무료 데모 (API 없이 규칙 기반)").run()
 
     app.text_area[0].input(
         "정부는 15일 수도권 주택 공급을 늘리기 위한 대책을 발표했다. "

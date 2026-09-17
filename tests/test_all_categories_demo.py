@@ -68,7 +68,7 @@ def test_category_completes_demo_run(label, monkeypatch) -> None:
 
     app = AppTest.from_file(APP_PATH, default_timeout=60).run()
     app.selectbox[0].select(label).run()
-    app.radio[0].set_value(DEMO_MODE).run()
+    app.radio(key="run_mode").set_value(DEMO_MODE).run()
     app.text_area[0].input(SAMPLE_INPUT[label]).run()
     app.button[0].click().run()
     assert not app.exception, f"{label}: 비교 시작에서 예외"

@@ -8,6 +8,16 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from budget import DailyBudget
+from expert_profile import (
+    DELIMITER_HINT,
+    MAX_MATERIAL_CHARS,
+    RECOMMENDED_ANSWERS,
+    build_anchor,
+    compose_prompt,
+    parse_answers,
+    profile_rows,
+    readiness,
+)
 from feedback import FeedbackLog
 
 from engine.demo_generator import generate_demo
@@ -613,6 +623,113 @@ STEPS = (
 )
 
 
+# 전문가 프롬프트 쪽에 붙이는 과제 서술. 사용자가 무슨 일을 하는지는
+# 우리가 모르므로 분야를 지정하지 않고, 형식 앵커만 그 위에 얹는다.
+EXPERT_TASK_DESCRIPTION = (
+    "Answer the following question the way the examples below were written."
+)
+
+
+def _show_expert_flow() -> None:
+    """자기 글을 붙여넣으면 그 사람 형식으로 쓰게 하는 프롬프트를 만든다.
+
+    **API 를 한 번도 호출하지 않는다.** 실측에서 이 방법의 효과는 전부
+    코드로 잰 수치 앵커에서 나왔다 - 저자 8명 x 홀드아웃 30개에서 형식
+    거리 0.308 -> 0.146 (8/8 개선, p=0.008). 사용자의 실제 글을 예시로
+    프롬프트에 넣어도 0.149 로 차이가 없었다(페어드 p=0.727). 그러니
+    자료를 모델에 보낼 이유가 없고, **사용자의 글은 어디로도 전송되지
+    않는다.**
+
+    비교 루프(기존 흐름)와 완전히 분리해서 넣는다. 저 쪽은 선호를
+    추정하고 이 쪽은 이미 있는 자료를 측정한다 - 출발점이 다르다.
+    """
+    st.subheader("내가 쓴 글에서 프롬프트 만들기")
+    st.caption(
+        "지금까지 쓴 답변·문서를 붙여넣으면 형식을 코드로 재서, 그 형식으로 쓰게 하는 "
+        f"프롬프트를 만들어 드립니다. **모델을 호출하지 않습니다** - 붙여넣은 글은 "
+        "어디로도 전송되지 않고 브라우저 세션 안에서만 계산됩니다."
+    )
+
+    material = st.text_area(
+        f"내가 쓴 글 (답변 사이를 하이픈 세 개 `{DELIMITER_HINT}` 만 있는 줄로 구분)",
+        height=260,
+        max_chars=MAX_MATERIAL_CHARS,
+        placeholder=(
+            "첫 번째 답변 전문을 여기에 붙여넣습니다.\n"
+            "여러 문단이어도 그대로 두세요 - 문단 수도 재는 항목입니다.\n"
+            f"\n{DELIMITER_HINT}\n\n"
+            "두 번째 답변...\n"
+        ),
+        help=(
+            f"{RECOMMENDED_ANSWERS}개쯤 넣으면 가장 정확합니다. 실측에서 12개만 넣었을 때 "
+            "평균 길이를 40% 넘게 잘못 잡은 경우가 있었습니다."
+        ),
+    )
+
+    examples = parse_answers(material)
+    level, message = readiness(len(examples))
+    if not material.strip():
+        return
+    if level == "none":
+        st.info(message)
+        return
+    (st.warning if level == "thin" else st.success)(message)
+
+    st.markdown("**코드로 잰 내 형식**")
+    rows = profile_rows(examples)
+    for column, (label, value) in zip(st.columns(len(rows)), rows):
+        column.metric(label, value)
+
+    anchor, kind, per_task = build_anchor(examples)
+    if not anchor:
+        st.warning("형식을 재지 못했습니다. 답변이 충분히 긴지 확인해 주세요.")
+        return
+
+    prompt = compose_prompt(EXPERT_TASK_DESCRIPTION, anchor)
+    st.markdown("**만들어진 프롬프트**")
+    st.code(prompt, language="text")
+
+    if per_task:
+        # 압축률이 뽑힌 경우. 목표가 과제 길이에 비례하므로 이 문구를
+        # 그대로 다른 과제에 쓰면 틀린다. 모델이 백분율 규칙을 스스로
+        # 적용하지 못한다는 것도 실측했다(길이 오차 3단어 -> 27~57단어).
+        st.warning(
+            "넣어주신 자료는 **원문을 받아 그 길이에 비례해 쓰는 종류**(요약 등)로 "
+            "측정됐습니다. 그런 경우 목표 분량이 과제마다 달라지므로 위 프롬프트를 "
+            "다른 과제에 그대로 쓰면 어긋납니다. 이 화면은 아직 고정된 문구만 "
+            "만들어 드립니다."
+        )
+    else:
+        st.caption(
+            "이 프롬프트는 과제에 따라 바뀌지 않습니다. 그대로 복사해서 쓰시면 됩니다."
+        )
+
+    with st.expander("문단 수도 지시에 넣을까요?"):
+        st.caption(
+            "실측 결과를 그대로 알려드립니다. 문단 수를 같이 지시하면 문단은 잘 맞지만"
+            "(평균 오차 1.90 → 0.88) 길이와 문장 수가 나빠집니다(형식 거리 0.158 → "
+            "0.256). 위 프롬프트는 길이·문장만 지시하는, 저자 8명에게 검증된 조건입니다."
+        )
+        paragraphs = next(
+            (value for label, value in rows if label == "답변당 문단"), None
+        )
+        if paragraphs:
+            st.code(
+                f"{prompt}\nAlso break it into about {paragraphs.rstrip('문단')} paragraphs.",
+                language="text",
+            )
+
+    with st.expander("이 수치는 어떻게 검증했나요?"):
+        st.caption(
+            "Stack Exchange 네 분야(요리·글쓰기·수리·학계)의 실제 답변자 8명에게 "
+            "각자 답변 30개를 보여주고 프롬프트를 만든 뒤, **한 번도 보여주지 않은 "
+            "질문 30개**에 적용해 그 사람의 실제 답변과 형식을 비교했습니다. "
+            "형식 거리가 0.308에서 0.146으로 줄고 8명 전원에서 개선됐습니다 "
+            "(부호검정 p=0.008). 내용이 비슷해지는 효과는 없었습니다 - "
+            "이 기능이 맞추는 것은 **형식**입니다."
+        )
+
+
 def _inject_styles() -> None:
     st.markdown(STYLES, unsafe_allow_html=True)
 
@@ -659,7 +776,31 @@ if st.session_state.stage != "input" and (
     _reset_session()
     st.session_state.stage = "input"
 
+COMPARE_PATH_LABEL = "비교해서 만들기 (자료가 없어도 됩니다)"
+EXPERT_PATH_LABEL = "내가 쓴 글에서 만들기 (자료 필요)"
+
 if st.session_state.stage == "input":
+    # 두 경로는 출발점이 다르다. 비교 루프는 선호를 **추정**하고, 전문가
+    # 경로는 이미 있는 자료를 **측정**한다. 그래서 하나의 흐름에 섞지 않고
+    # 여기서 갈라놓는다 (규칙 10 - 신규 기능이 확보된 결과를 건드리지
+    # 않아야 한다).
+    path = st.radio(
+        "어떻게 만들까요?",
+        (COMPARE_PATH_LABEL, EXPERT_PATH_LABEL),
+        horizontal=True,
+        # key 를 준다. 테스트가 순서(radio[0])로 집으면 위젯을 하나
+        # 추가할 때마다 깨진다 - 이 라디오를 넣으면서 실제로 깨뜨렸다.
+        key="build_path",
+        help=(
+            "비교는 결과물 둘 중 나은 쪽을 고르는 방식입니다. "
+            "내가 쓴 글에서 만들기는 지금까지 쓴 답변을 붙여넣으면 형식을 재서 "
+            "바로 프롬프트를 만듭니다 - 모델 호출이 없습니다."
+        ),
+    )
+    if path == EXPERT_PATH_LABEL:
+        _show_expert_flow()
+        st.stop()
+
     _show_steps()
 
     labels_to_keys = {config["label"]: key for key, config in DOMAIN_OPTIONS.items()}
@@ -671,6 +812,7 @@ if st.session_state.stage == "input":
     run_mode = st.radio(
         "실행 모드",
         (API_MODE_LABEL, DEMO_MODE_LABEL),
+        key="run_mode",
         help=(
             "AI 실시간 생성은 실제로 모델을 호출해 후보를 만듭니다. "
             "무료 데모는 API 키나 비용 없이 규칙 기반 예시로 흐름만 보여줍니다."

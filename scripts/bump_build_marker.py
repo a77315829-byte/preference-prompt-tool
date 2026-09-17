@@ -32,7 +32,11 @@ REQUIREMENTS = ROOT / "requirements.txt"
 
 # 배포된 app.py 가 import 하는 경로. 이 안이 바뀌면 프로세스를 새로
 # 띄워야 옛 모듈이 정리된다.
-WATCHED_DIRS = ("engine", "demos", "optimize", "checks")
+# agents 는 나중에 추가했다. app.py 가 전문가 프롬프트 기능에서
+# agents/expert_onboarding.py 를 import 하는데, 감시 대상에 없으면 그 파일만
+# 고친 푸시에서 배포 프로세스가 재시작되지 않아 옛 모듈이 남는다. 그게
+# 정확히 앱을 두 번 내려앉힌 경로다.
+WATCHED_DIRS = ("engine", "demos", "optimize", "checks", "agents")
 
 # 루트의 모듈은 이름을 나열하지 않고 전부 본다. budget.py 를 적어두고
 # feedback.py 를 빼먹는 식의 누락이 곧 링크 사망으로 이어지기 때문이다.
