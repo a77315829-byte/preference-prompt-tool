@@ -275,6 +275,7 @@ def test_selective_anchor_handles_empty_default() -> None:
 
 from agents.expert_onboarding import (
     length_parameterization,
+    RATIO_MARGIN,
     ratio_anchor,
     ratio_rule_anchor,
     stable_length_anchor,
@@ -443,3 +444,54 @@ def test_stable_length_anchor_always_states_a_sentence_target() -> None:
 
 def test_stable_length_anchor_is_empty_without_usable_examples() -> None:
     assert stable_length_anchor([], "some source")[0] == ""
+
+
+def test_ratio_needs_a_clear_margin_not_a_narrow_win() -> None:
+    """근소한 우위로 압축률을 고르면 안 된다.
+
+    실제 저자 u67 이 이 경우였다 - 전체 96쌍으로는 절대 쪽이 맞는데
+    (절대 CV 0.511 대 압축률 0.961) 어떤 12개 분할에서 뒤집혀 압축률을
+    골랐고, 형식 거리가 base 의 0.189 에서 0.797 로 아무것도 안 한 것보다
+    나빠졌다. 그래서 절대 단어 수를 기본값으로 두고 마진을 건다.
+    """
+    # 압축률이 조금 낮지만(비율 0.95) RATIO_MARGIN 을 넘지 못하는 구성.
+    author = [
+        _example(source_words=s, answer_words=a)
+        for s, a in ((400, 60), (900, 60), (1400, 100), (2000, 150))
+    ]
+    kind, measured = length_parameterization(author)
+    ratio_over_absolute = measured["ratio_cv"] / measured["absolute_cv"]
+    assert RATIO_MARGIN < ratio_over_absolute < 1.0, ratio_over_absolute
+    assert kind == "absolute"
+
+
+def test_ratio_margin_sits_in_the_measured_gap() -> None:
+    """임계값이 실측한 틈 안에 있어야 한다.
+
+    저자 11명 x 20개 분할 = 220 케이스에서 압축률CV/절대CV 비율이 요약
+    쪽은 최대 0.545, Q&A 쪽은 최소 0.694 였다. 이 사이를 벗어나면 한쪽을
+    체계적으로 틀린다 - 마진 1.0 에서는 13개, 0.2 에서는 15개를 틀렸다.
+    """
+    assert 0.545 < RATIO_MARGIN < 0.694
+
+
+def test_ratio_is_still_chosen_when_it_is_clearly_steadier() -> None:
+    """마진을 걸어도 요약 쪽은 그대로 압축률을 골라야 한다.
+
+    MACSum 실측 비율은 0.05~0.545 로 임계값 아래에 확실히 들어간다.
+    """
+    author = [
+        _example(source_words=n, answer_words=n // 10)
+        for n in (500, 900, 1300, 1700, 2100)
+    ]
+    kind, measured = length_parameterization(author)
+    assert kind == "ratio"
+    assert measured["ratio_cv"] < measured["absolute_cv"] * RATIO_MARGIN
+
+
+def test_perfectly_consistent_author_does_not_divide_by_zero() -> None:
+    """절대 단어 수가 완벽히 일정하면 변동계수가 0 이다. 그걸로 나누면 터진다."""
+    author = [_example(source_words=n, answer_words=200) for n in (30, 300, 1500)]
+    kind, measured = length_parameterization(author)
+    assert kind == "absolute"
+    assert measured["absolute_cv"] == 0.0

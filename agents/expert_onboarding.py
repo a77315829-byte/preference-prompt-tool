@@ -425,6 +425,12 @@ def ratio_rule_anchor(author: list[ExpertExample]) -> str:
     )
 
 
+# 압축률로 바꾸려면 절대 단어 수보다 이 배수만큼 안정적이어야 한다.
+# 실측으로 고른 값이다 (저자 11명 x 20개 분할: 요약 쪽 비율 최대 0.545,
+# Q&A 쪽 최소 0.694 - 그 틈 사이라면 220개 전부 정답이다).
+RATIO_MARGIN = 0.6
+
+
 def _coefficient_of_variation(values: list[float]) -> float | None:
     """표준편차 / 평균. 평균이 0 이거나 표본이 1개면 못 잰다."""
     if len(values) < 2:
@@ -453,6 +459,17 @@ def length_parameterization(author: list[ExpertExample]) -> tuple[str, dict[str,
     한쪽에서 틀린다.** 학습 예시에서 변동계수를 재서 작은 쪽을 쓴다
     (절대 규칙 6 - 코드로 직접 재고 고른다).
 
+    **마진이 필요하다.** 처음엔 그냥 작은 쪽을 골랐는데 n=12 에서
+    불안정했다. 실제 저자 u67 은 전체 96쌍으로 보면 절대 쪽이 맞는데
+    (절대 CV 0.511 대 압축률 0.961) 어떤 12개 분할에서는 뒤집혀
+    압축률을 골랐고, 그 결과 형식 거리가 base 의 0.189 에서 0.797 로
+    **아무것도 안 한 것보다 나빠졌다**(목표 180단어에 331단어).
+
+    임계값은 실측으로 골랐다 - 두 코퍼스의 저자 11명 x 20개 분할 = 220
+    케이스에서 압축률CV/절대CV 비율이 요약 쪽은 최대 0.545, Q&A 쪽은
+    최소 0.694 로 틈이 벌어진다. 그 사이를 쓰면 220개 전부 정답이고,
+    마진 없이(1.0) 고르면 13개를 틀린다.
+
     돌려주는 것은 ("absolute" | "ratio", 잰 변동계수들)이다.
     """
     word_counts = [float(len(example.output.split())) for example in author]
@@ -475,7 +492,18 @@ def length_parameterization(author: list[ExpertExample]) -> tuple[str, dict[str,
     # 다른 표본에서 나와 비교가 성립하지 않는다.
     if ratio_cv is None or absolute_cv is None:
         return ("absolute" if ratio_cv is None else "ratio"), measured
-    return ("ratio" if ratio_cv < absolute_cv else "absolute"), measured
+
+    # 절대 단어 수가 완벽히 일정한 저자라면 바꿀 이유가 없다. 여기서
+    # 나누면 0 으로 나눈다 - 테스트가 먼저 잡았다.
+    if absolute_cv == 0:
+        return "absolute", measured
+
+    measured["ratio_over_absolute"] = round(ratio_cv / absolute_cv, 3)
+    # 근소한 우위로는 바꾸지 않는다. 절대 단어 수가 기본값이고, 압축률은
+    # 확실히 더 안정적일 때만 쓴다.
+    if ratio_cv < absolute_cv * RATIO_MARGIN:
+        return "ratio", measured
+    return "absolute", measured
 
 
 def stable_length_anchor(
