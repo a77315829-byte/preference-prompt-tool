@@ -744,6 +744,55 @@ def _profile_note(key: str, got: float, target: float) -> str:
     )
 
 
+# 프롬프트가 학습 자료를 베꼈는지 볼 때 쓰는 n-gram 길이. 4 로 둔다 -
+# 2~3 은 "in the oven" 같은 흔한 연결이 걸려서 아무 프롬프트나 높게
+# 나오고, 5 이상은 살짝 바꿔 쓴 문구를 놓친다.
+LEAKAGE_NGRAM = 4
+
+
+def content_leakage(prompt: str, corpus: list[ExpertExample]) -> float:
+    """프롬프트가 학습 자료에서 그대로 가져온 비율.
+
+    **왜 재는가.** GEPA 가 찾아준 프롬프트에 학습 과제의 *내용*이 들어갔다 -
+    suet(영국식 덤플링에 쓰는 신장 주변 지방)의 설명, 밀가루에 효모가
+    있는지에 대한 해설 같은 것이 프롬프트 본문에 박혀 있었다. 그러면
+    산출물이 문체 프롬프트가 아니라 문체 + 도메인 지식 프롬프트다.
+
+    이 프로젝트는 "프롬프트로 되는 것은 전문가의 방식이고 지식은 아니다"를
+    경계로 적어뒀다. GEPA 가 그 경계를 스스로 넘었는지를 눈대중이 아니라
+    수치로 확인해야 한다(절대 규칙 6). LLM 에게 "내용이 섞였니"라고 묻는
+    대신 겹침을 직접 센다.
+
+    **무엇을 위협하는지 정확히 쓴다.** 도메인 지식이 섞여도 길이·문장·문단
+    수는 바뀌지 않으므로 형식 거리 결과는 이것 때문에 흔들리지 않는다.
+    위협받는 것은 (가) 산출물을 "문체 프롬프트"라고 부르는 주장과
+    (나) 내용 지표(ROUGE-L)의 이득 해석이다.
+
+    0 이면 베낀 4-gram 이 하나도 없고, 1 이면 전부 학습 자료에 있던 것이다.
+    """
+    prompt_grams = _word_ngrams(prompt, LEAKAGE_NGRAM)
+    if not prompt_grams:
+        return 0.0
+
+    corpus_grams: set[tuple[str, ...]] = set()
+    for example in corpus:
+        corpus_grams |= set(_word_ngrams(example.output, LEAKAGE_NGRAM))
+        if example.task:
+            corpus_grams |= set(_word_ngrams(example.task, LEAKAGE_NGRAM))
+
+    shared = sum(1 for gram in set(prompt_grams) if gram in corpus_grams)
+    return round(shared / len(set(prompt_grams)), 4)
+
+
+def _word_ngrams(text: str, n: int) -> list[tuple[str, ...]]:
+    """소문자 단어 n-gram. 구두점은 떼고 본다 - 쉼표 하나 차이로 베낀
+    문구를 못 잡으면 지표가 쓸모없어진다."""
+    words = [w.lower() for w in _WORD.findall(text)]
+    if len(words) < n:
+        return []
+    return [tuple(words[i : i + n]) for i in range(len(words) - n + 1)]
+
+
 def calibrate_targets(
     target: dict[str, float], achieved: dict[str, float], keys
 ) -> tuple[dict[str, float], dict[str, float]]:

@@ -63,6 +63,7 @@ from gepa.adapters.default_adapter.default_adapter import DefaultAdapter
 from agents.expert_onboarding import (
     ExpertExample,
     PROFILE_KEYS,
+    content_leakage,
     corpus_stats,
     expert_form_metric,
     fewshot_prompt,
@@ -234,6 +235,14 @@ def run_author(site: str, index: int, n_train: int, n_test: int, budget: int) ->
     print(f"  --- 찾은 프롬프트 ---\n{optimized}\n  ---")
 
     result = evaluate(train, test, optimized)
+    # 찾아준 프롬프트가 학습 자료를 얼마나 베꼈는지 코드로 잰다.
+    # base·stable 은 0 이어야 하고, GEPA 쪽이 높으면 산출물을 "문체
+    # 프롬프트"라고 부를 수 없다.
+    result["content_leakage"] = {
+        "gepa": content_leakage(optimized, train),
+        "fewshot": content_leakage(fewshot_prompt(TASK_DESCRIPTION, train), train),
+        "base": content_leakage(TASK_DESCRIPTION, train),
+    }
     result["user_id"] = user_id
     result["train_score"] = round(float(train_score), 3)
     result["optimized_prompt"] = optimized

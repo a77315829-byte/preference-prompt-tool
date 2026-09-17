@@ -16,6 +16,7 @@ from agents.expert_onboarding import (
     ExpertExample,
     FEWSHOT_TASK_CHARS,
     PROFILE_KEYS,
+    content_leakage,
     expert_form_metric,
     fewshot_prompt,
     profile_targets,
@@ -126,3 +127,45 @@ def test_fewshot_prompt_falls_back_when_no_tasks_are_available() -> None:
     author = [ExpertExample(output="Just an answer.")]
     assert fewshot_prompt("Do the task.", author) == "Do the task."
     assert fewshot_prompt("Do the task.", []) == "Do the task."
+
+
+def test_content_leakage_is_zero_for_a_generic_instruction() -> None:
+    """형식만 말하는 프롬프트는 학습 자료와 겹칠 게 없다."""
+    corpus = [
+        ExpertExample(
+            output="Suet is the hard fat around the kidneys of beef.",
+            task="What is suet and why do British dumplings need it?",
+        )
+    ]
+    generic = (
+        "Answer the question. Write roughly 200 words in total, "
+        "break it into about three paragraphs, and avoid bulleted lists."
+    )
+    assert content_leakage(generic, corpus) == 0.0
+
+
+def test_content_leakage_catches_copied_domain_sentences() -> None:
+    """GEPA 가 실제로 이렇게 했다 - suet 설명을 프롬프트에 그대로 박았다."""
+    corpus = [
+        ExpertExample(
+            output="Suet is the hard fat around the kidneys of beef, and it melts slowly.",
+            task="What is suet?",
+        )
+    ]
+    leaky = (
+        "Answer the question. Remember that suet is the hard fat around the "
+        "kidneys of beef, and it melts slowly."
+    )
+    assert content_leakage(leaky, corpus) > 0.4
+
+
+def test_content_leakage_ignores_punctuation_differences() -> None:
+    """쉼표 하나 차이로 베낀 문구를 놓치면 지표가 쓸모없다."""
+    corpus = [ExpertExample(output="Add the salt early, then taste again.", task="How?")]
+    assert content_leakage("Add the salt early then taste again.", corpus) == 1.0
+
+
+def test_content_leakage_handles_text_shorter_than_the_ngram() -> None:
+    corpus = [ExpertExample(output="Some answer text here.", task="A question?")]
+    assert content_leakage("Too short", corpus) == 0.0
+    assert content_leakage("", corpus) == 0.0
