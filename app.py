@@ -641,6 +641,29 @@ EXPERT_TASK_DESCRIPTION = (
 )
 
 
+EXPERT_STEPS = (
+    ("1", "내가 쓴 글 붙여넣기", f"답변 사이를 `{DELIMITER_HINT}` 로 구분합니다. "
+     f"{RECOMMENDED_ANSWERS}개쯤이 가장 정확합니다."),
+    ("2", "형식 측정", "길이·문장·문단·글머리 기호를 코드로 잽니다. 모델 호출이 없습니다."),
+    ("3", "프롬프트 복사", "과제에 따라 바뀌지 않으니 그대로 붙여 쓰면 됩니다."),
+)
+
+
+def _show_expert_steps() -> None:
+    """전문가 경로의 단계 안내.
+
+    비교 경로에는 `_show_steps()` 가 있는데 이 경로에는 없어서, 붙여넣기
+    전에 무엇을 하는 화면인지 알 수 없었다. 같은 마크업을 쓴다.
+    """
+    cards = "".join(
+        f'<div class="ppt-step"><div class="ppt-step-n">0{n} /</div>'
+        f'<div class="ppt-step-t">{title}</div>'
+        f'<div class="ppt-step-d">{desc}</div></div>'
+        for n, title, desc in EXPERT_STEPS
+    )
+    st.markdown(f'<div class="ppt-steps">{cards}</div>', unsafe_allow_html=True)
+
+
 def _show_expert_feedback_form(answer_count: int, examples: list) -> None:
     """전문가 경로의 만족도를 묻는다.
 
@@ -712,17 +735,21 @@ def _show_expert_flow() -> None:
     비교 루프(기존 흐름)와 완전히 분리해서 넣는다. 저 쪽은 선호를
     추정하고 이 쪽은 이미 있는 자료를 측정한다 - 출발점이 다르다.
     """
-    st.subheader("내가 쓴 글에서 프롬프트 만들기")
+    st.subheader("형식을 재서 프롬프트로")
     st.caption(
         "지금까지 쓴 답변·문서를 붙여넣으면 형식을 코드로 재서, 그 형식으로 쓰게 하는 "
         f"프롬프트를 만들어 드립니다. **모델을 호출하지 않습니다** - 붙여넣은 글은 "
         "어디로도 전송되지 않고 브라우저 세션 안에서만 계산됩니다."
     )
+    _show_expert_steps()
 
+    # max_chars 를 주지 않는다. Streamlit 이 그 카운터를 입력창 오른쪽
+    # 아래에 겹쳐 그려서, 붙여넣은 글의 마지막 줄과 포개진다(스크린샷에서
+    # 확인). 상한은 parse_answers 가 코드로 자르고, 넘었을 때만 아래에서
+    # 따로 알린다.
     material = st.text_area(
         f"내가 쓴 글 (답변 사이를 하이픈 세 개 `{DELIMITER_HINT}` 만 있는 줄로 구분)",
         height=260,
-        max_chars=MAX_MATERIAL_CHARS,
         placeholder=(
             "첫 번째 답변 전문을 여기에 붙여넣습니다.\n"
             "여러 문단이어도 그대로 두세요 - 문단 수도 재는 항목입니다.\n"
@@ -739,6 +766,10 @@ def _show_expert_flow() -> None:
     level, message = readiness(len(examples))
     if not material.strip():
         return
+    if len(material) > MAX_MATERIAL_CHARS:
+        st.caption(
+            f"{len(material):,}자를 받았고 앞 {MAX_MATERIAL_CHARS:,}자까지만 계산에 씁니다."
+        )
     if level == "none":
         st.info(message)
         return
@@ -819,7 +850,8 @@ def _show_hero() -> None:
           <h1>선택으로 만드는 나만의 프롬프트</h1>
           <div class="ppt-rule"></div>
           <p>복잡한 프롬프트를 직접 쓰지 않아도 됩니다. 더 마음에 드는 결과를
-          고르면, 그 선택에서 취향을 추정해 재사용 가능한 시스템 프롬프트를 만들어 드립니다.</p>
+          고르면, 그 선택에서 취향을 추정해 재사용 가능한 시스템 프롬프트를 만들어 드립니다.
+          이미 써둔 글이 있다면 그걸 넘겨 형식을 재는 방법도 있습니다.</p>
         </div>
         """,
         unsafe_allow_html=True,
