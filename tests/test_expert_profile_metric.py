@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 from agents.expert_onboarding import (
+    _profile_error,
     ExpertExample,
     FEWSHOT_TASK_CHARS,
     PROFILE_KEYS,
@@ -220,3 +221,42 @@ def test_topic_leakage_handles_empty_inputs() -> None:
     own = [ExpertExample(output="Some answer.", task="A question?")]
     assert topic_leakage("", own, []) == 0.0
     assert topic_leakage("word", own, []) == 0.0  # 4자 미만은 세지 않는다
+
+
+def test_error_discriminates_where_the_target_is_near_zero() -> None:
+    """0 근처 목표에서 오차가 포화되면 그 항목은 최적화되지 않는다.
+
+    실측에서 정확히 물렸다 - 저자의 글머리 기호 비율 0.07 에 대해 GEPA 는
+    0.41 을 냈고 다른 조건은 0.00 을 냈는데, 상대 오차를 1.0 에서 자르던
+    시절에는 둘 다 똑같이 상한 처리돼서 지표가 6배 남발을 전혀 벌하지
+    못했다. GEPA 는 그 틈으로 점수를 올렸다.
+    """
+    target = 0.07
+    at_target = _profile_error("bullet_line_ratio", target, target)
+    none_at_all = _profile_error("bullet_line_ratio", 0.0, target)
+    six_times = _profile_error("bullet_line_ratio", 0.41, target)
+
+    assert at_target == 0.0
+    assert none_at_all < six_times, "0 을 내는 것과 6배 남발이 구분돼야 한다"
+    assert six_times < 1.0
+
+
+def test_count_error_never_saturates() -> None:
+    """개수 항목은 크게 어긋날수록 계속 나빠져야 한다. 하드 상한과 다르다."""
+    errors = [_profile_error("words_per_answer", got, 200) for got in (300, 400, 700, 2000)]
+    assert errors == sorted(errors), errors
+    assert all(e < 1.0 for e in errors)
+    # 예전 하드 상한(1.0)에서는 400 과 2000 이 똑같았다.
+    assert errors[-1] - errors[1] > 0.2
+
+
+def test_metric_punishes_bullet_spam_more_than_no_bullets() -> None:
+    """지표 전체 수준에서도 그 구분이 살아 있어야 한다."""
+    author = [
+        ExpertExample(output="One block.\n\nTwo block.\n\nThree block.", task="q " * 100)
+        for _ in range(3)
+    ]
+    metric = expert_form_metric(author)
+    plain = "One block.\n\nTwo block.\n\nThree block."
+    spam = "\n".join(["- point one", "- point two", "- point three", "- point four"])
+    assert metric(plain, "q " * 100)[0] > metric(spam, "q " * 100)[0]

@@ -638,10 +638,33 @@ PROFILE_KEYS = (
     "bullet_line_ratio",
 )
 
-# 상대 오차가 이 값을 넘으면 그 항목은 0점으로 본다. 넘는 정도를 계속
-# 반영하면 한 항목이 크게 어긋났을 때 점수가 그것만 따라가서, 나머지
-# 항목의 개선이 안 보인다.
-PROFILE_ERROR_CAP = 1.0
+# 값 자체가 0~1 비율인 항목. 이런 항목은 상대 오차가 아니라 **절대
+# 차이**로 본다.
+#
+# 왜 나눠야 하는가: 처음엔 전 항목을 상대 오차로 재고 1.0 에서 잘랐다.
+# 그런데 목표가 0 에 가까운 항목에서는 어느 쪽으로 얼마나 벗어나도
+# 오차가 상한에 붙어 **구분이 사라진다.** 실측에서 물렸다 - 저자의
+# 글머리 기호 비율이 0.07 인데 GEPA 는 0.41 을 냈고(6배) 다른 조건은
+# 0.00 을 냈는데, 둘 다 상대오차 1.0 을 넘어 똑같이 처리돼서 지표가
+# 그 차이를 전혀 벌하지 못했다. 그래서 GEPA 는 글머리 기호를 마음껏
+# 남발하면서 점수를 올렸다. **볼 수 없는 것은 최적화되지 않는다.**
+#
+# 비율 항목은 값이 이미 0~1 안에 있으므로 절대 차이가 곧 유계 오차다.
+PROFILE_RATIO_KEYS = ("bullet_line_ratio",)
+
+
+def _profile_error(key: str, got: float, target: float) -> float:
+    """항목 하나의 0~1 오차.
+
+    개수 항목은 상대 오차를 쓰되 `e / (1 + e)` 로 눌러 담는다. 하드
+    상한과 달리 **끝에서 포화되지 않으므로** 크게 어긋난 정도가 계속
+    반영되고, 동시에 한 항목이 점수를 독차지하지도 않는다.
+    """
+    if key in PROFILE_RATIO_KEYS:
+        return min(abs(got - target), 1.0)
+    scale = max(abs(target), 1e-6)
+    relative = abs(got - target) / scale
+    return relative / (1.0 + relative)
 
 
 def profile_targets(author: list[ExpertExample], source_text: str) -> dict[str, float]:
@@ -706,12 +729,9 @@ def expert_form_metric(author: list[ExpertExample]):
         errors, notes = [], []
         for key, target in targets.items():
             got = achieved.get(key, 0.0)
-            # 목표가 0 인 항목(글머리 기호를 안 쓰는 저자)은 절대 차이로
-            # 본다. 상대 오차의 분모가 0 이 되기 때문이다.
-            scale = max(abs(target), 1e-6)
-            error = min(abs(got - target) / scale, PROFILE_ERROR_CAP)
+            error = _profile_error(key, got, target)
             errors.append(error)
-            if error > 0.15:
+            if error > 0.12:
                 notes.append(_profile_note(key, got, target))
 
         score = round(1.0 - sum(errors) / len(errors), 4) if errors else 0.0
