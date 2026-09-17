@@ -855,6 +855,29 @@ def _word_ngrams(text: str, n: int) -> list[tuple[str, ...]]:
     return [tuple(words[i : i + n]) for i in range(len(words) - n + 1)]
 
 
+def length_gap(author: list[ExpertExample], model_default: list[ExpertExample]) -> float:
+    """저자의 길이가 모델 기본 출력에서 얼마나 떨어져 있는가 (상대값).
+
+    **왜 재는가.** 앵커가 모든 저자에게 도움이 되지는 않는다. 실제 저자
+    4명 중 한 명(u67)은 앵커를 붙였을 때 형식 거리가 0.189 에서 0.264 로
+    **아무것도 안 한 것보다 나빠졌다.** 그 저자만 학습 평균 212단어에
+    모델 기본 출력이 215단어였다 - 모델이 가만히 뒀을 때 이미 그 사람의
+    길이로 쓰고 있었다. 거기에 목표를 박아 넣으면 얻을 것은 없고 흔들릴
+    것만 있다.
+
+    격차는 다른 세 저자에서 0.13~0.66 이고 그 저자만 0.014 다. 그래서
+    이 값으로 "지시할지"를 미리 가를 수 있는지 시험한다
+    (`experiments/anchor_gating.py`).
+
+    **학습 자료와 모델 기본 출력만 쓴다.** 홀드아웃을 보면 정답을 엿본
+    것이 되므로, 기본 출력도 학습 과제로 만든 것을 넘겨야 한다.
+    """
+    author_words = corpus_stats(author).get("words_per_answer") or 0.0
+    default_words = corpus_stats(model_default).get("words_per_answer") or 0.0
+    scale = max(abs(author_words), abs(default_words), 1e-6)
+    return round(abs(author_words - default_words) / scale, 4)
+
+
 def calibrate_targets(
     target: dict[str, float], achieved: dict[str, float], keys
 ) -> tuple[dict[str, float], dict[str, float]]:

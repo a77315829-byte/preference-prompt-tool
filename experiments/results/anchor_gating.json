@@ -1,0 +1,380 @@
+{
+  "sites": [
+    "cooking",
+    "writing",
+    "diy",
+    "academia"
+  ],
+  "train": 12,
+  "test": 15,
+  "complete": true,
+  "authors": [
+    {
+      "site": "cooking",
+      "user_id": 4638,
+      "length_gap": 0.6591,
+      "parameterization": "absolute",
+      "author_words": 355.8,
+      "default_words": 121.3,
+      "form_distance": {
+        "base": 0.429,
+        "stable": 0.097
+      },
+      "gain": 0.332,
+      "rouge_l": {
+        "base": 0.1332,
+        "stable": 0.1497
+      }
+    },
+    {
+      "site": "cooking",
+      "user_id": 67,
+      "length_gap": 0.0154,
+      "parameterization": "absolute",
+      "author_words": 211.6,
+      "default_words": 214.9,
+      "form_distance": {
+        "base": 0.221,
+        "stable": 0.221
+      },
+      "gain": 0.0,
+      "rouge_l": {
+        "base": 0.1413,
+        "stable": 0.1511
+      }
+    },
+    {
+      "site": "cooking",
+      "user_id": 17143,
+      "length_gap": 0.2434,
+      "parameterization": "absolute",
+      "author_words": 103.5,
+      "default_words": 136.8,
+      "form_distance": {
+        "base": 0.201,
+        "stable": 0.035
+      },
+      "gain": 0.166,
+      "rouge_l": {
+        "base": 0.1491,
+        "stable": 0.164
+      }
+    },
+    {
+      "site": "cooking",
+      "user_id": 19707,
+      "length_gap": 0.1312,
+      "parameterization": "absolute",
+      "author_words": 176.0,
+      "default_words": 152.9,
+      "form_distance": {
+        "base": 0.158,
+        "stable": 0.145
+      },
+      "gain": 0.013,
+      "rouge_l": {
+        "base": 0.1561,
+        "stable": 0.1502
+      }
+    },
+    {
+      "site": "writing",
+      "user_id": 26047,
+      "length_gap": 0.451,
+      "parameterization": "absolute",
+      "author_words": 269.6,
+      "default_words": 148.0,
+      "form_distance": {
+        "base": 0.329,
+        "stable": 0.029
+      },
+      "gain": 0.3,
+      "rouge_l": {
+        "base": 0.1236,
+        "stable": 0.1428
+      }
+    },
+    {
+      "site": "writing",
+      "user_id": 553,
+      "length_gap": 0.2998,
+      "parameterization": "absolute",
+      "author_words": 206.8,
+      "default_words": 144.8,
+      "form_distance": {
+        "base": 0.129,
+        "stable": 0.063
+      },
+      "gain": 0.066,
+      "rouge_l": {
+        "base": 0.1233,
+        "stable": 0.1253
+      }
+    },
+    {
+      "site": "writing",
+      "user_id": 14704,
+      "length_gap": 0.3224,
+      "parameterization": "absolute",
+      "author_words": 289.4,
+      "default_words": 196.1,
+      "form_distance": {
+        "base": 0.364,
+        "stable": 0.035
+      },
+      "gain": 0.329,
+      "rouge_l": {
+        "base": 0.1122,
+        "stable": 0.1338
+      }
+    },
+    {
+      "site": "writing",
+      "user_id": 10479,
+      "length_gap": 0.339,
+      "parameterization": "absolute",
+      "author_words": 253.4,
+      "default_words": 167.5,
+      "form_distance": {
+        "base": 0.193,
+        "stable": 0.157
+      },
+      "gain": 0.036,
+      "rouge_l": {
+        "base": 0.1269,
+        "stable": 0.1332
+      }
+    },
+    {
+      "site": "diy",
+      "user_id": 47125,
+      "length_gap": 0.5908,
+      "parameterization": "absolute",
+      "author_words": 465.1,
+      "default_words": 190.3,
+      "form_distance": {
+        "base": 0.26,
+        "stable": 0.864
+      },
+      "gain": -0.604,
+      "rouge_l": {
+        "base": 0.1325,
+        "stable": 0.117
+      }
+    },
+    {
+      "site": "diy",
+      "user_id": 18078,
+      "length_gap": 0.0919,
+      "parameterization": "absolute",
+      "author_words": 179.6,
+      "default_words": 163.1,
+      "form_distance": {
+        "base": 0.282,
+        "stable": 0.302
+      },
+      "gain": -0.02,
+      "rouge_l": {
+        "base": 0.1527,
+        "stable": 0.1475
+      }
+    },
+    {
+      "site": "diy",
+      "user_id": 35141,
+      "length_gap": 0.1251,
+      "parameterization": "absolute",
+      "author_words": 127.3,
+      "default_words": 145.5,
+      "form_distance": {
+        "base": 0.276,
+        "stable": 0.076
+      },
+      "gain": 0.2,
+      "rouge_l": {
+        "base": 0.1396,
+        "stable": 0.1398
+      }
+    },
+    {
+      "site": "diy",
+      "user_id": 69578,
+      "length_gap": 0.3607,
+      "parameterization": "absolute",
+      "author_words": 257.8,
+      "default_words": 164.8,
+      "form_distance": {
+        "base": 0.243,
+        "stable": 0.107
+      },
+      "gain": 0.136,
+      "rouge_l": {
+        "base": 0.1499,
+        "stable": 0.1555
+      }
+    },
+    {
+      "site": "academia",
+      "user_id": 75368,
+      "length_gap": 0.3215,
+      "parameterization": "ratio",
+      "author_words": 197.8,
+      "default_words": 134.2,
+      "form_distance": {
+        "base": 0.239,
+        "stable": 0.093
+      },
+      "gain": 0.146,
+      "rouge_l": {
+        "base": 0.1625,
+        "stable": 0.1486
+      }
+    },
+    {
+      "site": "academia",
+      "user_id": 40589,
+      "length_gap": 0.3555,
+      "parameterization": "absolute",
+      "author_words": 247.8,
+      "default_words": 159.7,
+      "form_distance": {
+        "base": 0.49,
+        "stable": 0.279
+      },
+      "gain": 0.211,
+      "rouge_l": {
+        "base": 0.1265,
+        "stable": 0.144
+      }
+    },
+    {
+      "site": "academia",
+      "user_id": 22733,
+      "length_gap": 0.0521,
+      "parameterization": "absolute",
+      "author_words": 158.2,
+      "default_words": 166.9,
+      "form_distance": {
+        "base": 0.357,
+        "stable": 0.303
+      },
+      "gain": 0.054,
+      "rouge_l": {
+        "base": 0.1357,
+        "stable": 0.1438
+      }
+    },
+    {
+      "site": "academia",
+      "user_id": 53,
+      "length_gap": 0.2549,
+      "parameterization": "absolute",
+      "author_words": 105.5,
+      "default_words": 141.6,
+      "form_distance": {
+        "base": 0.262,
+        "stable": 0.288
+      },
+      "gain": -0.026,
+      "rouge_l": {
+        "base": 0.1511,
+        "stable": 0.1414
+      }
+    }
+  ],
+  "sweep": [
+    {
+      "threshold": 0.0,
+      "mean_form_distance": 0.1934,
+      "gated_count": 0,
+      "gated": []
+    },
+    {
+      "threshold": 0.03,
+      "mean_form_distance": 0.1934,
+      "gated_count": 1,
+      "gated": [
+        "cooking/u67"
+      ]
+    },
+    {
+      "threshold": 0.05,
+      "mean_form_distance": 0.1934,
+      "gated_count": 1,
+      "gated": [
+        "cooking/u67"
+      ]
+    },
+    {
+      "threshold": 0.08,
+      "mean_form_distance": 0.1968,
+      "gated_count": 2,
+      "gated": [
+        "cooking/u67",
+        "academia/u22733"
+      ]
+    },
+    {
+      "threshold": 0.1,
+      "mean_form_distance": 0.1955,
+      "gated_count": 3,
+      "gated": [
+        "cooking/u67",
+        "diy/u18078",
+        "academia/u22733"
+      ]
+    },
+    {
+      "threshold": 0.15,
+      "mean_form_distance": 0.2088,
+      "gated_count": 5,
+      "gated": [
+        "cooking/u67",
+        "cooking/u19707",
+        "diy/u18078",
+        "diy/u35141",
+        "academia/u22733"
+      ]
+    },
+    {
+      "threshold": 0.2,
+      "mean_form_distance": 0.2088,
+      "gated_count": 5,
+      "gated": [
+        "cooking/u67",
+        "cooking/u19707",
+        "diy/u18078",
+        "diy/u35141",
+        "academia/u22733"
+      ]
+    },
+    {
+      "threshold": 0.25,
+      "mean_form_distance": 0.2192,
+      "gated_count": 6,
+      "gated": [
+        "cooking/u67",
+        "cooking/u17143",
+        "cooking/u19707",
+        "diy/u18078",
+        "diy/u35141",
+        "academia/u22733"
+      ]
+    },
+    {
+      "threshold": 0.3,
+      "mean_form_distance": 0.2217,
+      "gated_count": 8,
+      "gated": [
+        "cooking/u67",
+        "cooking/u17143",
+        "cooking/u19707",
+        "writing/u553",
+        "diy/u18078",
+        "diy/u35141",
+        "academia/u22733",
+        "academia/u53"
+      ]
+    }
+  ]
+}

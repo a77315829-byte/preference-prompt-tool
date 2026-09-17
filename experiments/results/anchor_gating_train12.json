@@ -1,0 +1,105 @@
+{
+  "sites": [
+    "diy",
+    "cooking"
+  ],
+  "train": 12,
+  "test": 45,
+  "complete": true,
+  "authors": [
+    {
+      "site": "diy",
+      "user_id": 47125,
+      "n_train": 12,
+      "holdout_offset": 30,
+      "length_gap": 0.5908,
+      "parameterization": "absolute",
+      "author_words": 465.1,
+      "default_words": 190.3,
+      "form_distance": {
+        "base": 0.363,
+        "stable": 0.485
+      },
+      "gain": -0.122,
+      "rouge_l": {
+        "base": 0.132,
+        "stable": 0.1381
+      }
+    },
+    {
+      "site": "cooking",
+      "user_id": 4638,
+      "n_train": 12,
+      "holdout_offset": 30,
+      "length_gap": 0.6591,
+      "parameterization": "absolute",
+      "author_words": 355.8,
+      "default_words": 121.3,
+      "form_distance": {
+        "base": 0.319,
+        "stable": 0.203
+      },
+      "gain": 0.116,
+      "rouge_l": {
+        "base": 0.1422,
+        "stable": 0.1561
+      }
+    }
+  ],
+  "sweep": [
+    {
+      "threshold": 0.0,
+      "mean_form_distance": 0.344,
+      "gated_count": 0,
+      "gated": []
+    },
+    {
+      "threshold": 0.03,
+      "mean_form_distance": 0.344,
+      "gated_count": 0,
+      "gated": []
+    },
+    {
+      "threshold": 0.05,
+      "mean_form_distance": 0.344,
+      "gated_count": 0,
+      "gated": []
+    },
+    {
+      "threshold": 0.08,
+      "mean_form_distance": 0.344,
+      "gated_count": 0,
+      "gated": []
+    },
+    {
+      "threshold": 0.1,
+      "mean_form_distance": 0.344,
+      "gated_count": 0,
+      "gated": []
+    },
+    {
+      "threshold": 0.15,
+      "mean_form_distance": 0.344,
+      "gated_count": 0,
+      "gated": []
+    },
+    {
+      "threshold": 0.2,
+      "mean_form_distance": 0.344,
+      "gated_count": 0,
+      "gated": []
+    },
+    {
+      "threshold": 0.25,
+      "mean_form_distance": 0.344,
+      "gated_count": 0,
+      "gated": []
+    },
+    {
+      "threshold": 0.3,
+      "mean_form_distance": 0.344,
+      "gated_count": 0,
+      "gated": []
+    }
+  ]
+}
