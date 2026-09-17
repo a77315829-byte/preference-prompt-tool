@@ -279,6 +279,7 @@ from agents.expert_onboarding import (
     ratio_anchor,
     ratio_rule_anchor,
     stable_length_anchor,
+    structure_anchor,
 )
 
 
@@ -495,3 +496,37 @@ def test_perfectly_consistent_author_does_not_divide_by_zero() -> None:
     kind, measured = length_parameterization(author)
     assert kind == "absolute"
     assert measured["absolute_cv"] == 0.0
+
+
+def test_structure_anchor_adds_only_what_differs_from_the_model_default() -> None:
+    """모델 기본값과 비슷한 항목은 붙이지 않는다.
+
+    왜: 문단 목표를 항상 붙이면 문단 오차는 1.90 → 0.88 로 좋아지지만
+    길이·문장 형식 거리가 0.158 → 0.256 으로 나빠졌다 - base(0.233)보다도
+    나쁘다. 지시를 더할수록 앞의 것이 덜 지켜지므로 이득이 있을 때만 더한다.
+    """
+    author = [
+        ExpertExample(output="One block.\n\nTwo block.\n\nThree block.", task="q " * 100)
+        for _ in range(3)
+    ]
+    # 기본값도 3문단이면 문단 절은 붙을 이유가 없다.
+    same = [
+        ExpertExample(output="A here.\n\nB here.\n\nC here.", task="q " * 100)
+        for _ in range(3)
+    ]
+    _, selected = structure_anchor(author, same, "q " * 100)
+    assert "paragraphs_per_answer" not in selected
+
+    # 기본값이 1문단이면 붙어야 한다.
+    flat = [ExpertExample(output="All one block here.", task="q " * 100) for _ in range(3)]
+    line, selected = structure_anchor(author, flat, "q " * 100)
+    assert "paragraphs_per_answer" in selected
+    assert "paragraphs" in line
+
+
+def test_structure_anchor_always_keeps_the_length_clause() -> None:
+    """구조 항목이 하나도 안 골려도 길이 앵커는 남아야 한다."""
+    author = [ExpertExample(output="Same shape.", task="q " * 100) for _ in range(3)]
+    line, selected = structure_anchor(author, list(author), "q " * 100)
+    assert selected == []
+    assert "words in total" in line

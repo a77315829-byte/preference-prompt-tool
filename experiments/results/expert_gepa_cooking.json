@@ -1,0 +1,118 @@
+{
+  "site": "cooking",
+  "budget": 60,
+  "profile_keys": [
+    "words_per_answer",
+    "sentences_per_answer",
+    "paragraphs_per_answer",
+    "bullet_line_ratio"
+  ],
+  "authors": [
+    {
+      "ceiling_author_own": 0.451,
+      "form_score": {
+        "base": 0.251,
+        "stable": 0.653,
+        "fewshot": 0.44,
+        "gepa": 0.631
+      },
+      "rouge_l": {
+        "base": 0.11,
+        "stable": 0.147,
+        "fewshot": 0.139,
+        "gepa": 0.137
+      },
+      "form_distance": {
+        "base": 0.455,
+        "stable": 0.071,
+        "fewshot": 0.317,
+        "gepa": 0.027
+      },
+      "achieved": {
+        "base": {
+          "sentences_per_answer": 8.4,
+          "words_per_answer": 135.0,
+          "words_per_sentence": 16.1,
+          "answer_to_task_word_ratio": 1.081,
+          "bullet_line_ratio": 0.175,
+          "paragraphs_per_answer": 2.6,
+          "hedges_per_100w": 1.22,
+          "numerals_per_100w": 1.98,
+          "first_person_per_100w": 0.76
+        },
+        "stable": {
+          "sentences_per_answer": 20.4,
+          "words_per_answer": 353.2,
+          "words_per_sentence": 17.3,
+          "answer_to_task_word_ratio": 4.436,
+          "bullet_line_ratio": 0.0,
+          "paragraphs_per_answer": 5.8,
+          "hedges_per_100w": 1.18,
+          "numerals_per_100w": 0.5,
+          "first_person_per_100w": 0.28
+        },
+        "fewshot": {
+          "sentences_per_answer": 12.0,
+          "words_per_answer": 202.6,
+          "words_per_sentence": 16.9,
+          "answer_to_task_word_ratio": 2.086,
+          "bullet_line_ratio": 0.111,
+          "paragraphs_per_answer": 4.8,
+          "hedges_per_100w": 1.1,
+          "numerals_per_100w": 1.3,
+          "first_person_per_100w": 0.3
+        },
+        "gepa": {
+          "sentences_per_answer": 18.4,
+          "words_per_answer": 361.4,
+          "words_per_sentence": 19.6,
+          "answer_to_task_word_ratio": 4.221,
+          "bullet_line_ratio": 0.366,
+          "paragraphs_per_answer": 7.0,
+          "hedges_per_100w": 0.83,
+          "numerals_per_100w": 0.78,
+          "first_person_per_100w": 0.44
+        }
+      },
+      "prompt_words": {
+        "base": 16,
+        "stable": 29,
+        "fewshot": 1290,
+        "gepa": 463
+      },
+      "per_document_form": {
+        "base": [
+          0.1506,
+          0.5416,
+          0.239,
+          0.1569,
+          0.1685
+        ],
+        "stable": [
+          0.6635,
+          0.6023,
+          0.6946,
+          0.6685,
+          0.6369
+        ],
+        "fewshot": [
+          0.4978,
+          0.5314,
+          0.4312,
+          0.4414,
+          0.3
+        ],
+        "gepa": [
+          0.6644,
+          0.4658,
+          0.7163,
+          0.6485,
+          0.658
+        ]
+      },
+      "user_id": 4638,
+      "train_score": 0.677,
+      "optimized_prompt": "You will receive a question or query from an online Q&A platform, typically related to specific, niche, or domain-focused topics in cookware, cooking techniques, or food products. Your task is to generate a detailed, expert-level, and well-organized answer that directly addresses the question without any introductory or meta commentary.\n\nYour response must adhere strictly to the following guidelines:\n\n1. **Length and Depth:**  \n   Write an answer approximately 350–360 words long, providing enough depth to thoroughly explain concepts or solutions. The content should be similar in richness and detail to high-quality expert answers typically found on reputable Q&A sites.\n\n2. **Sentence Count and Structure:**  \n   Use roughly 15–18 sentences, distributed logically over multiple paragraphs. Avoid compressing your answer into one or two paragraphs.\n\n3. **Paragraphing:**  \n   Organize the content into 5 to 7 paragraphs. Each paragraph should focus on a distinct theme, point, or aspect of the answer to ensure clarity and logical flow.\n\n4. **Bulleted Lists:**  \n   Include concise bulleted lists sparingly to present key advice, steps, clarifications, or enumerations when appropriate. These lists should make up roughly 5–7% of your lines, approximately 1–2 bullets per answer, and should be used judiciously to enhance readability and emphasis.\n\n5. **Domain-Specific Knowledge and Terminology:**  \n   Incorporate accurate and relevant niche information depending on the topic. Examples include:  \n   - For cookware questions: distinguish among cookware materials and coatings (e.g., types of stainless steel or nonstick surfaces), discuss practical properties (heat conduction, durability, maintenance), and provide purchasing or usage tips.  \n   - For culinary techniques: explain underlying food chemistry, ingredient interactions, and practical precautions to avoid common pitfalls. Include alternative methods when applicable.  \n   - For food product terms: define industry-specific processing steps (e.g., \"Sortexed rice\" involves optical sorting to remove defective kernels), impacts on quality, and implications for cooking or usage.\n\n6. **Explanation and Justification:**  \n   Clearly explain why a phenomenon occurs or why certain recommendations are provided. Support statements with known causes, effects, or best practices within the field, ensuring the reasoning is accessible to an informed but non-expert audience.\n\n7. **Readability and Clarity:**  \n   Use clear, concise, and accessible language. Avoid jargon overload but include necessary technical terms related to the domain, explained if needed.\n\n8. **Answer Only:**  \n   Do not include any preamble, disclaimers, or meta commentary about the question or your answer. Provide a direct, standalone answer.\n\n9. **Form and Style Consistency:**  \n   Ensure your answer length, number of sentences, paragraph distribution, and bulleted content closely match the target style exemplified by expert answers on high-quality Q&A platforms. Specifically:  \n   - Keep total words near 350–360.  \n   - Maintain 15–18 sentences total.  \n   - Use 5–7 paragraphs.  \n   - Keep bulleted lines to about 5–7% of total lines.\n\nBy following these instructions, your answers will be authoritative, detailed, logically structured, and closely match the style and format of top-tier expert responses in the culinary and cookware domains."
+    }
+  ]
+}

@@ -16,6 +16,17 @@ MACSum 페르소나는 사람이 속성 지시를 받아 쓴 것이라 문체가
   ratio_forced: 압축률로 강제한 앵커. 요약에서 이겼던 그 방법.
   paragraphs  : stable + 문단 수 목표. 판별력 진단을 통과한 유일한
                 넓힌 지표라서, 갈리는 코퍼스에서 실제로 기여하는지 본다.
+  selective   : stable + 모델 기본값과 실제로 다른 구조 항목만.
+                paragraphs 가 문단은 맞추면서 길이·문장을 놓쳤으므로,
+                이득이 있을 때만 더해서 상충을 피할 수 있는지 본다.
+  fewshot     : 수치 없이 저자의 실제 답변 3개만 예시로 보여준다.
+  fewshot_stable : 예시 + 길이 앵커. 앵커가 예시 위에 더할 게 있는지.
+
+**fewshot 이 왜 반드시 있어야 하나.** "그냥 예시를 보여주면 되지 않나"가
+가장 먼저 나올 질문이고, 그 비교 없이는 측정 앵커의 값어치를 주장할 수
+없다. 이 조건은 앵커가 부딪힌 벽(수치 절을 쌓을수록 서로 간섭한다)도
+우회한다 - 예시는 절이 아니라 본보기다. 다만 프롬프트가 수천 토큰
+늘어나므로 이겼는지만이 아니라 얼마를 더 써서 이겼는지도 봐야 한다.
 
 ratio_forced 를 넣는 이유: "측정으로 고른다"가 값을 하려면 잘못 고른
 쪽보다 나아야 한다. 그게 아니면 모수화 선택은 장식이다.
@@ -45,7 +56,9 @@ from agents.expert_onboarding import (
     form_distance,
     length_parameterization,
     ratio_anchor,
+    fewshot_prompt,
     stable_length_anchor,
+    structure_anchor,
 )
 from engine.generator import generate_all_with_prompts
 from experiments.expert_prompt_eval import sign_test_p
@@ -66,7 +79,10 @@ TASK_DESCRIPTION = (
     "Write the answer only, with no preamble."
 )
 
-CONDITIONS = ("base", "stable", "ratio_forced", "paragraphs")
+CONDITIONS = (
+    "base", "stable", "ratio_forced", "paragraphs", "selective",
+    "fewshot", "fewshot_stable",
+)
 
 
 def load_corpus(site: str) -> dict:
@@ -102,6 +118,19 @@ def run_author(author: dict, n_train: int, n_test: int) -> dict:
         raise SystemExit(f"저자 {author['user_id']}: 쌍이 부족하다 ({len(examples)}개)")
     train, test = examples[:n_train], examples[n_train : n_train + n_test]
 
+    # 모델이 가만히 뒀을 때 어떤 구조로 쓰는지를 **학습 과제**로 잰다.
+    # 홀드아웃으로 재면 프롬프트가 정답을 엿본 셈이 된다.
+    print(f"\n저자 {author['user_id']} - 모델 기본 출력 측정 중...")
+    default_outputs = [
+        ExpertExample(
+            output=generate_all_with_prompts(
+                [TASK_DESCRIPTION], example.task, model=MODEL, temperature=0.0
+            )[0],
+            task=example.task,
+        )
+        for example in examples[:n_train]
+    ]
+
     kind, measured = length_parameterization(train)
     stats = corpus_stats(train)
     paragraph_target = stats.get("paragraphs_per_answer")
@@ -121,6 +150,12 @@ def run_author(author: dict, n_train: int, n_test: int) -> dict:
             if paragraph_target
             else ""
         )
+        selective_line, selected_keys = structure_anchor(
+            train, default_outputs, example.task
+        )
+        # 예시는 과제마다 바뀌지 않지만, 조립을 한곳에 모아두면 조건이
+        # 어떤 프롬프트를 받는지 한눈에 보인다.
+        fewshot_line = fewshot_prompt(TASK_DESCRIPTION, train)
         prompts = {
             "base": TASK_DESCRIPTION,
             "stable": _join(TASK_DESCRIPTION, stable_line),
@@ -128,7 +163,12 @@ def run_author(author: dict, n_train: int, n_test: int) -> dict:
             # 두 앵커 문장을 나란히 붙인다. stable 위에 문단 목표만
             # 더한 차이라서 문단 절의 기여가 그대로 분리된다.
             "paragraphs": _join(TASK_DESCRIPTION, stable_line, paragraph_line),
+            "selective": _join(TASK_DESCRIPTION, selective_line),
+            "fewshot": fewshot_line,
+            "fewshot_stable": _join(fewshot_line, stable_line),
         }
+        if index == 1:
+            print(f"  고른 구조 항목: {selected_keys or '없음'}")
         outputs = generate_all_with_prompts(
             [prompts[name] for name in CONDITIONS],
             example.task,
@@ -143,6 +183,9 @@ def run_author(author: dict, n_train: int, n_test: int) -> dict:
             line.append(f"{name} {score:.3f}")
         print(f"  홀드아웃 {index}/{len(test)}: " + " | ".join(line))
 
+    # 프롬프트 길이를 같이 남긴다. few-shot 이 이기더라도 비용이 몇 배인지
+    # 모르면 제품 결정을 할 수 없다.
+    prompt_words = {name: len(prompts[name].split()) for name in CONDITIONS}
     means = {name: round(statistics.fmean(values), 3) for name, values in scores.items()}
     distances = {name: form_distance(generated[name], test) for name in CONDITIONS}
     achieved = {name: corpus_stats(generated[name]) for name in CONDITIONS}
@@ -156,6 +199,9 @@ def run_author(author: dict, n_train: int, n_test: int) -> dict:
     return {
         "user_id": author["user_id"],
         "parameterization": kind,
+        "selected_structure_keys": selected_keys,
+        "model_default_stats": corpus_stats(default_outputs),
+        "prompt_words": prompt_words,
         "cv": measured,
         "train_stats": stats,
         "holdout_stats": target_stats,
@@ -217,15 +263,38 @@ def main() -> int:
     corpus = load_corpus(args.site)
     authors = corpus["authors"][: args.authors] if args.authors else corpus["authors"]
 
-    results = [run_author(author, args.train, args.test) for author in authors]
-    report(results)
-
     RESULTS.mkdir(parents=True, exist_ok=True)
     out = RESULTS / f"expert_prompt_se_{args.site}.json"
-    out.write_text(
-        json.dumps({"site": args.site, "authors": results}, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
+
+    def save(rows: list[dict], complete: bool) -> None:
+        out.write_text(
+            json.dumps(
+                {"site": args.site, "complete": complete, "authors": rows},
+                ensure_ascii=False,
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+
+    # 저자마다 바로 저장한다. 마지막에 한 번만 쓰다가 API 크레딧이 중간에
+    # 끊겨 끝낸 저자들의 결과까지 같이 날렸다. 여기는 생성 캐시가 있어
+    # 다시 돌리는 비용은 작지만, 중단 지점을 남기는 것 자체가 필요하다.
+    results: list[dict] = []
+    for author in authors:
+        try:
+            results.append(run_author(author, args.train, args.test))
+        except Exception as error:  # noqa: BLE001 - 중단 사유를 남기고 끝낸다
+            save(results, complete=False)
+            print(f"\n저자 {author['user_id']} 에서 중단: "
+                  f"{type(error).__name__}: {error}")
+            print(f"여기까지 저장: {out.relative_to(ROOT)} (저자 {len(results)}명)")
+            if results:
+                report(results)
+            return 1
+        save(results, complete=False)
+
+    save(results, complete=True)
+    report(results)
     print(f"\n결과 저장: {out.relative_to(ROOT)}")
     return 0
 

@@ -546,6 +546,204 @@ def stable_length_anchor(
     )
 
 
+# 길이 앵커 위에 더할 구조 항목 후보. 판별력 진단에서 살아남은 것만
+# 둔다 - 유보 표현·숫자·1인칭 밀도는 실제 사람 8명 사이에서도 신호가
+# 없어 기각했다.
+STRUCTURE_KEYS = ("paragraphs_per_answer", "bullet_line_ratio")
+
+
+def structure_anchor(
+    author: list[ExpertExample],
+    model_default: list[ExpertExample],
+    source_text: str,
+) -> tuple[str, list[str]]:
+    """길이 앵커에, 모델 기본값과 실제로 다른 구조 항목만 더한다.
+
+    **왜 골라서 더하나.** 문단 목표를 항상 붙이면 상충이 생긴다. 실제
+    저자 4명에서 문단 오차는 1.90 → 0.88 로 좋아지는데 길이·문장 형식
+    거리가 0.158 → 0.256 으로 나빠졌다 - base(0.233)보다도 나쁘다.
+    지시를 하나 더 붙이면 앞의 것이 덜 지켜진다.
+
+    그러면 **이득이 있을 때만** 붙이는 게 맞다. 이득은 저자가 모델
+    기본값에서 얼마나 먼지에 비례한다는 것이 이미 확인된 관찰이고
+    (`selective_form_anchor` 의 근거), 실제로 base 가 이미 저자의 문단
+    수에 가까운 저자가 있었다(u19707: 실제 3.3, base 3.6).
+
+    돌려주는 것은 (앵커 문장, 더한 항목 이름들)이다.
+    """
+    length_line, _, _ = stable_length_anchor(author, source_text)
+    structure_line, selected = selective_form_anchor(
+        author, model_default, keys=STRUCTURE_KEYS
+    )
+    parts = [part for part in (length_line, structure_line) if part]
+    return "\n".join(parts), list(selected)
+
+
+# few-shot 에 넣을 예시 수의 기본값. 사용자가 손으로 붙여 넣을 만한
+# 분량이면서, 형식 평균이 어느 정도 잡히는 수로 잡았다.
+FEWSHOT_COUNT = 3
+
+# 예시 안의 과제 본문만 이 길이로 자른다. **답변은 자르지 않는다** -
+# 답변을 자르면 이 방법이 전달하려는 형식(특히 길이)이 왜곡돼서, 재는
+# 대상 자체가 달라진다. 과제는 길이가 형식에 영향을 주지 않으므로 잘라도
+# 된다.
+FEWSHOT_TASK_CHARS = 800
+
+
+def fewshot_prompt(
+    task_description: str,
+    author: list[ExpertExample],
+    count: int = FEWSHOT_COUNT,
+) -> str:
+    """저자의 실제 (과제, 답변) 쌍을 예시로 붙인 프롬프트.
+
+    **왜 이 조건이 반드시 필요한가.** 지금까지의 방법은 저자의 형식을
+    수치로 재서 지시문에 박는다. 그런데 "그냥 이 사람 답변 몇 개를
+    보여주면 되지 않나"가 가장 먼저 나올 질문이고, 그 비교가 없으면
+    측정 앵커의 값어치를 주장할 수 없다.
+
+    또 이 조건은 앵커가 부딪힌 벽을 우회한다 - 수치 절을 쌓을수록 서로
+    간섭해서(길이+문장+문단을 같이 주면 앞의 둘이 덜 지켜졌다) 지시문을
+    늘리는 길이 막혔는데, 예시는 절이 아니라 본보기라서 간섭할 절 자체가
+    없다.
+
+    대신 비용이 든다 - 예시 3개면 프롬프트가 수천 토큰 늘어나고, 앵커는
+    한 문장이다. 그러니 "이기는가"만이 아니라 "얼마를 더 써서 이기는가"도
+    같이 봐야 한다.
+    """
+    chosen = [example for example in author if example.task][:count]
+    if not chosen:
+        return task_description
+
+    blocks = []
+    for index, example in enumerate(chosen, start=1):
+        task = " ".join(example.task.split())[:FEWSHOT_TASK_CHARS]
+        blocks.append(
+            f"Example {index}\nQuestion: {task}\nAnswer: {example.output}"
+        )
+    return (
+        task_description
+        + "\n\nHere are answers this author has written. Match the way they write.\n\n"
+        + "\n\n".join(blocks)
+    )
+
+
+# 저자 프로필로 점수를 낼 때 보는 항목. 판별력 진단에서 살아남은 것만
+# 둔다 (길이 계열 + 문단·글머리 기호). 유보 표현·숫자·1인칭 밀도는 실제
+# 사람 8명 사이에서도 신호가 없어 기각했다.
+PROFILE_KEYS = (
+    "words_per_answer",
+    "sentences_per_answer",
+    "paragraphs_per_answer",
+    "bullet_line_ratio",
+)
+
+# 상대 오차가 이 값을 넘으면 그 항목은 0점으로 본다. 넘는 정도를 계속
+# 반영하면 한 항목이 크게 어긋났을 때 점수가 그것만 따라가서, 나머지
+# 항목의 개선이 안 보인다.
+PROFILE_ERROR_CAP = 1.0
+
+
+def profile_targets(author: list[ExpertExample], source_text: str) -> dict[str, float]:
+    """이 과제에 대해 저자가 쓸 것으로 보이는 형식 목표값.
+
+    길이는 `length_parameterization` 이 고른 모수화를 따른다 - 압축률을
+    골랐으면 이 과제의 원문 길이에 곱하고, 절대 단어 수를 골랐으면 학습
+    평균을 그대로 쓴다. 나머지 항목은 과제 길이와 무관하므로 평균이다.
+    """
+    stats = corpus_stats(author)
+    kind, _ = length_parameterization(author)
+    words_per_sentence = stats.get("words_per_sentence") or 0.0
+
+    if kind == "ratio" and stats.get("answer_to_task_word_ratio"):
+        target_words = stats["answer_to_task_word_ratio"] * len(source_text.split())
+    else:
+        target_words = stats.get("words_per_answer") or 0.0
+
+    targets = {
+        "words_per_answer": target_words,
+        "sentences_per_answer": (
+            max(1.0, target_words / words_per_sentence) if words_per_sentence else 0.0
+        ),
+    }
+    for key in PROFILE_KEYS:
+        if key not in targets:
+            targets[key] = stats.get(key, 0.0)
+    return {key: targets[key] for key in PROFILE_KEYS}
+
+
+def expert_form_metric(author: list[ExpertExample]):
+    """저자 프로필과의 형식 일치도를 (점수, 자연어 피드백)으로 돌려준다.
+
+    **왜 이게 필요한가.** 수치 목표를 지시문 절로 쌓는 방식이 벽에 부딪혔다.
+    실측된 현상이 세 번 같았다 - 단어만 지시하면 문장이 잘게 쪼개지고
+    (문장당 13~17단어, 저자는 18~23), 길이만 지시하면 문단이 붕괴하고
+    (저자 둘에서 1.0문단), 길이·문장·문단을 같이 주면 앞의 둘이 덜
+    지켜진다(형식 거리 0.158 → 0.256, base 0.233 보다도 나쁘다).
+    모델 기본값과 다른 항목만 골라 붙여도 안 됐다 - 실제 저자 4명 전원이
+    문단·글머리 기호에서 기본값과 달라서 선별 게이트가 아예 작동하지
+    않았다(0.264).
+
+    즉 문제는 "무엇을 재는가"가 아니라 **여러 수치 목표를 한 프롬프트에
+    쌓으면 서로 간섭한다**는 것이다. 그러면 문구를 사람이 조율하는 대신
+    최적화기에 넘기는 것이 맞고, 이 프로젝트에는 이미 그 부품이 있다
+    (GEPA + `engine/metric_builder.py`). 그쪽에 넘기려면 평가 함수가
+    필요하고, 이 함수가 그것이다.
+
+    피드백을 자연어로 같이 내는 것이 핵심이다 - 점수만 주는 조건과
+    비교했을 때 같은 호출 예산에서 0.98 대 0.44 였다(피드백 풍부도
+    어블레이션). 축별 위반 내역을 글로 적어주면 GEPA 가 적은 시도로
+    좋은 문구를 찾는다.
+
+    **순환 논증 주의.** 이 함수로 최적화한 결과를 이 함수로만 채점하면
+    안 된다(절대 규칙 7). 보고할 때 ROUGE-L 을 반드시 병기한다.
+    """
+
+    def metric(output: str, source: str) -> tuple[float, str]:
+        targets = profile_targets(author, source)
+        achieved = corpus_stats([ExpertExample(output=output, task=source)])
+
+        errors, notes = [], []
+        for key, target in targets.items():
+            got = achieved.get(key, 0.0)
+            # 목표가 0 인 항목(글머리 기호를 안 쓰는 저자)은 절대 차이로
+            # 본다. 상대 오차의 분모가 0 이 되기 때문이다.
+            scale = max(abs(target), 1e-6)
+            error = min(abs(got - target) / scale, PROFILE_ERROR_CAP)
+            errors.append(error)
+            if error > 0.15:
+                notes.append(_profile_note(key, got, target))
+
+        score = round(1.0 - sum(errors) / len(errors), 4) if errors else 0.0
+        if not notes:
+            return score, "Form matches this author on every measured feature."
+        return score, "Form mismatches: " + " ".join(notes)
+
+    return metric
+
+
+_PROFILE_LABELS = {
+    "words_per_answer": ("words", "{value:.0f}"),
+    "sentences_per_answer": ("sentences", "{value:.0f}"),
+    "paragraphs_per_answer": ("paragraphs", "{value:.0f}"),
+    "bullet_line_ratio": ("share of lines bulleted", "{value:.0%}"),
+}
+
+
+def _profile_note(key: str, got: float, target: float) -> str:
+    """위반 하나를 GEPA 가 읽을 문장으로 적는다.
+
+    "어긋났다"가 아니라 **어느 방향으로 얼마나** 어긋났는지 적는다.
+    방향이 없으면 최적화기가 어느 쪽으로 고쳐야 할지 모른다.
+    """
+    label, fmt = _PROFILE_LABELS[key]
+    direction = "too many" if got > target else "too few"
+    return (
+        f"{direction} {label}: {fmt.format(value=got)} "
+        f"against this author's {fmt.format(value=target)}."
+    )
+
+
 def calibrate_targets(
     target: dict[str, float], achieved: dict[str, float], keys
 ) -> tuple[dict[str, float], dict[str, float]]:
