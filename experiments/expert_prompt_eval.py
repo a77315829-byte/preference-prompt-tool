@@ -48,6 +48,7 @@ from agents.expert_onboarding import (
     anchor_text,
     calibrate_targets,
     ratio_anchor,
+    ratio_rule_anchor,
     selective_form_anchor,
     to_domain,
 )
@@ -136,9 +137,9 @@ def _anti_combo(report) -> dict[str, str]:
 # 호출 수가 조건 수만큼 곱해진다.
 ALL_CONDITIONS = (
     "base", "anchor_only", "selective_len", "selective", "calibrated",
-    "ratio", "anchored", "expert",
+    "ratio", "ratio_rule", "anchored", "expert",
 )
-CORE_CONDITIONS = ("base", "anchor_only", "ratio")
+CORE_CONDITIONS = ("base", "anchor_only", "ratio", "ratio_rule")
 
 
 def run(
@@ -169,6 +170,8 @@ def run(
 
     expert_prompt = build_prompt(domain, report.author_combo())
     anchor = form_anchor(train)
+    rule_line = ratio_rule_anchor(train)
+    print("압축률 규칙 앵커:", rule_line or "(없음)")
 
     # 모델 기본 출력의 형식을 직접 잰다. 한 사람의 글만 보면 "무엇에 비해
     # 긴가"를 알 수 없으니, 과제 서술만 준 프롬프트로 학습 과제를 풀게 해
@@ -240,6 +243,14 @@ def run(
         "calibrated": (
             (domain.task_description + "\n" + calibrated)
             if calibrated
+            else domain.task_description
+        ),
+        # 압축률을 규칙으로 적은 조건. 과제마다 재계산하지 않으므로
+        # 사용자가 복사해 쓸 수 있는 형태다. 이게 ratio 와 맞먹으면
+        # 산출물을 프롬프트 한 덩어리로 낼 수 있다.
+        "ratio_rule": (
+            (domain.task_description + "\n" + rule_line)
+            if rule_line
             else domain.task_description
         ),
         "selective_len": (

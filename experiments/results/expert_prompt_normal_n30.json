@@ -15,11 +15,11 @@
         },
         {
           "value": "medium_length",
-          "instruction": "Write a summary of moderate length, about 80 words in a single paragraph."
+          "instruction": "Write a summary of moderate length, around 80 words."
         },
         {
           "value": "long",
-          "instruction": "Write a detailed and lengthy summary with multiple paragraphs."
+          "instruction": "Write a detailed and lengthy summary with extensive information."
         }
       ]
     },
@@ -34,7 +34,7 @@
         },
         {
           "value": "moderate_complexity",
-          "instruction": "Use sentences of moderate length with some complexity and detail."
+          "instruction": "Use moderately complex sentences averaging about 20 words each."
         },
         {
           "value": "complex",
@@ -49,22 +49,22 @@
       "values": [
         {
           "value": "high_hedging",
-          "instruction": "Use frequent hedging expressions to indicate uncertainty or caution."
+          "instruction": "Use many hedging expressions to indicate uncertainty or caution."
         },
         {
           "value": "low_hedging",
-          "instruction": "Use minimal hedging, stating facts and claims directly."
+          "instruction": "Use few hedging expressions, stating facts more directly."
         }
       ]
     },
     {
       "name": "paragraph_structure",
-      "description": "답변 내 단락 구성 방식을 나타냅니다.",
+      "description": "답변 내 단락 구분의 유무를 나타냅니다.",
       "author_value": "single_paragraph",
       "values": [
         {
           "value": "single_paragraph",
-          "instruction": "Write the entire summary as a single paragraph."
+          "instruction": "Write the entire summary as a single paragraph without breaks."
         },
         {
           "value": "multiple_paragraphs",
@@ -75,7 +75,8 @@
   ],
   "prompts": {
     "base": "Summarise the given news article in English.",
-    "anchor_only": "Summarise the given news article in English.\nMatch this length: about 4 sentences and roughly 84 words in total."
+    "anchor_only": "Summarise the given news article in English.\nMatch this length: about 4 sentences and roughly 84 words in total.",
+    "ratio_rule": "Summarise the given news article in English.\nMatch this form: write about 10.0% as many words as the source text (roughly 100 words for a 1000-word source), averaging about 21 words per sentence."
   },
   "target_stats": {
     "sentences_per_answer": 2.7,
@@ -91,11 +92,13 @@
   "length_gap": {
     "base": 79.6,
     "anchor_only": 33.5,
+    "ratio_rule": 40.4,
     "ratio": -1.0
   },
   "form_distance": {
     "base": 0.919,
     "anchor_only": 0.387,
+    "ratio_rule": 0.6,
     "ratio": 0.016
   },
   "selected_anchor_keys": {
@@ -126,6 +129,7 @@
   "means": {
     "base": 0.2005803392490841,
     "anchor_only": 0.21390484793433492,
+    "ratio_rule": 0.1932039704808607,
     "ratio": 0.2616391540998875
   },
   "per_document": {
@@ -193,6 +197,38 @@
       0.1889763779527559,
       0.3125
     ],
+    "ratio_rule": [
+      0.17241379310344826,
+      0.13138686131386865,
+      0.22222222222222224,
+      0.16470588235294117,
+      0.1420118343195266,
+      0.18433179723502305,
+      0.18888888888888888,
+      0.18556701030927836,
+      0.15841584158415842,
+      0.25301204819277107,
+      0.15294117647058822,
+      0.19672131147540983,
+      0.2857142857142857,
+      0.192,
+      0.16260162601626016,
+      0.17741935483870966,
+      0.19631901840490795,
+      0.23188405797101447,
+      0.14772727272727273,
+      0.18285714285714286,
+      0.16560509554140126,
+      0.20540540540540542,
+      0.19999999999999998,
+      0.26373626373626374,
+      0.15827338129496404,
+      0.15942028985507248,
+      0.24691358024691357,
+      0.28108108108108104,
+      0.1818181818181818,
+      0.2047244094488189
+    ],
     "ratio": [
       0.3333333333333333,
       0.11904761904761904,
@@ -229,10 +265,12 @@
   "expert_beats_base_docs": 0,
   "paired_wins_vs_base": {
     "anchor_only": 22,
+    "ratio_rule": 13,
     "ratio": 22
   },
   "sign_test_p": {
     "anchor_only": 0.01612,
+    "ratio_rule": 0.58466,
     "ratio": 0.01612
   }
 }

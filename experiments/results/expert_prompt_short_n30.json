@@ -15,7 +15,7 @@
         },
         {
           "value": "detailed",
-          "instruction": "Write a longer, more detailed summary using 4 or more sentences and over 70 words."
+          "instruction": "Write a detailed summary using multiple sentences and over 80 words."
         }
       ]
     },
@@ -45,33 +45,38 @@
       "values": [
         {
           "value": "low",
-          "instruction": "Write with high certainty and minimal use of hedging words."
+          "instruction": "Minimize use of hedging words; state facts directly."
         },
         {
           "value": "high",
-          "instruction": "Include frequent hedging expressions to indicate uncertainty or caution."
+          "instruction": "Use frequent hedging expressions to indicate uncertainty or possibility."
         }
       ]
     },
     {
-      "name": "numerical_density",
+      "name": "numerical_data_usage",
       "description": "숫자 및 구체적 데이터 사용 빈도를 나타냅니다.",
-      "author_value": "low",
+      "author_value": "moderate",
       "values": [
         {
-          "value": "low",
-          "instruction": "Use few numerals and specific data points sparingly."
+          "value": "none",
+          "instruction": "Avoid using numerical data or statistics."
+        },
+        {
+          "value": "moderate",
+          "instruction": "Include some numerical data or statistics where relevant."
         },
         {
           "value": "high",
-          "instruction": "Include many numerals and specific data points to support the summary."
+          "instruction": "Use frequent and detailed numerical data and statistics."
         }
       ]
     }
   ],
   "prompts": {
     "base": "Summarise the given news article in English.",
-    "anchor_only": "Summarise the given news article in English.\nMatch this length: about 2 sentences and roughly 46 words in total."
+    "anchor_only": "Summarise the given news article in English.\nMatch this length: about 2 sentences and roughly 46 words in total.",
+    "ratio_rule": "Summarise the given news article in English.\nMatch this form: write about 5.2% as many words as the source text (roughly 52 words for a 1000-word source), averaging about 18 words per sentence."
   },
   "target_stats": {
     "sentences_per_answer": 1.6,
@@ -87,11 +92,13 @@
   "length_gap": {
     "base": 107.0,
     "anchor_only": 17.8,
+    "ratio_rule": 26.6,
     "ratio": 1.1
   },
   "form_distance": {
     "base": 2.267,
     "anchor_only": 0.382,
+    "ratio_rule": 0.777,
     "ratio": 0.049
   },
   "selected_anchor_keys": {
@@ -119,6 +126,7 @@
   "means": {
     "base": 0.1483626841116851,
     "anchor_only": 0.22315270309710408,
+    "ratio_rule": 0.2067592957930488,
     "ratio": 0.2620718505917498
   },
   "per_document": {
@@ -186,6 +194,38 @@
       0.0923076923076923,
       0.16438356164383564
     ],
+    "ratio_rule": [
+      0.2,
+      0.08333333333333334,
+      0.19469026548672566,
+      0.18348623853211007,
+      0.1951219512195122,
+      0.15204678362573099,
+      0.19801980198019806,
+      0.3191489361702128,
+      0.31067961165048535,
+      0.33333333333333337,
+      0.3111111111111111,
+      0.15384615384615385,
+      0.2631578947368421,
+      0.24615384615384614,
+      0.11764705882352941,
+      0.16129032258064516,
+      0.13043478260869568,
+      0.22535211267605634,
+      0.163265306122449,
+      0.16216216216216214,
+      0.1794871794871795,
+      0.3061224489795919,
+      0.2222222222222222,
+      0.21428571428571427,
+      0.17948717948717952,
+      0.20253164556962022,
+      0.2823529411764706,
+      0.2268041237113402,
+      0.08955223880597014,
+      0.1956521739130435
+    ],
     "ratio": [
       0.34782608695652173,
       0.10000000000000002,
@@ -222,10 +262,12 @@
   "expert_beats_base_docs": 0,
   "paired_wins_vs_base": {
     "anchor_only": 27,
+    "ratio_rule": 28,
     "ratio": 27
   },
   "sign_test_p": {
     "anchor_only": 1e-05,
+    "ratio_rule": 0.0,
     "ratio": 1e-05
   }
 }

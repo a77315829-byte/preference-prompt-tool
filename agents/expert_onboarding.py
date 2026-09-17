@@ -386,6 +386,35 @@ def ratio_anchor(author: list[ExpertExample], source_text: str) -> str:
     )
 
 
+def ratio_rule_anchor(author: list[ExpertExample]) -> str:
+    """압축률을 규칙으로 적은 앵커. 과제마다 다시 계산하지 않는다.
+
+    왜 이것도 필요한가: ratio_anchor 는 과제마다 목표 단어 수를 다시
+    계산하므로 프롬프트가 과제마다 달라진다. 그런데 이 도구의 산출물은
+    사용자가 복사해 쓰는 프롬프트 한 덩어리다. 과제마다 다른 프롬프트는
+    제품이 될 수 없다.
+
+    그래서 계산을 모델에게 넘긴다 - "원문의 몇 %로 쓰라"고 규칙만 적는다.
+    모델이 그 규칙을 따르는지는 실측해야 한다. 따라준다면 재사용 가능한
+    프롬프트 하나로 끝나고, 아니면 앱이 과제마다 채워 넣어야 한다.
+    """
+    stats = corpus_stats(author)
+    ratio = stats.get("answer_to_task_word_ratio")
+    words_per_sentence = stats.get("words_per_sentence")
+    if not ratio or not words_per_sentence:
+        return ""
+
+    percent = 100 * ratio
+    # 1000단어 기준 예시를 같이 준다. 백분율만 주면 모델이 어림을 크게
+    # 틀릴 수 있어서, 곱셈을 대신 해준 수치를 하나 붙인다.
+    per_thousand = round(ratio * 1000)
+    return (
+        f"Match this form: write about {percent:.1f}% as many words as the source "
+        f"text (roughly {per_thousand} words for a 1000-word source), "
+        f"averaging about {words_per_sentence:.0f} words per sentence."
+    )
+
+
 def calibrate_targets(
     target: dict[str, float], achieved: dict[str, float], keys
 ) -> tuple[dict[str, float], dict[str, float]]:

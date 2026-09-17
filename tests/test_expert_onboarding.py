@@ -273,7 +273,7 @@ def test_selective_anchor_handles_empty_default() -> None:
 # 미달한다"는 잘못된 결론까지 냈다. 실측에서 절대 단어 수의 변동계수는
 # 0.56, 압축률은 0.08 이었다.
 
-from agents.expert_onboarding import ratio_anchor
+from agents.expert_onboarding import ratio_anchor, ratio_rule_anchor
 
 
 def _example(source_words: int, answer_words: int) -> ExpertExample:
@@ -327,3 +327,26 @@ def test_compression_ratio_is_more_stable_than_absolute_length() -> None:
 
     assert spread > 1.0, "절대 단어 수는 크게 흔들린다"
     assert stats["answer_to_task_word_ratio"] == pytest.approx(0.1, abs=0.01)
+
+
+def test_ratio_rule_anchor_states_a_percentage_and_an_example() -> None:
+    """복사해 쓸 수 있는 형태의 앵커. 백분율만 주면 모델이 어림을 크게
+    틀리므로 1000단어 기준 환산치를 같이 적는다.
+
+    다만 실측에서 이 형태는 과제별 계산에 크게 못 미쳤다 - 형식 거리
+    0.016~0.073 대 0.58~0.78. 그래서 제품의 기본 경로는 과제별 계산이고,
+    이건 프롬프트를 밖으로 들고 나갈 때의 차선책이다.
+    """
+    author = [_example(1000, 100), _example(2000, 200)]  # 압축률 10%
+    rule = ratio_rule_anchor(author)
+
+    assert "10.0%" in rule
+    assert "100 words for a 1000-word source" in rule
+    assert "words per sentence" in rule
+    # 특정 과제에 묶이지 않아야 재사용할 수 있다.
+    assert "source text" in rule
+
+
+def test_ratio_rule_anchor_needs_tasks() -> None:
+    assert ratio_rule_anchor([ExpertExample(output="No task here.")]) == ""
+    assert ratio_rule_anchor([]) == ""

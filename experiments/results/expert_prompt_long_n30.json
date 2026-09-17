@@ -6,7 +6,7 @@
   "axes": [
     {
       "name": "answer_length",
-      "description": "답변의 길이와 밀도를 나타냅니다.",
+      "description": "답변의 길이와 상세함 정도를 나타냅니다.",
       "author_value": "medium_length",
       "values": [
         {
@@ -19,18 +19,22 @@
         },
         {
           "value": "long",
-          "instruction": "Write a detailed summary using more than 7 sentences and over 150 words."
+          "instruction": "Write a detailed and elaborate summary using more than 7 sentences and over 150 words."
         }
       ]
     },
     {
       "name": "sentence_complexity",
-      "description": "문장당 단어 수로 나타내는 문장 복잡성 수준입니다.",
+      "description": "문장 길이와 복잡성 수준을 나타냅니다.",
       "author_value": "complex",
       "values": [
         {
           "value": "simple",
-          "instruction": "Use short and simple sentences with about 10 to 15 words each."
+          "instruction": "Use short and simple sentences with fewer than 15 words each."
+        },
+        {
+          "value": "moderate",
+          "instruction": "Use sentences of moderate length, about 15 to 20 words each."
         },
         {
           "value": "complex",
@@ -40,38 +44,43 @@
     },
     {
       "name": "hedging_frequency",
-      "description": "불확실성이나 조심스러운 표현 사용 빈도를 나타냅니다.",
-      "author_value": "low_hedging",
+      "description": "불확실성 표현(hedging)의 사용 빈도를 나타냅니다.",
+      "author_value": "low",
       "values": [
         {
-          "value": "high_hedging",
-          "instruction": "Use many hedging expressions to indicate uncertainty or caution."
+          "value": "none",
+          "instruction": "Avoid using hedging expressions; state facts directly and confidently."
         },
         {
-          "value": "low_hedging",
-          "instruction": "Use few hedging expressions and state facts more directly."
+          "value": "low",
+          "instruction": "Use hedging expressions sparingly, less than 1 per 100 words."
+        },
+        {
+          "value": "high",
+          "instruction": "Use frequent hedging expressions to indicate uncertainty or caution."
         }
       ]
     },
     {
       "name": "paragraph_structure",
-      "description": "답변 내 단락 구분 여부를 나타냅니다.",
+      "description": "답변 내 단락 구성 방식을 나타냅니다.",
       "author_value": "single_paragraph",
       "values": [
         {
           "value": "single_paragraph",
-          "instruction": "Write the entire summary as a single paragraph without line breaks."
+          "instruction": "Write the entire answer as a single continuous paragraph."
         },
         {
           "value": "multiple_paragraphs",
-          "instruction": "Divide the summary into multiple paragraphs to separate ideas."
+          "instruction": "Divide the answer into multiple paragraphs, each focusing on a distinct point."
         }
       ]
     }
   ],
   "prompts": {
     "base": "Summarise the given news article in English.",
-    "anchor_only": "Summarise the given news article in English.\nMatch this length: about 6 sentences and roughly 122 words in total."
+    "anchor_only": "Summarise the given news article in English.\nMatch this length: about 6 sentences and roughly 122 words in total.",
+    "ratio_rule": "Summarise the given news article in English.\nMatch this form: write about 14.6% as many words as the source text (roughly 146 words for a 1000-word source), averaging about 21 words per sentence."
   },
   "target_stats": {
     "sentences_per_answer": 3.6,
@@ -87,11 +96,13 @@
   "length_gap": {
     "base": 52.3,
     "anchor_only": 42.1,
+    "ratio_rule": 56.5,
     "ratio": -3.3
   },
   "form_distance": {
     "base": 0.449,
     "anchor_only": 0.408,
+    "ratio_rule": 0.582,
     "ratio": 0.073
   },
   "selected_anchor_keys": {
@@ -121,6 +132,7 @@
   "means": {
     "base": 0.20424508842105557,
     "anchor_only": 0.21288159495935322,
+    "ratio_rule": 0.20468052324574365,
     "ratio": 0.2284548975866933
   },
   "per_document": {
@@ -188,6 +200,38 @@
       0.2185792349726776,
       0.21951219512195122
     ],
+    "ratio_rule": [
+      0.20731707317073172,
+      0.12621359223300968,
+      0.1895424836601307,
+      0.15037593984962405,
+      0.15873015873015875,
+      0.20125786163522014,
+      0.1691176470588235,
+      0.21428571428571427,
+      0.17880794701986755,
+      0.1904761904761905,
+      0.24031007751937986,
+      0.2857142857142857,
+      0.28431372549019607,
+      0.2366863905325444,
+      0.18497109826589597,
+      0.1744186046511628,
+      0.217741935483871,
+      0.1836734693877551,
+      0.1732851985559567,
+      0.16730038022813687,
+      0.18584070796460175,
+      0.23880597014925375,
+      0.19653179190751446,
+      0.29906542056074764,
+      0.18811881188118812,
+      0.2641509433962264,
+      0.27467811158798283,
+      0.19649122807017544,
+      0.1722488038277512,
+      0.18994413407821228
+    ],
     "ratio": [
       0.30000000000000004,
       0.12280701754385966,
@@ -224,10 +268,12 @@
   "expert_beats_base_docs": 0,
   "paired_wins_vs_base": {
     "anchor_only": 18,
+    "ratio_rule": 16,
     "ratio": 20
   },
   "sign_test_p": {
     "anchor_only": 0.36159,
+    "ratio_rule": 0.85554,
     "ratio": 0.09874
   }
 }
