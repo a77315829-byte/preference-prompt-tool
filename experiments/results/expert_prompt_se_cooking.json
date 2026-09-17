@@ -1,0 +1,129 @@
+{
+  "site": "cooking",
+  "authors": [
+    {
+      "user_id": 4638,
+      "parameterization": "absolute",
+      "cv": {
+        "absolute_cv": 0.522,
+        "ratio_cv": 0.984
+      },
+      "train_stats": {
+        "sentences_per_answer": 16.6,
+        "words_per_answer": 355.8,
+        "words_per_sentence": 21.5,
+        "answer_to_task_word_ratio": 7.898,
+        "bullet_line_ratio": 0.073,
+        "paragraphs_per_answer": 5.9,
+        "hedges_per_100w": 1.13,
+        "numerals_per_100w": 0.54,
+        "first_person_per_100w": 0.45
+      },
+      "holdout_stats": {
+        "sentences_per_answer": 20.5,
+        "words_per_answer": 403.5,
+        "words_per_sentence": 19.7,
+        "answer_to_task_word_ratio": 4.213,
+        "bullet_line_ratio": 0.156,
+        "paragraphs_per_answer": 6.5,
+        "hedges_per_100w": 0.94,
+        "numerals_per_100w": 0.25,
+        "first_person_per_100w": 1.13
+      },
+      "means": {
+        "base": 0.109,
+        "stable": 0.142,
+        "ratio_forced": 0.146,
+        "paragraphs": 0.142
+      },
+      "form_distance": {
+        "base": 0.45,
+        "stable": 0.092,
+        "ratio_forced": 0.376,
+        "paragraphs": 0.031
+      },
+      "achieved": {
+        "base": {
+          "sentences_per_answer": 9.2,
+          "words_per_answer": 150.8,
+          "words_per_sentence": 16.3,
+          "answer_to_task_word_ratio": 1.012,
+          "bullet_line_ratio": 0.219,
+          "paragraphs_per_answer": 3.0,
+          "hedges_per_100w": 1.2,
+          "numerals_per_100w": 2.23,
+          "first_person_per_100w": 0.86
+        },
+        "stable": {
+          "sentences_per_answer": 19.8,
+          "words_per_answer": 348.5,
+          "words_per_sentence": 17.6,
+          "answer_to_task_word_ratio": 3.79,
+          "bullet_line_ratio": 0.0,
+          "paragraphs_per_answer": 5.8,
+          "hedges_per_100w": 1.13,
+          "numerals_per_100w": 0.5,
+          "first_person_per_100w": 0.35
+        },
+        "ratio_forced": {
+          "sentences_per_answer": 32.2,
+          "words_per_answer": 615.8,
+          "words_per_sentence": 19.1,
+          "answer_to_task_word_ratio": 6.34,
+          "bullet_line_ratio": 0.227,
+          "paragraphs_per_answer": 10.5,
+          "hedges_per_100w": 1.23,
+          "numerals_per_100w": 1.23,
+          "first_person_per_100w": 0.29
+        },
+        "paragraphs": {
+          "sentences_per_answer": 20.2,
+          "words_per_answer": 385.8,
+          "words_per_sentence": 19.0,
+          "answer_to_task_word_ratio": 4.117,
+          "bullet_line_ratio": 0.0,
+          "paragraphs_per_answer": 6.0,
+          "hedges_per_100w": 1.03,
+          "numerals_per_100w": 0.45,
+          "first_person_per_100w": 0.32
+        }
+      },
+      "paired_wins_vs_base": {
+        "stable": 3,
+        "ratio_forced": 4,
+        "paragraphs": 4
+      },
+      "sign_test_p": {
+        "stable": 0.625,
+        "ratio_forced": 0.125,
+        "paragraphs": 0.125
+      },
+      "per_document": {
+        "base": [
+          0.11940298507462686,
+          0.14739517153748413,
+          0.08681135225375626,
+          0.08244274809160305
+        ],
+        "stable": [
+          0.14007782101167315,
+          0.13691931540342298,
+          0.13445378151260506,
+          0.15638766519823788
+        ],
+        "ratio_forced": [
+          0.12206572769953052,
+          0.15897435897435896,
+          0.1404140414041404,
+          0.16216216216216214
+        ],
+        "paragraphs": [
+          0.12521739130434784,
+          0.15419501133786848,
+          0.13736903376018628,
+          0.15265486725663718
+        ]
+      }
+    }
+  ]
+}

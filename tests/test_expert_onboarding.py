@@ -273,7 +273,12 @@ def test_selective_anchor_handles_empty_default() -> None:
 # 미달한다"는 잘못된 결론까지 냈다. 실측에서 절대 단어 수의 변동계수는
 # 0.56, 압축률은 0.08 이었다.
 
-from agents.expert_onboarding import ratio_anchor, ratio_rule_anchor
+from agents.expert_onboarding import (
+    length_parameterization,
+    ratio_anchor,
+    ratio_rule_anchor,
+    stable_length_anchor,
+)
 
 
 def _example(source_words: int, answer_words: int) -> ExpertExample:
@@ -350,3 +355,91 @@ def test_ratio_rule_anchor_states_a_percentage_and_an_example() -> None:
 def test_ratio_rule_anchor_needs_tasks() -> None:
     assert ratio_rule_anchor([ExpertExample(output="No task here.")]) == ""
     assert ratio_rule_anchor([]) == ""
+
+
+def test_length_parameterization_prefers_the_ratio_when_answers_track_the_task() -> None:
+    """요약처럼 답변 길이가 원문을 따라가면 압축률이 안정적이다.
+
+    MACSum 이 이 경우다 - 상관 0.91~0.996, 압축률 변동계수 0.08~0.10 대
+    절대 단어 변동계수 0.53~0.56.
+    """
+    author = [
+        _example(source_words=n, answer_words=n // 10)
+        for n in (500, 1000, 1500, 2000, 2500)
+    ]
+    kind, measured = length_parameterization(author)
+    assert kind == "ratio"
+    assert measured["ratio_cv"] < measured["absolute_cv"]
+
+
+def test_length_parameterization_prefers_absolute_words_for_qa() -> None:
+    """실제 Q&A 에서는 반대다. 답변 길이는 질문의 난이도가 정한다.
+
+    Stack Exchange 저자 4명에서 상관이 0.04~0.25 로 사라지고 압축률
+    변동계수가 1.0 을 넘어 절대 단어 수(0.54~0.68)보다 불안정했다.
+    이 케이스가 실패하면 3차의 결론을 다른 과제 유형에 잘못 옮기게 된다.
+    """
+    # 답변은 200단어 근처로 일정한데 질문 길이는 크게 흔들린다.
+    author = [
+        _example(source_words=n, answer_words=200)
+        for n in (30, 90, 300, 800, 1500)
+    ]
+    kind, measured = length_parameterization(author)
+    assert kind == "absolute"
+    assert measured["absolute_cv"] < measured["ratio_cv"]
+
+
+def test_length_parameterization_falls_back_without_tasks() -> None:
+    """과제가 없으면 압축률을 잴 수 없다. 절대 단어 수로 간다."""
+    author = [ExpertExample(output=" ".join(["w"] * n)) for n in (100, 150, 200)]
+    kind, measured = length_parameterization(author)
+    assert kind == "absolute"
+    assert "ratio_cv" not in measured
+
+
+def test_length_parameterization_needs_every_task_to_compare() -> None:
+    """일부만 과제가 있으면 두 변동계수가 다른 표본에서 나와 비교가 안 된다."""
+    author = [
+        _example(source_words=1000, answer_words=100),
+        ExpertExample(output=" ".join(["w"] * 150)),
+        _example(source_words=2000, answer_words=200),
+    ]
+    kind, measured = length_parameterization(author)
+    assert kind == "absolute"
+    assert "ratio_cv" not in measured
+
+
+def test_stable_length_anchor_scales_with_the_source_when_ratio_wins() -> None:
+    author = [
+        _example(source_words=n, answer_words=n // 10)
+        for n in (500, 1000, 1500, 2000)
+    ]
+    short_line, kind, _ = stable_length_anchor(author, " ".join(["x"] * 400))
+    long_line, _, _ = stable_length_anchor(author, " ".join(["x"] * 4000))
+    assert kind == "ratio"
+    assert "40 words" in short_line
+    assert "400 words" in long_line
+
+
+def test_stable_length_anchor_ignores_the_source_when_absolute_wins() -> None:
+    """절대 단어 수를 골랐으면 과제 길이가 목표를 흔들어서는 안 된다."""
+    author = [_example(source_words=n, answer_words=200) for n in (30, 90, 300, 800, 1500)]
+    short_line, kind, _ = stable_length_anchor(author, " ".join(["x"] * 50))
+    long_line, _, _ = stable_length_anchor(author, " ".join(["x"] * 5000))
+    assert kind == "absolute"
+    assert short_line == long_line
+    assert "200 words" in short_line
+
+
+def test_stable_length_anchor_always_states_a_sentence_target() -> None:
+    """문장 절을 빼면 모델이 문장을 잘게 쪼갠다 (실측: 문장당 13~17단어,
+    저자는 18~23, 형식 거리 3~11배 악화). 두 모수화 모두에서 붙어야 한다."""
+    ratio_author = [_example(source_words=n, answer_words=n // 10) for n in (500, 1000, 1500)]
+    abs_author = [_example(source_words=n, answer_words=200) for n in (30, 300, 1500)]
+    for author in (ratio_author, abs_author):
+        line, _, _ = stable_length_anchor(author, " ".join(["x"] * 1000))
+        assert "sentence" in line
+
+
+def test_stable_length_anchor_is_empty_without_usable_examples() -> None:
+    assert stable_length_anchor([], "some source")[0] == ""

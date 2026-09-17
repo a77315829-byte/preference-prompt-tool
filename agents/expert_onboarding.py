@@ -34,6 +34,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import statistics
 from dataclasses import dataclass, field
 
 from engine.domain_loader import Axis, AxisValue, CheckSpec, Domain
@@ -421,6 +422,99 @@ def ratio_rule_anchor(author: list[ExpertExample]) -> str:
         f"Match this form: write about {percent:.1f}% as many words as the source "
         f"text (roughly {per_thousand} words for a 1000-word source), "
         f"averaging about {words_per_sentence:.0f} words per sentence."
+    )
+
+
+def _coefficient_of_variation(values: list[float]) -> float | None:
+    """표준편차 / 평균. 평균이 0 이거나 표본이 1개면 못 잰다."""
+    if len(values) < 2:
+        return None
+    mean = statistics.fmean(values)
+    if mean <= 0:
+        return None
+    return statistics.stdev(values) / mean
+
+
+def length_parameterization(author: list[ExpertExample]) -> tuple[str, dict[str, float]]:
+    """길이를 절대 단어 수로 볼지 원문 대비 압축률로 볼지 재서 고른다.
+
+    **왜 고르게 하나.** 3차에서 MACSum 으로 "압축률이 절대 단어 수보다
+    7배 안정적"이라는 결론을 냈고 n=30 부호검정까지 붙였다. 그런데 실제
+    Q&A 코퍼스(Stack Exchange 저자 4명)에서 방향이 반대였다.
+
+    | 코퍼스 | 상관(과제,답변) | 절대 CV | 압축률 CV |
+    |---|---|---|---|
+    | MACSum 요약 | 0.91~0.996 | 0.53~0.56 | 0.08~0.10 |
+    | SE Q&A | 0.04~0.25 | 0.54~0.68 | 0.77~1.03 |
+
+    요약문은 원문에서 파생되므로 길이가 원문을 따라간다. 답변은 그렇지
+    않다 - 길이를 정하는 건 질문의 난이도이고 질문의 길이가 아니다.
+    그러니 어느 쪽이 맞는지는 과제 유형마다 다르고, **상수로 박으면
+    한쪽에서 틀린다.** 학습 예시에서 변동계수를 재서 작은 쪽을 쓴다
+    (절대 규칙 6 - 코드로 직접 재고 고른다).
+
+    돌려주는 것은 ("absolute" | "ratio", 잰 변동계수들)이다.
+    """
+    word_counts = [float(len(example.output.split())) for example in author]
+    ratios = [
+        len(example.output.split()) / len(example.task.split())
+        for example in author
+        if example.task and example.task.split()
+    ]
+
+    absolute_cv = _coefficient_of_variation(word_counts)
+    ratio_cv = _coefficient_of_variation(ratios) if len(ratios) == len(author) else None
+
+    measured = {}
+    if absolute_cv is not None:
+        measured["absolute_cv"] = round(absolute_cv, 3)
+    if ratio_cv is not None:
+        measured["ratio_cv"] = round(ratio_cv, 3)
+
+    # 압축률은 과제가 전부 있어야만 후보다. 일부만 있으면 두 값이 서로
+    # 다른 표본에서 나와 비교가 성립하지 않는다.
+    if ratio_cv is None or absolute_cv is None:
+        return ("absolute" if ratio_cv is None else "ratio"), measured
+    return ("ratio" if ratio_cv < absolute_cv else "absolute"), measured
+
+
+def stable_length_anchor(
+    author: list[ExpertExample], source_text: str
+) -> tuple[str, str, dict[str, float]]:
+    """더 안정적인 모수화로 길이 앵커를 만든다.
+
+    압축률을 골랐으면 목표 단어 수를 이 과제의 원문 길이에 곱해 구하고,
+    절대 단어 수를 골랐으면 학습 예시의 평균을 그대로 목표로 쓴다.
+    문장 목표는 두 경우 모두 함께 적는다 - 문장 절을 빼면 모델이 문장을
+    잘게 쪼개서(문장당 13~17단어, 저자는 18~23) 형식 거리가 3~11배
+    나빠진다는 것을 실측했다.
+
+    돌려주는 것은 (앵커 문장, 고른 모수화, 잰 변동계수들)이다.
+    """
+    kind, measured = length_parameterization(author)
+    stats = corpus_stats(author)
+    words_per_sentence = stats.get("words_per_sentence")
+
+    if kind == "ratio":
+        ratio = stats.get("answer_to_task_word_ratio")
+        if not ratio:
+            return "", kind, measured
+        target_words = ratio * len(source_text.split())
+    else:
+        target_words = stats.get("words_per_answer") or 0.0
+
+    if not target_words or not words_per_sentence:
+        return "", kind, measured
+
+    return (
+        anchor_text(
+            {
+                "sentences_per_answer": max(1.0, target_words / words_per_sentence),
+                "words_per_answer": target_words,
+            }
+        ),
+        kind,
+        measured,
     )
 
 
