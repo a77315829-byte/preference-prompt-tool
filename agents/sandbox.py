@@ -1,12 +1,14 @@
 """검증된 measure() 코드를 별도 프로세스에서, 타임아웃을 걸고 실행한다.
 
-프로세스 격리 + 시간 제한이 실제 방어선이다 (code_validator.py의 정적
-검증은 1차 방어선일 뿐 - AST 검증을 통과했다고 안전이 보장되진 않는다).
+프로세스 분리와 시간 제한은 오류 전파를 줄이지만 OS 보안 격리가 아니다.
+파일·네트워크·메모리 제한이 없으므로 공개 서비스에서 비신뢰 코드를 받지 않는다.
+연구용 실행기이며 알려진 우회 경로에 대한 회귀 방어를 제공한다.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -32,8 +34,12 @@ def run_measure(code: str, text: str, source: str, timeout: float = 5.0) -> floa
     payload = json.dumps({"code": code, "text": text, "source": source})
     try:
         proc = subprocess.run(
-            [sys.executable, str(_RUNNER)],
+            [sys.executable, "-I", str(_RUNNER)],
             input=payload,
+            # 호출한 앱의 API 키·토큰을 자식 프로세스 환경으로 넘기지 않는다.
+            # -I 는 PYTHONPATH와 사용자 site-package 주입도 무시한다.
+            env={key: value for key, value in os.environ.items()
+                 if key.upper() in {"SYSTEMROOT", "WINDIR", "TEMP", "TMP", "LANG", "LC_ALL"}},
             capture_output=True,
             text=True,
             timeout=timeout,

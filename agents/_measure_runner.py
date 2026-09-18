@@ -16,11 +16,12 @@ import math
 import re
 import statistics
 import sys
+from types import SimpleNamespace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from agents.code_validator import ValidationError, validate_measure_code  # noqa: E402
+from agents.code_validator import MODULE_MEMBERS, ValidationError, validate_measure_code  # noqa: E402
 
 _SAFE_BUILTIN_NAMES = (
     "len", "abs", "min", "max", "sum", "sorted", "reversed", "range",
@@ -42,15 +43,19 @@ def main() -> None:
 
     namespace: dict = {
         "__builtins__": SAFE_BUILTINS,
-        "re": re,
-        "math": math,
-        "statistics": statistics,
-        "collections": collections,
+        # 실제 모듈을 넘기지 않는다. 별칭으로 받은 뒤에도 허용된 멤버만 보인다.
+        **{
+            name: SimpleNamespace(**{member: getattr(module, member) for member in MODULE_MEMBERS[name]})
+            for name, module in {"re": re, "math": math, "statistics": statistics, "collections": collections}.items()
+        },
     }
     try:
         exec(compile(code, "<measure>", "exec"), namespace)  # noqa: S102
         value = namespace["measure"](text, source)
-        print(json.dumps({"value": float(value)}))
+        value = float(value)
+        if not math.isfinite(value):
+            raise ValueError("measure must return a finite number")
+        print(json.dumps({"value": value}))
     except Exception as e:  # noqa: BLE001 - 샌드박스 실행기라 광범위 포착이 의도된 동작
         print(json.dumps({"error": f"{type(e).__name__}: {e}"}))
 

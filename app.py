@@ -76,6 +76,11 @@ MAX_API_RUNS_PER_DAY = 60
 MAX_TRIALS_PER_DAY = 200
 MAX_TRIALS_PER_SESSION = 3
 
+# 실패한 시도도 비용이 발생할 수 있으므로 시작 전에 차감한다.
+# 비교 세션을 다시 시작해도 이 카운터는 초기화하지 않는다.
+MAX_OPTIMIZATIONS_PER_SESSION = 2
+MAX_OPTIMIZATIONS_PER_DAY = 30
+
 # 의견 입력 길이 상한. feedback.py 가 기록 시 한 번 더 자른다.
 MAX_COMMENT_CHARS = 300
 
@@ -247,12 +252,17 @@ def _daily_trial_budget() -> DailyBudget:
     return DailyBudget(MAX_TRIALS_PER_DAY)
 
 
+@st.cache_resource
+def _daily_optimization_budget() -> DailyBudget:
+    return DailyBudget(MAX_OPTIMIZATIONS_PER_DAY)
+
+
 def _domain_for(key: str) -> Domain:
     return load_domain(DOMAIN_OPTIONS[key]["path"])
 
 
 def _reset_session() -> None:
-    for key in ("stage", "domain_key", "source", "demo_mode", "estimator", "selector", "round", "current_pair", "optimized_prompt", "api_error", "gepa_error", "trial_source", "trial_result", "trial_error", "trials_used", "feedback_sent", "feedback_comment"):
+    for key in ("stage", "domain_key", "source", "demo_mode", "estimator", "selector", "round", "current_pair", "optimized_prompt", "api_error", "gepa_error", "trial_source", "trial_result", "trial_error", "trials_used", "feedback_sent", "feedback_comment", "session", "gauge_prev", "optimize_changed"):
         st.session_state.pop(key, None)
 
 
@@ -381,7 +391,8 @@ def _show_feedback_form(domain_key: str, preferred: dict[str, str]) -> None:
     st.subheader("이 프롬프트가 내 취향에 맞나요?")
     st.caption(
         "한 번만 답해주시면 개인화가 실제로 통하는지 판단하는 데 쓰겠습니다. "
-        "원문과 생성 결과는 저장하지 않고, 아래 응답만 익명으로 남깁니다."
+        "피드백 로그에는 원문·생성 결과를 넣지 않고 아래 응답을 기록합니다. "
+        "AI 생성 결과는 재사용을 위해 서버 캐시에 저장됩니다."
     )
 
     comment = st.text_input(
@@ -643,7 +654,7 @@ EXPERT_TASK_DESCRIPTION = (
 
 EXPERT_STEPS = (
     ("1", "내가 쓴 글 붙여넣기", f"답변 사이를 `{DELIMITER_HINT}` 로 구분합니다. "
-     f"{RECOMMENDED_ANSWERS}개쯤이 가장 정확합니다."),
+     f"{RECOMMENDED_ANSWERS}개를 권장합니다. 정확도를 보장하는 기준은 아닙니다."),
     ("2", "형식 측정", "길이·문장·문단·글머리 기호를 코드로 잽니다. 모델 호출이 없습니다."),
     ("3", "프롬프트 복사", "과제에 따라 바뀌지 않으니 그대로 붙여 쓰면 됩니다."),
 )
@@ -729,8 +740,8 @@ def _show_expert_flow() -> None:
     코드로 잰 수치 앵커에서 나왔다 - 저자 8명 x 홀드아웃 30개에서 형식
     거리 0.308 -> 0.146 (8/8 개선, p=0.008). 사용자의 실제 글을 예시로
     프롬프트에 넣어도 0.149 로 차이가 없었다(페어드 p=0.727). 그러니
-    자료를 모델에 보낼 이유가 없고, **사용자의 글은 어디로도 전송되지
-    않는다.**
+    이 경로는 모델 API를 호출하지 않는다. 입력은 Streamlit 서버로
+    전송되어 처리된다. 브라우저 안에서만 계산하는 기능은 아니다.
 
     비교 루프(기존 흐름)와 완전히 분리해서 넣는다. 저 쪽은 선호를
     추정하고 이 쪽은 이미 있는 자료를 측정한다 - 출발점이 다르다.
@@ -739,7 +750,12 @@ def _show_expert_flow() -> None:
     st.caption(
         "지금까지 쓴 답변·문서를 붙여넣으면 형식을 코드로 재서, 그 형식으로 쓰게 하는 "
         f"프롬프트를 만들어 드립니다. **모델을 호출하지 않습니다** - 붙여넣은 글은 "
-        "어디로도 전송되지 않고 브라우저 세션 안에서만 계산됩니다."
+        "Streamlit 서버로 전송되어 처리되며, 이 기능에서는 모델 API로 보내지 않습니다."
+    )
+    st.caption(
+        "현재 검증 범위는 영어 Q&A 답변의 길이·문장 형식입니다. 한국어 효과나 "
+        "전문 지식의 재현은 검증하지 않았습니다. 질문 원문을 받지 않으므로 "
+        "원문 길이에 따른 적정 요약 분량은 추정할 수 없습니다."
     )
     _show_expert_steps()
 
@@ -757,7 +773,7 @@ def _show_expert_flow() -> None:
             "두 번째 답변...\n"
         ),
         help=(
-            f"{RECOMMENDED_ANSWERS}개쯤 넣으면 가장 정확합니다. 실측에서 12개만 넣었을 때 "
+            f"{RECOMMENDED_ANSWERS}개를 권장하지만 정확도를 보장하지 않습니다. 실측에서 12개만 넣었을 때 "
             "평균 길이를 40% 넘게 잘못 잡은 경우가 있었습니다."
         ),
     )
@@ -807,7 +823,7 @@ def _show_expert_flow() -> None:
         )
     else:
         st.caption(
-            "이 프롬프트는 과제에 따라 바뀌지 않습니다. 그대로 복사해서 쓰시면 됩니다."
+            "입력한 글의 평균 분량으로 만든 고정 지침입니다. 새 과제에도 이 분량이 적합한지는 결과를 보고 확인해 주세요."
         )
 
     with st.expander("문단 수도 지시에 넣을까요?"):
@@ -829,12 +845,12 @@ def _show_expert_flow() -> None:
 
     with st.expander("이 수치는 어떻게 검증했나요?"):
         st.caption(
-            "Stack Exchange 네 분야(요리·글쓰기·수리·학계)의 실제 답변자 8명에게 "
-            "각자 답변 30개를 보여주고 프롬프트를 만든 뒤, **한 번도 보여주지 않은 "
+            "Stack Exchange 네 분야(요리·글쓰기·수리·학계)의 저자 8명이 공개한 "
+            "답변을 각 30개씩 측정해 프롬프트를 만든 뒤, **프롬프트 구성에 넣지 않은 "
             "질문 30개**에 적용해 그 사람의 실제 답변과 형식을 비교했습니다. "
             "형식 거리가 0.308에서 0.146으로 줄고 8명 전원에서 개선됐습니다 "
-            "(부호검정 p=0.008). 내용이 비슷해지는 효과는 없었습니다 - "
-            "이 기능이 맞추는 것은 **형식**입니다."
+            "(탐색적 부호검정 p=0.008). 실제 저자가 참여한 만족도 실험은 아닙니다. "
+            "이 결과만으로 내용 품질이나 전문 지식의 재현을 주장할 수 없습니다."
         )
 
 
@@ -859,6 +875,14 @@ def _run_optimize(session, seed_prompt: str) -> None:
     스레드에서 `st.*` 를 부르지 않는다. 진행률은 공유 dict 에만 쓰고,
     화면은 여기서 폴링하며 그린다.
     """
+    used = st.session_state.get("optimizations_used", 0)
+    if used >= MAX_OPTIMIZATIONS_PER_SESSION:
+        st.warning("이 브라우저 세션의 최적화 시도 횟수를 모두 썼습니다. 기본 프롬프트는 사용할 수 있습니다.")
+        return
+    if not _daily_optimization_budget().consume():
+        st.warning("오늘 배정된 최적화 시도 횟수를 모두 썼습니다. 기본 프롬프트는 사용할 수 있습니다.")
+        return
+    st.session_state.optimizations_used = used + 1
     shared: dict = {"progress": 0.0, "prompt": None, "error": None}
 
     def work() -> None:
@@ -1227,16 +1251,21 @@ elif st.session_state.stage == "done":
             with st.expander("오류 내용 보기"):
                 st.caption(gepa_error)
 
-        if st.button("GEPA로 프롬프트 최적화"):
+        optimize_left = max(0, MAX_OPTIMIZATIONS_PER_SESSION - st.session_state.get("optimizations_used", 0))
+        st.caption(f"최적화 시도는 세션당 {MAX_OPTIMIZATIONS_PER_SESSION}회까지입니다. 남은 횟수 {optimize_left}회 (실패 포함).")
+        if st.button(
+            "GEPA로 프롬프트 최적화", key="optimize",
+            disabled=optimize_left == 0 or _daily_optimization_budget().left() == 0,
+        ):
             _run_optimize(session, seed_prompt)
     elif st.session_state.get("optimize_changed"):
         st.caption("API 최적화가 적용된 프롬프트입니다.")
     else:
         # 정직하게 적는다. 최적화를 돌렸지만 프롬프트가 그대로다.
         st.caption(
-            "최적화를 돌렸지만 프롬프트는 그대로입니다. 선택으로 조립한 시드가 "
-            "이미 평가 기준을 만점으로 통과해서 GEPA 가 바꿀 여지를 찾지 못했습니다 "
-            "- 실패가 아니라 이미 기준을 충족한 상태입니다."
+            "이번 실행에서는 초기 프롬프트가 그대로 선택됐습니다. "
+            "프롬프트가 같다는 사실만으로 만점이나 최적성을 뜻하지는 않습니다. "
+            "새 원문에서 결과를 비교해 주세요."
         )
 
     _show_prompt_trial(domain, prompt)

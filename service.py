@@ -40,8 +40,8 @@ from engine.metric_builder import build_metric
 from engine.selector import UncertaintySelector
 from optimize.run_gepa import MetricEvaluator, build_seed_prompt
 
-# 비교 횟수. 8회로 고정한 근거는 실험 쪽에 있다 - 순차·불확실도 두 알고리즘
-# 모두 6회차에 완전 복원했고, 그 이상은 사용자 노력만 늘린다.
+# 현재 제품의 비교 예산. 모의 실험의 수렴 양상을 참고했지만 모든 사용자가
+# 8회 안에 복원되거나 추가 질문이 무의미하다는 뜻은 아니다.
 TOTAL_ROUNDS = 8
 
 # 선택기 시드. 고정해야 같은 이력이 같은 쌍을 낸다.
