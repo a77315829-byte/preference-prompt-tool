@@ -1,0 +1,89 @@
+{
+  "length": {
+    "n": {
+      "short": 1305,
+      "normal": 2785,
+      "long": 1289
+    },
+    "pass_rate": {
+      "short": 0.8114942528735632,
+      "normal": 0.2035906642728905,
+      "long": 0.32195500387897596
+    },
+    "recall": {
+      "short": 0.8114942528735632,
+      "normal": 0.2035906642728905,
+      "long": 0.32195500387897596
+    },
+    "balanced_accuracy": 0.4456799736751433,
+    "accuracy": 0.3794385573526678,
+    "confusion": {
+      "short": {
+        "short": 1059,
+        "normal": 224,
+        "long": 22
+      },
+      "normal": {
+        "short": 1989,
+        "normal": 567,
+        "long": 229
+      },
+      "long": {
+        "normal": 383,
+        "short": 491,
+        "long": 415
+      }
+    },
+    "raw_mean": {
+      "short": 1.7432950191570882,
+      "normal": 2.229443447037702,
+      "long": 3.9596586501163693
+    }
+  },
+  "extractiveness": {
+    "n": {
+      "normal": 4675,
+      "high": 371,
+      "fully": 333
+    },
+    "pass_rate": {
+      "normal": 0.6688770053475935,
+      "high": 0.3908355795148248,
+      "fully": 0.7837837837837838
+    },
+    "recall": {
+      "normal": 0.6688770053475935,
+      "high": 0.3477088948787062,
+      "fully": 0.7777777777777778
+    },
+    "balanced_accuracy": 0.5981212260013592,
+    "accuracy": 0.6534671872095185,
+    "confusion": {
+      "normal": {
+        "high": 1307,
+        "fully": 241,
+        "normal": 3127
+      },
+      "high": {
+        "high": 129,
+        "normal": 162,
+        "fully": 80
+      },
+      "fully": {
+        "fully": 259,
+        "high": 65,
+        "normal": 9
+      }
+    },
+    "raw_mean": {
+      "normal": 0.43618392500437514,
+      "high": 0.5528952866618512,
+      "fully": 0.8360673836867684
+    }
+  },
+  "_meta": {
+    "summaries": 5379,
+    "source": "MACSum macdoc train+val+test, 사람 작성 요약",
+    "note": "검사 함수의 만점 통과율과 argmax 분류 정확도. API 호출 없음."
+  }
+}
