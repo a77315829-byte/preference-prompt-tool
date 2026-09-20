@@ -13,7 +13,7 @@ frontend/
     app/                        앱 진입점과 전역 화면 상태
     features/
       landing/                  첫 화면과 스크롤 스토리텔링
-      category/                 문서 요약 / 코딩 도움 선택
+      category/                 문서 요약 / 코딩 / AWS / 리뷰 / 이메일 선택
       comparison/               A/B 카드와 선택 전환
       prompt-result/            선호 요약과 최종 프롬프트
     shared/
@@ -23,5 +23,19 @@ frontend/
 
 디자인 값은 처음부터 별도 토큰 파일로 분리하지 않고 각 화면의 CSS에서
 직접 관리합니다. 화면 간에 실제 반복이 생길 때만 공통 스타일을 분리합니다.
-화면을 먼저 로컬 데모 데이터로 완성한 뒤, 기존 Python 엔진과 연결하는 API
-계층을 붙입니다.
+## 실행
+
+프론트만 실행해도 API가 없으면 로컬 예시로 계속 진행합니다. 기존 Python
+엔진의 코딩·문서 요약·리뷰·이메일·AWS 데모까지 연결하려면 터미널을 두 개 열고 다음처럼 실행합니다.
+
+```bash
+# 터미널 1: 저장소 루트
+.venv/bin/python api_server.py
+
+# 터미널 2: frontend/
+npm run dev
+```
+
+Vite가 `/api` 요청을 `127.0.0.1:8000`으로 전달합니다. API가 켜져 있으면
+실제 `service.py`의 `start_session`·`submit_choice` 결과를 사용하고, API가
+없으면 브라우저 안의 결정적 데모 데이터로 자동 전환합니다.

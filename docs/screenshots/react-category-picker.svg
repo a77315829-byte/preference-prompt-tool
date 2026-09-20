@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Preference Prompt Tool React category picker</title>
+  <desc id="desc">Horizontal category cards for document summary, coding, AWS cost check, review and email.</desc>
+  <rect width="1200" height="680" rx="28" fill="#f8fafc"/>
+  <text x="72" y="92" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#667085">PREFERENCE PROMPT TOOL</text>
+  <text x="72" y="170" font-family="Arial, sans-serif" font-size="56" font-weight="800" fill="#101828">좋아하는 결과를 고르는 것부터 시작하세요.</text>
+  <text x="72" y="215" font-family="Arial, sans-serif" font-size="22" fill="#667085">카드를 옆으로 넘겨 필요한 작업을 빠르게 선택합니다.</text>
+  <rect x="72" y="280" width="1056" height="300" rx="28" fill="#111318"/>
+  <text x="104" y="330" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#9aa2b2">01 / START HERE</text>
+  <text x="104" y="370" font-family="Arial, sans-serif" font-size="32" font-weight="800" fill="#fff">무엇을 도와드릴까요?</text>
+  <g transform="translate(104 405)">
+    <rect width="210" height="140" rx="20" fill="#dfe9ff"/><text x="22" y="38" font-family="Arial" font-size="14" fill="#697386">01 · DOCUMENT</text><text x="22" y="82" font-family="Arial" font-size="25" font-weight="700" fill="#111827">문서 요약</text>
+    <rect x="226" width="210" height="140" rx="20" fill="#e9e2ff"/><text x="248" y="38" font-family="Arial" font-size="14" fill="#697386">02 · CODE</text><text x="248" y="82" font-family="Arial" font-size="25" font-weight="700" fill="#111827">코딩 도움</text>
+    <rect x="452" width="210" height="140" rx="20" fill="#dff7ed"/><text x="474" y="38" font-family="Arial" font-size="14" fill="#53796d">03 · AWS COST</text><text x="474" y="82" font-family="Arial" font-size="25" font-weight="700" fill="#124d3b">AWS 비용</text>
+    <rect x="678" width="210" height="140" rx="20" fill="#fff0d8"/><text x="700" y="38" font-family="Arial" font-size="14" fill="#8d6a3b">04 · REVIEW</text><text x="700" y="82" font-family="Arial" font-size="25" font-weight="700" fill="#5c3d16">고객 리뷰</text>
+  </g>
+</svg>
