@@ -29,12 +29,18 @@ frontend/
 엔진의 코딩·문서 요약·리뷰·이메일·AWS 데모까지 연결하려면 터미널을 두 개 열고 다음처럼 실행합니다.
 
 ```bash
+# 최초 1회: 저장소 루트에서 프론트 의존성 설치
+npm run install:frontend
+
 # 터미널 1: 저장소 루트
 .venv/bin/python api_server.py
 
-# 터미널 2: frontend/
+# 터미널 2: 저장소 루트 (frontend/ 안에서 실행해도 됩니다)
 npm run dev
 ```
+
+브라우저에서 `http://localhost:5173`을 열면 됩니다. `npm run dev`가 인식되지
+않는 경우에는 `cd frontend && npm run dev`로 직접 실행할 수 있습니다.
 
 Vite가 `/api` 요청을 `127.0.0.1:8000`으로 전달합니다. API가 켜져 있으면
 실제 `service.py`의 `start_session`·`submit_choice` 결과를 사용하고, API가
