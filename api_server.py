@@ -52,6 +52,8 @@ def _domain_path(domain_key: str) -> str:
         "email": ROOT / "domains" / "email.yaml",
         "summarization": ROOT / "domains" / "summarization.yaml",
         "summarization_ko": ROOT / "domains" / "summarization_ko.yaml",
+        "summarization_hybrid": ROOT / "domains" / "summarization_hybrid.yaml",
+        "macsum_eval_agent": ROOT / "domains" / "macsum_eval_agent.yaml",
     }
     path = allowed.get(domain_key)
     if path is None:

@@ -51,8 +51,16 @@ const categoryOptions = [
     accent: 'blue',
   },
   {
-    id: 'idleTracker',
+    id: 'summaryHybrid',
     number: '04',
+    label: 'DEEP SUMMARY',
+    title: '문서 요약 심화',
+    description: '요약 길이와 원문 반영 정도를 더 세밀하게 맞춥니다.',
+    accent: 'indigo',
+  },
+  {
+    id: 'idleTracker',
+    number: '05',
     label: 'AWS COST',
     title: 'AWS 비용 점검',
     description: '놓치기 쉬운 유휴 리소스와 해결 방법을 한눈에 확인합니다.',
@@ -60,7 +68,7 @@ const categoryOptions = [
   },
   {
     id: 'review',
-    number: '05',
+    number: '06',
     label: 'REVIEW',
     title: '고객 리뷰 작성',
     description: '방문 메모를 내가 좋아하는 길이와 어조의 리뷰로 바꿉니다.',
@@ -68,11 +76,19 @@ const categoryOptions = [
   },
   {
     id: 'email',
-    number: '06',
+    number: '07',
     label: 'EMAIL',
     title: '이메일 초안',
     description: '전달할 내용을 원하는 길이와 말투의 이메일로 정리합니다.',
     accent: 'teal',
+  },
+  {
+    id: 'macsumEval',
+    number: '08',
+    label: 'DOC QUALITY',
+    title: '문서 품질 평가',
+    description: '문장을 얼마나 간결하고 읽기 쉽게 다듬을지 정합니다.',
+    accent: 'rose',
   },
 ];
 
@@ -181,7 +197,6 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction 
               type="button"
               aria-label={`${category.title}${selectedCategory === category.id ? ' 선택됨' : ''}`}
               onClick={() => onSelectCategory(category.id)}
-              whileHover={{ y: -6 }}
               whileTap={{ scale: 0.985 }}
             >
               <div className="category-card-topline">
@@ -214,7 +229,7 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction 
                 카테고리를 선택했습니다.
               </p>
               <button className="selection-button" type="button" onClick={onContinue}>
-                {selectedCategory === 'coding' || selectedCategory === 'review' || selectedCategory === 'email' || selectedCategory === 'summary' || selectedCategory === 'summaryKo' ? '선택 비교 시작하기' : '비용 점검 시작하기'}
+                {selectedCategory === 'idleTracker' ? '비용 점검 시작하기' : '선택 비교 시작하기'}
                 <span aria-hidden="true">→</span>
               </button>
             </motion.div>

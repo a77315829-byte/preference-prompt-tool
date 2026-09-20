@@ -46,6 +46,26 @@ const remoteAxisLabels = {
     question: '원문의 표현을 얼마나 살릴까요?',
     options: { normal: '내 표현으로 바꿔 쓰기', high: '원문 표현을 살리기', fully: '원문 문장을 그대로 발췌' },
   },
+  specificity: {
+    eyebrow: '설명 밀도',
+    question: '얼마나 구체적으로 설명할까요?',
+    options: { normal: '큰 흐름만', high: '세부 내용까지' },
+  },
+  conciseness: {
+    eyebrow: '문장 밀도',
+    question: '문장을 얼마나 간결하게 다듬을까요?',
+    options: { concise: '짧고 선명하게', moderate: '균형 있게', detailed: '맥락을 충분히' },
+  },
+  sentence_complexity: {
+    eyebrow: '문장 난이도',
+    question: '문장 구조를 어느 정도로 만들까요?',
+    options: { simple: '쉽게 나누어 쓰기', moderate: '균형 있게', complex: '정교하게 연결하기' },
+  },
+  focus_on_entities: {
+    eyebrow: '강조점',
+    question: '무엇을 더 눈에 띄게 할까요?',
+    options: { general: '전체 흐름 중심', mixed: '흐름과 대상을 함께', 'entity-focused': '이름과 숫자 중심' },
+  },
   topic: {
     eyebrow: '강조할 내용',
     question: '특히 어떤 내용을 중심으로 볼까요?',
@@ -66,7 +86,7 @@ function getRemoteAxis(pair) {
     options: [pair.a, pair.b].map((candidate, index) => ({
       id: index === 0 ? 'a' : 'b',
       title: copy.options[candidate.combo?.[axisId]] || `예시 ${index === 0 ? 'A' : 'B'}`,
-      description: '실제 코딩 도메인 데모 생성기가 만든 예시입니다.',
+      description: '선택한 카테고리의 데모 생성기가 만든 예시입니다.',
       code: candidate.text,
     })),
   };
@@ -81,6 +101,8 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
     email: { eyebrow: 'Email preference', title: '어떤 이메일이 더 편한가요?', task: 'Ask the vendor to confirm the Q4 delivery date and share the updated invoice.', label: '이메일로 만들 요청' },
     summarization: { eyebrow: 'Document preference', title: '어떤 요약이 더 편한가요?', task: 'The product team moved the release to Friday after reviewing the final accessibility checklist.', label: '요약할 원문' },
     summarization_ko: { eyebrow: '한국어 문서 preference', title: '어떤 한국어 요약이 더 편한가요?', task: '제품 팀은 접근성 점검표를 검토한 뒤 출시 일정을 금요일로 변경했습니다.', label: '요약할 한국어 원문' },
+    summarization_hybrid: { eyebrow: 'Deep summary preference', title: '어떤 심화 요약이 더 편한가요?', task: 'The product team moved the release to Friday after reviewing the final accessibility checklist and tracking three unresolved issues.', label: '심화 요약할 원문' },
+    macsum_eval_agent: { eyebrow: 'Document quality preference', title: '어떤 문서 다듬기가 더 편한가요?', task: 'The launch plan includes several updates, and the team needs a clear summary of owners, dates, and risks.', label: '다듬을 문서' },
   }[domainKey] || {};
   const [answers, setAnswers] = useState({});
   const [copied, setCopied] = useState(false);
@@ -201,8 +223,8 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
             </button>
           </div>
           <p className="connection-note" role="status">
-            {connection === 'connected' && '실제 코딩 도메인 데모 생성기와 연결됨'}
-            {connection === 'connecting' && '코딩 예시를 준비하는 중…'}
+            {connection === 'connected' && '실제 데모 생성기와 연결됨'}
+            {connection === 'connecting' && '예시를 준비하는 중…'}
             {connection === 'submitting' && '선택을 기록하는 중…'}
             {connection === 'offline' && '로컬 예시로 계속 진행합니다 (API 없이도 사용 가능)'}
           </p>
@@ -264,7 +286,7 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
               transition={{ duration: 0.45, ease: 'easeOut' }}
             >
               <p className="question-eyebrow">Your preference prompt</p>
-              <h3>나만의 {isCoding ? '코딩' : domainKey === 'review' ? '리뷰' : domainKey === 'email' ? '이메일' : '요약'} 프롬프트가 완성됐어요.</h3>
+              <h3>나만의 {isCoding ? '코딩' : domainKey === 'review' ? '리뷰' : domainKey === 'email' ? '이메일' : domainKey === 'macsum_eval_agent' ? '문서 품질' : '요약'} 프롬프트가 완성됐어요.</h3>
               <p>아래 내용을 복사해서 ChatGPT나 Claude에 바로 사용할 수 있습니다.</p>
               <pre className="prompt-box"><code>{prompt}</code></pre>
               <div className="prompt-actions">

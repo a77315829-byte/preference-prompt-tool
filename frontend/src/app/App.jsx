@@ -26,6 +26,8 @@ function App() {
     else if (selectedCategory === 'review') setActiveFlow('review');
     else if (selectedCategory === 'email') setActiveFlow('email');
     else if (selectedCategory === 'summaryKo') setActiveFlow('summarization_ko');
+    else if (selectedCategory === 'summaryHybrid') setActiveFlow('summarization_hybrid');
+    else if (selectedCategory === 'macsumEval') setActiveFlow('macsum_eval_agent');
     else setActiveFlow('summarization');
   };
 
@@ -68,7 +70,7 @@ function App() {
           </motion.div>
         )}
 
-        {['coding', 'review', 'email', 'summarization', 'summarization_ko'].includes(activeFlow) && (
+        {['coding', 'review', 'email', 'summarization', 'summarization_ko', 'summarization_hybrid', 'macsum_eval_agent'].includes(activeFlow) && (
           <motion.div
             className="flow-view"
             key={activeFlow}
