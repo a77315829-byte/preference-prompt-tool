@@ -4,9 +4,10 @@ import ComparisonSection from '../features/comparison/ComparisonSection';
 import IdleTrackerSection from '../features/idle-tracker/IdleTrackerSection';
 import ScrollStory from '../features/landing/ScrollStory';
 import './App.css';
+import '../features/landing/landing.css';
 
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('summary');
   const [activeFlow, setActiveFlow] = useState('category');
 
   const requestScene = (scene) => {

@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
+import CategoryDeck from './CategoryDeck';
 
 const scenes = [
   {
@@ -187,54 +188,8 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction 
           <span>카드를 옆으로 넘겨 필요한 작업을 고르세요.</span>
         </div>
 
-        <div className="narrative-category-grid">
-          {categoryOptions.map((category) => (
-            <motion.button
-              className={`category-card category-card-${category.accent} ${
-                selectedCategory === category.id ? 'is-selected' : ''
-              }`}
-              key={category.id}
-              type="button"
-              aria-label={`${category.title}${selectedCategory === category.id ? ' 선택됨' : ''}`}
-              onClick={() => onSelectCategory(category.id)}
-              whileTap={{ scale: 0.985 }}
-            >
-              <div className="category-card-topline">
-                <span>{category.number}</span>
-                <span>{category.label}</span>
-              </div>
-              <div className="category-card-copy">
-                <h3>{category.title}</h3>
-                <p>{category.description}</p>
-              </div>
-              <span className="category-arrow" aria-hidden="true">
-                {selectedCategory === category.id ? '✓' : '↗'}
-              </span>
-            </motion.button>
-          ))}
-        </div>
-
-        <AnimatePresence initial={false}>
-          {selectedCategory && (
-            <motion.div
-              className="category-selection"
-              initial={{ opacity: 0, height: 0, marginTop: 0 }}
-              animate={{ opacity: 1, height: 'auto', marginTop: '1rem' }}
-              exit={{ opacity: 0, height: 0, marginTop: 0 }}
-            >
-              <p>
-                <strong>
-                  {categoryOptions.find(({ id }) => id === selectedCategory)?.title}
-                </strong>{' '}
-                카테고리를 선택했습니다.
-              </p>
-              <button className="selection-button" type="button" onClick={onContinue}>
-                {selectedCategory === 'idleTracker' ? '비용 점검 시작하기' : '선택 비교 시작하기'}
-                <span aria-hidden="true">→</span>
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <CategoryDeck options={categoryOptions} selectedCategory={selectedCategory}
+          onSelect={onSelectCategory} onContinue={onContinue} />
       </div>
     </motion.article>
   );
@@ -255,6 +210,7 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue }) {
 
   useEffect(() => {
     const handleWheel = (event) => {
+      if (event.target.closest('.narrative-category-stage')) return;
       event.preventDefault();
       if (wheelLock.current || Math.abs(event.deltaY) < 12) return;
 
@@ -266,6 +222,7 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue }) {
     };
 
     const handleKeyDown = (event) => {
+      if (event.defaultPrevented || event.target.closest('button, input, textarea, select, [contenteditable], .category-deck')) return;
       if (['ArrowDown', 'PageDown', ' ', 'ArrowRight'].includes(event.key)) {
         event.preventDefault();
         moveScene(activeScene + 1);
@@ -277,6 +234,10 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue }) {
     };
 
     const handleTouchStart = (event) => {
+      if (event.target.closest('.narrative-category-stage')) {
+        touchStartY.current = null;
+        return;
+      }
       touchStartY.current = event.touches[0]?.clientY ?? null;
     };
 
@@ -310,7 +271,7 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue }) {
   return (
     <section className="narrative-shell" id="how-it-works" aria-label="서비스 소개">
       <div className="narrative-rail" aria-label={`현재 ${activeScene + 1}번째 장면`}>
-        {Array.from({ length: 9 }, (_, index) => (
+        {Array.from({ length: 10 }, (_, index) => (
           <span key={index} className={index === activeScene * 3 ? 'is-active' : ''} />
         ))}
       </div>
