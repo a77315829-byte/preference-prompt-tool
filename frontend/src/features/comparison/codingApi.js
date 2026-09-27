@@ -31,7 +31,17 @@ export function submitPreferenceChoice(sessionId, pairId, chosen) {
   });
 }
 
-export const startCodingSession = (sourceText) => startPreferenceSession('coding', sourceText, 8);
+// GEPA 최적화는 수십 초 걸린다. 시작만 요청하고, 진행률과 결과는
+// fetchSession 으로 폴링해 session.optimize_status/optimize_progress/prompt 에서 읽는다.
+export function startOptimization(sessionId) {
+  return request(`/sessions/${sessionId}/optimize`, { method: 'POST', body: '{}' });
+}
+
+export function fetchSession(sessionId) {
+  return request(`/sessions/${sessionId}`);
+}
+
+export const startCodingSession =(sourceText) => startPreferenceSession('coding', sourceText, 8);
 export const submitCodingChoice = submitPreferenceChoice;
 
 export function fetchAwsCostReport({ demoMode = true, lookbackDays = 30 } = {}) {

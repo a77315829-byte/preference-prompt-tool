@@ -101,3 +101,99 @@ def test_daily_live_budget_falls_back_to_demo(server, monkeypatch) -> None:
     status, body = _post(server, "/sessions", {"domainKey": "summarization", "sourceText": SOURCE})
     assert status == 201
     assert json.loads(body)["session"]["demo_mode"] is True
+
+
+def _get(base: str, path: str) -> tuple[int, dict]:
+    try:
+        with urllib.request.urlopen(base + path) as resp:
+            return resp.status, json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as err:
+        return err.code, json.loads(err.read().decode("utf-8"))
+
+
+def _finished_session(base: str, live: bool) -> str:
+    status, body = _post(base, "/sessions", {"domainKey": "summarization", "sourceText": SOURCE, "totalRounds": 2})
+    session = json.loads(body)["session"]
+    for _ in range(2):
+        _, body = _post(
+            base, f"/sessions/{session['session_id']}/choices",
+            {"pairId": session["pair"]["pair_id"], "chosen": "a"},
+        )
+        session = json.loads(body)["session"]
+    assert session["done"]
+    if live:
+        with api_server.SESSIONS_LOCK:
+            api_server.SESSIONS[session["session_id"]].demo_mode = False
+    return session["session_id"]
+
+
+@pytest.fixture
+def fresh_optimize_budget(monkeypatch):
+    monkeypatch.setattr(api_server, "LIVE", False)
+    monkeypatch.setattr(api_server, "DAILY_OPTIMIZATIONS", DailyBudget(5))
+    monkeypatch.setattr(api_server, "OPTIMIZE_RUNS", {})
+
+
+def test_optimize_replaces_seed_prompt(server, monkeypatch, fresh_optimize_budget) -> None:
+    """React 화면의 프롬프트가 두세 줄에서 끝나던 이유가 이 단계의 부재였다."""
+    import time
+
+    def fake_optimize(state, on_progress=None, **_):
+        on_progress(0.5)
+        on_progress(1.0)
+        return "OPTIMIZED PROMPT"
+
+    monkeypatch.setattr(service, "optimize", fake_optimize)
+    session_id = _finished_session(server, live=True)
+    _, before = _get(server, f"/sessions/{session_id}")
+    seed = before["session"]["prompt"]
+
+    status, _ = _post(server, f"/sessions/{session_id}/optimize", {})
+    assert status == 202
+    for _ in range(50):
+        _, polled = _get(server, f"/sessions/{session_id}")
+        if polled["session"]["optimize_status"] != "running":
+            break
+        time.sleep(0.05)
+    assert polled["session"]["optimize_status"] == "done"
+    assert polled["session"]["optimize_progress"] == 1.0
+    assert polled["session"]["prompt"] == "OPTIMIZED PROMPT" != seed
+
+
+def test_optimize_refuses_demo_sessions(server, fresh_optimize_budget) -> None:
+    session_id = _finished_session(server, live=False)
+    status, body = _post(server, f"/sessions/{session_id}/optimize", {})
+    assert status == 400
+    assert "PPT_LIVE" in body
+
+
+def test_optimize_per_session_cap(server, monkeypatch, fresh_optimize_budget) -> None:
+    import time
+
+    monkeypatch.setattr(service, "optimize", lambda state, on_progress=None, **_: "P")
+    session_id = _finished_session(server, live=True)
+    for _ in range(api_server.MAX_OPTIMIZATIONS_PER_SESSION):
+        assert _post(server, f"/sessions/{session_id}/optimize", {})[0] == 202
+        time.sleep(0.1)
+    status, body = _post(server, f"/sessions/{session_id}/optimize", {})
+    assert status == 400
+
+
+def test_unchanged_optimization_is_reported_as_unchanged(server, monkeypatch, fresh_optimize_budget) -> None:
+    """GEPA 가 시드를 그대로 고른 경우(실제 실행에서 나왔다)를 '적용됐다'로
+    표시하지 않도록 바뀌었는지를 같이 준다."""
+    import time
+
+    monkeypatch.setattr(service, "optimize", lambda state, on_progress=None, **_: seed_holder["seed"])
+    seed_holder = {}
+    session_id = _finished_session(server, live=True)
+    seed_holder["seed"] = _get(server, f"/sessions/{session_id}")[1]["session"]["prompt"]
+
+    _post(server, f"/sessions/{session_id}/optimize", {})
+    for _ in range(50):
+        session = _get(server, f"/sessions/{session_id}")[1]["session"]
+        if session["optimize_status"] != "running":
+            break
+        time.sleep(0.05)
+    assert session["optimize_status"] == "done"
+    assert session["optimize_changed"] is False

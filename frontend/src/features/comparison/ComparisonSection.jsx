@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { buildCodingPrompt, buildPreferencePrompt, codingComparisonAxes, otherComparisonAxes } from './comparisonData';
-import { startPreferenceSession, submitPreferenceChoice } from './codingApi';
+import { fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice } from './codingApi';
 
 const DEFAULT_TASK = '클릭 횟수를 보여주는 TypeScript/React 버튼 컴포넌트를 만들어 주세요.';
 
@@ -73,7 +73,7 @@ const remoteAxisLabels = {
   },
 };
 
-function getRemoteAxis(pair) {
+function getRemoteAxis(pair, demoMode = true) {
   if (!pair) return null;
   const axisId = Object.keys(remoteAxisLabels).find(
     (name) => pair.a.combo?.[name] !== pair.b.combo?.[name],
@@ -86,7 +86,9 @@ function getRemoteAxis(pair) {
     options: [pair.a, pair.b].map((candidate, index) => ({
       id: index === 0 ? 'a' : 'b',
       title: copy.options[candidate.combo?.[axisId]] || `예시 ${index === 0 ? 'A' : 'B'}`,
-      description: '선택한 카테고리의 데모 생성기가 만든 예시입니다.',
+      description: demoMode
+        ? '규칙 기반 데모 생성기가 만든 예시입니다.'
+        : 'AI가 입력한 원문으로 직접 쓴 예시입니다.',
       code: candidate.text,
     })),
   };
@@ -110,6 +112,7 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
   const [remoteSession, setRemoteSession] = useState(null);
   const [connection, setConnection] = useState('connecting');
   const [sessionRequested, setSessionRequested] = useState(false);
+  const [optimizeError, setOptimizeError] = useState('');
 
   const requestRemoteSession = async (sourceText) => {
     setSessionRequested(true);
@@ -148,7 +151,7 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
   const isRemote = Boolean(remoteSession);
   const isComplete = isRemote ? remoteSession.done : staticAxisIndex === -1;
   const currentAxis = isRemote
-    ? getRemoteAxis(remoteSession.pair)
+    ? getRemoteAxis(remoteSession.pair, remoteSession.demo_mode)
     : staticAxes?.[staticAxisIndex];
   const prompt = useMemo(
     () => (isComplete ? (remoteSession?.prompt || (isCoding ? buildCodingPrompt(answers) : buildPreferencePrompt(domainKey, staticAxes || [], answers))) : ''),
@@ -176,6 +179,31 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
       return;
     }
     setAnswers((currentAnswers) => ({ ...currentAnswers, [axisId]: optionId }));
+  };
+
+  const optimizeStatus = remoteSession?.optimize_status || 'idle';
+  const canOptimize = isRemote && isComplete && remoteSession.demo_mode === false;
+
+  // 최적화가 도는 동안 1초마다 진행률을 물어본다. 끝나면 서버가 돌려준
+  // session.prompt 가 최적화된 프롬프트로 바뀌어 있다.
+  useEffect(() => {
+    if (!remoteSession || optimizeStatus !== 'running') return undefined;
+    const timer = setInterval(() => {
+      fetchSession(remoteSession.session_id)
+        .then(({ session }) => setRemoteSession(session))
+        .catch(() => {});
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [remoteSession?.session_id, optimizeStatus]);
+
+  const handleOptimize = async () => {
+    setOptimizeError('');
+    try {
+      const { session } = await startOptimization(remoteSession.session_id);
+      setRemoteSession(session);
+    } catch (error) {
+      setOptimizeError(error.message);
+    }
   };
 
   const handleCopy = async () => {
@@ -223,7 +251,9 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
             </button>
           </div>
           <p className="connection-note" role="status">
-            {connection === 'connected' && '실제 데모 생성기와 연결됨'}
+            {connection === 'connected' && (remoteSession?.demo_mode === false
+              ? 'AI 실시간 생성과 연결됨'
+              : '데모 생성기와 연결됨 (규칙 기반 예시)')}
             {connection === 'connecting' && '예시를 준비하는 중…'}
             {connection === 'submitting' && '선택을 기록하는 중…'}
             {connection === 'offline' && '로컬 예시로 계속 진행합니다 (API 없이도 사용 가능)'}
@@ -269,7 +299,7 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
                       <strong>{option.title}</strong>
                       <span>{option.description}</span>
                     </span>
-                    <pre><code>{option.code}</code></pre>
+                    <pre className={isCoding ? undefined : 'option-prose'}><code>{option.code}</code></pre>
                     <span className="option-arrow" aria-hidden="true">→</span>
                   </button>
                 ))}
@@ -289,10 +319,34 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
               <h3>나만의 {isCoding ? '코딩' : domainKey === 'review' ? '리뷰' : domainKey === 'email' ? '이메일' : domainKey === 'macsum_eval_agent' ? '문서 품질' : '요약'} 프롬프트가 완성됐어요.</h3>
               <p>아래 내용을 복사해서 ChatGPT나 Claude에 바로 사용할 수 있습니다.</p>
               <pre className="prompt-box"><code>{prompt}</code></pre>
+              {canOptimize && optimizeStatus === 'running' && (
+                <div className="comparison-progress" aria-label="최적화 진행 상황">
+                  <span className="comparison-progress-bar">
+                    <span style={{ width: `${Math.round(remoteSession.optimize_progress * 100)}%` }} />
+                  </span>
+                  <span>최적화 중 {Math.round(remoteSession.optimize_progress * 100)}%</span>
+                </div>
+              )}
+              {canOptimize && optimizeStatus === 'done' && (
+                <p className="connection-note">
+                  {remoteSession.optimize_changed
+                    ? 'AI가 다듬은 프롬프트입니다.'
+                    : '다듬은 후보가 기본 프롬프트보다 낫지 않아 기본 프롬프트를 그대로 유지했습니다.'}
+                </p>
+              )}
+              {canOptimize && optimizeStatus === 'error' && (
+                <p className="connection-note">최적화 중 API 호출이 실패했습니다. 위의 기본 프롬프트는 그대로 쓸 수 있습니다.</p>
+              )}
+              {optimizeError && <p className="connection-note">{optimizeError}</p>}
               <div className="prompt-actions">
                 <button className="prompt-copy-button" type="button" onClick={handleCopy}>
                   {copied ? '복사했습니다 ✓' : '프롬프트 복사'}
                 </button>
+                {canOptimize && optimizeStatus !== 'running' && optimizeStatus !== 'done' && (
+                  <button className="prompt-reset-button" type="button" onClick={handleOptimize}>
+                    AI로 프롬프트 다듬기 (1~2분)
+                  </button>
+                )}
                 <button className="prompt-reset-button" type="button" onClick={onBack}>
                   다시 선택하기
                 </button>

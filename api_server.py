@@ -37,6 +37,10 @@ LIVE = os.environ.get("PPT_LIVE") == "1"
 # 서버 프로세스가 공유하는 하루 실제 생성 세션 상한. app.py 와 같은 방침이고
 # 재시작하면 0 으로 돌아가므로 결제 쪽 월 상한을 대신하지 않는다.
 LIVE_SESSIONS = DailyBudget(int(os.environ.get("PPT_LIVE_SESSIONS_PER_DAY", "60")))
+# GEPA 최적화 상한. app.py 의 값과 같다. 한 번에 모델 호출이 수십 번이다.
+MAX_OPTIMIZATIONS_PER_SESSION = 2
+DAILY_OPTIMIZATIONS = DailyBudget(int(os.environ.get("PPT_OPTIMIZATIONS_PER_DAY", "30")))
+OPTIMIZE_RUNS: dict[str, int] = {}
 SESSIONS: dict[str, service.SessionState] = {}
 SESSIONS_LOCK = threading.Lock()
 
@@ -50,9 +54,14 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
     payload = _jsonable(state)
     payload["round"] = state.round
     payload["answered"] = state.answered
-    if state.done and state.prompt is None:
+    if state.done:
         domain, estimator, _ = service._rebuild(state)
-        payload["prompt"] = build_seed_prompt(domain, estimator)
+        seed = build_seed_prompt(domain, estimator)
+        if state.prompt is None:
+            payload["prompt"] = seed
+        # GEPA 는 후보가 시드보다 낫지 않으면 시드를 그대로 돌려준다. 그걸
+        # "최적화가 적용됐다"고 표시하면 거짓이므로 바뀌었는지를 같이 준다.
+        payload["optimize_changed"] = state.optimize_status == "done" and state.prompt != seed
     return payload
 
 
@@ -189,8 +198,19 @@ class ApiHandler(BaseHTTPRequestHandler):
         self._send(204, {})
 
     def do_GET(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler API
-        if urlparse(self.path).path == "/api/health":
+        path = urlparse(self.path).path.rstrip("/")
+        if path == "/api/health":
             self._send(200, {"ok": True, "demoAvailable": True})
+            return
+        # 최적화 진행률을 폴링하는 경로. /api/sessions/<id>
+        parts = path.split("/")
+        if len(parts) == 4 and parts[:3] == ["", "api", "sessions"]:
+            with SESSIONS_LOCK:
+                state = SESSIONS.get(parts[3])
+            if state is None:
+                self._send(404, {"error": "세션을 찾을 수 없습니다."})
+                return
+            self._send(200, {"session": _state_payload(state)})
             return
         self._send(404, {"error": "찾을 수 없는 경로입니다."})
 
@@ -203,6 +223,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/aws/costs":
                 self._send(200, {"report": _aws_cost_report(body)})
+                return
+            if path.startswith("/api/sessions/") and path.endswith("/optimize"):
+                self._start_optimize(path.split("/")[3])
                 return
             if path.startswith("/api/sessions/") and path.endswith("/choices"):
                 session_id = path.split("/")[3]
@@ -267,6 +290,52 @@ class ApiHandler(BaseHTTPRequestHandler):
         with SESSIONS_LOCK:
             SESSIONS[session_id] = updated
         self._send(200, {"session": _state_payload(updated)})
+
+    def _start_optimize(self, session_id: str) -> None:
+        """GEPA 최적화를 백그라운드로 시작하고 바로 돌려준다.
+
+        수십 초 걸리므로 요청을 붙잡고 있지 않는다. 진행률과 결과는
+        세션 상태(optimize_status/optimize_progress/prompt)에 쓰고, 프론트는
+        GET /api/sessions/<id> 로 폴링한다. Streamlit 결과 화면의 긴
+        프롬프트가 이 단계의 산출물이다 - 이 경로가 없으면 React 화면은
+        축 문구를 이어 붙인 시드 프롬프트에서 끝난다.
+        """
+        with SESSIONS_LOCK:
+            state = SESSIONS.get(session_id)
+            if state is None:
+                self._send(404, {"error": "세션을 찾을 수 없습니다."})
+                return
+            if not state.done:
+                raise ValueError("선택을 모두 마친 뒤에 최적화할 수 있습니다.")
+            if state.demo_mode:
+                raise ValueError("데모 모드에서는 최적화할 수 없습니다. 서버를 PPT_LIVE=1 로 켜 주세요.")
+            if state.optimize_status == "running":
+                self._send(202, {"session": _state_payload(state)})
+                return
+            if OPTIMIZE_RUNS.get(session_id, 0) >= MAX_OPTIMIZATIONS_PER_SESSION:
+                raise ValueError(f"세션당 최적화는 {MAX_OPTIMIZATIONS_PER_SESSION}회까지입니다.")
+            if not DAILY_OPTIMIZATIONS.consume():
+                raise ValueError("오늘 배정된 최적화 횟수를 모두 썼습니다.")
+            OPTIMIZE_RUNS[session_id] = OPTIMIZE_RUNS.get(session_id, 0) + 1
+            state.optimize_status = "running"
+            state.optimize_progress = 0.0
+
+        def progress(value: float) -> None:
+            state.optimize_progress = value
+
+        def work() -> None:
+            print(f"[optimize] {state.domain_key} 시작", flush=True)
+            try:
+                optimized = service.optimize(state, on_progress=progress)
+                state.prompt = optimized
+                state.optimize_status = "done"
+                print(f"[optimize] {state.domain_key} 완료 ({len(optimized)}자)", flush=True)
+            except Exception as exc:  # noqa: BLE001 - 실패해도 시드 프롬프트는 남는다
+                state.optimize_status = "error"
+                print(f"[optimize] 실패: {type(exc).__name__}: {exc}", flush=True)
+
+        threading.Thread(target=work, daemon=True).start()
+        self._send(202, {"session": _state_payload(state)})
 
     def log_message(self, format: str, *args: Any) -> None:
         # 기본 access log는 터미널을 지나치게 채우므로 필요한 오류만 앱에서 본다.

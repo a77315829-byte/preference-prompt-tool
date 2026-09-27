@@ -1313,8 +1313,21 @@
   line-height: 1.6;
 }
 
+/* 후보 글은 한 줄로 이어지면 가로 스크롤이 생겨 비교가 안 된다.
+   줄바꿈하고 내용만큼 늘어나게 한다. 코드는 들여쓰기를 살리려고
+   pre-wrap 으로 줄만 접는다. */
 .comparison-option pre {
   flex: 1;
+  overflow-x: visible;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* 요약·리뷰·이메일처럼 코드가 아닌 글은 본문 글꼴로 읽힌다. */
+.comparison-option pre.option-prose {
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.75;
 }
 
 .option-arrow {
