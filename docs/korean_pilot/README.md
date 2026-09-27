@@ -57,6 +57,8 @@ Copy-Item docs/korean_pilot/protocol.example.json data/korean_pilot/P001-input.j
 
 - `is_test`: 실제 참여자가 실제 절차를 수행한 경우에만 `false`.
 - `model`: 평가 두 조건에 동일하게 사용할 모델. 배포 모델과 실험 모델이 다르면 따로 보고한다.
+  `temperature=0` 을 받는 모델이어야 한다 - 추론형 모델(`gpt-5.6-luna`, `gpt-5-nano` 등)은
+  거부하고 첫 생성에서 멈춘다. 예시는 앱의 후보 생성 모델과 같은 `gpt-4o-mini` 다.
 - `prompts.direct`: 사용자가 직접 작성한 전체 지침.
 - `prompts.selected`: 주 앱에서 얻은 전체 조립 지침.
 - `effort_seconds`: 측정한 초 단위 시간. 측정하지 않았다면 `null`. 추정치를 넣지 않는다.
