@@ -120,6 +120,5 @@ def test_all_leaky_falls_back_to_seed(monkeypatch) -> None:
 
     monkeypatch.setattr(gepa, "optimize", fake_optimize)
     state = _finished_state("domains/summarization.yaml", SOURCE)
-    assert service.optimize(state) == service.optimize.__globals__["build_seed_prompt"](
-        *service._rebuild(state)[:2]
-    )
+    domain, estimator, _ = service._rebuild(state)
+    assert service.optimize(state) == service.final_prompt(domain, estimator)

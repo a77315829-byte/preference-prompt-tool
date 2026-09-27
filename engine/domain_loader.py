@@ -54,6 +54,20 @@ class Axis:
 
 
 @dataclass
+class FinalPromptSpec:
+    """사용자에게 건네는 최종 프롬프트의 틀에 들어갈 문구. 전부 YAML 에서
+    온다 - 엔진은 순서대로 이어 붙이기만 한다."""
+
+    role: str
+    preference_heading: str
+    rules_heading: str
+    rules: list[str]
+    output_heading: str
+    output: str
+    axis_labels: dict[str, str] = field(default_factory=dict)
+
+
+@dataclass
 class Domain:
     name: str
     task_description: str
@@ -62,6 +76,8 @@ class Domain:
     # 이 도메인의 전형적인 입력 몇 개. 최적화가 사용자 원문 하나에만 맞춰
     # 그 내용을 프롬프트에 박아 넣지 않도록 평가용으로 쓴다. 선택 항목.
     example_sources: list[str] = field(default_factory=list)
+    # 선택 항목. 없으면 최종 프롬프트는 후보 생성용 프롬프트와 같다.
+    final_prompt: FinalPromptSpec | None = None
 
     def axis(self, name: str) -> Axis:
         for a in self.axes:
@@ -141,6 +157,19 @@ def _validate(raw: dict, path: Path) -> None:
     if enum_count == 0:
         raise DomainError(f"{where}: 선택으로 학습할 enum 축이 하나도 없다")
 
+    final = raw.get("final_prompt")
+    if final is not None:
+        at = f"{where} final_prompt"
+        for key in ("role", "preference_heading", "rules_heading", "output_heading", "output"):
+            if not isinstance(final.get(key), str) or not final[key].strip():
+                raise DomainError(f"{at}: '{key}' 는 비어 있지 않은 문자열이어야 한다")
+        rules = final.get("rules")
+        if not isinstance(rules, list) or not rules or not all(isinstance(r, str) and r.strip() for r in rules):
+            raise DomainError(f"{at}: 'rules' 는 비어 있지 않은 문자열 목록이어야 한다")
+        unknown = set(final.get("axis_labels", {})) - axis_names
+        if unknown:
+            raise DomainError(f"{at}: axis_labels 에 없는 축이 있다: {sorted(unknown)}")
+
     examples = raw.get("example_sources", [])
     if not isinstance(examples, list) or not all(isinstance(e, str) and e.strip() for e in examples):
         raise DomainError(f"{where}: example_sources 는 비어 있지 않은 문자열 목록이어야 한다")
@@ -189,4 +218,19 @@ def load_domain(path: str | Path) -> Domain:
         checks_module=raw["checks_module"],
         axes=axes,
         example_sources=[e.strip() for e in raw.get("example_sources", [])],
+        final_prompt=_final_prompt(raw.get("final_prompt")),
+    )
+
+
+def _final_prompt(raw: dict | None) -> FinalPromptSpec | None:
+    if raw is None:
+        return None
+    return FinalPromptSpec(
+        role=raw["role"].strip(),
+        preference_heading=raw["preference_heading"].strip(),
+        rules_heading=raw["rules_heading"].strip(),
+        rules=[r.strip() for r in raw["rules"]],
+        output_heading=raw["output_heading"].strip(),
+        output=raw["output"].strip(),
+        axis_labels=dict(raw.get("axis_labels", {})),
     )

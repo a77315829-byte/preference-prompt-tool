@@ -31,7 +31,7 @@ from engine.domain_loader import Domain, load_domain
 from engine.estimator import Comparison, Estimator
 from engine.generator import generate_all, generate_all_with_prompts
 from engine.selector import UncertaintySelector
-from optimize.run_gepa import build_seed_prompt, run as run_gepa
+from optimize.run_gepa import run as run_gepa
 
 load_dotenv()
 
@@ -1226,7 +1226,7 @@ elif st.session_state.stage == "done":
     with st.expander("사람이 읽는 말로 보기"):
         _show_preferences(domain_key, preferred)
 
-    seed_prompt = build_seed_prompt(domain, _rebuilt_estimator(session))
+    seed_prompt = service.final_prompt(domain, _rebuilt_estimator(session))
     prompt = st.session_state.get("optimized_prompt", seed_prompt)
     st.markdown(
         '<div class="ppt-label" style="margin-top:24px">시스템 프롬프트</div>',

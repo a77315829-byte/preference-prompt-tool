@@ -36,10 +36,10 @@ from typing import Callable
 from engine.demo_generator import generate_demo
 from engine.domain_loader import Domain, load_domain
 from engine.estimator import Comparison, Estimator
-from engine.generator import generate_all
+from engine.generator import build_final_prompt, generate_all
 from engine.metric_builder import build_metric
 from engine.selector import UncertaintySelector
-from optimize.run_gepa import MetricEvaluator, build_seed_prompt
+from optimize.run_gepa import MetricEvaluator
 
 # 현재 제품의 비교 예산. 모의 실험의 수렴 양상을 참고했지만 모든 사용자가
 # 8회 안에 복원되거나 추가 질문이 무의미하다는 뜻은 아니다.
@@ -334,7 +334,8 @@ def optimize(
 
     domain, estimator, _ = _rebuild(state)
     metric = build_metric(domain, estimator)
-    seed_prompt = build_seed_prompt(domain, estimator)
+    # GEPA 는 사용자에게 보여 준 것과 같은 최종 프롬프트에서 출발한다.
+    seed_prompt = final_prompt(domain, estimator)
     examples = [e for e in domain.example_sources if e != state.source_text.strip()]
 
     calls = {"n": 0}
@@ -434,6 +435,18 @@ def source_leak(prompt: str, source: str, reference: str = "", ngram: int = 5) -
         if tuple(prompt_words[i:i + ngram]) in grams
     }
     return sorted(marks | copied)
+
+
+def final_prompt(domain: Domain, estimator: Estimator) -> str:
+    """사용자에게 건네는 최종 프롬프트. 추정한 선호를 도메인 YAML 의
+    final_prompt 틀(역할·선호·지킬 것·출력 형식)에 넣어 조립한다.
+
+    optimize/run_gepa.build_seed_prompt 는 그대로 둔다 - 실험(비교군 D,
+    피드백 어블레이션)이 그 짧은 형태로 결과를 냈다.
+    """
+    combo = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
+    combo.update({axis.name: "" for axis in domain.axes if axis.type != "enum"})
+    return build_final_prompt(domain, combo)
 
 
 def load_domain_for(domain_path: str) -> Domain:

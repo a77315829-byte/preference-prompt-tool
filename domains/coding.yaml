@@ -80,6 +80,24 @@ axes:
           target:
             min_signals: 5
 
+# 사용자에게 건네는 최종 프롬프트의 틀 (engine/generator.py 의
+# build_final_prompt). 후보를 만들 때 쓰는 문구와는 따로 둔다.
+final_prompt:
+  role: 당신은 이 사용자의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다. 아래 선호는 사용자가 여러 코드 예시를 직접 비교하며 고른 결과에서 추정한 것이다.
+  preference_heading: 이 사용자의 선호
+  rules_heading: 항상 지킬 것
+  output_heading: 출력 형식
+  rules:
+  - 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.
+  - 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.
+  - 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.
+  - 접근성(레이블, 키보드 조작)을 기본으로 챙겨라.
+  output: 코드를 먼저 보여 주고, 그 방식을 고른 이유를 두세 문장으로 덧붙여라.
+  axis_labels:
+    code_structure: 코드 구성
+    style_management: 스타일 관리
+    type_detail: 타입 작성
+
 # 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
 # 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
 # 이 입력들로 채점한다.

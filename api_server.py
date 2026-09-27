@@ -21,7 +21,6 @@ from dotenv import load_dotenv
 
 import service
 from budget import DailyBudget
-from optimize.run_gepa import build_seed_prompt
 
 load_dotenv()
 
@@ -56,7 +55,7 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
     payload["answered"] = state.answered
     if state.done:
         domain, estimator, _ = service._rebuild(state)
-        seed = build_seed_prompt(domain, estimator)
+        seed = service.final_prompt(domain, estimator)
         if state.prompt is None:
             payload["prompt"] = seed
         # GEPA 는 후보가 시드보다 낫지 않으면 시드를 그대로 돌려준다. 그걸

@@ -31,6 +31,34 @@ def build_prompt(domain: Domain, combo: dict[str, str]) -> str:
     return "\n".join(lines)
 
 
+def build_final_prompt(domain: Domain, combo: dict[str, str]) -> str:
+    """사용자에게 건네는 최종 프롬프트. 역할 -> 과제 -> 선호 -> 규칙 ->
+    출력 형식 순으로 domain.final_prompt 의 문구를 이어 붙인다.
+
+    build_prompt 와 따로 둔다. build_prompt 는 후보를 만들 때 모델에 보내는
+    문장이라 바꾸면 캐시 키와 실험 재현성이 같이 바뀐다. 이 함수는 화면에
+    내보내는 결과물에만 쓴다. final_prompt 가 없는 도메인은 build_prompt
+    와 같은 결과를 돌려준다.
+    """
+    spec = domain.final_prompt
+    if spec is None:
+        return build_prompt(domain, combo)
+
+    preferences = []
+    for axis in domain.axes:
+        instruction = axis.instruction_for(combo.get(axis.name, ""))
+        if instruction:
+            label = spec.axis_labels.get(axis.name) or axis.description
+            preferences.append(f"- {label}: {instruction}")
+
+    sections = [spec.role, domain.task_description]
+    if preferences:
+        sections.append("\n".join([f"## {spec.preference_heading}", *preferences]))
+    sections.append("\n".join([f"## {spec.rules_heading}", *(f"- {r}" for r in spec.rules)]))
+    sections.append(f"## {spec.output_heading}\n{spec.output}")
+    return "\n\n".join(sections)
+
+
 def _cache_key(
     prompt: str, source_text: str, model: str, temperature: float | None = None
 ) -> str:
