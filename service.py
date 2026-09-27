@@ -146,7 +146,13 @@ def _rebuild(state: SessionState) -> tuple[Domain, Estimator, UncertaintySelecto
     """
     domain = load_domain(state.domain_path)
     estimator = Estimator(domain)
-    selector = UncertaintySelector(domain, seed=SELECTOR_SEED)
+    # 사람을 상대하므로 양 끝 값부터 묻고 같은 쌍을 반복하지 않는다. 합성
+    # 사용자로 전 조합을 재면 복원율은 기본 동작과 같고(요약 90/90, 코딩
+    # 80/80) 8회 중 반복 질문만 2.6~3.8회에서 0회가 된다. 실험 스크립트는
+    # 기본 동작을 그대로 쓴다.
+    selector = UncertaintySelector(
+        domain, seed=SELECTOR_SEED, contrast_first=True, avoid_repeats=True
+    )
 
     for combo_a, combo_b, winner in state.history:
         selector.next_pair(estimator)

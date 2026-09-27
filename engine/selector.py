@@ -25,6 +25,13 @@ def _baseline_combo(domain: Domain, estimator: Estimator) -> Combo:
     return combo
 
 
+def _pair_key(combo_a: Combo, combo_b: Combo) -> frozenset:
+    """A/B 순서와 무관한 쌍의 식별자. 뒤집어 보여줘도 같은 질문이다."""
+    return frozenset(
+        (tuple(sorted(combo_a.items())), tuple(sorted(combo_b.items())))
+    )
+
+
 class RandomSelector:
     def __init__(self, domain: Domain, seed: int = 0) -> None:
         self.domain = domain
@@ -79,12 +86,34 @@ class SequentialAxisSelector:
 
 class UncertaintySelector:
     """확신도가 가장 낮은 축을 고르고, 그 축에서 utility가 가장 근접한
-    (가장 헷갈리는) 두 값을 질의한다. 다른 축은 baseline으로 고정한다."""
+    (가장 헷갈리는) 두 값을 질의한다. 다른 축은 baseline으로 고정한다.
 
-    def __init__(self, domain: Domain, seed: int = 0) -> None:
+    사람을 상대하는 화면을 위한 선택 사항이 두 개 있다. 둘 다 기본은 꺼져
+    있고, 꺼져 있으면 동작이 예전과 똑같다 - 실험 결과(experiments/results)
+    는 이 기본 동작으로 낸 것이다.
+
+    - contrast_first: 아직 한 번도 갈라 본 적 없는 축은 양 끝 값(YAML 의
+      첫 값과 마지막 값)부터 묻는다. 처음에는 모든 효용이 0이라 "가장
+      헷갈리는 쌍"이 곧 이웃한 두 값이 되고, 사람 눈에는 A/B 가 거의 같아
+      보인다 (요약의 normal 대 high 추출성).
+    - avoid_repeats: 이미 물은 쌍(A/B 순서 무관)은 다시 묻지 않는다. 값이
+      2개뿐인 축은 가능한 쌍이 하나라서, 막지 않으면 같은 질문이 몇 번이고
+      나온다. 같은 축을 다시 물어야 하면 다른 축의 값을 바꿔 새 쌍을 만든다.
+    """
+
+    def __init__(
+        self,
+        domain: Domain,
+        seed: int = 0,
+        *,
+        contrast_first: bool = False,
+        avoid_repeats: bool = False,
+    ) -> None:
         self.domain = domain
         self._enum_axes = [axis for axis in domain.axes if axis.type == "enum"]
         self._rng = random.Random(seed)
+        self.contrast_first = contrast_first
+        self.avoid_repeats = avoid_repeats
 
     def _pick_axis_name(self, estimator: Estimator) -> str:
         confidences = {axis.name: estimator.confidence(axis.name) for axis in self._enum_axes}
@@ -102,6 +131,9 @@ class UncertaintySelector:
         return value_a, value_b
 
     def next_pair(self, estimator: Estimator) -> Pair:
+        if self.contrast_first or self.avoid_repeats:
+            return self._next_pair_for_people(estimator)
+
         axis_name = self._pick_axis_name(estimator)
         value_a, value_b = self._most_confusable_pair(estimator, axis_name)
 
@@ -110,3 +142,66 @@ class UncertaintySelector:
         combo_a[axis_name] = value_a
         combo_b[axis_name] = value_b
         return combo_a, combo_b
+
+    # --- 사람용 선택 (contrast_first / avoid_repeats) ---------------------
+
+    def _next_pair_for_people(self, estimator: Estimator) -> Pair:
+        asked = {_pair_key(c.combo_a, c.combo_b) for c in estimator.history}
+        varied = {
+            axis.name
+            for c in estimator.history
+            for axis in self._enum_axes
+            if c.combo_a.get(axis.name) != c.combo_b.get(axis.name)
+        }
+
+        # 확신도 낮은 축부터. 동률은 시드 고정 RNG 로 섞는다.
+        axes = list(self._enum_axes)
+        self._rng.shuffle(axes)
+        axes.sort(key=lambda axis: estimator.confidence(axis.name))
+
+        first: Pair | None = None
+        for axis in axes:
+            for value_a, value_b in self._value_pairs(estimator, axis, varied):
+                for context in self._contexts(estimator, axis.name):
+                    combo_a = {**context, axis.name: value_a}
+                    combo_b = {**context, axis.name: value_b}
+                    if first is None:
+                        first = (combo_a, combo_b)
+                    if not self.avoid_repeats or _pair_key(combo_a, combo_b) not in asked:
+                        return combo_a, combo_b
+        # 가능한 쌍을 다 물었다. 반복은 피할 수 없으니 가장 필요한 것을 다시 묻는다.
+        return first
+
+    def _value_pairs(self, estimator: Estimator, axis, varied: set[str]) -> list[tuple[str, str]]:
+        """이 축에서 물어볼 값 쌍을 우선순위대로. 효용이 낮은 값이 A 쪽."""
+        utilities = estimator.utilities[axis.name]
+        values = [v.value for v in axis.values]
+        pairs = sorted(
+            itertools.combinations(values, 2),
+            key=lambda p: abs(utilities[p[0]] - utilities[p[1]]),
+        )
+        pairs = [tuple(sorted(p, key=lambda v: utilities[v])) for p in pairs]
+        if self.contrast_first and axis.name not in varied:
+            ends = (values[0], values[-1])
+            pairs = [ends] + [p for p in pairs if set(p) != set(ends)]
+        return pairs
+
+    def _contexts(self, estimator: Estimator, axis_name: str) -> list[Combo]:
+        """질의 축 말고 나머지 축의 값 조합. 현재 최선 추정(baseline)을
+        먼저, 그다음 추정에서 덜 벗어난 순서로."""
+        baseline = _baseline_combo(self.domain, estimator)
+        others = [axis for axis in self._enum_axes if axis.name != axis_name]
+        if not self.avoid_repeats or not others:
+            return [baseline]
+
+        choices = [
+            sorted((v.value for v in axis.values), key=lambda v: v != baseline[axis.name])
+            for axis in others
+        ]
+        contexts = []
+        for values in itertools.product(*choices):
+            context = dict(baseline)
+            context.update({axis.name: value for axis, value in zip(others, values)})
+            contexts.append(context)
+        contexts.sort(key=lambda c: sum(c[a.name] != baseline[a.name] for a in others))
+        return contexts
