@@ -470,6 +470,49 @@ def source_leak(prompt: str, source: str, reference: str = "", ngram: int = 5) -
     return sorted(marks | copied)
 
 
+# 모델 호출 예외를 화면에 보여 줄 문구로 바꾼다. 클래스 이름만 본다 -
+# litellm 을 import 하지 않아도 되고(11초), 메시지 원문을 쓰지 않는다.
+# 순서가 중요하다: 하위 클래스를 먼저 둔다 (Timeout 은 APIConnectionError 의,
+# ContextWindowExceededError 는 BadRequestError 의 하위 클래스다).
+_API_ERROR_KINDS = (
+    ("AuthenticationError", "인증 실패", "API 키가 없거나 틀렸습니다. .env 의 OPENAI_API_KEY 를 확인해 주세요."),
+    ("RateLimitError", "호출 한도 초과", "호출 한도나 결제 크레딧이 소진됐습니다. 잠시 뒤 다시 시도하거나 결제 설정을 확인해 주세요."),
+    ("BudgetExceededError", "예산 초과", "설정된 지출 상한에 닿았습니다."),
+    ("APITimeoutError", "응답 시간 초과", "모델 응답이 제한 시간 안에 오지 않았습니다. 잠시 뒤 다시 시도해 주세요."),
+    ("Timeout", "응답 시간 초과", "모델 응답이 제한 시간 안에 오지 않았습니다. 잠시 뒤 다시 시도해 주세요."),
+    ("APIConnectionError", "연결 실패", "모델 서버에 연결하지 못했습니다. 네트워크를 확인해 주세요."),
+    ("ContextWindowExceededError", "입력이 너무 김", "입력한 글이 모델이 한 번에 읽을 수 있는 길이를 넘었습니다. 글을 줄여 주세요."),
+    ("ContentPolicyViolationError", "콘텐츠 정책", "모델 공급자의 콘텐츠 정책에 걸렸습니다. 다른 글로 시도해 주세요."),
+    ("NotFoundError", "모델 없음", "설정된 모델 이름을 찾을 수 없습니다. 모델 설정을 확인해 주세요."),
+    ("UnsupportedParamsError", "설정 오류", "이 모델이 지원하지 않는 요청 설정입니다. 모델 설정을 확인해 주세요."),
+    ("BadRequestError", "요청 오류", "모델이 요청을 거부했습니다. 모델 설정을 확인해 주세요."),
+    ("ServiceUnavailableError", "공급자 장애", "모델 공급자 서버에 문제가 있습니다. 잠시 뒤 다시 시도해 주세요."),
+    ("InternalServerError", "공급자 장애", "모델 공급자 서버에 문제가 있습니다. 잠시 뒤 다시 시도해 주세요."),
+)
+
+
+def current_estimate(state: SessionState) -> tuple[Domain, Estimator]:
+    """화면이 추정 결과를 읽는 공개 통로. 이력을 재생해 도메인과 추정기를
+    돌려준다. 호출하는 쪽이 _rebuild 에 기대지 않게 한다."""
+    domain, estimator, _ = _rebuild(state)
+    return domain, estimator
+
+
+def describe_api_error(exc: BaseException) -> str:
+    """화면에 보여도 되는 오류 설명.
+
+    예외 메시지를 그대로 보여 주면 안 된다. OpenAI 인증 오류 문구는 키
+    일부("Incorrect API key provided: sk-abc*****wxyz")를 담고 있고, 공개
+    링크에서는 아무나 그 화면을 본다. 원인 파악에 필요한 종류와 예외 이름만
+    남긴다 - 원문은 서버 로그에서 본다.
+    """
+    names = [cls.__name__ for cls in type(exc).__mro__]
+    for name, title, advice in _API_ERROR_KINDS:
+        if name in names:
+            return f"{title}: {advice} (오류 종류: {type(exc).__name__})"
+    return f"알 수 없는 오류로 모델 호출이 실패했습니다. (오류 종류: {type(exc).__name__})"
+
+
 def final_prompt(domain: Domain, estimator: Estimator) -> str:
     """사용자에게 건네는 최종 프롬프트. 추정한 선호를 도메인 YAML 의
     final_prompt 틀(역할·선호·지킬 것·출력 형식)에 넣어 조립한다.

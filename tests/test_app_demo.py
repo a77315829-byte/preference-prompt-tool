@@ -119,8 +119,11 @@ def test_api_failure_degrades_to_demo_instead_of_dead_ending(monkeypatch) -> Non
     """
     generator_module = importlib.import_module("engine.generator")
 
+    class AuthenticationError(Exception):
+        """litellm 의 인증 오류와 같은 이름. 원문에 키 일부가 들어 있다."""
+
     def boom(*args, **kwargs):
-        raise RuntimeError("AuthenticationError: invalid api key")
+        raise AuthenticationError("Incorrect API key provided: sk-abc*****wxyz")
 
     monkeypatch.setattr(generator_module, "generate", boom)
 
@@ -132,7 +135,9 @@ def test_api_failure_degrades_to_demo_instead_of_dead_ending(monkeypatch) -> Non
     assert not app.exception
     # API 모드로 시작했지만 실패 후 데모 모드로 내려와 있어야 한다.
     assert app.session_state["demo_mode"] is True
-    assert "invalid api key" in app.session_state["api_error"]
+    # 원인 종류는 알려 주되 공급자 오류 원문(키 일부)은 화면에 두지 않는다.
+    assert app.session_state["api_error"].startswith("인증 실패")
+    assert "sk-" not in app.session_state["api_error"]
     assert app.session_state["stage"] == "compare"
     # 실패 사실을 숨기지 않고 알린다.
     assert any("무료 데모 모드로 전환" in w.value for w in app.warning)

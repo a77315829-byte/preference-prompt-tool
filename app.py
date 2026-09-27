@@ -281,6 +281,14 @@ def _show_candidate(domain_key: str, candidate: str) -> None:
         st.write(candidate)
 
 
+def _safe_error(exc: BaseException) -> str:
+    """화면에 띄울 오류 문구. 원문은 서버 로그(배포자만 봄)에만 남긴다 -
+    OpenAI 인증 오류 원문에는 키 일부가 들어 있어 공개 링크에 그대로
+    띄우면 안 된다."""
+    print(f"[api-error] {type(exc).__name__}: {exc}", flush=True)
+    return service.describe_api_error(exc)
+
+
 def _show_api_error_notice() -> None:
     """API 호출이 실패해 데모 모드로 내려왔음을 숨기지 않고 알린다."""
     error = st.session_state.get("api_error")
@@ -351,7 +359,7 @@ def _show_prompt_trial(domain: Domain, personal_prompt: str) -> None:
                         model=MODEL,
                     )
                 except Exception as exc:  # noqa: BLE001 - 사용자에게 그대로 알린다
-                    st.session_state.trial_error = str(exc)
+                    st.session_state.trial_error = _safe_error(exc)
                 else:
                     st.session_state.pop("trial_error", None)
                     st.session_state.trial_result = (baseline, personal)
@@ -865,7 +873,7 @@ def _rebuilt_estimator(session):
     `service.SessionState` 는 엔진 객체를 담지 않으므로(직렬화 가능해야
     한다) 여기서 이력을 재생해 꺼낸다. 재생 비용은 8라운드짜리다.
     """
-    _, estimator, _ = service._rebuild(session)
+    _, estimator = service.current_estimate(session)
     return estimator
 
 
@@ -896,7 +904,7 @@ def _run_optimize(session, seed_prompt: str) -> None:
                 session, on_progress=lambda value: shared.__setitem__("progress", value)
             )
         except Exception as exc:  # noqa: BLE001 - 실패해도 기본 프롬프트는 쓸 수 있다
-            shared["error"] = str(exc)
+            shared["error"] = _safe_error(exc)
 
     worker = threading.Thread(target=work, daemon=True)
     worker.start()
@@ -1081,7 +1089,7 @@ if st.session_state.stage == "input":
                 demo_mode=demo_mode,
             )
         except Exception as exc:  # noqa: BLE001 - 첫 호출 실패는 데모로 내린다
-            st.session_state.api_error = str(exc)
+            st.session_state.api_error = _safe_error(exc)
             st.session_state.demo_mode = True
             st.session_state.session = service.start_session(
                 source,
@@ -1186,7 +1194,7 @@ elif st.session_state.stage == "compare":
             # 막다른 길로 끝내지 않는다. 키가 만료되거나 결제 한도에 걸리면
             # 처음 보는 사람 눈에는 그냥 고장난 서비스다. 데모로 내려 남은
             # 비교를 이어가고 지금까지의 선택은 살린다.
-            st.session_state.api_error = str(exc)
+            st.session_state.api_error = _safe_error(exc)
             st.session_state.demo_mode = True
             degraded = replace(session, demo_mode=True)
             st.session_state.session = service.submit_choice(

@@ -57,7 +57,7 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
     payload["round"] = state.round
     payload["answered"] = state.answered
     if state.done:
-        domain, estimator, _ = service._rebuild(state)
+        domain, estimator = service.current_estimate(state)
         seed = service.final_prompt(domain, estimator)
         if state.prompt is None:
             payload["prompt"] = seed
@@ -240,7 +240,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
             self._send(400, {"error": str(exc)})
         except Exception as exc:  # noqa: BLE001 - API 응답으로 안전하게 변환
-            self._send(500, {"error": f"세션 처리 중 오류가 발생했습니다: {exc}"})
+            # 원문은 서버 터미널에만. 공급자 오류 문구에는 키 일부가 들어 있다.
+            print(f"[error] {type(exc).__name__}: {exc}", flush=True)
+            self._send(500, {"error": service.describe_api_error(exc)})
 
     def _start_session(self, body: dict[str, Any]) -> None:
         domain_key = str(body.get("domainKey", "coding"))

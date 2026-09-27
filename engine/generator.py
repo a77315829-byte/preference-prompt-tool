@@ -21,6 +21,22 @@ from engine.domain_loader import Domain
 
 CACHE_DIR = Path(__file__).resolve().parent.parent / "cache"
 
+# 한 번의 생성 호출이 기다릴 최대 시간(초)과 출력 토큰 상한. 상한은
+# 요약·리뷰·코드 한 벌에는 넉넉하고, 모델이 폭주하면 거기서 끊는다.
+# 캐시 키에는 넣지 않는다 - 넣으면 기존 cache/ 가 통째로 무효화된다.
+REQUEST_TIMEOUT_SECONDS = 60
+MAX_OUTPUT_TOKENS = 2048
+
+# 같은 캐시 키를 동시에 부르면 한 번만 호출하고 나머지는 기다렸다 캐시를
+# 읽는다. 새로고침·분기 미리 만들기가 같은 요청을 겹쳐 보낸다.
+_KEY_LOCKS: dict[str, threading.Lock] = {}
+_KEY_LOCKS_GUARD = threading.Lock()
+
+
+def _lock_for(key: str) -> threading.Lock:
+    with _KEY_LOCKS_GUARD:
+        return _KEY_LOCKS.setdefault(key, threading.Lock())
+
 
 def build_prompt(domain: Domain, combo: dict[str, str]) -> str:
     lines = [domain.task_description]
@@ -168,11 +184,22 @@ def generate_with_prompt(
     축조합이 아니라 프롬프트 텍스트가 입력이다.
     """
     cache_dir.mkdir(parents=True, exist_ok=True)
-    cache_file = cache_dir / f"{_cache_key(prompt, source_text, model, temperature)}.json"
+    key = _cache_key(prompt, source_text, model, temperature)
+    cache_file = cache_dir / f"{key}.json"
 
     if cache_file.exists():
         return json.loads(cache_file.read_text(encoding="utf-8"))["output"]
 
+    with _lock_for(key):
+        # 기다리는 동안 다른 스레드가 채웠을 수 있다.
+        if cache_file.exists():
+            return json.loads(cache_file.read_text(encoding="utf-8"))["output"]
+        return _call_and_cache(prompt, source_text, model, temperature, cache_file)
+
+
+def _call_and_cache(
+    prompt: str, source_text: str, model: str, temperature: float | None, cache_file: Path
+) -> str:
     # litellm은 import에만 11초가 걸린다. 첫 화면 렌더에는 필요 없으므로
     # 실제 API 호출 시점까지 미룬다 (배포 콜드스타트 12.6초 -> 약 2초).
     from litellm import completion
@@ -184,6 +211,8 @@ def generate_with_prompt(
             {"role": "system", "content": prompt},
             {"role": "user", "content": source_text},
         ],
+        timeout=REQUEST_TIMEOUT_SECONDS,
+        max_tokens=MAX_OUTPUT_TOKENS,
         **extra,
     )
     output = response.choices[0].message.content
