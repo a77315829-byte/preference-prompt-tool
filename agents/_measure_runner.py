@@ -16,6 +16,7 @@ import math
 import re
 import statistics
 import sys
+import types
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -30,6 +31,22 @@ _SAFE_BUILTIN_NAMES = (
 SAFE_BUILTINS = {name: getattr(builtins, name) for name in _SAFE_BUILTIN_NAMES}
 
 
+def _public_view(module: types.ModuleType) -> types.SimpleNamespace:
+    """모듈의 공개 멤버 중 모듈이 아닌 것만 담은 사본.
+
+    모듈 객체를 그대로 넘기면 모듈이 import 해 둔 다른 모듈까지 딸려
+    온다 - `statistics.sys` 는 밑줄도 없는 공개 속성이라 속성 이름 검사로는
+    못 막는다. 필요한 것은 함수와 클래스뿐이다.
+    """
+    return types.SimpleNamespace(
+        **{
+            name: value
+            for name, value in vars(module).items()
+            if not name.startswith("_") and not isinstance(value, types.ModuleType)
+        }
+    )
+
+
 def main() -> None:
     payload = json.loads(sys.stdin.read())
     code, text, source = payload["code"], payload["text"], payload["source"]
@@ -42,10 +59,10 @@ def main() -> None:
 
     namespace: dict = {
         "__builtins__": SAFE_BUILTINS,
-        "re": re,
-        "math": math,
-        "statistics": statistics,
-        "collections": collections,
+        "re": _public_view(re),
+        "math": _public_view(math),
+        "statistics": _public_view(statistics),
+        "collections": _public_view(collections),
     }
     try:
         exec(compile(code, "<measure>", "exec"), namespace)  # noqa: S102

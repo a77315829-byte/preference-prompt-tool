@@ -28,6 +28,18 @@ FORBIDDEN_NAMES = {
 
 _DUNDER_RE = re.compile(r"^__.+__$")
 
+# 이름공간 밖으로 나가는 속성들. 던더가 아니어서 위 패턴에 안 걸린다.
+# - 프레임·트레이스백: 제너레이터의 gi_frame.f_back.f_globals 로 러너
+#   모듈의 전역(sys 포함)에 닿는다.
+# - format/format_map: "{0.mean.__globals__[sys]}".format(...) 은 문자열
+#   안에서 속성을 따라가므로 AST 검사를 통째로 건너뛴다. 실제로 이
+#   경로로 os.environ 을 읽는 코드가 검증을 통과했다.
+FORBIDDEN_ATTRS = {
+    "gi_frame", "gi_code", "cr_frame", "cr_code", "ag_frame", "ag_code",
+    "f_back", "f_globals", "f_locals", "f_builtins", "f_code",
+    "tb_frame", "tb_next", "format", "format_map",
+}
+
 
 class ValidationError(Exception):
     pass
@@ -73,5 +85,10 @@ def validate_measure_code(code: str, function_name: str = "measure") -> None:
             raise ValidationError(f"던더 이름 접근 금지: {node.id}")
         if isinstance(node, ast.Attribute) and _DUNDER_RE.match(node.attr):
             raise ValidationError(f"던더 속성 접근 금지: {node.attr}")
+        # 밑줄 하나로 시작하는 속성도 막는다. collections._sys 가 곧 sys 다.
+        if isinstance(node, ast.Attribute) and node.attr.startswith("_"):
+            raise ValidationError(f"비공개 속성 접근 금지: {node.attr}")
+        if isinstance(node, ast.Attribute) and node.attr in FORBIDDEN_ATTRS:
+            raise ValidationError(f"금지된 속성 사용: {node.attr}")
         if isinstance(node, (ast.Global, ast.Nonlocal)):
             raise ValidationError("global/nonlocal 사용 금지")
