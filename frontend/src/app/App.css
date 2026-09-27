@@ -1209,6 +1209,12 @@
   font-weight: 800;
 }
 
+/* "0 / 6" 이 두 줄로 쪼개지지 않게. 막대만 줄어든다. */
+.comparison-progress > span:not(.comparison-progress-bar) {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 .comparison-progress-bar {
   display: block;
   width: 100%;
@@ -1323,9 +1329,12 @@
   overflow-wrap: anywhere;
 }
 
-/* 요약·리뷰·이메일처럼 코드가 아닌 글은 본문 글꼴로 읽힌다. */
-.comparison-option pre.option-prose {
+/* 요약·리뷰·이메일처럼 코드가 아닌 글은 본문 글꼴로 읽힌다. 안쪽 code 에도
+   걸어야 한다 - code 는 자기 고정폭 글꼴을 따로 갖는다. */
+.comparison-option pre.option-prose,
+.comparison-option pre.option-prose code {
   font-family: inherit;
+  letter-spacing: normal;
   font-size: 0.95rem;
   line-height: 1.75;
 }

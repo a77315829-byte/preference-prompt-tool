@@ -42,7 +42,7 @@ API 키 없이도 무료 데모 모드로 전체 흐름을 돌려볼 수 있다.
   원문(키 일부 포함) 제거, 모델 호출 시간 제한·출력 상한, 도메인 YAML 검증.
   무엇을 왜 바꿨는지는 [`CLAUDE.md`](CLAUDE.md) 끝의 「2026-09-27 점검과 개편」.
 
-![React 카테고리 선택 화면](docs/screenshots/react-category-picker.svg)
+![카테고리 선택 화면 (React)](docs/screenshots/react-categories.png)
 
 카테고리를 고르고 원문을 넣으면, 축 조합이 다른 결과물 두 개가 나온다. React 화면의
 카테고리 카드는 삼성페이처럼 가로로 넘길 수 있고, 화면 전체는 한 장면씩 전환된다.
@@ -50,14 +50,14 @@ API 키 없이도 무료 데모 모드로 전체 흐름을 돌려볼 수 있다.
 않고, React 화면은 카드 제목에 그 값("내 표현으로 바꿔 쓰기" 등)을 보여 준다.
 처음 묻는 축은 양 끝 값(예: 짧게 대 상세하게)부터 비교해 차이가 눈에 보이게 한다.
 
-![두 결과물 비교](docs/screenshots/03-compare.png)
+![두 결과물 비교 (React, 실제 생성 모드)](docs/screenshots/react-compare.png)
 
 비교를 마치면(최대 8회) 추정된 선호와 재사용 가능한 시스템 프롬프트가 나온다.
 실제 생성 모드에서는 "AI로 다듬기"로 GEPA 최적화를 한 번 더 돌릴 수 있다. 이
 도메인의 예시 글 3개에서 선호를 지키는 정도를 코드로 채점해 점수가 오를 때만
 바꾸고, 전후 점수를 화면에 보여 준다.
 
-![결과 화면](docs/screenshots/04-result.png)
+![결과 화면 (React): 완결된 프롬프트와 AI로 다듬기의 기준](docs/screenshots/react-result.png)
 
 AWS 비용 점검을 선택하면 API 키 없이도 결정적인 데모 결과를 확인할 수 있다. AWS
 자격 증명이 있는 환경에서는 Cost Explorer를 선택적으로 조회하고, 발견된 리소스 ID와
@@ -72,12 +72,12 @@ AWS 비용 점검을 선택하면 API 키 없이도 결정적인 데모 결과�
 `python -m scripts.summarize_feedback <로그파일>` 로 뽑고, 규칙 기반
 데모 모드 응답은 개인화 검증 근거가 약하므로 합치지 않고 나눠 보고한다.
 
-그 프롬프트를 새 원문에 바로 적용해, 개인화하지 않은 기본 프롬프트와
-나란히 확인할 수 있다. 아래는 "2문장 이내 + 원문 그대로 발췌"를 학습한
+Streamlit 화면에서는 그 프롬프트를 새 원문에 바로 적용해, 개인화하지 않은 기본 프롬프트와
+나란히 확인할 수 있다 (React 화면에는 아직 없다). 아래는 "2문장 이내 + 원문 그대로 발췌"를 학습한
 사용자의 실제 결과다 - 기본 프롬프트는 문장을 재서술하고, 개인화된
 프롬프트는 원문 문장을 그대로 가져온다.
 
-![기본 프롬프트와 개인화된 프롬프트 비교](docs/screenshots/05-trial.png)
+![기본 프롬프트와 개인화된 프롬프트 비교 (Streamlit)](docs/screenshots/05-trial.png)
 
 프로젝트의 상세한 설계 결정과 그 이유(무엇을 왜 바꿨는지 포함)는
 [`CLAUDE.md`](CLAUDE.md)에 기록되어 있다.
@@ -581,11 +581,12 @@ gpt-5-nano 는 표시 가격이 가장 싸지만 추론 토큰(1회 약 1,400개
 문서·코딩 카테고리다. React 화면에는 여기에 AWS 비용 점검(`idle_tracker`)을
 더해 총 8개 카드를 제공하며, 심화 요약과 문서 품질 평가도 직접 선택할 수 있다.
 
-화면 캡처는 [`docs/screenshots/`](docs/screenshots)에 있다
+화면 캡처는 [`docs/screenshots/`](docs/screenshots)에 있다. `react-*.png` 는 2026-09-27
+실제 생성 모드(gpt-4o-mini)로 찍은 React 화면이고, 번호가 붙은 것은 Streamlit 화면이다
 (카테고리 선택 · 원문 입력 · A/B 비교 · 결과 · 프롬프트 적용 비교 ·
 전문가 경로 입력 · 전문가 경로 결과).
 
-![A/B 비교 화면](docs/screenshots/03-compare.png)
+![A/B 비교 화면 (Streamlit)](docs/screenshots/03-compare.png)
 
 카테고리를 고르고 비교를 마치면(최대 8회) 추정된 선호와 재사용 가능한 시스템
 프롬프트를 보여준다. 화면의 주인공은 A/B 카드 두 장이고, 좌측 계기판에
@@ -618,7 +619,7 @@ React 화면은 고정 높이에 가로 스크롤이 생겨 글을 끝까지 볼
 경로와 달리, 이미 써둔 답변이 있으면 그걸 붙여넣어 바로 프롬프트를 만들 수
 있다 (`expert_profile.py`).
 
-![내가 쓴 글 붙여넣기](docs/screenshots/06-expert-input.png)
+![내가 쓴 글 붙여넣기 (Streamlit)](docs/screenshots/06-expert-input.png)
 
 형식 측정은 Streamlit 서버의 Python에서 수행하며 **모델 API는 호출하지 않는다**.
 브라우저 내부 계산은 아니므로 입력은 서버로 전송된다. 프롬프트에는 측정한 수치가 들어간다
@@ -626,7 +627,7 @@ React 화면은 고정 높이에 가로 스크롤이 생겨 글을 끝까지 볼
 답변 5개 미만이면 계산을 거부하고, 30개 미만이면 계산하되 경고한다 - 실측에서
 12개만 넣었을 때 평균 길이를 40% 넘게 잘못 잡은 저자가 있었다.
 
-![측정 결과와 만들어진 프롬프트](docs/screenshots/07-expert-result.png)
+![측정 결과와 만들어진 프롬프트 (Streamlit)](docs/screenshots/07-expert-result.png)
 
 **재는 것과 지시하는 것을 구분해 보여준다.** 문단 수와 글머리 기호 비율은
 프로필로 보여주지만 프롬프트에는 넣지 않는다 - 넣으면 문단은 맞지만(오차
