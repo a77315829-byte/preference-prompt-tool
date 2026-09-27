@@ -27,7 +27,8 @@ load_dotenv()
 ROOT = Path(__file__).resolve().parent
 HOST = os.environ.get("PPT_API_HOST", "127.0.0.1")
 PORT = int(os.environ.get("PPT_API_PORT", "8000"))
-DEFAULT_MODEL = os.environ.get("PPT_MODEL", "openai/gpt-5.6-luna")
+# 후보 생성 모델. 근거는 app.py 의 MODEL 주석(같은 실측).
+DEFAULT_MODEL = os.environ.get("PPT_MODEL", "openai/gpt-4o-mini")
 
 # PPT_LIVE=1 이면 프론트가 보내는 demoMode 와 상관없이 실제 모델로 후보를
 # 만든다. 프론트는 아직 demoMode: true 를 고정으로 보내므로, 백엔드만으로

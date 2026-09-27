@@ -48,10 +48,15 @@ if not os.environ.get("OPENAI_API_KEY"):
     if secret_key:
         os.environ["OPENAI_API_KEY"] = secret_key
 
-# gpt-4.1-mini 대비 입력 50%·출력 25% 저렴하고(0.20/1.20 vs 0.40/1.60 per M),
-# 실제 코딩 프롬프트 생성에서 더 빨랐다(6.3s vs 11.4s, 각 1회 측정).
+# 후보 생성 모델. 호출 대부분이 여기라 싼 모델을 쓴다.
+# 2026-09-27 실측 (요약 조합 3개 + 이메일 조합 2개 x 예시 입력 3개, 모델당 15회,
+# 코드 채점 함수로 축 준수를 잼): gpt-4o-mini 0.944 / 1회 $0.00008 / 1.1초,
+# gpt-5.6-luna 0.895 / $0.00020 / 3.0초. gpt-4.1-nano 는 0.927 / $0.00006.
+# 추론형 gpt-5-nano 는 표시 가격이 가장 싸지만 추론 토큰 때문에 1회 $0.00056
+# 으로 가장 비쌌다. 추론형이 아니라 temperature 도 받는다.
+# GEPA 성찰 모델은 service.REFLECTION_MODEL 에서 따로 정한다.
 # experiments/ 쪽은 README에 보고된 수치가 4.1-mini로 측정된 것이라 안 바꾼다.
-MODEL = "openai/gpt-5.6-luna"
+MODEL = "openai/gpt-4o-mini"
 N_ROUNDS = 8
 
 API_MODE_LABEL = "AI 실시간 생성 (GPT-5.6 Luna)"

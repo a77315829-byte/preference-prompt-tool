@@ -28,6 +28,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import uuid
 from dataclasses import dataclass, field, replace
@@ -50,6 +51,10 @@ SELECTOR_SEED = 0
 
 # GEPA 호출 예산. 진행률의 분모이기도 하다.
 GEPA_METRIC_CALLS = 20
+
+# GEPA 가 후보 프롬프트를 고쳐 쓰는 성찰 모델. 후보 생성은 싼 모델로 하고
+# 성찰만 강한 모델에 맡긴다 (CLAUDE.md 스택 절). 호출 수가 적어 비용 영향이 작다.
+REFLECTION_MODEL = os.environ.get("PPT_REFLECTION_MODEL", "openai/gpt-5.6-luna")
 
 
 class StaleChoiceError(RuntimeError):
@@ -362,7 +367,7 @@ def optimize(
         trainset=trainset,
         valset=valset,
         adapter=adapter,
-        reflection_lm=reflection_model or state.model,
+        reflection_lm=reflection_model or REFLECTION_MODEL,
         max_metric_calls=metric_calls,
         display_progress_bar=False,
     )
