@@ -35,6 +35,15 @@ MODULE_MEMBERS = {
     "collections": ("Counter", "defaultdict", "deque"),
 }
 
+# 밑줄로 시작하지 않아서 위 규칙에 안 걸리는, 프레임으로 올라가는 속성들.
+# 제너레이터의 gi_frame.f_back.f_globals 로 러너 모듈의 전역(sys 포함)에
+# 닿는다. (format/format_map 은 아래 속성 검사에서 따로 막는다.)
+FORBIDDEN_ATTRS = {
+    "gi_frame", "gi_code", "cr_frame", "cr_code", "ag_frame", "ag_code",
+    "f_back", "f_globals", "f_locals", "f_builtins", "f_code",
+    "tb_frame", "tb_next",
+}
+
 
 class ValidationError(Exception):
     pass
@@ -85,5 +94,7 @@ def validate_measure_code(code: str, function_name: str = "measure") -> None:
             if isinstance(node.value, ast.Name) and node.value.id in MODULE_MEMBERS:
                 if node.attr not in MODULE_MEMBERS[node.value.id]:
                     raise ValidationError(f"허용하지 않는 모듈 속성: {node.value.id}.{node.attr}")
+        if isinstance(node, ast.Attribute) and node.attr in FORBIDDEN_ATTRS:
+            raise ValidationError(f"금지된 속성 사용: {node.attr}")
         if isinstance(node, (ast.Global, ast.Nonlocal)):
             raise ValidationError("global/nonlocal 사용 금지")

@@ -17,6 +17,23 @@ from agents.code_validator import ValidationError, validate_measure_code
 
 _RUNNER = Path(__file__).with_name("_measure_runner.py")
 
+# 자식 프로세스에 물려줄 환경변수. 부모 환경을 그대로 넘기면 .env 에서
+# 읽은 API 키도 같이 넘어간다 - 실제로 `collections._sys` 경유로 os.environ
+# 을 읽어 int() 에러 메시지에 키를 실어 내보내는 코드가 검증을 통과했고,
+# 그 에러 문자열은 재시도 프롬프트로 외부 LLM 에 그대로 전송된다.
+# 정적 검증이 뚫려도 훔칠 것이 없게 하는 것이 이 목록의 목적이다.
+# SYSTEMROOT 가 없으면 윈도우에서 파이썬이 시작되지 않는다. SYSTEMDRIVE·
+# PROGRAMDATA 가 없으면 윈도우 셸 캐시가 현재 폴더에 "%SystemDrive%" 라는
+# 이름 그대로 디렉토리를 만든다. 전부 비밀이 아닌 OS 경로다.
+_ENV_ALLOWLIST = (
+    "SYSTEMROOT", "SYSTEMDRIVE", "WINDIR", "PROGRAMDATA", "TEMP", "TMP",
+    "LANG", "LC_ALL", "PYTHONUTF8", "PYTHONIOENCODING",
+)
+
+
+def _child_env() -> dict[str, str]:
+    return {name: os.environ[name] for name in _ENV_ALLOWLIST if name in os.environ}
+
 
 class MeasureExecutionError(Exception):
     pass
@@ -38,12 +55,11 @@ def run_measure(code: str, text: str, source: str, timeout: float = 5.0) -> floa
             input=payload,
             # 호출한 앱의 API 키·토큰을 자식 프로세스 환경으로 넘기지 않는다.
             # -I 는 PYTHONPATH와 사용자 site-package 주입도 무시한다.
-            env={key: value for key, value in os.environ.items()
-                 if key.upper() in {"SYSTEMROOT", "WINDIR", "TEMP", "TMP", "LANG", "LC_ALL"}},
             capture_output=True,
             text=True,
             timeout=timeout,
             encoding="utf-8",
+            env=_child_env(),
         )
     except subprocess.TimeoutExpired as e:
         raise MeasureExecutionError(f"타임아웃 ({timeout}s 초과)") from e

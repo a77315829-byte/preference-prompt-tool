@@ -153,3 +153,22 @@ def test_temperature_is_part_of_the_cache_key(domain, tmp_path) -> None:
     assert plain == none_explicit
     assert zero != plain
     assert zero != one
+
+
+@pytest.mark.parametrize("content", [None, "", "  \n"])
+def test_empty_response_is_not_cached(content, tmp_path, monkeypatch) -> None:
+    """거절·필터 응답(content=None)을 캐시에 쓰면 같은 입력은 다시 호출되지
+    않아 실패가 영구히 굳는다. 예외로 올리고 캐시는 비워 둬야 한다."""
+    import sys
+    import types
+
+    message = types.SimpleNamespace(content=content)
+    choice = types.SimpleNamespace(message=message, finish_reason="content_filter")
+    fake_litellm = types.SimpleNamespace(
+        completion=lambda **_: types.SimpleNamespace(choices=[choice])
+    )
+    monkeypatch.setitem(sys.modules, "litellm", fake_litellm)
+
+    with pytest.raises(RuntimeError, match="content_filter"):
+        generator_module.generate_with_prompt("p", "s", "m", cache_dir=tmp_path)
+    assert not list(tmp_path.iterdir())

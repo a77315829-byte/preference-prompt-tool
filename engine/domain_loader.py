@@ -87,8 +87,61 @@ def _read_raw(path: Path) -> dict:
     return merged
 
 
+class DomainError(ValueError):
+    """도메인 정의가 엔진이 돌 수 없는 모양일 때."""
+
+
+def _require(mapping: dict, key: str, where: str) -> object:
+    if key not in mapping or mapping[key] in (None, ""):
+        raise DomainError(f"{where}: '{key}' 가 없다")
+    return mapping[key]
+
+
+def _validate(raw: dict, path: Path) -> None:
+    """엔진이 전제하는 모양인지 로드 시점에 확인한다.
+
+    어기면 한참 뒤에 엉뚱한 곳에서 터진다 - 값이 하나뿐인 enum 축은 순차
+    선택기를 무한 루프에 빠뜨리고, enum 축이 없으면 0으로 나누고, 중복된
+    값 이름은 추정 결과를 조용히 덮어쓴다. 새 도메인은 YAML 만 써서
+    붙이는 것이 목표이므로 틀린 YAML 은 여기서 이유와 함께 거부한다.
+    """
+    where = str(path)
+    for key in ("domain", "task_description", "checks_module", "axes"):
+        _require(raw, key, where)
+
+    axis_names: set[str] = set()
+    enum_count = 0
+    for i, axis in enumerate(raw["axes"]):
+        name = _require(axis, "name", f"{where} axes[{i}]")
+        at = f"{where} 축 '{name}'"
+        if name in axis_names:
+            raise DomainError(f"{at}: 축 이름이 중복된다")
+        axis_names.add(name)
+
+        if _require(axis, "type", at) == "enum":
+            enum_count += 1
+            values = _require(axis, "values", at)
+            seen: set[str] = set()
+            for v in values:
+                value = _require(v, "value", at)
+                _require(v, "prompt", f"{at} 값 '{value}'")
+                _require(_require(v, "check", f"{at} 값 '{value}'"), "fn", f"{at} 값 '{value}'")
+                if value in seen:
+                    raise DomainError(f"{at}: 값 '{value}' 가 중복된다")
+                seen.add(value)
+            if len(seen) < 2:
+                raise DomainError(f"{at}: enum 축은 비교할 값이 2개 이상 있어야 한다")
+        else:
+            _require(axis, "prompt_template", at)
+            _require(_require(axis, "check", at), "fn", at)
+
+    if enum_count == 0:
+        raise DomainError(f"{where}: 선택으로 학습할 enum 축이 하나도 없다")
+
+
 def load_domain(path: str | Path) -> Domain:
     raw = _read_raw(Path(path))
+    _validate(raw, Path(path))
 
     axes = []
     for raw_axis in raw["axes"]:
