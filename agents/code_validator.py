@@ -26,7 +26,23 @@ FORBIDDEN_NAMES = {
     "exit", "quit", "breakpoint", "help", "dir", "id", "memoryview",
 }
 
-_DUNDER_RE = re.compile(r"^__.+__$")
+# 모듈 전체를 넘기면 statistics.sys / collections._sys 등으로 우회할 수 있다.
+# 실행기도 동일한 허용 목록으로 만든 객체만 노출한다.
+MODULE_MEMBERS = {
+    "re": ("findall", "finditer", "search", "match", "fullmatch", "split", "sub", "subn", "escape", "compile", "IGNORECASE", "MULTILINE", "DOTALL", "UNICODE", "VERBOSE", "ASCII"),
+    "math": ("ceil", "floor", "sqrt", "log", "log2", "log10", "exp", "fabs", "fsum", "isfinite", "isnan", "isinf", "pow", "pi", "e", "inf", "nan"),
+    "statistics": ("mean", "fmean", "median", "median_low", "median_high", "mode", "multimode", "stdev", "pstdev", "variance", "pvariance", "quantiles"),
+    "collections": ("Counter", "defaultdict", "deque"),
+}
+
+# 밑줄로 시작하지 않아서 위 규칙에 안 걸리는, 프레임으로 올라가는 속성들.
+# 제너레이터의 gi_frame.f_back.f_globals 로 러너 모듈의 전역(sys 포함)에
+# 닿는다. (format/format_map 은 아래 속성 검사에서 따로 막는다.)
+FORBIDDEN_ATTRS = {
+    "gi_frame", "gi_code", "cr_frame", "cr_code", "ag_frame", "ag_code",
+    "f_back", "f_globals", "f_locals", "f_builtins", "f_code",
+    "tb_frame", "tb_next",
+}
 
 
 class ValidationError(Exception):
@@ -36,8 +52,8 @@ class ValidationError(Exception):
 def validate_measure_code(code: str, function_name: str = "measure") -> None:
     """measure(text, source) -> float 형태인지, 위험한 코드가 없는지 검증한다.
     문제가 있으면 ValidationError를 던진다. 통과해도 "안전이 보장"되는 건
-    아니고 "알려진 위험 패턴이 없다"는 뜻이다 - 그래서 sandbox.py의 프로세스
-    격리가 실제 방어선이다."""
+    아니고 "알려진 위험 패턴이 없다"는 뜻이다 - 프로세스 분리와 타임아웃만으로 OS 수준의
+    파일·네트워크·메모리 격리를 보장하지 않는다. 공개 비신뢰 코드용이 아니다."""
     try:
         tree = ast.parse(code)
     except SyntaxError as e:
@@ -69,9 +85,16 @@ def validate_measure_code(code: str, function_name: str = "measure") -> None:
         # ().__class__.__base__.__subclasses__() 류의 샌드박스 탈출 경로가
         # 전부 던더 체인이라, 개별 이름을 나열하는 것보다 구조적으로 막는
         # 쪽이 안전하다.
-        if isinstance(node, ast.Name) and _DUNDER_RE.match(node.id):
-            raise ValidationError(f"던더 이름 접근 금지: {node.id}")
-        if isinstance(node, ast.Attribute) and _DUNDER_RE.match(node.attr):
-            raise ValidationError(f"던더 속성 접근 금지: {node.attr}")
+        if isinstance(node, ast.Name) and node.id.startswith("_"):
+            raise ValidationError(f"비공개 이름 접근 금지: {node.id}")
+        if isinstance(node, ast.Attribute):
+            if node.attr.startswith("_") or node.attr in {"format", "format_map"}:
+                # str.format 필드도 속성 탐색을 하므로 AST 바깥의 우회 경로가 된다.
+                raise ValidationError(f"허용하지 않는 속성: {node.attr}")
+            if isinstance(node.value, ast.Name) and node.value.id in MODULE_MEMBERS:
+                if node.attr not in MODULE_MEMBERS[node.value.id]:
+                    raise ValidationError(f"허용하지 않는 모듈 속성: {node.value.id}.{node.attr}")
+        if isinstance(node, ast.Attribute) and node.attr in FORBIDDEN_ATTRS:
+            raise ValidationError(f"금지된 속성 사용: {node.attr}")
         if isinstance(node, (ast.Global, ast.Nonlocal)):
             raise ValidationError("global/nonlocal 사용 금지")

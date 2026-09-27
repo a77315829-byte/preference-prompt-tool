@@ -34,11 +34,17 @@ class MetricEvaluator:
         return EvaluationResult(score=score, feedback=feedback)
 
 
+def _freeform_values(domain: Domain, topic: str) -> dict[str, str]:
+    return {
+        axis.name: (topic if axis.name == "topic" else "")
+        for axis in domain.axes
+        if axis.type != "enum"
+    }
+
+
 def build_seed_prompt(domain: Domain, estimator: Estimator, topic: str = "") -> str:
     combo = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
-    for axis in domain.axes:
-        if axis.type != "enum":
-            combo[axis.name] = topic if axis.name == "topic" else ""
+    combo.update(_freeform_values(domain, topic))
     return build_prompt(domain, combo)
 
 
@@ -53,7 +59,9 @@ def run(
     max_metric_calls: int = 150,
 ) -> tuple[str, GEPAResult]:
     seed_prompt = build_seed_prompt(domain, estimator, topic=topic)
-    metric = build_metric(domain, estimator)
+    # 시드에 넣은 자유 키워드 값을 채점에도 넣는다. 안 넣으면 GEPA 가
+    # 주제 지시를 지운 프롬프트를 골라도 점수가 그대로다.
+    metric = build_metric(domain, estimator, freeform_values=_freeform_values(domain, topic))
 
     trainset = [{"input": s} for s in train_sources]
     valset = [{"input": s} for s in val_sources] if val_sources is not None else None

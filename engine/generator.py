@@ -159,6 +159,11 @@ def generate_with_prompt(
         **extra,
     )
     output = response.choices[0].message.content
+    # 거절·콘텐츠 필터면 content 가 None 이나 빈 문자열로 온다. 그대로
+    # 캐시하면 같은 입력은 다시 호출되지 않으므로 실패가 영구히 굳는다.
+    if not output or not output.strip():
+        finish = getattr(response.choices[0], "finish_reason", None)
+        raise RuntimeError(f"모델이 빈 응답을 돌려줬다 (finish_reason={finish})")
 
     # 임시 파일에 쓰고 rename 한다. 같은 키를 두 스레드가 동시에 쓰면
     # 반쯤 쓰인 JSON이 남아 다음 실행에서 깨질 수 있다. rename 은 같은

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # 실험·검증 스크립트용 전체 의존성 (experiments/, tests/, agents/).
 # 배포에는 필요 없다 - 배포용은 requirements.txt.
 -r requirements.txt
