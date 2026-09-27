@@ -28,6 +28,7 @@
 
 from __future__ import annotations
 
+import re
 import uuid
 from dataclasses import dataclass, field, replace
 from typing import Callable
@@ -334,6 +335,7 @@ def optimize(
     domain, estimator, _ = _rebuild(state)
     metric = build_metric(domain, estimator)
     seed_prompt = build_seed_prompt(domain, estimator)
+    examples = [e for e in domain.example_sources if e != state.source_text.strip()]
 
     calls = {"n": 0}
 
@@ -348,12 +350,16 @@ def optimize(
         model=task_model or state.model,
         evaluator=MetricEvaluator(counting_metric),
     )
-    trainset = [{"input": state.source_text}]
+    # 원문 하나로 학습하고 같은 원문으로 평가하면, 성찰 모델이 그 원문의
+    # 내용을 프롬프트에 박아 넣는다 ("SK hynix 관련 내용이라면 ..." 이 실제로
+    # 제안됐다). 후보를 고르는 평가 세트는 도메인의 예시 입력으로 채운다.
+    trainset = [{"input": state.source_text}] + [{"input": e} for e in examples]
+    valset = [{"input": e} for e in examples] or trainset
 
     result = gepa_optimize(
         seed_candidate={"system_prompt": seed_prompt},
         trainset=trainset,
-        valset=trainset,
+        valset=valset,
         adapter=adapter,
         reflection_lm=reflection_model or state.model,
         max_metric_calls=metric_calls,
@@ -361,7 +367,73 @@ def optimize(
     )
     if on_progress is not None:
         on_progress(1.0)
-    return result.best_candidate["system_prompt"]
+    return _best_without_leak(result, seed_prompt, state.source_text, domain)
+
+
+def _best_without_leak(result, seed_prompt: str, source: str, domain: Domain) -> str:
+    """점수 순으로 보면서 사용자 원문의 내용이 새어 들어가지 않은 첫 후보.
+
+    예시 입력으로 평가해도 원문 내용이 든 후보가 점수로 걸러진다는 보장은
+    없다 - 평가 함수는 길이·겹침 같은 형식만 잰다. 그래서 따로 잰다.
+    시드는 YAML 문구로만 조립되므로 항상 통과한다.
+    """
+    order = sorted(
+        range(len(result.candidates)),
+        key=lambda i: result.val_aggregate_scores[i],
+        reverse=True,
+    )
+    reference = " ".join([seed_prompt, domain.task_description, *domain.example_sources])
+    for i in order:
+        prompt = result.candidates[i]["system_prompt"]
+        if not source_leak(prompt, source, reference):
+            return prompt
+    return seed_prompt
+
+
+_WORD = re.compile(r"\w+")
+_SENTENCE_START = re.compile(r"(?:^|[.!?]\s+)(\w+)")
+
+
+def source_leak(prompt: str, source: str, reference: str = "", ngram: int = 5) -> list[str]:
+    """프롬프트에 들어간 원문 고유 내용. 비어 있으면 새지 않은 것이다.
+
+    두 가지를 코드로 잰다 (절대 규칙 6).
+    - 원문과 연속 `ngram` 단어가 같은 구절 - 문장을 옮겨 적은 경우.
+    - 원문의 고유 표지 - 숫자가 든 두 자 이상 단어, 문장 첫머리가 아닌데
+      대문자로 시작하는 단어와 대문자 약어(고유명사), 비ASCII 원문의 3자
+      이상 단어. 성찰 모델은
+      원문을 번역·요약해 넣기도 해서 구절 비교만으로는 못 잡는다.
+      reference(시드 프롬프트·과제 설명·예시 입력)에 이미 있는 단어는
+      이 도메인의 흔한 말이라 뺀다.
+    """
+    source_words = _WORD.findall(source)
+    prompt_words = [w.lower() for w in _WORD.findall(prompt)]
+    prompt_set = set(prompt_words)
+    common = {w.lower() for w in _WORD.findall(reference)}
+    starts = {m.group(1) for m in _SENTENCE_START.finditer(source)}
+
+    marks = set()
+    for word in source_words:
+        lower = word.lower()
+        if lower in common or lower not in prompt_set:
+            continue
+        # 한 자리 숫자는 "3~4문장" 같은 지침과 우연히 겹친다.
+        has_digit = any(ch.isdigit() for ch in word) and len(word) >= 2
+        # 문장 첫 단어는 대문자라도 고유명사로 보지 않되, 전부 대문자인
+        # 약어(SK, EU)는 문장 첫머리여도 고유명사다.
+        proper = (word[:1].isupper() and word not in starts) or (word.isupper() and len(word) >= 2)
+        non_ascii = not word.isascii() and len(word) >= 3
+        if has_digit or proper or non_ascii:
+            marks.add(word)
+
+    lowered = [w.lower() for w in source_words]
+    grams = {tuple(lowered[i:i + ngram]) for i in range(len(lowered) - ngram + 1)}
+    copied = {
+        " ".join(prompt_words[i:i + ngram])
+        for i in range(len(prompt_words) - ngram + 1)
+        if tuple(prompt_words[i:i + ngram]) in grams
+    }
+    return sorted(marks | copied)
 
 
 def load_domain_for(domain_path: str) -> Domain:

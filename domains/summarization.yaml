@@ -78,3 +78,11 @@ axes:
     check:
       fn: keyword_presence
       target: {}
+
+# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
+# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
+# 이 입력들로 채점한다.
+example_sources:
+- The regional transit authority voted on Tuesday to extend late-night bus service on four routes starting in March. Officials said ridership after 10 p.m. has grown 18 percent since last year, driven largely by hospital and warehouse shift workers. The expansion will cost about 2.3 million dollars annually, funded by a state grant that expires in two years. Some board members questioned whether the service can continue once the grant runs out, and staff were asked to present a long-term funding plan by the summer.
+- A small biotech firm said its experimental treatment for a rare liver disease met its main goal in a mid-stage trial of 120 patients. Patients receiving the drug showed a 40 percent reduction in a key marker of liver damage after six months, compared with 8 percent in the placebo group. The company plans to meet regulators later this year to discuss a larger trial. Its shares rose sharply in early trading, although analysts cautioned that mid-stage results often fail to hold up in bigger studies.
+- City officials closed a popular riverside park for at least three weeks after inspectors found cracks in a pedestrian bridge. The bridge, built in 1978, had passed its last inspection two years ago. Engineers will decide whether it can be repaired or must be replaced, a choice that could delay reopening until next spring. Local businesses near the park said weekend foot traffic had already fallen, and the council agreed to add temporary signage directing visitors to other entrances.

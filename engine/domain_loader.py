@@ -59,6 +59,9 @@ class Domain:
     task_description: str
     checks_module: str
     axes: list[Axis]
+    # 이 도메인의 전형적인 입력 몇 개. 최적화가 사용자 원문 하나에만 맞춰
+    # 그 내용을 프롬프트에 박아 넣지 않도록 평가용으로 쓴다. 선택 항목.
+    example_sources: list[str] = field(default_factory=list)
 
     def axis(self, name: str) -> Axis:
         for a in self.axes:
@@ -138,6 +141,10 @@ def _validate(raw: dict, path: Path) -> None:
     if enum_count == 0:
         raise DomainError(f"{where}: 선택으로 학습할 enum 축이 하나도 없다")
 
+    examples = raw.get("example_sources", [])
+    if not isinstance(examples, list) or not all(isinstance(e, str) and e.strip() for e in examples):
+        raise DomainError(f"{where}: example_sources 는 비어 있지 않은 문자열 목록이어야 한다")
+
 
 def load_domain(path: str | Path) -> Domain:
     raw = _read_raw(Path(path))
@@ -181,4 +188,5 @@ def load_domain(path: str | Path) -> Domain:
         task_description=raw["task_description"],
         checks_module=raw["checks_module"],
         axes=axes,
+        example_sources=[e.strip() for e in raw.get("example_sources", [])],
     )

@@ -79,3 +79,11 @@ axes:
           fn: type_explicitness
           target:
             min_signals: 5
+
+# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
+# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
+# 이 입력들로 채점한다.
+example_sources:
+- A search input that filters a list of product names as the user types.
+- A modal dialog component with a title, body text, and confirm and cancel buttons.
+- A hook that fetches a user's profile from an API and exposes loading and error states.

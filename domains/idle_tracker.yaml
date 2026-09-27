@@ -53,3 +53,11 @@ axes:
           target:
             min_cost_signals: 1
             min_resource_signals: 2
+
+# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
+# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
+# 이 입력들로 채점한다.
+example_sources:
+- Monthly AWS bill rose 22 percent. EC2 is the largest line item, followed by EBS volumes and an RDS instance used for a staging database. Two load balancers show almost no traffic.
+- Cost Explorer shows steady S3 growth over six months, several unattached EBS volumes in us-east-1, and a NAT gateway charging for data processing in a VPC with no running instances.
+- A development account spends about 900 dollars a month. Most of it is three t3.large instances that run around the clock, plus snapshots older than a year and an idle Elastic IP.

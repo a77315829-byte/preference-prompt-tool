@@ -85,3 +85,11 @@ axes:
         check:
           fn: check_focus_on_entities
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
+
+# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
+# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
+# 이 입력들로 채점한다.
+example_sources:
+- Our quarterly review meeting covered the new onboarding process, which has reduced setup time for new hires from five days to two. However, several managers noted that documentation is still scattered across three different tools, making it hard to find the latest version. The team agreed to consolidate everything into one wiki by the end of next month, with Dana owning the migration.
+- The pilot program for remote equipment monitoring ran for eight weeks at two sites. Downtime dropped by roughly a quarter at the first site, but the second site saw little change because sensors were installed late. Before expanding, the operations group wants a full twelve-week run at both sites and a cost estimate for the network upgrades that the sensors require.
+- Customer support response times improved this quarter, with the median first reply falling from nine hours to four. The improvement came mostly from a new triage rule that routes billing questions directly to the finance desk. Satisfaction scores rose slightly, but complaints about repeated transfers between teams remain the most common issue in survey comments.
