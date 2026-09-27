@@ -180,12 +180,12 @@ function IdleTrackerSection({ onBack }) {
         {phase === 'compare' && (
           <>
             <p className="connection-note" role="status">
-              {connection === 'connected' && 'AWS 비용 점검 데모와 연결됨'}
+              {connection === 'connected' && (session?.demo_mode === false ? 'AWS 비용 점검 AI 실시간 생성과 연결됨' : 'AWS 비용 점검 데모와 연결됨 (규칙 기반 예시)')}
               {connection === 'connecting' && '점검 예시를 준비하는 중…'}
               {connection === 'submitting' && '선택을 기록하는 중…'}
               {connection === 'offline' && '로컬 예시로 계속 진행합니다 (API 없이도 사용 가능)'}
             </p>
-            <div className="comparison-progress"><span className="comparison-progress-bar"><span style={{ width: `${isComplete ? 100 : (session ? (session.answered / session.total_rounds) * 100 : (Object.keys(answers).length / FALLBACK_PAIRS.length) * 100)}%` }} /></span><span>{isComplete ? '선택 완료' : `${session ? session.answered : Object.keys(answers).length} / 2`}</span></div>
+            <div className="comparison-progress"><span className="comparison-progress-bar"><span style={{ width: `${isComplete ? 100 : (session ? (session.answered / session.total_rounds) * 100 : (Object.keys(answers).length / FALLBACK_PAIRS.length) * 100)}%` }} /></span><span>{isComplete ? '선택 완료' : `${session ? session.answered : Object.keys(answers).length} / ${session ? session.total_rounds : FALLBACK_PAIRS.length}`}</span></div>
             <AnimatePresence mode="wait">
               {!isComplete && question && (
                 <motion.div className="comparison-question" key={question.id || question.axis} initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -28 }}>
