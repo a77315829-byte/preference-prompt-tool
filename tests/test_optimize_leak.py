@@ -122,3 +122,24 @@ def test_all_leaky_falls_back_to_seed(monkeypatch) -> None:
     state = _finished_state("domains/summarization.yaml", SOURCE)
     domain, estimator, _ = service._rebuild(state)
     assert service.optimize(state) == service.final_prompt(domain, estimator)
+
+
+def test_report_explains_what_was_chosen(monkeypatch) -> None:
+    """화면에 "무슨 기준으로 다듬었는지"를 보여 줄 근거: 전후 점수, 평가 입력
+    수, 원문 내용 때문에 버린 후보 수."""
+    import gepa
+
+    clean = CLEAN["제안1 (일반 지침)"]
+
+    def fake_optimize(**kwargs):
+        seed = kwargs["seed_candidate"]
+        return SimpleNamespace(
+            candidates=[seed, {"system_prompt": LEAKY["제안3 (영어, 기사 예시)"]}, {"system_prompt": clean}],
+            val_aggregate_scores=[0.6, 0.9, 0.8],
+        )
+
+    monkeypatch.setattr(gepa, "optimize", fake_optimize)
+    state = _finished_state("domains/summarization.yaml", SOURCE)
+    report: dict = {}
+    assert service.optimize(state, report=report) == clean
+    assert report == {"seed_score": 0.6, "final_score": 0.8, "eval_inputs": 3, "leaky_skipped": 1}

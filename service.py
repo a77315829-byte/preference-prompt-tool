@@ -245,6 +245,9 @@ def start_session(
         total_rounds=total_rounds,
     )
     domain, estimator, selector = _rebuild(state)
+    # 물을 수 있는 질문이 그보다 적으면 그만큼만 묻는다. 코딩(값 2개짜리 축
+    # 3개)은 3번이면 선호가 다 정해지는데, 8번을 채우느라 같은 질문이 나왔다.
+    state.total_rounds = min(total_rounds, selector.max_questions())
     combo_a, combo_b = selector.next_pair(estimator)
     state.pair = _generate_pair(state, domain, combo_a, combo_b)
     state.axes = _axis_views(state, estimator)
@@ -282,7 +285,14 @@ def submit_choice(state: SessionState, pair_id: str, chosen: str) -> SessionStat
         updated.done = True
         return updated
 
-    combo_a, combo_b = selector.next_pair(estimator)
+    pair = selector.next_pair(estimator)
+    if pair is None:
+        # 더 물을 질문이 없다 - 모든 축에서 1위가 도전자를 다 이겼다.
+        # 진행 표시가 맞도록 총 라운드를 실제로 물은 수로 줄인다.
+        updated.total_rounds = len(updated.history)
+        updated.done = True
+        return updated
+    combo_a, combo_b = pair
     updated.pair = _generate_pair(updated, domain, combo_a, combo_b)
     return updated
 
@@ -310,7 +320,10 @@ def prefetch_branches(state: SessionState) -> None:
             pair=None,
         )
         domain, estimator, selector = _rebuild(branch)
-        combo_a, combo_b = selector.next_pair(estimator)
+        pair = selector.next_pair(estimator)
+        if pair is None:
+            continue
+        combo_a, combo_b = pair
         # 결과는 버린다. generator 의 파일 캐시에 들어가는 것이 목적이다.
         _generate_pair(branch, domain, combo_a, combo_b)
 
@@ -322,8 +335,13 @@ def optimize(
     task_model: str | None = None,
     reflection_model: str | None = None,
     metric_calls: int = GEPA_METRIC_CALLS,
+    report: dict | None = None,
 ) -> str:
     """추정된 선호로 GEPA 를 돌려 최종 프롬프트를 만든다.
+
+    report 에 dict 를 넘기면 화면에 보여 줄 근거를 채운다: 시드와 고른
+    프롬프트의 평가 점수(예시 입력 평균, 0~1), 평가에 쓴 입력 수, 원문
+    내용이 들어가 버린 후보 수.
 
     **진행률은 평가 함수 호출 수를 세서 낸다.** gepa 0.1.4 는 진행률
     콜백을 주지 않는다 - `display_progress_bar` 로 자기 진행 바를 그릴
@@ -373,10 +391,18 @@ def optimize(
     )
     if on_progress is not None:
         on_progress(1.0)
-    return _best_without_leak(result, seed_prompt, state.source_text, domain)
+    prompt, score, skipped = _best_without_leak(result, seed_prompt, state.source_text, domain)
+    if report is not None:
+        report.update(
+            seed_score=float(result.val_aggregate_scores[0]),
+            final_score=float(score),
+            eval_inputs=len(valset),
+            leaky_skipped=skipped,
+        )
+    return prompt
 
 
-def _best_without_leak(result, seed_prompt: str, source: str, domain: Domain) -> str:
+def _best_without_leak(result, seed_prompt: str, source: str, domain: Domain) -> tuple[str, float, int]:
     """점수 순으로 보면서 사용자 원문의 내용이 새어 들어가지 않은 첫 후보.
 
     예시 입력으로 평가해도 원문 내용이 든 후보가 점수로 걸러진다는 보장은
@@ -389,11 +415,13 @@ def _best_without_leak(result, seed_prompt: str, source: str, domain: Domain) ->
         reverse=True,
     )
     reference = " ".join([seed_prompt, domain.task_description, *domain.example_sources])
+    skipped = 0
     for i in order:
         prompt = result.candidates[i]["system_prompt"]
         if not source_leak(prompt, source, reference):
-            return prompt
-    return seed_prompt
+            return prompt, result.val_aggregate_scores[i], skipped
+        skipped += 1
+    return seed_prompt, result.val_aggregate_scores[0], skipped
 
 
 _WORD = re.compile(r"\w+")

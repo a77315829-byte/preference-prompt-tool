@@ -25,11 +25,13 @@ def _baseline_combo(domain: Domain, estimator: Estimator) -> Combo:
     return combo
 
 
-def _pair_key(combo_a: Combo, combo_b: Combo) -> frozenset:
-    """A/B 순서와 무관한 쌍의 식별자. 뒤집어 보여줘도 같은 질문이다."""
-    return frozenset(
-        (tuple(sorted(combo_a.items())), tuple(sorted(combo_b.items())))
-    )
+def _question_key(combo_a: Combo, combo_b: Combo) -> tuple[str, frozenset] | None:
+    """사람이 보는 질문의 식별자: 갈린 축과 그 축의 두 값 (A/B 순서 무관).
+    갈린 축이 하나가 아니면 None."""
+    diff = [k for k in combo_a if combo_a.get(k) != combo_b.get(k)]
+    if len(diff) != 1:
+        return None
+    return diff[0], frozenset((combo_a[diff[0]], combo_b[diff[0]]))
 
 
 class RandomSelector:
@@ -96,9 +98,12 @@ class UncertaintySelector:
       첫 값과 마지막 값)부터 묻는다. 처음에는 모든 효용이 0이라 "가장
       헷갈리는 쌍"이 곧 이웃한 두 값이 되고, 사람 눈에는 A/B 가 거의 같아
       보인다 (요약의 normal 대 high 추출성).
-    - avoid_repeats: 이미 물은 쌍(A/B 순서 무관)은 다시 묻지 않는다. 값이
-      2개뿐인 축은 가능한 쌍이 하나라서, 막지 않으면 같은 질문이 몇 번이고
-      나온다. 같은 축을 다시 물어야 하면 다른 축의 값을 바꿔 새 쌍을 만든다.
+    - avoid_repeats: 질문을 "축 하나와 그 축의 두 값"으로 보고 같은 질문은
+      다시 묻지 않는다. 화면에는 묻는 축의 두 값만 보이므로, 다른 축의 값만
+      바꾼 쌍도 사람에게는 같은 질문이다. 다른 축은 늘 현재 추정값으로 두고,
+      항상 현재 1위 값과 도전자를 붙인다 - 이미 진 두 값끼리 붙이면 1위를
+      가리는 데 아무 정보도 없다. 더 물을 질문이 없으면 None 을 돌려준다
+      (값 2개짜리 축은 한 번이면 끝난다). 호출하는 쪽은 그때 멈춘다.
     """
 
     def __init__(
@@ -130,7 +135,7 @@ class UncertaintySelector:
         _, value_a, value_b = min(gaps, key=lambda g: g[0])
         return value_a, value_b
 
-    def next_pair(self, estimator: Estimator) -> Pair:
+    def next_pair(self, estimator: Estimator) -> Pair | None:
         if self.contrast_first or self.avoid_repeats:
             return self._next_pair_for_people(estimator)
 
@@ -145,63 +150,46 @@ class UncertaintySelector:
 
     # --- 사람용 선택 (contrast_first / avoid_repeats) ---------------------
 
-    def _next_pair_for_people(self, estimator: Estimator) -> Pair:
-        asked = {_pair_key(c.combo_a, c.combo_b) for c in estimator.history}
-        varied = {
-            axis.name
-            for c in estimator.history
-            for axis in self._enum_axes
-            if c.combo_a.get(axis.name) != c.combo_b.get(axis.name)
-        }
+    def max_questions(self) -> int:
+        """avoid_repeats 일 때 물을 수 있는 질문 수의 상한 (축마다 값 쌍의 수)."""
+        return sum(len(axis.values) * (len(axis.values) - 1) // 2 for axis in self._enum_axes)
+
+    def _next_pair_for_people(self, estimator: Estimator) -> Pair | None:
+        asked = {_question_key(c.combo_a, c.combo_b) for c in estimator.history}
+        varied = {key[0] for key in asked if key is not None}
 
         # 확신도 낮은 축부터. 동률은 시드 고정 RNG 로 섞는다.
         axes = list(self._enum_axes)
         self._rng.shuffle(axes)
         axes.sort(key=lambda axis: estimator.confidence(axis.name))
+        flip = self._rng.random() < 0.5
 
-        first: Pair | None = None
+        baseline = _baseline_combo(self.domain, estimator)
         for axis in axes:
             for value_a, value_b in self._value_pairs(estimator, axis, varied):
-                for context in self._contexts(estimator, axis.name):
-                    combo_a = {**context, axis.name: value_a}
-                    combo_b = {**context, axis.name: value_b}
-                    if first is None:
-                        first = (combo_a, combo_b)
-                    if not self.avoid_repeats or _pair_key(combo_a, combo_b) not in asked:
-                        return combo_a, combo_b
-        # 가능한 쌍을 다 물었다. 반복은 피할 수 없으니 가장 필요한 것을 다시 묻는다.
-        return first
+                if self.avoid_repeats and (axis.name, frozenset((value_a, value_b))) in asked:
+                    continue
+                if flip:
+                    # 1위 값이 늘 같은 쪽에 서면 위치로 고르는 버릇이 생긴다.
+                    value_a, value_b = value_b, value_a
+                return {**baseline, axis.name: value_a}, {**baseline, axis.name: value_b}
+        return None
 
     def _value_pairs(self, estimator: Estimator, axis, varied: set[str]) -> list[tuple[str, str]]:
-        """이 축에서 물어볼 값 쌍을 우선순위대로. 효용이 낮은 값이 A 쪽."""
+        """이 축에서 물어볼 값 쌍을 우선순위대로."""
         utilities = estimator.utilities[axis.name]
         values = [v.value for v in axis.values]
-        pairs = sorted(
-            itertools.combinations(values, 2),
-            key=lambda p: abs(utilities[p[0]] - utilities[p[1]]),
-        )
-        pairs = [tuple(sorted(p, key=lambda v: utilities[v])) for p in pairs]
         if self.contrast_first and axis.name not in varied:
-            ends = (values[0], values[-1])
-            pairs = [ends] + [p for p in pairs if set(p) != set(ends)]
-        return pairs
-
-    def _contexts(self, estimator: Estimator, axis_name: str) -> list[Combo]:
-        """질의 축 말고 나머지 축의 값 조합. 현재 최선 추정(baseline)을
-        먼저, 그다음 추정에서 덜 벗어난 순서로."""
-        baseline = _baseline_combo(self.domain, estimator)
-        others = [axis for axis in self._enum_axes if axis.name != axis_name]
-        if not self.avoid_repeats or not others:
-            return [baseline]
-
-        choices = [
-            sorted((v.value for v in axis.values), key=lambda v: v != baseline[axis.name])
-            for axis in others
-        ]
-        contexts = []
-        for values in itertools.product(*choices):
-            context = dict(baseline)
-            context.update({axis.name: value for axis, value in zip(others, values)})
-            contexts.append(context)
-        contexts.sort(key=lambda c: sum(c[a.name] != baseline[a.name] for a in others))
-        return contexts
+            return [(values[0], values[-1])]
+        if not self.avoid_repeats:
+            ordered = sorted(
+                itertools.combinations(values, 2),
+                key=lambda p: abs(utilities[p[0]] - utilities[p[1]]),
+            )
+            return [tuple(sorted(p, key=lambda v: utilities[v])) for p in ordered]
+        # 현재 1위와 도전자. 1위에 가까운 값부터.
+        top = estimator.preferred_value(axis.name)
+        challengers = sorted(
+            (v for v in values if v != top), key=lambda v: utilities[top] - utilities[v]
+        )
+        return [(v, top) for v in challengers]

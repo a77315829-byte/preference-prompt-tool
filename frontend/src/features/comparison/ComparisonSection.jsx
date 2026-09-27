@@ -327,11 +327,28 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
                   <span>최적화 중 {Math.round(remoteSession.optimize_progress * 100)}%</span>
                 </div>
               )}
+              {canOptimize && optimizeStatus !== 'done' && (
+                <p className="connection-note">
+                  AI로 다듬기의 기준: 이 카테고리의 예시 글 3개에 프롬프트를 적용해, 방금 고른
+                  선호(분량, 표현 방식 등)를 결과물이 실제로 지키는지 코드로 채점합니다. AI가 고쳐 쓴
+                  프롬프트는 이 점수가 오를 때만 채택하고, 입력한 글의 내용이 들어간 프롬프트는
+                  버립니다.
+                </p>
+              )}
               {canOptimize && optimizeStatus === 'done' && (
                 <p className="connection-note">
                   {remoteSession.optimize_changed
                     ? 'AI가 다듬은 프롬프트입니다.'
                     : '다듬은 후보가 기본 프롬프트보다 낫지 않아 기본 프롬프트를 그대로 유지했습니다.'}
+                  {remoteSession.optimize_report && (
+                    <>
+                      {' '}선호 준수 점수(예시 글 {remoteSession.optimize_report.eval_inputs}개 평균, 1이 만점):{' '}
+                      기본 {remoteSession.optimize_report.seed_score.toFixed(2)} → 최종{' '}
+                      {remoteSession.optimize_report.final_score.toFixed(2)}.
+                      {remoteSession.optimize_report.leaky_skipped > 0
+                        && ` 입력한 글의 내용이 들어가 버린 후보 ${remoteSession.optimize_report.leaky_skipped}개는 제외했습니다.`}
+                    </>
+                  )}
                 </p>
               )}
               {canOptimize && optimizeStatus === 'error' && (

@@ -41,6 +41,8 @@ LIVE_SESSIONS = DailyBudget(int(os.environ.get("PPT_LIVE_SESSIONS_PER_DAY", "60"
 MAX_OPTIMIZATIONS_PER_SESSION = 2
 DAILY_OPTIMIZATIONS = DailyBudget(int(os.environ.get("PPT_OPTIMIZATIONS_PER_DAY", "30")))
 OPTIMIZE_RUNS: dict[str, int] = {}
+# 최적화 근거(전후 점수 등). 화면에서 "무슨 기준으로 다듬었는지" 보여 준다.
+OPTIMIZE_REPORTS: dict[str, dict] = {}
 SESSIONS: dict[str, service.SessionState] = {}
 SESSIONS_LOCK = threading.Lock()
 
@@ -62,6 +64,7 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
         # GEPA 는 후보가 시드보다 낫지 않으면 시드를 그대로 돌려준다. 그걸
         # "최적화가 적용됐다"고 표시하면 거짓이므로 바뀌었는지를 같이 준다.
         payload["optimize_changed"] = state.optimize_status == "done" and state.prompt != seed
+        payload["optimize_report"] = OPTIMIZE_REPORTS.get(state.session_id)
     return payload
 
 
@@ -326,7 +329,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         def work() -> None:
             print(f"[optimize] {state.domain_key} 시작", flush=True)
             try:
-                optimized = service.optimize(state, on_progress=progress)
+                report: dict = {}
+                optimized = service.optimize(state, on_progress=progress, report=report)
+                OPTIMIZE_REPORTS[state.session_id] = report
                 state.prompt = optimized
                 state.optimize_status = "done"
                 print(f"[optimize] {state.domain_key} 완료 ({len(optimized)}자)", flush=True)

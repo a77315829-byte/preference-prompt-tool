@@ -101,7 +101,7 @@ DOMAIN_OPTIONS = {
         "path": "domains/coding.yaml",
         "intro": (
             "만들고 싶은 기능을 적고, 작성 방식이 다른 TypeScript/React 코드 중 "
-            f"마음에 드는 쪽을 {N_ROUNDS}회 골라주세요."
+            f"마음에 드는 쪽을 최대 {N_ROUNDS}회 골라주세요."
         ),
         "input_label": "어떤 기능을 만들고 싶나요?",
         "placeholder": "예: 클릭 횟수를 보여주는 버튼 컴포넌트를 만들어 주세요.",
@@ -112,7 +112,7 @@ DOMAIN_OPTIONS = {
         "label": "문서 요약 (영어)",
         "path": "domains/summarization.yaml",
         "intro": (
-            f"영어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 {N_ROUNDS}회 골라주세요. "
+            f"영어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 최대 {N_ROUNDS}회 골라주세요. "
             "요약은 영어로 나옵니다."
         ),
         "input_label": "요약할 원문 (영어 뉴스 기사 권장)",
@@ -127,7 +127,7 @@ DOMAIN_OPTIONS = {
         "label": "문서 요약 (한국어)",
         "path": "domains/summarization_ko.yaml",
         "intro": (
-            f"한국어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 {N_ROUNDS}회 골라주세요. "
+            f"한국어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 최대 {N_ROUNDS}회 골라주세요. "
             "요약은 한국어로 나옵니다."
         ),
         "input_label": "요약할 원문 (한국어 뉴스 기사 권장)",
@@ -142,7 +142,7 @@ DOMAIN_OPTIONS = {
         "label": "고객 리뷰 작성",
         "path": "domains/review.yaml",
         "intro": (
-            f"방문 경험이나 사용 후기를 적으면, 리뷰 두 개 중 마음에 드는 쪽을 {N_ROUNDS}회 "
+            f"방문 경험이나 사용 후기를 적으면, 리뷰 두 개 중 마음에 드는 쪽을 최대 {N_ROUNDS}회 "
             "골라주세요. 리뷰는 영어로 나옵니다."
         ),
         "input_label": "리뷰로 만들 메모 (영어 권장)",
@@ -155,7 +155,7 @@ DOMAIN_OPTIONS = {
         "path": "domains/email.yaml",
         "intro": (
             f"보내려는 내용을 적으면, 작성 방식이 다른 이메일 두 개 중 마음에 드는 쪽을 "
-            f"{N_ROUNDS}회 골라주세요. 이메일은 영어로 나옵니다."
+            f"최대 {N_ROUNDS}회 골라주세요. 이메일은 영어로 나옵니다."
         ),
         "input_label": "이메일로 만들 요청 사항 (영어 권장)",
         "placeholder": "예: Ask the vendor to confirm the Q4 delivery date and share the updated invoice.",
@@ -635,7 +635,7 @@ STYLES = """
 
 STEPS = (
     ("1", "주제 선택 &amp; 입력", "요약할 원문이나 만들고 싶은 기능을 적습니다."),
-    ("2", f"A/B 비교 {N_ROUNDS}회", "어느 축이 다른지는 알려주지 않습니다. 마음에 드는 쪽만 고르세요."),
+    ("2", f"A/B 비교 최대 {N_ROUNDS}회", "어느 축이 다른지는 알려주지 않습니다. 마음에 드는 쪽만 고르세요."),
     ("3", "프롬프트 완성", "추정된 취향을 반영한 시스템 프롬프트를 복사해 갑니다."),
 )
 

@@ -30,7 +30,10 @@ def test_coding_demo_completes_without_api(monkeypatch) -> None:
     app.button(key="start").click().run()
     assert app.session_state["stage"] == "compare"
 
+    # 질문이 떨어지면 8회 전에 끝난다 (코딩은 3회). 끝날 때까지 고른다.
     for _ in range(8):
+        if app.session_state["stage"] != "compare":
+            break
         app.button(key="pick_a").click().run()
         assert not app.exception
 
@@ -88,7 +91,10 @@ def test_korean_summarization_demo_completes_without_api(monkeypatch) -> None:
     assert not app.exception
     assert app.session_state["stage"] == "compare"
 
+    # 질문이 떨어지면 8회 전에 끝난다 (코딩은 3회). 끝날 때까지 고른다.
     for _ in range(8):
+        if app.session_state["stage"] != "compare":
+            break
         app.button(key="pick_a").click().run()
         assert not app.exception
 
@@ -132,7 +138,10 @@ def test_api_failure_degrades_to_demo_instead_of_dead_ending(monkeypatch) -> Non
     assert any("무료 데모 모드로 전환" in w.value for w in app.warning)
 
     # 남은 비교를 끝까지 진행할 수 있어야 한다.
+    # 질문이 떨어지면 8회 전에 끝난다 (코딩은 3회). 끝날 때까지 고른다.
     for _ in range(8):
+        if app.session_state["stage"] != "compare":
+            break
         app.button(key="pick_a").click().run()
         assert not app.exception
 
