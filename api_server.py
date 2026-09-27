@@ -11,20 +11,32 @@ import json
 import os
 import threading
 from datetime import date, timedelta
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+from dotenv import load_dotenv
+
 import service
+from budget import DailyBudget
 from optimize.run_gepa import build_seed_prompt
 
+load_dotenv()
 
 ROOT = Path(__file__).resolve().parent
 HOST = os.environ.get("PPT_API_HOST", "127.0.0.1")
 PORT = int(os.environ.get("PPT_API_PORT", "8000"))
 DEFAULT_MODEL = os.environ.get("PPT_MODEL", "openai/gpt-5.6-luna")
+
+# PPT_LIVE=1 이면 프론트가 보내는 demoMode 와 상관없이 실제 모델로 후보를
+# 만든다. 프론트는 아직 demoMode: true 를 고정으로 보내므로, 백엔드만으로
+# 실제 생성을 켜고 끌 수 있게 하려는 스위치다. 기본은 꺼짐.
+LIVE = os.environ.get("PPT_LIVE") == "1"
+# 서버 프로세스가 공유하는 하루 실제 생성 세션 상한. app.py 와 같은 방침이고
+# 재시작하면 0 으로 돌아가므로 결제 쪽 월 상한을 대신하지 않는다.
+LIVE_SESSIONS = DailyBudget(int(os.environ.get("PPT_LIVE_SESSIONS_PER_DAY", "60")))
 SESSIONS: dict[str, service.SessionState] = {}
 SESSIONS_LOCK = threading.Lock()
 
@@ -209,14 +221,27 @@ class ApiHandler(BaseHTTPRequestHandler):
         source_text = str(body.get("sourceText", "")).strip()
         if not source_text:
             raise ValueError("sourceText가 필요합니다.")
-        state = service.start_session(
-            source_text[:12_000],
-            domain_key,
-            _domain_path(domain_key),
+        demo_mode = bool(body.get("demoMode", True))
+        if LIVE:
+            if LIVE_SESSIONS.consume():
+                demo_mode = False
+            else:
+                print("[session] 오늘 실제 생성 상한에 도달해 데모로 진행한다", flush=True)
+        args = dict(
+            source_text=source_text[:12_000],
+            domain_key=domain_key,
+            domain_path=_domain_path(domain_key),
             model=str(body.get("model", DEFAULT_MODEL)),
-            demo_mode=bool(body.get("demoMode", True)),
             total_rounds=min(max(int(body.get("totalRounds", service.TOTAL_ROUNDS)), 1), 8),
         )
+        try:
+            state = service.start_session(demo_mode=demo_mode, **args)
+        except Exception as exc:  # noqa: BLE001 - 실제 호출 실패는 데모로 내린다
+            if demo_mode:
+                raise
+            _log_live_failure(exc)
+            state = service.start_session(demo_mode=True, **args)
+        print(f"[session] {domain_key} mode={'demo' if state.demo_mode else 'live'}", flush=True)
         with SESSIONS_LOCK:
             SESSIONS[state.session_id] = state
         self._send(201, {"session": _state_payload(state)})
@@ -229,7 +254,16 @@ class ApiHandler(BaseHTTPRequestHandler):
         if state is None:
             self._send(404, {"error": "세션을 찾을 수 없습니다."})
             return
-        updated = service.submit_choice(state, pair_id, chosen)
+        try:
+            updated = service.submit_choice(state, pair_id, chosen)
+        except service.StaleChoiceError:
+            raise
+        except Exception as exc:  # noqa: BLE001 - 실제 호출 실패는 데모로 내린다
+            if state.demo_mode:
+                raise
+            # 중간에 키가 만료되거나 한도에 걸려도 지금까지의 선택은 살린다.
+            _log_live_failure(exc)
+            updated = service.submit_choice(replace(state, demo_mode=True), pair_id, chosen)
         with SESSIONS_LOCK:
             SESSIONS[session_id] = updated
         self._send(200, {"session": _state_payload(updated)})
@@ -239,9 +273,20 @@ class ApiHandler(BaseHTTPRequestHandler):
         return
 
 
+def _log_live_failure(exc: Exception) -> None:
+    """실제 호출 실패는 서버 터미널에만 남긴다. 응답으로 돌려주면 공급자
+    에러 문구(키 일부, 계정 정보)가 브라우저까지 간다."""
+    print(f"[live] 실제 생성 실패, 데모로 전환: {type(exc).__name__}: {exc}", flush=True)
+
+
 def main() -> None:
     server = ThreadingHTTPServer((HOST, PORT), ApiHandler)
     print(f"Preference Prompt API listening on http://{HOST}:{PORT}")
+    if LIVE:
+        key = "있음" if os.environ.get("OPENAI_API_KEY") else "없음 - 호출이 실패해 데모로 내려간다"
+        print(f"mode: live (model={DEFAULT_MODEL}, API 키 {key}, 하루 {LIVE_SESSIONS.limit}세션)")
+    else:
+        print("mode: demo (규칙 기반 후보. 실제 생성은 PPT_LIVE=1 로 켠다)")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
