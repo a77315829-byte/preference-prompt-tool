@@ -178,5 +178,54 @@ def test_metric_is_deterministic(metric) -> None:
     assert first == second
 
 
+def _short_normal_estimator(domain) -> Estimator:
+    estimator = Estimator(domain)
+    for _ in range(20):
+        estimator.update(
+            Comparison(
+                {"length": "short", "extractiveness": "normal", "topic": ""},
+                {"length": "long", "extractiveness": "fully", "topic": ""},
+                "a",
+            )
+        )
+    return estimator
+
+
+@pytest.mark.parametrize("empty", ["", "   \n"])
+def test_empty_output_never_scores(domain, empty) -> None:
+    """short(2문장 이하)와 normal 추출성(겹침 50% 이하)은 0문장·겹침 0으로도
+    충족된다. 가드가 없을 때 빈 문자열이 이 선호에서 1.0을 받았다 - GEPA가
+    최적화하는 함수라 그대로 두면 보상 해킹 경로다."""
+    metric = build_metric(domain, _short_normal_estimator(domain))
+    score, feedback = metric(empty, SOURCE)
+    assert score == 0.0
+    assert feedback
+
+
+def test_freeform_value_is_scored_when_given(domain) -> None:
+    """시드 프롬프트에 넣은 주제를 채점에서도 봐야 한다. 안 보면 최적화가
+    주제 지시를 지워도 점수가 그대로다."""
+    estimator = _preference_estimator(domain)
+    plain = build_metric(domain, estimator)
+    with_topic = build_metric(domain, estimator, freeform_values={"topic": "prices"})
+
+    # MATCHING 에는 prices 가 없다.
+    assert plain(MATCHING, SOURCE)[0] == pytest.approx(1.0)
+    score, feedback = with_topic(MATCHING, SOURCE)
+    assert score < 1.0
+    assert "prices" in feedback
+
+    # 문장 수는 그대로 두고 주제어만 넣는다 - 길이 축이 같이 움직이지 않게.
+    mentions = MATCHING.replace("by 2030.", "by 2030 to curb prices.")
+    assert with_topic(mentions, SOURCE)[0] > score
+
+
+def test_inactive_freeform_value_is_ignored(domain) -> None:
+    estimator = _preference_estimator(domain)
+    assert build_metric(domain, estimator, freeform_values={"topic": ""})(
+        MATCHING, SOURCE
+    ) == build_metric(domain, estimator)(MATCHING, SOURCE)
+
+
 if __name__ == "__main__":
     main()
