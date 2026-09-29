@@ -1360,6 +1360,72 @@
   margin-top: 2rem;
 }
 
+/* 프롬프트 다듬기 공간 - 코드 체크리스트 칩과 예시 칩. 기존 pill/카드
+   톤(라운드 999px, 잉크 #111827, 액센트 #4468ff)을 그대로 따른다. */
+.polish-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.polish-example-chip {
+  padding: 0.45rem 0.85rem;
+  border: 1px solid #dfe4ed;
+  border-radius: 999px;
+  color: #5d6470;
+  background: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.polish-example-chip:hover {
+  border-color: #4468ff;
+  color: #111827;
+}
+
+.polish-checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.polish-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.polish-check.is-passed {
+  color: #176b50;
+  background: #dff7ed;
+}
+
+.polish-check.is-failed {
+  color: #7a4a00;
+  background: #fdf0da;
+}
+
+.polish-check-mark {
+  font-size: 0.85rem;
+}
+
+.polish-suggestions {
+  max-width: 46rem;
+  color: #374151;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
 .idle-tracker-section {
   background: #f7fbfa;
 }

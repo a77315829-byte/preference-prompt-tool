@@ -18,6 +18,8 @@ from typing import Any
 from urllib.parse import urlparse
 
 import service
+from agents.prompt_polish import checklist as polish_checklist
+from agents.prompt_polish import polish as polish_prompt
 from optimize.run_gepa import build_seed_prompt
 
 
@@ -149,6 +151,42 @@ def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
         return report
 
 
+# 프롬프트 자체는 비교 세션의 sourceText(과제 원문, 12,000자 한도)보다
+# 훨씬 짧아야 정상이다. 큰 값을 받으면 사용자가 원문을 프롬프트 칸에
+# 잘못 붙여넣은 것으로 보고 앞에서 거절한다.
+MAX_POLISH_PROMPT_CHARS = 4_000
+
+
+def _checklist_payload(items) -> list[dict[str, Any]]:
+    return [{"name": r.name, "passed": r.passed, "note": r.note} for r in items]
+
+
+def _polish_prompt_text(body: dict[str, Any]) -> str:
+    prompt = str(body.get("prompt", "")).strip()
+    if not prompt:
+        raise ValueError("prompt가 필요합니다.")
+    if len(prompt) > MAX_POLISH_PROMPT_CHARS:
+        raise ValueError(f"prompt는 {MAX_POLISH_PROMPT_CHARS}자 이내여야 합니다.")
+    return prompt
+
+
+def _polish_checklist_only(body: dict[str, Any]) -> dict[str, Any]:
+    """타이핑할 때마다 호출해도 되는 무료 경로 - 모델을 부르지 않는다."""
+    prompt = _polish_prompt_text(body)
+    return {"checklist": _checklist_payload(polish_checklist(prompt))}
+
+
+def _polish_prompt(body: dict[str, Any]) -> dict[str, Any]:
+    """제출 시 한 번만 부르는 경로 - 체크리스트 + LLM 재작성."""
+    prompt = _polish_prompt_text(body)
+    result = polish_prompt(prompt, model=str(body.get("model", DEFAULT_MODEL)))
+    return {
+        "checklist": _checklist_payload(result.checklist),
+        "suggestions": result.suggestions,
+        "revisedPrompt": result.revised_prompt,
+    }
+
+
 class ApiHandler(BaseHTTPRequestHandler):
     server_version = "PreferencePromptAPI/1.0"
 
@@ -191,6 +229,12 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/aws/costs":
                 self._send(200, {"report": _aws_cost_report(body)})
+                return
+            if path == "/api/polish/checklist":
+                self._send(200, _polish_checklist_only(body))
+                return
+            if path == "/api/polish":
+                self._send(200, _polish_prompt(body))
                 return
             if path.startswith("/api/sessions/") and path.endswith("/choices"):
                 session_id = path.split("/")[3]

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ComparisonSection from '../features/comparison/ComparisonSection';
 import IdleTrackerSection from '../features/idle-tracker/IdleTrackerSection';
 import ScrollStory from '../features/landing/ScrollStory';
+import PromptPolishSection from '../features/polish/PromptPolishSection';
 import './App.css';
 import '../features/landing/landing.css';
 
@@ -46,6 +47,7 @@ function App() {
         <div className="nav-links" aria-label="페이지 이동">
           <button type="button" onClick={() => requestScene(1)}>사용 방법</button>
           <button type="button" onClick={() => requestScene(0)}>시작하기</button>
+          <button type="button" onClick={() => setActiveFlow('polish')}>프롬프트 다듬기</button>
         </div>
 
         <button className="nav-button" type="button" onClick={() => requestScene(0)}>
@@ -81,6 +83,12 @@ function App() {
             transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
           >
             <ComparisonSection onBack={handleComparisonBack} domainKey={activeFlow} />
+          </motion.div>
+        )}
+
+        {activeFlow === 'polish' && (
+          <motion.div className="flow-view" key="polish" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
+            <PromptPolishSection onBack={handleComparisonBack} />
           </motion.div>
         )}
 
