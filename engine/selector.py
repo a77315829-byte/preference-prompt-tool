@@ -79,31 +79,60 @@ class SequentialAxisSelector:
 
 class UncertaintySelector:
     """확신도가 가장 낮은 축을 고르고, 그 축에서 utility가 가장 근접한
-    (가장 헷갈리는) 두 값을 질의한다. 다른 축은 baseline으로 고정한다."""
+    (가장 헷갈리는) 두 값을 질의한다. 다른 축은 baseline으로 고정한다.
+
+    같은 (축, 값쌍)은 한 번만 묻는다. 원래 구현엔 이력이 없어서 - 매
+    라운드 "지금 상태에서 가장 헷갈리는 쌍"을 처음부터 다시 계산할
+    뿐이라 - 확신도가 안 바뀌면 같은 질문이 반복될 수 있었다(FR-03 "같은
+    질문 반복 금지"가 실제로는 보장되지 않고 있었다). 한 축의 모든 쌍을
+    다 물었으면 그다음으로 확신도가 낮은 축으로 넘어가고, 축 전부가
+    소진된 드문 경우에만 반복을 허용한다."""
 
     def __init__(self, domain: Domain, seed: int = 0) -> None:
         self.domain = domain
         self._enum_axes = [axis for axis in domain.axes if axis.type == "enum"]
         self._rng = random.Random(seed)
+        self._asked: set[tuple[str, str, str]] = set()
+
+    def _pair_key(self, axis_name: str, value_a: str, value_b: str) -> tuple[str, str, str]:
+        low, high = sorted((value_a, value_b))
+        return (axis_name, low, high)
+
+    def _axis_has_unasked_pair(self, axis) -> bool:
+        values = [v.value for v in axis.values]
+        return any(
+            self._pair_key(axis.name, a, b) not in self._asked
+            for a, b in itertools.combinations(values, 2)
+        )
 
     def _pick_axis_name(self, estimator: Estimator) -> str:
-        confidences = {axis.name: estimator.confidence(axis.name) for axis in self._enum_axes}
+        eligible = [axis for axis in self._enum_axes if self._axis_has_unasked_pair(axis)]
+        pool = eligible or self._enum_axes  # 전부 소진되면 반복을 허용한다
+        confidences = {axis.name: estimator.confidence(axis.name) for axis in pool}
         min_confidence = min(confidences.values())
         candidates = [name for name, c in confidences.items() if c == min_confidence]
         return self._rng.choice(candidates)
 
     def _most_confusable_pair(self, estimator: Estimator, axis_name: str) -> tuple[str, str]:
-        ordered = sorted(estimator.utilities[axis_name].items(), key=lambda kv: kv[1])
-        gaps = [
-            (abs(ordered[i + 1][1] - ordered[i][1]), ordered[i][0], ordered[i + 1][0])
-            for i in range(len(ordered) - 1)
-        ]
-        _, value_a, value_b = min(gaps, key=lambda g: g[0])
+        axis = next(a for a in self._enum_axes if a.name == axis_name)
+        values = [v.value for v in axis.values]
+        utilities = estimator.utilities[axis_name]
+
+        def gaps(only_unasked: bool):
+            return [
+                (abs(utilities[a] - utilities[b]), a, b)
+                for a, b in itertools.combinations(values, 2)
+                if not only_unasked or self._pair_key(axis_name, a, b) not in self._asked
+            ]
+
+        candidates = gaps(only_unasked=True) or gaps(only_unasked=False)
+        _, value_a, value_b = min(candidates, key=lambda g: g[0])
         return value_a, value_b
 
     def next_pair(self, estimator: Estimator) -> Pair:
         axis_name = self._pick_axis_name(estimator)
         value_a, value_b = self._most_confusable_pair(estimator, axis_name)
+        self._asked.add(self._pair_key(axis_name, value_a, value_b))
 
         combo_a = _baseline_combo(self.domain, estimator)
         combo_b = dict(combo_a)

@@ -4,6 +4,8 @@
 API 호출 없이 합성 오라클(정답값과 더 많이 일치하는 콤보를 선택)로
 검증한다 - 실제 생성/사람 대행 실험은 9~10주차 experiments/run_all.py 몫."""
 
+import itertools
+
 from engine.domain_loader import load_domain
 from engine.estimator import Comparison, Estimator
 from engine.selector import RandomSelector, SequentialAxisSelector, UncertaintySelector
@@ -140,6 +142,51 @@ def test_pairs_always_differ_on_some_axis(selector_cls, domain) -> None:
         assert identical < 15
     else:
         assert identical == 0
+
+
+def _pair_key(axis_name: str, combo_a: dict, combo_b: dict) -> tuple:
+    """두 콤보가 갈리는 축과 그 값쌍 - 순서 무관하게 비교한다."""
+    axis = next(k for k in combo_a if combo_a[k] != combo_b[k])
+    return (axis,) + tuple(sorted((combo_a[axis], combo_b[axis])))
+
+
+def test_uncertainty_selector_does_not_repeat_a_pair_before_exhausting_the_axis(domain) -> None:
+    """estimator 를 전혀 갱신하지 않으면(확신도가 안 바뀌면) 원래 구현은
+    매번 똑같은 쌍을 돌려줬다 - FR-03 "같은 질문 반복 금지"가 실제로는
+    보장되지 않았다. summarization.yaml 은 2축 x 3값 = 축당 3쌍, 총
+    6쌍이므로 6번까지는 전부 달라야 하고, 7번째부터는 (전부 소진됐으니)
+    반복을 허용한다."""
+    estimator = Estimator(domain)
+    selector = UncertaintySelector(domain, seed=0)
+
+    seen = []
+    for _ in range(6):
+        combo_a, combo_b = selector.next_pair(estimator)
+        seen.append(_pair_key("length", combo_a, combo_b) if combo_a["length"] != combo_b["length"]
+                    else _pair_key("extractiveness", combo_a, combo_b))
+    assert len(set(seen)) == 6, f"6쌍을 다 묻기 전에 반복이 나왔다: {seen}"
+
+    # 7번째는 소진됐으니 반복이 나와도 된다 - 여기서 예외가 나면 안 된다.
+    combo_a, combo_b = selector.next_pair(estimator)
+    assert combo_a != combo_b
+
+
+def test_uncertainty_selector_moves_to_the_other_axis_once_one_is_exhausted(domain) -> None:
+    """한 축의 쌍을 전부 물었으면(내부 이력에 직접 표시), 그 축이 여전히
+    확신도 최저라도 골라지면 안 된다. RNG 운에 기대지 않도록 내부 상태를
+    직접 조작하는 화이트박스 테스트다."""
+    estimator = Estimator(domain)
+    selector = UncertaintySelector(domain, seed=0)
+    axis_name = "length"  # summarization.yaml: short/normal/long, 3쌍
+
+    for value_a, value_b in itertools.combinations(("short", "normal", "long"), 2):
+        selector._asked.add(selector._pair_key(axis_name, value_a, value_b))
+
+    assert selector._axis_has_unasked_pair(next(a for a in domain.axes if a.name == axis_name)) is False
+
+    # length 축은 소진됐으니, 확신도가 모두 동률(초기 상태)이라도 골라지면 안 된다.
+    picked = {selector._pick_axis_name(estimator) for _ in range(20)}
+    assert axis_name not in picked, f"소진된 축이 계속 골라졌다: {picked}"
 
 
 if __name__ == "__main__":
