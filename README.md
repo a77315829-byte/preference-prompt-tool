@@ -529,14 +529,23 @@ streamlit run app.py
 | 문서 요약 (영어) | 영어 원문 | 영어 | `domains/summarization.yaml` | 길이·추출성·주제 |
 | 문서 요약 (한국어) | 한국어 원문 | 한국어 | `domains/summarization_ko.yaml` | 길이·추출성·주제 |
 | 문서 요약 심화 | 영어 원문 | 영어 | `domains/summarization_hybrid.yaml` | 길이·추출성·구체성 |
-| AWS 비용 점검 | AWS 비용·리소스 | 한국어 | `domains/idle_tracker.yaml` | 유휴 리소스·해결 방법 |
+| AWS 비용 현황 보고 | AWS 비용 조회 결과 | 한국어 | `domains/idle_tracker.yaml` | 상세도·강조점 |
 | 고객 리뷰 작성 | 방문·사용 메모 | 영어 | `domains/review.yaml` | 길이·어조·주제 |
 | 이메일 초안 | 요청 사항 | 영어 | `domains/email.yaml` | 길이·격식·구조 |
 | 문서 품질 평가 | 다듬을 문서 | 영어 | `domains/macsum_eval_agent.yaml` | 간결성·말투·문장 난이도·강조점 |
 
 위 표는 기존 Streamlit 화면과 React 화면에서 공통 엔진으로 사용할 수 있는
-문서·코딩 카테고리다. React 화면에는 여기에 AWS 비용 점검(`idle_tracker`)을
+문서·코딩 카테고리다. React 화면에는 여기에 AWS 비용 현황 보고(`idle_tracker`)를
 더해 총 8개 카드를 제공하며, 심화 요약과 문서 품질 평가도 직접 선택할 수 있다.
+
+**AWS는 유휴 리소스를 찾는 도구가 아니다.** 조회는 Cost Explorer의
+서비스별 비용 합계이고, 특정 리소스가 실제로 유휴 상태인지는 확정하지
+않는다(화면 데모의 예시 리소스는 미리 정해둔 것). 개인화하는 것은
+상세도·강조점(축)뿐이고, 금액·리소스ID의 정확성은 별도로 검증한다
+(`checks/idle_tracker.py`의 `total_cost_accuracy`·`no_fabrication`,
+CLAUDE.md 보너스 9). 생성기가 실제 조회 데이터를 받지 못하던 결함을
+찾아 고쳤고, 실제 API로 4개 축조합 전부 정확성·근거없는주장 검사를
+통과했다.
 
 화면 캡처는 [`docs/screenshots/`](docs/screenshots)에 있다
 (카테고리 선택 · 원문 입력 · A/B 비교 · 결과 · 프롬프트 적용 비교 ·

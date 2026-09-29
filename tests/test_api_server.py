@@ -1,9 +1,9 @@
-"""api_server.py 의 /api/polish, /api/polish/checklist 회귀 테스트.
+"""api_server.py 의 /api/polish, /api/polish/checklist, AWS sourceText 회귀 테스트.
 
 실제 서버를 임시 포트에 띄우고 stdlib http.client 로만 호출한다 - 새
 의존성을 추가하지 않는다(절대 규칙 3). 세션류 엔드포인트는 이미
 프론트가 codingApi.js 로 실사용 검증 중이라 여기서는 이번에 추가한
-polish 경로만 다룬다.
+polish 경로와 AWS sourceText 구성만 다룬다.
 """
 
 from __future__ import annotations
@@ -111,3 +111,26 @@ def test_polish_endpoint_uses_default_model_when_none_given(server, monkeypatch,
     _post(server, "/api/polish", {"prompt": "요약해줘"})
 
     assert seen["model"] == api_server.DEFAULT_MODEL
+
+
+# ── AWS 비용 리포트의 sourceText: 생성기가 실제 숫자를 받는지 ─────────
+#
+# 예전엔 sourceText가 "찾았으니 확인하세요" 한 줄이라, 화면(카드)엔 진짜
+# 금액·리소스ID가 있는데 그걸 요약하는 생성기는 받지 못했다 - 출력의
+# 구체적인 숫자는 전부 모델이 지어낸 것일 수밖에 없었다.
+
+def test_demo_report_source_text_carries_the_real_numbers() -> None:
+    report = api_server._demo_aws_cost_report()
+    assert report["totalCost"] in report["sourceText"]
+    for finding in report["findings"]:
+        assert finding["cost"] in report["sourceText"]
+        assert finding["resourceId"] in report["sourceText"]
+
+
+def test_report_source_text_helper_handles_missing_fields_without_crashing() -> None:
+    # boto3 조회 결과가 일부 필드를 안 채울 수도 있다 - KeyError로 죽으면
+    # 화면 전체가 죽는다.
+    minimal = {"totalCost": "$1.00", "findings": [{"service": "EC2"}]}
+    text = api_server._report_source_text(minimal)
+    assert "$1.00" in text
+    assert "EC2" in text

@@ -146,14 +146,14 @@ function IdleTrackerSection({ onBack }) {
         <button className="back-button" type="button" onClick={onBack}>← 카테고리 다시 선택</button>
         <div className="comparison-heading">
           <p className="eyebrow">AWS cost check</p>
-          <h2>놓치고 있는 비용을 찾아볼까요?</h2>
-          <p>연결된 리소스와 비용을 살펴보고, 내가 보고 싶은 방식의 점검 프롬프트를 만듭니다.</p>
+          <h2>이번 달 AWS 비용, 원하는 방식으로 확인하세요</h2>
+          <p>조회된 비용과 리소스를 살펴보고, 내가 보고 싶은 방식의 점검 프롬프트를 만듭니다.</p>
         </div>
 
         {phase === 'report' && (
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}>
             <div className="aws-report-summary">
-              <div><span>최근 30일 예상 낭비 비용</span><strong>{report?.totalCost || '불러오는 중…'}</strong></div>
+              <div><span>최근 30일 AWS 비용</span><strong>{report?.totalCost || '불러오는 중…'}</strong></div>
               <div className="aws-report-summary-actions">
                 <span className="aws-report-mode">{reportState === 'live' ? 'AWS Cost Explorer 연결됨' : 'API 없이 데모 중'}</span>
                 <button className="aws-live-button" type="button" disabled={reportState === 'loading'} onClick={() => loadReport(false)}>

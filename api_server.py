@@ -63,11 +63,35 @@ def _domain_path(domain_key: str) -> str:
     return str(path)
 
 
+def _report_source_text(report: dict[str, Any]) -> str:
+    """findings 를 생성기가 실제로 인용할 수 있는 형태로 적는다.
+
+    이전 sourceText는 "찾았으니 확인하세요" 정도의 안내문 한 줄이었다 -
+    그 문장만 생성기에 들어가면 실제 금액·리소스ID를 하나도 못 받은
+    채로 "요약"을 만드는 셈이라, 출력에 나오는 구체적인 숫자는 전부
+    모델이 지어낸 것일 수밖에 없다(사용자에게 보여주는 카드에는 진짜
+    데이터가 있는데, 그걸 요약하는 모델만 못 보고 있었다). 개인화(상세도
+    ·강조점)와 정확성(금액·리소스ID가 실제와 일치)을 따로 검증하려면
+    검증 대상 자체가 먼저 정확해야 한다."""
+    period = report.get("period", {})
+    lines = [
+        f"조회 기간: {period.get('start', '?')} ~ {period.get('end', '?')}",
+        f"총 예상 비용: {report.get('totalCost', '?')}",
+    ]
+    for finding in report.get("findings", []):
+        lines.append(
+            f"- {finding.get('service', '?')} ({finding.get('resourceId', '?')}): "
+            f"{finding.get('cost', '?')} - {finding.get('reason', '')} "
+            f"해결: {finding.get('resolution', '')}"
+        )
+    return "\n".join(lines)
+
+
 def _demo_aws_cost_report(lookback_days: int = 30) -> dict[str, Any]:
     """API 키 없이도 항상 같은 화면을 보여주는 AWS 비용 점검 결과."""
     end = date.today()
     start = end - timedelta(days=lookback_days)
-    return {
+    report: dict[str, Any] = {
         "mode": "demo",
         "period": {"start": start.isoformat(), "end": end.isoformat()},
         "totalCost": "₩16,800",
@@ -92,11 +116,9 @@ def _demo_aws_cost_report(lookback_days: int = 30) -> dict[str, Any]:
                 "resolution": "AWS 콘솔 > EC2 > 스냅샷에서 필요 없는 항목을 확인 후 삭제하세요.",
             },
         ],
-        "sourceText": (
-            "AWS 비용 점검 결과입니다. 연결되지 않은 탄력적 IP와 오래된 EBS 스냅샷이 "
-            "발견되었습니다. 각 리소스의 비용과 해결 방법을 확인하세요."
-        ),
     }
+    report["sourceText"] = _report_source_text(report)
+    return report
 
 
 def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
@@ -143,7 +165,7 @@ def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
         ]
         report = _demo_aws_cost_report(lookback_days)
         report.update({"mode": "aws", "currency": "USD", "totalCost": f"${total:.2f}", "findings": findings})
-        report["sourceText"] = "AWS Cost Explorer 결과를 바탕으로 비용이 높은 서비스를 점검하세요."
+        report["sourceText"] = _report_source_text(report)
         return report
     except Exception:  # noqa: BLE001 - 자격 증명/SDK/권한 오류를 비밀 없이 처리
         report = _demo_aws_cost_report(lookback_days)
