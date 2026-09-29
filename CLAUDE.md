@@ -65,6 +65,11 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제)
 - DB는 SQLite 또는 JSON 파일. 서버형 DB를 쓰지 않는다.
 - 배포는 프로젝트 후반의 선택 항목. 초기에는 전부 로컬.
 - 후보 생성은 저렴한 소형 모델, GEPA 성찰 모델만 강한 모델을 쓴다.
+  **(2026-09-29 정정)** 계획 당시 의도였고 아직 구현되지 않았다.
+  `service.optimize()`는 `reflection_model`을 안 주면 과제 생성과 같은
+  모델(`app.py`의 `MODEL`, 현재 `openai/gpt-5.6-luna`)을 그대로 쓴다 -
+  실제로는 후보 생성과 성찰이 같은 모델이다. 나눌지는 비용·품질
+  트레이드오프를 재보고 팀이 정할 일이라 지금은 동작만 사실대로 적는다.
 
 ---
 
@@ -198,6 +203,12 @@ result = gepa.optimize(
 )
 optimized = result.best_candidate["system_prompt"]
 ```
+
+**이 코드는 최초 계획 당시의 예시이고, 실제 구현은 다르다.** gepa 0.1.4는
+`metric=` 인자를 받지 않아 `DefaultAdapter`로 감싸야 했고(`optimize/run_gepa.py`,
+`service.py`), 실제 호출 경로는 `gepa.optimize()`를 직접 부르지 않는다.
+task/reflection 모델 분리도 위 "후보 생성은 저렴한 모델..." 항목의 정정과
+같은 이유로 아직 구현되지 않았다 - 지금은 둘 다 같은 모델을 쓴다.
 
 **중요한 설계 포인트**: GEPA는 점수뿐 아니라 자연어 피드백도 받는다.
 평가 함수가 축별 위반 내역을 텍스트로 반환하면 GEPA가 이를 성찰에 사용해
