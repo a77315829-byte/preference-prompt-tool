@@ -31,7 +31,7 @@ from engine.domain_loader import Domain, load_domain
 from engine.estimator import Comparison, Estimator
 from engine.generator import generate_all, generate_all_with_prompts
 from engine.selector import UncertaintySelector
-from optimize.run_gepa import build_seed_prompt, run as run_gepa
+from optimize.run_gepa import build_seed_prompt
 
 load_dotenv()
 
