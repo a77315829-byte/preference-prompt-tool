@@ -204,7 +204,7 @@ def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
 # 훨씬 짧아야 정상이다. 큰 값을 받으면 사용자가 원문을 프롬프트 칸에
 # 잘못 붙여넣은 것으로 보고 앞에서 거절한다.
 MAX_POLISH_PROMPT_CHARS = 4_000
-# "AI로 다듬기"(프롬프트 다듬기의 LLM 경로) 하루 상한. 세션·최적화와 같은
+# 프롬프트 다듬기(가져온 프롬프트의 LLM 재작성, /api/polish) 하루 상한. 세션·최적화와 같은
 # 방침이고, 재시작하면 0 으로 돌아가므로 결제 쪽 월 상한을 대신하지 않는다.
 DAILY_POLISHES = DailyBudget(int(os.environ.get("PPT_POLISHES_PER_DAY", "60")))
 
