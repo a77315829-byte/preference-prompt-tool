@@ -64,8 +64,24 @@ def validate_protocol(raw: dict) -> dict:
         prompts[condition] = nonempty(prompts[condition], condition)
     if source_hash(prompts["direct"]) == source_hash(prompts["selected"]):
         raise ValueError("비교할 두 프롬프트가 동일합니다")
-    if p.get("selection_rounds") != 8:
-        raise ValueError("이 프로토콜은 8회 선택 조건입니다")
+    # 앱은 최대 8회를 묻고, 물을 질문이 떨어지면 일찍 끝낸다(한국어 요약은
+    # 보통 4~6회). 정확히 8을 요구하면 정상적으로 끝난 참여자가 전부 거부된다.
+    # 실제로 마친 횟수를 적는다.
+    rounds = p.get("selection_rounds")
+    if type(rounds) is not int or not 1 <= rounds <= 8:
+        raise ValueError("selection_rounds 에는 실제로 마친 선택 횟수(1~8)를 적으세요")
+    # 선택 항목: 노력의 다른 측면(계획서 1-2). 조건별 글자 수·수정 횟수.
+    # 미측정은 null 이고 추정치를 넣지 않는다 - effort_seconds 와 같은 원칙.
+    details = p.setdefault("effort_details", {c: {"chars": None, "revisions": None} for c in CONDITIONS})
+    if set(details) != set(CONDITIONS):
+        raise ValueError("effort_details 에는 direct·selected 두 조건을 모두 적으세요")
+    for condition in CONDITIONS:
+        item = details[condition]
+        if not isinstance(item, dict) or set(item) != {"chars", "revisions"}:
+            raise ValueError("effort_details 의 각 조건은 chars·revisions 두 값입니다")
+        for value in item.values():
+            if value is not None and (type(value) is not int or value < 0):
+                raise ValueError("글자 수·수정 횟수는 0 이상의 정수 또는 null 이어야 합니다")
     if p.get("collection_order") not in ("direct_first", "selected_first"):
         raise ValueError("지침 수집 순서를 기록하세요")
     for value in p.get("effort_seconds", {}).values():
@@ -252,6 +268,9 @@ def analyze(private: dict, packet: dict, response: dict) -> dict:
             "model": private["protocol"]["model"], "documents": len(response["answers"]),
             "preference_counts": dict(counts), "quality": quality,
             "effort_seconds": private["protocol"]["effort_seconds"],
+            # 앞선 버전으로 동결한 참여자에는 없다.
+            "effort_details": private["protocol"].get("effort_details"),
+            "selection_rounds": private["protocol"].get("selection_rounds"),
             "collection_order": private["protocol"]["collection_order"]}
 
 
@@ -268,7 +287,10 @@ def summarize(results: list[dict]) -> dict:
         per_user.append({"participant_id": r["participant_id"],
                          "documents": r["documents"], "preference_counts": counts,
                          "selected_share_including_ties": counts["selected"] / r["documents"],
-                         "effort_seconds": r["effort_seconds"], "quality": r["quality"]})
+                         "effort_seconds": r["effort_seconds"],
+                         "effort_details": r.get("effort_details"),
+                         "selection_rounds": r.get("selection_rounds"),
+                         "quality": r["quality"]})
     return {"participants": len(included), "excluded_test_records": len(results) - len(included),
             "per_participant": per_user,
             "mean_selected_share": (sum(r["selected_share_including_ties"] for r in per_user) / len(per_user) if per_user else None),

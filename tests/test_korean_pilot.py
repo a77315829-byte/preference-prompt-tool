@@ -54,6 +54,32 @@ def test_effort_must_be_real_measurement_or_null(protocol, value):
         pilot.validate_protocol(protocol)
 
 
+@pytest.mark.parametrize("rounds", [1, 5, 8])
+def test_early_finished_sessions_are_accepted(protocol, rounds):
+    """앱은 물을 게 없으면 8회 전에 끝난다(한국어 요약은 보통 4~6회). 정확히
+    8을 요구하면 정상적으로 끝난 참여자가 전부 거부된다."""
+    protocol["selection_rounds"] = rounds
+    assert pilot.validate_protocol(protocol)["selection_rounds"] == rounds
+
+
+@pytest.mark.parametrize("rounds", [0, 9, 5.0, True, None])
+def test_selection_rounds_must_be_a_real_count(protocol, rounds):
+    protocol["selection_rounds"] = rounds
+    with pytest.raises(ValueError):
+        pilot.validate_protocol(protocol)
+
+
+def test_effort_details_default_to_unmeasured_and_are_checked(protocol):
+    """글자 수·수정 횟수(계획서 1-2)는 선택 항목이다. 없으면 미측정(null)이다."""
+    validated = pilot.validate_protocol(protocol)
+    assert validated["effort_details"] == {c: {"chars": None, "revisions": None} for c in pilot.CONDITIONS}
+    protocol["effort_details"] = {"direct": {"chars": 120, "revisions": 3}, "selected": {"chars": None, "revisions": 0}}
+    assert pilot.validate_protocol(protocol)["effort_details"]["direct"]["revisions"] == 3
+    protocol["effort_details"]["direct"]["chars"] = -1
+    with pytest.raises(ValueError):
+        pilot.validate_protocol(protocol)
+
+
 def test_blind_packet_does_not_expose_prompts_mapping_or_participant(protocol, tmp_path):
     private, packet = ready(protocol, tmp_path)
     pilot.validate_packet(packet)
