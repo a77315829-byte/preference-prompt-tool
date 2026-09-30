@@ -60,19 +60,37 @@ def build_final_prompt(domain: Domain, combo: dict[str, str]) -> str:
     if spec is None:
         return build_prompt(domain, combo)
 
-    preferences = []
-    for axis in domain.axes:
-        instruction = axis.instruction_for(combo.get(axis.name, ""))
-        if instruction:
-            label = spec.axis_labels.get(axis.name) or axis.description
-            preferences.append(f"- {label}: {instruction}")
-
     sections = [spec.role, domain.task_description]
+    preferences = build_preference_section(domain, combo)
     if preferences:
-        sections.append("\n".join([f"## {spec.preference_heading}", *preferences]))
+        sections.append(preferences)
     sections.append("\n".join([f"## {spec.rules_heading}", *(f"- {r}" for r in spec.rules)]))
     sections.append(f"## {spec.output_heading}\n{spec.output}")
     return "\n\n".join(sections)
+
+
+def build_preference_section(domain: Domain, combo: dict[str, str]) -> str:
+    """추정한 선호만 담은 절. "## 머리말" 아래 "- 라벨: 지시" 줄들이다.
+    선호가 하나도 없으면 빈 문자열. 머리말과 라벨은 domain.final_prompt 에서
+    읽고, 없으면 축 설명과 기본 머리말을 쓴다."""
+    spec = domain.final_prompt
+    lines = []
+    for axis in domain.axes:
+        instruction = axis.instruction_for(combo.get(axis.name, ""))
+        if instruction:
+            label = (spec.axis_labels.get(axis.name) if spec else None) or axis.description
+            lines.append(f"- {label}: {instruction}")
+    if not lines:
+        return ""
+    heading = spec.preference_heading if spec else "선호"
+    return "\n".join([f"## {heading}", *lines])
+
+
+def build_template_prompt(domain: Domain, combo: dict[str, str], template: str) -> str:
+    """사용자가 고른 템플릿 본문 뒤에 추정한 선호 절을 붙인다. 템플릿의
+    과제·규칙은 그대로 두고, 표현 방식만 이 사람에게 맞춘다."""
+    preferences = build_preference_section(domain, combo)
+    return template.strip() + (f"\n\n{preferences}" if preferences else "")
 
 
 def _cache_key(

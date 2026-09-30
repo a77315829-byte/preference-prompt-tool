@@ -4,12 +4,15 @@ import ComparisonSection from '../features/comparison/ComparisonSection';
 import IdleTrackerSection from '../features/idle-tracker/IdleTrackerSection';
 import ScrollStory from '../features/landing/ScrollStory';
 import PromptPolishSection from '../features/polish/PromptPolishSection';
+import TemplateLibrarySection from '../features/templates/TemplateLibrarySection';
 import './App.css';
 import '../features/landing/landing.css';
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState('summary');
   const [activeFlow, setActiveFlow] = useState('category');
+  // 템플릿 라이브러리에서 "내 방식으로 바꾸기"로 들어왔을 때의 템플릿.
+  const [template, setTemplate] = useState(null);
 
   const requestScene = (scene) => {
     if (activeFlow !== 'category') {
@@ -34,7 +37,14 @@ function App() {
   };
 
   const handleComparisonBack = () => {
+    setTemplate(null);
     setActiveFlow('category');
+  };
+
+  // 템플릿의 도메인 이름이 곧 비교 화면의 흐름 이름이다 (AWS 만 화면 이름이 다르다).
+  const handlePersonalizeTemplate = (picked) => {
+    setTemplate(picked);
+    setActiveFlow(picked.domain === 'idle_tracker' ? 'idleTracker' : picked.domain);
   };
 
   return (
@@ -47,6 +57,7 @@ function App() {
         <div className="nav-links" aria-label="페이지 이동">
           <button type="button" onClick={() => requestScene(1)}>사용 방법</button>
           <button type="button" onClick={() => requestScene(0)}>시작하기</button>
+          <button type="button" onClick={() => { setTemplate(null); setActiveFlow('templates'); }}>템플릿</button>
           <button type="button" onClick={() => setActiveFlow('polish')}>프롬프트 다듬기</button>
         </div>
 
@@ -82,7 +93,13 @@ function App() {
             exit={{ opacity: 0, y: -24, scale: 0.99 }}
             transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
           >
-            <ComparisonSection onBack={handleComparisonBack} domainKey={activeFlow} onSwitchDomain={setActiveFlow} />
+            <ComparisonSection onBack={handleComparisonBack} domainKey={activeFlow} onSwitchDomain={setActiveFlow} template={template} />
+          </motion.div>
+        )}
+
+        {activeFlow === 'templates' && (
+          <motion.div className="flow-view" key="templates" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
+            <TemplateLibrarySection onBack={handleComparisonBack} onPersonalize={handlePersonalizeTemplate} />
           </motion.div>
         )}
 
@@ -94,7 +111,7 @@ function App() {
 
         {activeFlow === 'idleTracker' && (
           <motion.div className="flow-view" key="idleTracker" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-            <IdleTrackerSection onBack={handleComparisonBack} />
+            <IdleTrackerSection onBack={handleComparisonBack} template={template} />
           </motion.div>
         )}
 

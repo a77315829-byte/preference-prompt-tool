@@ -23,6 +23,7 @@ from agents.prompt_polish import checklist as polish_checklist
 from agents.prompt_polish import polish as polish_prompt
 
 import service
+import template_library
 from budget import DailyBudget
 
 load_dotenv()
@@ -61,7 +62,7 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
     payload["answered"] = state.answered
     if state.done:
         domain, estimator = service.current_estimate(state)
-        seed = service.final_prompt(domain, estimator)
+        seed = service.final_prompt(domain, estimator, template_id=state.template_id)
         if state.prompt is None:
             payload["prompt"] = seed
         # GEPA 는 후보가 시드보다 낫지 않으면 시드를 그대로 돌려준다. 그걸
@@ -280,6 +281,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         if path == "/api/health":
             self._send(200, {"ok": True, "demoAvailable": True})
             return
+        if path == "/api/templates":
+            self._send(200, {"templates": [asdict(t) for t in template_library.library()]})
+            return
         # 최적화 진행률을 폴링하는 경로. /api/sessions/<id>
         parts = path.split("/")
         if len(parts) == 4 and parts[:3] == ["", "api", "sessions"]:
@@ -344,6 +348,8 @@ class ApiHandler(BaseHTTPRequestHandler):
             # 고르게 두면 누구든 비싼 모델 이름으로 서버 키를 쓸 수 있다.
             model=DEFAULT_MODEL,
             total_rounds=min(max(int(body.get("totalRounds", service.TOTAL_ROUNDS)), 1), 8),
+            # 템플릿 라이브러리의 "내 방식으로 바꾸기". 없는 id·다른 도메인은 400.
+            template_id=(str(body["templateId"]) if body.get("templateId") else None),
         )
         try:
             state = service.start_session(demo_mode=demo_mode, **args)

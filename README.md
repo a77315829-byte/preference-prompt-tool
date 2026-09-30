@@ -594,6 +594,11 @@ npm run dev
 모델은 서버가 정한다. 요청 본문에 `model` 을 보내도 무시한다 - 따르면
 누구든 비싼 모델 이름으로 서버 키를 쓸 수 있다.
 
+**템플릿** (React 상단 메뉴, `templates/library.yaml`, `template_library.py`): 핵심 카테고리별
+팀 작성 템플릿 9개. 그대로 복사하거나, **내 방식으로 바꾸기**로 그 카테고리의 비교를 돌려
+템플릿 본문 + 추정한 선호 절로 된 프롬프트를 만든다(바로 쓰기·GEPA 도 그대로 이어진다).
+외부 프롬프트 모음은 이용약관 때문에 긁어 오지 않는다 - 공개 라이선스 자료만 출처와 함께 넣는다.
+
 **바로 쓰기** (React 결과 화면, `exporters.py`): 만든 프롬프트를 도구별 형식으로
 가져간다. 채팅 서비스(ChatGPT 맞춤 지침·Claude 프로젝트·Gemini Gem)는 복사, 코딩은
 저장소가 자동으로 읽는 파일(`.github/copilot-instructions.md`, `.cursor/rules/*.mdc`,

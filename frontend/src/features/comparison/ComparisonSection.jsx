@@ -95,7 +95,7 @@ function getRemoteAxis(pair, demoMode = true) {
   };
 }
 
-function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain }) {
+function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, template = null }) {
   const isCoding = domainKey === 'coding';
   const staticAxes = isCoding ? codingComparisonAxes : otherComparisonAxes[domainKey];
   const domainCopy = {
@@ -119,7 +119,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain }) {
     setSessionRequested(true);
     setConnection('connecting');
     try {
-      const { session } = await startPreferenceSession(domainKey, sourceText.trim() || domainCopy.task, 8);
+      const { session } = await startPreferenceSession(domainKey, sourceText.trim() || domainCopy.task, 8, template?.id);
       setRemoteSession(session);
       setConnection('connected');
     } catch {
@@ -129,7 +129,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain }) {
 
   useEffect(() => {
     let cancelled = false;
-    startPreferenceSession(domainKey, domainCopy.task, 8)
+    startPreferenceSession(domainKey, domainCopy.task, 8, template?.id)
       .then(({ session }) => {
         if (!cancelled) {
           setRemoteSession(session);
@@ -230,7 +230,13 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain }) {
             정답은 없습니다. 더 편하게 느껴지는 예시를 고르면 선택 기록이
             프롬프트에 반영됩니다.
           </p>
-          {onSwitchDomain && (domainKey === 'summarization' || domainKey === 'summarization_ko') && (
+          {template && (
+            <p className="template-banner">
+              템플릿 <strong>{template.title}</strong>을 내 방식으로 바꾸는 중입니다. 결과는 템플릿 본문에
+              고른 선호가 더해진 프롬프트입니다.
+            </p>
+          )}
+          {!template && onSwitchDomain && (domainKey === 'summarization' || domainKey === 'summarization_ko') && (
             <div className="language-switch" role="group" aria-label="요약 언어">
               {[['summarization', '영어 요약'], ['summarization_ko', '한국어 요약']].map(([key, label]) => (
                 <button key={key} type="button" aria-pressed={domainKey === key}

@@ -38,7 +38,8 @@ from engine.demo_generator import generate_demo
 from engine.domain_loader import Domain, load_domain
 from engine.estimator import Comparison, Estimator
 import exporters
-from engine.generator import build_final_prompt, build_prompt, generate_all
+import template_library
+from engine.generator import build_final_prompt, build_prompt, build_template_prompt, generate_all
 from engine.metric_builder import build_metric
 from engine.selector import UncertaintySelector
 from optimize.run_gepa import MetricEvaluator
@@ -133,6 +134,9 @@ class SessionState:
     optimize_status: str = "idle"  # idle | running | done | error
     prompt: str | None = None
     error: str | None = None
+    # 템플릿 라이브러리에서 "내 방식으로 바꾸기"로 시작했으면 그 id. 결과는
+    # 템플릿 본문 + 추정한 선호 절이 된다.
+    template_id: str | None = None
 
     @property
     def round(self) -> int:
@@ -234,8 +238,13 @@ def start_session(
     model: str,
     demo_mode: bool,
     total_rounds: int = TOTAL_ROUNDS,
+    template_id: str | None = None,
 ) -> SessionState:
     """세션을 열고 첫 쌍을 만든다."""
+    if template_id is not None:
+        template = template_library.get(template_id)
+        if template.domain != domain_key:
+            raise ValueError(f"템플릿 '{template_id}' 은 '{template.domain}' 용이다 (요청: {domain_key}).")
     state = SessionState(
         session_id=uuid.uuid4().hex[:12],
         domain_key=domain_key,
@@ -244,6 +253,7 @@ def start_session(
         model=model,
         demo_mode=demo_mode,
         total_rounds=total_rounds,
+        template_id=template_id,
     )
     domain, estimator, selector = _rebuild(state)
     # 물을 수 있는 질문이 그보다 적으면 그만큼만 묻는다. 코딩(값 2개짜리 축
@@ -359,7 +369,7 @@ def optimize(
     domain, estimator, _ = _rebuild(state)
     metric = build_metric(domain, estimator)
     # GEPA 는 사용자에게 보여 준 것과 같은 최종 프롬프트에서 출발한다.
-    seed_prompt = final_prompt(domain, estimator)
+    seed_prompt = final_prompt(domain, estimator, template_id=state.template_id)
     examples = [e for e in domain.example_sources if e != state.source_text.strip()]
 
     calls = {"n": 0}
@@ -532,7 +542,7 @@ def describe_api_error(exc: BaseException) -> str:
     return f"알 수 없는 오류로 모델 호출이 실패했습니다. (오류 종류: {type(exc).__name__})"
 
 
-def final_prompt(domain: Domain, estimator: Estimator) -> str:
+def final_prompt(domain: Domain, estimator: Estimator, template_id: str | None = None) -> str:
     """사용자에게 건네는 최종 프롬프트. 추정한 선호를 도메인 YAML 의
     final_prompt 틀(역할·선호·지킬 것·출력 형식)에 넣어 조립한다.
 
@@ -541,6 +551,9 @@ def final_prompt(domain: Domain, estimator: Estimator) -> str:
     """
     combo = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
     combo.update({axis.name: "" for axis in domain.axes if axis.type != "enum"})
+    if template_id is not None:
+        # 템플릿의 과제·규칙은 그대로 두고 선호 절만 붙인다.
+        return build_template_prompt(domain, combo, template_library.get(template_id).prompt)
     return build_final_prompt(domain, combo)
 
 

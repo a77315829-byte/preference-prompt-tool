@@ -2002,3 +2002,54 @@
   background: #4468ff;
   cursor: default;
 }
+
+/* 템플릿 라이브러리 (features/templates/TemplateLibrarySection.jsx) */
+.template-group {
+  margin-top: 2rem;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: 0.8rem;
+}
+
+.template-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.2rem;
+  border: 1px solid #e1e6ef;
+  border-radius: 1.2rem;
+  background: #f8f9fb;
+}
+
+.template-card strong {
+  font-size: 1.1rem;
+}
+
+.template-card > span {
+  color: #697386;
+  line-height: 1.55;
+}
+
+.template-card small {
+  color: #8b93a7;
+}
+
+.template-toggle {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  color: #4468ff;
+  background: none;
+  cursor: pointer;
+}
+
+.template-banner {
+  margin: 0.6rem 0 1rem;
+  padding: 0.7rem 1rem;
+  border-radius: 0.8rem;
+  color: #1e3a8a;
+  background: #e8eeff;
+}

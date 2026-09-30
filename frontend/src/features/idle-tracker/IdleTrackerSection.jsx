@@ -53,7 +53,7 @@ function remotePairToQuestion(pair) {
   };
 }
 
-function IdleTrackerSection({ onBack }) {
+function IdleTrackerSection({ onBack, template = null }) {
   const [report, setReport] = useState(null);
   const [reportState, setReportState] = useState('loading');
   const [phase, setPhase] = useState('report');
@@ -98,7 +98,7 @@ function IdleTrackerSection({ onBack }) {
     setConnection('connecting');
     try {
       const sourceText = report?.sourceText || 'AWS 비용 점검 결과에서 낭비되는 리소스와 해결 방법을 찾아주세요.';
-      const { session: nextSession } = await startPreferenceSession('idle_tracker', sourceText, 2);
+      const { session: nextSession } = await startPreferenceSession('idle_tracker', sourceText, 2, template?.id);
       setSession(nextSession);
       setConnection('connected');
     } catch {

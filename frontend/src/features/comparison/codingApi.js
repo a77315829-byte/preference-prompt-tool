@@ -12,7 +12,9 @@ async function request(path, options = {}) {
   return body;
 }
 
-export function startPreferenceSession(domainKey, sourceText, totalRounds = 8) {
+// templateId: 템플릿 라이브러리의 "내 방식으로 바꾸기"로 시작할 때. 결과는
+// 템플릿 본문 + 추정한 선호 절이 된다.
+export function startPreferenceSession(domainKey, sourceText, totalRounds = 8, templateId = null) {
   return request('/sessions', {
     method: 'POST',
     body: JSON.stringify({
@@ -20,6 +22,7 @@ export function startPreferenceSession(domainKey, sourceText, totalRounds = 8) {
       sourceText,
       demoMode: true,
       totalRounds,
+      ...(templateId ? { templateId } : {}),
     }),
   });
 }
