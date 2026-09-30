@@ -23,6 +23,7 @@ from agents.prompt_polish import checklist as polish_checklist
 from agents.prompt_polish import polish as polish_prompt
 
 import service
+import team
 import template_library
 from budget import DailyBudget
 
@@ -47,6 +48,8 @@ DAILY_OPTIMIZATIONS = DailyBudget(int(os.environ.get("PPT_OPTIMIZATIONS_PER_DAY"
 OPTIMIZE_RUNS: dict[str, int] = {}
 # 최적화 근거(전후 점수 등). 화면에서 "무슨 기준으로 다듬었는지" 보여 준다.
 OPTIMIZE_REPORTS: dict[str, dict] = {}
+# 팀 모드 (team.py). 서버 메모리에만 있어 재시작하면 사라진다.
+TEAMS = team.TeamStore()
 SESSIONS: dict[str, service.SessionState] = {}
 SESSIONS_LOCK = threading.Lock()
 
@@ -72,6 +75,27 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
         # 화면에 보이는 프롬프트를 도구별 형식으로. 계산만 하고 모델은 안 부른다.
         payload["exports"] = [asdict(e) for e in service.exports_for(state, payload.get("prompt") or state.prompt)]
     return payload
+
+
+def _team_payload(code: str) -> dict[str, Any]:
+    """팀 결과: 팀원 이름, 축마다 갈린 정도, 합친 선호로 조립한 팀 프롬프트와
+    내보내기. 팀원별 원문이나 생성 결과는 담지 않는다."""
+    domain_key, members = TEAMS.get(code)
+    domain = service.load_domain_for(_domain_path(domain_key))
+    estimator, agreements = team.summarize(domain, members)
+    prompt = service.final_prompt(domain, estimator)
+    labels = domain.final_prompt.axis_labels if domain.final_prompt else {}
+    return {
+        "code": code,
+        "domain_key": domain_key,
+        "members": [m.name for m in members],
+        "agreements": [
+            {**asdict(a), "label": labels.get(a.axis) or domain.axis(a.axis).description}
+            for a in agreements
+        ],
+        "prompt": prompt,
+        "exports": [asdict(e) for e in service.exports_for_estimate(domain, estimator, prompt, slug_suffix="-team")],
+    }
 
 
 def _domain_path(domain_key: str) -> str:
@@ -281,6 +305,12 @@ class ApiHandler(BaseHTTPRequestHandler):
         if path == "/api/health":
             self._send(200, {"ok": True, "demoAvailable": True})
             return
+        if len(parts := path.split("/")) == 4 and parts[:3] == ["", "api", "teams"]:
+            try:
+                self._send(200, {"team": _team_payload(parts[3])})
+            except team.TeamError as exc:
+                self._send(404, {"error": str(exc)})
+            return
         if path == "/api/templates":
             self._send(200, {"templates": [asdict(t) for t in template_library.library()]})
             return
@@ -311,6 +341,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/polish":
                 self._send(200, _polish_prompt(body))
+                return
+            if path.startswith("/api/teams/") and path.endswith("/members"):
+                self._join_team(path.split("/")[3], body)
                 return
             if path.startswith("/api/sessions/") and path.endswith("/optimize"):
                 self._start_optimize(path.split("/")[3])
@@ -384,6 +417,18 @@ class ApiHandler(BaseHTTPRequestHandler):
         with SESSIONS_LOCK:
             SESSIONS[session_id] = updated
         self._send(200, {"session": _state_payload(updated)})
+
+    def _join_team(self, code: str, body: dict[str, Any]) -> None:
+        """끝난 세션의 선택 기록을 팀에 더한다. 원문은 넘기지 않는다."""
+        with SESSIONS_LOCK:
+            state = SESSIONS.get(str(body.get("sessionId", "")))
+        if state is None:
+            self._send(404, {"error": "세션을 찾을 수 없습니다."})
+            return
+        if not state.done:
+            raise ValueError("선택을 모두 마친 뒤에 팀에 더할 수 있습니다.")
+        TEAMS.add(code, state.domain_key, str(body.get("name", "")), state.history)
+        self._send(200, {"team": _team_payload(code)})
 
     def _start_optimize(self, session_id: str) -> None:
         """GEPA 최적화를 백그라운드로 시작하고 바로 돌려준다.

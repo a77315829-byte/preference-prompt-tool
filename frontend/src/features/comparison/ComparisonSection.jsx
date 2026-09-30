@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { buildCodingPrompt, buildPreferencePrompt, codingComparisonAxes, otherComparisonAxes } from './comparisonData';
 import { fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice } from './codingApi';
 import ExportPanel from '../../shared/components/ExportPanel';
+import TeamPanel from '../../shared/components/TeamPanel';
 
 const DEFAULT_TASK = '클릭 횟수를 보여주는 TypeScript/React 버튼 컴포넌트를 만들어 주세요.';
 
@@ -374,6 +375,10 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
               {optimizeError && <p className="connection-note">{optimizeError}</p>}
               {/* 최적화 중에는 옛 프롬프트를 내보내지 않도록 숨긴다. */}
               {optimizeStatus !== 'running' && <ExportPanel exports={remoteSession?.exports} />}
+              {isRemote && remoteSession.done && (
+                <TeamPanel sessionId={remoteSession.session_id}
+                  valueLabel={(axis, value) => remoteAxisLabels[axis]?.options?.[value] || value} />
+              )}
               <div className="prompt-actions">
                 <button className="prompt-copy-button" type="button" onClick={handleCopy}>
                   {copied ? '복사했습니다 ✓' : '프롬프트 복사'}

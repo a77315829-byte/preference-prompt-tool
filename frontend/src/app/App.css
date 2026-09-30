@@ -2053,3 +2053,52 @@
   color: #1e3a8a;
   background: #e8eeff;
 }
+
+/* 팀 모드 (shared/components/TeamPanel.jsx) */
+.team-panel {
+  margin-top: 2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid #e1e6ef;
+}
+
+.team-help {
+  color: #697386;
+  line-height: 1.6;
+}
+
+.team-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.8rem 0;
+}
+
+.team-form input {
+  min-width: 0;
+  flex: 1 1 12rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #d5dbe6;
+  border-radius: 0.8rem;
+  font: inherit;
+}
+
+.team-agreements {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0;
+  list-style: none;
+}
+
+.team-agreements li {
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.8rem;
+  line-height: 1.5;
+}
+
+.team-agreements li.agreed {
+  background: #ecfdf3;
+}
+
+.team-agreements li.split {
+  background: #fff7ed;
+}

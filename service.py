@@ -509,12 +509,19 @@ def exports_for(state: SessionState, prompt: str) -> list[exporters.Export]:
     글자 수 한도가 있는 곳에서 넘치면 선호 지시만 담은 짧은 판을 같이 준다.
     """
     domain, estimator = current_estimate(state)
+    return exports_for_estimate(domain, estimator, prompt)
+
+
+def exports_for_estimate(
+    domain: Domain, estimator: Estimator, prompt: str, *, slug_suffix: str = ""
+) -> list[exporters.Export]:
+    """세션 없이 추정만으로 내보내기를 만든다 (팀 프롬프트가 쓴다)."""
     combo = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
     combo.update({axis.name: "" for axis in domain.axes if axis.type != "enum"})
     return exporters.build_exports(
         prompt,
-        slug=domain.name,
-        title=f"선호 기반 프롬프트 ({domain.name})",
+        slug=domain.name + slug_suffix,
+        title=f"선호 기반 프롬프트 ({domain.name}{slug_suffix})",
         targets=domain.export_targets or None,
         compact_prompt=build_prompt(domain, combo),
     )
