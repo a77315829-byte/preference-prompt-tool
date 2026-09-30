@@ -56,11 +56,10 @@ def run(
     topic: str = "",
     # 이 함수는 실제 제품 경로(app.py, api_server.py)에서 쓰이지 않는다 -
     # 둘 다 service.optimize() 를 직접 부른다. 실험·테스트 전용 진입점이라
-    # 기본값이 안 맞아도 아무도 모르게 지나갈 수 있으므로, service.optimize()
-    # 가 reflection_model 을 안 받으면 task 모델을 그대로 쓰는 것과 같은
-    # 기본값을 쓴다 - 싸고 강한 모델을 나눠 쓴다는 CLAUDE.md 초기 구상과
-    # 다르게, 지금 제품은 둘 다 같은 모델(app.py 의 MODEL)을 쓴다.
-    task_lm: str = "openai/gpt-5.6-luna",
+    # 기본값이 안 맞아도 아무도 모르게 지나갈 수 있으므로 제품과 같게 둔다:
+    # 후보 생성은 app.py 의 MODEL, 성찰은 service.REFLECTION_MODEL 의 기본값.
+    # (service 를 import 하면 순환이라 문자열로 적는다.)
+    task_lm: str = "openai/gpt-4o-mini",
     reflection_lm: str = "openai/gpt-5.6-luna",
     max_metric_calls: int = 150,
 ) -> tuple[str, GEPAResult]:

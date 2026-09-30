@@ -70,6 +70,10 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제)
   모델(`app.py`의 `MODEL`, 현재 `openai/gpt-5.6-luna`)을 그대로 쓴다 -
   실제로는 후보 생성과 성찰이 같은 모델이다. 나눌지는 비용·품질
   트레이드오프를 재보고 팀이 정할 일이라 지금은 동작만 사실대로 적는다.
+  **(2026-09-30 정정)** 위 정정은 ui/ux 브랜치 기준이었다. master 는 9/27 에
+  이미 나눴다 - 후보 생성은 실측으로 고른 `openai/gpt-4o-mini`(app.py 의
+  `MODEL`, api_server.py 의 `PPT_MODEL`), 성찰은 `service.REFLECTION_MODEL`
+  (`PPT_REFLECTION_MODEL`, 기본 `openai/gpt-5.6-luna`). 실측 표는 README.
 
 ---
 
@@ -207,8 +211,8 @@ optimized = result.best_candidate["system_prompt"]
 **이 코드는 최초 계획 당시의 예시이고, 실제 구현은 다르다.** gepa 0.1.4는
 `metric=` 인자를 받지 않아 `DefaultAdapter`로 감싸야 했고(`optimize/run_gepa.py`,
 `service.py`), 실제 호출 경로는 `gepa.optimize()`를 직접 부르지 않는다.
-task/reflection 모델 분리도 위 "후보 생성은 저렴한 모델..." 항목의 정정과
-같은 이유로 아직 구현되지 않았다 - 지금은 둘 다 같은 모델을 쓴다.
+task/reflection 모델 분리는 2026-09-27 에 구현됐다 (위 "후보 생성은 저렴한
+모델..." 항목의 09-30 정정 참고).
 
 **중요한 설계 포인트**: GEPA는 점수뿐 아니라 자연어 피드백도 받는다.
 평가 함수가 축별 위반 내역을 텍스트로 반환하면 GEPA가 이를 성찰에 사용해
@@ -1855,6 +1859,21 @@ B-LLM의 checks_score(0.610)가 심지어 기존 B(0.668)보다 낮다는 것도
 프로젝트가 애초에 전제하지 않는 조건)과는 이 표본에서 구분되지 않는다."
 n=5이므로 어느 비교도 p<0.05는 아니다(규칙 11) - 승/패 횟수와 평균차를
 그대로 보고하고 유의성은 주장하지 않는다.
+
+**2026-09-30 정정.** 위 표의 D 와 D vs B 는 틀렸다. 이 실험은 기본
+`UncertaintySelector` 를 바꾼 ui/ux 브랜치에서 돌아, 문서 2번이 다른 선호로
+수렴했다. B 는 compare_baselines 결과와 문서별로 완전히 같으므로(같은 캐시)
+D 를 그 실험 값으로 되돌렸다: D 0.996 / 0.207, **D vs B 4/5(+0.039, p=0.375)**,
+D vs B+ 3/5(+0.007), D vs B-LLM 5/5(+0.056). 기본 선택기는 실험 재현성
+때문에 바꾸지 않는다 - 반복 방지는 앱 전용 옵션이다.
+
+해석도 둘 고친다. (1) B-LLM 이 약한 것은 "번역 과정이 정보를 잃는다"는
+증거가 아니다. B+ 는 채점 기준의 숫자("2문장 이하")를 받았고, B-LLM 에 준
+설명은 실험자가 쓴 숫자 없는 문장("as short as possible")에 한 문장 제약까지
+붙었다 - 정보는 모델에 들어가기 전에 빠졌다. (2) 페르소나 5명의 추출성이
+전부 `normal` 이라 사실상 길이 축 하나만 시험했고, 학습·채점 문서가 같다.
+`tests/test_strong_baseline_comparison.py` 가 이제 B·D 가 원래 실험과 같은지도
+검사한다.
 
 산출물: `experiments/results/strong_baseline_comparison.csv`(조건별 점수),
 `experiments/results/strong_baseline_prompts.json`(B+/B-LLM에 실제로 쓰인

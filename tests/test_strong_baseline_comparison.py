@@ -27,11 +27,24 @@ def test_five_documents_four_conditions() -> None:
     }
 
 
-def test_d_beats_plain_b_on_every_document() -> None:
-    """D vs B(기존): 5/5. 이건 원래 compare_baselines.py 결과와 같은 방향이어야 한다."""
+def test_d_and_b_match_the_original_baseline_experiment() -> None:
+    """같은 5문서·페르소나이므로 B 와 D 는 compare_baselines.py 의 결과
+    (baseline_comparison.csv, README 2절)와 같아야 한다. ui/ux 에서 기본
+    선택기를 바꾼 채로 이 실험을 돌려 D 가 조용히 달라졌었다(문서 2번이 다른
+    선호로 수렴해 D vs B 가 4/5 에서 5/5 로). 두 표가 다시 어긋나면 실패한다."""
+    pivot = _pivot()
+    original = pd.read_csv(RESULT.with_name("baseline_comparison.csv")).pivot(
+        index="doc", columns="condition", values="independent_score"
+    )
+    for condition in ("B_custom_instruction", "D_our_tool"):
+        assert pivot[condition].round(6).tolist() == original[condition].round(6).tolist(), condition
+
+
+def test_d_beats_plain_b_on_four_of_five() -> None:
+    """D vs B(기존): 4/5 (나머지 1개는 -0.0012). README 2절과 같다."""
     pivot = _pivot()
     diff = pivot["D_our_tool"] - pivot["B_custom_instruction"]
-    assert (diff > 0).all(), f"D가 기존 B를 매 문서에서 이겨야 하는데 아니다: {diff.to_dict()}"
+    assert int((diff > 0).sum()) == 4, diff.to_dict()
 
 
 def test_knowing_the_preference_closes_most_of_the_gap() -> None:
@@ -55,4 +68,4 @@ def test_d_beats_the_realistic_alternative() -> None:
     pivot = _pivot()
     diff = pivot["D_our_tool"] - pivot["B_llm_generated"]
     assert (diff > 0).all(), f"D가 B-LLM을 매 문서에서 이겨야 하는데 아니다: {diff.to_dict()}"
-    assert diff.mean() > 0.03, f"D vs B-LLM 격차가 보고된 값(+0.057)보다 훨씬 작아졌다: {diff.mean():.4f}"
+    assert diff.mean() > 0.03, f"D vs B-LLM 격차가 보고된 값(+0.056)보다 훨씬 작아졌다: {diff.mean():.4f}"
