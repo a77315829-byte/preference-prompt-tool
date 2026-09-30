@@ -4,6 +4,8 @@
 API 호출 없이 합성 오라클(정답값과 더 많이 일치하는 콤보를 선택)로
 검증한다 - 실제 생성/사람 대행 실험은 9~10주차 experiments/run_all.py 몫."""
 
+import itertools
+
 from engine.domain_loader import load_domain
 from engine.estimator import Comparison, Estimator
 from engine.selector import RandomSelector, SequentialAxisSelector, UncertaintySelector
@@ -140,6 +142,27 @@ def test_pairs_always_differ_on_some_axis(selector_cls, domain) -> None:
         assert identical < 15
     else:
         assert identical == 0
+
+
+def test_people_mode_never_repeats_for_a_flip_flopping_user(domain) -> None:
+    """확신도가 쌓이지 않는 사용자(A/B 를 번갈아 고름)에게도 같은 질문을
+    되풀이하면 안 된다 (ui/ux 3b140d1 의 걱정을 앱 전용 옵션 기준으로
+    옮겼다 - 기본 동작은 실험 재현성 때문에 바꾸지 않는다). 이미 물은
+    질문은 선택 이력에서 읽으므로 세션 재생에 내부 상태가 필요 없다.
+    물을 게 떨어지면 None 이다."""
+    from engine.selector import _question_key
+
+    estimator = Estimator(domain)
+    selector = UncertaintySelector(domain, seed=0, contrast_first=True, avoid_repeats=True)
+    asked = []
+    for i in range(selector.max_questions() + 1):
+        pair = selector.next_pair(estimator)
+        if pair is None:
+            break
+        asked.append(_question_key(*pair))
+        estimator.update(Comparison(*pair, "a" if i % 2 == 0 else "b"))
+    assert asked and len(set(asked)) == len(asked), f"반복이 나왔다: {asked}"
+    assert selector.next_pair(estimator) is None
 
 
 if __name__ == "__main__":

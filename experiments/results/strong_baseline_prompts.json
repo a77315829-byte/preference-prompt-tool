@@ -1,0 +1,47 @@
+[
+  {
+    "doc": 0,
+    "target": {
+      "length": "short",
+      "extractiveness": "normal"
+    },
+    "b_plus": "Summarize the following article in 2 sentences or less - keep it as short as possible, using your own words for the most part.",
+    "b_llm": "Summarize the key points as briefly as possible using mostly my own words."
+  },
+  {
+    "doc": 1,
+    "target": {
+      "length": "normal",
+      "extractiveness": "normal"
+    },
+    "b_plus": "Summarize the following article in about 3 to 4 sentences, a normal-length summary, using your own words for the most part.",
+    "b_llm": "Please provide a summary that’s a moderate length and mostly written in your own words."
+  },
+  {
+    "doc": 2,
+    "target": {
+      "length": "long",
+      "extractiveness": "normal"
+    },
+    "b_plus": "Summarize the following article in at least 5 sentences, with plenty of detail, using your own words for the most part.",
+    "b_llm": "Please provide detailed and thorough summaries written mostly in my own words."
+  },
+  {
+    "doc": 3,
+    "target": {
+      "length": "short",
+      "extractiveness": "normal"
+    },
+    "b_plus": "Summarize the following article in 2 sentences or less - keep it as short as possible, using your own words for the most part.",
+    "b_llm": "Summarize the key points as briefly as possible using mostly my own words."
+  },
+  {
+    "doc": 4,
+    "target": {
+      "length": "short",
+      "extractiveness": "normal"
+    },
+    "b_plus": "Summarize the following article in 2 sentences or less - keep it as short as possible, using your own words for the most part.",
+    "b_llm": "Summarize the key points as briefly as possible using mostly my own words."
+  }
+]

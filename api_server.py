@@ -19,6 +19,9 @@ from urllib.parse import urlparse
 
 from dotenv import load_dotenv
 
+from agents.prompt_polish import checklist as polish_checklist
+from agents.prompt_polish import polish as polish_prompt
+
 import service
 from budget import DailyBudget
 
@@ -85,11 +88,35 @@ def _domain_path(domain_key: str) -> str:
     return str(path)
 
 
+def _report_source_text(report: dict[str, Any]) -> str:
+    """findings 를 생성기가 실제로 인용할 수 있는 형태로 적는다.
+
+    이전 sourceText는 "찾았으니 확인하세요" 정도의 안내문 한 줄이었다 -
+    그 문장만 생성기에 들어가면 실제 금액·리소스ID를 하나도 못 받은
+    채로 "요약"을 만드는 셈이라, 출력에 나오는 구체적인 숫자는 전부
+    모델이 지어낸 것일 수밖에 없다(사용자에게 보여주는 카드에는 진짜
+    데이터가 있는데, 그걸 요약하는 모델만 못 보고 있었다). 개인화(상세도
+    ·강조점)와 정확성(금액·리소스ID가 실제와 일치)을 따로 검증하려면
+    검증 대상 자체가 먼저 정확해야 한다."""
+    period = report.get("period", {})
+    lines = [
+        f"조회 기간: {period.get('start', '?')} ~ {period.get('end', '?')}",
+        f"총 예상 비용: {report.get('totalCost', '?')}",
+    ]
+    for finding in report.get("findings", []):
+        lines.append(
+            f"- {finding.get('service', '?')} ({finding.get('resourceId', '?')}): "
+            f"{finding.get('cost', '?')} - {finding.get('reason', '')} "
+            f"해결: {finding.get('resolution', '')}"
+        )
+    return "\n".join(lines)
+
+
 def _demo_aws_cost_report(lookback_days: int = 30) -> dict[str, Any]:
     """API 키 없이도 항상 같은 화면을 보여주는 AWS 비용 점검 결과."""
     end = date.today()
     start = end - timedelta(days=lookback_days)
-    return {
+    report: dict[str, Any] = {
         "mode": "demo",
         "period": {"start": start.isoformat(), "end": end.isoformat()},
         "totalCost": "₩16,800",
@@ -114,11 +141,9 @@ def _demo_aws_cost_report(lookback_days: int = 30) -> dict[str, Any]:
                 "resolution": "AWS 콘솔 > EC2 > 스냅샷에서 필요 없는 항목을 확인 후 삭제하세요.",
             },
         ],
-        "sourceText": (
-            "AWS 비용 점검 결과입니다. 연결되지 않은 탄력적 IP와 오래된 EBS 스냅샷이 "
-            "발견되었습니다. 각 리소스의 비용과 해결 방법을 확인하세요."
-        ),
     }
+    report["sourceText"] = _report_source_text(report)
+    return report
 
 
 def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
@@ -165,12 +190,48 @@ def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
         ]
         report = _demo_aws_cost_report(lookback_days)
         report.update({"mode": "aws", "currency": "USD", "totalCost": f"${total:.2f}", "findings": findings})
-        report["sourceText"] = "AWS Cost Explorer 결과를 바탕으로 비용이 높은 서비스를 점검하세요."
+        report["sourceText"] = _report_source_text(report)
         return report
     except Exception:  # noqa: BLE001 - 자격 증명/SDK/권한 오류를 비밀 없이 처리
         report = _demo_aws_cost_report(lookback_days)
         report["liveError"] = "AWS Cost Explorer를 사용할 수 없어 데모 데이터를 표시합니다."
         return report
+
+
+# 프롬프트 자체는 비교 세션의 sourceText(과제 원문, 12,000자 한도)보다
+# 훨씬 짧아야 정상이다. 큰 값을 받으면 사용자가 원문을 프롬프트 칸에
+# 잘못 붙여넣은 것으로 보고 앞에서 거절한다.
+MAX_POLISH_PROMPT_CHARS = 4_000
+
+
+def _checklist_payload(items) -> list[dict[str, Any]]:
+    return [{"name": r.name, "passed": r.passed, "note": r.note} for r in items]
+
+
+def _polish_prompt_text(body: dict[str, Any]) -> str:
+    prompt = str(body.get("prompt", "")).strip()
+    if not prompt:
+        raise ValueError("prompt가 필요합니다.")
+    if len(prompt) > MAX_POLISH_PROMPT_CHARS:
+        raise ValueError(f"prompt는 {MAX_POLISH_PROMPT_CHARS}자 이내여야 합니다.")
+    return prompt
+
+
+def _polish_checklist_only(body: dict[str, Any]) -> dict[str, Any]:
+    """타이핑할 때마다 호출해도 되는 무료 경로 - 모델을 부르지 않는다."""
+    prompt = _polish_prompt_text(body)
+    return {"checklist": _checklist_payload(polish_checklist(prompt))}
+
+
+def _polish_prompt(body: dict[str, Any]) -> dict[str, Any]:
+    """제출 시 한 번만 부르는 경로 - 체크리스트 + LLM 재작성."""
+    prompt = _polish_prompt_text(body)
+    result = polish_prompt(prompt, model=str(body.get("model", DEFAULT_MODEL)))
+    return {
+        "checklist": _checklist_payload(result.checklist),
+        "suggestions": result.suggestions,
+        "revisedPrompt": result.revised_prompt,
+    }
 
 
 class ApiHandler(BaseHTTPRequestHandler):
@@ -226,6 +287,12 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/aws/costs":
                 self._send(200, {"report": _aws_cost_report(body)})
+                return
+            if path == "/api/polish/checklist":
+                self._send(200, _polish_checklist_only(body))
+                return
+            if path == "/api/polish":
+                self._send(200, _polish_prompt(body))
                 return
             if path.startswith("/api/sessions/") and path.endswith("/optimize"):
                 self._start_optimize(path.split("/")[3])
