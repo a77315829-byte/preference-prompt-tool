@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { buildCodingPrompt, buildPreferencePrompt, codingComparisonAxes, otherComparisonAxes } from './comparisonData';
 import { fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice } from './codingApi';
+import ExportPanel from '../../shared/components/ExportPanel';
 
 const DEFAULT_TASK = '클릭 횟수를 보여주는 TypeScript/React 버튼 컴포넌트를 만들어 주세요.';
 
@@ -355,6 +356,8 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
                 <p className="connection-note">최적화 중 API 호출이 실패했습니다. 위의 기본 프롬프트는 그대로 쓸 수 있습니다.</p>
               )}
               {optimizeError && <p className="connection-note">{optimizeError}</p>}
+              {/* 최적화 중에는 옛 프롬프트를 내보내지 않도록 숨긴다. */}
+              {optimizeStatus !== 'running' && <ExportPanel exports={remoteSession?.exports} />}
               <div className="prompt-actions">
                 <button className="prompt-copy-button" type="button" onClick={handleCopy}>
                   {copied ? '복사했습니다 ✓' : '프롬프트 복사'}

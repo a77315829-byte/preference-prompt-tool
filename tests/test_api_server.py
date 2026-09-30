@@ -208,3 +208,20 @@ def test_session_ignores_client_chosen_model(server, monkeypatch) -> None:
     })
     assert status == 201
     assert json.loads(body)["session"]["model"] == api_server.DEFAULT_MODEL
+
+
+def test_finished_session_carries_exports(server, monkeypatch) -> None:
+    """결과 화면이 도구별 내보내기를 그릴 수 있게, 끝난 세션에는 exports 가 붙는다.
+    내보내기는 화면에 보이는 그 프롬프트여야 한다."""
+    monkeypatch.setattr(api_server, "LIVE", False)
+    status, body = _post(server, "/sessions", {"domainKey": "coding", "sourceText": SOURCE})
+    session = json.loads(body)["session"]
+    assert "exports" not in session  # 끝나기 전에는 없다
+    while not session["done"]:
+        _, body = _post(server, f"/sessions/{session['session_id']}/choices",
+                        {"pairId": session["pair"]["pair_id"], "chosen": "a"})
+        session = json.loads(body)["session"]
+    exports = {e["key"]: e for e in session["exports"]}
+    assert exports["copilot"]["path"] == ".github/copilot-instructions.md"
+    assert session["prompt"] in exports["copilot"]["content"]
+    assert exports["chatgpt"]["content"] == session["prompt"].strip()

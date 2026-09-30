@@ -37,7 +37,8 @@ from typing import Callable
 from engine.demo_generator import generate_demo
 from engine.domain_loader import Domain, load_domain
 from engine.estimator import Comparison, Estimator
-from engine.generator import build_final_prompt, generate_all
+import exporters
+from engine.generator import build_final_prompt, build_prompt, generate_all
 from engine.metric_builder import build_metric
 from engine.selector import UncertaintySelector
 from optimize.run_gepa import MetricEvaluator
@@ -489,6 +490,24 @@ _API_ERROR_KINDS = (
     ("ServiceUnavailableError", "공급자 장애", "모델 공급자 서버에 문제가 있습니다. 잠시 뒤 다시 시도해 주세요."),
     ("InternalServerError", "공급자 장애", "모델 공급자 서버에 문제가 있습니다. 잠시 뒤 다시 시도해 주세요."),
 )
+
+
+def exports_for(state: SessionState, prompt: str) -> list[exporters.Export]:
+    """끝난 세션의 프롬프트를 도메인이 정한 도구 형식들로 바꾼다.
+
+    prompt 는 화면에 보여 준 그 프롬프트(최종 조립본 또는 GEPA 결과)다.
+    글자 수 한도가 있는 곳에서 넘치면 선호 지시만 담은 짧은 판을 같이 준다.
+    """
+    domain, estimator = current_estimate(state)
+    combo = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
+    combo.update({axis.name: "" for axis in domain.axes if axis.type != "enum"})
+    return exporters.build_exports(
+        prompt,
+        slug=domain.name,
+        title=f"선호 기반 프롬프트 ({domain.name})",
+        targets=domain.export_targets or None,
+        compact_prompt=build_prompt(domain, combo),
+    )
 
 
 def current_estimate(state: SessionState) -> tuple[Domain, Estimator]:

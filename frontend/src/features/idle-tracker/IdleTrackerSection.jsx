@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { fetchAwsCostReport, startPreferenceSession, submitPreferenceChoice } from '../comparison/codingApi';
+import ExportPanel from '../../shared/components/ExportPanel';
 
 const FALLBACK_PAIRS = [
   {
@@ -203,6 +204,7 @@ function IdleTrackerSection({ onBack }) {
                 <motion.div className="prompt-result" key="aws-prompt-result" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
                   <p className="question-eyebrow">Your AWS prompt</p><h3>나만의 비용 점검 프롬프트가 완성됐어요.</h3>
                   <p>다음 비용 점검에 그대로 붙여 넣을 수 있습니다.</p><pre className="prompt-box"><code>{prompt}</code></pre>
+                  <ExportPanel exports={session?.exports} />
                   <div className="prompt-actions"><button className="prompt-copy-button" type="button" onClick={copyPrompt}>{copied ? '복사했습니다 ✓' : '프롬프트 복사'}</button><button className="prompt-reset-button" type="button" onClick={onBack}>다시 선택하기</button></div>
                 </motion.div>
               )}

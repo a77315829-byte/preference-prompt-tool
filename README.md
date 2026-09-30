@@ -594,6 +594,12 @@ npm run dev
 모델은 서버가 정한다. 요청 본문에 `model` 을 보내도 무시한다 - 따르면
 누구든 비싼 모델 이름으로 서버 키를 쓸 수 있다.
 
+**바로 쓰기** (React 결과 화면, `exporters.py`): 만든 프롬프트를 도구별 형식으로
+가져간다. 채팅 서비스(ChatGPT 맞춤 지침·Claude 프로젝트·Gemini Gem)는 복사, 코딩은
+저장소가 자동으로 읽는 파일(`.github/copilot-instructions.md`, `.cursor/rules/*.mdc`,
+`AGENTS.md`)을 내려받는다. 어느 도메인에 무엇을 줄지는 YAML 의 `export_targets`.
+ChatGPT 무료 한도(1,500자)를 넘으면 자르지 않고 선호 지시만 담은 짧은 판을 함께 준다.
+
 **프롬프트 다듬기** (React 상단 메뉴, `agents/prompt_polish.py`): 사용자가
 가져온 아무 프롬프트를 역할·형식·제약·예시·분량·모호한 표현 여섯 항목으로
 코드가 점검하고(입력 중 무료, `/api/polish/checklist`), 제출하면 그 점검표를

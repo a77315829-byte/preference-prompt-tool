@@ -68,6 +68,8 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
         # "최적화가 적용됐다"고 표시하면 거짓이므로 바뀌었는지를 같이 준다.
         payload["optimize_changed"] = state.optimize_status == "done" and state.prompt != seed
         payload["optimize_report"] = OPTIMIZE_REPORTS.get(state.session_id)
+        # 화면에 보이는 프롬프트를 도구별 형식으로. 계산만 하고 모델은 안 부른다.
+        payload["exports"] = [asdict(e) for e in service.exports_for(state, payload.get("prompt") or state.prompt)]
     return payload
 
 

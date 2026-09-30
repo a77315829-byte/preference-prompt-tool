@@ -78,6 +78,9 @@ class Domain:
     example_sources: list[str] = field(default_factory=list)
     # 선택 항목. 없으면 최종 프롬프트는 후보 생성용 프롬프트와 같다.
     final_prompt: FinalPromptSpec | None = None
+    # 만든 프롬프트를 내보낼 곳의 이름 목록. 선택 항목이고, 비어 있으면
+    # 화면 쪽 기본값을 쓴다. 이름의 뜻은 엔진이 아니라 화면 쪽이 안다.
+    export_targets: list[str] = field(default_factory=list)
 
     def axis(self, name: str) -> Axis:
         for a in self.axes:
@@ -170,6 +173,10 @@ def _validate(raw: dict, path: Path) -> None:
         if unknown:
             raise DomainError(f"{at}: axis_labels 에 없는 축이 있다: {sorted(unknown)}")
 
+    targets = raw.get("export_targets", [])
+    if not isinstance(targets, list) or not all(isinstance(t, str) and t.strip() for t in targets):
+        raise DomainError(f"{where}: export_targets 는 비어 있지 않은 문자열 목록이어야 한다")
+
     examples = raw.get("example_sources", [])
     if not isinstance(examples, list) or not all(isinstance(e, str) and e.strip() for e in examples):
         raise DomainError(f"{where}: example_sources 는 비어 있지 않은 문자열 목록이어야 한다")
@@ -219,6 +226,7 @@ def load_domain(path: str | Path) -> Domain:
         axes=axes,
         example_sources=[e.strip() for e in raw.get("example_sources", [])],
         final_prompt=_final_prompt(raw.get("final_prompt")),
+        export_targets=[t.strip() for t in raw.get("export_targets", [])],
     )
 
 
