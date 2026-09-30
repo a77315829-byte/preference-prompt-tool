@@ -82,7 +82,7 @@ function App() {
             exit={{ opacity: 0, y: -24, scale: 0.99 }}
             transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
           >
-            <ComparisonSection onBack={handleComparisonBack} domainKey={activeFlow} />
+            <ComparisonSection onBack={handleComparisonBack} domainKey={activeFlow} onSwitchDomain={setActiveFlow} />
           </motion.div>
         )}
 

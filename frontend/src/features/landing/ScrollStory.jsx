@@ -26,13 +26,15 @@ const scenes = [
   },
 ];
 
-const categoryOptions = [
+// 앞에 보이는 핵심 카테고리. 타깃("AI 를 매일 쓰는 작은 개발팀")이 반복하는 일에
+// 맞춘 세 가지다. 요약은 영어·한국어를 한 카드로 두고 비교 화면에서 언어를 고른다.
+const coreCategories = [
   {
     id: 'summary',
     number: '01',
     label: 'DOCUMENT',
     title: '문서 요약',
-    description: '긴 문서를 내가 좋아하는 길이와 표현으로 요약합니다.',
+    description: '회의록·기술 문서·기사를 내가 좋아하는 길이와 표현으로 요약합니다. 영어·한국어.',
     accent: 'blue',
   },
   {
@@ -40,58 +42,57 @@ const categoryOptions = [
     number: '02',
     label: 'CODE',
     title: '코딩 도움',
-    description: '선호하는 TypeScript와 React 작성 방식을 찾아갑니다.',
+    description: '선호하는 TypeScript와 React 작성 방식을 찾아 Copilot·Cursor 설정 파일로 가져갑니다.',
     accent: 'purple',
   },
   {
-    id: 'summaryKo',
+    id: 'idleTracker',
     number: '03',
-    label: 'KOREAN DOC',
-    title: '한국어 문서 요약',
-    description: '한국어 원문을 원하는 길이와 표현으로 요약합니다.',
-    accent: 'blue',
+    label: 'AWS COST',
+    title: 'AWS 비용 보고',
+    description: '서비스별 비용 현황을 내가 보기 편한 상세도와 강조점으로 보고받습니다.',
+    accent: 'green',
   },
+];
+
+// 실험실: 엔진을 고치지 않고 붙는다는 확장성의 근거로 남겨 둔 카테고리.
+// 제품 검증 범위 밖이라 기본 화면에서는 숨긴다.
+const labCategories = [
   {
     id: 'summaryHybrid',
-    number: '04',
-    label: 'DEEP SUMMARY',
+    number: 'L1',
+    label: 'LAB · DEEP SUMMARY',
     title: '문서 요약 심화',
     description: '요약 길이와 원문 반영 정도를 더 세밀하게 맞춥니다.',
     accent: 'indigo',
   },
   {
-    id: 'idleTracker',
-    number: '05',
-    label: 'AWS COST',
-    title: 'AWS 비용 점검',
-    description: '놓치기 쉬운 유휴 리소스와 해결 방법을 한눈에 확인합니다.',
-    accent: 'green',
-  },
-  {
     id: 'review',
-    number: '06',
-    label: 'REVIEW',
+    number: 'L2',
+    label: 'LAB · REVIEW',
     title: '고객 리뷰 작성',
     description: '방문 메모를 내가 좋아하는 길이와 어조의 리뷰로 바꿉니다.',
     accent: 'orange',
   },
   {
     id: 'email',
-    number: '07',
-    label: 'EMAIL',
+    number: 'L3',
+    label: 'LAB · EMAIL',
     title: '이메일 초안',
     description: '전달할 내용을 원하는 길이와 말투의 이메일로 정리합니다.',
     accent: 'teal',
   },
   {
     id: 'macsumEval',
-    number: '08',
-    label: 'DOC QUALITY',
+    number: 'L4',
+    label: 'LAB · DOC QUALITY',
     title: '문서 품질 평가',
     description: '문장을 얼마나 간결하고 읽기 쉽게 다듬을지 정합니다.',
     accent: 'rose',
   },
 ];
+
+const labIds = new Set(labCategories.map(({ id }) => id));
 
 function StoryVisual({ type }) {
   if (type === 'category') {
@@ -161,6 +162,14 @@ function NarrativeScene({ scene, direction }) {
 }
 
 function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction }) {
+  const [showLab, setShowLab] = useState(labIds.has(selectedCategory));
+  const options = showLab ? [...coreCategories, ...labCategories] : coreCategories;
+  const toggleLab = () => {
+    // 실험실을 닫을 때 실험실 카드가 골라져 있으면, 보이지 않는 카드로
+    // 시작하지 않게 첫 카드로 돌린다.
+    if (showLab && labIds.has(selectedCategory)) onSelectCategory(coreCategories[0].id);
+    setShowLab(!showLab);
+  };
   return (
     <motion.article
       className="narrative-scene narrative-intro-scene"
@@ -188,8 +197,14 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction 
           <span>카드를 옆으로 넘겨 필요한 작업을 고르세요.</span>
         </div>
 
-        <CategoryDeck options={categoryOptions} selectedCategory={selectedCategory}
+        <CategoryDeck options={options} selectedCategory={selectedCategory}
           onSelect={onSelectCategory} onContinue={onContinue} />
+        <div className="category-lab-toggle">
+          <button type="button" onClick={toggleLab} aria-expanded={showLab}>
+            {showLab ? '핵심 카테고리만 보기' : `실험실 카테고리 보기 (${labCategories.length})`}
+          </button>
+          <span>실험실은 같은 엔진에 도메인 정의만 더해 붙인 카테고리입니다. 품질은 검증 전입니다.</span>
+        </div>
       </div>
     </motion.article>
   );

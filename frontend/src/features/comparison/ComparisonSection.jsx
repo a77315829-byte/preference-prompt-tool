@@ -95,7 +95,7 @@ function getRemoteAxis(pair, demoMode = true) {
   };
 }
 
-function ComparisonSection({ onBack, domainKey = 'coding' }) {
+function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain }) {
   const isCoding = domainKey === 'coding';
   const staticAxes = isCoding ? codingComparisonAxes : otherComparisonAxes[domainKey];
   const domainCopy = {
@@ -230,6 +230,16 @@ function ComparisonSection({ onBack, domainKey = 'coding' }) {
             정답은 없습니다. 더 편하게 느껴지는 예시를 고르면 선택 기록이
             프롬프트에 반영됩니다.
           </p>
+          {onSwitchDomain && (domainKey === 'summarization' || domainKey === 'summarization_ko') && (
+            <div className="language-switch" role="group" aria-label="요약 언어">
+              {[['summarization', '영어 요약'], ['summarization_ko', '한국어 요약']].map(([key, label]) => (
+                <button key={key} type="button" aria-pressed={domainKey === key}
+                  disabled={domainKey === key} onClick={() => onSwitchDomain(key)}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
           <label className="task-input-label" htmlFor={`${domainKey}-task`}>
             {domainCopy.label}을 적어보세요 <span>(선택)</span>
           </label>

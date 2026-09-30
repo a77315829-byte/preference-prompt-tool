@@ -1959,3 +1959,46 @@
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
+/* 실험실 카테고리 토글 (ScrollStory.jsx) */
+.category-lab-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.9rem;
+  margin-top: 1rem;
+  color: #8b93a7;
+  font-size: 0.85rem;
+}
+
+.category-lab-toggle button {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* 요약 언어 전환 (ComparisonSection.jsx) */
+.language-switch {
+  display: inline-flex;
+  gap: 0.4rem;
+  margin: 0.6rem 0 1rem;
+}
+
+.language-switch button {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid #d5dbe6;
+  border-radius: 999px;
+  color: #111827;
+  background: #fff;
+  cursor: pointer;
+}
+
+.language-switch button[aria-pressed="true"] {
+  border-color: #4468ff;
+  color: #fff;
+  background: #4468ff;
+  cursor: default;
+}
