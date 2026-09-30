@@ -15,12 +15,16 @@ from http.client import HTTPConnection
 import pytest
 
 import api_server
+from budget import DailyBudget
 from agents import prompt_polish as pp
 
 
 @pytest.fixture()
 def server(monkeypatch):
     monkeypatch.setattr(api_server, "SESSIONS", {})
+    # AI 다듬기는 실제 생성 모드에서만, 하루 상한 안에서만 돈다.
+    monkeypatch.setattr(api_server, "LIVE", True)
+    monkeypatch.setattr(api_server, "DAILY_POLISHES", DailyBudget(100))
     httpd = api_server.ThreadingHTTPServer(("127.0.0.1", 0), api_server.ApiHandler)
     thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     thread.start()
@@ -96,6 +100,65 @@ def test_polish_endpoint_returns_checklist_and_rewrite(server, monkeypatch, tmp_
     assert data["suggestions"] == "역할이 없다."
     assert data["revisedPrompt"].startswith("[역할]")
     assert any(item["name"] == "역할 지정" for item in data["checklist"])
+
+
+def test_polish_endpoint_ignores_client_chosen_model(server, monkeypatch, tmp_path) -> None:
+    """모델은 서버가 정한다. 요청 본문을 따르면 누구든 비싼 모델 이름을
+    보내 서버 키로 호출할 수 있다."""
+    monkeypatch.setattr(pp, "CACHE_DIR", tmp_path)
+    seen = {}
+
+    def fake_completion(**kwargs):
+        seen["model"] = kwargs["model"]
+        return _FakeResponse(FAKE_REPLY)
+
+    monkeypatch.setattr(pp, "completion", fake_completion)
+    _post(server, "/api/polish", {"prompt": "요약해줘", "model": "openai/some-expensive-model"})
+    assert seen["model"] == api_server.DEFAULT_MODEL
+
+
+def _forbid_model_call(**kwargs):
+    raise AssertionError("모델을 부르면 안 된다")
+
+
+def test_polish_needs_live_mode(server, monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(pp, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(pp, "completion", _forbid_model_call)
+    monkeypatch.setattr(api_server, "LIVE", False)
+    status, data = _post(server, "/api/polish", {"prompt": "요약해줘"})
+    assert status == 400 and "PPT_LIVE" in data["error"]
+
+
+def test_polish_daily_cap(server, monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(pp, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(pp, "completion", _forbid_model_call)
+    monkeypatch.setattr(api_server, "DAILY_POLISHES", DailyBudget(0))
+    status, data = _post(server, "/api/polish", {"prompt": "요약해줘"})
+    assert status == 400 and "횟수" in data["error"]
+
+
+def test_polish_reply_without_separator_is_not_cached(server, monkeypatch, tmp_path) -> None:
+    """구분선이 없는 응답을 캐시에 굳히면 다시 시도해도 계속 빈 결과가 나온다."""
+    monkeypatch.setattr(pp, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(pp, "completion", lambda **kw: _FakeResponse("설명만 있고 구분선이 없다"))
+    status, _ = _post(server, "/api/polish", {"prompt": "요약해줘"})
+    assert status == 400
+    assert not list(tmp_path.glob("*.json"))
+
+
+def test_polish_cache_key_follows_the_instructions(monkeypatch, tmp_path) -> None:
+    """지시문을 고치면 캐시가 무효화돼야 한다."""
+    monkeypatch.setattr(pp, "CACHE_DIR", tmp_path)
+    calls = []
+    monkeypatch.setattr(pp, "completion", lambda **kw: calls.append(kw) or _FakeResponse(FAKE_REPLY))
+    pp.polish("요약해줘", model="m")
+    pp.polish("요약해줘", model="m")
+    assert len(calls) == 1
+    monkeypatch.setattr(pp, "_REFLECTION_INSTRUCTIONS", pp._REFLECTION_INSTRUCTIONS + "\n")
+    pp.polish("요약해줘", model="m")
+    assert len(calls) == 2
+    assert calls[0]["timeout"] == pp.REQUEST_TIMEOUT_SECONDS
+    assert calls[0]["max_tokens"] == pp.MAX_OUTPUT_TOKENS
 
 
 def test_polish_endpoint_uses_default_model_when_none_given(server, monkeypatch, tmp_path) -> None:

@@ -28,15 +28,32 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
+import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from litellm import completion
-
 CACHE_DIR = Path(__file__).resolve().parent.parent / "cache" / "polish"
 
-DEFAULT_MODEL = "openai/gpt-4.1-mini"
+# 서버(api_server.py)는 항상 자기 DEFAULT_MODEL 을 넘긴다. 이 값은 모듈을
+# 직접 부를 때의 기본값이라 앱의 후보 생성 모델과 맞춘다.
+DEFAULT_MODEL = "openai/gpt-4o-mini"
+
+# engine/generator.py 와 같은 호출 상한.
+REQUEST_TIMEOUT_SECONDS = 60
+MAX_OUTPUT_TOKENS = 2048
+
+SEPARATOR = "---다듬은 프롬프트---"
+
+
+def completion(**kwargs):
+    """litellm 을 호출 시점에 불러온다. import 에만 11초가 걸려서, 모듈
+    최상단에서 부르면 API 서버 시작이 그만큼 늦어진다. 테스트는 이 이름을
+    바꿔 끼운다."""
+    from litellm import completion as _completion
+
+    return _completion(**kwargs)
 
 # 실측하지 않은 상식적 임계값이다 (위 docstring 참고). 프롬프트가 대체로
 # 한두 문장이면 무엇을, 어떤 형식으로, 얼마나 원하는지가 빠졌을 가능성이
@@ -171,8 +188,11 @@ _REFLECTION_INSTRUCTIONS = """\
 """
 
 
-def _cache_path(prompt: str, model: str) -> Path:
-    payload = json.dumps({"prompt": prompt, "model": model}, sort_keys=True)
+def _cache_path(message: str, model: str) -> Path:
+    # 사용자 프롬프트가 아니라 모델에 실제로 보내는 전체 문장으로 키를 만든다.
+    # 지시문(_REFLECTION_INSTRUCTIONS)이나 점검 항목을 고쳐도 옛 응답이
+    # 나오지 않게 - generator.py 가 8주차에 같은 이유로 바꾼 것과 같다.
+    payload = json.dumps({"message": message, "model": model}, sort_keys=True)
     key = hashlib.sha256(payload.encode("utf-8")).hexdigest()
     return CACHE_DIR / f"{key}.json"
 
@@ -183,22 +203,31 @@ def polish(prompt: str, model: str = DEFAULT_MODEL) -> PolishResult:
     results = checklist(prompt)
     feedback = _feedback_block(results)
 
-    cache_file = _cache_path(prompt, model)
+    message = _REFLECTION_INSTRUCTIONS.format(prompt=prompt, feedback=feedback)
+    cache_file = _cache_path(message, model)
     if cache_file.exists():
         raw = json.loads(cache_file.read_text(encoding="utf-8"))["response"]
     else:
-        message = _REFLECTION_INSTRUCTIONS.format(prompt=prompt, feedback=feedback)
-        response = completion(model=model, messages=[{"role": "user", "content": message}])
+        response = completion(
+            model=model,
+            messages=[{"role": "user", "content": message}],
+            timeout=REQUEST_TIMEOUT_SECONDS,
+            max_tokens=MAX_OUTPUT_TOKENS,
+        )
         raw = response.choices[0].message.content
         if not (raw or "").strip():
             raise ValueError("모델이 빈 응답을 반환했다.")
+        # 구분선이 없으면 다듬은 프롬프트를 가를 수 없다. 빈 결과를 캐시에
+        # 굳히면 같은 입력은 다시 시도해도 계속 빈 결과가 나온다.
+        if SEPARATOR not in raw:
+            raise ValueError("모델 응답에 다듬은 프롬프트 구분선이 없다. 다시 시도해 주세요.")
         CACHE_DIR.mkdir(parents=True, exist_ok=True)
-        tmp = cache_file.with_suffix(".tmp")
+        tmp = cache_file.with_suffix(f".{os.getpid()}.{threading.get_ident()}.tmp")
         tmp.write_text(json.dumps({"prompt": prompt, "response": raw}, ensure_ascii=False, indent=2),
                         encoding="utf-8")
         tmp.replace(cache_file)
 
-    suggestions, _, revised = raw.partition("---다듬은 프롬프트---")
+    suggestions, _, revised = raw.partition(SEPARATOR)
     return PolishResult(
         checklist=results,
         suggestions=suggestions.strip(),

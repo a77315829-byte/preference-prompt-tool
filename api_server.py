@@ -202,6 +202,9 @@ def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
 # 훨씬 짧아야 정상이다. 큰 값을 받으면 사용자가 원문을 프롬프트 칸에
 # 잘못 붙여넣은 것으로 보고 앞에서 거절한다.
 MAX_POLISH_PROMPT_CHARS = 4_000
+# "AI로 다듬기"(프롬프트 다듬기의 LLM 경로) 하루 상한. 세션·최적화와 같은
+# 방침이고, 재시작하면 0 으로 돌아가므로 결제 쪽 월 상한을 대신하지 않는다.
+DAILY_POLISHES = DailyBudget(int(os.environ.get("PPT_POLISHES_PER_DAY", "60")))
 
 
 def _checklist_payload(items) -> list[dict[str, Any]]:
@@ -226,7 +229,16 @@ def _polish_checklist_only(body: dict[str, Any]) -> dict[str, Any]:
 def _polish_prompt(body: dict[str, Any]) -> dict[str, Any]:
     """제출 시 한 번만 부르는 경로 - 체크리스트 + LLM 재작성."""
     prompt = _polish_prompt_text(body)
-    result = polish_prompt(prompt, model=str(body.get("model", DEFAULT_MODEL)))
+    # 실제 모델 호출이므로 세션 생성과 같은 스위치를 따른다. 꺼져 있으면
+    # 무료 점검표(/api/polish/checklist)만 쓸 수 있다.
+    if not LIVE:
+        raise ValueError("AI 다듬기는 실제 생성 모드에서만 쓸 수 있습니다 (서버를 PPT_LIVE=1 로 켜 주세요). "
+                         "위의 구조 점검은 그대로 쓸 수 있습니다.")
+    if not DAILY_POLISHES.consume():
+        raise ValueError("오늘 배정된 AI 다듬기 횟수를 모두 썼습니다. 구조 점검은 계속 쓸 수 있습니다.")
+    # 모델은 서버가 정한다. 요청 본문의 model 을 따르면 누구든 비싼 모델
+    # 이름을 보내 서버 키로 호출할 수 있다.
+    result = polish_prompt(prompt, model=DEFAULT_MODEL)
     return {
         "checklist": _checklist_payload(result.checklist),
         "suggestions": result.suggestions,
@@ -326,7 +338,9 @@ class ApiHandler(BaseHTTPRequestHandler):
             source_text=source_text[:12_000],
             domain_key=domain_key,
             domain_path=_domain_path(domain_key),
-            model=str(body.get("model", DEFAULT_MODEL)),
+            # 모델은 서버가 정한다 (요청 본문의 model 은 무시). 브라우저가
+            # 고르게 두면 누구든 비싼 모델 이름으로 서버 키를 쓸 수 있다.
+            model=DEFAULT_MODEL,
             total_rounds=min(max(int(body.get("totalRounds", service.TOTAL_ROUNDS)), 1), 8),
         )
         try:

@@ -197,3 +197,14 @@ def test_unchanged_optimization_is_reported_as_unchanged(server, monkeypatch, fr
         time.sleep(0.05)
     assert session["optimize_status"] == "done"
     assert session["optimize_changed"] is False
+
+
+def test_session_ignores_client_chosen_model(server, monkeypatch) -> None:
+    """세션 모델도 서버가 정한다. 요청 본문의 model 을 따르면 누구든 비싼
+    모델 이름으로 서버 키를 쓸 수 있었다."""
+    monkeypatch.setattr(api_server, "LIVE", False)
+    status, body = _post(server, "/sessions", {
+        "domainKey": "summarization", "sourceText": SOURCE, "model": "openai/some-expensive-model",
+    })
+    assert status == 201
+    assert json.loads(body)["session"]["model"] == api_server.DEFAULT_MODEL
