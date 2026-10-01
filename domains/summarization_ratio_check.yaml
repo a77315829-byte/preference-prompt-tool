@@ -1,0 +1,33 @@
+# 도메인: 문서 요약 - 길이 지시는 v1(문장 수), 길이 측정은 원문 대비 단어 비율.
+#
+# summarization_v2.yaml 은 지시까지 비율로 바꿨다가 실패했다 - 모델이 "원문의
+# 약 5%" 를 따르지 않아 후보가 10.9/14.8/18.8% 로 몰렸다. 반면 v1 의 문장 수
+# 지시는 5.8/11.7/25.0% 를 내서 사람 요약(5.3/10.3/15.4%)에 오히려 가깝다.
+# 그래서 지시는 v1 에 두고 측정만 바꾼다. 근거와 기준: docs/length_v2_preregistration.md
+#
+# topic 이 있는 요약에는 비율 측정이 맞지 않는다 (요약 대상이 원문 일부).
+
+extends: summarization.yaml
+domain: summarization_ratio_check
+checks_module: checks.summarization_v2
+
+axes:
+  - name: length
+    type: enum
+    description: 요약 길이
+    values:
+      - value: short
+        prompt: 2문장 이내로 아주 짧게 요약하라.
+        check:
+          fn: length_ratio
+          target: { max_ratio: 0.068 }
+      - value: normal
+        prompt: 3~4문장 정도의 분량으로 요약하라.
+        check:
+          fn: length_ratio
+          target: { min_ratio: 0.068, max_ratio: 0.127 }
+      - value: long
+        prompt: 5문장 이상으로 상세하게 요약하라.
+        check:
+          fn: length_ratio
+          target: { min_ratio: 0.127 }
