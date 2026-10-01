@@ -1,6 +1,12 @@
 {
   "n": 30,
   "means": {
+    "length_ratio": {
+      "A_no_prompt": 0.5457,
+      "B_custom_instruction": 0.3156,
+      "B_plus_knows_preference": 0.2807,
+      "D_our_tool": 0.2583
+    },
     "checks_score": {
       "A_no_prompt": 0.675,
       "B_custom_instruction": 0.7147,
@@ -79,5 +85,7 @@
   "learned_exact_rate": 0.6333,
   "spend_dollars": 0.0653,
   "model_calls": 287,
-  "stopped": null
+  "stopped": null,
+  "domain": "summarization",
+  "note": "length_ratio 열은 2026-10-01 캐시 재실행(호출 0회)으로 추가했다. 비용은 원래 실행 기준."
 }

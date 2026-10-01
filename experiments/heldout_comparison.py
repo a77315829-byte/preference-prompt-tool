@@ -19,6 +19,11 @@
 
     python -m experiments.heldout_comparison --n 2      # 파일럿: 비용 확인
     python -m experiments.heldout_comparison --n 30     # 본 실험 (캐시 재사용)
+    python -m experiments.heldout_comparison --domain domains/summarization_v2.yaml
+
+--domain 을 바꾸면 결과는 heldout_comparison_<도메인명>.{csv,json} 에 따로
+저장되고, 기본 도메인 결과의 D 와 페르소나별로 비교한 값이 JSON 에 붙는다.
+A/B/B+ 프롬프트는 도메인과 무관하게 같으므로 생성 결과도 같다 (캐시).
 """
 
 from __future__ import annotations
@@ -33,6 +38,7 @@ from pathlib import Path
 import pandas as pd
 from dotenv import load_dotenv
 
+from checks.summarization import _words
 from engine.domain_loader import load_domain
 from engine.estimator import Comparison, Estimator
 from engine.generator import generate
@@ -50,6 +56,7 @@ MODEL = "openai/gpt-4o-mini"
 N_ROUNDS = 8
 SPLIT = Path("data/macsum/dataset/macdoc/test.json")
 SEED = 0
+DEFAULT_DOMAIN = "domains/summarization.yaml"
 OUT_CSV = Path("experiments/results/heldout_comparison.csv")
 OUT_JSON = Path("experiments/results/heldout_comparison.json")
 CONDITIONS = ("A_no_prompt", "B_custom_instruction", "B_plus_knows_preference", "D_our_tool")
@@ -134,6 +141,9 @@ def learn_prompt(domain, persona: dict) -> tuple[str, dict[str, str]]:
 
 def summarize(df: pd.DataFrame) -> dict:
     out = {"n": int(df["persona"].nunique()), "means": {}, "paired": {}}
+    if "length_ratio" in df:
+        pivot = df.pivot(index="persona", columns="condition", values="length_ratio")
+        out["means"]["length_ratio"] = {c: round(float(pivot[c].mean()), 4) for c in CONDITIONS if c in pivot}
     for metric in ("checks_score", "rouge_l"):
         pivot = df.pivot(index="persona", columns="condition", values=metric)
         out["means"][metric] = {c: round(float(pivot[c].mean()), 4) for c in CONDITIONS if c in pivot}
@@ -148,10 +158,35 @@ def summarize(df: pd.DataFrame) -> dict:
     return out
 
 
+def length_ratio(output: str, source: str) -> float:
+    """출력 단어 수 / 원문 단어 수. 모델이 길이 지시를 실제로 따랐는지 본다."""
+    return len(_words(output)) / max(len(_words(source)), 1)
+
+
+def compare_d(df: pd.DataFrame, baseline_csv: Path) -> dict:
+    """같은 페르소나에서 기본 도메인의 D 와 이 도메인의 D 를 비교한다."""
+    base = pd.read_csv(baseline_csv)
+    base_d = base[base["condition"] == "D_our_tool"].set_index("persona")
+    new_d = df[df["condition"] == "D_our_tool"].set_index("persona")
+    common = new_d.index.intersection(base_d.index)
+    assert (base_d.loc[common, "eval_doc"] == new_d.loc[common, "eval_doc"]).all(), "페르소나가 다르다"
+    diff = new_d.loc[common, "rouge_l"] - base_d.loc[common, "rouge_l"]
+    wins, losses = int((diff > 0).sum()), int((diff < 0).sum())
+    return {
+        "baseline": str(baseline_csv), "n": len(common),
+        "rouge_l_baseline_D": round(float(base_d.loc[common, "rouge_l"].mean()), 4),
+        "rouge_l_this_D": round(float(new_d.loc[common, "rouge_l"].mean()), 4),
+        "wins": wins, "losses": losses, "ties": int((diff == 0).sum()),
+        "mean_diff": round(float(diff.mean()), 4),
+        "sign_test_p": round(sign_test_p(wins, wins + losses), 4),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--n", type=int, default=30)
     parser.add_argument("--cap", type=float, default=2.0, help="실제 청구 비용 상한 (달러)")
+    parser.add_argument("--domain", default=DEFAULT_DOMAIN)
     args = parser.parse_args()
 
     import litellm
@@ -159,7 +194,11 @@ def main() -> int:
     spend = Spend()
     litellm.success_callback = [spend]
 
-    domain = load_domain("domains/summarization.yaml")
+    domain = load_domain(args.domain)
+    out_csv, out_json = OUT_CSV, OUT_JSON
+    if args.domain != DEFAULT_DOMAIN:
+        out_csv = OUT_CSV.with_name(f"heldout_comparison_{domain.name}.csv")
+        out_json = OUT_JSON.with_name(f"heldout_comparison_{domain.name}.json")
     personas = pick_personas(args.n)
     print(f"페르소나 {len(personas)}명 (요청 {args.n}), 조합:",
           sorted({(p['combo']['length'], p['combo']['extractiveness']) for p in personas}))
@@ -189,11 +228,12 @@ def main() -> int:
                 "condition": condition,
                 "checks_score": score_against_combo(domain, persona["combo"], output, persona["eval_source"]),
                 "rouge_l": rouge_l_score(output, persona["eval_reference"]),
+                "length_ratio": length_ratio(output, persona["eval_source"]),
             })
         # 페르소나마다 바로 저장한다. 중간에 끊겨도 쓴 비용이 남는다.
         df = pd.DataFrame(rows)
-        OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
-        df.to_csv(OUT_CSV, index=False)
+        out_csv.parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(out_csv, index=False)
         print(f"  {k + 1}/{len(personas)} 완료 · 누적 ${spend.dollars:.4f} ({spend.calls}회 호출)")
 
     df = pd.DataFrame(rows)
@@ -203,7 +243,10 @@ def main() -> int:
         "learned_exact_rate": round(float(df.drop_duplicates("persona")["learned_exact"].mean()), 4) if len(df) else None,
         "spend_dollars": round(spend.dollars, 4), "model_calls": spend.calls, "stopped": stopped,
     })
-    OUT_JSON.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    summary["domain"] = domain.name
+    if out_csv != OUT_CSV and OUT_CSV.exists() and len(df):
+        summary["D_vs_baseline_D"] = compare_d(df, OUT_CSV)
+    out_json.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     return 0
 

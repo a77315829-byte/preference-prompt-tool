@@ -54,3 +54,25 @@ def test_reported_means_and_learning_rate(data) -> None:
     assert rouge == pytest.approx({"A_no_prompt": 0.130, "B_custom_instruction": 0.170,
                                    "B_plus_knows_preference": 0.183, "D_our_tool": 0.182}, abs=0.001)
     assert round(summary["learned_exact_rate"], 2) == 0.63
+
+
+V2_CSV = RESULTS / "heldout_comparison_summarization_v2.csv"
+V2_SUMMARY = RESULTS / "heldout_comparison_summarization_v2.json"
+
+
+def test_v2_ratio_instructions_did_not_help() -> None:
+    """docs/length_v2_preregistration.md 2단계. 비율로 지시하면 모델이 따르지
+    않아 선호 복원이 무너지고 ROUGE-L 도 오르지 않았다 - 이 음성 결과를 고정한다."""
+    if not V2_CSV.exists():
+        pytest.skip("결과 파일이 없다")
+    summary = json.loads(V2_SUMMARY.read_text(encoding="utf-8"))
+    assert summary["domain"] == "summarization_v2" and summary["n"] == 30
+    assert round(summary["learned_exact_rate"], 1) == 0.1
+    vs = summary["D_vs_baseline_D"]
+    assert (vs["wins"], vs["losses"]) == (13, 17) and vs["sign_test_p"] > 0.05
+    # A/B/B+ 는 같은 프롬프트라 v1 과 출력이 같다.
+    v1, v2 = pd.read_csv(CSV), pd.read_csv(V2_CSV)
+    for cond in ("A_no_prompt", "B_custom_instruction", "B_plus_knows_preference"):
+        a = v1[v1.condition == cond].set_index("persona")["rouge_l"]
+        b = v2[v2.condition == cond].set_index("persona")["rouge_l"]
+        assert (a == b).all()

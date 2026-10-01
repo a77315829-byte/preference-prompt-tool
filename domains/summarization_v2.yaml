@@ -1,0 +1,37 @@
+# 도메인: 문서 요약 v2 - 길이 축만 v1 과 다르다.
+#
+# v1(summarization.yaml)은 길이를 문장 수로 잰다. MACSum 사람 요약과 대조하니
+# 라벨은 문장 수가 아니라 원문 대비 분량을 따랐다 - topic 없는 요약은 원문 단어
+# 수의 약 5% / 10% / 15% 로 거의 겹치지 않게 갈린다 (train 중앙값 5.3% / 10.3%
+# / 15.4%). 임계값 0.068 / 0.127 은 train 에서만 정했다.
+# 근거: experiments/length_ratio_labels.py, docs/length_v2_preregistration.md.
+#
+# topic 이 있는 요약에는 맞지 않는다 (요약 대상이 원문 일부라 분모를 모른다).
+#
+# v1 을 고치지 않고 따로 둔다 (규칙 10). v1 을 바꾸면 캐시와 기존 결과가
+# 전부 무효가 된다. 나머지 축은 extends 로 그대로 가져온다.
+
+extends: summarization.yaml
+domain: summarization_v2
+checks_module: checks.summarization_v2
+
+axes:
+  - name: length
+    type: enum
+    description: 요약 길이 (원문 대비 단어 비율로 측정)
+    values:
+      - value: short
+        prompt: 원문 단어 수의 약 5% 분량으로 아주 짧게 요약하라 (원문이 1,000단어면 약 50단어).
+        check:
+          fn: length_ratio
+          target: { max_ratio: 0.068 }
+      - value: normal
+        prompt: 원문 단어 수의 약 10% 분량으로 요약하라 (원문이 1,000단어면 약 100단어).
+        check:
+          fn: length_ratio
+          target: { min_ratio: 0.068, max_ratio: 0.127 }
+      - value: long
+        prompt: 원문 단어 수의 약 15% 분량으로 상세하게 요약하라 (원문이 1,000단어면 약 150단어).
+        check:
+          fn: length_ratio
+          target: { min_ratio: 0.127 }
