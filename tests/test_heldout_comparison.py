@@ -76,3 +76,25 @@ def test_v2_ratio_instructions_did_not_help() -> None:
         a = v1[v1.condition == cond].set_index("persona")["rouge_l"]
         b = v2[v2.condition == cond].set_index("persona")["rouge_l"]
         assert (a == b).all()
+
+
+RC_SUMMARY = RESULTS / "heldout_comparison_summarization_ratio_check.json"
+
+
+def test_ratio_check_keeps_v1_prompts_and_misses_its_criterion() -> None:
+    """3단계 (가): 지시는 v1, 측정만 비율. D 프롬프트 문구가 v1 과 같으므로
+    ROUGE-L 차이는 학습 결과가 달라진 몫뿐이다. 주 기준(길이 축 >= 27/30)은
+    미달이었다 - 축별 수치는 문서에 있고 여기서는 요약 파일을 고정한다."""
+    if not RC_SUMMARY.exists():
+        pytest.skip("결과 파일이 없다")
+    from engine.domain_loader import load_domain
+    from engine.generator import build_prompt
+    v1 = load_domain("domains/summarization.yaml")
+    rc = load_domain("domains/summarization_ratio_check.yaml")
+    for length in ("short", "normal", "long"):
+        combo = {"length": length, "extractiveness": "normal", "topic": ""}
+        assert build_prompt(v1, combo) == build_prompt(rc, combo)
+    summary = json.loads(RC_SUMMARY.read_text(encoding="utf-8"))
+    assert round(summary["learned_exact_rate"], 1) == 0.3
+    vs = summary["D_vs_baseline_D"]
+    assert (vs["wins"], vs["losses"], vs["ties"]) == (15, 11, 4) and vs["sign_test_p"] > 0.05
