@@ -2287,3 +2287,97 @@
   .ws-table { display: block; overflow-x: auto; }
   .ws-excerpt { margin-left: 0; }
 }
+
+/* 작업 공간 - 다시 열기 · 답 보완 · 비교 */
+.ws-saved-list { margin: 0.5rem 0; padding: 0; list-style: none; }
+.ws-saved-list li {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
+  padding: 0.55rem 0; border-bottom: 1px solid #eef1f6;
+}
+.ws-saved-list li.is-open .ws-saved-title { color: #4468ff; }
+.ws-saved-title { flex: 1 1 12rem; font-weight: 800; }
+.ws-question { padding: 0.4rem 0 0.6rem; border-bottom: 1px dashed #eef1f6; }
+.ws-answer { margin-left: 2.5rem; }
+.ws-answer select, .ws-compare-pick select, .ws-table select {
+  max-width: 100%; padding: 0.4rem 0.5rem; border: 1px solid #dfe4ed; border-radius: 0.6rem;
+  font: inherit; font-size: 0.8rem;
+}
+.ws-resolved { margin-top: 0.6rem; font-size: 0.82rem; color: #374151; }
+.ws-resolved ul { padding-left: 1.2rem; }
+.ws-compare { margin-top: 1.8rem; }
+.ws-compare-pickers { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0.6rem 0; }
+.ws-compare-pick {
+  display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; max-width: 100%;
+  font-size: 0.78rem; font-weight: 800; color: #5d6470;
+}
+.ws-compare-section { margin: 1.2rem 0 0.3rem; font-size: 0.85rem; font-weight: 800; }
+.ws-diff {
+  max-height: 22rem; overflow: auto; margin: 0; padding: 0.8rem 1rem;
+  border-radius: 0.8rem; background: #f7f8fb;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.78rem; white-space: pre-wrap;
+}
+.ws-diff-same { color: #6b7280; }
+.ws-diff-added { color: #176b50; background: #dff7ed; }
+.ws-diff-removed { color: #8a1c12; background: #fdecea; text-decoration: line-through; }
+.ws-diff-list { margin: 0; padding-left: 1.1rem; font-size: 0.82rem; }
+.ws-diff-list li { margin: 0.3rem 0; }
+.ws-compare-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.ws-compare-col { min-width: 0; }
+.ws-compare-output { max-height: 18rem; overflow: auto; font-size: 0.75rem; }
+.ws-row-changed td { background: #fff8e6; font-weight: 700; }
+@media (max-width: 640px) {
+  .ws-compare-cols { grid-template-columns: 1fr; }
+  .ws-answer { margin-left: 0; }
+}
+
+/* 로그인 - 상단 메뉴의 상태 표시와 로그인 화면 */
+.nav-login,
+.nav-user button {
+  padding: 0.45rem 0.85rem;
+  border: 1px solid #dfe4ed;
+  border-radius: 999px;
+  color: #374151;
+  background: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-login:hover,
+.nav-user button:hover {
+  border-color: #4468ff;
+  color: #111827;
+}
+
+.nav-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #111827;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.nav-user > span {
+  max-width: 8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auth-form {
+  max-width: 28rem;
+}
+
+.auth-embedded {
+  margin-top: 1.6rem;
+  padding: 1.1rem 1.3rem;
+  border: 1px solid #c9d4ff;
+  border-radius: 1rem;
+  background: #f6f8ff;
+}
+
+@media (max-width: 760px) {
+  .nav-user > span { display: none; }
+}

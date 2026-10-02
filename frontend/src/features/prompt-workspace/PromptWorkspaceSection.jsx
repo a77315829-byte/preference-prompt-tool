@@ -1,8 +1,11 @@
 import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import AuthSection from '../../shared/auth/AuthSection';
+import CompareView from './CompareView';
 import {
-  buildProject, checkProject, confirmProject, exportProject, fetchHealth, fetchSample,
-  runProject, structureDescription,
+  buildProject, checkProject, confirmProject, deleteProject, exportProject, fetchHealth, fetchSample,
+  listProjects, openProject, resolveQuestion, restoreVersion, runProject, saveProject as saveProjectVersion,
+  structureDescription,
 } from './workspaceApi';
 
 // 서비스에 연결할 프롬프트 만들기 (docs/developer_prompt_workspace_plan.md 1차).
@@ -18,7 +21,7 @@ const RUN_LABEL = {
   input_error: '입력 오류 - 모델을 부르지 않았습니다',
   needs_review: '확인이 필요한 입력 - 모델을 부르지 않았습니다',
 };
-const MAX_RUNS = 5;
+const MAX_RUNS = 6;
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
@@ -95,7 +98,7 @@ function ChecksView({ checks }) {
   ));
 }
 
-function PromptWorkspaceSection({ onBack }) {
+function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, loginRequest = 0 }) {
   const [live, setLive] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -103,7 +106,14 @@ function PromptWorkspaceSection({ onBack }) {
   const [project, setProject] = useState(null);
   const [notes, setNotes] = useState([]);
   const [inputText, setInputText] = useState('');
-  const [runInputs, setRunInputs] = useState({}); // run.id -> 실행 당시 입력 글
+  // 다시 열기: 저장한 프로젝트 목록, 지금 프로젝트의 버전들, 마지막으로 저장(또는 연)
+  // 내용. 지금 내용과 다르면 저장하지 않은 변경이 있는 것이다.
+  const [savedList, setSavedList] = useState([]);
+  const [savedId, setSavedId] = useState(null);
+  const [versions, setVersions] = useState([]);
+  const [savedJson, setSavedJson] = useState('');
+  const [versionLabel, setVersionLabel] = useState('');
+  const [answers, setAnswers] = useState({}); // 질문 id -> { text, target }
   const [artifactDirty, setArtifactDirty] = useState(false);
   const [contractText, setContractText] = useState('');
   const [newVariable, setNewVariable] = useState('');
@@ -112,9 +122,39 @@ function PromptWorkspaceSection({ onBack }) {
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
 
+  // 저장·다시 열기는 로그인한 사용자 것만 보인다. 로그인 칸은 화면을 옮기지 않고
+  // 여기서 연다 - 옮기면 작성 중인 프로젝트가 사라진다.
+  const [loginOpen, setLoginOpen] = useState(false);
+  const loginRef = useRef(null);
+
+  const refreshList = () => (user
+    ? listProjects().then((d) => setSavedList(d.projects)).catch(() => setSavedList([]))
+    : Promise.resolve(setSavedList([])));
+
   useEffect(() => {
     fetchHealth().then((h) => setLive(Boolean(h.live))).catch(() => setLive(false));
   }, []);
+
+  // 로그인·로그아웃이 바뀌면 목록을 다시 읽는다. 로그아웃하면 지금 내용은 남기되
+  // 저장된 프로젝트와의 연결은 끊는다 (다른 계정으로 저장하면 새 프로젝트가 된다).
+  useEffect(() => {
+    refreshList();
+    if (!user) { setSavedId(null); setVersions([]); setSavedJson(''); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (loginRequest > 0 && !user) {
+      setLoginOpen(true);
+      window.setTimeout(() => loginRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginRequest]);
+
+  const openLogin = () => {
+    setLoginOpen(true);
+    window.setTimeout(() => loginRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+  };
 
   const stage = stageOf(project);
   const req = project?.requirements;
@@ -133,6 +173,8 @@ function PromptWorkspaceSection({ onBack }) {
 
   const adopt = (nextProject, nextNotes = []) => {
     setProject(nextProject);
+    if (nextProject.test_input_text) setInputText(nextProject.test_input_text);
+    setAnswers({});
     setNotes(nextNotes);
     setContractText(JSON.stringify(nextProject.requirements.output_contract.fields, null, 2));
     setContractError('');
@@ -167,8 +209,11 @@ function PromptWorkspaceSection({ onBack }) {
     }),
   });
 
-  const startSample = () => act('sample', async () => {
+  const forgetSaved = () => { setSavedId(null); setVersions([]); setSavedJson(''); };
+
+  const startSample = () => leaveOk() && act('sample', async () => {
     const data = await fetchSample();
+    forgetSaved();
     setTitle(data.project.title);
     setDescription(data.project.raw_description);
     setExampleOutput('');
@@ -176,8 +221,9 @@ function PromptWorkspaceSection({ onBack }) {
     adopt(data.project, data.notes);
   });
 
-  const structure = () => act('structure', async () => {
+  const structure = () => leaveOk() && act('structure', async () => {
     const data = await structureDescription(title, description, exampleOutput);
+    forgetSaved();
     adopt(data.project, data.notes);
   });
 
@@ -217,8 +263,9 @@ function PromptWorkspaceSection({ onBack }) {
       throw new Error(`시험 입력이 올바른 JSON이 아닙니다: ${e.message}`);
     }
     const { run } = await runProject(project, values);
-    setRunInputs((current) => ({ ...current, [run.id]: inputText }));
-    setProject((current) => ({ ...current, runs: [...current.runs, run].slice(-MAX_RUNS) }));
+    // 실행 당시 입력 글을 기록에 남긴다 - 다시 열었을 때도 '이전 입력 결과'를 가를 수 있게.
+    const recorded = { ...run, input_text: inputText };
+    setProject((current) => ({ ...current, runs: [...current.runs, recorded].slice(-MAX_RUNS) }));
     setArtifactDirty(false);
   });
 
@@ -230,7 +277,7 @@ function PromptWorkspaceSection({ onBack }) {
     download(data.filename, new Blob([bytes], { type: 'application/zip' }));
   });
 
-  const saveProject = () => {
+  const downloadProjectJson = () => {
     download(`${project.id}-project.json`, new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' }));
   };
 
@@ -245,14 +292,79 @@ function PromptWorkspaceSection({ onBack }) {
     setTitle(data.project.title);
     setDescription(data.project.raw_description);
     setExampleOutput(data.project.example_output || '');
-    adopt(data.project, ['불러온 프로젝트입니다. 시험 기록의 입력 글은 함께 저장되지 않아 현재 입력과 비교할 수 없습니다.']);
+    adopt(data.project, ['파일에서 불러온 프로젝트입니다. "버전 저장"을 누르면 이 서버에 저장됩니다.']);
+    setSavedId(null);
+    setVersions([]);
+    setSavedJson('');
+  });
+
+  // --- 다시 열기 · 버전 -----------------------------------------------------
+  const currentJson = project ? JSON.stringify({ ...project, test_input_text: inputText }) : '';
+  const unsaved = Boolean(project) && currentJson !== savedJson;
+
+  const applyOverview = (data, message) => {
+    setTitle(data.project.title);
+    setDescription(data.project.raw_description);
+    setExampleOutput(data.project.example_output || '');
+    adopt(data.project, message ? [message] : []);
+    setSavedId(data.id);
+    setVersions(data.versions);
+    setSavedJson(JSON.stringify({ ...data.project, test_input_text: data.project.test_input_text || '' }));
+  };
+
+  const leaveOk = () => !unsaved || window.confirm('저장하지 않은 변경이 사라집니다. 계속할까요?');
+
+  const reopen = (id) => {
+    if (!leaveOk()) return;
+    act('open', async () => {
+      const data = await openProject(id);
+      setInputText(data.project.test_input_text || '');
+      applyOverview(data, `저장된 프로젝트를 열었습니다 (v${data.versions[data.versions.length - 1].version}).`);
+    });
+  };
+
+  const saveVersion = () => act('save', async () => {
+    const data = await saveProjectVersion({ ...project, test_input_text: inputText }, versionLabel);
+    applyOverview(data, `v${data.version} 로 저장했습니다. 이전 버전은 그대로 남아 있습니다.`);
+    setVersionLabel('');
+    refreshList();
+  });
+
+  const restore = (version) => {
+    if (!window.confirm(`v${version} 의 내용으로 되돌립니다. 지금 저장된 버전들은 지워지지 않고, v${version} 의 사본이 새 버전으로 추가됩니다.`
+      + (unsaved ? '\n\n저장하지 않은 변경은 사라집니다.' : ''))) return;
+    act('restore', async () => {
+      const data = await restoreVersion(savedId, version);
+      setInputText(data.project.test_input_text || '');
+      applyOverview(data, `v${version} 을 v${data.version} 으로 복원했습니다.`);
+      refreshList();
+    });
+  };
+
+  const removeSaved = (id, label) => {
+    if (!window.confirm(`'${label}' 을(를) 모든 버전과 함께 지웁니다. 되돌릴 수 없습니다.`)) return;
+    act('delete', async () => {
+      await deleteProject(id);
+      if (id === savedId) { setSavedId(null); setVersions([]); setSavedJson(''); }
+      refreshList();
+    });
+  };
+
+  // --- 미결 사항에 답하기 -----------------------------------------------------
+  const answerOf = (id) => answers[id] || { text: '', target: 'hard_rule' };
+  const setAnswer = (id, patch) => setAnswers((current) => ({ ...current, [id]: { ...answerOf(id), ...patch } }));
+  const resolve = (id) => act('resolve', async () => {
+    const { text, target } = answerOf(id);
+    const data = await resolveQuestion(project, id, text, target);
+    setProject(data.project);
+    setAnswers((current) => { const next = { ...current }; delete next[id]; return next; });
   });
 
   const lastRun = project?.runs?.[project.runs.length - 1];
   const lastRunStale = lastRun && (
     lastRun.artifact_revision !== project.artifact?.revision
     || lastRun.requirements_revision !== project.requirements_revision
-    || runInputs[lastRun.id] !== inputText
+    || (lastRun.input_text ?? null) !== inputText
   );
   const missingRules = project?.artifact
     ? req.hard_rules.filter((r) => !project.artifact.system_prompt.includes(r.text.trim()))
@@ -263,13 +375,42 @@ function PromptWorkspaceSection({ onBack }) {
       <div className="comparison-inner">
         <button className="back-button" type="button" onClick={onBack}>← 카테고리로 돌아가기</button>
         <div className="comparison-heading">
-          <p className="eyebrow">SERVICE PROMPT · 1차 MVP</p>
+          <p className="eyebrow">SERVICE PROMPT</p>
           <h2>서비스에 연결할 프롬프트 만들기</h2>
           <p>
-            업무 설명을 요구사항으로 정리하고, 확인한 요구사항으로 변수형 프롬프트를 만들어 샘플 입력으로
+            한 번에 끝내는 생성기가 아니라 다시 열고, 답을 보완하고, 이전 결과와 비교하며 고쳐 쓰는
+            작업 공간입니다. 업무 설명을 요구사항으로 정리하고, 확인한 요구사항으로 변수형 프롬프트를 만들어
             시험한 뒤 개발용 파일로 내려받습니다.
           </p>
         </div>
+
+        {/* 로그인 (화면을 옮기지 않는다) */}
+        {loginOpen && !user && (
+          <div ref={loginRef}>
+            <AuthSection embedded signupOpen={signupOpen}
+              reason="로그인하면 이 프로젝트를 저장하고 나중에 다시 열 수 있습니다. 지금 작성 중인 내용은 그대로 남습니다."
+              onBack={() => setLoginOpen(false)}
+              onDone={(nextUser) => { onLogin?.(nextUser); setLoginOpen(false); }} />
+          </div>
+        )}
+
+        {/* 다시 열기 */}
+        {user && savedList.length > 0 && (
+          <div className="ws-step">
+            <p className="question-eyebrow">{user.username} 님이 저장한 프로젝트</p>
+            <ul className="ws-saved-list">
+              {savedList.map((item) => (
+                <li key={item.id} className={item.id === savedId ? 'is-open' : ''}>
+                  <span className="ws-saved-title">{item.title}</span>
+                  <span className="ws-help">v{item.versions} · {STAGE_LABEL[item.stage]} · {item.saved_at.replace('T', ' ').slice(0, 16)} UTC</span>
+                  <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => reopen(item.id)}>열기</button>
+                  <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => removeSaved(item.id, item.title)}>삭제</button>
+                </li>
+              ))}
+            </ul>
+            <p className="ws-help">내 계정으로 저장한 것만 보입니다. 이 서버의 data/app.db 에 저장됩니다.</p>
+          </div>
+        )}
 
         {/* A. 설명 입력 */}
         <div className="ws-step">
@@ -362,8 +503,53 @@ function PromptWorkspaceSection({ onBack }) {
             <ItemList label="필수 규칙" items={req.hard_rules} {...editList('hard_rules')}
               help="선호와 달리 어기면 안 되는 조건입니다. 고치면 요구사항을 다시 확인해야 합니다." />
             <ItemList label="선호" items={req.preferences} {...editList('preferences')} />
-            <ItemList label="미결 사항" items={req.open_questions} sourced={false} {...editList('open_questions')}
-              help="답을 규칙이나 선호에 반영한 뒤 지우세요. 남아 있으면 확인 완료로 표시하지 않습니다 (초안 저장은 가능)." />
+            <div className="ws-block">
+              <div className="ws-block-head">
+                <strong>미결 사항</strong>
+                <button className="ws-small-button" type="button" onClick={editList('open_questions').onAdd}>+ 질문 추가</button>
+              </div>
+              <p className="ws-help">
+                답을 적고 어디에 반영할지 고르세요. 남아 있으면 확인 완료로 표시하지 않습니다 (저장은 가능).
+                답은 고른 곳에 적은 그대로 들어갑니다 - AI 가 고쳐 쓰지 않습니다.
+              </p>
+              {req.open_questions.length === 0 && <p className="ws-help">없음</p>}
+              {req.open_questions.map((q, index) => (
+                <div className="ws-question" key={q.id}>
+                  <div className="ws-item">
+                    <span className="ws-item-id">{q.id}</span>
+                    <input aria-label={`미결 사항 ${q.id}`} value={q.text}
+                      onChange={(e) => editList('open_questions').onChange(index, e.target.value)} />
+                    <button className="ws-small-button" type="button" aria-label={`${q.id} 삭제`}
+                      onClick={() => editList('open_questions').onRemove(index)}>삭제</button>
+                  </div>
+                  <div className="ws-item ws-answer">
+                    <input aria-label={`${q.id} 답`} placeholder="답" value={answerOf(q.id).text}
+                      onChange={(e) => setAnswer(q.id, { text: e.target.value })} />
+                    <select aria-label={`${q.id} 반영할 곳`} value={answerOf(q.id).target}
+                      onChange={(e) => setAnswer(q.id, { target: e.target.value })}>
+                      <option value="hard_rule">필수 규칙으로</option>
+                      <option value="preference">선호로</option>
+                      <option value="none">프롬프트에 넣지 않음</option>
+                    </select>
+                    <button className="ws-small-button" type="button" disabled={Boolean(busy) || !answerOf(q.id).text.trim()}
+                      onClick={() => resolve(q.id)}>답 반영</button>
+                  </div>
+                </div>
+              ))}
+              {(req.resolved_questions || []).length > 0 && (
+                <details className="ws-resolved">
+                  <summary>답한 질문 {req.resolved_questions.length}개</summary>
+                  <ul>
+                    {req.resolved_questions.map((q, i) => (
+                      <li key={`${q.id}-${i}`}>
+                        <strong>{q.id}</strong> {q.text}<br />
+                        답: {q.answer} {q.resolved_as ? `→ ${q.resolved_as}` : '(프롬프트에 넣지 않음)'}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+            </div>
 
             <div className="ws-block">
               <strong>출력 계약</strong>
@@ -382,7 +568,7 @@ function PromptWorkspaceSection({ onBack }) {
                 onClick={confirmAndBuild}>
                 {busy === 'build' ? '만드는 중…' : '이 요구사항으로 만들기'}
               </button>
-              <button className="prompt-reset-button" type="button" onClick={saveProject}>초안 저장 (JSON)</button>
+              <button className="prompt-reset-button" type="button" onClick={downloadProjectJson}>초안 저장 (JSON)</button>
             </div>
             {req.open_questions.length > 0 && (
               <p className="ws-help">미결 사항 {req.open_questions.length}개가 남아 있어 만들 수 없습니다.</p>
@@ -442,13 +628,65 @@ function PromptWorkspaceSection({ onBack }) {
               </label>
               <div className="prompt-actions">
                 <button className="prompt-copy-button" type="button" disabled={Boolean(busy)} onClick={exportZip}>ZIP 내려받기</button>
-                <button className="prompt-reset-button" type="button" onClick={saveProject}>프로젝트 JSON 저장</button>
+                <button className="prompt-reset-button" type="button" onClick={downloadProjectJson}>프로젝트 JSON 저장</button>
               </div>
-              <p className="ws-help">
-                프로젝트는 이 화면에만 있습니다. 새로고침하면 사라지므로 JSON 으로 저장해 두고 &quot;프로젝트 불러오기&quot;로 이어서 작업하세요.
-              </p>
             </div>
           </motion.div>
+        )}
+
+        {/* D. 저장 · 버전 · 비교 */}
+        {project && (
+          <div className="ws-step">
+            <p className="question-eyebrow">4. 저장 · 버전 · 비교</p>
+            <p className={`ws-stage ${unsaved ? 'ws-stage-stale_artifact' : ''}`}>
+              {savedId ? `저장된 프로젝트 · 최신 v${versions[versions.length - 1]?.version}` : '아직 저장하지 않은 프로젝트'}
+              {unsaved ? ' · 저장하지 않은 변경 있음' : ' · 변경 없음'}
+            </p>
+            {user ? (
+              <div className="ws-item">
+                <input aria-label="버전 메모" placeholder="버전 메모 (선택, 예: Q1 답 반영)" maxLength={60}
+                  value={versionLabel} onChange={(e) => setVersionLabel(e.target.value)} />
+                <button className="prompt-copy-button" type="button" disabled={Boolean(busy) || !unsaved} onClick={saveVersion}>
+                  {busy === 'save' ? '저장 중…' : '새 버전으로 저장'}
+                </button>
+              </div>
+            ) : (
+              <div className="ws-item">
+                <span className="ws-help">저장하고 나중에 다시 열려면 로그인이 필요합니다. 로그인 없이도 JSON 파일로 내려받을 수 있습니다.</span>
+                <button className="prompt-copy-button" type="button" onClick={openLogin}>로그인하고 저장</button>
+              </div>
+            )}
+            <p className="ws-help">저장은 이전 버전을 덮어쓰지 않고 새 버전을 덧붙입니다. 자동 저장은 하지 않습니다.</p>
+
+            {versions.length > 0 && (
+              <table className="ws-table">
+                <thead><tr><th>버전</th><th>메모</th><th>상태</th><th>마지막 시험</th><th /></tr></thead>
+                <tbody>
+                  {[...versions].reverse().map((v) => (
+                    <tr key={v.version}>
+                      <td>v{v.version}</td>
+                      <td>{v.label || '-'}</td>
+                      <td>{STAGE_LABEL[v.stage]}</td>
+                      <td>
+                        {v.last_run
+                          ? `통과 ${v.last_run.counts.pass} · 실패 ${v.last_run.counts.fail} · 미평가 ${v.last_run.counts.not_evaluated}`
+                          : '모델 실행 없음'}
+                      </td>
+                      <td>
+                        <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => restore(v.version)}>
+                          이 버전으로 복원
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+
+            {(project.runs.length > 0 || versions.length > 0) && (
+              <CompareView project={project} projectId={savedId} versions={versions} />
+            )}
+          </div>
         )}
       </div>
     </section>

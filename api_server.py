@@ -13,6 +13,7 @@ import os
 import threading
 from datetime import date, timedelta
 from dataclasses import asdict, replace
+from http.cookies import CookieError, SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -26,11 +27,15 @@ from agents.prompt_polish import polish as polish_prompt
 import service
 import team
 import template_library
+from app_db import Database
+from auth import AuthError, AuthService, TooManyAttempts, User
 from budget import DailyBudget
 from prompt_workspace import builder as ws_builder
 from prompt_workspace import exports as ws_exports
 from prompt_workspace import requirements as ws_requirements
+from prompt_workspace import questions as ws_questions
 from prompt_workspace import runner as ws_runner
+from prompt_workspace.store import ProjectStore
 from prompt_workspace.examples import synthetic_cost as ws_sample
 from prompt_workspace.models import new_project, status as ws_status, validate_project
 
@@ -293,7 +298,19 @@ def _polish_prompt(body: dict[str, Any]) -> dict[str, Any]:
 # 않는다 (runner 의 before_call).
 DAILY_WORKSPACE_CALLS = DailyBudget(int(os.environ.get("PPT_WORKSPACE_CALLS_PER_DAY", "60")))
 # 시험 기록은 최근 것만 오간다. 요청 본문 상한(256KB) 안에 머물게.
-MAX_WORKSPACE_RUNS = 5
+MAX_WORKSPACE_RUNS = 6
+
+# 앱 DB 하나 (app_db.py, SQLite): 사용자 · 세션 · 저장한 작업 공간 프로젝트.
+# 기본 위치 data/ 는 커밋되지 않는다.
+DB = Database(os.environ.get("PPT_DB_PATH") or ROOT / "data" / "app.db")
+AUTH = AuthService(DB)
+# 저장한 프로젝트는 로그인한 사용자 것만 보이고 열린다 (prompt_workspace/store.py).
+WORKSPACE_STORE = ProjectStore(DB)
+# 가입을 막고 기존 계정만 쓰게 하려면 0. 기본은 열림 (로컬 도구).
+ALLOW_SIGNUP = os.environ.get("PPT_ALLOW_SIGNUP", "1") != "0"
+# HTTPS 로 배포할 때 1. 로컬 http 에서 켜면 브라우저가 쿠키를 보내지 않는다.
+COOKIE_SECURE = os.environ.get("PPT_COOKIE_SECURE") == "1"
+SESSION_COOKIE = "ppt_session"
 
 
 def _consume_workspace_call() -> None:
@@ -347,7 +364,56 @@ def _workspace_export(body: dict[str, Any]) -> dict[str, Any]:
     return {"filename": "prompt-package.zip", "zipBase64": base64.b64encode(data).decode("ascii")}
 
 
+def _workspace_resolve(body: dict[str, Any]) -> dict[str, Any]:
+    project = ws_questions.resolve(
+        _ws_project(body), str(body.get("questionId", "")), str(body.get("answer", "")), str(body.get("target", "")),
+    )
+    return _ws_payload(project)
+
+
+def _workspace_store_get(user: User, parts: list[str]) -> dict[str, Any]:
+    """GET /api/workspace/projects[/<id>[/versions/<n>]]"""
+    if len(parts) == 4:
+        return {"projects": WORKSPACE_STORE.list(user.id)}
+    if len(parts) == 5:
+        return WORKSPACE_STORE.open(user.id, parts[4])
+    if len(parts) == 7 and parts[5] == "versions" and parts[6].isdigit():
+        return {"project": WORKSPACE_STORE.version(user.id, parts[4], int(parts[6]))}
+    raise LookupError("찾을 수 없는 경로입니다.")
+
+
+def _workspace_store_post(user: User, parts: list[str], body: dict[str, Any]) -> dict[str, Any]:
+    """POST /api/workspace/projects (저장) · /<id>/restore · /<id>/delete"""
+    if len(parts) == 4:
+        return WORKSPACE_STORE.save(user.id, _ws_project(body), str(body.get("label", "")))
+    if len(parts) == 6 and parts[5] == "restore":
+        try:
+            version = int(body.get("version"))
+        except (TypeError, ValueError):
+            raise ValueError("복원할 버전 번호가 필요합니다.")
+        return WORKSPACE_STORE.restore(user.id, parts[4], version)
+    if len(parts) == 6 and parts[5] == "delete":
+        WORKSPACE_STORE.delete(user.id, parts[4])
+        return {"deleted": parts[4]}
+    raise LookupError("찾을 수 없는 경로입니다.")
+
+
+def _user_payload(user: User | None) -> dict[str, Any] | None:
+    return None if user is None else {"id": user.id, "username": user.username}
+
+
+def _session_cookie(token: str) -> str:
+    cookie = (f"{SESSION_COOKIE}={token}; Path=/; HttpOnly; SameSite=Lax; "
+              f"Max-Age={14 * 24 * 3600}")
+    return cookie + ("; Secure" if COOKIE_SECURE else "")
+
+
+def _clear_cookie() -> str:
+    return f"{SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0" + ("; Secure" if COOKIE_SECURE else "")
+
+
 WORKSPACE_ROUTES = {
+    "/api/workspace/resolve": _workspace_resolve,
     "/api/workspace/status": lambda body: _ws_payload(_ws_project(body)),
     "/api/workspace/structure": _workspace_structure,
     "/api/workspace/confirm": lambda body: _ws_payload(ws_builder.confirm(_ws_project(body))),
@@ -360,11 +426,15 @@ WORKSPACE_ROUTES = {
 class ApiHandler(BaseHTTPRequestHandler):
     server_version = "PreferencePromptAPI/1.0"
 
-    def _send(self, status: int, body: dict[str, Any]) -> None:
+    def _send(self, status: int, body: dict[str, Any], cookies: list[str] | None = None) -> None:
         encoded = json.dumps(body, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(encoded)))
+        # 로그인 응답이 캐시에 남지 않게.
+        self.send_header("Cache-Control", "no-store")
+        for cookie in cookies or []:
+            self.send_header("Set-Cookie", cookie)
         origin = self.headers.get("Origin")
         if origin and origin in ALLOWED_ORIGINS:
             self.send_header("Access-Control-Allow-Origin", origin)
@@ -387,6 +457,57 @@ class ApiHandler(BaseHTTPRequestHandler):
             raise ValueError("JSON 객체가 필요합니다.")
         return data
 
+    # --- 로그인 -----------------------------------------------------------------
+
+    def _session_token(self) -> str | None:
+        try:
+            jar = SimpleCookie(self.headers.get("Cookie", ""))
+        except CookieError:
+            return None
+        morsel = jar.get(SESSION_COOKIE)
+        return morsel.value if morsel else None
+
+    def _current_user(self) -> User | None:
+        return AUTH.user_for(self._session_token())
+
+    def _cross_site(self) -> bool:
+        """다른 사이트에서 온 POST 인가. 쿠키로 로그인한 상태를 다른 사이트가
+        이용하지 못하게(CSRF) 막는다. SameSite=Lax 쿠키와 JSON 전용 본문이 1차 방어이고,
+        이것은 2차다. Origin 이 없으면(curl·테스트·같은 출처의 일부 요청) 통과시킨다."""
+        origin = self.headers.get("Origin")
+        if not origin or origin in ALLOWED_ORIGINS:
+            return False
+        # 앞단 프록시(Vite 개발 서버 등)가 Host 를 바꿨으면 원래 Host 를 X-Forwarded-Host 로
+        # 알려 준다. 이 서버는 127.0.0.1 에서만 열리므로 그 헤더를 보낼 수 있는 것은 같은
+        # 컴퓨터의 프록시뿐이다 - 외부에 열 때는 이 가정을 다시 봐야 한다.
+        hosts = {self.headers.get("Host", "")}
+        hosts.update(h.strip() for h in self.headers.get("X-Forwarded-Host", "").split(",") if h.strip())
+        return urlparse(origin).netloc not in hosts
+
+    def _auth_route(self, path: str, body: dict[str, Any]) -> None:
+        if path == "/api/auth/signup":
+            if not ALLOW_SIGNUP:
+                self._send(403, {"error": "이 서버는 새 가입을 받지 않습니다."})
+                return
+            user, token = AUTH.signup(str(body.get("username", "")), str(body.get("password", "")))
+            print(f"[auth] 가입 {user.username}", flush=True)
+            self._send(200, {"user": _user_payload(user)}, cookies=[_session_cookie(token)])
+            return
+        if path == "/api/auth/login":
+            try:
+                user, token = AUTH.login(str(body.get("username", "")), str(body.get("password", "")),
+                                         address=self.client_address[0])
+            except TooManyAttempts as exc:
+                self._send(429, {"error": str(exc)})
+                return
+            self._send(200, {"user": _user_payload(user)}, cookies=[_session_cookie(token)])
+            return
+        if path == "/api/auth/logout":
+            AUTH.logout(self._session_token())
+            self._send(200, {"user": None}, cookies=[_clear_cookie()])
+            return
+        self._send(404, {"error": "찾을 수 없는 경로입니다."})
+
     def do_OPTIONS(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler API
         self._send(204, {})
 
@@ -397,6 +518,9 @@ class ApiHandler(BaseHTTPRequestHandler):
             # 생성 모드에서 자동으로 세션을 열면 방문만으로 하루 상한이 준다.
             self._send(200, {"ok": True, "demoAvailable": True, "live": LIVE})
             return
+        if path == "/api/auth/me":
+            self._send(200, {"user": _user_payload(self._current_user()), "signupOpen": ALLOW_SIGNUP})
+            return
         if len(parts := path.split("/")) == 4 and parts[:3] == ["", "api", "teams"]:
             try:
                 self._send(200, {"team": _team_payload(parts[3])})
@@ -405,6 +529,9 @@ class ApiHandler(BaseHTTPRequestHandler):
             return
         if path == "/api/workspace/sample":
             self._send(200, _workspace_sample())
+            return
+        if path.startswith("/api/workspace/projects"):
+            self._workspace_store(lambda user, parts: _workspace_store_get(user, parts), path)
             return
         if path == "/api/templates":
             self._send(200, {"templates": [asdict(t) for t in template_library.library()]})
@@ -423,8 +550,14 @@ class ApiHandler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler API
         path = urlparse(self.path).path.rstrip("/")
+        if self._cross_site():
+            self._send(403, {"error": "다른 사이트에서 보낸 요청은 받지 않습니다."})
+            return
         try:
             body = self._read_json()
+            if path.startswith("/api/auth/"):
+                self._auth_route(path, body)
+                return
             if path == "/api/sessions":
                 self._start_session(body)
                 return
@@ -439,6 +572,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if path in WORKSPACE_ROUTES:
                 self._send(200, WORKSPACE_ROUTES[path](body))
+                return
+            if path.startswith("/api/workspace/projects"):
+                self._workspace_store(lambda user, parts: _workspace_store_post(user, parts, body), path)
                 return
             if path.startswith("/api/teams/") and path.endswith("/members"):
                 self._join_team(path.split("/")[3], body)
@@ -459,6 +595,24 @@ class ApiHandler(BaseHTTPRequestHandler):
             # 원문은 서버 터미널에만. 공급자 오류 문구에는 키 일부가 들어 있다.
             print(f"[error] {type(exc).__name__}: {exc}", flush=True)
             self._send(500, {"error": service.describe_api_error(exc)})
+
+    def _workspace_store(self, handle, path: str) -> None:
+        """저장소 경로 공통 처리. 로그인이 없으면 401, 없는(또는 남의) 프로젝트·버전은
+        404, 형식 오류는 400."""
+        parts = path.split("/")
+        if len(parts) > 3 and parts[3] != "projects":
+            self._send(404, {"error": "찾을 수 없는 경로입니다."})
+            return
+        user = self._current_user()
+        if user is None:
+            self._send(401, {"error": "로그인이 필요합니다. 저장과 다시 열기는 로그인한 뒤에 쓸 수 있습니다."})
+            return
+        try:
+            self._send(200, handle(user, parts))
+        except (KeyError, LookupError):
+            self._send(404, {"error": "저장된 프로젝트나 버전을 찾을 수 없습니다."})
+        except ValueError as exc:
+            self._send(400, {"error": str(exc)})
 
     def _start_session(self, body: dict[str, Any]) -> None:
         domain_key = str(body.get("domainKey", "coding"))

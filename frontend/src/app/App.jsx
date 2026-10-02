@@ -1,11 +1,13 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ComparisonSection from '../features/comparison/ComparisonSection';
 import IdleTrackerSection from '../features/idle-tracker/IdleTrackerSection';
 import ScrollStory from '../features/landing/ScrollStory';
 import PromptPolishSection from '../features/polish/PromptPolishSection';
 import PromptWorkspaceSection from '../features/prompt-workspace/PromptWorkspaceSection';
 import TemplateLibrarySection from '../features/templates/TemplateLibrarySection';
+import AuthSection from '../shared/auth/AuthSection';
+import { fetchMe, logout } from '../shared/auth/authApi';
 import './App.css';
 import '../features/landing/landing.css';
 
@@ -14,6 +16,38 @@ function App() {
   const [activeFlow, setActiveFlow] = useState('category');
   // 템플릿 라이브러리에서 "내 방식으로 바꾸기"로 들어왔을 때의 템플릿.
   const [template, setTemplate] = useState(null);
+  // 로그인 상태. undefined = 아직 모름, null = 로그인 안 함. 세션은 HttpOnly 쿠키라
+  // 화면은 서버에 물어서만 안다.
+  const [user, setUser] = useState(undefined);
+  const [signupOpen, setSignupOpen] = useState(true);
+  // 로그인 화면으로 오기 전 흐름. 로그인이 끝나면 거기로 돌아간다.
+  const [returnFlow, setReturnFlow] = useState('category');
+  const [authReason, setAuthReason] = useState('');
+
+  useEffect(() => {
+    fetchMe()
+      .then((data) => { setUser(data.user); setSignupOpen(data.signupOpen !== false); })
+      .catch(() => setUser(null));
+  }, []);
+
+  // 작업 공간에서 로그인을 누르면 화면을 옮기지 않고 그 안에 로그인 칸을 연다 -
+  // 옮기면 작성 중인 프로젝트가 사라진다. 값이 바뀔 때마다 한 번 연다.
+  const [workspaceLoginRequest, setWorkspaceLoginRequest] = useState(0);
+
+  const requestLogin = (reason = '') => {
+    if (activeFlow === 'workspace') {
+      setWorkspaceLoginRequest((n) => n + 1);
+      return;
+    }
+    setReturnFlow(activeFlow === 'login' ? 'category' : activeFlow);
+    setAuthReason(reason);
+    setActiveFlow('login');
+  };
+
+  const handleLogout = async () => {
+    try { await logout(); } catch { /* 이미 끊긴 세션이어도 화면은 로그아웃 상태로 */ }
+    setUser(null);
+  };
 
   const requestScene = (scene) => {
     if (activeFlow !== 'category') {
@@ -63,6 +97,14 @@ function App() {
           <button type="button" onClick={() => setActiveFlow('workspace')}>서비스용 프롬프트</button>
         </div>
 
+        {user ? (
+          <span className="nav-user">
+            <span>{user.username}</span>
+            <button type="button" onClick={handleLogout}>로그아웃</button>
+          </span>
+        ) : user === null && (
+          <button className="nav-login" type="button" onClick={() => requestLogin()}>로그인</button>
+        )}
         <button className="nav-button" type="button" onClick={() => requestScene(0)}>
           바로 시작
         </button>
@@ -111,9 +153,18 @@ function App() {
           </motion.div>
         )}
 
+        {activeFlow === 'login' && (
+          <motion.div className="flow-view" key="login" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
+            <AuthSection signupOpen={signupOpen} reason={authReason}
+              onBack={() => setActiveFlow(returnFlow)}
+              onDone={(nextUser) => { setUser(nextUser); setActiveFlow(returnFlow); }} />
+          </motion.div>
+        )}
+
         {activeFlow === 'workspace' && (
           <motion.div className="flow-view" key="workspace" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-            <PromptWorkspaceSection onBack={handleComparisonBack} />
+            <PromptWorkspaceSection onBack={handleComparisonBack} user={user} signupOpen={signupOpen}
+              onLogin={setUser} loginRequest={workspaceLoginRequest} />
           </motion.div>
         )}
 
