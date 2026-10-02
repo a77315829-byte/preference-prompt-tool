@@ -40,6 +40,12 @@ export function startOptimization(sessionId) {
   return request(`/sessions/${sessionId}/optimize`, { method: 'POST', body: '{}' });
 }
 
+// { live }: 서버가 실제 생성 모드(PPT_LIVE=1)인지. 그때는 화면이 열리자마자
+// 세션을 만들지 않는다 - 세션마다 하루 상한이 하나씩 줄기 때문이다.
+export function fetchHealth() {
+  return request('/health');
+}
+
 export function fetchSession(sessionId) {
   return request(`/sessions/${sessionId}`);
 }

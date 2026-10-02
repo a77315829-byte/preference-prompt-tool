@@ -50,6 +50,13 @@ OPTIMIZE_RUNS: dict[str, int] = {}
 OPTIMIZE_REPORTS: dict[str, dict] = {}
 # 팀 모드 (team.py). 서버 메모리에만 있어 재시작하면 사라진다.
 TEAMS = team.TeamStore()
+# 다른 출처에서 이 API 를 부르도록 허용할 주소 목록 (쉼표로 구분). 기본은
+# 비어 있다 - React 화면은 Vite 프록시(/api)로 같은 출처에서 부르므로 CORS
+# 헤더가 필요 없다. 예전처럼 "*" 를 주면 PPT_LIVE=1 로 켜 둔 동안 사용자가
+# 연 아무 웹페이지나 서버 키로 다듬기·최적화를 호출할 수 있다.
+ALLOWED_ORIGINS = frozenset(
+    o.strip() for o in os.environ.get("PPT_CORS_ORIGINS", "").split(",") if o.strip()
+)
 SESSIONS: dict[str, service.SessionState] = {}
 SESSIONS_LOCK = threading.Lock()
 
@@ -281,14 +288,20 @@ class ApiHandler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(encoded)))
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        origin = self.headers.get("Origin")
+        if origin and origin in ALLOWED_ORIGINS:
+            self.send_header("Access-Control-Allow-Origin", origin)
+            self.send_header("Vary", "Origin")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.end_headers()
         self.wfile.write(encoded)
 
     def _read_json(self) -> dict[str, Any]:
         length = int(self.headers.get("Content-Length", "0"))
+        # 음수면 rfile.read(-1) 이 연결이 끊길 때까지 기다린다.
+        if length < 0:
+            raise ValueError("Content-Length가 올바르지 않습니다.")
         if length > 256_000:
             raise ValueError("요청 본문이 너무 큽니다.")
         raw = self.rfile.read(length)
@@ -303,7 +316,9 @@ class ApiHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler API
         path = urlparse(self.path).path.rstrip("/")
         if path == "/api/health":
-            self._send(200, {"ok": True, "demoAvailable": True})
+            # live: 화면이 열리자마자 세션을 만들지 말지 정하는 데 쓴다. 실제
+            # 생성 모드에서 자동으로 세션을 열면 방문만으로 하루 상한이 준다.
+            self._send(200, {"ok": True, "demoAvailable": True, "live": LIVE})
             return
         if len(parts := path.split("/")) == 4 and parts[:3] == ["", "api", "teams"]:
             try:

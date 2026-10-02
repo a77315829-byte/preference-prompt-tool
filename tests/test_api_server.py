@@ -225,3 +225,50 @@ def test_finished_session_carries_exports(server, monkeypatch) -> None:
     assert exports["copilot"]["path"] == ".github/copilot-instructions.md"
     assert session["prompt"] in exports["copilot"]["content"]
     assert exports["chatgpt"]["content"] == session["prompt"].strip()
+
+
+def _get_raw(base: str, path: str, headers: dict | None = None):
+    req = urllib.request.Request(base + path, headers=headers or {})
+    with urllib.request.urlopen(req) as resp:
+        return resp.status, dict(resp.headers), json.loads(resp.read().decode("utf-8"))
+
+
+@pytest.mark.parametrize("live", [True, False])
+def test_health_reports_live_mode(server, monkeypatch, live) -> None:
+    """화면은 이 값으로 열리자마자 세션을 만들지 정한다. 실제 생성 모드에서
+    자동으로 열면 방문만으로 하루 상한이 준다."""
+    monkeypatch.setattr(api_server, "LIVE", live)
+    _, _, body = _get_raw(server, "/health")
+    assert body["live"] is live
+
+
+def test_no_cors_header_by_default(server, monkeypatch) -> None:
+    """React 화면은 Vite 프록시로 같은 출처에서 부른다. "*" 를 주면 PPT_LIVE=1
+    동안 아무 웹페이지나 서버 키로 다듬기·최적화를 부를 수 있다."""
+    monkeypatch.setattr(api_server, "ALLOWED_ORIGINS", frozenset())
+    _, headers, _ = _get_raw(server, "/health", {"Origin": "https://evil.example"})
+    assert "Access-Control-Allow-Origin" not in headers
+
+
+def test_cors_header_only_for_listed_origin(server, monkeypatch) -> None:
+    monkeypatch.setattr(api_server, "ALLOWED_ORIGINS", frozenset({"https://app.example"}))
+    _, ok, _ = _get_raw(server, "/health", {"Origin": "https://app.example"})
+    assert ok["Access-Control-Allow-Origin"] == "https://app.example"
+    _, other, _ = _get_raw(server, "/health", {"Origin": "https://evil.example"})
+    assert "Access-Control-Allow-Origin" not in other
+
+
+def test_negative_content_length_is_rejected(server) -> None:
+    """음수면 rfile.read(-1) 이 연결이 끊길 때까지 기다리던 경로."""
+    import http.client
+    from urllib.parse import urlparse
+
+    url = urlparse(server)
+    conn = http.client.HTTPConnection(url.hostname, url.port, timeout=5)
+    conn.putrequest("POST", url.path + "/sessions")
+    conn.putheader("Content-Type", "application/json")
+    conn.putheader("Content-Length", "-1")
+    conn.endheaders()
+    resp = conn.getresponse()
+    assert resp.status == 400
+    conn.close()

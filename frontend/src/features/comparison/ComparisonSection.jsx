@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { buildCodingPrompt, buildPreferencePrompt, codingComparisonAxes, otherComparisonAxes } from './comparisonData';
-import { fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice } from './codingApi';
+import { fetchHealth, fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice } from './codingApi';
 import ExportPanel from '../../shared/components/ExportPanel';
 import TeamPanel from '../../shared/components/TeamPanel';
 
@@ -128,10 +128,24 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
     }
   };
 
+  // 데모 서버면 기본 예문으로 바로 세션을 연다 (무료). 실제 생성 서버면
+  // 열지 않고 "이 내용으로 시작"을 기다린다 - 자동으로 열면 방문만으로 하루
+  // 상한이 하나씩 줄고(개발 모드 StrictMode 에서는 둘), 사용자가 자기 글로
+  // 시작하면 또 하나가 준다.
   useEffect(() => {
     let cancelled = false;
-    startPreferenceSession(domainKey, domainCopy.task, 8, template?.id)
-      .then(({ session }) => {
+    fetchHealth()
+      .then((health) => {
+        if (cancelled) return null;
+        if (health.live) {
+          setConnection('idle');
+          return null;
+        }
+        return startPreferenceSession(domainKey, domainCopy.task, 8, template?.id);
+      })
+      .then((result) => {
+        if (!result) return;
+        const { session } = result;
         if (!cancelled) {
           setRemoteSession(session);
           setSessionRequested(true);
@@ -273,6 +287,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
               ? 'AI 실시간 생성과 연결됨'
               : '데모 생성기와 연결됨 (규칙 기반 예시)')}
             {connection === 'connecting' && '예시를 준비하는 중…'}
+            {connection === 'idle' && 'AI 실시간 생성 모드입니다. 내용을 확인하고 "이 내용으로 시작"을 누르면 예시를 만듭니다.'}
             {connection === 'submitting' && '선택을 기록하는 중…'}
             {connection === 'offline' && '로컬 예시로 계속 진행합니다 (API 없이도 사용 가능)'}
           </p>
@@ -292,7 +307,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
         </div>
 
         <AnimatePresence mode="wait">
-          {!isComplete && currentAxis && (
+          {!isComplete && currentAxis && connection !== 'idle' && (
             <motion.div
               className="comparison-question"
               key={currentAxis.id}
@@ -396,7 +411,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
           )}
         </AnimatePresence>
 
-        {!sessionRequested && (
+        {!sessionRequested && connection !== 'idle' && (
           <p className="comparison-fallback-note">무료 데모를 준비하고 있습니다.</p>
         )}
       </div>
