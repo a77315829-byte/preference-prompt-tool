@@ -180,7 +180,7 @@ def build_zip(project: dict[str, Any], values: Any = None, *, include_data: bool
     req = project["requirements"]
     exported = dict(project)
     if not include_data:
-        exported.update(raw_description="", example_output="", runs=[])
+        exported.update(raw_description="", example_output="", runs=[], test_input_text="")
         example = _blank_input(req["variables"])
     else:
         example = values if isinstance(values, dict) else _blank_input(req["variables"])

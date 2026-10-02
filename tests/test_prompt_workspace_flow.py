@@ -322,3 +322,10 @@ def test_korean_names_are_renamed_not_dropped(fake) -> None:
     assert [f["name"] for f in req["output_contract"]["fields"]] == ["field_1", "field_2"]
     assert req["output_contract"]["fields"][1]["item_fields"][0]["name"] == "field_1"
     assert sum("이름을 확인해 주세요" in n for n in result["notes"]) == 5
+
+
+def test_zip_without_data_also_drops_the_saved_test_input() -> None:
+    project = _built_project()
+    project["test_input_text"] = json.dumps(synthetic_cost.SAMPLE_INPUT)
+    saved = json.loads(_unzip(exports.build_zip(project))["prompt-package/project.json"])
+    assert saved["test_input_text"] == ""

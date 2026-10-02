@@ -55,6 +55,7 @@ def empty_requirements() -> dict[str, Any]:
         "preferences": [],
         "output_contract": {"fields": []},
         "open_questions": [],
+        "resolved_questions": [],
     }
 
 
@@ -175,6 +176,23 @@ def validate_requirements(req: Any) -> None:
             _text(item.get("text"), f"{at}.text", allow_empty=False)
             if key != "open_questions":
                 _sourced(item, at)
+            else:
+                # 답을 적는 중일 수 있다. 확인을 막는 것은 질문이 아직 여기 있다는 사실이다.
+                _text(item.get("answer", ""), f"{at}.answer")
+
+    # 답을 반영해 닫은 질문. 무엇을 물었고 어떻게 답했고 어느 규칙·선호로 들어갔는지
+    # 남긴다 - 나중에 다시 열었을 때 왜 그 규칙이 생겼는지 알 수 있게. 예전 프로젝트에는
+    # 이 칸이 없으므로 없으면 빈 목록으로 본다.
+    for i, item in enumerate(_list(req.get("resolved_questions", []), "해결된 질문")):
+        at = f"해결된 질문[{i}]"
+        if not isinstance(item, dict):
+            raise ProjectError(f"{at}: 객체여야 합니다.")
+        _text(item.get("id"), f"{at}.id", limit=40, allow_empty=False)
+        _text(item.get("text"), f"{at}.text", allow_empty=False)
+        _text(item.get("answer"), f"{at}.answer", allow_empty=False)
+        resolved_as = item.get("resolved_as")
+        if resolved_as is not None and not isinstance(resolved_as, str):
+            raise ProjectError(f"{at}.resolved_as: 문자열이거나 null 이어야 합니다.")
 
     contract = req.get("output_contract")
     if not isinstance(contract, dict):
@@ -195,6 +213,8 @@ def validate_project(project: Any) -> dict[str, Any]:
     _text(project.get("title"), "작업 이름", limit=100)
     _text(project.get("raw_description"), "업무 설명", limit=MAX_DESCRIPTION_CHARS)
     _text(project.get("example_output", ""), "결과 예시", limit=MAX_DESCRIPTION_CHARS)
+    # 다시 열었을 때 이어서 시험하도록 마지막 시험 입력 글을 같이 둔다. 선택 항목.
+    _text(project.get("test_input_text", ""), "시험 입력", limit=MAX_PROMPT_CHARS)
     check_set = project.get("check_set")
     if check_set is not None and not isinstance(check_set, str):
         raise ProjectError("check_set: 문자열이거나 null 이어야 합니다.")
