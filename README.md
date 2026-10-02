@@ -690,6 +690,7 @@ npm run dev
 | `PPT_LIVE_SESSIONS_PER_DAY` | 60 | 하루 실제 생성 세션 상한. 넘으면 데모로 진행 |
 | `PPT_OPTIMIZATIONS_PER_DAY` | 30 | 하루 GEPA 최적화("선호 기준으로 최적화") 상한 (세션당 2회) |
 | `PPT_POLISHES_PER_DAY` | 60 | 하루 "프롬프트 다듬기" LLM 재작성 상한 (`PPT_LIVE=1` 일 때만 동작) |
+| `PPT_WORKSPACE_CALLS_PER_DAY` | 60 | 하루 "서비스용 프롬프트" AI 호출 상한 (요구사항 정리 + 시험 실행. 입력 오류로 멈춘 시험은 차감 안 함) |
 | `PPT_CORS_ORIGINS` | 비어 있음 | 다른 출처에서 API 를 부르도록 허용할 주소 (쉼표 구분). 비어 있으면 CORS 헤더를 보내지 않는다 |
 
 모델은 서버가 정한다. 요청 본문에 `model` 을 보내도 무시한다 - 따르면

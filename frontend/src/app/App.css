@@ -2102,3 +2102,188 @@
 .team-agreements li.split {
   background: #fff7ed;
 }
+
+/* 서비스용 프롬프트 작업 공간 (features/prompt-workspace). 다듬기 공간과 같은
+   톤(잉크 #111827, 액센트 #4468ff, 통과 녹색·주의 주황)을 따른다. */
+.ws-step {
+  margin-top: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid #e5e9f0;
+}
+
+.ws-input {
+  width: 100%;
+  max-width: 28rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #dfe4ed;
+  border-radius: 0.8rem;
+  font: inherit;
+}
+
+.ws-block {
+  margin-top: 1.4rem;
+}
+
+.ws-block-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ws-help {
+  margin: 0.35rem 0;
+  color: #6b7280;
+  font-size: 0.82rem;
+}
+
+.ws-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.ws-item input {
+  flex: 1 1 18rem;
+  min-width: 0;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #dfe4ed;
+  border-radius: 0.7rem;
+  font: inherit;
+}
+
+.ws-item-id {
+  min-width: 2rem;
+  color: #4468ff;
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+
+.ws-excerpt {
+  flex-basis: 100%;
+  margin: 0 0 0 2.5rem;
+  color: #6b7280;
+  font-size: 0.78rem;
+}
+
+.ws-origin {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.ws-origin-extracted { color: #176b50; background: #dff7ed; }
+.ws-origin-suggested { color: #7a4a00; background: #fdf0da; }
+.ws-origin-user { color: #374151; background: #eef1f6; }
+
+.ws-small-button {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #dfe4ed;
+  border-radius: 999px;
+  color: #374151;
+  background: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ws-small-button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.ws-file input { display: none; }
+
+.ws-table {
+  width: 100%;
+  margin-top: 0.5rem;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.ws-table th,
+.ws-table td {
+  padding: 0.45rem 0.5rem;
+  border-bottom: 1px solid #eef1f6;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.ws-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+.ws-stage {
+  margin: 0.4rem 0;
+  color: #374151;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.ws-stage-built { color: #176b50; }
+.ws-stage-stale_artifact { color: #b42318; }
+
+.ws-error {
+  margin: 0.8rem 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.8rem;
+  color: #8a1c12;
+  background: #fdecea;
+  font-size: 0.85rem;
+}
+
+.ws-notes {
+  margin: 0.8rem 0;
+  padding-left: 1.2rem;
+  color: #5d6470;
+  font-size: 0.82rem;
+}
+
+.ws-run {
+  margin-top: 1.2rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid #e5e9f0;
+  border-radius: 1rem;
+}
+
+.ws-run.is-stale { border-style: dashed; opacity: 0.75; }
+
+.ws-checks {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ws-check {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.3rem 0;
+  font-size: 0.82rem;
+}
+
+.ws-check-status {
+  flex: none;
+  min-width: 3.4rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.ws-check-pass .ws-check-status { color: #176b50; background: #dff7ed; }
+.ws-check-fail .ws-check-status { color: #8a1c12; background: #fdecea; }
+.ws-check-not_evaluated .ws-check-status { color: #5d6470; background: #eef1f6; }
+
+.ws-check-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .ws-table { display: block; overflow-x: auto; }
+  .ws-excerpt { margin-left: 0; }
+}

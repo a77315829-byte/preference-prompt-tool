@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+import base64
 import json
 import os
 import threading
@@ -26,6 +27,12 @@ import service
 import team
 import template_library
 from budget import DailyBudget
+from prompt_workspace import builder as ws_builder
+from prompt_workspace import exports as ws_exports
+from prompt_workspace import requirements as ws_requirements
+from prompt_workspace import runner as ws_runner
+from prompt_workspace.examples import synthetic_cost as ws_sample
+from prompt_workspace.models import new_project, status as ws_status, validate_project
 
 load_dotenv()
 
@@ -280,6 +287,76 @@ def _polish_prompt(body: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+# 개발자용 작업 공간 (prompt_workspace/). 서버는 프로젝트를 들고 있지 않는다 -
+# 화면이 단계마다 프로젝트 JSON 을 보낸다. 모델을 부르는 것은 '설명 정리'와
+# '시험 실행' 둘이고, 하루 상한을 같이 쓴다. 입력 오류로 멈춘 시험은 차감하지
+# 않는다 (runner 의 before_call).
+DAILY_WORKSPACE_CALLS = DailyBudget(int(os.environ.get("PPT_WORKSPACE_CALLS_PER_DAY", "60")))
+# 시험 기록은 최근 것만 오간다. 요청 본문 상한(256KB) 안에 머물게.
+MAX_WORKSPACE_RUNS = 5
+
+
+def _consume_workspace_call() -> None:
+    if not LIVE:
+        raise ValueError("AI 호출은 실제 생성 모드에서만 쓸 수 있습니다 (서버를 PPT_LIVE=1 로 켜 주세요).")
+    if not DAILY_WORKSPACE_CALLS.consume():
+        raise ValueError("오늘 배정된 작업 공간 AI 호출 횟수를 모두 썼습니다.")
+
+
+def _ws_project(body: dict[str, Any]) -> dict[str, Any]:
+    project = validate_project(body.get("project"))
+    project["runs"] = project["runs"][-MAX_WORKSPACE_RUNS:]
+    return project
+
+
+def _ws_payload(project: dict[str, Any]) -> dict[str, Any]:
+    return {"project": project, "status": ws_status(project)}
+
+
+def _workspace_sample() -> dict[str, Any]:
+    """AI 호출 없이 미리 정리해 둔 샘플. 실제 구조화 결과가 아니다."""
+    project = new_project(ws_sample.TITLE, ws_sample.SAMPLE_DESCRIPTION)
+    project["requirements"] = ws_sample.sample_requirements()
+    project["check_set"] = ws_sample.NAME
+    return {**_ws_payload(project), "input": ws_sample.SAMPLE_INPUT, "live": LIVE,
+            "notes": ["샘플 요구사항은 미리 정리해 둔 것입니다 (AI 호출 없음). 실제 AWS 데이터가 아닙니다."]}
+
+
+def _workspace_structure(body: dict[str, Any]) -> dict[str, Any]:
+    raw = str(body.get("description", ""))
+    example = str(body.get("exampleOutput", ""))
+    if not raw.strip():
+        raise ValueError("업무 설명을 적어 주세요.")
+    _consume_workspace_call()
+    result = ws_requirements.structure(raw, example, model=DEFAULT_MODEL)
+    project = new_project(str(body.get("title", ""))[:100], raw, example)
+    project["requirements"] = result["requirements"]
+    return {**_ws_payload(project), "notes": result["notes"], "cached": result["cached"]}
+
+
+def _workspace_run(body: dict[str, Any]) -> dict[str, Any]:
+    project = _ws_project(body)
+    record = ws_runner.run(project, body.get("input"), model=DEFAULT_MODEL, live=LIVE,
+                           before_call=_consume_workspace_call)
+    return {"run": record}
+
+
+def _workspace_export(body: dict[str, Any]) -> dict[str, Any]:
+    project = _ws_project(body)
+    data = ws_exports.build_zip(project, body.get("input"), include_data=bool(body.get("includeData", False)))
+    return {"filename": "prompt-package.zip", "zipBase64": base64.b64encode(data).decode("ascii")}
+
+
+WORKSPACE_ROUTES = {
+    "/api/workspace/status": lambda body: _ws_payload(_ws_project(body)),
+    "/api/workspace/structure": _workspace_structure,
+    "/api/workspace/confirm": lambda body: _ws_payload(ws_builder.confirm(_ws_project(body))),
+    "/api/workspace/build": lambda body: _ws_payload(ws_builder.build(_ws_project(body))),
+    "/api/workspace/run": _workspace_run,
+    "/api/workspace/export": _workspace_export,
+}
+
+
 class ApiHandler(BaseHTTPRequestHandler):
     server_version = "PreferencePromptAPI/1.0"
 
@@ -326,6 +403,9 @@ class ApiHandler(BaseHTTPRequestHandler):
             except team.TeamError as exc:
                 self._send(404, {"error": str(exc)})
             return
+        if path == "/api/workspace/sample":
+            self._send(200, _workspace_sample())
+            return
         if path == "/api/templates":
             self._send(200, {"templates": [asdict(t) for t in template_library.library()]})
             return
@@ -356,6 +436,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/polish":
                 self._send(200, _polish_prompt(body))
+                return
+            if path in WORKSPACE_ROUTES:
+                self._send(200, WORKSPACE_ROUTES[path](body))
                 return
             if path.startswith("/api/teams/") and path.endswith("/members"):
                 self._join_team(path.split("/")[3], body)
