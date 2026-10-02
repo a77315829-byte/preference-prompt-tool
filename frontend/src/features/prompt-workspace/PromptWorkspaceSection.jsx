@@ -2,11 +2,38 @@ import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import AuthSection from '../../shared/auth/AuthSection';
 import CompareView from './CompareView';
+import SuggestionPanel from './SuggestionPanel';
 import {
-  buildProject, checkProject, confirmProject, deleteProject, exportProject, fetchHealth, fetchSample,
-  listProjects, openProject, resolveQuestion, restoreVersion, runProject, saveProject as saveProjectVersion,
-  structureDescription,
+  buildProject, checkProject, confirmProject, deleteProject, discardDraft, exportProject, fetchHealth, fetchSample,
+  listProjects, openProject, resolveQuestion, restoreVersion, runProject, saveDraft, saveProject as saveProjectVersion,
+  shareProject, structureDescription, unshareProject,
 } from './workspaceApi';
+
+// 자동 저장 간격 (마지막 수정 뒤). 저장한 프로젝트는 서버의 작업 중 사본에, 한 번도
+// 저장하지 않은 프로젝트는 이 브라우저에만 둔다 - 아무 클릭마다 서버에 프로젝트가
+// 생기지 않게. 브라우저 보관은 다른 기기에서 보이지 않고 지워질 수 있다.
+const AUTOSAVE_MS = 2500;
+const LOCAL_KEY = 'ppt-workspace-unsaved';
+const ROLE_LABEL = { owner: '소유자', editor: '편집', viewer: '보기' };
+
+function readLocal() {
+  try {
+    const raw = window.localStorage.getItem(LOCAL_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeLocal(value) {
+  try {
+    if (value) window.localStorage.setItem(LOCAL_KEY, JSON.stringify(value));
+    else window.localStorage.removeItem(LOCAL_KEY);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 // 서비스에 연결할 프롬프트 만들기 (docs/developer_prompt_workspace_plan.md 1차).
 // 설명 입력 -> 요구사항 확인 -> 프롬프트 생성·시험·내보내기.
@@ -113,6 +140,18 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
   const [versions, setVersions] = useState([]);
   const [savedJson, setSavedJson] = useState('');
   const [versionLabel, setVersionLabel] = useState('');
+  // 프로젝트 단위 권한: owner / editor / viewer. 저장한 프로젝트를 열었을 때만 의미가 있다.
+  const [role, setRole] = useState('owner');
+  const [owner, setOwner] = useState('');
+  const [members, setMembers] = useState([]);
+  const [shareName, setShareName] = useState('');
+  const [shareRole, setShareRole] = useState('viewer');
+  // 자동 저장. pendingDraft 는 열었을 때 발견한 작업 중 사본 - 사용자가 불러올지 버릴지
+  // 정하기 전에는 자동 저장을 멈춘다 (그 사본을 조용히 덮지 않게).
+  const [pendingDraft, setPendingDraft] = useState(null);
+  const [localRecovery, setLocalRecovery] = useState(() => readLocal());
+  const [lastDraftJson, setLastDraftJson] = useState('');
+  const [draftStatus, setDraftStatus] = useState(null);
   const [answers, setAnswers] = useState({}); // 질문 id -> { text, target }
   const [artifactDirty, setArtifactDirty] = useState(false);
   const [contractText, setContractText] = useState('');
@@ -309,10 +348,86 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
     adopt(data.project, message ? [message] : []);
     setSavedId(data.id);
     setVersions(data.versions);
-    setSavedJson(JSON.stringify({ ...data.project, test_input_text: data.project.test_input_text || '' }));
+    const savedNow = JSON.stringify({ ...data.project, test_input_text: data.project.test_input_text || '' });
+    setSavedJson(savedNow);
+    setLastDraftJson(savedNow);
+    setRole(data.role || 'owner');
+    setOwner(data.owner || '');
+    setMembers(data.members || []);
+    setPendingDraft(data.draft || null);
+    setDraftStatus(null);
   };
 
-  const leaveOk = () => !unsaved || window.confirm('저장하지 않은 변경이 사라집니다. 계속할까요?');
+  const readOnly = Boolean(savedId) && role === 'viewer';
+  const canAutosave = Boolean(user && savedId && !readOnly);
+  const draftSynced = canAutosave && currentJson === lastDraftJson;
+  const leaveOk = () => !unsaved || draftSynced
+    || window.confirm('버전으로 저장하지 않은 변경이 있습니다. 이 화면의 내용이 바뀝니다. 계속할까요?');
+
+  // 자동 저장: 마지막 수정 뒤 잠시 기다렸다가 한 번.
+  useEffect(() => {
+    if (!project || pendingDraft) return undefined;
+    if (canAutosave) {
+      if (!unsaved || currentJson === lastDraftJson) return undefined;
+      const snapshot = currentJson;
+      const timer = window.setTimeout(() => {
+        setDraftStatus({ state: 'saving' });
+        saveDraft({ ...project, test_input_text: inputText })
+          .then(({ saved_at: at }) => { setLastDraftJson(snapshot); setDraftStatus({ state: 'saved', at }); })
+          .catch((e) => setDraftStatus({ state: 'error', message: e.message }));
+      }, AUTOSAVE_MS);
+      return () => window.clearTimeout(timer);
+    }
+    if (!savedId) {
+      const timer = window.setTimeout(() => {
+        const at = new Date().toISOString();
+        if (writeLocal({ at, project: { ...project, test_input_text: inputText } })) {
+          setDraftStatus({ state: 'local', at });
+        }
+      }, AUTOSAVE_MS);
+      return () => window.clearTimeout(timer);
+    }
+    return undefined;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentJson, canAutosave, savedId, pendingDraft]);
+
+  const loadDraft = () => {
+    const draft = pendingDraft.project;
+    setInputText(draft.test_input_text || '');
+    adopt(draft, [`자동 저장된 작업 중 내용을 불러왔습니다 (v${pendingDraft.base_version} 이후 변경). 버전으로 저장하기 전까지는 작업 중 사본입니다.`]);
+    setLastDraftJson(JSON.stringify({ ...draft, test_input_text: draft.test_input_text || '' }));
+    setPendingDraft(null);
+  };
+
+  const dropDraft = () => act('discard', async () => {
+    await discardDraft(savedId);
+    setPendingDraft(null);
+    refreshList();
+  });
+
+  const recoverLocal = () => {
+    const saved = localRecovery.project;
+    setTitle(saved.title);
+    setDescription(saved.raw_description);
+    setExampleOutput(saved.example_output || '');
+    setInputText(saved.test_input_text || '');
+    adopt(saved, ['이 브라우저에 자동 보관된, 아직 저장하지 않은 작업을 불러왔습니다.']);
+    forgetSaved();
+    setLocalRecovery(null);
+  };
+
+  const dropLocal = () => { writeLocal(null); setLocalRecovery(null); };
+
+  // --- 공유 (소유자만) --------------------------------------------------------
+  const share = (username, nextRole) => act('share', async () => {
+    const data = await shareProject(savedId, username, nextRole);
+    setMembers(data.members);
+    setShareName('');
+  });
+  const unshare = (username) => {
+    if (!window.confirm(`${username} 님의 접근 권한을 없앱니다.`)) return;
+    act('share', async () => setMembers((await unshareProject(savedId, username)).members));
+  };
 
   const reopen = (id) => {
     if (!leaveOk()) return;
@@ -325,9 +440,30 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
 
   const saveVersion = () => act('save', async () => {
     const data = await saveProjectVersion({ ...project, test_input_text: inputText }, versionLabel);
-    applyOverview(data, `v${data.version} 로 저장했습니다. 이전 버전은 그대로 남아 있습니다.`);
+    applyOverview(data, data.copied
+      ? `편집 권한이 없는 프로젝트라 내 사본(새 프로젝트)으로 저장했습니다 (v${data.version}).`
+      : `v${data.version} 로 저장했습니다. 이전 버전은 그대로 남아 있습니다.`);
     setVersionLabel('');
+    writeLocal(null);
     refreshList();
+  });
+
+  // 추천 패널에서 "이 수정안 적용". 사용자가 고르고 눌렀으므로, 저장된 프로젝트면
+  // 바로 새 버전으로 남긴다 (계획서 10절: 사용자 승인 후 새 버전으로 저장).
+  const applySuggestion = (systemPrompt, trialRun, label) => act('apply', async () => {
+    const nextRevision = project.artifact.revision + 1;
+    const runs = trialRun && trialRun.artifact_revision === nextRevision
+      ? [...project.runs, trialRun].slice(-MAX_RUNS) : project.runs;
+    const next = { ...project, runs, artifact: { ...project.artifact, system_prompt: systemPrompt, revision: nextRevision } };
+    setProject(next);
+    setArtifactDirty(false);
+    if (user && savedId && !readOnly) {
+      const data = await saveProjectVersion({ ...next, test_input_text: inputText }, label);
+      applyOverview(data, `수정안을 적용하고 v${data.version} 로 저장했습니다 (${label}).`);
+      refreshList();
+    } else {
+      setNotes([`수정안을 적용했습니다 (${label}). 프롬프트 revision ${nextRevision}.`]);
+    }
   });
 
   const restore = (version) => {
@@ -335,6 +471,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
       + (unsaved ? '\n\n저장하지 않은 변경은 사라집니다.' : ''))) return;
     act('restore', async () => {
       const data = await restoreVersion(savedId, version);
+      setPendingDraft(null);
       setInputText(data.project.test_input_text || '');
       applyOverview(data, `v${version} 을 v${data.version} 으로 복원했습니다.`);
       refreshList();
@@ -394,21 +531,39 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
           </div>
         )}
 
+        {/* 저장하지 않은 작업 복구 (이 브라우저에만 보관됨) */}
+        {localRecovery && !project && (
+          <div className="ws-banner">
+            <span>
+              저장하지 않은 작업이 이 브라우저에 남아 있습니다
+              ({localRecovery.project?.title || '이름 없음'}, {String(localRecovery.at).replace('T', ' ').slice(0, 16)}).
+            </span>
+            <button className="ws-small-button" type="button" onClick={recoverLocal}>불러오기</button>
+            <button className="ws-small-button" type="button" onClick={dropLocal}>버리기</button>
+          </div>
+        )}
+
         {/* 다시 열기 */}
         {user && savedList.length > 0 && (
           <div className="ws-step">
-            <p className="question-eyebrow">{user.username} 님이 저장한 프로젝트</p>
+            <p className="question-eyebrow">{user.username} 님의 프로젝트</p>
             <ul className="ws-saved-list">
               {savedList.map((item) => (
                 <li key={item.id} className={item.id === savedId ? 'is-open' : ''}>
                   <span className="ws-saved-title">{item.title}</span>
+                  {item.role !== 'owner' && (
+                    <span className="ws-origin ws-origin-suggested">{item.owner} 님 공유 · {ROLE_LABEL[item.role]}</span>
+                  )}
+                  {item.draft_at && <span className="ws-origin ws-origin-user">자동 저장본 있음</span>}
                   <span className="ws-help">v{item.versions} · {STAGE_LABEL[item.stage]} · {item.saved_at.replace('T', ' ').slice(0, 16)} UTC</span>
                   <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => reopen(item.id)}>열기</button>
-                  <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => removeSaved(item.id, item.title)}>삭제</button>
+                  {item.role === 'owner' && (
+                    <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => removeSaved(item.id, item.title)}>삭제</button>
+                  )}
                 </li>
               ))}
             </ul>
-            <p className="ws-help">내 계정으로 저장한 것만 보입니다. 이 서버의 data/app.db 에 저장됩니다.</p>
+            <p className="ws-help">내가 만든 것과 나에게 공유된 것만 보입니다. 이 서버의 data/app.db 에 저장됩니다.</p>
           </div>
         )}
 
@@ -445,6 +600,19 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
 
         {error && <p className="ws-error" role="alert">{error}</p>}
         {notes.length > 0 && <ul className="ws-notes">{notes.map((n) => <li key={n}>{n}</li>)}</ul>}
+        {pendingDraft && (
+          <div className="ws-banner">
+            <span>
+              자동 저장된 작업 중 내용이 있습니다 ({pendingDraft.saved_at.replace('T', ' ').slice(0, 16)} UTC,
+              v{pendingDraft.base_version} 기준
+              {versions.length > 0 && pendingDraft.base_version < versions[versions.length - 1].version
+                ? ` - 그 뒤에 v${versions[versions.length - 1].version} 이 저장됐습니다` : ''}).
+              정하기 전에는 자동 저장을 멈춥니다.
+            </span>
+            <button className="ws-small-button" type="button" onClick={loadDraft}>불러오기</button>
+            <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={dropDraft}>버리기</button>
+          </div>
+        )}
 
         {/* B. 요구사항 확인 */}
         {project && (
@@ -620,6 +788,9 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
               </div>
             )}
 
+            <SuggestionPanel project={project} inputText={inputText} live={live}
+              disabled={stage !== 'built' || Boolean(busy)} onApply={applySuggestion} />
+
             <div className="ws-block">
               <strong>내보내기</strong>
               <label className="ws-check-row">
@@ -640,14 +811,23 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
             <p className="question-eyebrow">4. 저장 · 버전 · 비교</p>
             <p className={`ws-stage ${unsaved ? 'ws-stage-stale_artifact' : ''}`}>
               {savedId ? `저장된 프로젝트 · 최신 v${versions[versions.length - 1]?.version}` : '아직 저장하지 않은 프로젝트'}
-              {unsaved ? ' · 저장하지 않은 변경 있음' : ' · 변경 없음'}
+              {savedId && role !== 'owner' && ` · ${owner} 님 공유 (${ROLE_LABEL[role]})`}
+              {unsaved ? ' · 버전으로 저장하지 않은 변경 있음' : ' · 변경 없음'}
+            </p>
+            <p className="ws-help" role="status">
+              {readOnly && '보기 권한이라 자동 저장하지 않습니다. 저장하면 내 사본(새 프로젝트)이 됩니다.'}
+              {!readOnly && pendingDraft && '자동 저장 멈춤 - 위에서 자동 저장본을 불러올지 정해 주세요.'}
+              {!readOnly && !pendingDraft && draftStatus?.state === 'saving' && '자동 저장 중…'}
+              {!readOnly && !pendingDraft && draftStatus?.state === 'saved' && `작업 중 내용 자동 저장됨 (${draftStatus.at.slice(11, 19)} UTC) - 버전은 아닙니다.`}
+              {!readOnly && !pendingDraft && draftStatus?.state === 'local' && '아직 저장하지 않은 프로젝트라 이 브라우저에만 자동 보관 중입니다.'}
+              {!readOnly && !pendingDraft && draftStatus?.state === 'error' && `자동 저장 실패: ${draftStatus.message}`}
             </p>
             {user ? (
               <div className="ws-item">
                 <input aria-label="버전 메모" placeholder="버전 메모 (선택, 예: Q1 답 반영)" maxLength={60}
                   value={versionLabel} onChange={(e) => setVersionLabel(e.target.value)} />
-                <button className="prompt-copy-button" type="button" disabled={Boolean(busy) || !unsaved} onClick={saveVersion}>
-                  {busy === 'save' ? '저장 중…' : '새 버전으로 저장'}
+                <button className="prompt-copy-button" type="button" disabled={Boolean(busy) || (!unsaved && !readOnly)} onClick={saveVersion}>
+                  {busy === 'save' ? '저장 중…' : readOnly ? '내 사본으로 저장' : '새 버전으로 저장'}
                 </button>
               </div>
             ) : (
@@ -656,7 +836,38 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
                 <button className="prompt-copy-button" type="button" onClick={openLogin}>로그인하고 저장</button>
               </div>
             )}
-            <p className="ws-help">저장은 이전 버전을 덮어쓰지 않고 새 버전을 덧붙입니다. 자동 저장은 하지 않습니다.</p>
+            <p className="ws-help">
+              버전은 저장을 누를 때만 생기고 이전 버전을 덮어쓰지 않습니다. 그 사이의 작업 중 내용은 자동 저장되어
+              다시 열 때 불러올 수 있습니다 (내 계정에만, 버전 목록에는 안 나타남).
+            </p>
+
+            {savedId && role === 'owner' && (
+              <div className="ws-block">
+                <strong>공유</strong>
+                <p className="ws-help">아이디로 초대합니다. 편집: 새 버전 저장·복원. 보기: 열기·비교만 (저장하면 자기 사본). 삭제와 공유 관리는 소유자만.</p>
+                {members.map((m) => (
+                  <div className="ws-item" key={m.username}>
+                    <span className="ws-saved-title">{m.username}</span>
+                    <select aria-label={`${m.username} 권한`} value={m.role} disabled={Boolean(busy)}
+                      onChange={(e) => share(m.username, e.target.value)}>
+                      <option value="viewer">보기</option>
+                      <option value="editor">편집</option>
+                    </select>
+                    <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => unshare(m.username)}>권한 없애기</button>
+                  </div>
+                ))}
+                <div className="ws-item">
+                  <input aria-label="공유할 아이디" placeholder="공유할 아이디" maxLength={30} value={shareName}
+                    onChange={(e) => setShareName(e.target.value)} />
+                  <select aria-label="새 권한" value={shareRole} onChange={(e) => setShareRole(e.target.value)}>
+                    <option value="viewer">보기</option>
+                    <option value="editor">편집</option>
+                  </select>
+                  <button className="ws-small-button" type="button" disabled={Boolean(busy) || !shareName.trim()}
+                    onClick={() => share(shareName.trim(), shareRole)}>초대</button>
+                </div>
+              </div>
+            )}
 
             {versions.length > 0 && (
               <table className="ws-table">
@@ -673,9 +884,11 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
                           : '모델 실행 없음'}
                       </td>
                       <td>
-                        <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => restore(v.version)}>
-                          이 버전으로 복원
-                        </button>
+                        {!readOnly && (
+                          <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => restore(v.version)}>
+                            이 버전으로 복원
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}

@@ -35,6 +35,7 @@ from prompt_workspace import exports as ws_exports
 from prompt_workspace import requirements as ws_requirements
 from prompt_workspace import questions as ws_questions
 from prompt_workspace import runner as ws_runner
+from prompt_workspace import suggest as ws_suggest
 from prompt_workspace.store import ProjectStore
 from prompt_workspace.examples import synthetic_cost as ws_sample
 from prompt_workspace.models import new_project, status as ws_status, validate_project
@@ -383,9 +384,23 @@ def _workspace_store_get(user: User, parts: list[str]) -> dict[str, Any]:
 
 
 def _workspace_store_post(user: User, parts: list[str], body: dict[str, Any]) -> dict[str, Any]:
-    """POST /api/workspace/projects (저장) · /<id>/restore · /<id>/delete"""
+    """POST /api/workspace/projects (저장) · /<id>/restore · /<id>/delete
+    · /<id>/share · /<id>/unshare · /<id>/draft · /<id>/discard-draft"""
     if len(parts) == 4:
         return WORKSPACE_STORE.save(user.id, _ws_project(body), str(body.get("label", "")))
+    if len(parts) == 6 and parts[5] == "share":
+        return {"members": WORKSPACE_STORE.share(user.id, parts[4], str(body.get("username", "")),
+                                                 str(body.get("role", "")))}
+    if len(parts) == 6 and parts[5] == "unshare":
+        return {"members": WORKSPACE_STORE.unshare(user.id, parts[4], str(body.get("username", "")))}
+    if len(parts) == 6 and parts[5] == "draft":
+        project = _ws_project(body)
+        if project["id"] != parts[4]:
+            raise ValueError("자동 저장할 프로젝트 id 가 경로와 다릅니다.")
+        return WORKSPACE_STORE.save_draft(user.id, project)
+    if len(parts) == 6 and parts[5] == "discard-draft":
+        WORKSPACE_STORE.discard_draft(user.id, parts[4])
+        return {"discarded": parts[4]}
     if len(parts) == 6 and parts[5] == "restore":
         try:
             version = int(body.get("version"))
@@ -412,7 +427,27 @@ def _clear_cookie() -> str:
     return f"{SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0" + ("; Secure" if COOKIE_SECURE else "")
 
 
+def _workspace_suggest(body: dict[str, Any]) -> dict[str, Any]:
+    """개선 방향 추천. 코드 제안은 언제나, AI 제안은 실제 생성 모드에서만 (하루 상한 차감)."""
+    project = _ws_project(body)
+    if project.get("artifact") is None or ws_status(project)["stage"] != "built":
+        raise ValueError("지금 요구사항으로 만든 프롬프트가 있어야 개선 방향을 추천할 수 있습니다.")
+    if LIVE:
+        _consume_workspace_call()
+    return ws_suggest.suggest(project, model=DEFAULT_MODEL, use_ai=LIVE)
+
+
+def _workspace_apply_suggestions(body: dict[str, Any]) -> dict[str, Any]:
+    """고른 제안을 적용한 지침 후보. 모델을 부르지 않고 프로젝트도 바꾸지 않는다."""
+    picked = body.get("suggestions")
+    if not isinstance(picked, list) or not picked:
+        raise ValueError("적용할 제안을 하나 이상 고르세요.")
+    return ws_suggest.apply(_ws_project(body), picked, allow_rule_changes=bool(body.get("allowRuleChanges")))
+
+
 WORKSPACE_ROUTES = {
+    "/api/workspace/suggest": _workspace_suggest,
+    "/api/workspace/apply-suggestions": _workspace_apply_suggestions,
     "/api/workspace/resolve": _workspace_resolve,
     "/api/workspace/status": lambda body: _ws_payload(_ws_project(body)),
     "/api/workspace/structure": _workspace_structure,
@@ -609,6 +644,8 @@ class ApiHandler(BaseHTTPRequestHandler):
             return
         try:
             self._send(200, handle(user, parts))
+        except PermissionError as exc:
+            self._send(403, {"error": str(exc)})
         except (KeyError, LookupError):
             self._send(404, {"error": "저장된 프로젝트나 버전을 찾을 수 없습니다."})
         except ValueError as exc:

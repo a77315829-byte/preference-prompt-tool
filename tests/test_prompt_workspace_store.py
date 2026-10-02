@@ -294,3 +294,192 @@ def test_store_routes_reject_bad_paths(server) -> None:
     assert alice.call("/workspace/projects/0123456789ab")[0] == 404
     assert alice.call("/workspace/projects/0123456789ab/versions/x")[0] == 404
     assert alice.call("/workspace/projectsx")[0] == 404
+
+
+# --- sharing (project-level access control) ------------------------------------
+
+
+@pytest.fixture
+def three(db) -> tuple[int, int, int]:
+    auth = AuthService(db)
+    return tuple(auth.signup(name, f"{name}-password-1")[0].id for name in ("alice", "bob", "carol"))
+
+
+def test_viewer_can_open_but_not_write(store, three) -> None:
+    alice, bob, _ = three
+    project = _sample()
+    store.save(alice, project)
+    store.share(alice, project["id"], "bob", "viewer")
+    opened = store.open(bob, project["id"])
+    assert opened["role"] == "viewer" and opened["owner"] == "alice" and "members" not in opened
+    assert store.version(bob, project["id"], 1)["id"] == project["id"]
+    with pytest.raises(PermissionError):
+        store.restore(bob, project["id"], 1)
+    with pytest.raises(PermissionError):
+        store.save_draft(bob, project)
+    with pytest.raises(PermissionError):
+        store.delete(bob, project["id"])
+
+
+def test_viewer_saving_makes_their_own_copy(store, three) -> None:
+    alice, bob, _ = three
+    project = _sample()
+    store.save(alice, project)
+    store.share(alice, project["id"], "bob", "viewer")
+    saved = store.save(bob, project, "내 사본")
+    assert saved["copied"] is True and saved["id"] != project["id"] and saved["role"] == "owner"
+    assert len(store.open(alice, project["id"])["versions"]) == 1
+
+
+def test_editor_appends_versions_to_the_shared_project(store, three) -> None:
+    alice, bob, _ = three
+    project = _sample()
+    store.save(alice, project)
+    store.share(alice, project["id"], "bob", "editor")
+    saved = store.save(bob, questions.resolve(project, "Q1", "빈 목록", "hard_rule"), "밥 수정")
+    assert saved["copied"] is False and saved["version"] == 2
+    assert store.open(alice, project["id"])["versions"][-1]["label"] == "밥 수정"
+    assert store.restore(bob, project["id"], 1)["version"] == 3
+    with pytest.raises(PermissionError):  # 삭제·공유 관리는 소유자만
+        store.delete(bob, project["id"])
+    with pytest.raises(PermissionError):
+        store.share(bob, project["id"], "carol", "viewer")
+
+
+def test_list_marks_shared_projects_with_role_and_owner(store, three) -> None:
+    alice, bob, carol = three
+    project = _sample()
+    store.save(alice, project)
+    store.share(alice, project["id"], "bob", "editor")
+    listed = store.list(bob)
+    assert [(i["role"], i["owner"]) for i in listed] == [("editor", "alice")]
+    assert store.list(carol) == []
+    with pytest.raises(KeyError):  # 공유받지 않은 사람에게는 없는 프로젝트
+        store.open(carol, project["id"])
+
+
+def test_share_changes_role_unshare_removes_and_owner_sees_members(store, three) -> None:
+    alice, bob, _ = three
+    project = _sample()
+    store.save(alice, project)
+    store.share(alice, project["id"], "bob", "editor")
+    members = store.share(alice, project["id"], "BOB", "viewer")  # 대소문자 무관, 권한만 바뀐다
+    assert members == [{"username": "bob", "role": "viewer", "added_at": members[0]["added_at"]}]
+    assert store.open(alice, project["id"])["members"][0]["role"] == "viewer"
+    store.unshare(alice, project["id"], "bob")
+    with pytest.raises(KeyError):
+        store.open(bob, project["id"])
+
+
+@pytest.mark.parametrize("username, role, message", [
+    ("nobody", "viewer", "찾을 수"),
+    ("alice", "viewer", "이미"),
+    ("bob", "owner", "권한은"),
+])
+def test_share_rejects_bad_requests(store, three, username, role, message) -> None:
+    alice, _, _ = three
+    project = _sample()
+    store.save(alice, project)
+    with pytest.raises(ValueError, match=message):
+        store.share(alice, project["id"], username, role)
+
+
+# --- autosave drafts ------------------------------------------------------------
+
+
+def test_draft_is_not_a_version_and_comes_back_on_open(store, three) -> None:
+    alice, _, _ = three
+    project = _sample()
+    store.save(alice, project, "v1")
+    edited = questions.resolve(project, "Q1", "빈 목록", "hard_rule")
+    store.save_draft(alice, edited)
+    store.save_draft(alice, edited)  # 덮어쓴다
+    opened = store.open(alice, project["id"])
+    assert len(opened["versions"]) == 1
+    assert opened["draft"]["base_version"] == 1
+    assert opened["draft"]["project"]["requirements"]["open_questions"] == []
+    assert store.list(alice)[0]["draft_at"] is not None
+
+
+def test_saving_a_version_clears_my_draft_only(store, three) -> None:
+    alice, bob, _ = three
+    project = _sample()
+    store.save(alice, project)
+    store.share(alice, project["id"], "bob", "editor")
+    edited = questions.resolve(project, "Q1", "빈 목록", "hard_rule")
+    store.save_draft(alice, edited)
+    store.save_draft(bob, edited)
+    store.save(alice, edited)
+    assert store.open(alice, project["id"])["draft"] is None
+    # 밥의 작업 중 사본은 남는다 (이제 최신 버전과 같아 돌려주지는 않는다).
+    with store.db.connect() as conn:
+        assert conn.execute("SELECT COUNT(*) FROM workspace_drafts WHERE user_id = ?", (bob,)).fetchone()[0] == 1
+
+
+def test_draft_identical_to_latest_version_is_not_offered(store, three) -> None:
+    alice, _, _ = three
+    project = _sample()
+    store.save(alice, project)
+    store.save_draft(alice, project)
+    assert store.open(alice, project["id"])["draft"] is None
+
+
+def test_demoting_to_viewer_drops_their_draft(store, three) -> None:
+    alice, bob, _ = three
+    project = _sample()
+    store.save(alice, project)
+    store.share(alice, project["id"], "bob", "editor")
+    store.save_draft(bob, questions.resolve(project, "Q1", "빈 목록", "hard_rule"))
+    store.share(alice, project["id"], "bob", "viewer")
+    assert store.open(bob, project["id"])["draft"] is None
+
+
+def test_existing_v2_database_upgrades_and_keeps_projects(tmp_path) -> None:
+    """이미 쓰던 DB(스키마 2단계)에 새 단계만 적용되고 저장된 것은 그대로다."""
+    import app_db
+
+    path = tmp_path / "app.db"
+    original = list(app_db.MIGRATIONS)
+    try:
+        app_db.MIGRATIONS[:] = original[:2]
+        old = Database(path)
+        alice, _ = AuthService(old).signup("alice", "alice-password-1")
+        with old.connect() as conn:  # 2단계 스키마에 직접 프로젝트를 넣는다
+            conn.execute("INSERT INTO workspace_projects VALUES ('0123456789ab', ?, '옛 것', 't', 't')", (alice.id,))
+            conn.execute("INSERT INTO workspace_versions VALUES ('0123456789ab', 1, 't', '옛 버전', ?)",
+                         (json.dumps(dict(_sample(), id="0123456789ab"), ensure_ascii=False),))
+    finally:
+        app_db.MIGRATIONS[:] = original
+    new = Database(path)
+    listed = ProjectStore(new).list(alice.id)
+    assert listed[0]["versions"] == 1 and listed[0]["role"] == "owner"
+    with new.connect() as conn:
+        assert conn.execute("PRAGMA user_version").fetchone()[0] == len(original)
+
+
+# --- sharing and drafts over HTTP ---------------------------------------------
+
+
+def test_sharing_and_drafts_over_http(server) -> None:
+    alice, bob = _login(server, "alice"), _login(server, "bob")
+    _, sample = alice.call("/workspace/sample")
+    project = sample["project"]
+    pid = project["id"]
+    alice.call("/workspace/projects", {"project": project})
+
+    assert bob.call(f"/workspace/projects/{pid}/share", {"username": "bob", "role": "editor"})[0] == 404
+    status_code, shared = alice.call(f"/workspace/projects/{pid}/share", {"username": "bob", "role": "viewer"})
+    assert status_code == 200 and shared["members"][0]["username"] == "bob"
+
+    _, opened = bob.call(f"/workspace/projects/{pid}")
+    assert opened["role"] == "viewer"
+    assert bob.call(f"/workspace/projects/{pid}/restore", {"version": 1})[0] == 403
+    assert bob.call(f"/workspace/projects/{pid}/draft", {"project": project})[0] == 403
+
+    edited = dict(project, title="자동 저장 중")
+    assert alice.call(f"/workspace/projects/{pid}/draft", {"project": edited})[0] == 200
+    _, reopened = alice.call(f"/workspace/projects/{pid}")
+    assert reopened["draft"]["project"]["title"] == "자동 저장 중" and len(reopened["versions"]) == 1
+    assert alice.call(f"/workspace/projects/{pid}/draft", {"project": dict(edited, id="0123456789ab")})[0] == 400
+    alice.call(f"/workspace/projects/{pid}/discard-draft", {})
+    assert alice.call(f"/workspace/projects/{pid}")[1]["draft"] is None

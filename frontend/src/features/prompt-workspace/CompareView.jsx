@@ -63,7 +63,32 @@ function RequirementDiff({ a, b }) {
   );
 }
 
-function RunColumn({ title, run }) {
+// 두 실행의 검사 결과를 이름으로 맞춰 나란히. 결과가 달라진 줄을 강조한다.
+export function ChecksTable({ a, b, labels = ['기준', '비교'] }) {
+  const names = [...new Set([...(a?.checks || []), ...(b?.checks || [])].map((c) => c.name))];
+  if (!names.length) return null;
+  const statusIn = (run, name) => run?.checks?.find((c) => c.name === name)?.status;
+  return (
+    <table className="ws-table">
+      <thead><tr><th>검사</th><th>{labels[0]}</th><th>{labels[1]}</th></tr></thead>
+      <tbody>
+        {names.map((name) => {
+          const before = statusIn(a, name);
+          const after = statusIn(b, name);
+          return (
+            <tr key={name} className={before !== after ? 'ws-row-changed' : ''}>
+              <td>{name}</td>
+              <td>{before ? STATUS_LABEL[before] : '-'}</td>
+              <td>{after ? STATUS_LABEL[after] : '-'}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
+
+export function RunColumn({ title, run }) {
   if (!run) return <div className="ws-compare-col"><strong>{title}</strong><p className="ws-help">시험 기록이 없습니다.</p></div>;
   return (
     <div className="ws-compare-col">
@@ -124,8 +149,6 @@ function CompareView({ project, projectId, versions }) {
   const diff = a?.system != null && b?.system != null ? lineDiff(a.system, b.system) : null;
   const changedLines = diff ? diff.filter((d) => d.type !== 'same').length : 0;
 
-  const names = [...new Set([...(a?.run?.checks || []), ...(b?.run?.checks || [])].map((c) => c.name))];
-  const statusIn = (run, name) => run?.checks?.find((c) => c.name === name)?.status;
   const differentInput = a?.run && b?.run && a.run.input_hash !== b.run.input_hash;
   const sameRun = a?.run && b?.run && a.run.id === b.run.id;
 
@@ -178,24 +201,7 @@ function CompareView({ project, projectId, versions }) {
             <RunColumn title="비교" run={b.run} />
           </div>
 
-          {names.length > 0 && (
-            <table className="ws-table">
-              <thead><tr><th>검사</th><th>기준</th><th>비교</th></tr></thead>
-              <tbody>
-                {names.map((name) => {
-                  const before = statusIn(a.run, name);
-                  const after = statusIn(b.run, name);
-                  return (
-                    <tr key={name} className={before !== after ? 'ws-row-changed' : ''}>
-                      <td>{name}</td>
-                      <td>{before ? STATUS_LABEL[before] : '-'}</td>
-                      <td>{after ? STATUS_LABEL[after] : '-'}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
+          <ChecksTable a={a.run} b={b.run} />
         </>
       )}
     </div>

@@ -35,3 +35,19 @@ export const saveProject = (project, label) => request('/workspace/projects', { 
 export const restoreVersion = (id, version) =>
   request(`/workspace/projects/${encodeURIComponent(id)}/restore`, { version });
 export const deleteProject = (id) => request(`/workspace/projects/${encodeURIComponent(id)}/delete`, {});
+
+// 프로젝트 공유 (소유자만). role: viewer | editor
+export const shareProject = (id, username, role) =>
+  request(`/workspace/projects/${encodeURIComponent(id)}/share`, { username, role });
+export const unshareProject = (id, username) =>
+  request(`/workspace/projects/${encodeURIComponent(id)}/unshare`, { username });
+
+// 자동 저장. 버전이 아니라 사용자마다 하나인 작업 중 사본을 덮어쓴다.
+export const saveDraft = (project) =>
+  request(`/workspace/projects/${encodeURIComponent(project.id)}/draft`, { project });
+export const discardDraft = (id) => request(`/workspace/projects/${encodeURIComponent(id)}/discard-draft`, {});
+
+// 개선 방향 추천 (AI 1회) 과 고른 제안으로 만든 수정안 (AI 없음, 프로젝트는 안 바뀜).
+export const suggestImprovements = (project) => request('/workspace/suggest', { project });
+export const applySuggestions = (project, suggestions, allowRuleChanges) =>
+  request('/workspace/apply-suggestions', { project, suggestions, allowRuleChanges });

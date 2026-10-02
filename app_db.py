@@ -58,6 +58,27 @@ MIGRATIONS: list[str] = [
         PRIMARY KEY (project_id, version)
     );
     """,
+    # 3: 프로젝트 단위 공유와 자동 저장.
+    # - members: 소유자가 다른 사용자에게 준 권한 (viewer 보기 / editor 편집).
+    # - drafts: 사용자마다 프로젝트마다 하나. 덮어쓰는 작업 중 사본이고, 버전이 아니다.
+    """
+    CREATE TABLE workspace_members (
+        project_id TEXT NOT NULL REFERENCES workspace_projects(id) ON DELETE CASCADE,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        role TEXT NOT NULL CHECK (role IN ('viewer', 'editor')),
+        added_at TEXT NOT NULL,
+        PRIMARY KEY (project_id, user_id)
+    );
+    CREATE INDEX workspace_members_user ON workspace_members(user_id);
+    CREATE TABLE workspace_drafts (
+        project_id TEXT NOT NULL REFERENCES workspace_projects(id) ON DELETE CASCADE,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        saved_at TEXT NOT NULL,
+        base_version INTEGER NOT NULL,
+        project_json TEXT NOT NULL,
+        PRIMARY KEY (project_id, user_id)
+    );
+    """,
 ]
 
 

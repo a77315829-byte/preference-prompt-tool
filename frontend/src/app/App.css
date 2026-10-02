@@ -2381,3 +2381,17 @@
 @media (max-width: 760px) {
   .nav-user > span { display: none; }
 }
+
+/* 작업 공간 2차 - 알림 띠, 추천 */
+.ws-banner {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
+  margin: 1rem 0; padding: 0.75rem 1rem;
+  border: 1px solid #f0d9a8; border-radius: 0.9rem;
+  color: #6b4500; background: #fff8e6; font-size: 0.85rem;
+}
+.ws-banner > span { flex: 1 1 18rem; }
+.ws-suggest { margin-top: 1.8rem; }
+.ws-suggestion { margin-top: 0.9rem; padding: 0.8rem 1rem; border: 1px solid #e5e9f0; border-radius: 0.9rem; }
+.ws-suggestion.is-advice { border-style: dashed; opacity: 0.85; }
+.ws-suggestion .ws-diff { margin-top: 0.4rem; max-height: 10rem; }
+.ws-suggestion-reason { margin: 0.3rem 0; color: #374151; font-size: 0.85rem; }

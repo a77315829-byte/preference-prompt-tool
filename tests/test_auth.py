@@ -13,6 +13,7 @@ from http.server import ThreadingHTTPServer
 import pytest
 
 import api_server
+import app_db
 import auth
 from app_db import Database
 from auth import AuthError, AuthService, FailureLimiter, TooManyAttempts
@@ -110,7 +111,7 @@ def test_migrations_are_idempotent(tmp_path) -> None:
     db.migrate()
     db.migrate()
     with db.connect() as conn:
-        assert conn.execute("PRAGMA user_version").fetchone()[0] == 2
+        assert conn.execute("PRAGMA user_version").fetchone()[0] == len(app_db.MIGRATIONS)
 
 
 # --- HTTP ---------------------------------------------------------------------
