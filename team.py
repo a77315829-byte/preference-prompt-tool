@@ -8,7 +8,7 @@ Streamlit 을 import 하지 않는다 (`service.py`, `exporters.py` 와 같은 �
 
 **저장하는 것:** 팀 코드, 이름, 선택 기록(어느 두 조합 중 무엇을 골랐는지).
 원문과 생성 결과는 저장하지 않는다. 앱 DB(app_db.py, SQLite)에 남아 서버를 다시
-켜도 사라지지 않는다.
+켜도 사라지지 않는다. 대신 30일 동안 아무도 참여하지 않은 팀은 지운다 (아래 상한 참고).
 
 **누가 누구로 참여하나.** 로그인한 사람은 자기 아이디로만 참여한다(이름을 고를 수
 없다). 로그인하지 않은 사람은 이름을 적는다 - 다만 로그인한 팀원의 아이디와 같은 이름은
@@ -24,13 +24,22 @@ import json
 import re
 from collections import Counter
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from typing import Callable
 
 from engine.domain_loader import Domain
 from engine.estimator import Comparison, Estimator
 
 MAX_MEMBERS_PER_TEAM = 20
 MAX_TEAMS = 200
+# 팀이 DB 에 남으므로 전체 상한이 영구적이다. 두 가지로 막힌 상태가 굳지 않게 한다.
+# - 로그인하지 않은 방문자가 만든 팀은 모두 합쳐 MAX_ANON_TEAMS 개까지 (데모 세션 하나로
+#   아무 코드나 만들 수 있어서, 이게 없으면 익명 방문자가 전체 상한을 다 채운다).
+#   로그인한 사람은 각자 MAX_TEAMS_PER_USER 개까지.
+# - TEAM_IDLE_DAYS 동안 아무도 참여하지 않은 팀은 새 팀을 만들 때 지운다.
+MAX_ANON_TEAMS = 50
+MAX_TEAMS_PER_USER = 20
+TEAM_IDLE_DAYS = 30
 _CODE = re.compile(r"^[A-Za-z0-9_-]{3,32}$")
 MAX_NAME_CHARS = 20
 
@@ -52,9 +61,10 @@ class Member:
 class TeamStore:
     """팀 코드 -> 팀. DB 에 둔다."""
 
-    def __init__(self, db) -> None:
+    def __init__(self, db, clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc)) -> None:
         # Database 또는 그것을 돌려주는 함수 (quota.Quota 와 같은 이유).
         self._db = db
+        self._clock = clock
 
     @property
     def db(self):
@@ -75,11 +85,21 @@ class TeamStore:
             key = f"name:{name.lower()}"
         if not history:
             raise TeamError("선택 기록이 없는 세션은 팀에 더할 수 없습니다.")
-        now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        now_dt = self._clock()
+        now = now_dt.isoformat(timespec="seconds")
         with self.db.connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
             team = conn.execute("SELECT domain_key FROM teams WHERE code = ?", (code,)).fetchone()
             if team is None:
+                self._expire_idle(conn, now_dt)
+                if user_id is None:
+                    made = conn.execute("SELECT COUNT(*) FROM teams WHERE created_by IS NULL").fetchone()[0]
+                    if made >= MAX_ANON_TEAMS:
+                        raise TeamError("로그인하지 않은 방문자가 만들 수 있는 팀이 다 찼습니다. "
+                                        "로그인하면 새 팀을 만들 수 있고, 이미 있는 팀 코드에는 그대로 참여할 수 있습니다.")
+                elif conn.execute("SELECT COUNT(*) FROM teams WHERE created_by = ?",
+                                  (user_id,)).fetchone()[0] >= MAX_TEAMS_PER_USER:
+                    raise TeamError(f"한 사람이 만들 수 있는 팀은 {MAX_TEAMS_PER_USER}개까지입니다.")
                 if conn.execute("SELECT COUNT(*) FROM teams").fetchone()[0] >= MAX_TEAMS:
                     raise TeamError("지금은 새 팀을 만들 수 없습니다. 잠시 뒤 다시 시도해 주세요.")
                 conn.execute("INSERT INTO teams (code, domain_key, created_by, created_at) VALUES (?, ?, ?, ?)",
@@ -109,6 +129,19 @@ class TeamStore:
                 (code, key, name, user_id, json.dumps([list(c) for c in history], ensure_ascii=False), now),
             )
             return self._members(conn, code)
+
+    @staticmethod
+    def _expire_idle(conn, now: datetime) -> None:
+        """TEAM_IDLE_DAYS 동안 아무도 참여하지 않은 팀을 지운다 (팀원은 CASCADE)."""
+        cutoff = (now - timedelta(days=TEAM_IDLE_DAYS)).isoformat(timespec="seconds")
+        conn.execute(
+            """
+            DELETE FROM teams WHERE COALESCE(
+                (SELECT MAX(joined_at) FROM team_members m WHERE m.code = teams.code), teams.created_at
+            ) < ?
+            """,
+            (cutoff,),
+        )
 
     @staticmethod
     def _members(conn, code: str) -> list[Member]:

@@ -80,6 +80,57 @@ def test_teams_survive_a_restart(db) -> None:
     assert domain_key == "coding" and [m.name for m in members] == ["민수"]
 
 
+class _Clock:
+    def __init__(self) -> None:
+        from datetime import datetime, timezone
+        self.now = datetime(2026, 10, 1, tzinfo=timezone.utc)
+
+    def __call__(self):
+        return self.now
+
+
+def test_anonymous_visitors_cannot_use_up_every_team_slot(db, monkeypatch) -> None:
+    """팀이 DB 에 남게 되면서 전체 상한이 영구적이 됐다. 데모 세션 하나로 아무 코드나
+    만들 수 있는 익명 방문자가 상한을 다 채우면 아무도 새 팀을 못 만들었다."""
+    monkeypatch.setattr(team, "MAX_TEAMS", 6)
+    monkeypatch.setattr(team, "MAX_ANON_TEAMS", 3)
+    monkeypatch.setattr(team, "MAX_TEAMS_PER_USER", 2)
+    alice, _ = AuthService(db).signup("alice", "alice-password-1")
+    store = team.TeamStore(db)
+    history = _history("coding", {})
+    for i in range(3):
+        store.add(f"anon-{i}", "coding", "민수", history)
+    with pytest.raises(team.TeamError, match="로그인"):
+        store.add("anon-3", "coding", "민수", history)
+    # 이미 있는 팀에 참여하는 것은 막지 않는다.
+    store.add("anon-0", "coding", "지은", history)
+    # 로그인한 사람은 자기 몫이 따로 있다.
+    store.add("alice-0", "coding", "", history, user_id=alice.id, username="alice")
+    store.add("alice-1", "coding", "", history, user_id=alice.id, username="alice")
+    with pytest.raises(team.TeamError, match="한 사람이"):
+        store.add("alice-2", "coding", "", history, user_id=alice.id, username="alice")
+
+
+def test_idle_teams_expire_so_the_cap_heals(db, monkeypatch) -> None:
+    from datetime import timedelta
+    monkeypatch.setattr(team, "MAX_TEAMS", 2)
+    clock = _Clock()
+    store = team.TeamStore(db, clock=clock)
+    history = _history("coding", {})
+    store.add("old-1", "coding", "민수", history)
+    store.add("old-2", "coding", "민수", history)
+    with pytest.raises(team.TeamError, match="새 팀"):
+        store.add("new-1", "coding", "민수", history)
+    # 최근 참여가 있는 팀은 남는다.
+    clock.now += timedelta(days=team.TEAM_IDLE_DAYS - 1)
+    store.add("old-2", "coding", "지은", history)
+    clock.now += timedelta(days=2)
+    store.add("new-1", "coding", "민수", history)
+    with pytest.raises(team.TeamError, match="참여하지 않은"):
+        store.get("old-1")
+    assert [m.name for m in store.get("old-2")[1]] == ["민수", "지은"]
+
+
 def test_signed_in_members_join_as_themselves_and_cannot_be_impersonated(db) -> None:
     alice, _ = AuthService(db).signup("alice", "alice-password-1")
     store = team.TeamStore(db)

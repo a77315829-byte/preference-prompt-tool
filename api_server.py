@@ -579,6 +579,21 @@ class ApiHandler(BaseHTTPRequestHandler):
             self._user_cache = AUTH.user_for(self._session_token())
         return self._user_cache
 
+    def _client_address(self) -> str:
+        """로그인 실패를 셀 방문자 주소.
+
+        Vite 프록시를 거치면 서버가 보는 주소는 모두 127.0.0.1 이라, 그대로 세면 한 사람의
+        실패가 모든 사람의 로그인을 막는다. 직접 연결한 쪽이 이 컴퓨터(루프백)일 때만
+        프록시가 붙인 X-Forwarded-For 를 믿고, 그중 **마지막** 주소를 쓴다 - 프록시가 직접
+        본 주소이고, 앞부분은 방문자가 헤더에 마음대로 적을 수 있다. 서버를 외부에 열면
+        (PPT_API_HOST) 바깥 연결은 루프백이 아니므로 헤더를 무시한다."""
+        direct = self.client_address[0]
+        if direct in ("127.0.0.1", "::1"):
+            forwarded = [a.strip() for a in self.headers.get("X-Forwarded-For", "").split(",") if a.strip()]
+            if forwarded:
+                return forwarded[-1]
+        return direct
+
     def _cross_site(self) -> bool:
         """다른 사이트에서 온 POST 인가. 쿠키로 로그인한 상태를 다른 사이트가
         이용하지 못하게(CSRF) 막는다. SameSite=Lax 쿠키와 JSON 전용 본문이 1차 방어이고,
@@ -605,7 +620,7 @@ class ApiHandler(BaseHTTPRequestHandler):
         if path == "/api/auth/login":
             try:
                 user, token = AUTH.login(str(body.get("username", "")), str(body.get("password", "")),
-                                         address=self.client_address[0])
+                                         address=self._client_address())
             except TooManyAttempts as exc:
                 self._send(429, {"error": str(exc)})
                 return
@@ -623,10 +638,10 @@ class ApiHandler(BaseHTTPRequestHandler):
             try:
                 if path == "/api/auth/password":
                     token = AUTH.change_password(user, str(body.get("current", "")), str(body.get("new", "")),
-                                                 address=self.client_address[0])
+                                                 address=self._client_address())
                     self._send(200, {"user": _user_payload(user)}, cookies=[_session_cookie(token)])
                 else:
-                    AUTH.delete_account(user, str(body.get("password", "")), address=self.client_address[0])
+                    AUTH.delete_account(user, str(body.get("password", "")), address=self._client_address())
                     print(f"[auth] 탈퇴 {user.username}", flush=True)
                     self._send(200, {"user": None}, cookies=[_clear_cookie()])
             except TooManyAttempts as exc:

@@ -188,6 +188,23 @@ def test_same_site_requests_through_a_dev_proxy_pass(server) -> None:
     assert status == 403
 
 
+def test_address_lockout_through_the_dev_proxy_is_per_visitor(server) -> None:
+    """Vite 프록시를 거치면 서버가 보는 주소는 모두 127.0.0.1 이다. 그 주소로 실패를 세면
+    누구 한 명이 20번 틀릴 때 모든 사람의 로그인이 15분 막혔다. 프록시가 덧붙이는
+    X-Forwarded-For 의 마지막 주소(프록시가 직접 본 주소)로 센다 - 앞부분은 방문자가
+    마음대로 적을 수 있으므로 쓰지 않는다."""
+    _post(server, "/api/auth/signup", {"username": "bob", "password": "correct-horse-1"})
+    attacker = {"X-Forwarded-For": "10.0.0.7, 10.0.0.66"}  # 앞은 위조, 뒤가 실제
+    for i in range(auth.MAX_FAILS_PER_ADDRESS):
+        _post(server, "/api/auth/login", {"username": f"guess{i}", "password": "wrong-pass"}, headers=attacker)
+    assert _post(server, "/api/auth/login", {"username": "bob", "password": "correct-horse-1"},
+                 headers=attacker)[0] == 429
+    # 다른 방문자 - 공격자가 위조해 적은 10.0.0.7 이라도 - 는 막히지 않는다.
+    status, _, body = _post(server, "/api/auth/login", {"username": "bob", "password": "correct-horse-1"},
+                            headers={"X-Forwarded-For": "10.0.0.7"})
+    assert status == 200 and body["user"]["username"] == "bob"
+
+
 # --- 계정 관리: 비밀번호 변경 · 탈퇴 ------------------------------------------------
 
 
