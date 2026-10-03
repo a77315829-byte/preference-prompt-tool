@@ -107,3 +107,36 @@ example_sources:
 - The regional transit authority voted on Tuesday to extend late-night bus service on four routes starting in March. Officials said ridership after 10 p.m. has grown 18 percent since last year, driven largely by hospital and warehouse shift workers. The expansion will cost about 2.3 million dollars annually, funded by a state grant that expires in two years. Some board members questioned whether the service can continue once the grant runs out, and staff were asked to present a long-term funding plan by the summer.
 - A small biotech firm said its experimental treatment for a rare liver disease met its main goal in a mid-stage trial of 120 patients. Patients receiving the drug showed a 40 percent reduction in a key marker of liver damage after six months, compared with 8 percent in the placebo group. The company plans to meet regulators later this year to discuss a larger trial. Its shares rose sharply in early trading, although analysts cautioned that mid-stage results often fail to hold up in bigger studies.
 - City officials closed a popular riverside park for at least three weeks after inspectors found cracks in a pedestrian bridge. The bridge, built in 1978, had passed its last inspection two years ago. Engineers will decide whether it can be repaired or must be replaced, a choice that could delay reopening until next spring. Local businesses near the park said weekend foot traffic had already fallen, and the council agreed to add temporary signage directing visitors to other entrances.
+
+# 최종 프롬프트의 영어판 (화면 기본값). 후보 생성 지시문은 위 한국어 그대로다 -
+# 캐시 키와 실험 결과가 그 문구에 묶여 있다.
+final_prompt_translations:
+  en:
+    role: "You are a summarization assistant who summarizes English text to match this user's preferences. The preferences below were inferred from summaries the user picked while comparing several options."
+    team_role: "You are a summarization assistant who summarizes English text to match this team's preferences. The preferences below were inferred by combining the summaries each team member picked while comparing several options."
+    task: "Summarize the source text below according to these instructions. Always write the summary in English, the same language as the source."
+    preference_heading: "This user's preferences"
+    team_preference_heading: "This team's preferences"
+    rules_heading: "Always"
+    rules:
+      - "Follow the preferences above (length, use of source wording) first; apply the rules below within them."
+      - "Do not add facts, guesses, or opinions that are not in the source."
+      - "Do not misstate numbers, dates, or proper nouns."
+      - "Keep confirmed facts separate from things that are under review or uncertain."
+    output_heading: "Output format"
+    output: "Output only the summary, in English. No preamble, title, explanation, or closing."
+    axis_labels:
+      length: "Length"
+      extractiveness: "Use of source wording"
+      topic: "Focus"
+    instructions:
+      length:
+        short: "Keep it very short: two sentences or fewer."
+        normal: "Write about three to four sentences."
+        long: "Write five or more sentences, in detail."
+      extractiveness:
+        normal: "Mostly rephrase in your own words; quote the source wording only where it helps."
+        high: "Reuse the source's words and phrases as much as possible."
+        fully: "Build the summary from sentences extracted verbatim from the source. Do not write new sentences."
+    freeform_templates:
+      topic: 'Focus the summary on "{value}". You may leave out other parts of the source.'

@@ -68,7 +68,37 @@ def build_prompt(domain: Domain, combo: dict[str, str], source: str | None = Non
     return fill_source_placeholders("\n".join(lines), source)
 
 
-def build_final_prompt(domain: Domain, combo: dict[str, str], team: bool = False) -> str:
+def _final_spec(domain: Domain, language: str | None):
+    """language 가 없으면 도메인의 원본 최종 프롬프트, 있으면 그 번역판."""
+    if language is None:
+        return domain.final_prompt
+    try:
+        return domain.final_prompt_translations[language]
+    except KeyError:
+        raise ValueError(f"'{domain.name}' 에는 '{language}' 최종 프롬프트가 없다") from None
+
+
+def _final_instruction(domain: Domain, axis, value: str, spec, language: str | None) -> str | None:
+    """번역판이면 그 언어의 지시문을, 아니면 축의 원래 지시문을 쓴다. 번역판에
+    빠진 값이 있으면 조용히 원문으로 섞지 않고 오류를 낸다."""
+    if language is None or spec is None:
+        return axis.instruction_for(value)
+    if axis.type == "enum":
+        text = (spec.instructions or {}).get(axis.name, {}).get(value)
+        if text is None:
+            raise ValueError(f"'{domain.name}' 의 '{language}' 판에 {axis.name}={value} 지시문이 없다")
+        return text
+    if not value and axis.empty_means_inactive:
+        return None
+    template = spec.freeform_templates.get(axis.name)
+    if template is None:
+        raise ValueError(f"'{domain.name}' 의 '{language}' 판에 {axis.name} 지시문 틀이 없다")
+    return template.format(value=value)
+
+
+def build_final_prompt(
+    domain: Domain, combo: dict[str, str], team: bool = False, language: str | None = None
+) -> str:
     """사용자에게 건네는 최종 프롬프트. 역할 -> 과제 -> 선호 -> 규칙 ->
     출력 형식 순으로 domain.final_prompt 의 문구를 이어 붙인다.
 
@@ -76,15 +106,17 @@ def build_final_prompt(domain: Domain, combo: dict[str, str], team: bool = False
     문장이라 바꾸면 캐시 키와 실험 재현성이 같이 바뀐다. 이 함수는 화면에
     내보내는 결과물에만 쓴다. final_prompt 가 없는 도메인은 build_prompt
     와 같은 결과를 돌려준다.
+
+    language 를 주면 domain.final_prompt_translations 의 그 판으로 조립한다.
     """
-    spec = domain.final_prompt
+    spec = _final_spec(domain, language)
     if spec is None:
         return build_prompt(domain, combo)
 
     # team: 여러 사람의 선택을 합친 프롬프트. YAML 에 팀용 문구가 있으면 그것을 쓴다.
     role = (spec.team_role if team else None) or spec.role
-    sections = [role, domain.task_description]
-    preferences = build_preference_section(domain, combo, team=team)
+    sections = [role, spec.task or domain.task_description]
+    preferences = build_preference_section(domain, combo, team=team, language=language)
     if preferences:
         sections.append(preferences)
     sections.append("\n".join([f"## {spec.rules_heading}", *(f"- {r}" for r in spec.rules)]))
@@ -92,21 +124,39 @@ def build_final_prompt(domain: Domain, combo: dict[str, str], team: bool = False
     return "\n\n".join(sections)
 
 
-def build_preference_section(domain: Domain, combo: dict[str, str], team: bool = False) -> str:
+def build_preference_section(
+    domain: Domain, combo: dict[str, str], team: bool = False, language: str | None = None
+) -> str:
     """추정한 선호만 담은 절. "## 머리말" 아래 "- 라벨: 지시" 줄들이다.
     선호가 하나도 없으면 빈 문자열. 머리말과 라벨은 domain.final_prompt 에서
     읽고, 없으면 축 설명과 기본 머리말을 쓴다."""
-    spec = domain.final_prompt
+    spec = _final_spec(domain, language)
     lines = []
     for axis in domain.axes:
-        instruction = axis.instruction_for(combo.get(axis.name, ""))
+        instruction = _final_instruction(domain, axis, combo.get(axis.name, ""), spec, language)
         if instruction:
-            label = (spec.axis_labels.get(axis.name) if spec else None) or axis.description
+            # 번역판에 라벨이 없으면 원문 설명 대신 축 이름을 쓴다 - 다른 언어가 섞이지 않게.
+            fallback = axis.name if language is not None else axis.description
+            label = (spec.axis_labels.get(axis.name) if spec else None) or fallback
             lines.append(f"- {label}: {instruction}")
     if not lines:
         return ""
     heading = ((spec.team_preference_heading if team else None) or spec.preference_heading) if spec else "선호"
     return "\n".join([f"## {heading}", *lines])
+
+
+def build_compact_prompt(domain: Domain, combo: dict[str, str], language: str | None = None) -> str:
+    """글자 수 한도가 있는 곳에 넣을 짧은 판: 과제 설명과 선호 지시만.
+    language 가 없으면 후보 생성용 프롬프트와 같다."""
+    if language is None:
+        return build_prompt(domain, combo)
+    spec = _final_spec(domain, language)
+    lines = [spec.task or domain.task_description]
+    for axis in domain.axes:
+        instruction = _final_instruction(domain, axis, combo.get(axis.name, ""), spec, language)
+        if instruction:
+            lines.append(instruction)
+    return "\n".join(lines)
 
 
 def build_template_prompt(domain: Domain, combo: dict[str, str], template: str) -> str:

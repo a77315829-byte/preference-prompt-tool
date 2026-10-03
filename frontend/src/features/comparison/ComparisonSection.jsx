@@ -4,6 +4,7 @@ import { buildCodingPrompt, buildPreferencePrompt, codingComparisonAxes, otherCo
 import { fetchHealth, fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice } from './codingApi';
 import ExportPanel from '../../shared/components/ExportPanel';
 import TeamPanel from '../../shared/components/TeamPanel';
+import PromptLanguageSwitch from '../../shared/components/PromptLanguageSwitch';
 
 const DEFAULT_TASK = '클릭 횟수를 보여주는 TypeScript/React 버튼 컴포넌트를 만들어 주세요.';
 
@@ -115,6 +116,8 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
   const [connection, setConnection] = useState('connecting');
   const [sessionRequested, setSessionRequested] = useState(false);
   const [optimizeError, setOptimizeError] = useState('');
+  // 사용자가 고른 프롬프트 언어. 고르기 전에는 서버의 기본값을 쓴다.
+  const [promptLanguage, setPromptLanguage] = useState(null);
 
   const requestRemoteSession = async (sourceText) => {
     setSessionRequested(true);
@@ -169,10 +172,17 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
   const currentAxis = isRemote
     ? getRemoteAxis(remoteSession.pair, remoteSession.demo_mode)
     : staticAxes?.[staticAxisIndex];
+  // 서버가 언어별 프롬프트를 함께 준다. 기본값(보통 English)은 prompt_language.
+  const promptLanguages = Object.keys(remoteSession?.prompts || {});
+  const activeLanguage = promptLanguages.includes(promptLanguage) ? promptLanguage : remoteSession?.prompt_language;
   const prompt = useMemo(
-    () => (isComplete ? (remoteSession?.prompt || (isCoding ? buildCodingPrompt(answers) : buildPreferencePrompt(domainKey, staticAxes || [], answers))) : ''),
-    [answers, domainKey, isCoding, isComplete, remoteSession, staticAxes],
+    () => (isComplete
+      ? (remoteSession?.prompts?.[activeLanguage] || remoteSession?.prompt
+        || (isCoding ? buildCodingPrompt(answers) : buildPreferencePrompt(domainKey, staticAxes || [], answers)))
+      : ''),
+    [activeLanguage, answers, domainKey, isCoding, isComplete, remoteSession, staticAxes],
   );
+  const exportsForLanguage = remoteSession?.exports_by_language?.[activeLanguage] || remoteSession?.exports;
   const progress = isRemote
     ? (remoteSession.answered / remoteSession.total_rounds) * 100
     : (((staticAxes?.length || 1) - (staticAxisIndex === -1 ? 0 : (staticAxes?.length || 1) - staticAxisIndex)) / (staticAxes?.length || 1)) * 100;
@@ -351,6 +361,11 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
               <p className="question-eyebrow">Your preference prompt</p>
               <h3>나만의 {isCoding ? '코딩' : domainKey === 'review' ? '리뷰' : domainKey === 'email' ? '이메일' : domainKey === 'macsum_eval_agent' ? '문서 품질' : '요약'} 프롬프트가 완성됐어요.</h3>
               <p>아래 내용을 복사해서 ChatGPT나 Claude에 바로 사용할 수 있습니다.</p>
+              <PromptLanguageSwitch
+                languages={promptLanguages}
+                value={activeLanguage}
+                onChange={(language) => { setPromptLanguage(language); setCopied(false); }}
+              />
               <pre className="prompt-box"><code>{prompt}</code></pre>
               {canOptimize && optimizeStatus === 'running' && (
                 <div className="comparison-progress" aria-label="최적화 진행 상황">
@@ -389,7 +404,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
               )}
               {optimizeError && <p className="connection-note">{optimizeError}</p>}
               {/* 최적화 중에는 옛 프롬프트를 내보내지 않도록 숨긴다. */}
-              {optimizeStatus !== 'running' && <ExportPanel exports={remoteSession?.exports} />}
+              {optimizeStatus !== 'running' && <ExportPanel exports={exportsForLanguage} />}
               {isRemote && remoteSession.done && (
                 <TeamPanel sessionId={remoteSession.session_id}
                   valueLabel={(axis, value) => remoteAxisLabels[axis]?.options?.[value] || value} />

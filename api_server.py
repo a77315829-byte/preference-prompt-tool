@@ -98,21 +98,50 @@ def _jsonable(value: Any) -> Any:
     return asdict(value)
 
 
+# 최종 프롬프트의 기본 언어. 도메인에 그 번역판이 없으면 원본("ko")을 쓴다.
+DEFAULT_PROMPT_LANGUAGE = os.environ.get("PPT_PROMPT_LANGUAGE", "en")
+
+
+def _prompt_languages(domain, template_id: str | None) -> list[str]:
+    """화면이 고를 수 있는 언어, 기본값이 앞. 템플릿은 팀이 쓴 원문 하나뿐이다."""
+    if template_id is not None:
+        return ["ko"]
+    languages = service.prompt_languages(domain)
+    if DEFAULT_PROMPT_LANGUAGE in languages:
+        languages = [DEFAULT_PROMPT_LANGUAGE] + [l for l in languages if l != DEFAULT_PROMPT_LANGUAGE]
+    return languages
+
+
 def _state_payload(state: service.SessionState) -> dict[str, Any]:
     payload = _jsonable(state)
     payload["round"] = state.round
     payload["answered"] = state.answered
     if state.done:
         domain, estimator = service.current_estimate(state)
-        seed = service.final_prompt(domain, estimator, template_id=state.template_id)
+        languages = _prompt_languages(domain, state.template_id)
+        prompts = {lang: service.final_prompt(domain, estimator, template_id=state.template_id, language=lang)
+                   for lang in languages}
+        default = languages[0]
+        seed = prompts[default]
+        payload["prompt_language"] = default
         if state.prompt is None:
             payload["prompt"] = seed
+            payload["prompts"] = prompts
+            # 화면이 언어를 바꾸면 내보내기도 같이 바뀐다. 계산만 하고 모델은 안 부른다.
+            payload["exports_by_language"] = {
+                lang: [asdict(e) for e in service.exports_for(state, text, language=lang)]
+                for lang, text in prompts.items()
+            }
+        else:
+            # 최적화한 프롬프트는 기본 언어로 시작해 그 언어 하나뿐이다.
+            payload["prompts"] = {default: state.prompt}
         # GEPA 는 후보가 시드보다 낫지 않으면 시드를 그대로 돌려준다. 그걸
         # "최적화가 적용됐다"고 표시하면 거짓이므로 바뀌었는지를 같이 준다.
         payload["optimize_changed"] = state.optimize_status == "done" and state.prompt != seed
         payload["optimize_report"] = OPTIMIZE_REPORTS.get(state.session_id)
         # 화면에 보이는 프롬프트를 도구별 형식으로. 계산만 하고 모델은 안 부른다.
-        payload["exports"] = [asdict(e) for e in service.exports_for(state, payload.get("prompt") or state.prompt)]
+        payload["exports"] = [asdict(e) for e in service.exports_for(
+            state, payload.get("prompt") or state.prompt, language=default)]
     return payload
 
 
@@ -122,7 +151,9 @@ def _team_payload(code: str) -> dict[str, Any]:
     domain_key, members = TEAMS.get(code)
     domain = service.load_domain_for(_domain_path(domain_key))
     estimator, agreements = team.summarize(domain, members)
-    prompt = service.final_prompt(domain, estimator, team=True)
+    languages = _prompt_languages(domain, None)
+    prompts = {lang: service.final_prompt(domain, estimator, team=True, language=lang) for lang in languages}
+    prompt = prompts[languages[0]]
     labels = domain.final_prompt.axis_labels if domain.final_prompt else {}
     return {
         "code": code,
@@ -135,7 +166,15 @@ def _team_payload(code: str) -> dict[str, Any]:
             for a in agreements
         ],
         "prompt": prompt,
-        "exports": [asdict(e) for e in service.exports_for_estimate(domain, estimator, prompt, slug_suffix="-team")],
+        "prompts": prompts,
+        "prompt_language": languages[0],
+        "exports": [asdict(e) for e in service.exports_for_estimate(
+            domain, estimator, prompt, slug_suffix="-team", language=languages[0])],
+        "exports_by_language": {
+            lang: [asdict(e) for e in service.exports_for_estimate(
+                domain, estimator, text, slug_suffix="-team", language=lang)]
+            for lang, text in prompts.items()
+        },
     }
 
 
@@ -874,7 +913,10 @@ class ApiHandler(BaseHTTPRequestHandler):
             print(f"[optimize] {state.domain_key} 시작", flush=True)
             try:
                 report: dict = {}
-                optimized = service.optimize(state, on_progress=progress, report=report)
+                domain, _ = service.current_estimate(state)
+                # 화면 기본값과 같은 언어의 프롬프트에서 출발한다.
+                language = _prompt_languages(domain, state.template_id)[0]
+                optimized = service.optimize(state, on_progress=progress, report=report, language=language)
                 OPTIMIZE_REPORTS[state.session_id] = report
                 state.prompt = optimized
                 state.optimize_status = "done"

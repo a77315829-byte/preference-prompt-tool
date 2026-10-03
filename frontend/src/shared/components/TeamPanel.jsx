@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchMe } from '../auth/authApi';
 import ExportPanel from './ExportPanel';
+import PromptLanguageSwitch from './PromptLanguageSwitch';
 
 // 팀 모드: 내 선택 기록을 팀에 더하고, 팀원 모두의 비교를 합친 팀 공통
 // 프롬프트를 본다 (서버 team.py). 원문은 보내지 않고 선택 기록만 더한다.
@@ -22,6 +23,7 @@ function TeamPanel({ sessionId, valueLabel = (axis, value) => value }) {
   const [busy, setBusy] = useState(false);
   // 로그인했으면 서버가 이름 칸을 무시하고 아이디로 참여시킨다. 화면도 그렇게 보여 준다.
   const [me, setMe] = useState(null);
+  const [language, setLanguage] = useState(null);
 
   useEffect(() => {
     fetchMe().then((data) => setMe(data.user)).catch(() => setMe(null));
@@ -89,8 +91,13 @@ function TeamPanel({ sessionId, valueLabel = (axis, value) => value }) {
               </li>
             ))}
           </ul>
-          <pre className="prompt-box"><code>{teamResult.prompt}</code></pre>
-          <ExportPanel exports={teamResult.exports} />
+          <PromptLanguageSwitch
+            languages={Object.keys(teamResult.prompts || {})}
+            value={teamResult.prompts?.[language] ? language : teamResult.prompt_language}
+            onChange={setLanguage}
+          />
+          <pre className="prompt-box"><code>{teamResult.prompts?.[language] || teamResult.prompt}</code></pre>
+          <ExportPanel exports={teamResult.exports_by_language?.[language] || teamResult.exports} />
         </div>
       )}
     </div>

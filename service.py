@@ -39,7 +39,7 @@ from engine.domain_loader import Domain, load_domain
 from engine.estimator import Comparison, Estimator
 import exporters
 import template_library
-from engine.generator import build_final_prompt, build_prompt, build_template_prompt, generate_all
+from engine.generator import build_compact_prompt, build_final_prompt, build_prompt, build_template_prompt, generate_all
 from engine.metric_builder import build_metric
 from engine.selector import UncertaintySelector
 from optimize.run_gepa import MetricEvaluator
@@ -347,6 +347,7 @@ def optimize(
     reflection_model: str | None = None,
     metric_calls: int = GEPA_METRIC_CALLS,
     report: dict | None = None,
+    language: str | None = None,
 ) -> str:
     """추정된 선호로 GEPA 를 돌려 최종 프롬프트를 만든다.
 
@@ -369,7 +370,7 @@ def optimize(
     domain, estimator, _ = _rebuild(state)
     metric = build_metric(domain, estimator)
     # GEPA 는 사용자에게 보여 준 것과 같은 최종 프롬프트에서 출발한다.
-    seed_prompt = final_prompt(domain, estimator, template_id=state.template_id)
+    seed_prompt = final_prompt(domain, estimator, template_id=state.template_id, language=language)
     examples = [e for e in domain.example_sources if e != state.source_text.strip()]
 
     calls = {"n": 0}
@@ -502,18 +503,18 @@ _API_ERROR_KINDS = (
 )
 
 
-def exports_for(state: SessionState, prompt: str) -> list[exporters.Export]:
+def exports_for(state: SessionState, prompt: str, language: str | None = None) -> list[exporters.Export]:
     """끝난 세션의 프롬프트를 도메인이 정한 도구 형식들로 바꾼다.
 
     prompt 는 화면에 보여 준 그 프롬프트(최종 조립본 또는 GEPA 결과)다.
     글자 수 한도가 있는 곳에서 넘치면 선호 지시만 담은 짧은 판을 같이 준다.
     """
     domain, estimator = current_estimate(state)
-    return exports_for_estimate(domain, estimator, prompt)
+    return exports_for_estimate(domain, estimator, prompt, language=language)
 
 
 def exports_for_estimate(
-    domain: Domain, estimator: Estimator, prompt: str, *, slug_suffix: str = ""
+    domain: Domain, estimator: Estimator, prompt: str, *, slug_suffix: str = "", language: str | None = None
 ) -> list[exporters.Export]:
     """세션 없이 추정만으로 내보내기를 만든다 (팀 프롬프트가 쓴다)."""
     combo = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
@@ -521,9 +522,12 @@ def exports_for_estimate(
     return exporters.build_exports(
         prompt,
         slug=domain.name + slug_suffix,
-        title=f"선호 기반 프롬프트 ({domain.name}{slug_suffix})",
+        # 파일 머리의 제목도 프롬프트와 같은 언어로 (영어 파일에 한국어 제목이 섞이지 않게).
+        title=(f"선호 기반 프롬프트 ({domain.name}{slug_suffix})" if language in (None, "ko")
+               else f"Preference-based prompt ({domain.name}{slug_suffix})"),
         targets=domain.export_targets or None,
-        compact_prompt=build_prompt(domain, combo),
+        # 짧은 판도 화면에 보인 프롬프트와 같은 언어로.
+        compact_prompt=build_compact_prompt(domain, combo, language=None if language in (None, "ko") else language),
     )
 
 
@@ -549,7 +553,16 @@ def describe_api_error(exc: BaseException) -> str:
     return f"알 수 없는 오류로 모델 호출이 실패했습니다. (오류 종류: {type(exc).__name__})"
 
 
-def final_prompt(domain: Domain, estimator: Estimator, template_id: str | None = None, team: bool = False) -> str:
+def prompt_languages(domain: Domain) -> list[str]:
+    """이 도메인의 최종 프롬프트를 낼 수 있는 언어. 번역판이 있으면 그것이 먼저(화면 기본값)다.
+    원본 문구의 언어 키는 "ko" 로 부른다 - 지금 도메인들의 원본이 한국어다."""
+    return [*domain.final_prompt_translations, "ko"]
+
+
+def final_prompt(
+    domain: Domain, estimator: Estimator, template_id: str | None = None, team: bool = False,
+    language: str | None = None,
+) -> str:
     """사용자에게 건네는 최종 프롬프트. 추정한 선호를 도메인 YAML 의
     final_prompt 틀(역할·선호·지킬 것·출력 형식)에 넣어 조립한다.
 
@@ -561,7 +574,8 @@ def final_prompt(domain: Domain, estimator: Estimator, template_id: str | None =
     if template_id is not None:
         # 템플릿의 과제·규칙은 그대로 두고 선호 절만 붙인다.
         return build_template_prompt(domain, combo, template_library.get(template_id).prompt)
-    return build_final_prompt(domain, combo, team=team)
+    # "ko" 는 원본 문구다 (prompt_languages 참고).
+    return build_final_prompt(domain, combo, team=team, language=None if language in (None, "ko") else language)
 
 
 def load_domain_for(domain_path: str) -> Domain:

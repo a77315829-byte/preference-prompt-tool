@@ -63,6 +63,7 @@ def test_topic_goes_into_preferences_when_given() -> None:
 def test_domain_without_final_prompt_falls_back(tmp_path) -> None:
     raw = yaml.safe_load(Path("domains/summarization.yaml").read_text(encoding="utf-8"))
     raw.pop("final_prompt")
+    raw.pop("final_prompt_translations")  # 원본 없이 번역판만 두는 것은 로더가 거부한다
     path = tmp_path / "plain.yaml"
     path.write_text(yaml.safe_dump(raw, allow_unicode=True), encoding="utf-8")
     domain = load_domain(path)

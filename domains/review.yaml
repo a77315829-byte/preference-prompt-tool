@@ -93,3 +93,35 @@ example_sources:
 - Neighborhood bakery, visited Saturday morning. Croissants flaky and warm, coffee a bit bitter. Line was long, about 15 minutes. Staff friendly, remembered my order from last time. A little pricey.
 - Bought a mid-range wireless keyboard. Typing feels good and quiet. Bluetooth drops once a day or so. Battery lasted three weeks. Setup took two minutes. Cheaper than the brand I used before.
 - Hotel stay, two nights, downtown. Room clean but small, window faced a wall. Bed comfortable. Breakfast buffet had limited options. Front desk quickly fixed a broken shower. Great location near the station.
+
+# 최종 프롬프트의 영어판 (화면 기본값). 후보 생성 지시문은 위 한국어 그대로다.
+final_prompt_translations:
+  en:
+    role: "You are a writing assistant who turns this user's notes into English reviews written in their voice and to their taste. The preferences below were inferred from reviews the user picked while comparing several options."
+    team_role: "You are a writing assistant who turns this team's notes into English reviews written in their voice and to their taste. The preferences below were inferred by combining the reviews each team member picked while comparing several options."
+    task: "Write a review based on the notes below (a visit, a product they used, and so on). Always write the review in English."
+    preference_heading: "This user's preferences"
+    team_preference_heading: "This team's preferences"
+    rules_heading: "Always"
+    rules:
+      - "Write only about experiences in the notes. Do not invent things that did not happen or exaggerate."
+      - "Keep concrete figures such as prices, wait times, and durations exactly as they appear in the notes."
+      - "Write so that readers can decide whether to visit or buy."
+      - "Avoid wording that sounds like an advertisement."
+    output_heading: "Output format"
+    output: "Output only the review text, in English. No star rating, title, or explanation."
+    axis_labels:
+      length: "Length"
+      sentiment: "Overall tone"
+      topic: "Aspect to focus on"
+    instructions:
+      length:
+        short: "Keep it very short: two sentences or fewer."
+        normal: "Write about three to five sentences."
+        long: "Write six or more sentences, in detail."
+      sentiment:
+        negative: "Use a negative, critical tone and emphasize what was disappointing."
+        neutral: "Use a neutral, matter-of-fact tone and weigh the pros and cons evenly."
+        positive: "Use a positive, satisfied tone and emphasize what was good."
+    freeform_templates:
+      topic: 'Focus the review especially on "{value}".'
