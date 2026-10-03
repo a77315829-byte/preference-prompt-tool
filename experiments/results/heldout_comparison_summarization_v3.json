@@ -1,0 +1,101 @@
+{
+  "n": 30,
+  "means": {
+    "length_ratio": {
+      "A_no_prompt": 0.5457,
+      "B_custom_instruction": 0.3156,
+      "B_plus_knows_preference": 0.2807,
+      "D_our_tool": 0.1139
+    },
+    "checks_score": {
+      "A_no_prompt": 0.6734,
+      "B_custom_instruction": 0.7317,
+      "B_plus_knows_preference": 0.8249,
+      "D_our_tool": 0.9366
+    },
+    "rouge_l": {
+      "A_no_prompt": 0.1295,
+      "B_custom_instruction": 0.1696,
+      "B_plus_knows_preference": 0.1831,
+      "D_our_tool": 0.2114
+    }
+  },
+  "paired": {
+    "checks_score: D_our_tool vs B_custom_instruction": {
+      "wins": 16,
+      "losses": 1,
+      "ties": 13,
+      "mean_diff": 0.2049,
+      "sign_test_p": 0.0003
+    },
+    "checks_score: D_our_tool vs B_plus_knows_preference": {
+      "wins": 14,
+      "losses": 1,
+      "ties": 15,
+      "mean_diff": 0.1116,
+      "sign_test_p": 0.001
+    },
+    "checks_score: B_plus_knows_preference vs B_custom_instruction": {
+      "wins": 10,
+      "losses": 0,
+      "ties": 20,
+      "mean_diff": 0.0933,
+      "sign_test_p": 0.002
+    },
+    "checks_score: D_our_tool vs A_no_prompt": {
+      "wins": 19,
+      "losses": 1,
+      "ties": 10,
+      "mean_diff": 0.2631,
+      "sign_test_p": 0.0
+    },
+    "rouge_l: D_our_tool vs B_custom_instruction": {
+      "wins": 22,
+      "losses": 8,
+      "ties": 0,
+      "mean_diff": 0.0417,
+      "sign_test_p": 0.0161
+    },
+    "rouge_l: D_our_tool vs B_plus_knows_preference": {
+      "wins": 21,
+      "losses": 9,
+      "ties": 0,
+      "mean_diff": 0.0283,
+      "sign_test_p": 0.0428
+    },
+    "rouge_l: B_plus_knows_preference vs B_custom_instruction": {
+      "wins": 17,
+      "losses": 13,
+      "ties": 0,
+      "mean_diff": 0.0134,
+      "sign_test_p": 0.5847
+    },
+    "rouge_l: D_our_tool vs A_no_prompt": {
+      "wins": 29,
+      "losses": 1,
+      "ties": 0,
+      "mean_diff": 0.0819,
+      "sign_test_p": 0.0
+    }
+  },
+  "model": "openai/gpt-4o-mini",
+  "split": "data\\macsum\\dataset\\macdoc\\test.json",
+  "n_rounds": 8,
+  "seed": 0,
+  "learned_exact_rate": 0.5667,
+  "spend_dollars": 0.0352,
+  "model_calls": 192,
+  "stopped": null,
+  "domain": "summarization_v3",
+  "D_vs_baseline_D": {
+    "baseline": "experiments\\results\\heldout_comparison.csv",
+    "n": 30,
+    "rouge_l_baseline_D": 0.1823,
+    "rouge_l_this_D": 0.2114,
+    "wins": 20,
+    "losses": 10,
+    "ties": 0,
+    "mean_diff": 0.0291,
+    "sign_test_p": 0.0987
+  }
+}

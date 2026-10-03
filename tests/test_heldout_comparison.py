@@ -98,3 +98,22 @@ def test_ratio_check_keeps_v1_prompts_and_misses_its_criterion() -> None:
     assert round(summary["learned_exact_rate"], 1) == 0.3
     vs = summary["D_vs_baseline_D"]
     assert (vs["wins"], vs["losses"], vs["ties"]) == (15, 11, 4) and vs["sign_test_p"] > 0.05
+
+
+V3_SUMMARY = RESULTS / "heldout_comparison_summarization_v3.json"
+V3_GATE = RESULTS / "length_v3_compliance.json"
+
+
+def test_v3_word_count_instructions_pass_the_gate_and_the_criterion() -> None:
+    """4단계 (나). 관문(출력 비율이 사람 중앙값 ±3%p)을 통과했고, 30쌍에서 D 의 ROUGE-L 은
+    올랐지만 등록한 기준(p<0.05)에는 못 미쳤다 - 그 상태를 고정한다."""
+    if not V3_SUMMARY.exists():
+        pytest.skip("결과 파일이 없다")
+    gate = json.loads(V3_GATE.read_text(encoding="utf-8"))
+    assert gate["gate"]["passed"] is True
+    v3 = gate["median_ratio"]["v3"]
+    assert v3["short"] < v3["normal"] < v3["long"]
+    summary = json.loads(V3_SUMMARY.read_text(encoding="utf-8"))
+    vs = summary["D_vs_baseline_D"]
+    assert (vs["wins"], vs["losses"]) == (20, 10) and 0.05 < vs["sign_test_p"] < 0.1
+    assert summary["spend_dollars"] < 0.1

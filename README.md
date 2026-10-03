@@ -27,6 +27,15 @@ API 키 없이도 무료 데모 모드로 전체 흐름을 돌려볼 수 있다.
 화면(`submission-final` 태그)이고, 아래의 React 화면과 이후 개선은 master 에서
 로컬로 실행한다 (아래 「웹 UI로 사용해보기」).
 
+**최근 변경 (2026-10-03)**
+- **길이 지시를 원문에 맞춘 단어 수로 (아래 2-4절 4단계).** 엔진이 지시문의 `{source_words*R}` 를
+  원문 단어 수 x R 로 채운다(자리표시자가 없는 도메인은 프롬프트가 글자 하나까지 그대로). 모델이
+  이 지시를 따라 출력 비율이 사람 요약과 거의 같아졌고(5.3 / 10.6 / 16.6% 대 5.3 / 10.3 / 15.4%),
+  사람 라벨에 맞는 측정 아래에서 길이 선호 복원이 29/30 이다. ROUGE-L 은 0.182 → 0.211 로
+  올랐지만 유의하지 않다(p=0.099). 실험 도메인(`summarization_v3.yaml`)이고 앱에는 아직 연결하지 않았다.
+- 로그인·작업 공간 검토에서 나온 결함 다섯 개를 고쳤다 (팀 상한 고착, 프록시 뒤 로그인 잠금,
+  잘못된 입력의 500, 브라우저 표시를 믿던 제안 시험, DB 무한 증가).
+
 **최근 변경 (2026-10-01)**
 - **길이 검사를 사람 라벨에 다시 맞춰 봤다 (아래 2-4절).** 판단 기준을 먼저 커밋하고 쟀다.
   MACSum 길이 라벨은 문장 수가 아니라 원문 대비 분량을 따른다 - 원문 단어 수 대비 비율로 재면
@@ -283,11 +292,11 @@ D vs B+ ROUGE-L **15승 15패** (동률), checks 0승 10패 (나머지 동점).
 
 `tests/test_heldout_comparison.py`가 위 수치와 설계(문서 분리·중복 없음)를 고정한다.
 
-#### 2-4. 길이 검사 다시 맞추기 — 측정은 비율이 맞고, 지시는 비율로 하면 안 된다
+#### 2-4. 길이 검사 다시 맞추기 — 측정은 비율로, 지시는 원문에 맞춘 단어 수로
 
 2-1절에서 길이 검사가 사람 라벨과 0.446 만 맞았다. 원인이 측정 단위인지 확인했다.
 **판단 기준을 결과보다 먼저 커밋했다** (`docs/length_v2_preregistration.md` - 상세 수치와
-경위는 이 문서). 실제 API 비용은 세 단계 합쳐 $0.06 이다.
+경위는 이 문서). 실제 API 비용은 네 단계 합쳐 약 $0.1 이다.
 
 **1단계 - 측정 (API 0회).** 임계값은 train 4,278개에서만 정하고 test 547개로 쟀다.
 test 원문은 train 과 겹치지 않고, 2-3절의 30쌍 문서도 train 에 없다 (코드로 확인).
@@ -322,13 +331,33 @@ test 원문은 train 과 겹치지 않고, 2-3절의 30쌍 문서도 train 에 �
   지시는 절대값이다.
 - 독립 지표(ROUGE-L)는 어느 쪽에서도 유의하게 움직이지 않았다 (p=0.58, p=0.56).
 
-**현행 `domains/summarization.yaml` 은 바꾸지 않았다.** 두 시도는 별도 도메인
-(`summarization_v2.yaml`, `summarization_ratio_check.yaml`)으로 두었다. 남은 방법은 원문
-길이로 "약 N단어" 를 계산해 지시에 넣는 것인데, 엔진이 원문을 보고 지시를 채워야 하고
-내보내는 프롬프트가 고정 텍스트가 아니라 템플릿이 된다. 이 결정은 아직 내리지 않았다.
+**4단계 - 원문 길이로 계산한 단어 수로 지시한다.** 엔진이 지시문의 `{source_words*R}` 를
+"원문 단어 수 x R" 로 채운다 (`engine/generator.py`). 자리표시자가 없는 기존 도메인은 모든
+축조합에서 프롬프트가 글자 하나까지 그대로라 캐시와 기존 결과가 바뀌지 않는다
+(`tests/test_source_placeholders.py`). 비율은 사람 요약의 train 중앙값 0.053 / 0.103 / 0.154.
+
+| | 현행 | 문장 지시·비율 측정 | **단어 수 지시·비율 측정** |
+|---|---|---|---|
+| 후보 출력 비율 (short / normal / long) | 5.8 / 11.8 / 25.0% | 같음 | **5.3 / 10.6 / 16.6%** |
+| 길이 선호 복원 | 29/30 | 20/30 | **29/30** (등록 기준 27 충족) |
+| 사람 정답 요약의 길이 검사 통과 | 16/30 | 30/30 | 30/30 |
+| D ROUGE-L (대 현행 D) | 0.182 | 0.177 | **0.211** (20승 10패, p=0.099) |
+
+- **모델이 못 따른 것은 비율 환산이었다.** 계산해 준 단어 수는 따라서, 출력 비율이 사람
+  요약(5.3 / 10.3 / 15.4%)과 거의 같다. 실행 전 관문(±3%p)을 통과한 뒤에 30쌍을 돌렸다.
+- 이번 29/30 은 사람 라벨과 맞는 측정 아래의 값이다. 현행의 29/30 과 숫자는 같지만 뜻이 다르다.
+- ROUGE-L 은 등록한 기준(p<0.05)에 못 미쳐 "개선"이라고 쓰지 않는다. 방향은 양수다.
+- 탐색 관찰(등록 안 함): 이 D 는 B 를 22승 8패, B+ 를 21승 9패로 이겼다. 하지만 B+ 는 여전히
+  문장 수로 지시받았고 D 만 단어 수를 받았으므로 공정한 비교가 아니다. 단어 수를 받은 B+ 와
+  다시 재기 전에는 결론으로 쓰지 않는다.
+
+**현행 `domains/summarization.yaml` 과 앱은 바꾸지 않았다.**
+시도한 도메인은 `summarization_v2.yaml`, `summarization_ratio_check.yaml`,
+`summarization_v3.yaml` 로 따로 두었다. 앱에 붙이려면 내보내는 프롬프트에 어느 원문 기준의
+숫자를 적을지 정해야 한다 (다른 글에 그대로 붙여 쓰면 숫자가 맞지 않는다).
 
 `tests/test_length_ratio_labels.py`, `tests/test_heldout_comparison.py`,
-`tests/test_summarization_v2.py`가 위 수치와 설계를 고정한다.
+`tests/test_summarization_v2.py`, `tests/test_source_placeholders.py`가 위 수치와 설계를 고정한다.
 
 #### 3. 쌍 선택 알고리즘 비교: 무작위 vs 순차 질의 vs 불확실도 기반
 
@@ -587,7 +616,8 @@ bigram 겹침)를 **같은 텍스트 36개에 돌려 피어슨 상관을 쟀다*
   교체하자 5문서 평균 완전복원율이 0~8% → 80%로 뛰었다.
 - **지시와 측정이 같은 단위라 생긴 자기 일관성**: 길이 선호 복원 29/30 은 후보 지시와
   오라클 측정이 둘 다 문장 수라 맞물린 결과였다. 사람 라벨에 맞는 측정(원문 대비 비율)으로
-  바꾸면 20/30 이다. 2-4절 참고.
+  바꾸면 20/30 이다. 지시를 원문 길이로 계산한 단어 수로 바꾸자 그 측정 아래에서 다시
+  29/30 이 됐다. 2-4절 참고.
 
 ---
 
@@ -872,6 +902,8 @@ python -m experiments.heldout_comparison            # 문서 분리 30쌍 (2-3�
 python -m experiments.length_ratio_labels           # 문장 수 vs 비율, train->test (API 0회)
 python -m experiments.heldout_comparison --domain domains/summarization_v2.yaml
 python -m experiments.heldout_comparison --domain domains/summarization_ratio_check.yaml
+python -m experiments.length_v3_compliance          # 4단계 관문: 단어 수 지시 준수 점검
+python -m experiments.heldout_comparison --domain domains/summarization_v3.yaml
 
 # 어블레이션
 python -m experiments.feedback_richness_ablation    # GEPA 피드백 풍부도 어블레이션
