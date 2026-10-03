@@ -131,6 +131,43 @@ def apply_edits(prompt: str, edits: list[dict[str, str]]) -> tuple[str | None, s
     return current, ""
 
 
+def parse_picked(raw: Any) -> list[dict[str, Any]]:
+    """화면이 보낸 제안 목록의 모양을 확인한다. 잘못된 모양은 500 이 아니라 400 (ProjectError).
+    applicable·touches_rules 같은 표시는 읽지 않는다 - 서버가 다시 잰다."""
+    if not isinstance(raw, list) or not raw:
+        raise ProjectError("고른 제안이 없습니다.")
+    picked = []
+    for item in raw[:MAX_SUGGESTIONS]:
+        if not isinstance(item, dict) or not isinstance(item.get("edits", []), list):
+            raise ProjectError("제안의 형식이 올바르지 않습니다.")
+        edits = item.get("edits", [])
+        if len(edits) > MAX_EDITS or not all(
+            isinstance(e, dict) and isinstance(e.get("find", ""), str) and isinstance(e.get("replace", ""), str)
+            for e in edits
+        ):
+            raise ProjectError("제안의 수정 항목 형식이 올바르지 않습니다.")
+        picked.append({**item, "edits": [{"find": e.get("find", ""), "replace": e.get("replace", "")} for e in edits]})
+    return picked
+
+
+def _check(project: dict[str, Any], item: dict[str, Any]) -> tuple[str | None, str]:
+    """(시험할 지침, 시험하지 않는 이유). 지금 지침에 대고 코드가 정한다."""
+    prompt = project["artifact"]["system_prompt"]
+    if not item.get("edits"):
+        return None, "고칠 문장이 없는 의견이라 시험하지 않음"
+    candidate, problem = apply_edits(prompt, item["edits"])
+    if candidate is None:
+        return None, problem
+    if lines_touched(prompt, candidate, protected_lines(project)):
+        return None, "보호 문장을 바꾸는 제안이라 시험하지 않음 (따로 확인이 필요)"
+    return candidate, ""
+
+
+def testable_count(project: dict[str, Any], suggestions: list[dict[str, Any]]) -> int:
+    """trial 이 실제로 모델을 부를 제안 수 (지금 지침 1회는 빼고)."""
+    return sum(1 for item in suggestions[:MAX_SUGGESTIONS] if _check(project, item)[0] is not None)
+
+
 def sanitize(raw: Any, project: dict[str, Any]) -> tuple[list[dict[str, Any]], list[str]]:
     """모델 응답을 제안 목록으로. 적용 가능 여부와 필수 규칙 영향은 코드가 정한다."""
     notes: list[str] = []
@@ -271,11 +308,8 @@ def trial(
     prompt = project["artifact"]["system_prompt"]
     results = []
     for item in suggestions[:limit]:
-        if not item.get("applicable") or item.get("touches_rules"):
-            results.append({"id": item.get("id"), "tested": False,
-                            "reason": "적용할 수 없거나 보호 문장을 바꾸는 제안이라 시험하지 않음"})
-            continue
-        candidate, problem = apply_edits(prompt, item.get("edits", []))
+        # 화면이 보낸 applicable·touches_rules 는 믿지 않고 지금 지침에 대고 다시 잰다.
+        candidate, problem = _check(project, item)
         if candidate is None:
             results.append({"id": item.get("id"), "tested": False, "reason": problem})
             continue

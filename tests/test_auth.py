@@ -292,3 +292,14 @@ def test_account_routes_over_http(server) -> None:
     assert status == 200 and body["user"] is None and "Max-Age=0" in headers["Set-Cookie"]
     status, _, _ = _post(server, "/api/auth/login", {"username": "alice", "password": "battery-staple-2"})
     assert status == 400
+
+
+def test_signups_from_one_address_are_limited(db, monkeypatch) -> None:
+    """계정을 계속 만들면 팀·저장 공간의 사람별 상한을 우회할 수 있다."""
+    monkeypatch.setattr(auth, "MAX_SIGNUPS_PER_ADDRESS", 2)
+    service = AuthService(db)
+    service.signup("user1", "password-123", address="10.0.0.1")
+    service.signup("user2", "password-123", address="10.0.0.1")
+    with pytest.raises(TooManyAttempts):
+        service.signup("user3", "password-123", address="10.0.0.1")
+    service.signup("user4", "password-123", address="10.0.0.2")

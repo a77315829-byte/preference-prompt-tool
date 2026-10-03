@@ -41,6 +41,9 @@ SCRYPT_N, SCRYPT_R, SCRYPT_P, SCRYPT_LEN = 2**14, 8, 1, 32
 FAIL_WINDOW_SECONDS = 15 * 60
 MAX_FAILS_PER_USERNAME = 5
 MAX_FAILS_PER_ADDRESS = 20
+# 같은 주소에서 하루 가입 수. 계정을 계속 만들면 팀·저장 공간의 사람별 상한을 우회한다.
+MAX_SIGNUPS_PER_ADDRESS = 10
+SIGNUP_WINDOW_SECONDS = 24 * 3600
 
 
 class AuthError(ValueError):
@@ -91,13 +94,14 @@ def _token_hash(token: str) -> str:
 class FailureLimiter:
     """키(아이디·주소)별 최근 실패 시각. 스레드 안전."""
 
-    def __init__(self, clock: Callable[[], float] = time.monotonic) -> None:
+    def __init__(self, clock: Callable[[], float] = time.monotonic, window: float = FAIL_WINDOW_SECONDS) -> None:
         self._clock = clock
+        self._window = window
         self._fails: dict[str, list[float]] = {}
         self._lock = threading.Lock()
 
     def _recent(self, key: str) -> list[float]:
-        cutoff = self._clock() - FAIL_WINDOW_SECONDS
+        cutoff = self._clock() - self._window
         recent = [t for t in self._fails.get(key, []) if t > cutoff]
         if recent:
             self._fails[key] = recent
@@ -123,11 +127,15 @@ class AuthService:
     def __init__(self, db: Database, limiter: FailureLimiter | None = None) -> None:
         self.db = db
         self.limiter = limiter or FailureLimiter()
+        self.signups = FailureLimiter(window=SIGNUP_WINDOW_SECONDS)
 
     # --- 가입 · 로그인 ----------------------------------------------------------
 
-    def signup(self, username: str, password: str) -> tuple[User, str]:
+    def signup(self, username: str, password: str, address: str = "") -> tuple[User, str]:
         """(사용자, 세션 토큰)."""
+        address_key = f"signup:{address}"
+        if address and self.signups.blocked(address_key, MAX_SIGNUPS_PER_ADDRESS):
+            raise TooManyAttempts("이 주소에서 오늘 만들 수 있는 계정 수를 넘었습니다. 내일 다시 시도해 주세요.")
         username = (username or "").strip()
         if not USERNAME.match(username):
             raise AuthError("아이디는 영문·숫자·_ . - 로 3~30자여야 합니다.")
@@ -143,6 +151,8 @@ class AuthService:
                     (username, password_hash, _now().isoformat(timespec="seconds")),
                 )
                 user = User(cursor.lastrowid, username)
+            if address:
+                self.signups.fail(address_key)  # 실패가 아니라 가입 한 번을 센다
         except sqlite3.IntegrityError:
             # 대소문자만 다른 아이디도 같은 아이디로 본다 (COLLATE NOCASE). 동시에 두 번
             # 가입해도 UNIQUE 제약이 하나만 받는다.

@@ -235,7 +235,8 @@ def test_trial_counts_fixed_and_broken_checks_per_suggestion() -> None:
     bad = {"id": "S2", "applicable": True, "touches_rules": [],
            "edits": [{"find": "", "replace": "- BREAKS_TOTAL"}]}
     advice = {"id": "S3", "applicable": False, "touches_rules": [], "edits": []}
-    guarded = {"id": "S4", "applicable": True, "touches_rules": ["R1"], "edits": [{"find": "", "replace": "x"}]}
+    # 보호 문장을 지우는 제안 - 브라우저가 touches_rules 를 비워 보내도 코드가 다시 잰다.
+    guarded = {"id": "S4", "applicable": True, "touches_rules": [], "edits": [{"find": RULE, "replace": ""}]}
     seen = []
 
     def run(p):
@@ -295,5 +296,41 @@ def test_trial_route_checks_live_mode_and_remaining_calls(monkeypatch, fake) -> 
         status, data = post("/workspace/trial-suggestions", body)
         assert status == 200 and [r["id"] for r in data["results"]] == ["S1", "S2"]
         assert api_server.DAILY_WORKSPACE_CALLS.left() == 0
+    finally:
+        srv.shutdown()
+
+
+def test_trial_recomputes_flags_instead_of_trusting_the_browser() -> None:
+    """applicable·touches_rules 는 화면이 들고 다니는 값이라 바뀌어 올 수 있다.
+    시험 여부는 서버가 지금 지침에 대고 다시 정한다."""
+    project = _built()
+    sneaky = {"id": "S1", "applicable": True, "touches_rules": [], "edits": [{"find": RULE, "replace": "- 무엇이든"}]}
+    shy = {"id": "S2", "applicable": False, "touches_rules": ["R1"], "edits": [{"find": "", "replace": "- 짧게"}]}
+    seen = []
+    result = suggest.trial(project, [sneaky, shy],
+                           lambda p: seen.append(p) or {"status": "ran", "checks": [], "output": ""})
+    by_id = {r["id"]: r for r in result["results"]}
+    assert by_id["S1"]["tested"] is False and "보호 문장" in by_id["S1"]["reason"]
+    assert by_id["S2"]["tested"] is True
+    assert len(seen) == 2
+    assert suggest.testable_count(project, [sneaky, shy]) == 1
+
+
+@pytest.mark.parametrize("picked", [["not a dict"], [{"edits": "x"}], [{"edits": ["x"]}],
+                                    [{"edits": [{"find": 1, "replace": "a"}]}]])
+def test_malformed_suggestions_are_a_400_not_a_500(picked) -> None:
+    srv = ThreadingHTTPServer(("127.0.0.1", 0), api_server.ApiHandler)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{srv.server_address[1]}/api"
+    try:
+        for path in ("/workspace/apply-suggestions", "/workspace/trial-suggestions"):
+            req = urllib.request.Request(base + path, json.dumps({"project": _built(), "suggestions": picked}).encode(),
+                                         {"Content-Type": "application/json"})
+            try:
+                urllib.request.urlopen(req)
+                status = 200
+            except urllib.error.HTTPError as err:
+                status = err.code
+            assert status == 400, (path, picked)
     finally:
         srv.shutdown()

@@ -493,11 +493,9 @@ def _workspace_trial_suggestions(body: dict[str, Any]) -> dict[str, Any]:
     if not LIVE:
         raise ValueError("제안 시험은 실제 생성 모드에서만 쓸 수 있습니다 (서버를 PPT_LIVE=1 로 켜 주세요).")
     project = _ws_project(body)
-    picked = body.get("suggestions")
-    if not isinstance(picked, list) or not picked:
-        raise ValueError("시험할 제안이 없습니다.")
-    testable = [s for s in picked[:ws_suggest.MAX_SUGGESTIONS] if s.get("applicable") and not s.get("touches_rules")]
-    needed = 1 + len(testable)
+    picked = ws_suggest.parse_picked(body.get("suggestions"))
+    # 화면이 보낸 표시가 아니라 서버가 다시 잰 수로 필요한 호출을 센다.
+    needed = 1 + ws_suggest.testable_count(project, picked)
     left = DAILY_WORKSPACE_CALLS.left(_subject())
     if left < needed:
         raise ValueError(f"제안 시험에 AI 호출 {needed}회가 필요한데 오늘 남은 횟수는 {left}회입니다.")
@@ -510,9 +508,7 @@ def _workspace_trial_suggestions(body: dict[str, Any]) -> dict[str, Any]:
 
 def _workspace_apply_suggestions(body: dict[str, Any]) -> dict[str, Any]:
     """고른 제안을 적용한 지침 후보. 모델을 부르지 않고 프로젝트도 바꾸지 않는다."""
-    picked = body.get("suggestions")
-    if not isinstance(picked, list) or not picked:
-        raise ValueError("적용할 제안을 하나 이상 고르세요.")
+    picked = ws_suggest.parse_picked(body.get("suggestions"))
     return ws_suggest.apply(_ws_project(body), picked, allow_rule_changes=bool(body.get("allowRuleChanges")))
 
 
@@ -613,7 +609,12 @@ class ApiHandler(BaseHTTPRequestHandler):
             if not ALLOW_SIGNUP:
                 self._send(403, {"error": "이 서버는 새 가입을 받지 않습니다."})
                 return
-            user, token = AUTH.signup(str(body.get("username", "")), str(body.get("password", "")))
+            try:
+                user, token = AUTH.signup(str(body.get("username", "")), str(body.get("password", "")),
+                                          address=self._client_address())
+            except TooManyAttempts as exc:
+                self._send(429, {"error": str(exc)})
+                return
             print(f"[auth] 가입 {user.username}", flush=True)
             self._send(200, {"user": _user_payload(user)}, cookies=[_session_cookie(token)])
             return

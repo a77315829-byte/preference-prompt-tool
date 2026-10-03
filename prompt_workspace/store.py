@@ -36,6 +36,9 @@ MAX_PROJECTS_PER_OWNER = 200
 MAX_VERSIONS = 50
 MAX_MEMBERS = 20
 MAX_LABEL_CHARS = 60
+# 사람마다 저장 공간 (글자 수). 내가 소유한 프로젝트의 모든 버전 + 내 자동 저장본.
+# 가입이 열려 있고 프로젝트 200 x 버전 50 x 최대 256KB 까지 쌓일 수 있어서 둔다.
+MAX_STORED_CHARS_PER_OWNER = 20_000_000
 ROLES = ("viewer", "editor")
 WRITERS = ("owner", "editor")
 
@@ -114,15 +117,34 @@ class ProjectStore:
             "SELECT COALESCE(MAX(version), 0) FROM workspace_versions WHERE project_id = ?", (project_id,)
         ).fetchone()[0]
 
+    @staticmethod
+    def _used_chars(conn: sqlite3.Connection, user_id: int) -> int:
+        return conn.execute(
+            """
+            SELECT
+              (SELECT COALESCE(SUM(LENGTH(v.project_json)), 0) FROM workspace_versions v
+               JOIN workspace_projects p ON p.id = v.project_id WHERE p.owner_id = ?)
+            + (SELECT COALESCE(SUM(LENGTH(d.project_json)), 0) FROM workspace_drafts d WHERE d.user_id = ?)
+            """,
+            (user_id, user_id),
+        ).fetchone()[0]
+
+    def _ensure_space(self, conn: sqlite3.Connection, user_id: int, adding: int, freeing: int = 0) -> None:
+        if self._used_chars(conn, user_id) - freeing + adding > MAX_STORED_CHARS_PER_OWNER:
+            raise StoreError("저장 공간을 다 썼습니다. 안 쓰는 프로젝트를 지운 뒤 다시 저장해 주세요.")
+
     def _append(self, conn: sqlite3.Connection, project_id: str, project: dict[str, Any], label: str) -> int:
         latest = self._latest(conn, project_id)
         if latest >= MAX_VERSIONS:
             raise StoreError(f"한 프로젝트의 버전은 {MAX_VERSIONS}개까지입니다. 새 프로젝트로 저장해 주세요.")
+        body = json.dumps(project, ensure_ascii=False)
+        # 버전은 편집자가 저장해도 프로젝트 소유자의 공간으로 센다.
+        owner_id = conn.execute("SELECT owner_id FROM workspace_projects WHERE id = ?", (project_id,)).fetchone()[0]
+        self._ensure_space(conn, owner_id, len(body))
         now = _now()
         conn.execute(
             "INSERT INTO workspace_versions (project_id, version, saved_at, label, project_json) VALUES (?, ?, ?, ?, ?)",
-            (project_id, latest + 1, now, (label or "").strip()[:MAX_LABEL_CHARS],
-             json.dumps(project, ensure_ascii=False)),
+            (project_id, latest + 1, now, (label or "").strip()[:MAX_LABEL_CHARS], body),
         )
         conn.execute(
             "UPDATE workspace_projects SET title = ?, updated_at = ? WHERE id = ?",
@@ -335,6 +357,12 @@ class ProjectStore:
         validate_project(project)
         with self.db.connect() as conn:
             self._require(conn, user_id, project["id"], WRITERS)
+            body = json.dumps(project, ensure_ascii=False)
+            old = conn.execute(
+                "SELECT COALESCE(LENGTH(project_json), 0) FROM workspace_drafts WHERE project_id = ? AND user_id = ?",
+                (project["id"], user_id),
+            ).fetchone()
+            self._ensure_space(conn, user_id, len(body), freeing=old[0] if old else 0)
             now = _now()
             conn.execute(
                 """
@@ -344,8 +372,7 @@ class ProjectStore:
                     saved_at = excluded.saved_at, base_version = excluded.base_version,
                     project_json = excluded.project_json
                 """,
-                (project["id"], user_id, now, self._latest(conn, project["id"]),
-                 json.dumps(project, ensure_ascii=False)),
+                (project["id"], user_id, now, self._latest(conn, project["id"]), body),
             )
             return {"saved_at": now}
 

@@ -136,3 +136,14 @@ def test_api_shares_follow_login(server) -> None:
     cookie = headers["Set-Cookie"].split(";")[0]
     assert _me(server, cookie)["quota"]["workspace"] == 1
     assert _me(server)["quota"]["workspace"] == 0
+
+
+def test_old_usage_rows_are_pruned(db) -> None:
+    """usage 표는 날마다 줄이 늘고 지우는 곳이 없었다. 지난 기록은 상한 계산에 쓰이지 않는다."""
+    day = {"value": "2026-08-01"}
+    q = Quota(db, "polish", total=10, per_user=5, clock=lambda: day["value"])
+    q.consume(subject_for(1))
+    day["value"] = "2026-10-01"
+    q.consume(subject_for(1))
+    with db.connect() as conn:
+        assert [r[0] for r in conn.execute("SELECT day FROM usage ORDER BY day")] == ["2026-10-01"]

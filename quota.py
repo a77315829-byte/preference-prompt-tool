@@ -16,12 +16,14 @@ Streamlit 앱(app.py)은 계속 budget.DailyBudget(메모리)을 쓴다 - 그 �
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from typing import Callable, Union
 
 from app_db import Database
 
 ANON = "anon"
+# 이보다 오래된 사용량 기록은 지운다. 상한 계산은 오늘 줄만 쓴다 - 나머지는 사후 확인용이다.
+KEEP_DAYS = 30
 
 
 def _utc_today() -> str:
@@ -67,6 +69,8 @@ class Quota:
         day = self._clock()
         with self.db.connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
+            cutoff = (date.fromisoformat(day) - timedelta(days=KEEP_DAYS)).isoformat()
+            conn.execute("DELETE FROM usage WHERE day < ?", (cutoff,))
             used_total = conn.execute(
                 "SELECT COALESCE(SUM(count), 0) FROM usage WHERE day = ? AND kind = ?", (day, self.kind)
             ).fetchone()[0]

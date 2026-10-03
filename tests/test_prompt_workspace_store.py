@@ -483,3 +483,20 @@ def test_sharing_and_drafts_over_http(server) -> None:
     assert alice.call(f"/workspace/projects/{pid}/draft", {"project": dict(edited, id="0123456789ab")})[0] == 400
     alice.call(f"/workspace/projects/{pid}/discard-draft", {})
     assert alice.call(f"/workspace/projects/{pid}")[1]["draft"] is None
+
+
+def test_each_owner_has_a_storage_cap(tmp_path, monkeypatch) -> None:
+    """가입이 열려 있고 사용자당 프로젝트 200 x 버전 50 x 최대 256KB 를 쌓을 수 있었다."""
+    from prompt_workspace import store as store_module
+    db = Database(tmp_path / "app.db")
+    alice, _ = AuthService(db).signup("alice", "alice-password-1")
+    store = ProjectStore(db)
+    project = _sample()
+    size = len(json.dumps(project, ensure_ascii=False))
+    monkeypatch.setattr(store_module, "MAX_STORED_CHARS_PER_OWNER", size * 2 + size // 2)
+    store.save(alice.id, project)
+    store.save(alice.id, project)
+    with pytest.raises(store_module.StoreError, match="저장 공간"):
+        store.save(alice.id, project)
+    with pytest.raises(store_module.StoreError, match="저장 공간"):
+        store.save_draft(alice.id, project)
