@@ -68,7 +68,7 @@ def build_prompt(domain: Domain, combo: dict[str, str], source: str | None = Non
     return fill_source_placeholders("\n".join(lines), source)
 
 
-def build_final_prompt(domain: Domain, combo: dict[str, str]) -> str:
+def build_final_prompt(domain: Domain, combo: dict[str, str], team: bool = False) -> str:
     """사용자에게 건네는 최종 프롬프트. 역할 -> 과제 -> 선호 -> 규칙 ->
     출력 형식 순으로 domain.final_prompt 의 문구를 이어 붙인다.
 
@@ -81,8 +81,10 @@ def build_final_prompt(domain: Domain, combo: dict[str, str]) -> str:
     if spec is None:
         return build_prompt(domain, combo)
 
-    sections = [spec.role, domain.task_description]
-    preferences = build_preference_section(domain, combo)
+    # team: 여러 사람의 선택을 합친 프롬프트. YAML 에 팀용 문구가 있으면 그것을 쓴다.
+    role = (spec.team_role if team else None) or spec.role
+    sections = [role, domain.task_description]
+    preferences = build_preference_section(domain, combo, team=team)
     if preferences:
         sections.append(preferences)
     sections.append("\n".join([f"## {spec.rules_heading}", *(f"- {r}" for r in spec.rules)]))
@@ -90,7 +92,7 @@ def build_final_prompt(domain: Domain, combo: dict[str, str]) -> str:
     return "\n\n".join(sections)
 
 
-def build_preference_section(domain: Domain, combo: dict[str, str]) -> str:
+def build_preference_section(domain: Domain, combo: dict[str, str], team: bool = False) -> str:
     """추정한 선호만 담은 절. "## 머리말" 아래 "- 라벨: 지시" 줄들이다.
     선호가 하나도 없으면 빈 문자열. 머리말과 라벨은 domain.final_prompt 에서
     읽고, 없으면 축 설명과 기본 머리말을 쓴다."""
@@ -103,7 +105,7 @@ def build_preference_section(domain: Domain, combo: dict[str, str]) -> str:
             lines.append(f"- {label}: {instruction}")
     if not lines:
         return ""
-    heading = spec.preference_heading if spec else "선호"
+    heading = ((spec.team_preference_heading if team else None) or spec.preference_heading) if spec else "선호"
     return "\n".join([f"## {heading}", *lines])
 
 

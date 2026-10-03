@@ -65,6 +65,9 @@ class FinalPromptSpec:
     output_heading: str
     output: str
     axis_labels: dict[str, str] = field(default_factory=dict)
+    # 여러 사람의 선택을 합친 팀 프롬프트용. 없으면 role·preference_heading 을 쓴다.
+    team_role: str | None = None
+    team_preference_heading: str | None = None
 
 
 @dataclass
@@ -241,4 +244,6 @@ def _final_prompt(raw: dict | None) -> FinalPromptSpec | None:
         output_heading=raw["output_heading"].strip(),
         output=raw["output"].strip(),
         axis_labels=dict(raw.get("axis_labels", {})),
+        team_role=(raw.get("team_role") or "").strip() or None,
+        team_preference_heading=(raw.get("team_preference_heading") or "").strip() or None,
     )

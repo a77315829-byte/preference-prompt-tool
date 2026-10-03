@@ -231,3 +231,16 @@ def test_api_team_uses_the_signed_in_name(server) -> None:
     with urllib.request.urlopen(req) as resp:
         result = json.loads(resp.read())["team"]
     assert result["members"] == ["alice"] and result["signedIn"] == ["alice"]
+
+
+@pytest.mark.parametrize("domain_file", ["coding", "summarization", "summarization_ko", "idle_tracker",
+                                         "review", "email"])
+def test_team_prompt_speaks_to_a_team_not_one_user(domain_file) -> None:
+    """팀 프롬프트가 개인용 역할 문구("당신은 이 사용자의 ...")를 그대로 쓰고 있었다."""
+    domain = load_domain(f"domains/{domain_file}.yaml")
+    members = [team.Member("민수", _history(domain_file, {})), team.Member("지은", _history(domain_file, {}))]
+    estimator, _ = team.summarize(domain, members)
+    prompt = service.final_prompt(domain, estimator, team=True)
+    assert "이 사용자" not in prompt and "팀" in prompt
+    # 개인 프롬프트는 그대로다.
+    assert "이 사용자" in service.final_prompt(domain, estimator)

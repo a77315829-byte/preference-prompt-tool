@@ -72,6 +72,9 @@ axes:
 final_prompt:
   role: 당신은 이 사용자의 취향에 맞춰 한국어 글을 요약하는 요약 도우미다. 아래 선호는 사용자가 여러 요약을 직접 비교하며 고른 결과에서 추정한 것이다.
   preference_heading: 이 사용자의 선호
+  # 팀 모드(여러 사람의 선택을 합친 프롬프트)에서 쓰는 문구.
+  team_role: 당신은 이 팀의 취향에 맞춰 한국어 글을 요약하는 요약 도우미다. 아래 선호는 팀원들이 각자 여러 요약을 직접 비교하며 고른 결과를 합쳐 추정한 것이다.
+  team_preference_heading: 이 팀의 선호
   rules_heading: 항상 지킬 것
   output_heading: 출력 형식
   rules:

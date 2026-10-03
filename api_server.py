@@ -122,7 +122,7 @@ def _team_payload(code: str) -> dict[str, Any]:
     domain_key, members = TEAMS.get(code)
     domain = service.load_domain_for(_domain_path(domain_key))
     estimator, agreements = team.summarize(domain, members)
-    prompt = service.final_prompt(domain, estimator)
+    prompt = service.final_prompt(domain, estimator, team=True)
     labels = domain.final_prompt.axis_labels if domain.final_prompt else {}
     return {
         "code": code,

@@ -549,7 +549,7 @@ def describe_api_error(exc: BaseException) -> str:
     return f"알 수 없는 오류로 모델 호출이 실패했습니다. (오류 종류: {type(exc).__name__})"
 
 
-def final_prompt(domain: Domain, estimator: Estimator, template_id: str | None = None) -> str:
+def final_prompt(domain: Domain, estimator: Estimator, template_id: str | None = None, team: bool = False) -> str:
     """사용자에게 건네는 최종 프롬프트. 추정한 선호를 도메인 YAML 의
     final_prompt 틀(역할·선호·지킬 것·출력 형식)에 넣어 조립한다.
 
@@ -561,7 +561,7 @@ def final_prompt(domain: Domain, estimator: Estimator, template_id: str | None =
     if template_id is not None:
         # 템플릿의 과제·규칙은 그대로 두고 선호 절만 붙인다.
         return build_template_prompt(domain, combo, template_library.get(template_id).prompt)
-    return build_final_prompt(domain, combo)
+    return build_final_prompt(domain, combo, team=team)
 
 
 def load_domain_for(domain_path: str) -> Domain:
