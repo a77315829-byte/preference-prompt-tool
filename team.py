@@ -7,19 +7,24 @@ Streamlit 을 import 하지 않는다 (`service.py`, `exporters.py` 와 같은 �
 선호를 정하고, 사람마다 갈린 축은 "합의가 필요한 항목"으로 보여 준다.
 
 **저장하는 것:** 팀 코드, 이름, 선택 기록(어느 두 조합 중 무엇을 골랐는지).
-원문과 생성 결과는 저장하지 않는다. 서버 메모리에만 두므로 재시작하면
-사라진다 - 최소 버전이다. 오래 두려면 JSON 파일 저장소로 옮긴다(프로젝트
-규칙상 서버형 DB 는 쓰지 않는다).
+원문과 생성 결과는 저장하지 않는다. 앱 DB(app_db.py, SQLite)에 남아 서버를 다시
+켜도 사라지지 않는다.
+
+**누가 누구로 참여하나.** 로그인한 사람은 자기 아이디로만 참여한다(이름을 고를 수
+없다). 로그인하지 않은 사람은 이름을 적는다 - 다만 로그인한 팀원의 아이디와 같은 이름은
+쓸 수 없다. 그 사람을 사칭하거나 그 기록을 덮어쓰지 못하게. 같은 이름의 익명 참여자끼리는
+예전처럼 나중 것이 앞의 것을 바꾼다(다시 해 본 경우).
 
 이 모듈은 도메인을 모른다. 축 이름과 값은 도메인 정의에서 읽는다.
 """
 
 from __future__ import annotations
 
+import json
 import re
-import threading
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from datetime import datetime, timezone
 
 from engine.domain_loader import Domain
 from engine.estimator import Comparison, Estimator
@@ -40,49 +45,85 @@ class TeamError(ValueError):
 class Member:
     name: str
     history: History
-
-
-@dataclass
-class _Team:
-    domain_key: str
-    members: dict[str, Member] = field(default_factory=dict)
+    # 로그인한 계정으로 참여했는가. 화면이 이름 옆에 표시한다.
+    signed_in: bool = False
 
 
 class TeamStore:
-    """팀 코드 -> 팀. 스레드 안전. 서버 프로세스가 하나를 공유한다."""
+    """팀 코드 -> 팀. DB 에 둔다."""
 
-    def __init__(self) -> None:
-        self._teams: dict[str, _Team] = {}
-        self._lock = threading.Lock()
+    def __init__(self, db) -> None:
+        # Database 또는 그것을 돌려주는 함수 (quota.Quota 와 같은 이유).
+        self._db = db
 
-    def add(self, code: str, domain_key: str, name: str, history: History) -> list[Member]:
-        """이름이 같으면 그 사람의 기록을 새것으로 바꾼다 (다시 해 본 경우)."""
+    @property
+    def db(self):
+        return self._db() if callable(self._db) else self._db
+
+    def add(self, code: str, domain_key: str, name: str, history: History,
+            user_id: int | None = None, username: str | None = None) -> list[Member]:
+        """팀에 더한다. 같은 사람(로그인한 사람은 같은 아이디, 아니면 같은 이름)이 다시
+        더하면 그 사람의 기록을 새것으로 바꾼다 (다시 해 본 경우)."""
         if not _CODE.match(code or ""):
             raise TeamError("팀 코드는 영문·숫자·-·_ 3~32자여야 합니다.")
-        name = (name or "").strip()
-        if not name or len(name) > MAX_NAME_CHARS:
-            raise TeamError(f"이름은 1~{MAX_NAME_CHARS}자여야 합니다.")
+        if user_id is not None:
+            name, key = username or "", f"user:{user_id}"
+        else:
+            name = (name or "").strip()
+            if not name or len(name) > MAX_NAME_CHARS:
+                raise TeamError(f"이름은 1~{MAX_NAME_CHARS}자여야 합니다.")
+            key = f"name:{name.lower()}"
         if not history:
             raise TeamError("선택 기록이 없는 세션은 팀에 더할 수 없습니다.")
-        with self._lock:
-            team = self._teams.get(code)
+        now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        with self.db.connect() as conn:
+            conn.execute("BEGIN IMMEDIATE")
+            team = conn.execute("SELECT domain_key FROM teams WHERE code = ?", (code,)).fetchone()
             if team is None:
-                if len(self._teams) >= MAX_TEAMS:
+                if conn.execute("SELECT COUNT(*) FROM teams").fetchone()[0] >= MAX_TEAMS:
                     raise TeamError("지금은 새 팀을 만들 수 없습니다. 잠시 뒤 다시 시도해 주세요.")
-                team = self._teams[code] = _Team(domain_key)
-            if team.domain_key != domain_key:
-                raise TeamError(f"이 팀 코드는 다른 카테고리({team.domain_key})에 쓰이고 있습니다.")
-            if name not in team.members and len(team.members) >= MAX_MEMBERS_PER_TEAM:
+                conn.execute("INSERT INTO teams (code, domain_key, created_by, created_at) VALUES (?, ?, ?, ?)",
+                             (code, domain_key, user_id, now))
+            elif team["domain_key"] != domain_key:
+                raise TeamError(f"이 팀 코드는 다른 카테고리({team['domain_key']})에 쓰이고 있습니다.")
+            if user_id is None:
+                # 익명 이름이 로그인한 팀원의 아이디와 같으면 거부 (사칭 방지).
+                taken = conn.execute(
+                    "SELECT 1 FROM team_members WHERE code = ? AND user_id IS NOT NULL AND lower(name) = ?",
+                    (code, name.lower()),
+                ).fetchone()
+                if taken:
+                    raise TeamError(f"'{name}' 은 이 팀에서 로그인한 팀원의 아이디입니다. 다른 이름을 쓰거나 로그인해 주세요.")
+            exists = conn.execute("SELECT 1 FROM team_members WHERE code = ? AND member_key = ?",
+                                  (code, key)).fetchone()
+            if not exists and conn.execute("SELECT COUNT(*) FROM team_members WHERE code = ?",
+                                           (code,)).fetchone()[0] >= MAX_MEMBERS_PER_TEAM:
                 raise TeamError(f"한 팀은 {MAX_MEMBERS_PER_TEAM}명까지입니다.")
-            team.members[name] = Member(name, [tuple(c) for c in history])
-            return list(team.members.values())
+            conn.execute(
+                """
+                INSERT INTO team_members (code, member_key, name, user_id, history_json, joined_at)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ON CONFLICT (code, member_key) DO UPDATE SET
+                    name = excluded.name, history_json = excluded.history_json, joined_at = excluded.joined_at
+                """,
+                (code, key, name, user_id, json.dumps([list(c) for c in history], ensure_ascii=False), now),
+            )
+            return self._members(conn, code)
+
+    @staticmethod
+    def _members(conn, code: str) -> list[Member]:
+        rows = conn.execute(
+            "SELECT name, user_id, history_json FROM team_members WHERE code = ? ORDER BY joined_at, rowid", (code,)
+        ).fetchall()
+        return [Member(r["name"], [tuple(c) for c in json.loads(r["history_json"])], signed_in=r["user_id"] is not None)
+                for r in rows]
 
     def get(self, code: str) -> tuple[str, list[Member]]:
-        with self._lock:
-            team = self._teams.get(code)
+        with self.db.connect() as conn:
+            team = conn.execute("SELECT domain_key FROM teams WHERE code = ?", (code,)).fetchone()
             if team is None:
                 raise TeamError("아직 아무도 참여하지 않은 팀 코드입니다.")
-            return team.domain_key, list(team.members.values())
+            return team["domain_key"], self._members(conn, code)
 
 
 def _estimator(domain: Domain, histories: list[History]) -> Estimator:

@@ -79,6 +79,33 @@ MIGRATIONS: list[str] = [
         PRIMARY KEY (project_id, user_id)
     );
     """,
+    # 4: 하루 사용량(재시작해도 남는다)과 팀. 메모리에 있던 것을 옮겼다.
+    # - usage: subject 는 "user:<id>" 또는 "anon"(로그인 안 한 방문자 전체가 한 몫).
+    # - team_members.member_key: 로그인한 사람은 "user:<id>", 아니면 "name:<소문자 이름>".
+    """
+    CREATE TABLE usage (
+        day TEXT NOT NULL,
+        kind TEXT NOT NULL,
+        subject TEXT NOT NULL,
+        count INTEGER NOT NULL,
+        PRIMARY KEY (day, kind, subject)
+    );
+    CREATE TABLE teams (
+        code TEXT PRIMARY KEY,
+        domain_key TEXT NOT NULL,
+        created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+        created_at TEXT NOT NULL
+    );
+    CREATE TABLE team_members (
+        code TEXT NOT NULL REFERENCES teams(code) ON DELETE CASCADE,
+        member_key TEXT NOT NULL,
+        name TEXT NOT NULL,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        history_json TEXT NOT NULL,
+        joined_at TEXT NOT NULL,
+        PRIMARY KEY (code, member_key)
+    );
+    """,
 ]
 
 

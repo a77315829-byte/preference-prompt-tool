@@ -29,7 +29,8 @@ import team
 import template_library
 from app_db import Database
 from auth import AuthError, AuthService, TooManyAttempts, User
-from budget import DailyBudget
+from budget import DailyBudget  # noqa: F401 - 테스트가 상한 자리에 끼워 넣는다
+from quota import Quota, subject_for
 from prompt_workspace import builder as ws_builder
 from prompt_workspace import exports as ws_exports
 from prompt_workspace import requirements as ws_requirements
@@ -52,17 +53,31 @@ DEFAULT_MODEL = os.environ.get("PPT_MODEL", "openai/gpt-4o-mini")
 # 만든다. 프론트는 아직 demoMode: true 를 고정으로 보내므로, 백엔드만으로
 # 실제 생성을 켜고 끌 수 있게 하려는 스위치다. 기본은 꺼짐.
 LIVE = os.environ.get("PPT_LIVE") == "1"
-# 서버 프로세스가 공유하는 하루 실제 생성 세션 상한. app.py 와 같은 방침이고
-# 재시작하면 0 으로 돌아가므로 결제 쪽 월 상한을 대신하지 않는다.
-LIVE_SESSIONS = DailyBudget(int(os.environ.get("PPT_LIVE_SESSIONS_PER_DAY", "60")))
-# GEPA 최적화 상한. app.py 의 값과 같다. 한 번에 모델 호출이 수십 번이다.
+# 앱 DB 하나 (app_db.py, SQLite): 사용자 · 세션 · 저장한 작업 공간 프로젝트 · 하루
+# 사용량 · 팀. 기본 위치 data/ 는 커밋되지 않는다.
+DB = Database(os.environ.get("PPT_DB_PATH") or ROOT / "data" / "app.db")
+
+
+def _quota(kind: str, total_env: str, total: int, user_env: str, per_user: int) -> Quota:
+    """하루 상한 (quota.py). 서버 전체 상한 + 사람마다의 상한. 로그인하지 않은 방문자는
+    모두 합쳐 한 사람 몫을 나눠 쓴다(PPT_ANON_<KIND>_PER_DAY 로 바꿀 수 있다).
+    DB 에 남으므로 서버를 다시 켜도 초기화되지 않는다."""
+    per = int(os.environ.get(user_env, str(per_user)))
+    anon_env = user_env.replace("PPT_USER_", "PPT_ANON_")
+    return Quota(lambda: DB, kind, total=int(os.environ.get(total_env, str(total))), per_user=per,
+                 anon=int(os.environ.get(anon_env, str(per))))
+
+
+# 실제 생성 세션 상한.
+LIVE_SESSIONS = _quota("session", "PPT_LIVE_SESSIONS_PER_DAY", 60, "PPT_USER_SESSIONS_PER_DAY", 20)
+# GEPA 최적화 상한. 한 번에 모델 호출이 수십 번이다.
 MAX_OPTIMIZATIONS_PER_SESSION = 2
-DAILY_OPTIMIZATIONS = DailyBudget(int(os.environ.get("PPT_OPTIMIZATIONS_PER_DAY", "30")))
+DAILY_OPTIMIZATIONS = _quota("optimize", "PPT_OPTIMIZATIONS_PER_DAY", 30, "PPT_USER_OPTIMIZATIONS_PER_DAY", 5)
 OPTIMIZE_RUNS: dict[str, int] = {}
 # 최적화 근거(전후 점수 등). 화면에서 "무슨 기준으로 다듬었는지" 보여 준다.
 OPTIMIZE_REPORTS: dict[str, dict] = {}
-# 팀 모드 (team.py). 서버 메모리에만 있어 재시작하면 사라진다.
-TEAMS = team.TeamStore()
+# 팀 모드 (team.py). DB 에 남는다. 로그인한 사람은 자기 아이디로만 참여한다.
+TEAMS = team.TeamStore(DB)
 # 다른 출처에서 이 API 를 부르도록 허용할 주소 목록 (쉼표로 구분). 기본은
 # 비어 있다 - React 화면은 Vite 프록시(/api)로 같은 출처에서 부르므로 CORS
 # 헤더가 필요 없다. 예전처럼 "*" 를 주면 PPT_LIVE=1 로 켜 둔 동안 사용자가
@@ -109,6 +124,8 @@ def _team_payload(code: str) -> dict[str, Any]:
         "code": code,
         "domain_key": domain_key,
         "members": [m.name for m in members],
+        # 로그인한 계정으로 참여한 사람 (화면이 이름 옆에 표시한다).
+        "signedIn": [m.name for m in members if m.signed_in],
         "agreements": [
             {**asdict(a), "label": labels.get(a.axis) or domain.axis(a.axis).description}
             for a in agreements
@@ -251,7 +268,7 @@ def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
 MAX_POLISH_PROMPT_CHARS = 4_000
 # 프롬프트 다듬기(가져온 프롬프트의 LLM 재작성, /api/polish) 하루 상한. 세션·최적화와 같은
 # 방침이고, 재시작하면 0 으로 돌아가므로 결제 쪽 월 상한을 대신하지 않는다.
-DAILY_POLISHES = DailyBudget(int(os.environ.get("PPT_POLISHES_PER_DAY", "60")))
+DAILY_POLISHES = _quota("polish", "PPT_POLISHES_PER_DAY", 60, "PPT_USER_POLISHES_PER_DAY", 20)
 
 
 def _checklist_payload(items) -> list[dict[str, Any]]:
@@ -281,8 +298,10 @@ def _polish_prompt(body: dict[str, Any]) -> dict[str, Any]:
     if not LIVE:
         raise ValueError("AI 다듬기는 실제 생성 모드에서만 쓸 수 있습니다 (서버를 PPT_LIVE=1 로 켜 주세요). "
                          "위의 구조 점검은 그대로 쓸 수 있습니다.")
-    if not DAILY_POLISHES.consume():
-        raise ValueError("오늘 배정된 AI 다듬기 횟수를 모두 썼습니다. 구조 점검은 계속 쓸 수 있습니다.")
+    try:
+        _take(DAILY_POLISHES, "AI 다듬기")
+    except ValueError as exc:
+        raise ValueError(f"{exc} 구조 점검은 계속 쓸 수 있습니다.") from None
     # 모델은 서버가 정한다. 요청 본문의 model 을 따르면 누구든 비싼 모델
     # 이름을 보내 서버 키로 호출할 수 있다.
     result = polish_prompt(prompt, model=DEFAULT_MODEL)
@@ -297,13 +316,10 @@ def _polish_prompt(body: dict[str, Any]) -> dict[str, Any]:
 # 화면이 단계마다 프로젝트 JSON 을 보낸다. 모델을 부르는 것은 '설명 정리'와
 # '시험 실행' 둘이고, 하루 상한을 같이 쓴다. 입력 오류로 멈춘 시험은 차감하지
 # 않는다 (runner 의 before_call).
-DAILY_WORKSPACE_CALLS = DailyBudget(int(os.environ.get("PPT_WORKSPACE_CALLS_PER_DAY", "60")))
+DAILY_WORKSPACE_CALLS = _quota("workspace", "PPT_WORKSPACE_CALLS_PER_DAY", 60, "PPT_USER_WORKSPACE_CALLS_PER_DAY", 30)
 # 시험 기록은 최근 것만 오간다. 요청 본문 상한(256KB) 안에 머물게.
 MAX_WORKSPACE_RUNS = 6
 
-# 앱 DB 하나 (app_db.py, SQLite): 사용자 · 세션 · 저장한 작업 공간 프로젝트.
-# 기본 위치 data/ 는 커밋되지 않는다.
-DB = Database(os.environ.get("PPT_DB_PATH") or ROOT / "data" / "app.db")
 AUTH = AuthService(DB)
 # 저장한 프로젝트는 로그인한 사용자 것만 보이고 열린다 (prompt_workspace/store.py).
 WORKSPACE_STORE = ProjectStore(DB)
@@ -314,11 +330,41 @@ COOKIE_SECURE = os.environ.get("PPT_COOKIE_SECURE") == "1"
 SESSION_COOKIE = "ppt_session"
 
 
+_REQUEST = threading.local()
+
+
+def _subject() -> str:
+    handler = getattr(_REQUEST, "handler", None)
+    user = handler._current_user() if handler is not None else None
+    return subject_for(user.id if user else None)
+
+
+def _take(quota, what: str) -> None:
+    """한 번 차감한다. 막히면 이유에 맞는 문구로 ValueError (400)."""
+    subject = _subject()
+    blocked = quota.try_consume(subject)
+    if blocked is None:
+        return
+    if blocked == "total":
+        raise ValueError(f"오늘 이 서버에 배정된 {what} 횟수를 모두 썼습니다. 내일 다시 시도해 주세요.")
+    if subject == "anon":
+        raise ValueError(f"로그인하지 않은 방문자에게 배정된 오늘의 {what} 횟수를 모두 썼습니다. "
+                         "로그인하면 개인 몫이 따로 생깁니다.")
+    raise ValueError(f"오늘 내 {what} 횟수를 모두 썼습니다. 내일 다시 시도해 주세요.")
+
+
+def quota_left() -> dict[str, int]:
+    """지금 요청한 사람의 오늘 남은 횟수 (/api/auth/me 가 보여 준다)."""
+    subject = _subject()
+    quotas = {"session": LIVE_SESSIONS, "optimize": DAILY_OPTIMIZATIONS,
+              "polish": DAILY_POLISHES, "workspace": DAILY_WORKSPACE_CALLS}
+    return {kind: q.left(subject) for kind, q in quotas.items() if hasattr(q, "left")}
+
+
 def _consume_workspace_call() -> None:
     if not LIVE:
         raise ValueError("AI 호출은 실제 생성 모드에서만 쓸 수 있습니다 (서버를 PPT_LIVE=1 로 켜 주세요).")
-    if not DAILY_WORKSPACE_CALLS.consume():
-        raise ValueError("오늘 배정된 작업 공간 AI 호출 횟수를 모두 썼습니다.")
+    _take(DAILY_WORKSPACE_CALLS, "작업 공간 AI 호출")
 
 
 def _ws_project(body: dict[str, Any]) -> dict[str, Any]:
@@ -503,7 +549,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         return morsel.value if morsel else None
 
     def _current_user(self) -> User | None:
-        return AUTH.user_for(self._session_token())
+        if not hasattr(self, "_user_cache"):
+            self._user_cache = AUTH.user_for(self._session_token())
+        return self._user_cache
 
     def _cross_site(self) -> bool:
         """다른 사이트에서 온 POST 인가. 쿠키로 로그인한 상태를 다른 사이트가
@@ -564,6 +612,7 @@ class ApiHandler(BaseHTTPRequestHandler):
         self._send(204, {})
 
     def do_GET(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler API
+        _REQUEST.handler = self
         path = urlparse(self.path).path.rstrip("/")
         if path == "/api/health":
             # live: 화면이 열리자마자 세션을 만들지 말지 정하는 데 쓴다. 실제
@@ -577,6 +626,8 @@ class ApiHandler(BaseHTTPRequestHandler):
                 "signupOpen": ALLOW_SIGNUP,
                 # 탈퇴하면 공유받은 사람에게서도 사라질 내 프로젝트 수 (화면이 미리 알린다).
                 "ownedShared": AUTH.owned_shared_count(user) if user else 0,
+                # 오늘 남은 AI 횟수 (로그인 안 했으면 익명 공용 몫).
+                "quota": quota_left(),
             })
             return
         if len(parts := path.split("/")) == 4 and parts[:3] == ["", "api", "teams"]:
@@ -607,6 +658,7 @@ class ApiHandler(BaseHTTPRequestHandler):
         self._send(404, {"error": "찾을 수 없는 경로입니다."})
 
     def do_POST(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler API
+        _REQUEST.handler = self
         path = urlparse(self.path).path.rstrip("/")
         if self._cross_site():
             self._send(403, {"error": "다른 사이트에서 보낸 요청은 받지 않습니다."})
@@ -681,7 +733,7 @@ class ApiHandler(BaseHTTPRequestHandler):
             raise ValueError("sourceText가 필요합니다.")
         demo_mode = bool(body.get("demoMode", True))
         if LIVE:
-            if LIVE_SESSIONS.consume():
+            if LIVE_SESSIONS.try_consume(_subject()) is None:
                 demo_mode = False
             else:
                 print("[session] 오늘 실제 생성 상한에 도달해 데모로 진행한다", flush=True)
@@ -739,7 +791,10 @@ class ApiHandler(BaseHTTPRequestHandler):
             return
         if not state.done:
             raise ValueError("선택을 모두 마친 뒤에 팀에 더할 수 있습니다.")
-        TEAMS.add(code, state.domain_key, str(body.get("name", "")), state.history)
+        # 로그인했으면 이름 칸은 무시하고 아이디로 참여한다.
+        user = self._current_user()
+        TEAMS.add(code, state.domain_key, str(body.get("name", "")), state.history,
+                  user_id=user.id if user else None, username=user.username if user else None)
         self._send(200, {"team": _team_payload(code)})
 
     def _start_optimize(self, session_id: str) -> None:
@@ -765,8 +820,7 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if OPTIMIZE_RUNS.get(session_id, 0) >= MAX_OPTIMIZATIONS_PER_SESSION:
                 raise ValueError(f"세션당 최적화는 {MAX_OPTIMIZATIONS_PER_SESSION}회까지입니다.")
-            if not DAILY_OPTIMIZATIONS.consume():
-                raise ValueError("오늘 배정된 최적화 횟수를 모두 썼습니다.")
+            _take(DAILY_OPTIMIZATIONS, "최적화")
             OPTIMIZE_RUNS[session_id] = OPTIMIZE_RUNS.get(session_id, 0) + 1
             state.optimize_status = "running"
             state.optimize_progress = 0.0

@@ -11,6 +11,8 @@ import pytest
 import api_server
 import service
 import team
+from app_db import Database
+from auth import AuthService
 from engine.domain_loader import load_domain
 
 SECRET_SOURCE = "Internal roadmap: project Nightingale ships in March."
@@ -51,8 +53,13 @@ def test_team_merges_everyone_and_flags_disagreement() -> None:
     assert {a.axis: a.tied for a in pair}["code_structure"] is True
 
 
-def test_store_rules() -> None:
-    store = team.TeamStore()
+@pytest.fixture
+def db(tmp_path) -> Database:
+    return Database(tmp_path / "app.db")
+
+
+def test_store_rules(db) -> None:
+    store = team.TeamStore(db)
     history = _history("coding", {})
     with pytest.raises(team.TeamError, match="팀 코드"):
         store.add("x!", "coding", "a", history)
@@ -66,10 +73,46 @@ def test_store_rules() -> None:
     assert [m.name for m in store.get("team-1")[1]] == ["민수"]
 
 
+def test_teams_survive_a_restart(db) -> None:
+    """예전에는 메모리에만 있어서 서버를 다시 켜면 팀이 사라졌다."""
+    team.TeamStore(db).add("team-1", "coding", "민수", _history("coding", {}))
+    domain_key, members = team.TeamStore(Database(db.path)).get("team-1")
+    assert domain_key == "coding" and [m.name for m in members] == ["민수"]
+
+
+def test_signed_in_members_join_as_themselves_and_cannot_be_impersonated(db) -> None:
+    alice, _ = AuthService(db).signup("alice", "alice-password-1")
+    store = team.TeamStore(db)
+    history = _history("coding", {})
+    # 로그인한 사람은 적은 이름과 상관없이 아이디로 참여한다.
+    members = store.add("team-1", "coding", "아무 이름", history, user_id=alice.id, username="alice")
+    assert [(m.name, m.signed_in) for m in members] == [("alice", True)]
+    # 로그인하지 않은 사람이 그 아이디를 이름으로 쓰면 거부 (대소문자 무관).
+    with pytest.raises(team.TeamError, match="로그인한 팀원"):
+        store.add("team-1", "coding", "ALICE", history)
+    # 다시 더하면 자기 기록만 바뀐다.
+    store.add("team-1", "coding", "", history, user_id=alice.id, username="alice")
+    store.add("team-1", "coding", "민수", history)
+    assert [(m.name, m.signed_in) for m in store.get("team-1")[1]] == [("alice", True), ("민수", False)]
+
+
+def test_deleting_an_account_removes_their_team_entry(db) -> None:
+    auth = AuthService(db)
+    alice, _ = auth.signup("alice", "alice-password-1")
+    store = team.TeamStore(db)
+    store.add("team-1", "coding", "", _history("coding", {}), user_id=alice.id, username="alice")
+    store.add("team-1", "coding", "민수", _history("coding", {}))
+    auth.delete_account(alice, "alice-password-1")
+    assert [m.name for m in store.get("team-1")[1]] == ["민수"]
+
+
 @pytest.fixture
-def server(monkeypatch):
+def server(monkeypatch, tmp_path):
     monkeypatch.setattr(api_server, "LIVE", False)
-    monkeypatch.setattr(api_server, "TEAMS", team.TeamStore())
+    db = Database(tmp_path / "app.db")
+    monkeypatch.setattr(api_server, "DB", db)
+    monkeypatch.setattr(api_server, "AUTH", AuthService(db))
+    monkeypatch.setattr(api_server, "TEAMS", team.TeamStore(db))
     srv = ThreadingHTTPServer(("127.0.0.1", 0), api_server.ApiHandler)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     yield f"http://127.0.0.1:{srv.server_address[1]}/api"
@@ -121,3 +164,19 @@ def test_api_team_errors(server) -> None:
     _, data = _call(server, "/sessions", {"domainKey": "coding", "sourceText": SECRET_SOURCE})
     status, _ = _call(server, "/teams/devteam/members", {"sessionId": data["session"]["session_id"], "name": "a"})
     assert status == 400
+
+
+def test_api_team_uses_the_signed_in_name(server) -> None:
+    status, headers = None, None
+    req = urllib.request.Request(server + "/auth/signup",
+                                 json.dumps({"username": "alice", "password": "alice-password-1"}).encode(),
+                                 {"Content-Type": "application/json"})
+    with urllib.request.urlopen(req) as resp:
+        cookie = resp.headers["Set-Cookie"].split(";")[0]
+    session_id = _finished_session(server, "a")
+    req = urllib.request.Request(server + "/teams/devteam/members",
+                                 json.dumps({"sessionId": session_id, "name": "가짜 이름"}).encode(),
+                                 {"Content-Type": "application/json", "Cookie": cookie})
+    with urllib.request.urlopen(req) as resp:
+        result = json.loads(resp.read())["team"]
+    assert result["members"] == ["alice"] and result["signedIn"] == ["alice"]

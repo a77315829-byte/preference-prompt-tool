@@ -690,7 +690,13 @@ npm run dev
 | `PPT_LIVE_SESSIONS_PER_DAY` | 60 | 하루 실제 생성 세션 상한. 넘으면 데모로 진행 |
 | `PPT_OPTIMIZATIONS_PER_DAY` | 30 | 하루 GEPA 최적화("선호 기준으로 최적화") 상한 (세션당 2회) |
 | `PPT_POLISHES_PER_DAY` | 60 | 하루 "프롬프트 다듬기" LLM 재작성 상한 (`PPT_LIVE=1` 일 때만 동작) |
-| `PPT_WORKSPACE_CALLS_PER_DAY` | 60 | 하루 "서비스용 프롬프트" AI 호출 상한 (요구사항 정리 + 시험 실행. 입력 오류로 멈춘 시험은 차감 안 함) |
+| `PPT_WORKSPACE_CALLS_PER_DAY` | 60 | 하루 "서비스용 프롬프트" AI 호출 상한 (요구사항 정리 + 시험 실행 + AI 추천. 입력 오류로 멈춘 시험은 차감 안 함) |
+| `PPT_USER_SESSIONS_PER_DAY` · `PPT_USER_OPTIMIZATIONS_PER_DAY` · `PPT_USER_POLISHES_PER_DAY` · `PPT_USER_WORKSPACE_CALLS_PER_DAY` | 20 · 5 · 20 · 30 | 위 네 상한의 **사람마다 몫**. 위 값은 서버 전체 상한으로 그대로 남는다 |
+| `PPT_ANON_..._PER_DAY` (같은 네 가지) | 사람마다 몫과 같음 | 로그인하지 않은 방문자 **전체가 나눠 쓰는** 한 몫 |
+
+하루 상한은 `data/app.db` 에 남으므로 서버를 다시 켜도 초기화되지 않는다 (React API 서버.
+Streamlit 앱은 로그인이 없어 예전처럼 메모리 상한을 쓴다). 팀 모드도 같은 DB 에 남고,
+로그인한 사람은 자기 아이디로만 참여한다.
 | `PPT_DB_PATH` | `data/app.db` | 앱 SQLite DB (사용자 · 세션 · 저장한 "서비스용 프롬프트" 프로젝트와 버전) |
 | `PPT_ALLOW_SIGNUP` | `1` | `0` 이면 새 가입을 막고 기존 계정만 로그인 |
 | `PPT_COOKIE_SECURE` | 꺼짐 | HTTPS 로 배포할 때 `1` (로그인 쿠키에 Secure). 로컬 http 에서 켜면 로그인이 안 된다 |

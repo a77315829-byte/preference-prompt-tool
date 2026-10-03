@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import AuthSection from '../../shared/auth/AuthSection';
+import { fetchMe } from '../../shared/auth/authApi';
 import CompareView from './CompareView';
 import SuggestionPanel from './SuggestionPanel';
 import {
@@ -164,6 +165,9 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
   // 저장·다시 열기는 로그인한 사용자 것만 보인다. 로그인 칸은 화면을 옮기지 않고
   // 여기서 연다 - 옮기면 작성 중인 프로젝트가 사라진다.
   const [loginOpen, setLoginOpen] = useState(false);
+  // 오늘 남은 AI 호출 (로그인했으면 내 몫, 아니면 익명 공용 몫).
+  const [quotaLeft, setQuotaLeft] = useState(null);
+  const refreshQuota = () => fetchMe().then((d) => setQuotaLeft(d.quota?.workspace ?? null)).catch(() => {});
   const loginRef = useRef(null);
 
   const refreshList = () => (user
@@ -178,6 +182,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
   // 저장된 프로젝트와의 연결은 끊는다 (다른 계정으로 저장하면 새 프로젝트가 된다).
   useEffect(() => {
     refreshList();
+    refreshQuota();
     if (!user) { setSavedId(null); setVersions([]); setSavedJson(''); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
@@ -207,6 +212,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
       setError(e.message || '문제가 발생했습니다.');
     } finally {
       setBusy('');
+      if (label === 'structure' || label === 'run') refreshQuota();
     }
   };
 
@@ -581,7 +587,8 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
             onChange={(e) => setExampleOutput(e.target.value)} />
           <p className="connection-note">
             {live === null && '서버 상태를 확인하는 중…'}
-            {live === true && '요구사항 정리와 시험 실행은 AI를 호출합니다 (서버의 하루 상한에 포함).'}
+            {live === true && `요구사항 정리·시험 실행·AI 추천은 AI를 호출합니다. 오늘 남은 횟수: ${quotaLeft ?? '확인 중'}회`
+              + (user ? ' (내 몫)' : ' (로그인하지 않은 방문자 공용 몫 - 로그인하면 개인 몫이 따로 생깁니다)')}
             {live === false && 'API 없이 실행 중입니다. AI 정리와 모델 실행은 쓸 수 없고, 샘플로 확인·생성·메시지 구성·내보내기를 해 볼 수 있습니다.'}
           </p>
           <div className="prompt-actions">
