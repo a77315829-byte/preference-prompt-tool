@@ -20,7 +20,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import Any, Callable
 
 from prompt_workspace import llm
 from prompt_workspace.builder import SAFETY_LINES, output_format_lines
@@ -35,6 +35,8 @@ from prompt_workspace.models import ProjectError, status, validate_project
 # code_suggestions 가 직접 고친다.
 PROMPT_VERSION = "suggest-v3"
 MAX_SUGGESTIONS = 5
+# 추론형 모델은 생각에도 출력 토큰을 쓴다. 2,048 로는 답이 비어 올 수 있다.
+AI_MAX_TOKENS = 8000
 MAX_EDITS = 4
 
 CATEGORIES = {
@@ -204,7 +206,9 @@ def suggest(project: dict[str, Any], *, model: str, use_ai: bool = True) -> dict
         item["source"] = "code"
     from_ai, cached = [], False
     if use_ai:
-        result = llm.call(SYSTEM, _user_message(project), model=model, version=PROMPT_VERSION, accept=_accept)
+        # 추론형 모델(성찰용 강한 모델)도 쓸 수 있게 온도를 보내지 않고 출력 한도를 넉넉히 둔다.
+        result = llm.call(SYSTEM, _user_message(project), model=model, version=PROMPT_VERSION, accept=_accept,
+                          temperature=None, max_tokens=AI_MAX_TOKENS)
         raw, error = parse_output(result["text"])
         if not isinstance(raw, dict):
             raise ProjectError(f"모델 응답을 제안으로 읽지 못했습니다 ({error or '형식이 다름'}). 다시 시도해 주세요.")
@@ -239,3 +243,52 @@ def apply(project: dict[str, Any], suggestions: list[dict[str, Any]], *, allow_r
     if touched and not allow_rule_changes:
         raise ProjectError(f"보호 문장({', '.join(touched)})이 바뀝니다. 바꾸려면 따로 확인해 주세요.")
     return {"system_prompt": candidate, "touches_rules": touched}
+
+
+
+def trial(
+    project: dict[str, Any],
+    suggestions: list[dict[str, Any]],
+    run: Callable[[dict[str, Any]], dict[str, Any]],
+    *,
+    limit: int = MAX_SUGGESTIONS,
+) -> dict[str, Any]:
+    """제안마다 따로 적용해 같은 입력으로 시험하고, 지금 지침의 결과와 검사별로 견준다.
+
+    좋아졌는지는 모델의 말이 아니라 이 시험으로 판단한다 (절대 규칙 6). run 은 프로젝트를
+    받아 실행 기록을 돌려주는 함수다 (서버가 입력·모델·상한을 묶어 넘긴다). 적용할 수 없거나
+    보호 문장을 바꾸는 제안은 시험하지 않는다 - 사용자가 따로 확인해야 하는 것들이다.
+
+    돌려주는 것: {"baseline": 지금 지침의 실행 기록, "results": [{id, fixed, broke, ...}]}.
+    fixed 는 실패 -> 통과로 바뀐 검사, broke 는 통과 -> 실패로 바뀐 검사. 미평가는 세지 않는다.
+    """
+    validate_project(project)
+    baseline = run(project)
+    if baseline.get("status") != "ran":
+        raise ProjectError("지금 지침으로 시험이 실행되지 않았습니다 (입력 오류이거나 실제 생성 모드가 아님). "
+                           "시험 입력을 먼저 고쳐 주세요.")
+    before = {c["name"]: c["status"] for c in baseline["checks"]}
+    prompt = project["artifact"]["system_prompt"]
+    results = []
+    for item in suggestions[:limit]:
+        if not item.get("applicable") or item.get("touches_rules"):
+            results.append({"id": item.get("id"), "tested": False,
+                            "reason": "적용할 수 없거나 보호 문장을 바꾸는 제안이라 시험하지 않음"})
+            continue
+        candidate, problem = apply_edits(prompt, item.get("edits", []))
+        if candidate is None:
+            results.append({"id": item.get("id"), "tested": False, "reason": problem})
+            continue
+        tried = run({**project, "artifact": {**project["artifact"], "system_prompt": candidate,
+                                             "revision": project["artifact"]["revision"] + 1}})
+        after = {c["name"]: c["status"] for c in tried.get("checks", [])}
+        results.append({
+            "id": item.get("id"),
+            "tested": tried.get("status") == "ran",
+            "fixed": sorted(n for n, st in after.items() if st == "pass" and before.get(n) == "fail"),
+            "broke": sorted(n for n, st in after.items() if st == "fail" and before.get(n) == "pass"),
+            "fail_before": sum(1 for st in before.values() if st == "fail"),
+            "fail_after": sum(1 for st in after.values() if st == "fail"),
+            "output": tried.get("output"),
+        })
+    return {"baseline": baseline, "results": results}

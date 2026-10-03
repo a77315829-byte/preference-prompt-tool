@@ -42,7 +42,7 @@ class DailyBudget:
             self._day = today
             self._used = 0
 
-    def left(self) -> int:
+    def left(self, _subject: str | None = None) -> int:
         """오늘 남은 횟수."""
         with self._lock:
             self._roll_over_if_needed()

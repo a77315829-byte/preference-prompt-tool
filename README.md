@@ -687,6 +687,7 @@ npm run dev
 | `PPT_LIVE` | 꺼짐 | `1` 이면 프론트가 보내는 `demoMode` 와 상관없이 실제 모델로 생성 |
 | `PPT_MODEL` | `openai/gpt-4o-mini` | 후보 생성 모델 (Streamlit 은 `app.py` 의 `MODEL`) |
 | `PPT_REFLECTION_MODEL` | `openai/gpt-5.6-luna` | GEPA 성찰 모델 (`service.REFLECTION_MODEL`) |
+| `PPT_SUGGEST_MODEL` | `PPT_REFLECTION_MODEL` 과 같음 | "서비스용 프롬프트" 개선 추천 모델 (성찰 역할이라 강한 모델) |
 | `PPT_LIVE_SESSIONS_PER_DAY` | 60 | 하루 실제 생성 세션 상한. 넘으면 데모로 진행 |
 | `PPT_OPTIMIZATIONS_PER_DAY` | 30 | 하루 GEPA 최적화("선호 기준으로 최적화") 상한 (세션당 2회) |
 | `PPT_POLISHES_PER_DAY` | 60 | 하루 "프롬프트 다듬기" LLM 재작성 상한 (`PPT_LIVE=1` 일 때만 동작) |

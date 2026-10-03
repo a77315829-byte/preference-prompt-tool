@@ -211,3 +211,89 @@ def test_ai_suggestions_follow_code_ones_and_ids_are_sequential(fake) -> None:
     project["artifact"]["system_prompt"] = project["artifact"]["system_prompt"].replace(f"- {RULE}\n", "")
     result = suggest.suggest(project, model="m")
     assert [(s["id"], s["source"]) for s in result["suggestions"]] == [("S1", "code"), ("S2", "ai")]
+
+
+# --- 강한 모델 호출 설정과 제안별 시험 ----------------------------------------------
+
+
+def test_ai_suggestions_are_called_like_a_reasoning_model(fake) -> None:
+    """추론형 모델은 temperature=0 을 거부하고 생각에도 출력 토큰을 쓴다."""
+    calls = fake(_reply())
+    suggest.suggest(_built(), model="openai/gpt-5.6-luna")
+    assert "temperature" not in calls[0]
+    assert calls[0]["max_tokens"] == suggest.AI_MAX_TOKENS and calls[0]["model"] == "openai/gpt-5.6-luna"
+
+
+def _checks(**statuses):
+    return [{"name": n, "status": st, "detail": "", "group": "contract"} for n, st in statuses.items()]
+
+
+def test_trial_counts_fixed_and_broken_checks_per_suggestion() -> None:
+    project = _built()
+    good = {"id": "S1", "applicable": True, "touches_rules": [],
+            "edits": [{"find": "", "replace": "- FIXES_PARSE"}]}
+    bad = {"id": "S2", "applicable": True, "touches_rules": [],
+           "edits": [{"find": "", "replace": "- BREAKS_TOTAL"}]}
+    advice = {"id": "S3", "applicable": False, "touches_rules": [], "edits": []}
+    guarded = {"id": "S4", "applicable": True, "touches_rules": ["R1"], "edits": [{"find": "", "replace": "x"}]}
+    seen = []
+
+    def run(p):
+        prompt = p["artifact"]["system_prompt"]
+        seen.append(prompt)
+        if "FIXES_PARSE" in prompt:
+            checks = _checks(**{"JSON 파싱": "pass", "총액 보존": "pass", "규칙 R1": "not_evaluated"})
+        elif "BREAKS_TOTAL" in prompt:
+            checks = _checks(**{"JSON 파싱": "fail", "총액 보존": "fail", "규칙 R1": "not_evaluated"})
+        else:
+            checks = _checks(**{"JSON 파싱": "fail", "총액 보존": "pass", "규칙 R1": "not_evaluated"})
+        return {"status": "ran", "checks": checks, "output": "x"}
+
+    result = suggest.trial(project, [good, bad, advice, guarded], run)
+    by_id = {r["id"]: r for r in result["results"]}
+    assert by_id["S1"]["fixed"] == ["JSON 파싱"] and by_id["S1"]["broke"] == []
+    assert by_id["S2"]["fixed"] == [] and by_id["S2"]["broke"] == ["총액 보존"]
+    assert by_id["S1"]["fail_before"] == 1 and by_id["S1"]["fail_after"] == 0
+    assert by_id["S3"]["tested"] is False and by_id["S4"]["tested"] is False
+    assert len(seen) == 3  # 지금 지침 1 + 시험 가능한 제안 2. 보호 문장 제안은 부르지 않는다.
+    assert all("FIXES_PARSE" not in prompt for prompt in seen[:1])
+
+
+def test_trial_needs_a_real_baseline_run() -> None:
+    with pytest.raises(ProjectError, match="시험 입력"):
+        suggest.trial(_built(), [{"id": "S1", "applicable": True, "touches_rules": [], "edits": []}],
+                      lambda p: {"status": "input_error", "checks": []})
+
+
+def test_trial_route_checks_live_mode_and_remaining_calls(monkeypatch, fake) -> None:
+    fake(json.dumps({"currency": "USD", "total": "37.50", "summary": "37.50 USD",
+                     "items": [{"service": "Compute", "amount": "25.00"}, {"service": "Storage", "amount": "12.50"}]}))
+    srv = ThreadingHTTPServer(("127.0.0.1", 0), api_server.ApiHandler)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{srv.server_address[1]}/api"
+
+    def post(path, body):
+        req = urllib.request.Request(base + path, json.dumps(body).encode(), {"Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req) as resp:
+                return resp.status, json.loads(resp.read())
+        except urllib.error.HTTPError as err:
+            return err.code, json.loads(err.read())
+
+    picked = [{"id": "S1", "applicable": True, "touches_rules": [], "edits": [{"find": "", "replace": "- 짧게"}]},
+              {"id": "S2", "applicable": True, "touches_rules": [], "edits": [{"find": "", "replace": "- 길게"}]}]
+    body = {"project": _built(), "input": synthetic_cost.SAMPLE_INPUT, "suggestions": picked}
+    try:
+        monkeypatch.setattr(api_server, "LIVE", False)
+        assert post("/workspace/trial-suggestions", body)[0] == 400
+        monkeypatch.setattr(api_server, "LIVE", True)
+        monkeypatch.setattr(api_server, "DAILY_WORKSPACE_CALLS", DailyBudget(2))
+        status, data = post("/workspace/trial-suggestions", body)
+        assert status == 400 and "3회가 필요" in data["error"]
+        assert api_server.DAILY_WORKSPACE_CALLS.left() == 2  # 거절하면 아무것도 쓰지 않았다
+        monkeypatch.setattr(api_server, "DAILY_WORKSPACE_CALLS", DailyBudget(3))
+        status, data = post("/workspace/trial-suggestions", body)
+        assert status == 200 and [r["id"] for r in data["results"]] == ["S1", "S2"]
+        assert api_server.DAILY_WORKSPACE_CALLS.left() == 0
+    finally:
+        srv.shutdown()

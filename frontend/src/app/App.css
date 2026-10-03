@@ -2403,3 +2403,7 @@
 .ws-danger:not(:disabled):hover { background: #fdecea; }
 
 .team-me { align-self: center; padding: 0 0.4rem; color: #374151; font-size: 0.85rem; font-weight: 800; }
+
+.ws-verdict { margin: 0.4rem 0 0; padding: 0.35rem 0.7rem; border-radius: 0.6rem; background: #eef1f6; color: #374151; font-size: 0.82rem; font-weight: 700; }
+.ws-verdict.is-better { background: #dff7ed; color: #176b50; }
+.ws-verdict.is-worse { background: #fdecea; color: #8a1c12; }

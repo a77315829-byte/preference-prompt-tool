@@ -51,3 +51,7 @@ export const discardDraft = (id) => request(`/workspace/projects/${encodeURIComp
 export const suggestImprovements = (project) => request('/workspace/suggest', { project });
 export const applySuggestions = (project, suggestions, allowRuleChanges) =>
   request('/workspace/apply-suggestions', { project, suggestions, allowRuleChanges });
+
+// 제안마다 같은 입력으로 시험해 검사 변화를 센다 (지금 지침 1회 + 제안 수만큼 AI 호출).
+export const trialSuggestions = (project, input, suggestions) =>
+  request('/workspace/trial-suggestions', { project, input, suggestions });

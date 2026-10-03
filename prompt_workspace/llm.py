@@ -36,9 +36,9 @@ def completion(**kwargs):
     return _completion(**kwargs)
 
 
-def _cache_path(system: str, user: str, model: str, version: str) -> Path:
+def _cache_path(system: str, user: str, model: str, version: str, temperature: float | None = TEMPERATURE) -> Path:
     payload = json.dumps(
-        {"system": system, "user": user, "model": model, "temperature": TEMPERATURE, "version": version},
+        {"system": system, "user": user, "model": model, "temperature": temperature, "version": version},
         sort_keys=True, ensure_ascii=False,
     )
     return CACHE_DIR / f"{hashlib.sha256(payload.encode('utf-8')).hexdigest()}.json"
@@ -51,14 +51,20 @@ def call(
     model: str,
     version: str,
     accept: Callable[[str], bool] = lambda text: True,
+    temperature: float | None = TEMPERATURE,
+    max_tokens: int = MAX_OUTPUT_TOKENS,
 ) -> dict:
     """{"text", "cached", "elapsed_seconds", "usage"}.
 
     accept 가 False 를 돌려주는 응답은 캐시에 쓰지 않고 그대로 돌려준다 -
     시험 실행에서는 깨진 출력도 결과로 보여 줘야 하기 때문이다. 빈 응답은
     결과로도 쓸 수 없으므로 예외다.
+
+    temperature=None 이면 보내지 않는다 - 추론형 모델(gpt-5.x 등)은 0 을 거부한다.
+    추론형 모델은 생각에도 출력 토큰을 써서 2,048 로는 답이 비어 올 수 있으므로
+    max_tokens 를 늘려 부른다.
     """
-    cache_file = _cache_path(system, user, model, version)
+    cache_file = _cache_path(system, user, model, version, temperature)
     if cache_file.exists():
         cached = json.loads(cache_file.read_text(encoding="utf-8"))
         return {"text": cached["text"], "cached": True, "elapsed_seconds": 0.0, "usage": cached.get("usage")}
@@ -68,8 +74,8 @@ def call(
         model=model,
         messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
         timeout=REQUEST_TIMEOUT_SECONDS,
-        max_tokens=MAX_OUTPUT_TOKENS,
-        temperature=TEMPERATURE,
+        max_tokens=max_tokens,
+        **({} if temperature is None else {"temperature": temperature}),
     )
     elapsed = round(time.monotonic() - started, 2)
     text = response.choices[0].message.content or ""

@@ -48,6 +48,10 @@ HOST = os.environ.get("PPT_API_HOST", "127.0.0.1")
 PORT = int(os.environ.get("PPT_API_PORT", "8000"))
 # 후보 생성 모델. 근거는 app.py 의 MODEL 주석(같은 실측).
 DEFAULT_MODEL = os.environ.get("PPT_MODEL", "openai/gpt-4o-mini")
+# 작업 공간의 개선 추천 모델. 프로젝트 방침대로 후보 생성은 싼 모델, 성찰(무엇을 고칠지)은
+# 강한 모델 - GEPA 성찰과 같은 모델을 쓴다. gpt-4o-mini 로는 실패를 고치는 제안이 한 번도
+# 나오지 않았다 (CLAUDE.md 2026-10-02 작업 공간 2차).
+SUGGEST_MODEL = os.environ.get("PPT_SUGGEST_MODEL") or service.REFLECTION_MODEL
 
 # PPT_LIVE=1 이면 프론트가 보내는 demoMode 와 상관없이 실제 모델로 후보를
 # 만든다. 프론트는 아직 demoMode: true 를 고정으로 보내므로, 백엔드만으로
@@ -480,7 +484,28 @@ def _workspace_suggest(body: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("지금 요구사항으로 만든 프롬프트가 있어야 개선 방향을 추천할 수 있습니다.")
     if LIVE:
         _consume_workspace_call()
-    return ws_suggest.suggest(project, model=DEFAULT_MODEL, use_ai=LIVE)
+    return ws_suggest.suggest(project, model=SUGGEST_MODEL, use_ai=LIVE)
+
+
+def _workspace_trial_suggestions(body: dict[str, Any]) -> dict[str, Any]:
+    """제안마다 같은 입력으로 시험해 검사 변화를 센다. 지금 지침 1회 + 제안 수만큼 모델을
+    부르므로(캐시된 것도 상한에서는 센다) 남은 횟수가 모자라면 시작하기 전에 거절한다."""
+    if not LIVE:
+        raise ValueError("제안 시험은 실제 생성 모드에서만 쓸 수 있습니다 (서버를 PPT_LIVE=1 로 켜 주세요).")
+    project = _ws_project(body)
+    picked = body.get("suggestions")
+    if not isinstance(picked, list) or not picked:
+        raise ValueError("시험할 제안이 없습니다.")
+    testable = [s for s in picked[:ws_suggest.MAX_SUGGESTIONS] if s.get("applicable") and not s.get("touches_rules")]
+    needed = 1 + len(testable)
+    left = DAILY_WORKSPACE_CALLS.left(_subject())
+    if left < needed:
+        raise ValueError(f"제안 시험에 AI 호출 {needed}회가 필요한데 오늘 남은 횟수는 {left}회입니다.")
+    values = body.get("input")
+    return ws_suggest.trial(
+        project, picked,
+        lambda p: ws_runner.run(p, values, model=DEFAULT_MODEL, live=LIVE, before_call=_consume_workspace_call),
+    )
 
 
 def _workspace_apply_suggestions(body: dict[str, Any]) -> dict[str, Any]:
@@ -494,6 +519,7 @@ def _workspace_apply_suggestions(body: dict[str, Any]) -> dict[str, Any]:
 WORKSPACE_ROUTES = {
     "/api/workspace/suggest": _workspace_suggest,
     "/api/workspace/apply-suggestions": _workspace_apply_suggestions,
+    "/api/workspace/trial-suggestions": _workspace_trial_suggestions,
     "/api/workspace/resolve": _workspace_resolve,
     "/api/workspace/status": lambda body: _ws_payload(_ws_project(body)),
     "/api/workspace/structure": _workspace_structure,

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChecksTable, RunColumn } from './CompareView';
 import { lineDiff } from './lineDiff';
-import { applySuggestions, runProject, suggestImprovements } from './workspaceApi';
+import { applySuggestions, runProject, suggestImprovements, trialSuggestions } from './workspaceApi';
 
 // 개선 방향 추천 (계획서 10절 2차).
 // 1) AI 가 고칠 곳을 제안한다 - 범주, 이유, 바꿀 문장.
@@ -17,6 +17,8 @@ function SuggestionPanel({ project, inputText, live, disabled, onApply }) {
   const [allowRules, setAllowRules] = useState(false);
   const [candidate, setCandidate] = useState(null); // { system_prompt, touches_rules }
   const [trial, setTrial] = useState(null); // { current, candidate }
+  // 제안마다 같은 입력으로 시험한 결과: id -> { tested, fixed, broke, fail_before, fail_after }
+  const [verdicts, setVerdicts] = useState({});
 
   const artifact = project.artifact;
   const outdated = result && result.artifact_revision !== artifact.revision;
@@ -36,6 +38,7 @@ function SuggestionPanel({ project, inputText, live, disabled, onApply }) {
   const ask = () => act('suggest', async () => {
     const data = await suggestImprovements(project);
     setResult(data);
+    setVerdicts({});
     setPicked({});
     setCandidate(null);
     setTrial(null);
@@ -67,6 +70,13 @@ function SuggestionPanel({ project, inputText, live, disabled, onApply }) {
     setTrial({ current: { ...current, input_text: inputText }, candidate: { ...next, input_text: inputText } });
   });
 
+  // 좋아졌는지는 모델의 말이 아니라 시험으로 판단한다. 지금 지침 1회 + 시험할 제안 수만큼 부른다.
+  const testable = (result?.suggestions || []).filter((s) => s.applicable && s.touches_rules.length === 0);
+  const trialAll = () => act('trialAll', async () => {
+    const data = await trialSuggestions(project, parseInput(), result.suggestions);
+    setVerdicts(Object.fromEntries(data.results.map((r) => [r.id, r])));
+  });
+
   const labels = chosen.map((s) => s.id).join(', ');
   const diff = candidate ? lineDiff(artifact.system_prompt, candidate.system_prompt) : null;
 
@@ -87,6 +97,14 @@ function SuggestionPanel({ project, inputText, live, disabled, onApply }) {
       {outdated && <p className="ws-error">추천을 받은 뒤 지침이 바뀌었습니다. 다시 추천받으세요.</p>}
       {result?.notes?.map((n) => <p className="ws-help" key={n}>{n}</p>)}
       {result && result.suggestions.length === 0 && <p className="ws-help">고칠 곳을 제안하지 않았습니다.</p>}
+      {live && result && !outdated && testable.length > 0 && (
+        <div className="prompt-actions">
+          <button className="prompt-reset-button" type="button" disabled={Boolean(state.busy)} onClick={trialAll}>
+            {state.busy === 'trialAll' ? '시험 중…' : `제안마다 시험해 보기 (AI ${testable.length + 1}회)`}
+          </button>
+          <span className="ws-help">지금 시험 입력으로 제안을 하나씩 적용해 돌리고, 검사가 어떻게 바뀌는지 셉니다.</span>
+        </div>
+      )}
 
       {result && !outdated && result.suggestions.map((s) => (
         <div className={`ws-suggestion ${s.applicable ? '' : 'is-advice'}`} key={s.id}>
@@ -109,6 +127,14 @@ function SuggestionPanel({ project, inputText, live, disabled, onApply }) {
             </pre>
           ))}
           {!s.applicable && <p className="ws-help">적용 불가 - {s.problem}. 읽을거리로만 참고하세요.</p>}
+          {verdicts[s.id] && (verdicts[s.id].tested ? (
+            <p className={`ws-verdict ${verdicts[s.id].broke.length ? 'is-worse' : verdicts[s.id].fixed.length ? 'is-better' : ''}`}>
+              시험 결과: 실패 {verdicts[s.id].fail_before} → {verdicts[s.id].fail_after}
+              {verdicts[s.id].fixed.length > 0 && ` · 고친 검사: ${verdicts[s.id].fixed.join(', ')}`}
+              {verdicts[s.id].broke.length > 0 && ` · 새로 실패: ${verdicts[s.id].broke.join(', ')}`}
+              {!verdicts[s.id].fixed.length && !verdicts[s.id].broke.length && ' · 검사 결과 변화 없음'}
+            </p>
+          ) : <p className="ws-help">시험 안 함 - {verdicts[s.id].reason}</p>)}
           {s.touches_rules.length > 0 && (
             <p className="ws-error">보호 문장({s.touches_rules.join(", ")})을 지우거나 바꿉니다.</p>
           )}
