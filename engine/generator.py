@@ -12,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from collections.abc import Sequence
@@ -38,13 +39,33 @@ def _lock_for(key: str) -> threading.Lock:
         return _KEY_LOCKS.setdefault(key, threading.Lock())
 
 
-def build_prompt(domain: Domain, combo: dict[str, str]) -> str:
+# 지시문 안의 `{source_words*R}` 는 이 원문의 단어 수 x R 로 채운다. 모델은 "원문의
+# 5%" 같은 비율 지시를 스스로 환산하지 못하지만 단어 수 지시는 따른다
+# (docs/length_v2_preregistration.md). 단어 수는 공백으로 나눈 개수 - 언어나 과제를
+# 가정하지 않는다.
+_SOURCE_WORDS = re.compile(r"\{source_words\*([0-9]*\.?[0-9]+)\}")
+
+
+def fill_source_placeholders(text: str, source: str | None) -> str:
+    """자리표시자가 없으면 text 를 그대로 돌려준다. 있는데 원문이 없으면 ValueError -
+    조용히 비율 문구로 바꾸면 모델이 따르지 못하는 지시가 된다."""
+    if not _SOURCE_WORDS.search(text):
+        return text
+    if source is None:
+        raise ValueError("이 지시문은 원문 길이로 채워야 하는데 원문이 주어지지 않았다.")
+    words = len(source.split())
+    return _SOURCE_WORDS.sub(lambda m: str(round(float(m.group(1)) * words)), text)
+
+
+def build_prompt(domain: Domain, combo: dict[str, str], source: str | None = None) -> str:
+    """후보 생성용 프롬프트. 자리표시자가 없는 도메인은 source 와 무관하게 예전과
+    글자 하나까지 같다 - 캐시 키가 이 텍스트라서다."""
     lines = [domain.task_description]
     for axis in domain.axes:
         instruction = axis.instruction_for(combo.get(axis.name, ""))
         if instruction:
             lines.append(instruction)
-    return "\n".join(lines)
+    return fill_source_placeholders("\n".join(lines), source)
 
 
 def build_final_prompt(domain: Domain, combo: dict[str, str]) -> str:
@@ -146,7 +167,7 @@ def generate(
 ) -> str:
     """축조합으로 프롬프트를 조립해 결과물을 만든다."""
     return generate_with_prompt(
-        build_prompt(domain, combo), source_text, model, cache_dir=cache_dir
+        build_prompt(domain, combo, source=source_text), source_text, model, cache_dir=cache_dir
     )
 
 

@@ -42,10 +42,11 @@ def _freeform_values(domain: Domain, topic: str) -> dict[str, str]:
     }
 
 
-def build_seed_prompt(domain: Domain, estimator: Estimator, topic: str = "") -> str:
+def build_seed_prompt(domain: Domain, estimator: Estimator, topic: str = "", source: str | None = None) -> str:
+    """source 는 지시문에 원문 길이 자리표시자가 있는 도메인에서만 필요하다."""
     combo = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
     combo.update(_freeform_values(domain, topic))
-    return build_prompt(domain, combo)
+    return build_prompt(domain, combo, source=source)
 
 
 def run(

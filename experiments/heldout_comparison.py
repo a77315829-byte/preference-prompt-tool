@@ -136,7 +136,9 @@ def learn_prompt(domain, persona: dict) -> tuple[str, dict[str, str]]:
         b = generate(domain, persona["learn_source"], combo_b, model=MODEL)
         estimator.update(Comparison(combo_a, combo_b, choose(domain, oracle, a, b, persona["learn_source"])))
     learned = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
-    return build_seed_prompt(domain, estimator), learned
+    # 지시문에 원문 길이 자리표시자가 있는 도메인(v3)이면 채점 문서 Y 의 길이로 채운다.
+    # 없는 도메인은 source 와 무관하게 예전과 같은 프롬프트다.
+    return build_seed_prompt(domain, estimator, source=persona["eval_source"]), learned
 
 
 def summarize(df: pd.DataFrame) -> dict:
