@@ -541,6 +541,23 @@ class ApiHandler(BaseHTTPRequestHandler):
             AUTH.logout(self._session_token())
             self._send(200, {"user": None}, cookies=[_clear_cookie()])
             return
+        if path in ("/api/auth/password", "/api/auth/delete"):
+            user = self._current_user()
+            if user is None:
+                self._send(401, {"error": "로그인이 필요합니다."})
+                return
+            try:
+                if path == "/api/auth/password":
+                    token = AUTH.change_password(user, str(body.get("current", "")), str(body.get("new", "")),
+                                                 address=self.client_address[0])
+                    self._send(200, {"user": _user_payload(user)}, cookies=[_session_cookie(token)])
+                else:
+                    AUTH.delete_account(user, str(body.get("password", "")), address=self.client_address[0])
+                    print(f"[auth] 탈퇴 {user.username}", flush=True)
+                    self._send(200, {"user": None}, cookies=[_clear_cookie()])
+            except TooManyAttempts as exc:
+                self._send(429, {"error": str(exc)})
+            return
         self._send(404, {"error": "찾을 수 없는 경로입니다."})
 
     def do_OPTIONS(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler API
@@ -554,7 +571,13 @@ class ApiHandler(BaseHTTPRequestHandler):
             self._send(200, {"ok": True, "demoAvailable": True, "live": LIVE})
             return
         if path == "/api/auth/me":
-            self._send(200, {"user": _user_payload(self._current_user()), "signupOpen": ALLOW_SIGNUP})
+            user = self._current_user()
+            self._send(200, {
+                "user": _user_payload(user),
+                "signupOpen": ALLOW_SIGNUP,
+                # 탈퇴하면 공유받은 사람에게서도 사라질 내 프로젝트 수 (화면이 미리 알린다).
+                "ownedShared": AUTH.owned_shared_count(user) if user else 0,
+            })
             return
         if len(parts := path.split("/")) == 4 and parts[:3] == ["", "api", "teams"]:
             try:

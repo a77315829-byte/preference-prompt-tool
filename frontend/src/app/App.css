@@ -2395,3 +2395,9 @@
 .ws-suggestion.is-advice { border-style: dashed; opacity: 0.85; }
 .ws-suggestion .ws-diff { margin-top: 0.4rem; max-height: 10rem; }
 .ws-suggestion-reason { margin: 0.3rem 0; color: #374151; font-size: 0.85rem; }
+
+/* 내 계정 */
+.nav-user .nav-account { border-color: transparent; background: transparent; max-width: 8rem; overflow: hidden; text-overflow: ellipsis; }
+.nav-user .nav-account:hover { border-color: #dfe4ed; }
+.ws-danger { color: #8a1c12; border: 1px solid #f3c7c1; }
+.ws-danger:not(:disabled):hover { background: #fdecea; }

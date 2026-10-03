@@ -6,6 +6,7 @@ import ScrollStory from '../features/landing/ScrollStory';
 import PromptPolishSection from '../features/polish/PromptPolishSection';
 import PromptWorkspaceSection from '../features/prompt-workspace/PromptWorkspaceSection';
 import TemplateLibrarySection from '../features/templates/TemplateLibrarySection';
+import AccountSection from '../shared/auth/AccountSection';
 import AuthSection from '../shared/auth/AuthSection';
 import { fetchMe, logout } from '../shared/auth/authApi';
 import './App.css';
@@ -99,7 +100,10 @@ function App() {
 
         {user ? (
           <span className="nav-user">
-            <span>{user.username}</span>
+            <button type="button" className="nav-account" title="내 계정" onClick={() => {
+              setReturnFlow(activeFlow === 'account' ? 'category' : activeFlow);
+              setActiveFlow('account');
+            }}>{user.username}</button>
             <button type="button" onClick={handleLogout}>로그아웃</button>
           </span>
         ) : user === null && (
@@ -150,6 +154,13 @@ function App() {
         {activeFlow === 'polish' && (
           <motion.div className="flow-view" key="polish" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
             <PromptPolishSection onBack={handleComparisonBack} />
+          </motion.div>
+        )}
+
+        {activeFlow === 'account' && user && (
+          <motion.div className="flow-view" key="account" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
+            <AccountSection user={user} onBack={() => setActiveFlow(returnFlow)}
+              onDeleted={() => { setUser(null); setActiveFlow('category'); }} />
           </motion.div>
         )}
 

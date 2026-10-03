@@ -202,3 +202,53 @@ class AuthService:
             return
         with self.db.connect() as conn:
             conn.execute("DELETE FROM sessions WHERE token_hash = ?", (_token_hash(token),))
+
+    # --- 계정 관리 ---------------------------------------------------------------
+
+    def _recheck(self, user: User, password: str, address: str) -> None:
+        """민감한 동작 전에 비밀번호를 다시 확인한다. 세션 쿠키만 훔친 사람이 비밀번호를
+        바꾸거나 계정을 지우지 못하게. 실패는 로그인과 같은 횟수 제한을 받는다."""
+        key = f"user:{user.username.lower()}"
+        if self.limiter.blocked(key, MAX_FAILS_PER_USERNAME):
+            raise TooManyAttempts("비밀번호 확인 실패가 많아 잠시 막았습니다. 15분 뒤에 다시 시도해 주세요.")
+        with self.db.connect() as conn:
+            row = conn.execute("SELECT password_hash FROM users WHERE id = ?", (user.id,)).fetchone()
+        if row is None or not verify_password(str(password or ""), row["password_hash"]):
+            self.limiter.fail(key)
+            if address:
+                self.limiter.fail(f"addr:{address}")
+            raise AuthError("지금 비밀번호가 맞지 않습니다.")
+        self.limiter.clear(key)
+
+    def change_password(self, user: User, current: str, new: str, address: str = "") -> str:
+        """비밀번호를 바꾸고 **모든 세션을 끊는다**(다른 기기 포함). 이 기기용 새 세션 토큰을
+        돌려준다 - 비밀번호를 바꾸는 이유가 유출 의심일 때 다른 곳의 로그인이 남으면 안 된다."""
+        self._recheck(user, current, address)
+        if not isinstance(new, str) or not MIN_PASSWORD <= len(new) <= MAX_PASSWORD:
+            raise AuthError(f"새 비밀번호는 {MIN_PASSWORD}~{MAX_PASSWORD}자여야 합니다.")
+        if new.strip().lower() == user.username.lower():
+            raise AuthError("비밀번호를 아이디와 다르게 정해 주세요.")
+        if new == current:
+            raise AuthError("새 비밀번호가 지금 비밀번호와 같습니다.")
+        with self.db.connect() as conn:
+            conn.execute("UPDATE users SET password_hash = ? WHERE id = ?", (hash_password(new), user.id))
+            conn.execute("DELETE FROM sessions WHERE user_id = ?", (user.id,))
+        return self._new_session(user)
+
+    def delete_account(self, user: User, password: str, address: str = "") -> None:
+        """계정과 그 사람의 세션·프로젝트·버전·공유·자동 저장본을 지운다 (외래키 CASCADE).
+        **그 사람이 소유한 프로젝트는 공유받은 사람에게서도 사라진다** - 화면이 미리 알린다."""
+        self._recheck(user, password, address)
+        with self.db.connect() as conn:
+            conn.execute("DELETE FROM users WHERE id = ?", (user.id,))
+
+    def owned_shared_count(self, user: User) -> int:
+        """지우면 다른 사람에게서도 사라질 프로젝트 수 (내가 소유했고 공유한 것)."""
+        with self.db.connect() as conn:
+            return conn.execute(
+                """
+                SELECT COUNT(DISTINCT p.id) FROM workspace_projects p
+                JOIN workspace_members m ON m.project_id = p.id WHERE p.owner_id = ?
+                """,
+                (user.id,),
+            ).fetchone()[0]

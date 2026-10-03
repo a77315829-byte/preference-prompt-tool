@@ -186,3 +186,92 @@ def test_same_site_requests_through_a_dev_proxy_pass(server) -> None:
     status, _, _ = _post(server, "/api/auth/login", {"username": "alice", "password": "correct-horse-1"},
                          headers={"Origin": "https://evil.example", "X-Forwarded-Host": "localhost:5175"})
     assert status == 403
+
+
+# --- 계정 관리: 비밀번호 변경 · 탈퇴 ------------------------------------------------
+
+
+def test_change_password_revokes_every_session_and_issues_a_new_one(service) -> None:
+    user, phone = service.signup("alice", "correct-horse-1")
+    _, laptop = service.login("alice", "correct-horse-1")
+    new_token = service.change_password(user, "correct-horse-1", "battery-staple-2")
+    assert service.user_for(phone) is None and service.user_for(laptop) is None
+    assert service.user_for(new_token) == user
+    with pytest.raises(AuthError):
+        service.login("alice", "correct-horse-1")
+    assert service.login("alice", "battery-staple-2")[0] == user
+
+
+@pytest.mark.parametrize("current, new, message", [
+    ("wrong-password", "battery-staple-2", "지금 비밀번호"),
+    ("correct-horse-1", "short", "새 비밀번호"),
+    ("correct-horse-1", "correct-horse-1", "같습니다"),
+    ("correct-horse-1", "ALICE", "새 비밀번호"),
+])
+def test_change_password_rejects_bad_requests(service, current, new, message) -> None:
+    user, token = service.signup("alice", "correct-horse-1")
+    with pytest.raises(AuthError, match=message):
+        service.change_password(user, current, new)
+    assert service.user_for(token) == user  # 실패하면 세션도 그대로
+
+
+def test_password_recheck_counts_toward_lockout(db) -> None:
+    now = [1000.0]
+    service = AuthService(db, FailureLimiter(clock=lambda: now[0]))
+    user, _ = service.signup("alice", "correct-horse-1")
+    for _ in range(auth.MAX_FAILS_PER_USERNAME):
+        with pytest.raises(AuthError):
+            service.change_password(user, "guess-guess-1", "battery-staple-2")
+    with pytest.raises(TooManyAttempts):
+        service.delete_account(user, "correct-horse-1")
+
+
+def test_delete_account_removes_user_data_and_reports_shared_projects(service, db) -> None:
+    from prompt_workspace.examples import synthetic_cost
+    from prompt_workspace.models import new_project
+    from prompt_workspace.store import ProjectStore
+
+    alice, alice_token = service.signup("alice", "correct-horse-1")
+    bob, _ = service.signup("bob", "bob-password-1")
+    store = ProjectStore(db)
+    project = new_project("공유한 것", synthetic_cost.SAMPLE_DESCRIPTION)
+    project["requirements"] = synthetic_cost.sample_requirements()
+    store.save(alice.id, project)
+    store.share(alice.id, project["id"], "bob", "viewer")
+    assert service.owned_shared_count(alice) == 1
+
+    with pytest.raises(AuthError):
+        service.delete_account(alice, "wrong-password")
+    service.delete_account(alice, "correct-horse-1")
+
+    assert service.user_for(alice_token) is None
+    assert store.list(bob.id) == []  # 소유자가 탈퇴하면 공유받은 사람에게서도 사라진다
+    with db.connect() as conn:
+        for table in ("users", "sessions", "workspace_projects", "workspace_versions", "workspace_members"):
+            rows = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+            assert rows == (1 if table in ("users", "sessions") else 0), table
+    # 같은 아이디로 다시 가입할 수 있다.
+    service.signup("alice", "new-life-12345")
+
+
+def test_account_routes_over_http(server) -> None:
+    status, headers, _ = _post(server, "/api/auth/signup", {"username": "alice", "password": "correct-horse-1"})
+    cookie = headers["Set-Cookie"].split(";")[0]
+
+    assert _post(server, "/api/auth/password", {"current": "x", "new": "y"})[0] == 401  # 로그인 없이
+    status, _, body = _post(server, "/api/auth/password", {"current": "wrong-pass", "new": "battery-staple-2"},
+                            headers={"Cookie": cookie})
+    assert status == 400 and "지금 비밀번호" in body["error"]
+    status, headers, _ = _post(server, "/api/auth/password",
+                               {"current": "correct-horse-1", "new": "battery-staple-2"}, headers={"Cookie": cookie})
+    assert status == 200
+    new_cookie = headers["Set-Cookie"].split(";")[0]
+    assert new_cookie != cookie
+    # 옛 쿠키는 더는 통하지 않는다.
+    assert _post(server, "/api/auth/delete", {"password": "battery-staple-2"}, headers={"Cookie": cookie})[0] == 401
+
+    status, headers, body = _post(server, "/api/auth/delete", {"password": "battery-staple-2"},
+                                  headers={"Cookie": new_cookie})
+    assert status == 200 and body["user"] is None and "Max-Age=0" in headers["Set-Cookie"]
+    status, _, _ = _post(server, "/api/auth/login", {"username": "alice", "password": "battery-staple-2"})
+    assert status == 400

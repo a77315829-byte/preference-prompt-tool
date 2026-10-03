@@ -14,3 +14,7 @@ export const fetchMe = () => request('/me');
 export const login = (username, password) => request('/login', { username, password });
 export const signup = (username, password) => request('/signup', { username, password });
 export const logout = () => request('/logout', {});
+
+// 둘 다 지금 비밀번호를 다시 받는다. 비밀번호를 바꾸면 다른 기기의 로그인도 모두 끊긴다.
+export const changePassword = (current, next) => request('/password', { current, new: next });
+export const deleteAccount = (password) => request('/delete', { password });
