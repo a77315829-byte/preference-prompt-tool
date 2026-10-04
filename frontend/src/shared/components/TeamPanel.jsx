@@ -84,10 +84,8 @@ function TeamPanel({ sessionId, valueLabel = (axis, value) => value }) {
                   ? ` — 모두 같음: ${valueLabel(a.axis, a.team_value)}`
                   : ` — 합의 필요: ${Object.entries(a.votes).map(([v, n]) => `${valueLabel(a.axis, v)} ${n}명`).join(', ')}${
                     a.tied
-                      ? ` (동률이라 팀이 정해야 합니다. 지금 팀 프롬프트는 임시로 ${valueLabel(a.axis, a.team_value)})`
-                      : a.team_value === Object.keys(a.votes)[0]
-                        ? ` (팀 프롬프트는 다수 쪽 ${valueLabel(a.axis, a.team_value)})`
-                        : ` (모두의 비교를 합친 결과 팀 프롬프트는 ${valueLabel(a.axis, a.team_value)})`}`}
+                      ? ` (동률이라 팀이 정해야 합니다. 지금 팀 프롬프트는 선호가 조금 더 기운 쪽인 ${valueLabel(a.axis, a.team_value)})`
+                      : ` (팀 프롬프트는 다수 쪽 ${valueLabel(a.axis, a.team_value)} - 한 사람 한 표)`}`}
               </li>
             ))}
           </ul>

@@ -53,6 +53,20 @@ def test_team_merges_everyone_and_flags_disagreement() -> None:
     assert {a.axis: a.tied for a in pair}["code_structure"] is True
 
 
+def test_every_member_weighs_the_same_however_many_comparisons_they_made() -> None:
+    """예전에는 모든 비교를 한 추정기에 넣어서, 같은 쪽을 여러 번 고른 한 사람이 두
+    사람의 반대 선택을 이길 수 있었다. 사람마다 자기 추정을 내고 같은 무게로 합친다."""
+    domain = load_domain("domains/coding.yaml")
+    a = {"code_structure": "compact", "style_management": "theme", "type_detail": "explicit"}
+    b = {**a, "code_structure": "separated"}
+    heavy = team.Member("많이 고른 사람", [(a, b, "a")] * 12)   # compact 를 12번
+    light = [team.Member(n, [(a, b, "b")]) for n in ("지은", "현우")]  # separated 를 각 1번
+    estimator, agreements = team.summarize(domain, [heavy, *light])
+    assert estimator.preferred_value("code_structure") == "separated"
+    split = {x.axis: x for x in agreements}["code_structure"]
+    assert split.votes == {"separated": 2, "compact": 1} and split.team_value == "separated"
+
+
 @pytest.fixture
 def db(tmp_path) -> Database:
     return Database(tmp_path / "app.db")

@@ -137,6 +137,9 @@ class SessionState:
     # 템플릿 라이브러리에서 "내 방식으로 바꾸기"로 시작했으면 그 id. 결과는
     # 템플릿 본문 + 추정한 선호 절이 된다.
     template_id: str | None = None
+    # 시작할 때 정한 최대 질문 수. 물을 게 없어 일찍 끝나면 total_rounds 가 줄어드는데,
+    # "이전 선택 수정"으로 되돌릴 때 이 값으로 되돌린다.
+    round_limit: int | None = None
 
     @property
     def round(self) -> int:
@@ -259,6 +262,7 @@ def start_session(
     # 물을 수 있는 질문이 그보다 적으면 그만큼만 묻는다. 코딩(값 2개짜리 축
     # 3개)은 3번이면 선호가 다 정해지는데, 8번을 채우느라 같은 질문이 나왔다.
     state.total_rounds = min(total_rounds, selector.max_questions())
+    state.round_limit = state.total_rounds
     combo_a, combo_b = selector.next_pair(estimator)
     state.pair = _generate_pair(state, domain, combo_a, combo_b)
     state.axes = _axis_views(state, estimator)
@@ -272,8 +276,8 @@ def submit_choice(state: SessionState, pair_id: str, chosen: str) -> SessionStat
     이전 쌍의 선택이 늦게 도착하면, 그걸 그대로 받으면 엉뚱한 비교가
     이력에 들어간다.
     """
-    if chosen not in ("a", "b"):
-        raise ValueError(f"chosen 은 'a' 또는 'b' 여야 한다: {chosen!r}")
+    if chosen not in ("a", "b", "tie"):
+        raise ValueError(f"chosen 은 'a', 'b', 'tie'(비슷함) 중 하나여야 한다: {chosen!r}")
     if state.pair is None:
         # 끝난 세션에 늦게 도착한 선택도 만료로 다룬다. 호출하는 쪽이
         # 두 예외를 구분해 처리하게 만들 이유가 없다.
@@ -304,6 +308,35 @@ def submit_choice(state: SessionState, pair_id: str, chosen: str) -> SessionStat
         updated.done = True
         return updated
     combo_a, combo_b = pair
+    updated.pair = _generate_pair(updated, domain, combo_a, combo_b)
+    return updated
+
+
+def undo_choice(state: SessionState) -> SessionState:
+    """마지막 선택을 지우고 그 질문으로 돌아간다.
+
+    앱 선택기는 같은 질문을 다시 묻지 않아서, 잘못 누른 한 번이 그대로 굳는다 - 가상
+    사용자 실험에서 클릭 10% 를 잘못 누르면 정확 복원이 100% 에서 66% 로 떨어졌다
+    (experiments/estimator_ablation.py). 이력에서 하나를 빼고 재생하면 선택기의 난수까지
+    그때 상태로 돌아가 같은 질문이 다시 나온다. 끝난 세션이면 다시 열고, 만든 프롬프트와
+    최적화 결과는 버린다 (선호가 바뀌므로)."""
+    if not state.history:
+        raise ValueError("되돌릴 선택이 없습니다.")
+    if state.optimize_status == "running":
+        raise ValueError("최적화가 도는 중에는 선택을 되돌릴 수 없습니다.")
+    updated = replace(
+        state,
+        history=state.history[:-1],
+        pair=None,
+        done=False,
+        prompt=None,
+        optimize_status="idle",
+        optimize_progress=0.0,
+        total_rounds=state.round_limit or state.total_rounds,
+    )
+    domain, estimator, selector = _rebuild(updated)
+    updated.axes = _axis_views(updated, estimator)
+    combo_a, combo_b = selector.next_pair(estimator)
     updated.pair = _generate_pair(updated, domain, combo_a, combo_b)
     return updated
 

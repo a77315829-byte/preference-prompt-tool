@@ -17,7 +17,7 @@ from engine.domain_loader import Domain
 class Comparison:
     combo_a: dict[str, str]
     combo_b: dict[str, str]
-    winner: str  # "a" 또는 "b"
+    winner: str  # "a", "b", 또는 "tie" (두 후보가 비슷하다)
 
 
 class Estimator:
@@ -31,6 +31,11 @@ class Estimator:
         self.history: list[Comparison] = []
 
     def update(self, comparison: Comparison) -> None:
+        """한 비교를 반영한다. tie 는 "반쯤 이김"으로 다룬다 - 목표 확률을 0.5 로 두어
+        두 값의 효용을 서로 가깝게 당긴다 (Bradley-Terry 에서 무승부를 다루는 흔한 근사).
+        효용이 같을 때의 tie 는 아무것도 바꾸지 않는다."""
+        if comparison.winner not in ("a", "b", "tie"):
+            raise ValueError(f"winner 는 'a', 'b', 'tie' 중 하나여야 한다: {comparison.winner!r}")
         self.history.append(comparison)
         for axis in self._enum_axes:
             value_a = comparison.combo_a.get(axis.name)
@@ -40,7 +45,8 @@ class Estimator:
 
             u = self.utilities[axis.name]
             p_a_wins = 1.0 / (1.0 + math.exp(-(u[value_a] - u[value_b])))
-            grad = (1.0 - p_a_wins) if comparison.winner == "a" else -p_a_wins
+            target = {"a": 1.0, "b": 0.0, "tie": 0.5}[comparison.winner]
+            grad = target - p_a_wins
             u[value_a] += self.learning_rate * grad
             u[value_b] -= self.learning_rate * grad
 
@@ -49,7 +55,12 @@ class Estimator:
         return max(utilities, key=utilities.get)
 
     def confidence(self, axis_name: str) -> float:
-        """softmax 분포가 얼마나 뾰족한지 (1 - 정규화 엔트로피). 1이면 확신, 0이면 무지."""
+        """softmax 분포가 얼마나 뾰족한지 (1 - 정규화 엔트로피). 1이면 확신, 0이면 무지.
+
+        **확률이 아니다.** "사용자의 선호가 이 값일 확률"(사후확률)이 아니라, 추정한
+        효용이 한 값으로 얼마나 쏠렸는지를 재는 상대 지표다. 그래서 축끼리 가중치를
+        비교하는 데(metric_builder)만 쓰고 사용자에게 보여 주지 않는다 - 값이 3개인
+        축은 24번 물어도 0.06 근처에 머물면서 선호는 정확히 복원한다 (CLAUDE.md 보너스 3)."""
         values = list(self.utilities[axis_name].values())
         k = len(values)
         if k <= 1:

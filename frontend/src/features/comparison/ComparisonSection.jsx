@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { buildCodingPrompt, buildPreferencePrompt, codingComparisonAxes, otherComparisonAxes } from './comparisonData';
-import { fetchHealth, fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice } from './codingApi';
+import { fetchHealth, fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice, undoPreferenceChoice } from './codingApi';
 import ExportPanel from '../../shared/components/ExportPanel';
 import TeamPanel from '../../shared/components/TeamPanel';
 import PromptLanguageSwitch from '../../shared/components/PromptLanguageSwitch';
@@ -207,6 +207,20 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
     setAnswers((currentAnswers) => ({ ...currentAnswers, [axisId]: optionId }));
   };
 
+  // 마지막 선택 되돌리기. 결과 화면에서 누르면 프롬프트가 사라지고 마지막 질문으로 돌아간다.
+  const handleUndo = async () => {
+    setConnection('submitting');
+    try {
+      const { session } = await undoPreferenceChoice(remoteSession.session_id);
+      setRemoteSession(session);
+      setCopied(false);
+      setPromptLanguage(null);
+      setConnection('connected');
+    } catch {
+      setConnection('offline');
+    }
+  };
+
   const optimizeStatus = remoteSession?.optimize_status || 'idle';
   const canOptimize = isRemote && isComplete && remoteSession.demo_mode === false;
 
@@ -347,6 +361,19 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
                   </button>
                 ))}
               </div>
+              {isRemote && (
+                <div className="comparison-secondary-actions">
+                  <button type="button" className="prompt-reset-button" disabled={connection === 'submitting'}
+                    onClick={() => handleOptionSelect(currentAxis.id, 'tie')}>
+                    비슷해요 · 고르기 어려워요
+                  </button>
+                  <button type="button" className="prompt-reset-button"
+                    disabled={connection === 'submitting' || !remoteSession.answered}
+                    onClick={handleUndo}>
+                    ← 이전 선택 수정
+                  </button>
+                </div>
+              )}
             </motion.div>
           )}
 
@@ -416,6 +443,11 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
                 {canOptimize && optimizeStatus !== 'running' && optimizeStatus !== 'done' && (
                   <button className="prompt-reset-button" type="button" onClick={handleOptimize}>
                     선호 기준으로 최적화 (GEPA, 1~2분)
+                  </button>
+                )}
+                {isRemote && optimizeStatus !== 'running' && (
+                  <button className="prompt-reset-button" type="button" onClick={handleUndo}>
+                    ← 마지막 선택 수정
                   </button>
                 )}
                 <button className="prompt-reset-button" type="button" onClick={onBack}>

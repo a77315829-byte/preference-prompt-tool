@@ -21,6 +21,7 @@ Streamlit 을 import 하지 않는다 (`service.py`, `exporters.py` 와 같은 �
 from __future__ import annotations
 
 import json
+import math
 import re
 from collections import Counter
 from dataclasses import dataclass
@@ -178,11 +179,37 @@ class AxisAgreement:
     tied: bool = False
 
 
+def _equal_weight_team(domain: Domain, personal: list[Estimator]) -> Estimator:
+    """팀원마다 한 표. 축마다 각자의 1위 값으로 다수결하고, 동률이면 사람마다 같은
+    무게로 평균한 값별 확률(softmax)이 큰 쪽을 고른다.
+
+    예전에는 모든 비교를 한 추정기에 넣어서, 같은 쪽을 여러 번 고른 한 사람이 다른 두
+    사람을 이길 수 있었다. 확률을 평균하는 것만으로는 부족했다 - 같은 쪽을 12번 고른
+    사람은 0.99 로 확신하고 1번 고른 사람은 0.62 라, 여전히 한 사람이 둘을 이긴다.
+    돌려주는 추정기의 효용은 (표 수 + 평균 확률) 이라 1위가 다수결 결과가 된다
+    (평균 확률은 1 보다 작으므로 표 수가 같을 때만 순서를 가른다)."""
+    team_estimator = Estimator(domain)
+    for axis in team_estimator.enum_axis_names():
+        values = list(team_estimator.utilities[axis])
+        votes = dict.fromkeys(values, 0)
+        mean = dict.fromkeys(values, 0.0)
+        for estimator in personal:
+            votes[estimator.preferred_value(axis)] += 1
+            utilities = estimator.utilities[axis]
+            top = max(utilities.values())
+            exps = {v: math.exp(utilities[v] - top) for v in values}
+            total = sum(exps.values())
+            for v in values:
+                mean[v] += exps[v] / total / len(personal)
+        team_estimator.utilities[axis] = {v: votes[v] + mean[v] for v in values}
+    return team_estimator
+
+
 def summarize(domain: Domain, members: list[Member]) -> tuple[Estimator, list[AxisAgreement]]:
-    """모든 팀원의 비교를 한 추정기에 넣은 팀 추정과, 축마다 사람들이 어떻게
-    갈렸는지. 사람별 1위는 각자의 기록만으로 따로 추정한다."""
-    team_estimator = _estimator(domain, [m.history for m in members])
+    """팀 추정과, 축마다 사람들이 어떻게 갈렸는지. 사람별 1위는 각자의 기록만으로
+    따로 추정하고, 팀 추정은 그 사람들을 같은 무게로 합친다 (비교 횟수와 무관하게)."""
     personal = [_estimator(domain, [m.history]) for m in members]
+    team_estimator = _equal_weight_team(domain, personal)
     agreements = []
     for axis in team_estimator.enum_axis_names():
         votes = Counter(e.preferred_value(axis) for e in personal)

@@ -34,6 +34,12 @@ export function submitPreferenceChoice(sessionId, pairId, chosen) {
   });
 }
 
+// 마지막 선택을 지우고 그 질문으로 돌아간다. 앱은 같은 질문을 다시 묻지 않으므로
+// 잘못 누른 선택은 이것으로만 고칠 수 있다. 후보는 캐시에 있어 모델을 다시 부르지 않는다.
+export function undoPreferenceChoice(sessionId) {
+  return request(`/sessions/${sessionId}/undo`, { method: 'POST', body: '{}' });
+}
+
 // GEPA 최적화는 수십 초 걸린다. 시작만 요청하고, 진행률과 결과는
 // fetchSession 으로 폴링해 session.optimize_status/optimize_progress/prompt 에서 읽는다.
 export function startOptimization(sessionId) {

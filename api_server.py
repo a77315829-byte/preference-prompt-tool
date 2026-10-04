@@ -773,6 +773,9 @@ class ApiHandler(BaseHTTPRequestHandler):
             if path.startswith("/api/sessions/") and path.endswith("/optimize"):
                 self._start_optimize(path.split("/")[3])
                 return
+            if path.startswith("/api/sessions/") and path.endswith("/undo"):
+                self._undo_choice(path.split("/")[3])
+                return
             if path.startswith("/api/sessions/") and path.endswith("/choices"):
                 session_id = path.split("/")[3]
                 self._submit_choice(session_id, body)
@@ -861,6 +864,20 @@ class ApiHandler(BaseHTTPRequestHandler):
             updated = service.submit_choice(replace(state, demo_mode=True), pair_id, chosen)
         with SESSIONS_LOCK:
             SESSIONS[session_id] = updated
+        self._send(200, {"session": _state_payload(updated)})
+
+    def _undo_choice(self, session_id: str) -> None:
+        """마지막 선택을 되돌린다. 후보는 캐시에 있으므로 모델을 다시 부르지 않는다
+        (실제 생성 모드에서도 같은 프롬프트·원문이라 캐시를 탄다)."""
+        with SESSIONS_LOCK:
+            state = SESSIONS.get(session_id)
+        if state is None:
+            self._send(404, {"error": "세션을 찾을 수 없습니다."})
+            return
+        updated = service.undo_choice(state)
+        with SESSIONS_LOCK:
+            SESSIONS[session_id] = updated
+            OPTIMIZE_REPORTS.pop(session_id, None)
         self._send(200, {"session": _state_payload(updated)})
 
     def _join_team(self, code: str, body: dict[str, Any]) -> None:

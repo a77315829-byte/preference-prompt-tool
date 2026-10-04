@@ -2438,3 +2438,21 @@
 .prompt-language-switch + .prompt-box {
   margin-top: 0.6rem;
 }
+
+/* 비교 화면의 보조 버튼: "비슷해요"와 "이전 선택 수정". 두 후보 아래에 작게 둔다. */
+.comparison-secondary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.comparison-secondary-actions .prompt-reset-button {
+  padding: 0.55rem 0.95rem;
+  font-size: 0.85rem;
+}
+
+.comparison-secondary-actions .prompt-reset-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
