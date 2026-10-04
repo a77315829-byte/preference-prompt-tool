@@ -2,6 +2,7 @@
 .env
 data/
 cache/
+experiments/results/runs/
 __pycache__/
 *.pyc
 

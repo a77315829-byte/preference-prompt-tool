@@ -104,7 +104,7 @@ V3_SUMMARY = RESULTS / "heldout_comparison_summarization_v3.json"
 V3_GATE = RESULTS / "length_v3_compliance.json"
 
 
-def test_v3_word_count_instructions_pass_the_gate_and_the_criterion() -> None:
+def test_v3_word_count_instructions_pass_gate_but_not_rouge_criterion() -> None:
     """4단계 (나). 관문(출력 비율이 사람 중앙값 ±3%p)을 통과했고, 30쌍에서 D 의 ROUGE-L 은
     올랐지만 등록한 기준(p<0.05)에는 못 미쳤다 - 그 상태를 고정한다."""
     if not V3_SUMMARY.exists():
@@ -122,10 +122,12 @@ def test_v3_word_count_instructions_pass_the_gate_and_the_criterion() -> None:
 QWEN_SUMMARY = RESULTS / "heldout_comparison_summarization_v3_qwen2.5-7b.json"
 
 
-def test_fair_bplus_on_a_local_model_is_indistinguishable_from_d() -> None:
-    """5단계: B+ 에도 단어 수 지시를 주면 D 와 구분되지 않는다 (qwen2.5 7B, 비용 0)."""
-    if not QWEN_SUMMARY.exists():
-        pytest.skip("결과 파일이 없다")
+def test_fair_bplus_on_a_local_model_does_not_establish_d_superiority() -> None:
+    """5단계: 유의한 우위를 확인하지 못했다. 동등성을 검정한 결과는 아니다."""
+    from experiments.validate_heldout_results import validate_result_files
+    report = validate_result_files(QWEN_SUMMARY.with_suffix(".csv"), QWEN_SUMMARY,
+                                  RESULTS / "length_v3_compliance_qwen2.5-7b.json")
+    assert report["target_counts"]["extractiveness"] == {"normal": 30}
     summary = json.loads(QWEN_SUMMARY.read_text(encoding="utf-8"))
     assert summary["model"] == "ollama/qwen2.5:7b" and summary["n"] == 30 and summary["spend_dollars"] == 0
     fair = summary["paired"]["rouge_l: D_our_tool vs B_plus_word_count"]
