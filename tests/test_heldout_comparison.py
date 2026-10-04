@@ -117,3 +117,19 @@ def test_v3_word_count_instructions_pass_the_gate_and_the_criterion() -> None:
     vs = summary["D_vs_baseline_D"]
     assert (vs["wins"], vs["losses"]) == (20, 10) and 0.05 < vs["sign_test_p"] < 0.1
     assert summary["spend_dollars"] < 0.1
+
+
+QWEN_SUMMARY = RESULTS / "heldout_comparison_summarization_v3_qwen2.5-7b.json"
+
+
+def test_fair_bplus_on_a_local_model_is_indistinguishable_from_d() -> None:
+    """5단계: B+ 에도 단어 수 지시를 주면 D 와 구분되지 않는다 (qwen2.5 7B, 비용 0)."""
+    if not QWEN_SUMMARY.exists():
+        pytest.skip("결과 파일이 없다")
+    summary = json.loads(QWEN_SUMMARY.read_text(encoding="utf-8"))
+    assert summary["model"] == "ollama/qwen2.5:7b" and summary["n"] == 30 and summary["spend_dollars"] == 0
+    fair = summary["paired"]["rouge_l: D_our_tool vs B_plus_word_count"]
+    assert (fair["wins"], fair["losses"]) == (18, 12) and fair["sign_test_p"] > 0.05
+    assert summary["paired"]["rouge_l: D_our_tool vs A_no_prompt"]["sign_test_p"] < 0.05
+    gate = json.loads((RESULTS / "length_v3_compliance_qwen2.5-7b.json").read_text(encoding="utf-8"))
+    assert gate["gate"]["passed"] is True

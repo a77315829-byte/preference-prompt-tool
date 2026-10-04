@@ -1,0 +1,135 @@
+{
+  "n": 30,
+  "means": {
+    "length_ratio": {
+      "A_no_prompt": 0.7752,
+      "B_custom_instruction": 0.3444,
+      "B_plus_knows_preference": 0.2658,
+      "D_our_tool": 0.1047,
+      "B_plus_word_count": 0.1082
+    },
+    "checks_score": {
+      "A_no_prompt": 0.6739,
+      "B_custom_instruction": 0.7164,
+      "B_plus_knows_preference": 0.8423,
+      "D_our_tool": 0.9043,
+      "B_plus_word_count": 0.9754
+    },
+    "rouge_l": {
+      "A_no_prompt": 0.1199,
+      "B_custom_instruction": 0.1723,
+      "B_plus_knows_preference": 0.1942,
+      "D_our_tool": 0.2076,
+      "B_plus_word_count": 0.2029
+    }
+  },
+  "paired": {
+    "checks_score: D_our_tool vs B_custom_instruction": {
+      "wins": 18,
+      "losses": 5,
+      "ties": 7,
+      "mean_diff": 0.1878,
+      "sign_test_p": 0.0106
+    },
+    "checks_score: D_our_tool vs B_plus_knows_preference": {
+      "wins": 11,
+      "losses": 10,
+      "ties": 9,
+      "mean_diff": 0.062,
+      "sign_test_p": 1.0
+    },
+    "checks_score: B_plus_knows_preference vs B_custom_instruction": {
+      "wins": 14,
+      "losses": 2,
+      "ties": 14,
+      "mean_diff": 0.1258,
+      "sign_test_p": 0.0042
+    },
+    "checks_score: D_our_tool vs A_no_prompt": {
+      "wins": 19,
+      "losses": 3,
+      "ties": 8,
+      "mean_diff": 0.2303,
+      "sign_test_p": 0.0009
+    },
+    "checks_score: D_our_tool vs B_plus_word_count": {
+      "wins": 7,
+      "losses": 13,
+      "ties": 10,
+      "mean_diff": -0.0711,
+      "sign_test_p": 0.2632
+    },
+    "checks_score: B_plus_word_count vs B_plus_knows_preference": {
+      "wins": 15,
+      "losses": 4,
+      "ties": 11,
+      "mean_diff": 0.1331,
+      "sign_test_p": 0.0192
+    },
+    "checks_score: B_plus_word_count vs B_custom_instruction": {
+      "wins": 20,
+      "losses": 3,
+      "ties": 7,
+      "mean_diff": 0.259,
+      "sign_test_p": 0.0005
+    },
+    "rouge_l: D_our_tool vs B_custom_instruction": {
+      "wins": 18,
+      "losses": 12,
+      "ties": 0,
+      "mean_diff": 0.0354,
+      "sign_test_p": 0.3616
+    },
+    "rouge_l: D_our_tool vs B_plus_knows_preference": {
+      "wins": 15,
+      "losses": 15,
+      "ties": 0,
+      "mean_diff": 0.0134,
+      "sign_test_p": 1.0
+    },
+    "rouge_l: B_plus_knows_preference vs B_custom_instruction": {
+      "wins": 21,
+      "losses": 9,
+      "ties": 0,
+      "mean_diff": 0.022,
+      "sign_test_p": 0.0428
+    },
+    "rouge_l: D_our_tool vs A_no_prompt": {
+      "wins": 25,
+      "losses": 5,
+      "ties": 0,
+      "mean_diff": 0.0878,
+      "sign_test_p": 0.0003
+    },
+    "rouge_l: D_our_tool vs B_plus_word_count": {
+      "wins": 18,
+      "losses": 12,
+      "ties": 0,
+      "mean_diff": 0.0047,
+      "sign_test_p": 0.3616
+    },
+    "rouge_l: B_plus_word_count vs B_plus_knows_preference": {
+      "wins": 16,
+      "losses": 14,
+      "ties": 0,
+      "mean_diff": 0.0087,
+      "sign_test_p": 0.8555
+    },
+    "rouge_l: B_plus_word_count vs B_custom_instruction": {
+      "wins": 18,
+      "losses": 12,
+      "ties": 0,
+      "mean_diff": 0.0306,
+      "sign_test_p": 0.3616
+    }
+  },
+  "model": "ollama/qwen2.5:7b",
+  "split": "data\\macsum\\dataset\\macdoc\\test.json",
+  "n_rounds": 8,
+  "seed": 0,
+  "learned_exact_rate": 0.2,
+  "spend_dollars": 0.0,
+  "model_calls": 316,
+  "stopped": null,
+  "domain": "summarization_v3"
+}

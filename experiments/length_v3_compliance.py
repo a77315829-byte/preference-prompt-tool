@@ -33,17 +33,23 @@ OUT = Path("experiments/results/length_v3_compliance.json")
 
 
 def main() -> int:
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model", default=MODEL, help="예: ollama/qwen2.5:7b")
+    args = parser.parse_args()
+    model = args.model
+    out = OUT if model == MODEL else OUT.with_name(f"length_v3_compliance_{model.split('/')[-1].replace(':', '-')}.json")
     spend = Spend()
     litellm.success_callback = [spend]
     docs = [p["learn_source"] for p in pick_personas(30)[:N_DOCS]]
-    result: dict = {"n_docs": N_DOCS, "human_median": HUMAN, "tolerance": TOLERANCE, "median_ratio": {}}
+    result: dict = {"model": model, "n_docs": N_DOCS, "human_median": HUMAN, "tolerance": TOLERANCE, "median_ratio": {}}
     for name, path in DOMAINS.items():
         domain = load_domain(path)
         ratios = {v: [] for v in HUMAN}
         for source in docs:
             for value in HUMAN:
-                out = generate(domain, source, {"length": value, "extractiveness": "normal", "topic": ""}, MODEL)
-                ratios[value].append(length_ratio(out, source))
+                text = generate(domain, source, {"length": value, "extractiveness": "normal", "topic": ""}, model)
+                ratios[value].append(length_ratio(text, source))
         result["median_ratio"][name] = {v: round(statistics.median(r), 4) for v, r in ratios.items()}
 
     v3 = result["median_ratio"]["v3"]
@@ -52,7 +58,7 @@ def main() -> int:
     result["gate"] = {"within_tolerance": within, "ordered": ordered, "passed": within and ordered}
     result["spend_dollars"] = round(spend.dollars, 4)
     result["model_calls"] = spend.calls
-    OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 

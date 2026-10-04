@@ -1,0 +1,34 @@
+{
+  "model": "ollama/qwen2.5:7b",
+  "n_docs": 12,
+  "human_median": {
+    "short": 0.053,
+    "normal": 0.103,
+    "long": 0.154
+  },
+  "tolerance": 0.03,
+  "median_ratio": {
+    "v1": {
+      "short": 0.0576,
+      "normal": 0.1106,
+      "long": 0.2211
+    },
+    "v2": {
+      "short": 0.0862,
+      "normal": 0.1248,
+      "long": 0.1395
+    },
+    "v3": {
+      "short": 0.0531,
+      "normal": 0.0965,
+      "long": 0.1532
+    }
+  },
+  "gate": {
+    "within_tolerance": true,
+    "ordered": true,
+    "passed": true
+  },
+  "spend_dollars": 0.0,
+  "model_calls": 108
+}

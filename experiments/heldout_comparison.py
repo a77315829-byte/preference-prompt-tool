@@ -66,6 +66,15 @@ COMPARISONS = (
     ("B_plus_knows_preference", "B_custom_instruction"),
     ("D_our_tool", "A_no_prompt"),
 )
+# 5단계 (docs/length_v2_preregistration.md): B+ 에도 D(v3) 와 같은 방식의 단어 수를 준다.
+# 비율은 v3 와 같은 topic 없는 사람 요약의 train 중앙값.
+FAIR_BPLUS = "B_plus_word_count"
+FAIR_BPLUS_RATIOS = {"short": 0.053, "normal": 0.103, "long": 0.154}
+FAIR_COMPARISONS = (
+    ("D_our_tool", FAIR_BPLUS),
+    (FAIR_BPLUS, "B_plus_knows_preference"),
+    (FAIR_BPLUS, "B_custom_instruction"),
+)
 
 
 class Spend:
@@ -125,15 +134,23 @@ def pick_personas(n: int) -> list[dict]:
     return personas
 
 
-def learn_prompt(domain, persona: dict) -> tuple[str, dict[str, str]]:
+def build_word_count_prompt(combo: dict, source: str) -> str:
+    """B+ 의 공정한 판: 취향을 아는 사람이 채점 문서 길이로 단어 수를 계산해 적은 지침.
+    문장 수 대신 "about N words" 를 쓰는 것 말고는 B+ 와 같은 문구다."""
+    from experiments.strong_baseline_comparison import EXTRACTIVENESS_PHRASING
+    words = round(FAIR_BPLUS_RATIOS[combo["length"]] * len(source.split()))
+    return f"Summarize the following article in about {words} words, {EXTRACTIVENESS_PHRASING[combo['extractiveness']]}."
+
+
+def learn_prompt(domain, persona: dict, model: str = MODEL) -> tuple[str, dict[str, str]]:
     """학습 문서 X 에서 8회 선택으로 선호를 배우고, 그 선호로 조립한 프롬프트."""
     oracle = Persona(combo=persona["combo"], reference_summary=persona["learn_reference"])
     estimator = Estimator(domain)
     selector = UncertaintySelector(domain, seed=SEED)
     for _ in range(N_ROUNDS):
         combo_a, combo_b = selector.next_pair(estimator)
-        a = generate(domain, persona["learn_source"], combo_a, model=MODEL)
-        b = generate(domain, persona["learn_source"], combo_b, model=MODEL)
+        a = generate(domain, persona["learn_source"], combo_a, model=model)
+        b = generate(domain, persona["learn_source"], combo_b, model=model)
         estimator.update(Comparison(combo_a, combo_b, choose(domain, oracle, a, b, persona["learn_source"])))
     learned = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
     # 지시문에 원문 길이 자리표시자가 있는 도메인(v3)이면 채점 문서 Y 의 길이로 채운다.
@@ -141,15 +158,15 @@ def learn_prompt(domain, persona: dict) -> tuple[str, dict[str, str]]:
     return build_seed_prompt(domain, estimator, source=persona["eval_source"]), learned
 
 
-def summarize(df: pd.DataFrame) -> dict:
+def summarize(df: pd.DataFrame, conditions=CONDITIONS, comparisons=COMPARISONS) -> dict:
     out = {"n": int(df["persona"].nunique()), "means": {}, "paired": {}}
     if "length_ratio" in df:
         pivot = df.pivot(index="persona", columns="condition", values="length_ratio")
-        out["means"]["length_ratio"] = {c: round(float(pivot[c].mean()), 4) for c in CONDITIONS if c in pivot}
+        out["means"]["length_ratio"] = {c: round(float(pivot[c].mean()), 4) for c in conditions if c in pivot}
     for metric in ("checks_score", "rouge_l"):
         pivot = df.pivot(index="persona", columns="condition", values=metric)
-        out["means"][metric] = {c: round(float(pivot[c].mean()), 4) for c in CONDITIONS if c in pivot}
-        for a, b in COMPARISONS:
+        out["means"][metric] = {c: round(float(pivot[c].mean()), 4) for c in conditions if c in pivot}
+        for a, b in comparisons:
             diff = pivot[a] - pivot[b]
             wins, losses = int((diff > 0).sum()), int((diff < 0).sum())
             out["paired"][f"{metric}: {a} vs {b}"] = {
@@ -189,7 +206,11 @@ def main() -> int:
     parser.add_argument("--n", type=int, default=30)
     parser.add_argument("--cap", type=float, default=2.0, help="실제 청구 비용 상한 (달러)")
     parser.add_argument("--domain", default=DEFAULT_DOMAIN)
+    parser.add_argument("--model", default=MODEL, help="예: ollama/qwen2.5:7b (로컬, 비용 0)")
+    parser.add_argument("--fair-bplus", action="store_true", help="단어 수를 받는 B+ 조건을 더한다 (5단계)")
     args = parser.parse_args()
+    conditions = CONDITIONS + ((FAIR_BPLUS,) if args.fair_bplus else ())
+    comparisons = COMPARISONS + (FAIR_COMPARISONS if args.fair_bplus else ())
 
     import litellm
 
@@ -198,9 +219,11 @@ def main() -> int:
 
     domain = load_domain(args.domain)
     out_csv, out_json = OUT_CSV, OUT_JSON
-    if args.domain != DEFAULT_DOMAIN:
-        out_csv = OUT_CSV.with_name(f"heldout_comparison_{domain.name}.csv")
-        out_json = OUT_JSON.with_name(f"heldout_comparison_{domain.name}.json")
+    if args.domain != DEFAULT_DOMAIN or args.model != MODEL:
+        # 다른 모델의 결과는 gpt-4o-mini 결과와 섞이지 않게 파일 이름에 모델을 붙인다.
+        tag = domain.name + ("" if args.model == MODEL else "_" + args.model.split("/")[-1].replace(":", "-"))
+        out_csv = OUT_CSV.with_name(f"heldout_comparison_{tag}.csv")
+        out_json = OUT_JSON.with_name(f"heldout_comparison_{tag}.json")
     personas = pick_personas(args.n)
     print(f"페르소나 {len(personas)}명 (요청 {args.n}), 조합:",
           sorted({(p['combo']['length'], p['combo']['extractiveness']) for p in personas}))
@@ -211,15 +234,16 @@ def main() -> int:
         if spend.dollars >= args.cap:
             stopped = f"비용 상한 ${args.cap} 도달 - {k}번째 페르소나 전에 멈춤"
             break
-        d_prompt, learned = learn_prompt(domain, persona)
+        d_prompt, learned = learn_prompt(domain, persona, args.model)
         prompts = {
             "A_no_prompt": CONDITION_A_PROMPT,
             "B_custom_instruction": CONDITION_B_PROMPT,
             "B_plus_knows_preference": build_strong_direct_prompt(persona["combo"]),
             "D_our_tool": d_prompt,
+            FAIR_BPLUS: build_word_count_prompt(persona["combo"], persona["eval_source"]),
         }
-        for condition in CONDITIONS:
-            output = generate_raw(prompts[condition], persona["eval_source"], MODEL)
+        for condition in conditions:
+            output = generate_raw(prompts[condition], persona["eval_source"], args.model)
             rows.append({
                 "persona": k,
                 "length": persona["combo"]["length"],
@@ -239,14 +263,15 @@ def main() -> int:
         print(f"  {k + 1}/{len(personas)} 완료 · 누적 ${spend.dollars:.4f} ({spend.calls}회 호출)")
 
     df = pd.DataFrame(rows)
-    summary = summarize(df) if len(df) else {"n": 0}
+    summary = summarize(df, conditions, comparisons) if len(df) else {"n": 0}
     summary.update({
-        "model": MODEL, "split": str(SPLIT), "n_rounds": N_ROUNDS, "seed": SEED,
+        "model": args.model, "split": str(SPLIT), "n_rounds": N_ROUNDS, "seed": SEED,
         "learned_exact_rate": round(float(df.drop_duplicates("persona")["learned_exact"].mean()), 4) if len(df) else None,
         "spend_dollars": round(spend.dollars, 4), "model_calls": spend.calls, "stopped": stopped,
     })
     summary["domain"] = domain.name
-    if out_csv != OUT_CSV and OUT_CSV.exists() and len(df):
+    # 기본 결과(gpt-4o-mini)와의 D 비교는 같은 모델일 때만 뜻이 있다.
+    if out_csv != OUT_CSV and args.model == MODEL and OUT_CSV.exists() and len(df):
         summary["D_vs_baseline_D"] = compare_d(df, OUT_CSV)
     out_json.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))
