@@ -9,6 +9,11 @@
 
     type logs.txt | python -m scripts.summarize_feedback
 
+`--json` 을 주면 표 대신 같은 집계를 JSON 하나로 낸다 (모드를 합친 만족률은
+넣지 않는다). 다른 스크립트나 발표 자료가 수치를 읽을 때 쓴다.
+
+    python -m scripts.summarize_feedback --json logs.txt
+
 왜 필요한가: 응답은 한 줄 JSON 으로 로그에 찍힌다(feedback.py). 저장소가
 없어서 그렇게 했고, 사람이 읽을 형태로 되돌리는 것은 이 스크립트 몫이다.
 한글은 로그에서 유니코드 escape 상태이므로 여기서 풀어 보여준다.
@@ -112,9 +117,55 @@ def report(records: list[dict]) -> None:
             print(f"  [{mark}] ({domain}) {comment}")
 
 
+def build_json(records: list[dict]) -> dict:
+    """report() 와 같은 집계를 JSON 으로 낼 dict 로 만든다.
+
+    모드를 합친 만족률은 넣지 않는다. 의견 목록과 답변 개수 분포도 뺀다.
+    """
+    result: dict = dict(responses=len(records), modes={}, api_by_domain={}, expert={})
+    if not records:
+        return result
+
+    summary = summarize(records)
+    for mode in sorted(summary):
+        bucket = summary[mode]
+        result["modes"][mode] = {
+            key: bucket[key] for key in ("total", "yes", "no", "yes_rate")
+        }
+
+    by_domain: dict[str, dict[str, int]] = {}
+    for record in records:
+        if record.get("mode") != "api":
+            continue
+        bucket = by_domain.setdefault(record.get("domain", "unknown"), dict(yes=0, no=0))
+        bucket["yes" if record.get("fits") else "no"] += 1
+    result["api_by_domain"] = dict(sorted(by_domain.items()))
+
+    expert = [r for r in records if r.get("mode") == "expert"]
+    if expert:
+        def answers(r):
+            return r.get("extra", {}).get("answers") or 0
+
+        for key, bucket in (
+            ("under_30", [r for r in expert if answers(r) < 30]),
+            ("30_or_more", [r for r in expert if answers(r) >= 30]),
+        ):
+            yes = sum(1 for r in bucket if r.get("fits"))
+            result["expert"][key] = dict(
+                total=len(bucket),
+                yes=yes,
+                yes_rate=round(yes / len(bucket), 3) if bucket else None,
+            )
+    return result
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("log", nargs="?", help="로그 파일 경로 (없으면 표준 입력)")
+    parser.add_argument(
+        "--json", action="store_true",
+        help="표 대신 같은 집계를 JSON 하나로 표준 출력에 낸다",
+    )
     args = parser.parse_args()
 
     # 로그 파일 인코딩은 환경마다 다를 수 있다. 줄 자체는 ASCII 라서
@@ -124,7 +175,11 @@ def main() -> int:
     else:
         lines = io.TextIOWrapper(sys.stdin.buffer, encoding="utf-8", errors="replace").read().splitlines()
 
-    report(parse_lines(lines))
+    records = parse_lines(lines)
+    if args.json:
+        print(json.dumps(build_json(records), ensure_ascii=False))
+    else:
+        report(records)
     return 0
 
 

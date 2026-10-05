@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { IDLE_COPY_STATE, buttonLabel, copyResult, failedVariant, failureNotice } from './copyStatus.js';
 
 // 만든 프롬프트를 도구별 형식으로 가져가는 곳. 형식은 서버(exporters.py)가
 // 정해서 session.exports 로 보낸다 - 여기서는 복사하거나 파일로 내려받기만 한다.
@@ -17,17 +18,20 @@ function download(filename, content) {
 }
 
 function ExportPanel({ exports }) {
-  const [done, setDone] = useState('');
+  const [copyState, setCopyState] = useState(IDLE_COPY_STATE);
 
   if (!exports?.length) return null;
 
-  const copy = async (key, text) => {
+  // navigator.clipboard 가 없거나(비보안 접속) 쓰기가 거부돼도 같은 실패 경로로 간다.
+  const copy = async (itemKey, variant, text) => {
+    let ok = false;
     try {
       await navigator.clipboard.writeText(text);
-      setDone(key);
+      ok = true;
     } catch {
-      setDone('');
+      ok = false;
     }
+    setCopyState(copyResult(itemKey, variant, ok));
   };
 
   return (
@@ -53,16 +57,28 @@ function ExportPanel({ exports }) {
                   {item.filename} 내려받기
                 </button>
               ) : (
-                <button className="prompt-reset-button" type="button" onClick={() => copy(item.key, item.content)}>
-                  {done === item.key ? '복사했습니다 ✓' : '복사'}
+                <button className="prompt-reset-button" type="button" onClick={() => copy(item.key, 'full', item.content)}>
+                  {buttonLabel(copyState, item.key, 'full')}
                 </button>
               )}
               {item.compact && (
-                <button className="prompt-reset-button" type="button" onClick={() => copy(`${item.key}-compact`, item.compact)}>
-                  {done === `${item.key}-compact` ? '복사했습니다 ✓' : '짧은 판 복사'}
+                <button className="prompt-reset-button" type="button" onClick={() => copy(item.key, 'compact', item.compact)}>
+                  {buttonLabel(copyState, item.key, 'compact')}
                 </button>
               )}
             </div>
+            {failureNotice(copyState, item.key) && (
+              <div className="export-failure">
+                <span className="export-warning" role="alert">{failureNotice(copyState, item.key)}</span>
+                <textarea
+                  readOnly
+                  rows={6}
+                  aria-label={`${item.label} 내용`}
+                  value={failedVariant(copyState, item.key) === 'compact' ? item.compact : item.content}
+                  onFocus={(event) => event.target.select()}
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>

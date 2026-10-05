@@ -50,3 +50,8 @@ jobs:
         run: |
           npm ci --prefix frontend
           npm run build --prefix frontend
+
+      - name: Frontend unit tests
+        # 순수 함수 테스트(*.test.js)를 Node 내장 테스트 도구로 돌린다. 새 의존성이 없다.
+        # 빌드는 이 파일들을 번들에 넣지 않으므로 빌드가 초록이어도 여기서 깨질 수 있다.
+        run: node --test "frontend/src/**/*.test.js"

@@ -1954,6 +1954,34 @@
   color: #b45309;
 }
 
+/* 복사 실패 안내와 직접 선택해 복사할 내용. 항목 아래 한 줄을 다 쓴다. */
+.export-failure {
+  display: flex;
+  flex: 1 1 100%;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.export-failure .export-warning {
+  color: #b45309;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.export-failure textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 7rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e1e6ef;
+  border-radius: 0.6rem;
+  color: #111827;
+  background: #ffffff;
+  font: 0.82rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  resize: vertical;
+}
+
 .export-actions {
   display: flex;
   flex-wrap: wrap;
