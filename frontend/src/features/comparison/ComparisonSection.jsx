@@ -393,6 +393,12 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
                 value={activeLanguage}
                 onChange={(language) => { setPromptLanguage(language); setCopied(false); }}
               />
+              {remoteSession?.undecided_axes?.length > 0 && (
+                <p className="connection-note">
+                  {remoteSession.undecided_axes.map((a) => a.label).join(', ')}은(는) "비슷해요"만 골라 선호를 정하지 못해
+                  프롬프트에 넣지 않았습니다. 넣고 싶으면 "마지막 선택 수정"으로 돌아가 한쪽을 골라 주세요.
+                </p>
+              )}
               <pre className="prompt-box"><code>{prompt}</code></pre>
               {canOptimize && optimizeStatus === 'running' && (
                 <div className="comparison-progress" aria-label="최적화 진행 상황">

@@ -193,7 +193,8 @@ def _axis_views(state: SessionState, estimator: Estimator) -> list[AxisView]:
         views.append(
             AxisView(
                 name=name,
-                estimate=estimator.preferred_value(name) if state.history else None,
+                # 정하지 못한 축은 추정값이 없다 (정의상 첫 값을 추정이라 보여 주지 않는다).
+                estimate=estimator.preferred_value(name) if estimator.has_signal(name) else None,
                 confidence=round(estimator.confidence(name), 4),
                 discriminated=discriminated,
                 total_rounds=state.total_rounds,
@@ -401,7 +402,11 @@ def optimize(
     from gepa.adapters.default_adapter.default_adapter import DefaultAdapter
 
     domain, estimator, _ = _rebuild(state)
-    metric = build_metric(domain, estimator)
+    undecided = undecided_axes(estimator)
+    if len(undecided) == len(estimator.enum_axis_names()):
+        raise ValueError("정한 선호가 하나도 없어 최적화할 기준이 없습니다. 비교에서 한쪽을 골라 주세요.")
+    # 정하지 못한 축은 채점하지 않는다 - 채점하면 최적화가 그 축의 첫 값을 밀어 넣는다.
+    metric = build_metric(domain, estimator, skip_axes=set(undecided))
     # GEPA 는 사용자에게 보여 준 것과 같은 최종 프롬프트에서 출발한다.
     seed_prompt = final_prompt(domain, estimator, template_id=state.template_id, language=language)
     examples = [e for e in domain.example_sources if e != state.source_text.strip()]
@@ -550,8 +555,7 @@ def exports_for_estimate(
     domain: Domain, estimator: Estimator, prompt: str, *, slug_suffix: str = "", language: str | None = None
 ) -> list[exporters.Export]:
     """세션 없이 추정만으로 내보내기를 만든다 (팀 프롬프트가 쓴다)."""
-    combo = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
-    combo.update({axis.name: "" for axis in domain.axes if axis.type != "enum"})
+    combo = final_combo(domain, estimator)
     return exporters.build_exports(
         prompt,
         slug=domain.name + slug_suffix,
@@ -602,13 +606,28 @@ def final_prompt(
     optimize/run_gepa.build_seed_prompt 는 그대로 둔다 - 실험(비교군 D,
     피드백 어블레이션)이 그 짧은 형태로 결과를 냈다.
     """
-    combo = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
-    combo.update({axis.name: "" for axis in domain.axes if axis.type != "enum"})
+    combo = final_combo(domain, estimator)
     if template_id is not None:
         # 템플릿의 과제·규칙은 그대로 두고 선호 절만 붙인다.
         return build_template_prompt(domain, combo, template_library.get(template_id).prompt)
     # "ko" 는 원본 문구다 (prompt_languages 참고).
     return build_final_prompt(domain, combo, team=team, language=None if language in (None, "ko") else language)
+
+
+def undecided_axes(estimator: Estimator) -> list[str]:
+    """선호를 정하지 못한 enum 축 - 효용이 모두 같다 (비교가 없었거나 "비슷하다"만 골랐다).
+    최종 프롬프트와 최적화 채점에서 뺀다. 그 축의 1위는 정의상 첫 값일 뿐이라, 넣으면
+    사용자가 하지 않은 선택을 했다고 적게 된다."""
+    return [name for name in estimator.enum_axis_names() if not estimator.has_signal(name)]
+
+
+def final_combo(domain: Domain, estimator: Estimator) -> dict[str, str]:
+    """최종 프롬프트용 축 값. 정하지 못한 enum 축과 자유 키워드 축은 빈 값(=넣지 않음)."""
+    undecided = set(undecided_axes(estimator))
+    combo = {name: ("" if name in undecided else estimator.preferred_value(name))
+             for name in estimator.enum_axis_names()}
+    combo.update({axis.name: "" for axis in domain.axes if axis.type != "enum"})
+    return combo
 
 
 def load_domain_for(domain_path: str) -> Domain:

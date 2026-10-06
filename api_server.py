@@ -124,6 +124,12 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
         default = languages[0]
         seed = prompts[default]
         payload["prompt_language"] = default
+        # 선호를 정하지 못한 축 ("비슷해요"만 골랐다). 프롬프트에서 빠졌다는 것을 화면이 알린다.
+        labels = domain.final_prompt.axis_labels if domain.final_prompt else {}
+        payload["undecided_axes"] = [
+            {"axis": name, "label": labels.get(name) or domain.axis(name).description}
+            for name in service.undecided_axes(estimator)
+        ]
         if state.prompt is None:
             payload["prompt"] = seed
             payload["prompts"] = prompts

@@ -80,7 +80,12 @@ def _final_spec(domain: Domain, language: str | None):
 
 def _final_instruction(domain: Domain, axis, value: str, spec, language: str | None) -> str | None:
     """번역판이면 그 언어의 지시문을, 아니면 축의 원래 지시문을 쓴다. 번역판에
-    빠진 값이 있으면 조용히 원문으로 섞지 않고 오류를 낸다."""
+    빠진 값이 있으면 조용히 원문으로 섞지 않고 오류를 낸다.
+
+    enum 축의 값이 비어 있으면 그 축을 건너뛴다 - 최종 프롬프트에서 "정하지 못한 축"을
+    빼는 방법이다. 후보 생성용 build_prompt 는 이 함수를 쓰지 않으므로 그대로다."""
+    if axis.type == "enum" and not value:
+        return None
     if language is None or spec is None:
         return axis.instruction_for(value)
     if axis.type == "enum":
@@ -147,16 +152,17 @@ def build_preference_section(
 
 def build_compact_prompt(domain: Domain, combo: dict[str, str], language: str | None = None) -> str:
     """글자 수 한도가 있는 곳에 넣을 짧은 판: 과제 설명과 선호 지시만.
-    language 가 없으면 후보 생성용 프롬프트와 같다."""
-    if language is None:
-        return build_prompt(domain, combo)
-    spec = _final_spec(domain, language)
-    lines = [spec.task or domain.task_description]
+    language 가 없고 모든 enum 축에 값이 있으면 후보 생성용 프롬프트와 같다. 값이 빈
+    enum 축(정하지 못한 축)은 건너뛴다."""
+    spec = _final_spec(domain, language) if language is not None else None
+    lines = [(spec.task if spec else None) or domain.task_description]
     for axis in domain.axes:
         instruction = _final_instruction(domain, axis, combo.get(axis.name, ""), spec, language)
         if instruction:
             lines.append(instruction)
-    return "\n".join(lines)
+    text = "\n".join(lines)
+    # build_prompt 와 같게: 원문 길이 자리표시자는 원문 없이 채울 수 없으므로 알린다.
+    return text if language is not None else fill_source_placeholders(text, None)
 
 
 def build_template_prompt(domain: Domain, combo: dict[str, str], template: str) -> str:

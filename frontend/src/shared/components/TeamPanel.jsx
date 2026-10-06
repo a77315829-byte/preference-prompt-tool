@@ -80,7 +80,9 @@ function TeamPanel({ sessionId, valueLabel = (axis, value) => value }) {
             {teamResult.agreements.map((a) => (
               <li key={a.axis} className={a.agreed ? 'agreed' : 'split'}>
                 <strong>{a.label}</strong>
-                {a.agreed
+                {a.undecided
+                  ? ' — 아무도 선호를 정하지 않아 팀 프롬프트에 넣지 않았습니다'
+                  : a.agreed
                   ? ` — 모두 같음: ${valueLabel(a.axis, a.team_value)}`
                   : ` — 합의 필요: ${Object.entries(a.votes).map(([v, n]) => `${valueLabel(a.axis, v)} ${n}명`).join(', ')}${
                     a.tied

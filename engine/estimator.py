@@ -54,6 +54,12 @@ class Estimator:
         utilities = self.utilities[axis_name]
         return max(utilities, key=utilities.get)
 
+    def has_signal(self, axis_name: str) -> bool:
+        """이 축에서 값들 사이에 차이가 생겼는가. 모든 효용이 같으면 preferred_value 는
+        단지 정의 순서상 첫 값이다 - 비교가 없었거나 "비슷하다"만 골랐을 때다. 그 값을
+        사용자의 선호로 내보내면 하지 않은 선택을 했다고 적게 된다."""
+        return len(set(self.utilities[axis_name].values())) > 1
+
     def confidence(self, axis_name: str) -> float:
         """softmax 분포가 얼마나 뾰족한지 (1 - 정규화 엔트로피). 1이면 확신, 0이면 무지.
 

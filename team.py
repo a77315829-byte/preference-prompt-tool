@@ -177,6 +177,9 @@ class AxisAgreement:
     # 최다 득표가 둘 이상이면 팀 프롬프트의 값은 비교를 합친 결과일 뿐
     # 다수결이 아니다. 화면에서 "팀이 정해야 한다"고 알린다.
     tied: bool = False
+    # 아무도 이 축에서 선호를 정하지 않았다 ("비슷하다"만 골랐거나 묻지 않았다).
+    # 팀 프롬프트에서 빠지고, team_value 는 빈 문자열이다.
+    undecided: bool = False
 
 
 def _equal_weight_team(domain: Domain, personal: list[Estimator]) -> Estimator:
@@ -187,20 +190,27 @@ def _equal_weight_team(domain: Domain, personal: list[Estimator]) -> Estimator:
     사람을 이길 수 있었다. 확률을 평균하는 것만으로는 부족했다 - 같은 쪽을 12번 고른
     사람은 0.99 로 확신하고 1번 고른 사람은 0.62 라, 여전히 한 사람이 둘을 이긴다.
     돌려주는 추정기의 효용은 (표 수 + 평균 확률) 이라 1위가 다수결 결과가 된다
-    (평균 확률은 1 보다 작으므로 표 수가 같을 때만 순서를 가른다)."""
+    (평균 확률은 1 보다 작으므로 표 수가 같을 때만 순서를 가른다).
+
+    그 축에서 선호를 정하지 않은 사람(효용이 모두 같다)은 표를 던지지 않는다. 안 그러면
+    정의상 첫 값에 표가 가서, 고르지 않은 선택이 다수결을 바꾼다. 아무도 정하지 않은
+    축은 효용이 모두 0 으로 남아 has_signal 이 False 가 된다."""
     team_estimator = Estimator(domain)
     for axis in team_estimator.enum_axis_names():
+        voters = [e for e in personal if e.has_signal(axis)]
+        if not voters:
+            continue
         values = list(team_estimator.utilities[axis])
         votes = dict.fromkeys(values, 0)
         mean = dict.fromkeys(values, 0.0)
-        for estimator in personal:
+        for estimator in voters:
             votes[estimator.preferred_value(axis)] += 1
             utilities = estimator.utilities[axis]
             top = max(utilities.values())
             exps = {v: math.exp(utilities[v] - top) for v in values}
             total = sum(exps.values())
             for v in values:
-                mean[v] += exps[v] / total / len(personal)
+                mean[v] += exps[v] / total / len(voters)
         team_estimator.utilities[axis] = {v: votes[v] + mean[v] for v in values}
     return team_estimator
 
@@ -212,12 +222,15 @@ def summarize(domain: Domain, members: list[Member]) -> tuple[Estimator, list[Ax
     team_estimator = _equal_weight_team(domain, personal)
     agreements = []
     for axis in team_estimator.enum_axis_names():
-        votes = Counter(e.preferred_value(axis) for e in personal)
+        # 선호를 정한 사람만 센다 (_equal_weight_team 과 같은 기준).
+        votes = Counter(e.preferred_value(axis) for e in personal if e.has_signal(axis))
+        undecided = not team_estimator.has_signal(axis)
         agreements.append(AxisAgreement(
             axis=axis,
-            team_value=team_estimator.preferred_value(axis),
+            team_value="" if undecided else team_estimator.preferred_value(axis),
             votes=dict(votes.most_common()),
             agreed=len(votes) == 1,
             tied=len(votes) > 1 and sum(1 for n in votes.values() if n == max(votes.values())) > 1,
+            undecided=undecided,
         ))
     return team_estimator, agreements

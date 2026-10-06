@@ -30,17 +30,21 @@ def build_metric(
     domain: Domain,
     estimator: Estimator,
     freeform_values: dict[str, str] | None = None,
+    skip_axes: set[str] | None = None,
 ) -> Metric:
     """freeform_values: 값이 고정되지 않은 축에 사용자가 직접 준 값
     (예: 시드 프롬프트에 넣은 것과 같은 값). 비활성 값은 채점하지 않는다.
     이걸 빼면 시드 프롬프트에만 들어가고 채점은 안 돼서, 최적화가 그
-    지시를 지워도 점수가 깎이지 않는다."""
+    지시를 지워도 점수가 깎이지 않는다.
+
+    skip_axes: 채점하지 않을 enum 축. 선호를 정하지 못한 축을 넘긴다 - 안 넘기면 그 축의
+    정의상 첫 값을 목표로 채점해서, 최적화가 사용자가 하지 않은 선택을 프롬프트에 밀어
+    넣는다. 기본값(None)은 예전과 같다 (실험 결과는 이 기본값으로 냈다)."""
     checks_module = importlib.import_module(domain.checks_module)
 
-    target_values = {name: estimator.preferred_value(name) for name in estimator.enum_axis_names()}
-    weights = {
-        name: max(estimator.confidence(name), MIN_AXIS_WEIGHT) for name in estimator.enum_axis_names()
-    }
+    enum_names = [n for n in estimator.enum_axis_names() if n not in (skip_axes or set())]
+    target_values = {name: estimator.preferred_value(name) for name in enum_names}
+    weights = {name: max(estimator.confidence(name), MIN_AXIS_WEIGHT) for name in enum_names}
     for name, value in (freeform_values or {}).items():
         if domain.axis(name).check_for(value) is None:
             continue
