@@ -192,9 +192,9 @@ def _equal_weight_team(domain: Domain, personal: list[Estimator]) -> Estimator:
     돌려주는 추정기의 효용은 (표 수 + 평균 확률) 이라 1위가 다수결 결과가 된다
     (평균 확률은 1 보다 작으므로 표 수가 같을 때만 순서를 가른다).
 
-    그 축에서 선호를 정하지 않은 사람(효용이 모두 같다)은 표를 던지지 않는다. 안 그러면
-    정의상 첫 값에 표가 가서, 고르지 않은 선택이 다수결을 바꾼다. 아무도 정하지 않은
-    축은 효용이 모두 0 으로 남아 has_signal 이 False 가 된다."""
+    그 축에서 선호를 정하지 않은 사람(1위가 하나로 정해지지 않았다)은 표를 던지지 않는다.
+    안 그러면 정의상 첫 값에 표가 가서, 고르지 않은 선택이 다수결을 바꾼다. 아무도 정하지
+    않은 축은 효용이 모두 0 으로 남아 has_signal 이 False 가 된다."""
     team_estimator = Estimator(domain)
     for axis in team_estimator.enum_axis_names():
         voters = [e for e in personal if e.has_signal(axis)]
@@ -224,8 +224,9 @@ def summarize(domain: Domain, members: list[Member]) -> tuple[Estimator, list[Ax
     for axis in team_estimator.enum_axis_names():
         # 선호를 정한 사람만 센다 (_equal_weight_team 과 같은 기준).
         votes = Counter(e.preferred_value(axis) for e in personal if e.has_signal(axis))
-        # 두 경우를 가른다: 아무도 선호를 정하지 않음(표가 없다)과, 의견이 정확히 반으로
-        # 갈림(표는 있는데 합친 효용이 같다 - 1:1 이고 두 사람의 확신이 대칭이면 그렇다).
+        # 두 경우를 가른다: 아무도 선호를 정하지 않음(표가 없다)과, 의견이 같은 수로
+        # 갈림(표는 있는데 합친 효용의 1위가 둘 이상이다 - 1:1, 3:3, 1:1:1 이고 확신이
+        # 대칭이면 그렇다. 값이 3개인 축은 아무도 고르지 않은 값만 낮다).
         # 둘 다 팀 프롬프트에서는 빠지지만 화면에 보일 말이 다르다.
         undecided = not votes
         decided = team_estimator.has_signal(axis)

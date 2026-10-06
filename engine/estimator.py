@@ -12,6 +12,10 @@ from dataclasses import dataclass
 
 from engine.domain_loader import Domain
 
+# 효용 차이가 이보다 작으면 같은 값으로 본다. 학습으로 생기는 차이는 학습률(기본 0.5) 단위라
+# 이보다 훨씬 크고, 이보다 작은 차이는 합칠 때의 부동소수점 끝자리뿐이다 (실측 4e-16).
+TIE_TOLERANCE = 1e-9
+
 
 @dataclass
 class Comparison:
@@ -55,10 +59,18 @@ class Estimator:
         return max(utilities, key=utilities.get)
 
     def has_signal(self, axis_name: str) -> bool:
-        """이 축에서 값들 사이에 차이가 생겼는가. 모든 효용이 같으면 preferred_value 는
-        단지 정의 순서상 첫 값이다 - 비교가 없었거나 "비슷하다"만 골랐을 때다. 그 값을
-        사용자의 선호로 내보내면 하지 않은 선택을 했다고 적게 된다."""
-        return len(set(self.utilities[axis_name].values())) > 1
+        """이 축의 1위가 하나로 정해졌는가. 1위가 둘 이상이면 preferred_value 는 그중 정의
+        순서상 앞의 값일 뿐이다 - 비교가 없었거나 "비슷하다"만 골랐을 때(효용이 모두 같다),
+        그리고 팀에서 의견이 같은 수로 갈렸을 때다. 그 값을 선호로 내보내면 하지 않은 선택을
+        했다고 적게 된다.
+
+        "값들 사이에 차이가 있는가"로 재면 안 된다. 값이 3개 이상인 축에서 1:1 로 갈리면 1위
+        둘은 같고 아무도 고르지 않은 값만 낮아서, 차이는 있는데 1위는 정해지지 않았다.
+        효용을 합칠 때 생기는 부동소수점 끝자리 차이(합치는 순서를 따라 부호가 바뀐다)는
+        같은 것으로 본다."""
+        utilities = list(self.utilities[axis_name].values())
+        top = max(utilities)
+        return sum(1 for u in utilities if top - u <= TIE_TOLERANCE) == 1
 
     def confidence(self, axis_name: str) -> float:
         """softmax 분포가 얼마나 뾰족한지 (1 - 정규화 엔트로피). 1이면 확신, 0이면 무지.

@@ -146,6 +146,20 @@ def test_has_signal() -> None:
     assert estimator.has_signal(axis) and estimator.preferred_value(axis) == a
 
 
+def test_has_signal_needs_a_single_top_value() -> None:
+    """값이 3개 이상이면 "값들 사이에 차이가 있다"와 "1위가 정해졌다"가 다르다. 1위가 둘 이상이면
+    preferred_value 는 그중 정의상 앞의 값일 뿐이다."""
+    domain = load_domain("domains/summarization.yaml")
+    estimator = Estimator(domain)
+    short, normal, long_ = list(estimator.utilities["length"])
+    estimator.utilities["length"] = {short: 1.0, normal: 1.0, long_: 0.2}
+    assert not estimator.has_signal("length")
+    estimator.utilities["length"] = {short: 1.0, normal: 1.0 + 4e-16, long_: 0.2}  # 부동소수점 끝자리
+    assert not estimator.has_signal("length")
+    estimator.utilities["length"] = {short: 1.0, normal: 0.9, long_: 0.2}
+    assert estimator.has_signal("length") and estimator.preferred_value("length") == short
+
+
 def test_preference_note_travels_with_the_preference_section() -> None:
     """역할 문장에 "아래 선호는 ...에서 추정한 것이다"를 두면 선호가 하나도 없을 때 그 문장만
     남는다. 출처 설명은 선호 절 머리말 바로 아래에 붙고, 선호 절과 함께 빠진다."""

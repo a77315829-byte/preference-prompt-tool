@@ -2,6 +2,8 @@
 
 1. GEPA 후보 평가가 생성 캐시를 거치지 않았다 (같은 평가를 두 번 샀다).
 3. 팀 1:1 의견 충돌이 "아무도 정하지 않음"으로 표시됐다.
+   3-1. 값이 3개인 축에서는 1:1 로 정확히 갈려도 정의상 첫 값이 팀 값이 되어 팀 프롬프트에
+   들어갔다 (3 의 테스트는 값이 2개인 coding 으로만 쟀다).
 4. gepa_seed_conditions 의 부호검정이 한쪽 꼬리만 셌다 (0승 5패가 p=1).
 5. 최적화할 선호가 없어 거부될 요청이 하루·세션 횟수를 먼저 깎았다.
 """
@@ -128,6 +130,86 @@ def test_nobody_choosing_is_still_undecided() -> None:
     domain = load_domain("domains/coding.yaml")
     _, agreements = team.summarize(domain, [team.Member("A", _session("tie").history)])
     assert all(a.undecided and not a.tied and a.votes == {} for a in agreements)
+
+
+# --- 3-1. 값이 3개인 축의 1위 동률 --------------------------------------------------
+# summarization 의 length 는 short / normal / long 이다. 1:1 로 갈리면 1위 둘은 같고 아무도 고르지
+# 않은 long 만 낮다. "값들 사이에 차이가 있다"로 판정하면 신호가 있는 것으로 보여 정의상 앞인
+# short 가 팀 값이 됐다.
+
+SUMMARY = "domains/summarization.yaml"
+LENGTH = "length"
+
+
+def _summary_history(winner: str, strength: int = 1):
+    """length 만 다른 질문들로 winner 를 고른 기록. 다른 축은 정의상 첫 값으로 고정한다."""
+    domain = load_domain(SUMMARY)
+    base = {axis.name: (axis.values[0].value if axis.type == "enum" else "") for axis in domain.axes}
+    values = [v.value for v in domain.axis(LENGTH).values]
+    history = []
+    for other in values:
+        if other == winner:
+            continue
+        a, b = dict(base, **{LENGTH: winner}), dict(base, **{LENGTH: other})
+        history += [(a, b, "a")] * strength
+    return history
+
+
+def _length_agreement(members):
+    domain = load_domain(SUMMARY)
+    estimator, agreements = team.summarize(domain, members)
+    prompt = service.final_prompt(domain, estimator, team=True, language="ko")
+    label = domain.final_prompt.axis_labels[LENGTH]
+    return next(a for a in agreements if a.axis == LENGTH), [line for line in prompt.splitlines()
+                                                             if line.startswith(f"- {label}:")]
+
+
+def test_even_split_on_a_three_value_axis_is_a_tie() -> None:
+    agreement, lines = _length_agreement(
+        [team.Member("A", _summary_history("short")), team.Member("B", _summary_history("normal"))]
+    )
+    assert agreement.votes == {"short": 1, "normal": 1}
+    assert agreement.tied and not agreement.undecided
+    assert agreement.team_value == ""  # long 이 낮다고 short 를 고른 것이 되지 않는다
+    assert lines == []  # 팀 프롬프트에서 빠진다
+
+
+def test_even_split_does_not_depend_on_member_order() -> None:
+    # 3:3 이면 합친 효용의 차이가 부동소수점 끝자리(±4e-16)만큼 생기고 부호가 팀원 순서를 따랐다.
+    people = [team.Member(f"s{i}", _summary_history("short")) for i in range(3)] + [
+        team.Member(f"n{i}", _summary_history("normal")) for i in range(3)
+    ]
+    for members in (people, list(reversed(people))):
+        agreement, lines = _length_agreement(members)
+        assert agreement.tied and agreement.team_value == "" and lines == []
+
+
+def _one_pick(winner: str, loser: str):
+    domain = load_domain(SUMMARY)
+    base = {axis.name: (axis.values[0].value if axis.type == "enum" else "") for axis in domain.axes}
+    return [(dict(base, **{LENGTH: winner}), dict(base, **{LENGTH: loser}), "a")]
+
+
+def test_symmetric_three_way_split_is_a_tie() -> None:
+    # 가위바위보처럼 맞물린 세 사람: 각자 한 번씩, 1위·꼴찌·남은 값의 자리가 서로 돌아간다.
+    # (각자 나머지 둘을 차례로 이기게 하면 두 번째 비교의 갱신 폭이 달라 대칭이 아니다 -
+    # 그때는 실제로 한쪽이 조금 기운 것이라 팀 값이 정해지는 게 맞다.)
+    agreement, lines = _length_agreement([
+        team.Member("A", _one_pick("short", "normal")),
+        team.Member("B", _one_pick("normal", "long")),
+        team.Member("C", _one_pick("long", "short")),
+    ])
+    assert agreement.votes == {"short": 1, "normal": 1, "long": 1}
+    assert agreement.tied and agreement.team_value == "" and lines == []
+
+
+def test_uneven_confidence_still_leans() -> None:
+    # 표는 1:1 이어도 한 사람이 더 분명하게 골랐으면 팀 값은 그쪽이다 (예전 동작 그대로).
+    agreement, lines = _length_agreement(
+        [team.Member("A", _summary_history("short", strength=3)), team.Member("B", _summary_history("normal"))]
+    )
+    assert agreement.tied and agreement.team_value == "short"
+    assert len(lines) == 1
 
 
 # --- 4. 부호검정 ------------------------------------------------------------------
