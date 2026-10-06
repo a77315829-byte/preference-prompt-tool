@@ -144,3 +144,18 @@ def test_has_signal() -> None:
     assert not estimator.has_signal(axis)  # 같은 효용에서의 무승부는 아무것도 바꾸지 않는다
     estimator.update(Comparison({axis: a}, {axis: b}, "a"))
     assert estimator.has_signal(axis) and estimator.preferred_value(axis) == a
+
+
+def test_preference_note_travels_with_the_preference_section() -> None:
+    """역할 문장에 "아래 선호는 ...에서 추정한 것이다"를 두면 선호가 하나도 없을 때 그 문장만
+    남는다. 출처 설명은 선호 절 머리말 바로 아래에 붙고, 선호 절과 함께 빠진다."""
+    for picks, decided in ((["a", "b", "a"], True), ([], False)):
+        domain, estimator = service.current_estimate(_session(picks))
+        for language in service.prompt_languages(domain):
+            spec = domain.final_prompt_translations.get(language) or domain.final_prompt
+            prompt = service.final_prompt(domain, estimator, language=language)
+            assert spec.preference_note and spec.preference_note not in spec.role
+            if decided:
+                assert f"## {spec.preference_heading}\n{spec.preference_note}\n- " in prompt
+            else:
+                assert spec.preference_note not in prompt

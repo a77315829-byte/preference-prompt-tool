@@ -147,7 +147,9 @@ def build_preference_section(
     if not lines:
         return ""
     heading = ((spec.team_preference_heading if team else None) or spec.preference_heading) if spec else "선호"
-    return "\n".join([f"## {heading}", *lines])
+    # 선호의 출처 설명. 선호가 하나도 없으면 위에서 이미 빈 문자열을 돌려줬으므로 같이 빠진다.
+    note = ((spec.team_preference_note if team else None) or spec.preference_note) if spec else None
+    return "\n".join([f"## {heading}", *([note] if note else []), *lines])
 
 
 def build_compact_prompt(domain: Domain, combo: dict[str, str], language: str | None = None) -> str:

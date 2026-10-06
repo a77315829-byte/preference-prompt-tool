@@ -68,6 +68,10 @@ class FinalPromptSpec:
     # 여러 사람의 선택을 합친 팀 프롬프트용. 없으면 role·preference_heading 을 쓴다.
     team_role: str | None = None
     team_preference_heading: str | None = None
+    # 선호 절 머리말 바로 아래에 붙는 설명 (선호가 어디서 왔는지). 선호 절이 빠지면 같이
+    # 빠진다 - 역할 문장에 넣어 두면 선호가 하나도 없을 때 "아래 선호는..."만 남는다.
+    preference_note: str | None = None
+    team_preference_note: str | None = None
     # 번역판에서만 쓴다 (final_prompt_translations). 과제 설명과 축 값마다의 지시문을
     # 그 언어로 다시 적는다. 원본(final_prompt)은 비워 두고 도메인의 문구를 쓴다.
     task: str | None = None
@@ -279,6 +283,8 @@ def _final_prompt(raw: dict | None) -> FinalPromptSpec | None:
         axis_labels=dict(raw.get("axis_labels", {})),
         team_role=(raw.get("team_role") or "").strip() or None,
         team_preference_heading=(raw.get("team_preference_heading") or "").strip() or None,
+        preference_note=(raw.get("preference_note") or "").strip() or None,
+        team_preference_note=(raw.get("team_preference_note") or "").strip() or None,
         task=(raw.get("task") or "").strip() or None,
         instructions=(
             {axis: {value: str(text).strip() for value, text in values.items()}
