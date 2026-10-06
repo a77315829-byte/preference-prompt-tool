@@ -88,7 +88,7 @@ function TeamPanel({ sessionId, valueLabel = (axis, value) => value }) {
                     a.tied
                       ? (a.team_value
                         ? ` (동률이라 팀이 정해야 합니다. 지금 팀 프롬프트는 선호가 조금 더 기운 쪽인 ${valueLabel(a.axis, a.team_value)})`
-                        : ' (의견이 정확히 반으로 갈려 팀이 정해야 합니다. 팀 프롬프트에는 넣지 않았습니다)')
+                        : ' (의견이 같은 수로 갈려 팀이 정해야 합니다. 팀 프롬프트에는 넣지 않았습니다)')
                       : ` (팀 프롬프트는 다수 쪽 ${valueLabel(a.axis, a.team_value)} - 한 사람 한 표)`}`}
               </li>
             ))}
