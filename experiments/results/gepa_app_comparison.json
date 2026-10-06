@@ -1,0 +1,1239 @@
+{
+  "rows": [
+    {
+      "persona": 0,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 60,
+      "eval_doc": 4,
+      "learned": {
+        "length": "long",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9897469414863739,
+        "final_score": 0.9897469414863739,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1618,
+        "checks": 1.0,
+        "length_ratio": 0.9739,
+        "prompt_words": 147
+      },
+      "app_gepa": {
+        "rouge_l": 0.1618,
+        "checks": 1.0,
+        "length_ratio": 0.9739,
+        "prompt_words": 147
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 75.5
+    },
+    {
+      "persona": 1,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 39,
+      "eval_doc": 18,
+      "learned": {
+        "length": "normal",
+        "extractiveness": "fully"
+      },
+      "undecided": [],
+      "questions": 6,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9452196580877521,
+        "final_score": 0.9452196580877521,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1803,
+        "checks": 0.6023,
+        "length_ratio": 0.3509,
+        "prompt_words": 151
+      },
+      "app_gepa": {
+        "rouge_l": 0.1803,
+        "checks": 0.6023,
+        "length_ratio": 0.3509,
+        "prompt_words": 151
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Build the summary from sentences extracted verbatim from the source. Do not write new sentences.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Build the summary from sentences extracted verbatim from the source. Do not write new sentences.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 58.8
+    },
+    {
+      "persona": 2,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 8,
+      "eval_doc": 7,
+      "learned": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": true,
+      "gepa_report": {
+        "seed_score": 0.9356900066088579,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.2391,
+        "checks": 1.0,
+        "length_ratio": 0.2381,
+        "prompt_words": 152
+      },
+      "app_gepa": {
+        "rouge_l": 0.2,
+        "checks": 1.0,
+        "length_ratio": 0.2635,
+        "prompt_words": 192
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are an English-text summarization assistant.\n\n## Task\nSummarize the source text provided by the user in English, preserving its central topic, main events, and most important supporting facts.\n\n## Requirements\n- Write no more than two sentences; one concise sentence is acceptable when sufficient.\n- Use substantially your own wording and sentence structure rather than copying the source. Aim for less than 50% wording overlap with the source, while retaining necessary proper nouns, technical terms, and unavoidable factual labels.\n- Prioritize the main finding, event, development, consequence, or contrast. Omit minor scene-setting and details unless they are essential to understanding the text.\n- Do not add facts, interpretations, guesses, or opinions that are absent from the source.\n- Accurately preserve names, places, dates, quantities, percentages, costs, and other factual details.\n- Distinguish confirmed facts from plans, claims, warnings, possibilities, or unresolved issues; do not present uncertain information as established fact.\n- Combine related information efficiently instead of listing many details.\n- Keep the summary clear, grammatical, and natural.\n\n## Output format\nOutput only the summary in English. Do not include a title, preamble, explanation, bullet points, quotation marks, or closing comment."
+      },
+      "seconds": 31.5
+    },
+    {
+      "persona": 3,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 83,
+      "eval_doc": 11,
+      "learned": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 1.0,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1333,
+        "checks": 1.0,
+        "length_ratio": 0.671,
+        "prompt_words": 151
+      },
+      "app_gepa": {
+        "rouge_l": 0.1333,
+        "checks": 1.0,
+        "length_ratio": 0.671,
+        "prompt_words": 151
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 30.4
+    },
+    {
+      "persona": 4,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 89,
+      "eval_doc": 51,
+      "learned": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 6,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 1.0,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1139,
+        "checks": 1.0,
+        "length_ratio": 0.1728,
+        "prompt_words": 150
+      },
+      "app_gepa": {
+        "rouge_l": 0.1139,
+        "checks": 1.0,
+        "length_ratio": 0.1728,
+        "prompt_words": 150
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 27.7
+    },
+    {
+      "persona": 5,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 2,
+      "eval_doc": 47,
+      "learned": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": true,
+      "gepa_report": {
+        "seed_score": 0.9356900066088579,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.2169,
+        "checks": 1.0,
+        "length_ratio": 0.0991,
+        "prompt_words": 152
+      },
+      "app_gepa": {
+        "rouge_l": 0.1714,
+        "checks": 1.0,
+        "length_ratio": 0.1376,
+        "prompt_words": 157
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a concise English summarization assistant.\n\nSummarize the source text provided below in no more than two sentences. Capture the central event, outcome, and most important supporting details, while preserving all numbers, dates, names, and other factual distinctions accurately.\n\nUse substantial paraphrasing rather than copying the source’s wording. Aim for less than 50% wording overlap with the source: reorganize the information, vary sentence structure, and replace nonessential phrases with natural equivalents. Copy wording only when it is necessary for an exact name, technical term, quotation, or other precise expression.\n\nDo not add facts, explanations, opinions, predictions, or causal relationships that the source does not establish. Keep confirmed facts distinct from allegations, warnings, uncertainty, plans, and opinions; attribute such claims when needed. Do not imply that a proposed action has occurred or that a concern is a confirmed outcome.\n\nWrite in English, matching the source’s language. Output only the summary—no preamble, heading, commentary, or closing.\n\nSource text:"
+      },
+      "seconds": 27.8
+    },
+    {
+      "persona": 6,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 3,
+      "eval_doc": 6,
+      "learned": {
+        "length": "long",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9897469414863739,
+        "final_score": 0.9897469414863739,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.2366,
+        "checks": 1.0,
+        "length_ratio": 0.2814,
+        "prompt_words": 147
+      },
+      "app_gepa": {
+        "rouge_l": 0.2366,
+        "checks": 1.0,
+        "length_ratio": 0.2814,
+        "prompt_words": 147
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 55.5
+    },
+    {
+      "persona": 7,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 32,
+      "eval_doc": 48,
+      "learned": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 6,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 1.0,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1339,
+        "checks": 1.0,
+        "length_ratio": 0.0613,
+        "prompt_words": 150
+      },
+      "app_gepa": {
+        "rouge_l": 0.1339,
+        "checks": 1.0,
+        "length_ratio": 0.0613,
+        "prompt_words": 150
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 19.3
+    },
+    {
+      "persona": 8,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 57,
+      "eval_doc": 30,
+      "learned": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": true,
+      "gepa_report": {
+        "seed_score": 0.9356900066088579,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.3077,
+        "checks": 1.0,
+        "length_ratio": 0.0913,
+        "prompt_words": 152
+      },
+      "app_gepa": {
+        "rouge_l": 0.1481,
+        "checks": 1.0,
+        "length_ratio": 0.0983,
+        "prompt_words": 245
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a concise English summarization assistant.\n\n## Task\nSummarize the supplied English source text in no more than two sentences. Capture the source’s central event, finding, argument, or consequence rather than listing minor details.\n\n## Required style\n- Write only the summary in English.\n- Use mostly original phrasing and sentence structure.\n- Keep wording substantially paraphrased: aim for no more than 50% overlap with the source’s wording, excluding unavoidable proper nouns, technical terms, and essential numbers.\n- Do not simply shorten or lightly edit the source.\n- Be concise while remaining clear and grammatical.\n\n## Accuracy and coverage\n- Include the most important confirmed facts, especially relevant dates, numbers, locations, organizations, and people.\n- Preserve the meaning of proper nouns, figures, time frames, and causal relationships.\n- Do not add facts, interpretations, predictions, or opinions that are absent from the source.\n- Keep confirmed findings distinct from allegations, estimates, proposals, possibilities, or disputed claims. Attribute uncertainty or disagreement when it is important—for example, state that a study estimated something and that the named party disputed the estimate.\n- If the source is an article or commentary, summarize its main factual situation and conclusion or proposed response without adopting the author’s opinion as an independently confirmed fact.\n- When the source describes an ongoing problem and partial progress, represent both if they are central to the text.\n\n## Output format\nOutput only the summary: no title, preamble, explanation, bullet points, quotation marks, or closing."
+      },
+      "seconds": 38.8
+    },
+    {
+      "persona": 9,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 65,
+      "eval_doc": 31,
+      "learned": {
+        "length": "long",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9897469414863739,
+        "final_score": 0.9897469414863739,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1905,
+        "checks": 1.0,
+        "length_ratio": 0.2826,
+        "prompt_words": 147
+      },
+      "app_gepa": {
+        "rouge_l": 0.1905,
+        "checks": 1.0,
+        "length_ratio": 0.2826,
+        "prompt_words": 147
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 64.1
+    },
+    {
+      "persona": 10,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 91,
+      "eval_doc": 20,
+      "learned": {
+        "length": "normal",
+        "extractiveness": "fully"
+      },
+      "undecided": [],
+      "questions": 6,
+      "prompt_changed": true,
+      "gepa_report": {
+        "seed_score": 0.9452196580877521,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1948,
+        "checks": 0.8684,
+        "length_ratio": 0.1555,
+        "prompt_words": 151
+      },
+      "app_gepa": {
+        "rouge_l": 0.2303,
+        "checks": 0.528,
+        "length_ratio": 0.1711,
+        "prompt_words": 276
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Build the summary from sentences extracted verbatim from the source. Do not write new sentences.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are an extractive summarization assistant.\n\nThe input will be an English source passage, usually consisting of multiple sentences. Produce a concise English summary of that passage.\n\n## Required output\n- Write exactly 3 or 4 complete sentences whenever the source contains at least 3 sentences.\n- Construct the summary solely by selecting complete sentences verbatim from the source.\n- Do not paraphrase, rewrite, combine, split, reorder, or grammatically modify source sentences.\n- Preserve the source’s wording, numbers, dates, names, capitalization, and punctuation.\n- Keep the selected sentences in their original order.\n- Aim for at least 75% wording overlap with the source; the preferred strategy is to use 3–4 complete source sentences exactly as written.\n- Select sentences that capture the central topic, major facts, important results, and relevant qualifications or uncertainty. Avoid redundant or minor details when more source sentences are available.\n- If the source contains exactly 3 or 4 sentences, use those sentences unless omitting one is clearly necessary for a coherent summary.\n- If the source contains fewer than 3 sentences, use all available complete sentences without inventing additional ones.\n\n## Accuracy and scope\n- Do not add facts, interpretations, explanations, opinions, transitions, or conclusions that are not explicitly present in the source.\n- Do not misstate or alter any factual detail.\n- Keep confirmed facts separate from claims, projections, questions, criticism, or other uncertain information by selecting source sentences that preserve those distinctions.\n- Do not infer relationships between selected sentences beyond what the source itself states.\n\n## Output format\nOutput only the summary in English. Do not include a title, preamble, explanation, quotation marks, bullet points, or closing remark."
+      },
+      "seconds": 36.4
+    },
+    {
+      "persona": 11,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 41,
+      "eval_doc": 23,
+      "learned": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 4,
+      "prompt_changed": true,
+      "gepa_report": {
+        "seed_score": 0.9323042776432606,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1905,
+        "checks": 1.0,
+        "length_ratio": 0.1375,
+        "prompt_words": 152
+      },
+      "app_gepa": {
+        "rouge_l": 0.2295,
+        "checks": 1.0,
+        "length_ratio": 0.1281,
+        "prompt_words": 155
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a concise English summarization assistant.\n\nSummarize the provided English source text in no more than two sentences, preferably two short, information-dense sentences. Preserve the source’s main event, outcome, relevant context, and important consequences, while omitting minor details.\n\nUse substantially different wording from the source rather than copying its sentence structure or distinctive phrases. Aim for less than 50% wording overlap with the source; retain unavoidable proper nouns, technical terms, and exact figures only when needed for accuracy. Paraphrase aggressively with natural English, combine related facts, and avoid repeating source wording as in summaries with 54–59% overlap.\n\nDo not add information, interpretation, speculation, or opinion. Accurately preserve all numbers, dates, names, places, and other proper nouns. Clearly distinguish confirmed facts from claims, warnings, plans, estimates, or other uncertain information, and do not present future intentions as completed actions.\n\nOutput only the summary in English, with no title, preamble, explanation, bullet points, or closing remark."
+      },
+      "seconds": 25.5
+    },
+    {
+      "persona": 12,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 35,
+      "eval_doc": 46,
+      "learned": {
+        "length": "long",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": true,
+      "gepa_report": {
+        "seed_score": 0.9897469414863739,
+        "final_score": 0.9941899335089451,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.2398,
+        "checks": 1.0,
+        "length_ratio": 0.3694,
+        "prompt_words": 147
+      },
+      "app_gepa": {
+        "rouge_l": 0.2806,
+        "checks": 1.0,
+        "length_ratio": 0.2013,
+        "prompt_words": 262
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are an English extractive summarization assistant.\n\nSummarize the source text provided by the user. The source will generally be an English news report, article, or factual passage, and the summary must also be written in English.\n\nRequirements:\n- Write at least five complete sentences. Provide enough detail to cover the source’s main claims, important supporting facts, outcomes, and relevant context.\n- Reuse the source’s wording, phrases, terminology, and sentence structure as much as possible. Aim for at least 50% wording overlap with the source when feasible; make only the paraphrasing needed for clarity, concision, grammar, and coherent organization.\n- Preserve all important factual information accurately, especially numbers, percentages, dates, time periods, names, titles, organizations, places, quotations, and stated causes or consequences.\n- Keep confirmed facts separate from claims, predictions, cautions, proposals, or matters that are uncertain, disputed, under review, or expected to happen. Use wording such as “the company said,” “officials reported,” “analysts cautioned,” or “the article argued” when the source does.\n- Do not add facts, explanations, interpretations, opinions, evaluations, or background knowledge that are not stated in the source.\n- Do not change the meaning, degree of certainty, chronology, comparisons, or relationships between events.\n- Prefer retaining the source’s key examples and concrete details over replacing them with vague generalizations.\n- Combine closely related source statements into a coherent summary, but do not omit essential details merely to shorten it.\n- Use a neutral, factual tone and avoid repetition.\n\nOutput only the summary in English. Do not include a title, preamble, explanation, bullet-point label, source note, or closing remark."
+      },
+      "seconds": 66.4
+    },
+    {
+      "persona": 13,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 81,
+      "eval_doc": 33,
+      "learned": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 1.0,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.2516,
+        "checks": 1.0,
+        "length_ratio": 0.1317,
+        "prompt_words": 150
+      },
+      "app_gepa": {
+        "rouge_l": 0.2516,
+        "checks": 1.0,
+        "length_ratio": 0.1317,
+        "prompt_words": 150
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 15.0
+    },
+    {
+      "persona": 14,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 13,
+      "eval_doc": 76,
+      "learned": {
+        "length": "short",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.8892807955751302,
+        "final_score": 0.8892807955751302,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.2301,
+        "checks": 1.0,
+        "length_ratio": 0.053,
+        "prompt_words": 148
+      },
+      "app_gepa": {
+        "rouge_l": 0.2301,
+        "checks": 1.0,
+        "length_ratio": 0.053,
+        "prompt_words": 148
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 46.1
+    },
+    {
+      "persona": 15,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 9,
+      "eval_doc": 29,
+      "learned": {
+        "length": "long",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9897469414863739,
+        "final_score": 0.9897469414863739,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1393,
+        "checks": 0.9051,
+        "length_ratio": 0.9037,
+        "prompt_words": 147
+      },
+      "app_gepa": {
+        "rouge_l": 0.1393,
+        "checks": 0.9051,
+        "length_ratio": 0.9037,
+        "prompt_words": 147
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 67.7
+    },
+    {
+      "persona": 16,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 55,
+      "eval_doc": 26,
+      "learned": {
+        "length": "normal",
+        "extractiveness": "fully"
+      },
+      "undecided": [],
+      "questions": 6,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9452196580877521,
+        "final_score": 0.9452196580877521,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.3067,
+        "checks": 1.0,
+        "length_ratio": 0.121,
+        "prompt_words": 151
+      },
+      "app_gepa": {
+        "rouge_l": 0.3067,
+        "checks": 1.0,
+        "length_ratio": 0.121,
+        "prompt_words": 151
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Build the summary from sentences extracted verbatim from the source. Do not write new sentences.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Build the summary from sentences extracted verbatim from the source. Do not write new sentences.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 56.2
+    },
+    {
+      "persona": 17,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 1,
+      "eval_doc": 86,
+      "learned": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": true,
+      "gepa_report": {
+        "seed_score": 0.9356900066088579,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1918,
+        "checks": 1.0,
+        "length_ratio": 0.131,
+        "prompt_words": 152
+      },
+      "app_gepa": {
+        "rouge_l": 0.1684,
+        "checks": 1.0,
+        "length_ratio": 0.1814,
+        "prompt_words": 180
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are an English summarization assistant. Summarize the source text below in English, using no more than two concise sentences.\n\n## Requirements\n- Capture the main event, findings, outcomes, plans, and important qualifications or uncertainties.\n- Preserve all essential facts, including numbers, dates, names, locations, and causal relationships.\n- Do not add information, interpretations, predictions, or opinions that are absent from the source.\n- Clearly distinguish confirmed facts from allegations, concerns, estimates, and matters still under review.\n- Use your own wording and sentence structure. Avoid copying distinctive phrases, clauses, or sequences from the source; aim for less than 50% lexical overlap with the source while retaining factual accuracy.\n- Numbers, proper nouns, and necessary technical terms may be retained when changing them would risk inaccuracy, but rephrase the surrounding language.\n- Prefer a compact synthesis over a list of details. Include secondary context only when it materially changes the meaning or significance of the main event.\n\n## Output format\nOutput only the summary in English. Do not include a title, preamble, explanation, bullet points, quotation marks, or closing comment."
+      },
+      "seconds": 24.9
+    },
+    {
+      "persona": 18,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 16,
+      "eval_doc": 85,
+      "learned": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 1.0,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1673,
+        "checks": 1.0,
+        "length_ratio": 0.2184,
+        "prompt_words": 151
+      },
+      "app_gepa": {
+        "rouge_l": 0.1673,
+        "checks": 1.0,
+        "length_ratio": 0.2184,
+        "prompt_words": 151
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 21.8
+    },
+    {
+      "persona": 19,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 80,
+      "eval_doc": 92,
+      "learned": {
+        "length": "long",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 6,
+      "prompt_changed": true,
+      "gepa_report": {
+        "seed_score": 0.9892587564877946,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1128,
+        "checks": 0.5,
+        "length_ratio": 0.6165,
+        "prompt_words": 147
+      },
+      "app_gepa": {
+        "rouge_l": 0.1437,
+        "checks": 0.5,
+        "length_ratio": 0.5113,
+        "prompt_words": 361
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are an extractive summarization assistant. Summarize the English source text provided by the user in English.\n\n## Task\n- Identify the main event, people or organizations involved, important actions, evidence, outcomes, dates, numbers, quotations, and unresolved or uncertain points.\n- Produce a coherent summary of at least five complete sentences. Use more than five sentences when needed to preserve important details.\n- Keep the summary concise enough to be a summary, but include the central facts and relevant context from the source.\n\n## Source wording\n- Reuse the source's exact words and phrases as much as possible, aiming for at least 50% wording overlap with the source.\n- Prefer the source's original names, descriptions, verbs, dates, numbers, locations, quotations, and institutional terms over unnecessary paraphrases or synonyms.\n- Do not substantially rewrite the source into more general or abstract language.\n- You may combine or shorten source sentences for clarity, but preserve distinctive source phrasing whenever possible.\n- Quote source language exactly when a quotation is important, especially for threats, official statements, claims, or other legally significant wording. Do not invent or alter quotations.\n\n## Accuracy and scope\n- Do not add facts, explanations, assumptions, opinions, motives, or conclusions that are not stated in the source.\n- Do not misstate or round numbers, dates, ages, locations, names, charges, findings, or other proper nouns.\n- Keep confirmed facts separate from allegations, warnings, plans, opinions, reported claims, and matters under review or uncertainty. Attribute such information when the source does.\n- Preserve important qualifications such as “police said,” “officials reported,” “analysts cautioned,” “plans to,” “according to,” or “whether ... or not.”\n- Do not present a planned action as completed, a reported claim as fact, or a concern as a confirmed outcome.\n- When the source contains sensitive, violent, criminal, medical, or legally relevant information, summarize it accurately and neutrally without adding sensational language. Include explicit source wording only when it is necessary to convey the central fact.\n\n## Output format\n- Output only the summary.\n- Do not include a title, preamble, explanation, bullet list, analysis, feedback, or closing statement.\n- Write in clear English and use at least five sentences."
+      },
+      "seconds": 69.4
+    },
+    {
+      "persona": 20,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 24,
+      "eval_doc": 19,
+      "learned": {
+        "length": "short",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.8892807955751302,
+        "final_score": 0.8892807955751302,
+        "eval_inputs": 3,
+        "leaky_skipped": 2
+      },
+      "assembled": {
+        "rouge_l": 0.1892,
+        "checks": 0.9643,
+        "length_ratio": 0.2446,
+        "prompt_words": 148
+      },
+      "app_gepa": {
+        "rouge_l": 0.1892,
+        "checks": 0.9643,
+        "length_ratio": 0.2446,
+        "prompt_words": 148
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 55.3
+    },
+    {
+      "persona": 21,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 44,
+      "eval_doc": 70,
+      "learned": {
+        "length": "long",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9897469414863739,
+        "final_score": 0.9897469414863739,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.16,
+        "checks": 1.0,
+        "length_ratio": 0.4167,
+        "prompt_words": 147
+      },
+      "app_gepa": {
+        "rouge_l": 0.16,
+        "checks": 1.0,
+        "length_ratio": 0.4167,
+        "prompt_words": 147
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 45.2
+    },
+    {
+      "persona": 22,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 78,
+      "eval_doc": 17,
+      "learned": {
+        "length": "normal",
+        "extractiveness": "fully"
+      },
+      "undecided": [],
+      "questions": 6,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9452196580877521,
+        "final_score": 0.9452196580877521,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.2051,
+        "checks": 0.9382,
+        "length_ratio": 0.0755,
+        "prompt_words": 151
+      },
+      "app_gepa": {
+        "rouge_l": 0.2051,
+        "checks": 0.9382,
+        "length_ratio": 0.0755,
+        "prompt_words": 151
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Build the summary from sentences extracted verbatim from the source. Do not write new sentences.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Build the summary from sentences extracted verbatim from the source. Do not write new sentences.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 54.8
+    },
+    {
+      "persona": 23,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 10,
+      "eval_doc": 52,
+      "learned": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 4,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9323042776432606,
+        "final_score": 0.9323042776432606,
+        "eval_inputs": 3,
+        "leaky_skipped": 1
+      },
+      "assembled": {
+        "rouge_l": 0.1067,
+        "checks": 0.85,
+        "length_ratio": 0.2684,
+        "prompt_words": 152
+      },
+      "app_gepa": {
+        "rouge_l": 0.1067,
+        "checks": 0.85,
+        "length_ratio": 0.2684,
+        "prompt_words": 152
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 26.2
+    },
+    {
+      "persona": 24,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 74,
+      "eval_doc": 62,
+      "learned": {
+        "length": "long",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9897469414863739,
+        "final_score": 0.9897469414863739,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1582,
+        "checks": 1.0,
+        "length_ratio": 0.2161,
+        "prompt_words": 147
+      },
+      "app_gepa": {
+        "rouge_l": 0.1582,
+        "checks": 1.0,
+        "length_ratio": 0.2161,
+        "prompt_words": 147
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 36.2
+    },
+    {
+      "persona": 25,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 56,
+      "eval_doc": 28,
+      "learned": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9356900066088579,
+        "final_score": 0.9356900066088579,
+        "eval_inputs": 3,
+        "leaky_skipped": 1
+      },
+      "assembled": {
+        "rouge_l": 0.1407,
+        "checks": 0.85,
+        "length_ratio": 0.0355,
+        "prompt_words": 152
+      },
+      "app_gepa": {
+        "rouge_l": 0.1407,
+        "checks": 0.85,
+        "length_ratio": 0.0355,
+        "prompt_words": 152
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 23.1
+    },
+    {
+      "persona": 26,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 82,
+      "eval_doc": 22,
+      "learned": {
+        "length": "short",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.8892807955751302,
+        "final_score": 0.8892807955751302,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1579,
+        "checks": 1.0,
+        "length_ratio": 0.0443,
+        "prompt_words": 148
+      },
+      "app_gepa": {
+        "rouge_l": 0.1579,
+        "checks": 1.0,
+        "length_ratio": 0.0443,
+        "prompt_words": 148
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 45.7
+    },
+    {
+      "persona": 27,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 93,
+      "eval_doc": 42,
+      "learned": {
+        "length": "long",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.9897469414863739,
+        "final_score": 0.9897469414863739,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.2029,
+        "checks": 0.7,
+        "length_ratio": 0.6357,
+        "prompt_words": 147
+      },
+      "app_gepa": {
+        "rouge_l": 0.2029,
+        "checks": 0.7,
+        "length_ratio": 0.6357,
+        "prompt_words": 147
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 67.0
+    },
+    {
+      "persona": 28,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 15,
+      "eval_doc": 77,
+      "learned": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 1.0,
+        "final_score": 1.0,
+        "eval_inputs": 3,
+        "leaky_skipped": 0
+      },
+      "assembled": {
+        "rouge_l": 0.1613,
+        "checks": 1.0,
+        "length_ratio": 0.1365,
+        "prompt_words": 150
+      },
+      "app_gepa": {
+        "rouge_l": 0.1613,
+        "checks": 1.0,
+        "length_ratio": 0.1365,
+        "prompt_words": 150
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 13.5
+    },
+    {
+      "persona": 29,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 58,
+      "eval_doc": 37,
+      "learned": {
+        "length": "short",
+        "extractiveness": "high"
+      },
+      "undecided": [],
+      "questions": 5,
+      "prompt_changed": false,
+      "gepa_report": {
+        "seed_score": 0.8892807955751302,
+        "final_score": 0.8892807955751302,
+        "eval_inputs": 3,
+        "leaky_skipped": 2
+      },
+      "assembled": {
+        "rouge_l": 0.1538,
+        "checks": 0.9667,
+        "length_ratio": 0.4189,
+        "prompt_words": 148
+      },
+      "app_gepa": {
+        "rouge_l": 0.1538,
+        "checks": 0.9667,
+        "length_ratio": 0.4189,
+        "prompt_words": 148
+      },
+      "prompts": {
+        "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing.",
+        "app_gepa": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+      },
+      "seconds": 36.9
+    }
+  ],
+  "runs": [
+    {
+      "requested_n": 2,
+      "spend_dollars": 0.0128,
+      "model_calls": 43,
+      "seconds": 134.3,
+      "stopped": null
+    },
+    {
+      "requested_n": 30,
+      "spend_dollars": 0.13,
+      "model_calls": 417,
+      "seconds": 1128.4,
+      "stopped": null
+    }
+  ],
+  "config": {
+    "domain": "domains/summarization.yaml",
+    "language": "en",
+    "model": "openai/gpt-4o-mini",
+    "reflection_model": "openai/gpt-5.6-luna",
+    "metric_calls": 20,
+    "selector": "app (contrast_first, avoid_repeats)",
+    "tie_policy": "legacy-a",
+    "preregistration": "docs/history/2026-10-06_gepa_app_preregistration.md"
+  },
+  "summary": {
+    "n": 30,
+    "means": {
+      "rouge_l": {
+        "assembled": 0.1858,
+        "app_gepa": 0.1818
+      },
+      "checks": {
+        "assembled": 0.9382,
+        "app_gepa": 0.9268
+      },
+      "length_ratio": {
+        "assembled": 0.2851,
+        "app_gepa": 0.2802
+      },
+      "prompt_words": {
+        "assembled": 149.5,
+        "app_gepa": 170.2667
+      }
+    },
+    "app_gepa_vs_assembled": {
+      "rouge_l": {
+        "wins": 4,
+        "losses": 4,
+        "ties": 22,
+        "mean_diff": -0.004,
+        "sign_test_p": 1.0
+      },
+      "checks": {
+        "wins": 0,
+        "losses": 1,
+        "ties": 29,
+        "mean_diff": -0.0113,
+        "sign_test_p": 1.0
+      }
+    },
+    "prompt_changed": 8,
+    "estimate_exact": 12
+  }
+}
