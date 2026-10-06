@@ -39,6 +39,7 @@ from engine.domain_loader import Domain, load_domain
 from engine.estimator import Comparison, Estimator
 import exporters
 import template_library
+from engine import generator
 from engine.generator import build_compact_prompt, build_final_prompt, build_prompt, build_template_prompt, generate_all
 from engine.metric_builder import build_metric
 from engine.selector import UncertaintySelector
@@ -402,9 +403,8 @@ def optimize(
     from gepa.adapters.default_adapter.default_adapter import DefaultAdapter
 
     domain, estimator, _ = _rebuild(state)
+    check_optimizable(estimator)
     undecided = undecided_axes(estimator)
-    if len(undecided) == len(estimator.enum_axis_names()):
-        raise ValueError("정한 선호가 하나도 없어 최적화할 기준이 없습니다. 비교에서 한쪽을 골라 주세요.")
     # 정하지 못한 축은 채점하지 않는다 - 채점하면 최적화가 그 축의 첫 값을 밀어 넣는다.
     metric = build_metric(domain, estimator, skip_axes=set(undecided))
     # GEPA 는 사용자에게 보여 준 것과 같은 최종 프롬프트에서 출발한다.
@@ -421,7 +421,8 @@ def optimize(
         return result
 
     adapter = DefaultAdapter(
-        model=task_model or state.model,
+        # 문자열 모델 이름을 주면 GEPA 가 litellm 을 직접 불러 캐시를 거치지 않는다 (절대 규칙 2).
+        model=cached_task_model(task_model or state.model),
         evaluator=MetricEvaluator(counting_metric),
     )
     # 원문 하나로 학습하고 같은 원문으로 평가하면, 성찰 모델이 그 원문의
@@ -612,6 +613,36 @@ def final_prompt(
         return build_template_prompt(domain, combo, template_library.get(template_id).prompt)
     # "ko" 는 원본 문구다 (prompt_languages 참고).
     return build_final_prompt(domain, combo, team=team, language=None if language in (None, "ko") else language)
+
+
+def check_optimizable(estimator: Estimator) -> None:
+    """최적화할 기준이 있는가. 없으면 ValueError. API 서버가 하루·세션 횟수를 차감하기 **전에**
+    부른다 - 거부될 요청이 횟수만 깎지 않게."""
+    if not any(estimator.has_signal(name) for name in estimator.enum_axis_names()):
+        raise ValueError("정한 선호가 하나도 없어 최적화할 기준이 없습니다. 비교에서 한쪽을 골라 주세요.")
+
+
+def cached_task_model(model: str, cache_dir=None):
+    """GEPA 가 후보 지침을 평가할 때 부르는 모델 함수. 후보 생성과 같은 파일 캐시
+    (engine.generator.generate_with_prompt)를 거치므로, 같은 (지침, 입력)은 다시 부르지 않는다.
+
+    대가: 함수로 넘기면 GEPA 는 평가 묶음을 동시에가 아니라 하나씩 부른다 (문자열이면
+    litellm 으로 10개씩 동시). 같은 평가를 두 번 사지 않는 쪽을 택했다.
+
+    모델이 빈 응답을 내면 생성기는 캐시하지 않고 RuntimeError 를 낸다. 여기서는 빈 문자열로
+    돌려준다 - 평가 함수가 빈 결과를 0점 처리하므로 그 후보만 떨어지고 최적화는 계속된다.
+    인증 오류 같은 다른 실패는 그대로 올라간다."""
+    target = cache_dir or generator.CACHE_DIR
+
+    def call(messages) -> str:
+        system = next((m["content"] for m in messages if m.get("role") == "system"), "")
+        user = next((m["content"] for m in messages if m.get("role") == "user"), "")
+        try:
+            return generator.generate_with_prompt(system, user, model, cache_dir=target)
+        except RuntimeError:
+            return ""
+
+    return call
 
 
 def undecided_axes(estimator: Estimator) -> list[str]:

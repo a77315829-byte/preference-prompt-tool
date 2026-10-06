@@ -167,6 +167,13 @@ def main() -> int:
         help="표 대신 같은 집계를 JSON 하나로 표준 출력에 낸다",
     )
     args = parser.parse_args()
+    if args.json:
+        # 한국어 윈도우는 표준 출력을 cp949 로 쓴다. --json 을 파이프로 받는 쪽(프로그램)은
+        # UTF-8 을 기대하므로 고정한다 - PYTHONUTF8 없이 테스트 3개가 실패하던 원인. 사람이
+        # 읽는 기본 표 출력은 예전과 바이트까지 같게 둔다 (test_default_output_unchanged).
+        for stream in (sys.stdout, sys.stderr):
+            if hasattr(stream, "reconfigure"):
+                stream.reconfigure(encoding="utf-8")
 
     # 로그 파일 인코딩은 환경마다 다를 수 있다. 줄 자체는 ASCII 라서
     # errors="replace" 로 읽어도 USER_FEEDBACK 줄은 온전하다.

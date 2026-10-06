@@ -1,6 +1,7 @@
 """scripts/summarize_feedback.py 의 --json 옵션 검증 (API 불필요)."""
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -34,10 +35,14 @@ def _make_lines():
     )
 
 
-def _run(args, text):
+def _run(args, text, env=None):
+    # 내용 비교가 목적이라 UTF-8 모드로 띄운다. 사람용 표 출력은 한국어 윈도우에서 예전처럼
+    # cp949 로 나오므로(test_default_output_unchanged), 그대로 UTF-8 로 읽으면 깨진다.
+    # --json 이 환경과 상관없이 UTF-8 인지는 test_json_is_utf8_without_utf8_mode 가 따로 본다.
     return subprocess.run(
         [sys.executable, "-m", "scripts.summarize_feedback", *args],
         input=text, capture_output=True, text=True, encoding="utf-8", cwd=ROOT,
+        env=env if env is not None else {**os.environ, "PYTHONUTF8": "1"},
     )
 
 
@@ -150,3 +155,12 @@ def test_default_output_unchanged(log_file, tmp_path):
     )
     assert before.returncode == 0
     assert after.stdout == before.stdout
+
+
+def test_json_is_utf8_without_utf8_mode(log_text):
+    """PYTHONUTF8 를 끈 한국어 윈도우에서도 --json 은 UTF-8 이다. 이것을 파이프로 받는 쪽은
+    프로그램이고 UTF-8 JSON 을 기대한다. 고치기 전에는 cp949 로 나와 테스트 3개가 실패했다."""
+    env = {k: v for k, v in os.environ.items() if k not in ("PYTHONUTF8", "PYTHONIOENCODING")}
+    result = _run(["--json"], log_text + 'USER_FEEDBACK {"at": "t", "mode": "ap\n', env=env)
+    assert json.loads(result.stdout)["responses"] == 8
+    assert "건너뜀" in result.stderr

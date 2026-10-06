@@ -924,6 +924,8 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if OPTIMIZE_RUNS.get(session_id, 0) >= MAX_OPTIMIZATIONS_PER_SESSION:
                 raise ValueError(f"세션당 최적화는 {MAX_OPTIMIZATIONS_PER_SESSION}회까지입니다.")
+            # 거부될 요청이 횟수만 깎지 않게, 최적화할 기준이 있는지 차감 전에 본다.
+            service.check_optimizable(service.current_estimate(state)[1])
             _take(DAILY_OPTIMIZATIONS, "최적화")
             OPTIMIZE_RUNS[session_id] = OPTIMIZE_RUNS.get(session_id, 0) + 1
             state.optimize_status = "running"

@@ -224,10 +224,14 @@ def summarize(domain: Domain, members: list[Member]) -> tuple[Estimator, list[Ax
     for axis in team_estimator.enum_axis_names():
         # 선호를 정한 사람만 센다 (_equal_weight_team 과 같은 기준).
         votes = Counter(e.preferred_value(axis) for e in personal if e.has_signal(axis))
-        undecided = not team_estimator.has_signal(axis)
+        # 두 경우를 가른다: 아무도 선호를 정하지 않음(표가 없다)과, 의견이 정확히 반으로
+        # 갈림(표는 있는데 합친 효용이 같다 - 1:1 이고 두 사람의 확신이 대칭이면 그렇다).
+        # 둘 다 팀 프롬프트에서는 빠지지만 화면에 보일 말이 다르다.
+        undecided = not votes
+        decided = team_estimator.has_signal(axis)
         agreements.append(AxisAgreement(
             axis=axis,
-            team_value="" if undecided else team_estimator.preferred_value(axis),
+            team_value=team_estimator.preferred_value(axis) if decided else "",
             votes=dict(votes.most_common()),
             agreed=len(votes) == 1,
             tied=len(votes) > 1 and sum(1 for n in votes.values() if n == max(votes.values())) > 1,

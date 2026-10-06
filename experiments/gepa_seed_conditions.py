@@ -36,7 +36,6 @@ GEPA 학습·검증 문서는 평가 문서와 겹치지 않도록 val.json 뒤�
 from __future__ import annotations
 
 import json
-import math
 import statistics
 import time
 from pathlib import Path
@@ -53,8 +52,10 @@ from engine.selector import UncertaintySelector
 from experiments.compare_baselines import MODEL, N_ROUNDS, generate_raw, score_against_combo
 from experiments.independent_grader import rouge_l_score
 from experiments.persona import choose
+from experiments.result_statistics import sign_test_p as _shared_sign_test_p
 from experiments.run_all import pick_documents_with_personas
 from optimize.run_gepa import MetricEvaluator, build_seed_prompt
+from service import cached_task_model
 
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
@@ -99,7 +100,8 @@ def partial_seed(domain: Domain, estimator: Estimator) -> tuple[str, list[str], 
 
 
 def run_gepa(seed_prompt: str, metric, train_sources: list[str], val_sources: list[str]):
-    adapter = DefaultAdapter(model=MODEL, evaluator=MetricEvaluator(metric))
+    # 함수로 넘겨 생성 캐시를 거친다 (절대 규칙 2). 문자열이면 GEPA 가 litellm 을 직접 부른다.
+    adapter = DefaultAdapter(model=cached_task_model(MODEL), evaluator=MetricEvaluator(metric))
     return gepa_optimize(
         seed_candidate={"system_prompt": seed_prompt},
         trainset=[{"input": s} for s in train_sources],
@@ -127,12 +129,10 @@ def gepa_sources(eval_sources: list[str]) -> tuple[list[str], list[str]]:
     return pool[:4], pool[4:6]
 
 
-def sign_test_p(wins: int, n: int) -> float:
-    """양측 부호검정, 동률 제외 후 n."""
-    if n == 0:
-        return 1.0
-    tail = sum(math.comb(n, k) for k in range(wins, n + 1)) / 2 ** n
-    return min(1.0, 2 * tail)
+# 양측 부호검정은 저장소 공통 함수를 쓴다. 예전에 여기 따로 있던 함수는 꼬리를 늘
+# wins 이상 쪽으로만 셌다 - 5승 0패는 0.0625 인데 0승 5패는 1.0 이 나와 악화를 놓친다.
+# 저장된 결과의 p 값은 모두 1.0 이라 바뀌지 않는다 (tests/test_review_fixes.py).
+sign_test_p = _shared_sign_test_p
 
 
 def load_partial() -> dict:
