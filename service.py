@@ -173,7 +173,7 @@ def _axis_views(state: SessionState, estimator: Estimator) -> list[AxisView]:
         views.append(
             AxisView(
                 name=name,
-                estimate=estimator.preferred_value(name) if state.history else None,
+                estimate=estimator.preferred_value(name) if discriminated else None,
                 confidence=round(estimator.confidence(name), 4),
                 discriminated=discriminated,
                 total_rounds=state.total_rounds,
@@ -195,7 +195,14 @@ def _generate_pair(
     중요하다 - 먼저 끝난 것을 앞에 놓으면 A/B 가 뒤바뀌어 사용자가 고른
     것과 다른 축을 학습한다.
     """
-    if state.demo_mode:
+    if state.demo_mode and domain.name == "coding":
+        from demos.coding_dataset import generate_coding_pair
+
+        # A/B의 위치를 바꾸더라도 실제 코드와 축 조합은 항상 함께 이동한다.
+        if state.answered % 2:
+            combo_a, combo_b = combo_b, combo_a
+        texts = generate_coding_pair(state.source_text, state.answered, combo_a, combo_b)
+    elif state.demo_mode:
         texts = [
             generate_demo(domain, state.source_text, combo_a),
             generate_demo(domain, state.source_text, combo_b),
