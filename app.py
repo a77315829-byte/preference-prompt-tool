@@ -31,7 +31,6 @@ from engine.domain_loader import Domain, load_domain
 from engine.estimator import Comparison, Estimator
 from engine.generator import generate_all, generate_all_with_prompts
 from engine.selector import UncertaintySelector
-from optimize.run_gepa import build_seed_prompt
 
 load_dotenv()
 
@@ -48,10 +47,15 @@ if not os.environ.get("OPENAI_API_KEY"):
     if secret_key:
         os.environ["OPENAI_API_KEY"] = secret_key
 
-# gpt-4.1-mini 대비 입력 50%·출력 25% 저렴하고(0.20/1.20 vs 0.40/1.60 per M),
-# 실제 코딩 프롬프트 생성에서 더 빨랐다(6.3s vs 11.4s, 각 1회 측정).
+# 후보 생성 모델. 호출 대부분이 여기라 싼 모델을 쓴다.
+# 2026-09-27 실측 (요약 조합 3개 + 이메일 조합 2개 x 예시 입력 3개, 모델당 15회,
+# 코드 채점 함수로 축 준수를 잼): gpt-4o-mini 0.944 / 1회 $0.00008 / 1.1초,
+# gpt-5.6-luna 0.895 / $0.00020 / 3.0초. gpt-4.1-nano 는 0.927 / $0.00006.
+# 추론형 gpt-5-nano 는 표시 가격이 가장 싸지만 추론 토큰 때문에 1회 $0.00056
+# 으로 가장 비쌌다. 추론형이 아니라 temperature 도 받는다.
+# GEPA 성찰 모델은 service.REFLECTION_MODEL 에서 따로 정한다.
 # experiments/ 쪽은 README에 보고된 수치가 4.1-mini로 측정된 것이라 안 바꾼다.
-MODEL = "openai/gpt-5.6-luna"
+MODEL = "openai/gpt-4o-mini"
 N_ROUNDS = 8
 
 API_MODE_LABEL = "AI 실시간 생성 (GPT-5.6 Luna)"
@@ -96,7 +100,7 @@ DOMAIN_OPTIONS = {
         "path": "domains/coding.yaml",
         "intro": (
             "만들고 싶은 기능을 적고, 작성 방식이 다른 TypeScript/React 코드 중 "
-            f"마음에 드는 쪽을 {N_ROUNDS}회 골라주세요."
+            f"마음에 드는 쪽을 최대 {N_ROUNDS}회 골라주세요."
         ),
         "input_label": "어떤 기능을 만들고 싶나요?",
         "placeholder": "예: 클릭 횟수를 보여주는 버튼 컴포넌트를 만들어 주세요.",
@@ -107,7 +111,7 @@ DOMAIN_OPTIONS = {
         "label": "문서 요약 (영어)",
         "path": "domains/summarization.yaml",
         "intro": (
-            f"영어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 {N_ROUNDS}회 골라주세요. "
+            f"영어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 최대 {N_ROUNDS}회 골라주세요. "
             "요약은 영어로 나옵니다."
         ),
         "input_label": "요약할 원문 (영어 뉴스 기사 권장)",
@@ -122,7 +126,7 @@ DOMAIN_OPTIONS = {
         "label": "문서 요약 (한국어)",
         "path": "domains/summarization_ko.yaml",
         "intro": (
-            f"한국어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 {N_ROUNDS}회 골라주세요. "
+            f"한국어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 최대 {N_ROUNDS}회 골라주세요. "
             "요약은 한국어로 나옵니다."
         ),
         "input_label": "요약할 원문 (한국어 뉴스 기사 권장)",
@@ -137,7 +141,7 @@ DOMAIN_OPTIONS = {
         "label": "고객 리뷰 작성",
         "path": "domains/review.yaml",
         "intro": (
-            f"방문 경험이나 사용 후기를 적으면, 리뷰 두 개 중 마음에 드는 쪽을 {N_ROUNDS}회 "
+            f"방문 경험이나 사용 후기를 적으면, 리뷰 두 개 중 마음에 드는 쪽을 최대 {N_ROUNDS}회 "
             "골라주세요. 리뷰는 영어로 나옵니다."
         ),
         "input_label": "리뷰로 만들 메모 (영어 권장)",
@@ -150,7 +154,7 @@ DOMAIN_OPTIONS = {
         "path": "domains/email.yaml",
         "intro": (
             f"보내려는 내용을 적으면, 작성 방식이 다른 이메일 두 개 중 마음에 드는 쪽을 "
-            f"{N_ROUNDS}회 골라주세요. 이메일은 영어로 나옵니다."
+            f"최대 {N_ROUNDS}회 골라주세요. 이메일은 영어로 나옵니다."
         ),
         "input_label": "이메일로 만들 요청 사항 (영어 권장)",
         "placeholder": "예: Ask the vendor to confirm the Q4 delivery date and share the updated invoice.",
@@ -276,6 +280,14 @@ def _show_candidate(domain_key: str, candidate: str) -> None:
         st.write(candidate)
 
 
+def _safe_error(exc: BaseException) -> str:
+    """화면에 띄울 오류 문구. 원문은 서버 로그(배포자만 봄)에만 남긴다 -
+    OpenAI 인증 오류 원문에는 키 일부가 들어 있어 공개 링크에 그대로
+    띄우면 안 된다."""
+    print(f"[api-error] {type(exc).__name__}: {exc}", flush=True)
+    return service.describe_api_error(exc)
+
+
 def _show_api_error_notice() -> None:
     """API 호출이 실패해 데모 모드로 내려왔음을 숨기지 않고 알린다."""
     error = st.session_state.get("api_error")
@@ -346,7 +358,7 @@ def _show_prompt_trial(domain: Domain, personal_prompt: str) -> None:
                         model=MODEL,
                     )
                 except Exception as exc:  # noqa: BLE001 - 사용자에게 그대로 알린다
-                    st.session_state.trial_error = str(exc)
+                    st.session_state.trial_error = _safe_error(exc)
                 else:
                     st.session_state.pop("trial_error", None)
                     st.session_state.trial_result = (baseline, personal)
@@ -630,7 +642,7 @@ STYLES = """
 
 STEPS = (
     ("1", "주제 선택 &amp; 입력", "요약할 원문이나 만들고 싶은 기능을 적습니다."),
-    ("2", f"A/B 비교 {N_ROUNDS}회", "어느 축이 다른지는 알려주지 않습니다. 마음에 드는 쪽만 고르세요."),
+    ("2", f"A/B 비교 최대 {N_ROUNDS}회", "어느 축이 다른지는 알려주지 않습니다. 마음에 드는 쪽만 고르세요."),
     ("3", "프롬프트 완성", "추정된 취향을 반영한 시스템 프롬프트를 복사해 갑니다."),
 )
 
@@ -860,7 +872,7 @@ def _rebuilt_estimator(session):
     `service.SessionState` 는 엔진 객체를 담지 않으므로(직렬화 가능해야
     한다) 여기서 이력을 재생해 꺼낸다. 재생 비용은 8라운드짜리다.
     """
-    _, estimator, _ = service._rebuild(session)
+    _, estimator = service.current_estimate(session)
     return estimator
 
 
@@ -891,7 +903,7 @@ def _run_optimize(session, seed_prompt: str) -> None:
                 session, on_progress=lambda value: shared.__setitem__("progress", value)
             )
         except Exception as exc:  # noqa: BLE001 - 실패해도 기본 프롬프트는 쓸 수 있다
-            shared["error"] = str(exc)
+            shared["error"] = _safe_error(exc)
 
     worker = threading.Thread(target=work, daemon=True)
     worker.start()
@@ -1076,7 +1088,7 @@ if st.session_state.stage == "input":
                 demo_mode=demo_mode,
             )
         except Exception as exc:  # noqa: BLE001 - 첫 호출 실패는 데모로 내린다
-            st.session_state.api_error = str(exc)
+            st.session_state.api_error = _safe_error(exc)
             st.session_state.demo_mode = True
             st.session_state.session = service.start_session(
                 source,
@@ -1181,7 +1193,7 @@ elif st.session_state.stage == "compare":
             # 막다른 길로 끝내지 않는다. 키가 만료되거나 결제 한도에 걸리면
             # 처음 보는 사람 눈에는 그냥 고장난 서비스다. 데모로 내려 남은
             # 비교를 이어가고 지금까지의 선택은 살린다.
-            st.session_state.api_error = str(exc)
+            st.session_state.api_error = _safe_error(exc)
             st.session_state.demo_mode = True
             degraded = replace(session, demo_mode=True)
             st.session_state.session = service.submit_choice(
@@ -1226,7 +1238,7 @@ elif st.session_state.stage == "done":
     with st.expander("사람이 읽는 말로 보기"):
         _show_preferences(domain_key, preferred)
 
-    seed_prompt = build_seed_prompt(domain, _rebuilt_estimator(session))
+    seed_prompt = service.final_prompt(domain, _rebuilt_estimator(session))
     prompt = st.session_state.get("optimized_prompt", seed_prompt)
     st.markdown(
         '<div class="ppt-label" style="margin-top:24px">시스템 프롬프트</div>',

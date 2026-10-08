@@ -1,0 +1,59 @@
+[
+  {
+    "domain": "summarization",
+    "rounds": 5,
+    "session": {},
+    "optimize": {
+      "gpt-4o-mini": {
+        "dollars": 0.00337,
+        "calls": 27
+      },
+      "gpt-5.6-luna": {
+        "dollars": 0.00243,
+        "calls": 2
+      }
+    },
+    "optimize_dollars": 0.0058,
+    "optimize_seconds": 37.6,
+    "metric_calls_budget": 20,
+    "reflection_model": "openai/gpt-5.6-luna",
+    "prompt_changed": true,
+    "report": {
+      "seed_score": 0.9287510445797689,
+      "final_score": 1.0,
+      "eval_inputs": 2,
+      "leaky_skipped": 0
+    }
+  },
+  {
+    "domain": "coding",
+    "rounds": 3,
+    "session": {
+      "gpt-4o-mini": {
+        "dollars": 0.00204,
+        "calls": 4
+      }
+    },
+    "optimize": {
+      "gpt-4o-mini": {
+        "dollars": 0.01258,
+        "calls": 22
+      },
+      "gpt-5.6-luna": {
+        "dollars": 0.01007,
+        "calls": 2
+      }
+    },
+    "optimize_dollars": 0.0226,
+    "optimize_seconds": 115.7,
+    "metric_calls_budget": 20,
+    "reflection_model": "openai/gpt-5.6-luna",
+    "prompt_changed": true,
+    "report": {
+      "seed_score": 0.5833333333333333,
+      "final_score": 0.8333333333333333,
+      "eval_inputs": 2,
+      "leaky_skipped": 0
+    }
+  }
+]

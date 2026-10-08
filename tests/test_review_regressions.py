@@ -6,7 +6,6 @@ import streamlit as st
 from streamlit.testing.v1 import AppTest
 
 import service
-from optimize.run_gepa import build_seed_prompt
 
 APP = Path(__file__).resolve().parents[1] / "app.py"
 
@@ -68,7 +67,8 @@ def test_daily_optimization_limit_blocks_call(monkeypatch):
 def test_unchanged_prompt_does_not_claim_perfect_score(monkeypatch):
     def unchanged(state, **kwargs):
         domain, estimator, _ = service._rebuild(state)
-        return build_seed_prompt(domain, estimator)
+        # 화면의 기본 프롬프트는 service.final_prompt 로 조립한다.
+        return service.final_prompt(domain, estimator)
     monkeypatch.setattr(service, "optimize", unchanged)
     app = finished_api_app(monkeypatch)
     before = app.code[0].value

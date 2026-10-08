@@ -54,11 +54,48 @@ class Axis:
 
 
 @dataclass
+class FinalPromptSpec:
+    """사용자에게 건네는 최종 프롬프트의 틀에 들어갈 문구. 전부 YAML 에서
+    온다 - 엔진은 순서대로 이어 붙이기만 한다."""
+
+    role: str
+    preference_heading: str
+    rules_heading: str
+    rules: list[str]
+    output_heading: str
+    output: str
+    axis_labels: dict[str, str] = field(default_factory=dict)
+    # 여러 사람의 선택을 합친 팀 프롬프트용. 없으면 role·preference_heading 을 쓴다.
+    team_role: str | None = None
+    team_preference_heading: str | None = None
+    # 선호 절 머리말 바로 아래에 붙는 설명 (선호가 어디서 왔는지). 선호 절이 빠지면 같이
+    # 빠진다 - 역할 문장에 넣어 두면 선호가 하나도 없을 때 "아래 선호는..."만 남는다.
+    preference_note: str | None = None
+    team_preference_note: str | None = None
+    # 번역판에서만 쓴다 (final_prompt_translations). 과제 설명과 축 값마다의 지시문을
+    # 그 언어로 다시 적는다. 원본(final_prompt)은 비워 두고 도메인의 문구를 쓴다.
+    task: str | None = None
+    instructions: dict[str, dict[str, str]] | None = None
+    freeform_templates: dict[str, str] = field(default_factory=dict)
+
+
+@dataclass
 class Domain:
     name: str
     task_description: str
     checks_module: str
     axes: list[Axis]
+    # 이 도메인의 전형적인 입력 몇 개. 최적화가 사용자 원문 하나에만 맞춰
+    # 그 내용을 프롬프트에 박아 넣지 않도록 평가용으로 쓴다. 선택 항목.
+    example_sources: list[str] = field(default_factory=list)
+    # 선택 항목. 없으면 최종 프롬프트는 후보 생성용 프롬프트와 같다.
+    final_prompt: FinalPromptSpec | None = None
+    # 같은 최종 프롬프트의 다른 언어판. 키(예: "en")의 뜻은 화면 쪽이 안다.
+    # 후보 생성 지시문에는 쓰지 않는다 - 캐시 키와 실험 결과가 그 문구에 묶여 있다.
+    final_prompt_translations: dict[str, FinalPromptSpec] = field(default_factory=dict)
+    # 만든 프롬프트를 내보낼 곳의 이름 목록. 선택 항목이고, 비어 있으면
+    # 화면 쪽 기본값을 쓴다. 이름의 뜻은 엔진이 아니라 화면 쪽이 안다.
+    export_targets: list[str] = field(default_factory=list)
 
     def axis(self, name: str) -> Axis:
         for a in self.axes:
@@ -138,6 +175,49 @@ def _validate(raw: dict, path: Path) -> None:
     if enum_count == 0:
         raise DomainError(f"{where}: 선택으로 학습할 enum 축이 하나도 없다")
 
+    final = raw.get("final_prompt")
+    if final is not None:
+        _validate_final(final, f"{where} final_prompt", axis_names)
+    translations = raw.get("final_prompt_translations", {})
+    if not isinstance(translations, dict):
+        raise DomainError(f"{where}: final_prompt_translations 는 언어 키를 가진 사전이어야 한다")
+    if translations and final is None:
+        raise DomainError(f"{where}: final_prompt 없이 번역판만 둘 수 없다")
+    for language, spec in translations.items():
+        at = f"{where} final_prompt_translations.{language}"
+        if not isinstance(spec, dict):
+            raise DomainError(f"{at}: 사전이어야 한다")
+        _validate_final(spec, at, axis_names)
+        if not isinstance(spec.get("task"), str) or not spec["task"].strip():
+            raise DomainError(f"{at}: 'task' 는 비어 있지 않은 문자열이어야 한다")
+        instructions = spec.get("instructions")
+        if not isinstance(instructions, dict):
+            raise DomainError(f"{at}: 'instructions' 는 축 -> 값 -> 문구 사전이어야 한다")
+        for key in ("instructions", "freeform_templates"):
+            unknown = set(spec.get(key) or {}) - axis_names
+            if unknown:
+                raise DomainError(f"{at}: {key} 에 없는 축이 있다: {sorted(unknown)}")
+
+    targets = raw.get("export_targets", [])
+    if not isinstance(targets, list) or not all(isinstance(t, str) and t.strip() for t in targets):
+        raise DomainError(f"{where}: export_targets 는 비어 있지 않은 문자열 목록이어야 한다")
+
+    examples = raw.get("example_sources", [])
+    if not isinstance(examples, list) or not all(isinstance(e, str) and e.strip() for e in examples):
+        raise DomainError(f"{where}: example_sources 는 비어 있지 않은 문자열 목록이어야 한다")
+
+
+def _validate_final(final: dict, at: str, axis_names: set[str]) -> None:
+    for key in ("role", "preference_heading", "rules_heading", "output_heading", "output"):
+        if not isinstance(final.get(key), str) or not final[key].strip():
+            raise DomainError(f"{at}: '{key}' 는 비어 있지 않은 문자열이어야 한다")
+    rules = final.get("rules")
+    if not isinstance(rules, list) or not rules or not all(isinstance(r, str) and r.strip() for r in rules):
+        raise DomainError(f"{at}: 'rules' 는 비어 있지 않은 문자열 목록이어야 한다")
+    unknown = set(final.get("axis_labels", {})) - axis_names
+    if unknown:
+        raise DomainError(f"{at}: axis_labels 에 없는 축이 있다: {sorted(unknown)}")
+
 
 def load_domain(path: str | Path) -> Domain:
     raw = _read_raw(Path(path))
@@ -181,4 +261,35 @@ def load_domain(path: str | Path) -> Domain:
         task_description=raw["task_description"],
         checks_module=raw["checks_module"],
         axes=axes,
+        example_sources=[e.strip() for e in raw.get("example_sources", [])],
+        final_prompt=_final_prompt(raw.get("final_prompt")),
+        final_prompt_translations={
+            language: _final_prompt(spec) for language, spec in raw.get("final_prompt_translations", {}).items()
+        },
+        export_targets=[t.strip() for t in raw.get("export_targets", [])],
+    )
+
+
+def _final_prompt(raw: dict | None) -> FinalPromptSpec | None:
+    if raw is None:
+        return None
+    return FinalPromptSpec(
+        role=raw["role"].strip(),
+        preference_heading=raw["preference_heading"].strip(),
+        rules_heading=raw["rules_heading"].strip(),
+        rules=[r.strip() for r in raw["rules"]],
+        output_heading=raw["output_heading"].strip(),
+        output=raw["output"].strip(),
+        axis_labels=dict(raw.get("axis_labels", {})),
+        team_role=(raw.get("team_role") or "").strip() or None,
+        team_preference_heading=(raw.get("team_preference_heading") or "").strip() or None,
+        preference_note=(raw.get("preference_note") or "").strip() or None,
+        team_preference_note=(raw.get("team_preference_note") or "").strip() or None,
+        task=(raw.get("task") or "").strip() or None,
+        instructions=(
+            {axis: {value: str(text).strip() for value, text in values.items()}
+             for axis, values in raw["instructions"].items()}
+            if isinstance(raw.get("instructions"), dict) else None
+        ),
+        freeform_templates={axis: str(t).strip() for axis, t in (raw.get("freeform_templates") or {}).items()},
     )

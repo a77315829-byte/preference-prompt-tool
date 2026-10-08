@@ -1,28 +1,75 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ComparisonSection from '../features/comparison/ComparisonSection';
 import IdleTrackerSection from '../features/idle-tracker/IdleTrackerSection';
 import ScrollStory from '../features/landing/ScrollStory';
 import PromptPolishSection from '../features/polish/PromptPolishSection';
+import PromptWorkspaceSection from '../features/prompt-workspace/PromptWorkspaceSection';
+import TemplateLibrarySection from '../features/templates/TemplateLibrarySection';
+import AccountSection from '../shared/auth/AccountSection';
+import AuthSection from '../shared/auth/AuthSection';
+import { fetchMe, logout } from '../shared/auth/authApi';
 import './App.css';
 import '../features/landing/landing.css';
+import '../features/comparison/comparison.css';
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState('summary');
   const [activeFlow, setActiveFlow] = useState('category');
+  const [sceneRequest, setSceneRequest] = useState({ index: 0, sequence: 0 });
+  // 템플릿 라이브러리에서 "내 방식으로 바꾸기"로 들어왔을 때의 템플릿.
+  const [template, setTemplate] = useState(null);
+  // 로그인 화면으로 잠시 이동해도 진행 중인 비교와 결과를 잃지 않는다.
+  const [comparisonDraft, setComparisonDraft] = useState(null);
+  const handleDraftChange = useCallback((draft) => {
+    setComparisonDraft({ domainKey: activeFlow, ...draft });
+  }, [activeFlow]);
+  // 로그인 상태. undefined = 아직 모름, null = 로그인 안 함. 세션은 HttpOnly 쿠키라
+  // 화면은 서버에 물어서만 안다.
+  const [user, setUser] = useState(undefined);
+  const [signupOpen, setSignupOpen] = useState(true);
+  // 로그인 화면으로 오기 전 흐름. 로그인이 끝나면 거기로 돌아간다.
+  const [returnFlow, setReturnFlow] = useState('category');
+  const [authReason, setAuthReason] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const requestScene = (scene) => {
-    if (activeFlow !== 'category') {
-      setActiveFlow('category');
-      window.setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('narrative:scene', { detail: scene }));
-      }, 30);
+  useEffect(() => {
+    fetchMe()
+      .then((data) => { setUser(data.user); setSignupOpen(data.signupOpen !== false); })
+      .catch(() => setUser(null));
+  }, []);
+
+  // 작업 공간에서 로그인을 누르면 화면을 옮기지 않고 그 안에 로그인 칸을 연다 -
+  // 옮기면 작성 중인 프로젝트가 사라진다. 값이 바뀔 때마다 한 번 연다.
+  const [workspaceLoginRequest, setWorkspaceLoginRequest] = useState(0);
+
+  const requestLogin = (reason = '') => {
+    if (activeFlow === 'workspace') {
+      setWorkspaceLoginRequest((n) => n + 1);
       return;
     }
-    window.dispatchEvent(new CustomEvent('narrative:scene', { detail: scene }));
+    setReturnFlow(activeFlow === 'login' ? 'category' : activeFlow);
+    setAuthReason(reason);
+    setActiveFlow('login');
+  };
+
+  const handleLogout = async () => {
+    try { await logout(); } catch { /* 이미 끊긴 세션이어도 화면은 로그아웃 상태로 */ }
+    setUser(null);
+    if (activeFlow === 'account') setActiveFlow('category');
+  };
+
+  const requestScene = (scene) => {
+    setMenuOpen(false);
+    setTemplate(null);
+    setComparisonDraft(null);
+    setActiveFlow('category');
+    setSceneRequest(({ sequence }) => ({ index: scene, sequence: sequence + 1 }));
   };
 
   const handleCategoryContinue = () => {
+    setTemplate(null);
+    setComparisonDraft(null);
     if (selectedCategory === 'coding') setActiveFlow('coding');
     else if (selectedCategory === 'idleTracker') setActiveFlow('idleTracker');
     else if (selectedCategory === 'review') setActiveFlow('review');
@@ -34,7 +81,16 @@ function App() {
   };
 
   const handleComparisonBack = () => {
-    setActiveFlow('category');
+    setTemplate(null);
+    setComparisonDraft(null);
+    requestScene(0);
+  };
+
+  // 템플릿의 도메인 이름이 곧 비교 화면의 흐름 이름이다 (AWS 만 화면 이름이 다르다).
+  const handlePersonalizeTemplate = (picked) => {
+    setTemplate(picked);
+    setComparisonDraft(null);
+    setActiveFlow(picked.domain === 'idle_tracker' ? 'idleTracker' : picked.domain);
   };
 
   return (
@@ -44,12 +100,29 @@ function App() {
           Preference Prompt<span aria-hidden="true">·</span>
         </button>
 
-        <div className="nav-links" aria-label="페이지 이동">
+        <button className="nav-menu-button" type="button" aria-expanded={menuOpen}
+          aria-controls="site-nav-links" onClick={() => setMenuOpen((open) => !open)}>
+          {menuOpen ? '닫기' : '메뉴'}
+        </button>
+        <div className={`nav-links ${menuOpen ? 'is-open' : ''}`} id="site-nav-links" aria-label="페이지 이동">
           <button type="button" onClick={() => requestScene(1)}>사용 방법</button>
           <button type="button" onClick={() => requestScene(0)}>시작하기</button>
-          <button type="button" onClick={() => setActiveFlow('polish')}>프롬프트 다듬기</button>
+          <button type="button" onClick={() => { setMenuOpen(false); setTemplate(null); setActiveFlow('templates'); }}>템플릿</button>
+          <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('polish'); }}>프롬프트 다듬기</button>
+          <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('workspace'); }}>서비스용 프롬프트</button>
         </div>
 
+        {user ? (
+          <span className="nav-user">
+            <button type="button" className="nav-account" title="내 계정" onClick={() => {
+              setReturnFlow(activeFlow === 'account' ? 'category' : activeFlow);
+              setActiveFlow('account');
+            }}>{user.username}</button>
+            <button type="button" onClick={handleLogout}>로그아웃</button>
+          </span>
+        ) : user === null && (
+          <button className="nav-login" type="button" onClick={() => requestLogin()}>로그인</button>
+        )}
         <button className="nav-button" type="button" onClick={() => requestScene(0)}>
           바로 시작
         </button>
@@ -69,6 +142,7 @@ function App() {
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
               onContinue={handleCategoryContinue}
+              sceneRequest={sceneRequest}
             />
           </motion.div>
         )}
@@ -82,7 +156,16 @@ function App() {
             exit={{ opacity: 0, y: -24, scale: 0.99 }}
             transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
           >
-            <ComparisonSection onBack={handleComparisonBack} domainKey={activeFlow} />
+            <ComparisonSection onBack={handleComparisonBack} domainKey={activeFlow}
+              onSwitchDomain={(domain) => { setComparisonDraft(null); setActiveFlow(domain); }}
+              template={template} initialDraft={comparisonDraft?.domainKey === activeFlow ? comparisonDraft : null}
+              onDraftChange={handleDraftChange} />
+          </motion.div>
+        )}
+
+        {activeFlow === 'templates' && (
+          <motion.div className="flow-view" key="templates" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
+            <TemplateLibrarySection onBack={handleComparisonBack} onPersonalize={handlePersonalizeTemplate} />
           </motion.div>
         )}
 
@@ -92,9 +175,31 @@ function App() {
           </motion.div>
         )}
 
+        {activeFlow === 'account' && user && (
+          <motion.div className="flow-view" key="account" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
+            <AccountSection user={user} onBack={() => setActiveFlow(returnFlow)}
+              onDeleted={() => { setUser(null); setActiveFlow('category'); }} />
+          </motion.div>
+        )}
+
+        {activeFlow === 'login' && (
+          <motion.div className="flow-view" key="login" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
+            <AuthSection signupOpen={signupOpen} reason={authReason}
+              onBack={() => setActiveFlow(returnFlow)}
+              onDone={(nextUser) => { setUser(nextUser); setActiveFlow(returnFlow); }} />
+          </motion.div>
+        )}
+
+        {activeFlow === 'workspace' && (
+          <motion.div className="flow-view" key="workspace" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
+            <PromptWorkspaceSection onBack={handleComparisonBack} user={user} signupOpen={signupOpen}
+              onLogin={setUser} loginRequest={workspaceLoginRequest} />
+          </motion.div>
+        )}
+
         {activeFlow === 'idleTracker' && (
           <motion.div className="flow-view" key="idleTracker" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-            <IdleTrackerSection onBack={handleComparisonBack} />
+            <IdleTrackerSection onBack={handleComparisonBack} template={template} />
           </motion.div>
         )}
 

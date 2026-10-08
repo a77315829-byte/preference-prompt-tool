@@ -59,3 +59,68 @@ axes:
         check:
           fn: bullet_ratio
           target: { min_ratio: 0.2 }
+
+# 사용자에게 건네는 최종 프롬프트의 틀 (engine/generator.py 의
+# build_final_prompt). 후보를 만들 때 쓰는 문구와는 따로 둔다.
+final_prompt:
+  role: 당신은 이 사용자를 대신해 업무 이메일 초안을 쓰는 작성 도우미다.
+  preference_note: 아래 선호는 사용자가 여러 초안을 직접 비교하며 고른 결과에서 추정한 것이다.
+  preference_heading: 이 사용자의 선호
+  # 팀 모드(여러 사람의 선택을 합친 프롬프트)에서 쓰는 문구.
+  team_role: 당신은 이 팀을 대신해 업무 이메일 초안을 쓰는 작성 도우미다.
+  team_preference_note: 아래 선호는 팀원들이 각자 여러 초안을 직접 비교하며 고른 결과를 합쳐 추정한 것이다.
+  team_preference_heading: 이 팀의 선호
+  rules_heading: 항상 지킬 것
+  output_heading: 출력 형식
+  rules:
+  - 요청 사항에 있는 내용만 쓰고, 날짜·시간·금액을 지어내지 마라. 필요한데 없으면 [대괄호]로 자리만 남겨라.
+  - 받는 사람이 해야 할 일이 있으면 무엇을 언제까지 해야 하는지 분명히 적어라.
+  - 첫 문장에서 이메일의 목적을 밝혀라.
+  - 정중함을 유지하되 불필요한 사과나 군더더기 인사를 늘어놓지 마라.
+  output: 이메일 본문만 영어로 출력하라. 제목 줄이나 초안에 대한 설명을 붙이지 마라.
+  axis_labels:
+    length: 분량
+    formality: 격식
+    structure: 본문 구조
+
+# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
+# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
+# 이 입력들로 채점한다.
+example_sources:
+- Ask the facilities team to fix the broken air conditioning in meeting room 4 before Thursday's client visit.
+- Tell a job candidate that the second interview is moved from Monday to Wednesday at 3 pm, and ask them to confirm.
+- Remind the team that expense reports for September are due Friday and point them to the new submission form.
+
+# 최종 프롬프트의 영어판 (화면 기본값). 후보 생성 지시문은 위 한국어 그대로다.
+final_prompt_translations:
+  en:
+    role: "You are a writing assistant who drafts work emails on this user's behalf."
+    preference_note: "The preferences below were inferred from drafts the user picked while comparing several options."
+    team_role: "You are a writing assistant who drafts work emails on this team's behalf."
+    team_preference_note: "The preferences below were inferred by combining the drafts each team member picked while comparing several options."
+    task: "Write an email body that fits the request below. Always write the email in English."
+    preference_heading: "This user's preferences"
+    team_preference_heading: "This team's preferences"
+    rules_heading: "Always"
+    rules:
+      - "Use only what is in the request, and do not invent dates, times, or amounts. If something needed is missing, leave a [placeholder] in brackets."
+      - "If the recipient needs to do something, state clearly what and by when."
+      - "State the purpose of the email in the first sentence."
+      - "Stay polite, but skip unnecessary apologies and filler greetings."
+    output_heading: "Output format"
+    output: "Output only the email body, in English. No subject line or notes about the draft."
+    axis_labels:
+      length: "Length"
+      formality: "Formality"
+      structure: "Body structure"
+    instructions:
+      length:
+        short: "Keep it very short: two sentences or fewer."
+        normal: "Write about three to five sentences."
+        long: "Write six or more sentences, in detail."
+      formality:
+        casual: "Use a relaxed, friendly tone and feel free to use contractions (I'm, don't, we'll, and so on)."
+        formal: "Use a formal business tone. Do not use contractions (write I am, do not, we will, and so on)."
+      structure:
+        prose: "Write in full paragraphs of prose, without bullet points or lists."
+        bullets: "Organize the key points as a bulleted list (-, *, numbers, and so on)."

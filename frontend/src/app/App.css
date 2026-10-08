@@ -78,6 +78,8 @@
   color: #111827;
 }
 
+.nav-menu-button { display: none; }
+
 .nav-button,
 .primary-button,
 .selection-button,
@@ -1209,6 +1211,12 @@
   font-weight: 800;
 }
 
+/* "0 / 6" 이 두 줄로 쪼개지지 않게. 막대만 줄어든다. */
+.comparison-progress > span:not(.comparison-progress-bar) {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 .comparison-progress-bar {
   display: block;
   width: 100%;
@@ -1313,8 +1321,24 @@
   line-height: 1.6;
 }
 
+/* 후보 글은 한 줄로 이어지면 가로 스크롤이 생겨 비교가 안 된다.
+   줄바꿈하고 내용만큼 늘어나게 한다. 코드는 들여쓰기를 살리려고
+   pre-wrap 으로 줄만 접는다. */
 .comparison-option pre {
   flex: 1;
+  overflow-x: visible;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* 요약·리뷰·이메일처럼 코드가 아닌 글은 본문 글꼴로 읽힌다. 안쪽 code 에도
+   걸어야 한다 - code 는 자기 고정폭 글꼴을 따로 갖는다. */
+.comparison-option pre.option-prose,
+.comparison-option pre.option-prose code {
+  font-family: inherit;
+  letter-spacing: normal;
+  font-size: 0.95rem;
+  line-height: 1.75;
 }
 
 .option-arrow {
@@ -1880,4 +1904,631 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* 바로 쓰기: 도구별 복사·내려받기 (shared/components/ExportPanel.jsx) */
+.export-panel {
+  margin-top: 1.6rem;
+}
+
+.export-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.export-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid #e1e6ef;
+  border-radius: 1rem;
+  background: #f8f9fb;
+}
+
+.export-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 18rem;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.export-copy span {
+  color: #697386;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.export-path {
+  align-self: flex-start;
+  padding: 0.1rem 0.45rem;
+  border-radius: 0.4rem;
+  color: #111827;
+  background: #e8ecf4;
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.export-copy .export-warning {
+  color: #b45309;
+}
+
+/* 복사 실패 안내와 직접 선택해 복사할 내용. 항목 아래 한 줄을 다 쓴다. */
+.export-failure {
+  display: flex;
+  flex: 1 1 100%;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.export-failure .export-warning {
+  color: #b45309;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.export-failure textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 7rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e1e6ef;
+  border-radius: 0.6rem;
+  color: #111827;
+  background: #ffffff;
+  font: 0.82rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  resize: vertical;
+}
+
+.export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* 실험실 카테고리 토글 (ScrollStory.jsx) */
+.category-lab-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.9rem;
+  margin-top: 1rem;
+  color: #8b93a7;
+  font-size: 0.85rem;
+}
+
+.category-lab-toggle button {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* 요약 언어 전환 (ComparisonSection.jsx) */
+.language-switch {
+  display: inline-flex;
+  gap: 0.4rem;
+  margin: 0.6rem 0 1rem;
+}
+
+.language-switch button {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid #d5dbe6;
+  border-radius: 999px;
+  color: #111827;
+  background: #fff;
+  cursor: pointer;
+}
+
+.language-switch button[aria-pressed="true"] {
+  border-color: #4468ff;
+  color: #fff;
+  background: #4468ff;
+  cursor: default;
+}
+
+/* 템플릿 라이브러리 (features/templates/TemplateLibrarySection.jsx) */
+.template-group {
+  margin-top: 2rem;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: 0.8rem;
+}
+
+.template-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.2rem;
+  border: 1px solid #e1e6ef;
+  border-radius: 1.2rem;
+  background: #f8f9fb;
+}
+
+.template-card strong {
+  font-size: 1.1rem;
+}
+
+.template-card > span {
+  color: #697386;
+  line-height: 1.55;
+}
+
+.template-card small {
+  color: #8b93a7;
+}
+
+.template-toggle {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  color: #4468ff;
+  background: none;
+  cursor: pointer;
+}
+
+.template-banner {
+  margin: 0.6rem 0 1rem;
+  padding: 0.7rem 1rem;
+  border-radius: 0.8rem;
+  color: #1e3a8a;
+  background: #e8eeff;
+}
+
+/* 팀 모드 (shared/components/TeamPanel.jsx) */
+.team-panel {
+  margin-top: 2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid #e1e6ef;
+}
+
+.team-help {
+  color: #697386;
+  line-height: 1.6;
+}
+
+.team-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.8rem 0;
+}
+
+.team-form input {
+  min-width: 0;
+  flex: 1 1 12rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #d5dbe6;
+  border-radius: 0.8rem;
+  font: inherit;
+}
+
+.team-agreements {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0;
+  list-style: none;
+}
+
+.team-agreements li {
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.8rem;
+  line-height: 1.5;
+}
+
+.team-agreements li.agreed {
+  background: #ecfdf3;
+}
+
+.team-agreements li.split {
+  background: #fff7ed;
+}
+
+/* 서비스용 프롬프트 작업 공간 (features/prompt-workspace). 다듬기 공간과 같은
+   톤(잉크 #111827, 액센트 #4468ff, 통과 녹색·주의 주황)을 따른다. */
+.ws-step {
+  margin-top: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid #e5e9f0;
+}
+
+.ws-input {
+  width: 100%;
+  max-width: 28rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #dfe4ed;
+  border-radius: 0.8rem;
+  font: inherit;
+}
+
+.ws-block {
+  margin-top: 1.4rem;
+}
+
+.ws-block-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ws-help {
+  margin: 0.35rem 0;
+  color: #6b7280;
+  font-size: 0.82rem;
+}
+
+.ws-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.ws-item input {
+  flex: 1 1 18rem;
+  min-width: 0;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #dfe4ed;
+  border-radius: 0.7rem;
+  font: inherit;
+}
+
+.ws-item-id {
+  min-width: 2rem;
+  color: #4468ff;
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+
+.ws-excerpt {
+  flex-basis: 100%;
+  margin: 0 0 0 2.5rem;
+  color: #6b7280;
+  font-size: 0.78rem;
+}
+
+.ws-origin {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.ws-origin-extracted { color: #176b50; background: #dff7ed; }
+.ws-origin-suggested { color: #7a4a00; background: #fdf0da; }
+.ws-origin-user { color: #374151; background: #eef1f6; }
+
+.ws-small-button {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #dfe4ed;
+  border-radius: 999px;
+  color: #374151;
+  background: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ws-small-button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.ws-file input { display: none; }
+
+.ws-table {
+  width: 100%;
+  margin-top: 0.5rem;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.ws-table th,
+.ws-table td {
+  padding: 0.45rem 0.5rem;
+  border-bottom: 1px solid #eef1f6;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.ws-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+.ws-stage {
+  margin: 0.4rem 0;
+  color: #374151;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.ws-stage-built { color: #176b50; }
+.ws-stage-stale_artifact { color: #b42318; }
+
+.ws-error {
+  margin: 0.8rem 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.8rem;
+  color: #8a1c12;
+  background: #fdecea;
+  font-size: 0.85rem;
+}
+
+.ws-notes {
+  margin: 0.8rem 0;
+  padding-left: 1.2rem;
+  color: #5d6470;
+  font-size: 0.82rem;
+}
+
+.ws-run {
+  margin-top: 1.2rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid #e5e9f0;
+  border-radius: 1rem;
+}
+
+.ws-run.is-stale { border-style: dashed; opacity: 0.75; }
+
+.ws-checks {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ws-check {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.3rem 0;
+  font-size: 0.82rem;
+}
+
+.ws-check-status {
+  flex: none;
+  min-width: 3.4rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.ws-check-pass .ws-check-status { color: #176b50; background: #dff7ed; }
+.ws-check-fail .ws-check-status { color: #8a1c12; background: #fdecea; }
+.ws-check-not_evaluated .ws-check-status { color: #5d6470; background: #eef1f6; }
+
+.ws-check-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .ws-table { display: block; overflow-x: auto; }
+  .ws-excerpt { margin-left: 0; }
+}
+
+/* 작업 공간 - 다시 열기 · 답 보완 · 비교 */
+.ws-saved-list { margin: 0.5rem 0; padding: 0; list-style: none; }
+.ws-saved-list li {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
+  padding: 0.55rem 0; border-bottom: 1px solid #eef1f6;
+}
+.ws-saved-list li.is-open .ws-saved-title { color: #4468ff; }
+.ws-saved-title { flex: 1 1 12rem; font-weight: 800; }
+.ws-question { padding: 0.4rem 0 0.6rem; border-bottom: 1px dashed #eef1f6; }
+.ws-answer { margin-left: 2.5rem; }
+.ws-answer select, .ws-compare-pick select, .ws-table select {
+  max-width: 100%; padding: 0.4rem 0.5rem; border: 1px solid #dfe4ed; border-radius: 0.6rem;
+  font: inherit; font-size: 0.8rem;
+}
+.ws-resolved { margin-top: 0.6rem; font-size: 0.82rem; color: #374151; }
+.ws-resolved ul { padding-left: 1.2rem; }
+.ws-compare { margin-top: 1.8rem; }
+.ws-compare-pickers { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0.6rem 0; }
+.ws-compare-pick {
+  display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; max-width: 100%;
+  font-size: 0.78rem; font-weight: 800; color: #5d6470;
+}
+.ws-compare-section { margin: 1.2rem 0 0.3rem; font-size: 0.85rem; font-weight: 800; }
+.ws-diff {
+  max-height: 22rem; overflow: auto; margin: 0; padding: 0.8rem 1rem;
+  border-radius: 0.8rem; background: #f7f8fb;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.78rem; white-space: pre-wrap;
+}
+.ws-diff-same { color: #6b7280; }
+.ws-diff-added { color: #176b50; background: #dff7ed; }
+.ws-diff-removed { color: #8a1c12; background: #fdecea; text-decoration: line-through; }
+.ws-diff-list { margin: 0; padding-left: 1.1rem; font-size: 0.82rem; }
+.ws-diff-list li { margin: 0.3rem 0; }
+.ws-compare-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.ws-compare-col { min-width: 0; }
+.ws-compare-output { max-height: 18rem; overflow: auto; font-size: 0.75rem; }
+.ws-row-changed td { background: #fff8e6; font-weight: 700; }
+@media (max-width: 640px) {
+  .ws-compare-cols { grid-template-columns: 1fr; }
+  .ws-answer { margin-left: 0; }
+}
+
+/* 로그인 - 상단 메뉴의 상태 표시와 로그인 화면 */
+.nav-login,
+.nav-user button {
+  padding: 0.45rem 0.85rem;
+  border: 1px solid #dfe4ed;
+  border-radius: 999px;
+  color: #374151;
+  background: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-login:hover,
+.nav-user button:hover {
+  border-color: #4468ff;
+  color: #111827;
+}
+
+.nav-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #111827;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.nav-user > span {
+  max-width: 8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auth-form {
+  max-width: 28rem;
+}
+
+.auth-embedded {
+  margin-top: 1.6rem;
+  padding: 1.1rem 1.3rem;
+  border: 1px solid #c9d4ff;
+  border-radius: 1rem;
+  background: #f6f8ff;
+}
+
+@media (max-width: 760px) {
+  .nav-user > span { display: none; }
+}
+
+/* 작업 공간 2차 - 알림 띠, 추천 */
+.ws-banner {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
+  margin: 1rem 0; padding: 0.75rem 1rem;
+  border: 1px solid #f0d9a8; border-radius: 0.9rem;
+  color: #6b4500; background: #fff8e6; font-size: 0.85rem;
+}
+.ws-banner > span { flex: 1 1 18rem; }
+.ws-suggest { margin-top: 1.8rem; }
+.ws-suggestion { margin-top: 0.9rem; padding: 0.8rem 1rem; border: 1px solid #e5e9f0; border-radius: 0.9rem; }
+.ws-suggestion.is-advice { border-style: dashed; opacity: 0.85; }
+.ws-suggestion .ws-diff { margin-top: 0.4rem; max-height: 10rem; }
+.ws-suggestion-reason { margin: 0.3rem 0; color: #374151; font-size: 0.85rem; }
+
+/* 내 계정 */
+.nav-user .nav-account { border-color: transparent; background: transparent; max-width: 8rem; overflow: hidden; text-overflow: ellipsis; }
+.nav-user .nav-account:hover { border-color: #dfe4ed; }
+.ws-danger { color: #8a1c12; border: 1px solid #f3c7c1; }
+.ws-danger:not(:disabled):hover { background: #fdecea; }
+
+.team-me { align-self: center; padding: 0 0.4rem; color: #374151; font-size: 0.85rem; font-weight: 800; }
+
+.ws-verdict { margin: 0.4rem 0 0; padding: 0.35rem 0.7rem; border-radius: 0.6rem; background: #eef1f6; color: #374151; font-size: 0.82rem; font-weight: 700; }
+.ws-verdict.is-better { background: #dff7ed; color: #176b50; }
+.ws-verdict.is-worse { background: #fdecea; color: #8a1c12; }
+
+/* 최종 프롬프트 언어 전환 (English / 한국어). 프롬프트 상자 바로 위에 붙는다. */
+.prompt-language-switch {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin-top: 1.1rem;
+  padding: 0.25rem;
+  border: 1px solid #d6dbe4;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+.prompt-language-switch button {
+  padding: 0.4rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  color: #374151;
+  background: transparent;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.prompt-language-switch button.is-active {
+  color: #ffffff;
+  background: #111827;
+}
+
+.prompt-language-switch + .prompt-box {
+  margin-top: 0.6rem;
+}
+
+/* 비교 화면의 보조 버튼: "비슷해요"와 "이전 선택 수정". 두 후보 아래에 작게 둔다. */
+.comparison-secondary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.comparison-secondary-actions .prompt-reset-button {
+  padding: 0.55rem 0.95rem;
+  font-size: 0.85rem;
+}
+
+.comparison-secondary-actions .prompt-reset-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* 좁은 화면에서도 템플릿·다듬기·작업 공간을 열 수 있게 한다. */
+@media (max-width: 1060px) {
+  .site-nav { gap: 0.5rem; }
+  .nav-menu-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #dfe4ed;
+    border-radius: 999px;
+    color: #374151;
+    background: #fff;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .nav-links,
+  .nav-links.is-open {
+    position: absolute;
+    top: calc(100% + 0.45rem);
+    right: 0;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin: 0;
+    padding: 0.45rem;
+    border: 1px solid #e4e7ed;
+    border-radius: 1.2rem;
+    background: #fff;
+    box-shadow: 0 1rem 2.5rem #11182722;
+  }
+  .nav-links.is-open { display: flex; }
+  .nav-links button { padding: 0.8rem 1rem; text-align: left; }
+}
+
+@media (max-width: 480px) {
+  .site-nav { padding: 0.55rem; }
+  .brand-mark { max-width: 7.5rem; overflow: hidden; text-overflow: ellipsis; }
+  .nav-button { display: none; }
+  .nav-user { gap: 0.25rem; }
+  .nav-user button { max-width: 5.5rem; overflow: hidden; text-overflow: ellipsis; padding: 0.45rem 0.55rem; }
 }

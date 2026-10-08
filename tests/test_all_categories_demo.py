@@ -74,7 +74,10 @@ def test_category_completes_demo_run(label, monkeypatch) -> None:
     assert not app.exception, f"{label}: 비교 시작에서 예외"
     assert app.session_state["stage"] == "compare"
 
+    # 질문이 떨어지면 8회 전에 끝난다 (코딩은 3회). 끝날 때까지 고른다.
     for round_index in range(8):
+        if app.session_state["stage"] != "compare":
+            break
         # 두 후보가 같으면 그 선택에서 아무 정보도 얻지 못한다.
         shown = [m.value for m in app.markdown] + [w.value for w in app.text]
         assert shown, f"{label}: {round_index + 1}회차에 후보가 안 그려짐"

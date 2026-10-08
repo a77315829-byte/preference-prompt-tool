@@ -79,3 +79,72 @@ axes:
           fn: type_explicitness
           target:
             min_signals: 5
+
+# 만든 프롬프트를 내보낼 곳 (exporters.py). 코딩 도구는 저장소 안의 파일을
+# 자동으로 읽으므로 채팅 서비스 복사에 더해 저장소용 파일을 준다.
+export_targets: [copilot, cursor, agents_md, chatgpt, claude, gemini]
+
+# 사용자에게 건네는 최종 프롬프트의 틀 (engine/generator.py 의
+# build_final_prompt). 후보를 만들 때 쓰는 문구와는 따로 둔다.
+final_prompt:
+  role: 당신은 이 사용자의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.
+  preference_note: 아래 선호는 사용자가 여러 코드 예시를 직접 비교하며 고른 결과에서 추정한 것이다.
+  preference_heading: 이 사용자의 선호
+  # 팀 모드(여러 사람의 선택을 합친 프롬프트)에서 쓰는 문구.
+  team_role: 당신은 이 팀의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.
+  team_preference_note: 아래 선호는 팀원들이 각자 여러 코드 예시를 직접 비교하며 고른 결과를 합쳐 추정한 것이다.
+  team_preference_heading: 이 팀의 선호
+  rules_heading: 항상 지킬 것
+  output_heading: 출력 형식
+  rules:
+  - 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.
+  - 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.
+  - 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.
+  - 접근성(레이블, 키보드 조작)을 기본으로 챙겨라.
+  output: 코드를 먼저 보여 주고, 그 방식을 고른 이유를 두세 문장으로 덧붙여라.
+  axis_labels:
+    code_structure: 코드 구성
+    style_management: 스타일 관리
+    type_detail: 타입 작성
+
+# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
+# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
+# 이 입력들로 채점한다.
+example_sources:
+- A search input that filters a list of product names as the user types.
+- A modal dialog component with a title, body text, and confirm and cancel buttons.
+- A hook that fetches a user's profile from an API and exposes loading and error states.
+
+# 최종 프롬프트의 영어판 (화면 기본값). 후보 생성 지시문은 위 한국어 그대로다 -
+# 캐시 키와 실험 결과가 그 문구에 묶여 있다.
+final_prompt_translations:
+  en:
+    role: "You are a pair programmer who writes TypeScript/React code in this user's preferred style."
+    preference_note: "The preferences below were inferred from code examples the user picked while comparing several options."
+    team_role: "You are a pair programmer who writes TypeScript/React code in this team's preferred style."
+    team_preference_note: "The preferences below were inferred by combining the code examples each team member picked while comparing several options."
+    task: "Write TypeScript/React code that solves the development request below. Apply the preferred code structure, style management, and typing approach consistently."
+    preference_heading: "This user's preferences"
+    team_preference_heading: "This team's preferences"
+    rules_heading: "Always"
+    rules:
+      - "Write complete code that can be pasted in and run as is. Do not skip parts with ellipses (...)."
+      - "Do not introduce libraries the request does not mention. If one is truly needed, say why in one line."
+      - "Apply the preferred structure and style consistently across the whole example."
+      - "Cover accessibility basics (labels, keyboard interaction) by default."
+    output_heading: "Output format"
+    output: "Show the code first, then add two or three sentences on why you chose that approach."
+    axis_labels:
+      code_structure: "Code structure"
+      style_management: "Style management"
+      type_detail: "Typing"
+    instructions:
+      code_structure:
+        compact: "For small features, keep the component, state logic, and styles together in one file and keep it concise."
+        separated: "Split the component, state logic, and styles into files by role, and present each file's name and code clearly."
+      style_management:
+        direct: "Write style values such as colors, spacing, and sizes directly in the style file or component so they are visible right away."
+        theme: "Collect design values such as colors, spacing, and fonts in a theme or design tokens, and reference them from components so the whole design is easy to change."
+      type_detail:
+        inferred: "Do not repeat types for local variables and simple return values that TypeScript clearly infers. Annotate only the public boundaries that need it."
+        explicit: "Explicitly type props, function parameters, return values, state, and the main data structures."

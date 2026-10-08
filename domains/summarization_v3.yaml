@@ -1,0 +1,35 @@
+# 도메인: 문서 요약 v3 - 길이를 원문에 맞춰 계산한 단어 수로 지시하고, 비율로 잰다.
+#
+# v2 는 "원문의 약 5%" 로 지시했다가 모델이 따르지 못했고(후보가 10.9/14.8/18.8% 로 몰림),
+# ratio_check 는 문장 수 지시를 비율로 쟀다가 원문 길이에 따라 6~29% 로 흔들렸다.
+# 여기서는 엔진이 원문 단어 수 x 비율을 계산해 "약 N단어" 로 넣는다. 비율은 topic 없는
+# 사람 요약의 train 중앙값(5.3 / 10.3 / 15.4%), 임계값은 1단계에서 train 으로 정한 값.
+# 기준과 경위: docs/length_v2_preregistration.md 4단계.
+#
+# topic 이 있는 요약에는 맞지 않는다 (요약 대상이 원문 일부). 앱에는 연결하지 않았다 -
+# 내보내는 프롬프트에 무엇을 적을지는 결과를 보고 따로 정한다.
+
+extends: summarization.yaml
+domain: summarization_v3
+checks_module: checks.summarization_v2
+
+axes:
+  - name: length
+    type: enum
+    description: 요약 길이 (원문 대비 단어 비율로 측정)
+    values:
+      - value: short
+        prompt: 약 {source_words*0.053}단어로 아주 짧게 요약하라.
+        check:
+          fn: length_ratio
+          target: { max_ratio: 0.068 }
+      - value: normal
+        prompt: 약 {source_words*0.103}단어로 요약하라.
+        check:
+          fn: length_ratio
+          target: { min_ratio: 0.068, max_ratio: 0.127 }
+      - value: long
+        prompt: 약 {source_words*0.154}단어로 상세하게 요약하라.
+        check:
+          fn: length_ratio
+          target: { min_ratio: 0.127 }

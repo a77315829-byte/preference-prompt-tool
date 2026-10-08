@@ -66,3 +66,69 @@ axes:
     check:
       fn: keyword_presence
       target: {}
+
+# 사용자에게 건네는 최종 프롬프트의 틀 (engine/generator.py 의
+# build_final_prompt). 후보를 만들 때 쓰는 문구와는 따로 둔다.
+final_prompt:
+  role: 당신은 이 사용자의 취향에 맞춰 한국어 글을 요약하는 요약 도우미다.
+  preference_note: 아래 선호는 사용자가 여러 요약을 직접 비교하며 고른 결과에서 추정한 것이다.
+  preference_heading: 이 사용자의 선호
+  # 팀 모드(여러 사람의 선택을 합친 프롬프트)에서 쓰는 문구.
+  team_role: 당신은 이 팀의 취향에 맞춰 한국어 글을 요약하는 요약 도우미다.
+  team_preference_note: 아래 선호는 팀원들이 각자 여러 요약을 직접 비교하며 고른 결과를 합쳐 추정한 것이다.
+  team_preference_heading: 이 팀의 선호
+  rules_heading: 항상 지킬 것
+  output_heading: 출력 형식
+  rules:
+  - 위의 선호(분량, 원문 표현을 살리는 정도)를 가장 먼저 지켜라. 아래 규칙은 그 안에서 적용하라.
+  - 원문에 없는 사실, 추측, 의견을 덧붙이지 마라.
+  - 숫자, 날짜, 고유명사를 틀리게 옮기지 마라.
+  - 확정된 사실과 검토 중이거나 불확실한 내용을 구분해 적어라.
+  output: 요약문만 한국어로 출력하라. 머리말, 제목, 설명, 맺음말을 붙이지 마라.
+  axis_labels:
+    length: 분량
+    extractiveness: 원문 표현을 살리는 정도
+    topic: 초점
+
+# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
+# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
+# 이 입력들로 채점한다.
+example_sources:
+- 시 교통공사는 다음 달부터 심야 버스 노선 네 개의 운행 시간을 새벽 2시까지 늘린다고 밝혔다. 공사에 따르면 밤 10시 이후 이용객은 지난해보다 18퍼센트 늘었고, 병원과 물류센터 교대 근무자가 대부분을 차지한다. 연간 추가 비용은 약 23억 원으로 도 보조금으로 충당하지만 보조금은 2년 뒤 끝난다. 일부 이사는 그 뒤의 재원 대책을 물었고, 공사는 여름까지 장기 계획을 내놓기로 했다.
+- 한 중소 바이오 기업이 희귀 간 질환 치료 후보 물질의 중기 임상에서 주요 목표를 달성했다고 발표했다. 환자 120명을 대상으로 한 시험에서 투약군의 간 손상 지표는 6개월 뒤 40퍼센트 줄었고, 위약군은 8퍼센트 줄었다. 회사는 올해 안에 규제 당국과 대규모 임상을 협의할 계획이다. 발표 직후 주가가 크게 올랐지만, 전문가들은 중기 임상 결과가 대규모 시험에서 유지되지 않는 경우가 많다고 지적했다.
+- 구청은 하천변 공원의 보행 다리에서 균열이 발견돼 공원을 최소 3주간 폐쇄한다고 밝혔다. 이 다리는 1978년에 지어졌고 2년 전 정기 점검은 통과했다. 기술진은 보수로 충분한지 아니면 새로 지어야 하는지 판단할 예정이며, 재건축이 결정되면 개방은 내년 봄으로 미뤄질 수 있다. 인근 상인들은 주말 방문객이 벌써 줄었다고 호소했고, 구청은 다른 입구를 안내하는 임시 표지판을 설치하기로 했다.
+
+# 최종 프롬프트의 영어판 (화면 기본값). 지시문은 영어지만 요약은 한국어로 쓰게 한다 -
+# 지시문 언어와 출력 언어가 다르면 출력이 섞인 적이 있어(8주차) 두 번 못 박는다.
+final_prompt_translations:
+  en:
+    role: "You are a summarization assistant who summarizes Korean text to match this user's preferences."
+    preference_note: "The preferences below were inferred from summaries the user picked while comparing several options."
+    team_role: "You are a summarization assistant who summarizes Korean text to match this team's preferences."
+    team_preference_note: "The preferences below were inferred by combining the summaries each team member picked while comparing several options."
+    task: "Summarize the source text below according to these instructions. Always write the summary in Korean, even though these instructions are in English."
+    preference_heading: "This user's preferences"
+    team_preference_heading: "This team's preferences"
+    rules_heading: "Always"
+    rules:
+      - "Follow the preferences above (length, use of source wording) first; apply the rules below within them."
+      - "Do not add facts, guesses, or opinions that are not in the source."
+      - "Do not misstate numbers, dates, or proper nouns."
+      - "Keep confirmed facts separate from things that are under review or uncertain."
+    output_heading: "Output format"
+    output: "Output only the summary, in Korean. No preamble, title, explanation, or closing."
+    axis_labels:
+      length: "Length"
+      extractiveness: "Use of source wording"
+      topic: "Focus"
+    instructions:
+      length:
+        short: "Keep it very short: two sentences or fewer."
+        normal: "Write about three to four sentences."
+        long: "Write five or more sentences, in detail."
+      extractiveness:
+        normal: "Mostly rephrase in your own words; quote the source wording only where it helps."
+        high: "Reuse the source's words and phrases as much as possible."
+        fully: "Build the summary from sentences extracted verbatim from the source. Do not write new sentences."
+    freeform_templates:
+      topic: 'Focus the summary on "{value}". You may leave out other parts of the source.'

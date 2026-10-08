@@ -1,0 +1,403 @@
+{
+  "docs": [
+    {
+      "doc": 0,
+      "target": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "estimated": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "estimate_correct": {
+        "length": true,
+        "extractiveness": true
+      },
+      "confidence": {
+        "length": 0.056443322101539795,
+        "extractiveness": 0.06317111328288894
+      },
+      "partial_kept_axes": [
+        "extractiveness"
+      ],
+      "conditions": {
+        "assembled": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": null,
+          "checks_score": 1.0,
+          "rouge_l": 0.29787234042553196,
+          "seconds": 0.0
+        },
+        "assembled_gepa": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 1.0,
+            "num_candidates": 2,
+            "changed": false
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.29787234042553196,
+          "seconds": 31.9
+        },
+        "neutral_gepa": {
+          "seed_prompt": "Summarize the following text.",
+          "final_prompt": "You will be given a news article or a similar informative text as input. Your task is to produce a concise summary of this text in **no more than two sentences** (2 sentences maximum). The summary should capture the key facts, main events, or central ideas of the input while avoiding unnecessary details. \n\nKey points to consider for the summary:\n- Include all critical factual information such as names, dates, locations, roles, or outcomes whenever relevant.\n- Emphasize major developments or conclusions presented in the text.\n- Use original phrasing as much as possible; minimize direct copying or overlapping expressions from the input text to avoid excessive extraction.\n- Ensure that the summary is cohesive, clear, and informative as a standalone piece.\n- The main objective is to condense the information accurately and succinctly, prioritizing informativeness and factual relevance over stylistic elements.\n\nYou should balance brevity and completeness — the summary must be very brief but still adequately reflect the core message or news reported by the input. Avoid redundant or minor details that do not contribute substantially to understanding the main points. For example, avoid unnecessary background information unless it directly supports the key message.\n\nIn summary, the task is a **highly concise (≤2 sentences), original summary of news-style texts, emphasizing factual accuracy and coverage of main points, with minimal textual overlap from the input**.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 0.6434248302409458,
+            "num_candidates": 5,
+            "changed": true
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.288135593220339,
+          "seconds": 42.9
+        },
+        "partial_gepa": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "Task: Summarize the provided English text according to the specified guidelines.\n\nInput Format:\n- The input text is always an English-language news article or report excerpt, sometimes including metadata like source or location (e.g., \"(CNN)\", \"Shanghai, China\"), followed by multiple paragraphs of content.\n  \nExpected Output:\n- A concise summary in English.\n- The summary must be extremely brief, ideally no more than 2 sentences.\n- Mostly use new, paraphrased wording rather than copying exact phrases from the original text.\n- Limited use of direct quotes from the original is allowed but only if essential.\n- Avoid excessive verbatim or close repetition to minimize extraction overlap with the original text.\n- Capture the core facts and key points to accurately reflect the original content.\n- The summary should be self-contained, clear, and coherent without reference to the original text.\n\nAdditional Domain-Specific/Internal Knowledge:\n- Many original texts relate to current affairs, geopolitical events, entertainment news, or industry developments.\n- Recognize named entities (people, organizations, places) and their roles succinctly, but in brief form.\n- When summarizing complex news reports (e.g., about terrorism, auto industry trends, etc.), distill only the central facts/events.\n- Avoid including detailed statistics or too many enumerations unless they are crucial to understanding the main message.\n- Focus on the “who, what, where, when, why” essence and omit ancillary context or background information unless it is central.\n\nGeneralizable Strategy:\n- Read the entire original text carefully to extract key points.\n- Select only the most critical facts for conveying the original message.\n- Rewrite these in your own words to minimize overlap.\n- Ensure the summary is short, avoids jargon unless necessary, and can stand alone.\n\nSummary length guideline:\n- Two sentences maximum.\n- If unsure what is essential, prioritize brevity and clarity over completeness.\n\nExample of expected summary style (based on original texts):\n\n- Terrorism-related text: “Ahmed Farouq, an American and deputy emir of al Qaeda in the Indian Subcontinent, was killed in a U.S. drone strike alongside other senior leaders and hostages in January, demonstrating the U.S. counterterrorism efforts in the region.”\n\n- Entertainment news text: “New Line Cinema is producing a Mariah Carey Christmas movie exploring music and nostalgia, highlighting Carey’s enduring influence and 1990s cultural revival.”\n\n- Industry news text: “The Shanghai Auto Show will focus solely on vehicle displays amid slowing growth in China’s largest car market, with rising SUV popularity and increasing competition from domestic and foreign brands.”\n\nNote on translation and language:\n- Instructions may appear in Korean, but the answer must ALWAYS be in English as per user’s directive.\n  \nThis structured instruction ensures the assistant produces succinct, clear English summaries with minimal copy-paste overlap and complies with length constraints on diverse factual content.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 0.6460921172256301,
+            "num_candidates": 6,
+            "changed": true
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.2828282828282828,
+          "seconds": 54.3
+        }
+      }
+    },
+    {
+      "doc": 1,
+      "target": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "estimated": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "estimate_correct": {
+        "length": true,
+        "extractiveness": true
+      },
+      "confidence": {
+        "length": 0.06291885900183192,
+        "extractiveness": 0.06291885900183192
+      },
+      "partial_kept_axes": [
+        "length",
+        "extractiveness"
+      ],
+      "conditions": {
+        "assembled": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n3~4문장 정도의 분량으로 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n3~4문장 정도의 분량으로 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": null,
+          "checks_score": 1.0,
+          "rouge_l": 0.21004566210045664,
+          "seconds": 0.0
+        },
+        "assembled_gepa": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n3~4문장 정도의 분량으로 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n3~4문장 정도의 분량으로 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 1.0,
+            "num_candidates": 1,
+            "changed": false
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.21004566210045664,
+          "seconds": 38.1
+        },
+        "neutral_gepa": {
+          "seed_prompt": "Summarize the following text.",
+          "final_prompt": "Task: Summarize the given news or informational text into a concise, clear summary that is no longer than four sentences.\n\nDetails and Requirements:  \n- The summary should capture the core facts and main points from the input text without unnecessary details.  \n- The summary must be factual and accurate, reflecting information about people, events, dates, places, organizations, and context as presented in the text.  \n- Avoid using exact or complete phrases and sentences from the original text; prioritize paraphrasing to reduce overlap and extraction. Aim to minimize direct textual overlap with the source.  \n- The summary should synthesize information into new, coherent sentences rather than listing points.  \n- Keep the length strictly to four sentences or fewer. Summaries with five or more sentences are considered too long.  \n- Focus on key domain-specific and niche facts where relevant (such as names of individuals, groups, companies, events, locations, dates, and contextual background) that define the news or article, rather than general or extraneous information.  \n- Reflect the tone of the original text (informative, neutral) but avoid subjective commentary or speculation.  \n- Exclude minor details, opinions, promotional content, or list-style reasoning unless central to understanding the main story.   \n- When summarizing complex or multi-faceted input (e.g., about terrorist organizations, market trends, celebrity projects), integrate information logically without repeating facts.  \n- The inputs will often be news or report style texts containing named entities and event descriptions. Summaries should balance specificity and conciseness.  \n\nPurpose: Provide a brief but comprehensive overview that anyone can read to grasp the gist and essential information of news reports or informational articles without needing to read the full text.  \n\nExample strategy:  \n- Identify the core subject (person, event, or topic) and its key attributes or developments.  \n- Mention important secondary facts (e.g., dates, outcomes, related parties) only if supporting the main point.  \n- Paraphrase to reduce direct overlap, replacing expressions with synonyms or restructuring sentences.  \n- Avoid excess sentence count by combining related information into single statements.  \n- Ensure the summary is self-contained and understandable without the original text.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 0.775,
+            "num_candidates": 2,
+            "changed": true
+          },
+          "checks_score": 0.85,
+          "rouge_l": 0.21495327102803738,
+          "seconds": 53.2
+        },
+        "partial_gepa": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n3~4문장 정도의 분량으로 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n3~4문장 정도의 분량으로 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 1.0,
+            "num_candidates": 2,
+            "changed": false
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.21004566210045664,
+          "seconds": 43.8
+        }
+      }
+    },
+    {
+      "doc": 2,
+      "target": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "estimated": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "estimate_correct": {
+        "length": true,
+        "extractiveness": true
+      },
+      "confidence": {
+        "length": 0.0639661506321535,
+        "extractiveness": 0.057246185090282675
+      },
+      "partial_kept_axes": [
+        "length"
+      ],
+      "conditions": {
+        "assembled": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n5문장 이상으로 상세하게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n5문장 이상으로 상세하게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": null,
+          "checks_score": 1.0,
+          "rouge_l": 0.14285714285714285,
+          "seconds": 0.0
+        },
+        "assembled_gepa": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n5문장 이상으로 상세하게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n5문장 이상으로 상세하게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 1.0,
+            "num_candidates": 2,
+            "changed": false
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.14285714285714285,
+          "seconds": 36.8
+        },
+        "neutral_gepa": {
+          "seed_prompt": "Summarize the following text.",
+          "final_prompt": "Task: Summarize the given text input.\n\nInput Format:\n- The input is a news article or a detailed informational text, often including:\n  - A dateline or location (e.g., \"Shanghai, China (CNN)\")\n  - Multiple paragraphs covering factual and contextual information about events, people, or topics\n  - Complex content with domain-specific terminology, proper nouns (names, places, organizations), chronology, and background context.\n\nOutput Requirements:\n- Produce a concise summary that captures all major factual points and core information from the input text.\n- The summary should be 5 or more sentences long (preferably between 5 to 7 sentences) to ensure completeness and adequate coverage of the original text.\n- Avoid excessive copying of phrases from the original; limit direct phrase overlap to about 20-40% to maintain extractiveness while ensuring fluency and originality.\n- Use paraphrasing and rephrasing strategically to reduce repetition of specific phrases or sentences from the source, but do not change or omit important facts.\n- The summary should maintain fidelity to the original meanings, correctly attributing key details (e.g., names, dates, locations, roles).\n- Highlight niche or domain-specific information such as organizational roles, historical events, statistical data, or significant developments mentioned.\n- Reflect the structure of the information logically: typically start by identifying the main subject(s) or event(s), then elaborate on key points such as significance, outcomes, context, stakeholders, and implications.\n- Include relevant specifics such as names of people, organizations, geographic locations, dates, and quantifiable data where important.\n- Summarization strategy:\n  - Identify key information conveyed by each paragraph or section.\n  - Condense multiple details into compound sentences without losing informativeness.\n  - Avoid adding new information or subjective commentary beyond what is in the original.\n  - Maintain a neutral, factual tone consistent with journalistic style.\n\nIn summary, your response should be a factual, well-organized, concise summary of at least 5 sentences, accurately reflecting the information given, with moderate paraphrasing to avoid excessive reuse of original wording, and including all significant details, especially niche domain-specific facts.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 0.9208420286793713,
+            "num_candidates": 4,
+            "changed": true
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.1411764705882353,
+          "seconds": 56.9
+        },
+        "partial_gepa": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n5문장 이상으로 상세하게 요약하라.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n5문장 이상으로 상세하게 요약하라.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 1.0,
+            "num_candidates": 2,
+            "changed": false
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.15263157894736842,
+          "seconds": 43.0
+        }
+      }
+    },
+    {
+      "doc": 3,
+      "target": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "estimated": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "estimate_correct": {
+        "length": true,
+        "extractiveness": true
+      },
+      "confidence": {
+        "length": 0.06772455658559429,
+        "extractiveness": 0.06772455658559429
+      },
+      "partial_kept_axes": [
+        "length",
+        "extractiveness"
+      ],
+      "conditions": {
+        "assembled": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": null,
+          "checks_score": 1.0,
+          "rouge_l": 0.18867924528301885,
+          "seconds": 0.0
+        },
+        "assembled_gepa": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 1.0,
+            "num_candidates": 4,
+            "changed": false
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.18867924528301885,
+          "seconds": 33.8
+        },
+        "neutral_gepa": {
+          "seed_prompt": "Summarize the following text.",
+          "final_prompt": "Task: Produce an extremely concise summary of the given factual news article or report, limited to no more than 2 sentences.\n\nInput format: The input text resembles a news report or article from reputable sources such as CNN or entertainment news outlets. It often includes detailed information presenting names, dates, places, affiliations, events, roles of people or organizations, and specific factual content related to politics, terrorism, entertainment, or market trends.\n\nDetailed Requirements:\n1. Length: The summary must be strictly limited to a maximum of 2 sentences.\n2. Core Content: Focus on capturing the essential facts — primary subjects (individuals, organizations), key events or developments, notable outcomes, and contextual significance (such as dates and locations if relevant).\n3. Paraphrasing and Originality: The summary must be substantially rephrased and rewritten to avoid heavy overlap with the input text. Aim to minimize verbatim phrase repetition to under 50% similarity, prioritizing clear, original sentence structure and vocabulary.\n4. Precision and Accuracy: Include only information explicitly supported by the input. Avoid adding any external knowledge, interpretation, or assumptions beyond what is contained in the source text.\n5. Focus on Newsworthiness: Emphasize the most important and newsworthy elements of the story. Exclude minor details, background explanations, or side commentary unless these are crucial to understanding the main point or significance.\n6. Style and Tone: Use a formal, journalistic style suitable for brief news updates—concise, factual, and clear.\n7. Information Hierarchy: Prioritize information by identifying:\n   - Who or what is the main subject and their role or significance.\n   - What key event or development has occurred.\n   - When and where the event took place if this adds meaningful context.\n   - The relevance or impact of the event (e.g., outcomes or consequences).\n8. Length Management: Carefully compress information to fit within two sentences without losing essential meaning or clarity. Avoid listing multiple minor details separately; instead, integrate core facts efficiently.\n9. Avoid Redundancy: Avoid repeating the same information in different words within the summary.\n\nRecommended Approach:\n- Read the full input carefully to capture all critical facts.\n- Extract the major entities involved and the main event or newsworthy development.\n- Note the timeline and location if these are significant.\n- Rewrite the information succinctly with original wording and phrasing, reducing overlap with the input source.\n- Condense related information into balanced sentence structures to meet the two-sentence maximum.\n- Review for clarity, completeness of essential facts, and strict adherence to the length limit.\n\nAdditional Domain-specific Notes (derived from examples):\n- For terrorism-related inputs, clearly identify the person(s) involved, their affiliation and rank, the nature and date of the incident, and any significant casualties or consequences.\n- For entertainment-related inputs, highlight confirmed projects, key collaborators, thematic focus, and notable cultural or career context.\n- Avoid using phrases or proper names verbatim as much as possible; use synonyms, descriptive phrases, or paraphrased equivalents instead.\n- Avoid including any subjective commentary or opinions present in the original text.\n\nPurpose: To generate a brief yet comprehensive news summary that condenses complex or detailed information into a digestible, two-sentence update, ensuring originality in expression, factual precision, and news appropriateness.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 0.55,
+            "num_candidates": 5,
+            "changed": true
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.16438356164383564,
+          "seconds": 52.0
+        },
+        "partial_gepa": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 1.0,
+            "num_candidates": 1,
+            "changed": false
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.18867924528301885,
+          "seconds": 33.3
+        }
+      }
+    },
+    {
+      "doc": 4,
+      "target": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "estimated": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "estimate_correct": {
+        "length": true,
+        "extractiveness": true
+      },
+      "confidence": {
+        "length": 0.06772455658559429,
+        "extractiveness": 0.06772455658559429
+      },
+      "partial_kept_axes": [
+        "length",
+        "extractiveness"
+      ],
+      "conditions": {
+        "assembled": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": null,
+          "checks_score": 0.9782608695652174,
+          "rouge_l": 0.1967213114754098,
+          "seconds": 0.0
+        },
+        "assembled_gepa": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "Task Description:\nYou will be given a text input (an original English passage) to summarize. Your goal is to produce a very concise summary strictly in English, regardless of any other language present in the instructions or input. The summary must be written in two sentences or fewer.\n\nKey Requirements:\n1. Language: Always respond in English, even when other instructions or texts are in Korean or other languages.\n2. Length: The summary must be extremely brief, limited to at most two sentences.\n3. Paraphrasing: Use mostly new, rephrased expressions instead of copying the original text verbatim. Some short phrases or key terms from the original may be quoted or reused if necessary, but avoid high lexical overlap.\n4. Minimal overlap with source: Strive to keep copied or directly matched wording from the input below 50%. Using synonyms, changing sentence structures, and employing generalization or abstraction is encouraged.\n5. Content: Include key facts and essential information relevant to the main points of the original passage. Maintain factual accuracy and the logical essence of the text.\n6. Avoid unnecessary or peripheral details, and do not lengthen the summary.\n7. Format: Produce the output as plain text without additional markup or commentary.\n\nRecommended approach:\n- Identify the main subject(s) and their roles or significance.\n- Capture critical events or data points that define the text’s purpose.\n- Condense supporting background or context into a single phrase or omit if not essential.\n- Rewrite sentences actively to reduce direct textual overlap.\n- Prioritize clarity and succinctness above exhaustive detail.\n\nExample:\nIf given a news passage about a terrorist leader’s death, mention the leader’s role, the event (e.g., drone strike), and any notable related facts, all in a compact two-sentence form with mostly paraphrased language.\n\nThis instruction bundle covers both the linguistic (English-only, paraphrasing) and structural (two sentences max, key content) criteria observed in prior examples and feedback. Please adhere strictly to these constraints in all summaries.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 0.9948979591836735,
+            "num_candidates": 2,
+            "changed": true
+          },
+          "checks_score": 1.0,
+          "rouge_l": 0.15584415584415587,
+          "seconds": 34.7
+        },
+        "neutral_gepa": {
+          "seed_prompt": "Summarize the following text.",
+          "final_prompt": "Task Description:\nYou are required to generate a concise summary of a given text article. The summary must be strictly limited to 2 sentences or fewer. The goal is to produce a highly condensed version that captures the essential factual information and core points of the original text while minimizing the length and avoiding excessive verbatim copying from the source.\n\nKey Requirements:\n1. Length: The summary must not exceed 2 sentences.\n2. Content: Capture the most important facts, events, or messages from the input text in a clear and coherent manner.\n3. Originality: Minimize overlap with phrases or sentences from the source text to reduce extractiveness. Aim to paraphrase rather than directly quote or reuse the original wording.\n4. Domain Awareness: The input texts often include domain-specific or niche factual details (e.g., names of people, organizations, geographical locations, dates, events, statistics, product names). Ensure that these factual elements are accurately preserved and clearly presented.\n5. Completeness: Despite brevity, the summary should convey a self-contained understanding of the main subject or news conveyed in the input text.\n6. Style: Use formal, neutral language suitable for summarizing news or informative articles.\n\nSuggested Approach:\n- Identify key entities (people, organizations, places) and critical events or developments described in the text.\n- Combine closely related facts into concise sentences.\n- Avoid unnecessary background information or peripheral details unless essential to understanding the main point.\n- Use your own phrasing to describe facts rather than copying exact sentences or phrases from the input.\n- Maintain logical flow and coherence in the summary, even within two sentences.\n\nInput Format:\nA news article text, possibly including:\n- Names of key individuals (e.g., Ahmed Farouq, Mariah Carey)\n- Organizational or group affiliations (e.g., al Qaeda, New Line Cinema)\n- Dates or time references (e.g., January, 2014)\n- Specific events or actions taken\n- Statistical or market data (when relevant)\n- Nuances that may contextualize the facts (e.g., reputational information about figures or market trends).\n\nOutput Format:\nMax 2 sentences succinctly summarizing the core information and main points of the input text, ensuring factual accuracy, minimal extractiveness, and clarity.\n\nExample:\nGiven a detailed news article on a person’s death confirmed by multiple sources including a drone strike and resulting collateral casualties, the summary should include:\n- Who died (with roles/positions)\n- When and where the event happened\n- Relevant additional key facts (e.g., associated group, others impacted)\n- Confirmation/source attribution if fitting, all condensed into max two sentences.\n\nBy following these instructions, the assistant will achieve concise, informative, and readable summaries optimized for length, factual accuracy, and originality.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 0.6000000000000001,
+            "num_candidates": 4,
+            "changed": true
+          },
+          "checks_score": 0.9558823529411765,
+          "rouge_l": 0.21428571428571425,
+          "seconds": 53.1
+        },
+        "partial_gepa": {
+          "seed_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "final_prompt": "아래 원문을 지침에 따라 요약하라. 요약은 반드시 영어(English)로 작성하라 - 다른 지침이 한국어로 적혀 있어도 원문과 같은 언어인 영어로 답하라.\n2문장 이내로 아주 짧게 요약하라.\n대부분은 새로운 표현으로 바꿔 쓰되, 필요하면 원문 표현을 일부 인용해도 좋다.",
+          "gepa": {
+            "best_val_score": 1.0,
+            "seed_val_score": 1.0,
+            "num_candidates": 2,
+            "changed": false
+          },
+          "checks_score": 0.9782608695652174,
+          "rouge_l": 0.1967213114754098,
+          "seconds": 35.5
+        }
+      }
+    }
+  ],
+  "complete": true,
+  "meta": {
+    "model": "openai/gpt-4.1-mini",
+    "rounds": 8,
+    "max_metric_calls": 40,
+    "neutral_seed": "Summarize the following text.",
+    "gepa_train_docs": 4,
+    "gepa_val_docs": 2
+  },
+  "summary": {
+    "assembled": {
+      "checks_mean": 0.9956521739130435,
+      "rouge_mean": 0.207235140428312
+    },
+    "assembled_gepa": {
+      "checks_mean": 1.0,
+      "rouge_mean": 0.19905970930206124,
+      "rouge_wins_vs_assembled": 0,
+      "rouge_losses_vs_assembled": 1,
+      "sign_test_p": 1.0,
+      "gepa_changed_prompt": 1
+    },
+    "neutral_gepa": {
+      "checks_mean": 0.9611764705882353,
+      "rouge_mean": 0.20458692215323232,
+      "rouge_wins_vs_assembled": 2,
+      "rouge_losses_vs_assembled": 3,
+      "sign_test_p": 1.0,
+      "gepa_changed_prompt": 5
+    },
+    "partial_gepa": {
+      "checks_mean": 0.9956521739130435,
+      "rouge_mean": 0.20618121612690732,
+      "rouge_wins_vs_assembled": 1,
+      "rouge_losses_vs_assembled": 1,
+      "sign_test_p": 1.0,
+      "gepa_changed_prompt": 1
+    },
+    "estimate_correct_axes": 10,
+    "estimate_total_axes": 10
+  }
+}

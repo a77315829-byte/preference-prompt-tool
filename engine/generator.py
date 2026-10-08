@@ -12,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from collections.abc import Sequence
@@ -21,14 +22,156 @@ from engine.domain_loader import Domain
 
 CACHE_DIR = Path(__file__).resolve().parent.parent / "cache"
 
+# 한 번의 생성 호출이 기다릴 최대 시간(초)과 출력 토큰 상한. 상한은
+# 요약·리뷰·코드 한 벌에는 넉넉하고, 모델이 폭주하면 거기서 끊는다.
+# 캐시 키에는 넣지 않는다 - 넣으면 기존 cache/ 가 통째로 무효화된다.
+REQUEST_TIMEOUT_SECONDS = 60
+MAX_OUTPUT_TOKENS = 2048
 
-def build_prompt(domain: Domain, combo: dict[str, str]) -> str:
+# 같은 캐시 키를 동시에 부르면 한 번만 호출하고 나머지는 기다렸다 캐시를
+# 읽는다. 새로고침·분기 미리 만들기가 같은 요청을 겹쳐 보낸다.
+_KEY_LOCKS: dict[str, threading.Lock] = {}
+_KEY_LOCKS_GUARD = threading.Lock()
+
+
+def _lock_for(key: str) -> threading.Lock:
+    with _KEY_LOCKS_GUARD:
+        return _KEY_LOCKS.setdefault(key, threading.Lock())
+
+
+# 지시문 안의 `{source_words*R}` 는 이 원문의 단어 수 x R 로 채운다. 모델은 "원문의
+# 5%" 같은 비율 지시를 스스로 환산하지 못하지만 단어 수 지시는 따른다
+# (docs/length_v2_preregistration.md). 단어 수는 공백으로 나눈 개수 - 언어나 과제를
+# 가정하지 않는다.
+_SOURCE_WORDS = re.compile(r"\{source_words\*([0-9]*\.?[0-9]+)\}")
+
+
+def fill_source_placeholders(text: str, source: str | None) -> str:
+    """자리표시자가 없으면 text 를 그대로 돌려준다. 있는데 원문이 없으면 ValueError -
+    조용히 비율 문구로 바꾸면 모델이 따르지 못하는 지시가 된다."""
+    if not _SOURCE_WORDS.search(text):
+        return text
+    if source is None:
+        raise ValueError("이 지시문은 원문 길이로 채워야 하는데 원문이 주어지지 않았다.")
+    words = len(source.split())
+    return _SOURCE_WORDS.sub(lambda m: str(round(float(m.group(1)) * words)), text)
+
+
+def build_prompt(domain: Domain, combo: dict[str, str], source: str | None = None) -> str:
+    """후보 생성용 프롬프트. 자리표시자가 없는 도메인은 source 와 무관하게 예전과
+    글자 하나까지 같다 - 캐시 키가 이 텍스트라서다."""
     lines = [domain.task_description]
     for axis in domain.axes:
         instruction = axis.instruction_for(combo.get(axis.name, ""))
         if instruction:
             lines.append(instruction)
-    return "\n".join(lines)
+    return fill_source_placeholders("\n".join(lines), source)
+
+
+def _final_spec(domain: Domain, language: str | None):
+    """language 가 없으면 도메인의 원본 최종 프롬프트, 있으면 그 번역판."""
+    if language is None:
+        return domain.final_prompt
+    try:
+        return domain.final_prompt_translations[language]
+    except KeyError:
+        raise ValueError(f"'{domain.name}' 에는 '{language}' 최종 프롬프트가 없다") from None
+
+
+def _final_instruction(domain: Domain, axis, value: str, spec, language: str | None) -> str | None:
+    """번역판이면 그 언어의 지시문을, 아니면 축의 원래 지시문을 쓴다. 번역판에
+    빠진 값이 있으면 조용히 원문으로 섞지 않고 오류를 낸다.
+
+    enum 축의 값이 비어 있으면 그 축을 건너뛴다 - 최종 프롬프트에서 "정하지 못한 축"을
+    빼는 방법이다. 후보 생성용 build_prompt 는 이 함수를 쓰지 않으므로 그대로다."""
+    if axis.type == "enum" and not value:
+        return None
+    if language is None or spec is None:
+        return axis.instruction_for(value)
+    if axis.type == "enum":
+        text = (spec.instructions or {}).get(axis.name, {}).get(value)
+        if text is None:
+            raise ValueError(f"'{domain.name}' 의 '{language}' 판에 {axis.name}={value} 지시문이 없다")
+        return text
+    if not value and axis.empty_means_inactive:
+        return None
+    template = spec.freeform_templates.get(axis.name)
+    if template is None:
+        raise ValueError(f"'{domain.name}' 의 '{language}' 판에 {axis.name} 지시문 틀이 없다")
+    return template.format(value=value)
+
+
+def build_final_prompt(
+    domain: Domain, combo: dict[str, str], team: bool = False, language: str | None = None
+) -> str:
+    """사용자에게 건네는 최종 프롬프트. 역할 -> 과제 -> 선호 -> 규칙 ->
+    출력 형식 순으로 domain.final_prompt 의 문구를 이어 붙인다.
+
+    build_prompt 와 따로 둔다. build_prompt 는 후보를 만들 때 모델에 보내는
+    문장이라 바꾸면 캐시 키와 실험 재현성이 같이 바뀐다. 이 함수는 화면에
+    내보내는 결과물에만 쓴다. final_prompt 가 없는 도메인은 build_prompt
+    와 같은 결과를 돌려준다.
+
+    language 를 주면 domain.final_prompt_translations 의 그 판으로 조립한다.
+    """
+    spec = _final_spec(domain, language)
+    if spec is None:
+        return build_prompt(domain, combo)
+
+    # team: 여러 사람의 선택을 합친 프롬프트. YAML 에 팀용 문구가 있으면 그것을 쓴다.
+    role = (spec.team_role if team else None) or spec.role
+    sections = [role, spec.task or domain.task_description]
+    preferences = build_preference_section(domain, combo, team=team, language=language)
+    if preferences:
+        sections.append(preferences)
+    sections.append("\n".join([f"## {spec.rules_heading}", *(f"- {r}" for r in spec.rules)]))
+    sections.append(f"## {spec.output_heading}\n{spec.output}")
+    return "\n\n".join(sections)
+
+
+def build_preference_section(
+    domain: Domain, combo: dict[str, str], team: bool = False, language: str | None = None
+) -> str:
+    """추정한 선호만 담은 절. "## 머리말" 아래 "- 라벨: 지시" 줄들이다.
+    선호가 하나도 없으면 빈 문자열. 머리말과 라벨은 domain.final_prompt 에서
+    읽고, 없으면 축 설명과 기본 머리말을 쓴다."""
+    spec = _final_spec(domain, language)
+    lines = []
+    for axis in domain.axes:
+        instruction = _final_instruction(domain, axis, combo.get(axis.name, ""), spec, language)
+        if instruction:
+            # 번역판에 라벨이 없으면 원문 설명 대신 축 이름을 쓴다 - 다른 언어가 섞이지 않게.
+            fallback = axis.name if language is not None else axis.description
+            label = (spec.axis_labels.get(axis.name) if spec else None) or fallback
+            lines.append(f"- {label}: {instruction}")
+    if not lines:
+        return ""
+    heading = ((spec.team_preference_heading if team else None) or spec.preference_heading) if spec else "선호"
+    # 선호의 출처 설명. 선호가 하나도 없으면 위에서 이미 빈 문자열을 돌려줬으므로 같이 빠진다.
+    note = ((spec.team_preference_note if team else None) or spec.preference_note) if spec else None
+    return "\n".join([f"## {heading}", *([note] if note else []), *lines])
+
+
+def build_compact_prompt(domain: Domain, combo: dict[str, str], language: str | None = None) -> str:
+    """글자 수 한도가 있는 곳에 넣을 짧은 판: 과제 설명과 선호 지시만.
+    language 가 없고 모든 enum 축에 값이 있으면 후보 생성용 프롬프트와 같다. 값이 빈
+    enum 축(정하지 못한 축)은 건너뛴다."""
+    spec = _final_spec(domain, language) if language is not None else None
+    lines = [(spec.task if spec else None) or domain.task_description]
+    for axis in domain.axes:
+        instruction = _final_instruction(domain, axis, combo.get(axis.name, ""), spec, language)
+        if instruction:
+            lines.append(instruction)
+    text = "\n".join(lines)
+    # build_prompt 와 같게: 원문 길이 자리표시자는 원문 없이 채울 수 없으므로 알린다.
+    return text if language is not None else fill_source_placeholders(text, None)
+
+
+def build_template_prompt(domain: Domain, combo: dict[str, str], template: str) -> str:
+    """사용자가 고른 템플릿 본문 뒤에 추정한 선호 절을 붙인다. 템플릿의
+    과제·규칙은 그대로 두고, 표현 방식만 이 사람에게 맞춘다."""
+    preferences = build_preference_section(domain, combo)
+    return template.strip() + (f"\n\n{preferences}" if preferences else "")
 
 
 def _cache_key(
@@ -84,7 +227,7 @@ def generate(
 ) -> str:
     """축조합으로 프롬프트를 조립해 결과물을 만든다."""
     return generate_with_prompt(
-        build_prompt(domain, combo), source_text, model, cache_dir=cache_dir
+        build_prompt(domain, combo, source=source_text), source_text, model, cache_dir=cache_dir
     )
 
 
@@ -140,11 +283,22 @@ def generate_with_prompt(
     축조합이 아니라 프롬프트 텍스트가 입력이다.
     """
     cache_dir.mkdir(parents=True, exist_ok=True)
-    cache_file = cache_dir / f"{_cache_key(prompt, source_text, model, temperature)}.json"
+    key = _cache_key(prompt, source_text, model, temperature)
+    cache_file = cache_dir / f"{key}.json"
 
     if cache_file.exists():
         return json.loads(cache_file.read_text(encoding="utf-8"))["output"]
 
+    with _lock_for(key):
+        # 기다리는 동안 다른 스레드가 채웠을 수 있다.
+        if cache_file.exists():
+            return json.loads(cache_file.read_text(encoding="utf-8"))["output"]
+        return _call_and_cache(prompt, source_text, model, temperature, cache_file)
+
+
+def _call_and_cache(
+    prompt: str, source_text: str, model: str, temperature: float | None, cache_file: Path
+) -> str:
     # litellm은 import에만 11초가 걸린다. 첫 화면 렌더에는 필요 없으므로
     # 실제 API 호출 시점까지 미룬다 (배포 콜드스타트 12.6초 -> 약 2초).
     from litellm import completion
@@ -156,6 +310,8 @@ def generate_with_prompt(
             {"role": "system", "content": prompt},
             {"role": "user", "content": source_text},
         ],
+        timeout=REQUEST_TIMEOUT_SECONDS,
+        max_tokens=MAX_OUTPUT_TOKENS,
         **extra,
     )
     output = response.choices[0].message.content

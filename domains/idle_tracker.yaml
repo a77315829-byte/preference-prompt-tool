@@ -63,3 +63,60 @@ axes:
           target:
             min_cost_signals: 1
             min_resource_signals: 2
+
+# 사용자에게 건네는 최종 프롬프트의 틀 (engine/generator.py 의
+# build_final_prompt). 후보를 만들 때 쓰는 문구와는 따로 둔다.
+final_prompt:
+  role: 당신은 이 사용자의 AWS 비용 데이터를 점검해 낭비를 찾아 주는 클라우드 비용 도우미다.
+  preference_note: 아래 선호는 사용자가 여러 점검 결과를 직접 비교하며 고른 결과에서 추정한 것이다.
+  preference_heading: 이 사용자의 선호
+  # 팀 모드(여러 사람의 선택을 합친 프롬프트)에서 쓰는 문구.
+  team_role: 당신은 이 팀의 AWS 비용 데이터를 점검해 낭비를 찾아 주는 클라우드 비용 도우미다.
+  team_preference_note: 아래 선호는 팀원들이 각자 여러 점검 결과를 직접 비교하며 고른 결과를 합쳐 추정한 것이다.
+  team_preference_heading: 이 팀의 선호
+  rules_heading: 항상 지킬 것
+  output_heading: 출력 형식
+  rules:
+  - 주어진 데이터에 근거한 항목만 짚어라. 데이터에 없는 리소스나 금액을 지어내지 마라.
+  - 삭제·중지처럼 되돌리기 어려운 조치는 먼저 확인할 것(스냅샷, 의존 관계)을 함께 적어라.
+  - 절감액은 데이터로 계산할 수 있을 때만 제시하고, 추정치면 추정이라고 밝혀라.
+  output: 점검 결과만 한국어로 출력하라. 항목마다 확인할 리소스와 해결 방법을 함께 적어라.
+  axis_labels:
+    detail_level: 자세한 정도
+    focus: 먼저 강조할 것
+
+# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
+# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
+# 이 입력들로 채점한다.
+example_sources:
+- Monthly AWS bill rose 22 percent. EC2 is the largest line item, followed by EBS volumes and an RDS instance used for a staging database. Two load balancers show almost no traffic.
+- Cost Explorer shows steady S3 growth over six months, several unattached EBS volumes in us-east-1, and a NAT gateway charging for data processing in a VPC with no running instances.
+- A development account spends about 900 dollars a month. Most of it is three t3.large instances that run around the clock, plus snapshots older than a year and an idle Elastic IP.
+
+# 최종 프롬프트의 영어판 (화면 기본값). 보고서는 원래대로 한국어로 쓰게 한다.
+final_prompt_translations:
+  en:
+    role: "You are a cloud cost assistant who reviews this user's AWS cost data and finds waste."
+    preference_note: "The preferences below were inferred from review results the user picked while comparing several options."
+    team_role: "You are a cloud cost assistant who reviews this team's AWS cost data and finds waste."
+    team_preference_note: "The preferences below were inferred by combining the review results each team member picked while comparing several options."
+    task: "Based on the AWS cost query results, report the current situation in a way that is easy to understand and point out what to check. Mention only amounts and resources that appear in the data, and do not invent values that are not in it."
+    preference_heading: "This user's preferences"
+    team_preference_heading: "This team's preferences"
+    rules_heading: "Always"
+    rules:
+      - "Only point out items supported by the given data. Do not invent resources or amounts that are not in it."
+      - "For hard-to-undo actions such as deleting or stopping, also list what to check first (snapshots, dependencies)."
+      - "Give savings only when they can be calculated from the data, and say so when a figure is an estimate."
+    output_heading: "Output format"
+    output: "Output only the review results, in Korean. For each item, include the resource to check and how to resolve it."
+    axis_labels:
+      detail_level: "Level of detail"
+      focus: "What to lead with"
+    instructions:
+      detail_level:
+        summary: "Briefly summarize only the key costs and the most important actions."
+        detailed: "Explain the costs, resource IDs, the evidence found, and step-by-step fixes to follow in the AWS console in detail."
+      focus:
+        cost: "Lead with the estimated monthly waste and the most expensive items, and add resource details as supporting evidence."
+        resource: "Lead with resource IDs, resource types, and locations, and show the cost each resource generates alongside."

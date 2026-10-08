@@ -14,17 +14,17 @@ axes:
     description: The degree to which the output is brief and to the point versus detailed and elaborate.
     values:
       - value: concise
-        prompt: 이 결과물을 'concise' 수준의 conciseness(으)로 만들어라.
+        prompt: 핵심 정보만 남기고 군더더기를 덜어 간결하게 써라.
         check:
           fn: check_conciseness
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
       - value: moderate
-        prompt: 이 결과물을 'moderate' 수준의 conciseness(으)로 만들어라.
+        prompt: 핵심과 필요한 배경을 균형 있게 담되 지나치게 길게 쓰지 마라.
         check:
           fn: check_conciseness
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
       - value: detailed
-        prompt: 이 결과물을 'detailed' 수준의 conciseness(으)로 만들어라.
+        prompt: 중요한 배경과 세부 사항을 빠뜨리지 않고 자세히 써라.
         check:
           fn: check_conciseness
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
@@ -33,17 +33,17 @@ axes:
     description: The level of formality in language, from casual or informal to formal and professional.
     values:
       - value: informal
-        prompt: 이 결과물을 'informal' 수준의 formality(으)로 만들어라.
+        prompt: 딱딱한 표현을 피하고 편안하고 자연스러운 말투로 써라.
         check:
           fn: check_formality
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
       - value: neutral
-        prompt: 이 결과물을 'neutral' 수준의 formality(으)로 만들어라.
+        prompt: 지나치게 격식을 차리거나 가볍지 않은 중립적인 말투로 써라.
         check:
           fn: check_formality
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
       - value: formal
-        prompt: 이 결과물을 'formal' 수준의 formality(으)로 만들어라.
+        prompt: 업무 문서에 어울리는 격식 있고 정중한 말투로 써라.
         check:
           fn: check_formality
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
@@ -52,17 +52,17 @@ axes:
     description: The complexity of sentence structures, from simple and short sentences to complex and compound sentences.
     values:
       - value: simple
-        prompt: 이 결과물을 'simple' 수준의 sentence_complexity(으)로 만들어라.
+        prompt: 짧고 단순한 문장으로 나누어 쉽게 읽히게 써라.
         check:
           fn: check_sentence_complexity
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
       - value: moderate
-        prompt: 이 결과물을 'moderate' 수준의 sentence_complexity(으)로 만들어라.
+        prompt: 문장을 적절히 연결하되 한 문장이 지나치게 길어지지 않게 써라.
         check:
           fn: check_sentence_complexity
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
       - value: complex
-        prompt: 이 결과물을 'complex' 수준의 sentence_complexity(으)로 만들어라.
+        prompt: 관련된 내용을 자연스럽게 연결해 정교한 문장으로 써라.
         check:
           fn: check_sentence_complexity
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
@@ -71,17 +71,44 @@ axes:
     description: The extent to which the output emphasizes named entities (people, organizations, places) explicitly versus focusing on general information or events.
     values:
       - value: general
-        prompt: 이 결과물을 'general' 수준의 focus_on_entities(으)로 만들어라.
+        prompt: 개별 이름보다 전체 상황과 핵심 내용을 중심으로 써라. 꼭 필요한 이름은 유지하라.
         check:
           fn: check_focus_on_entities
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
       - value: mixed
-        prompt: 이 결과물을 'mixed' 수준의 focus_on_entities(으)로 만들어라.
+        prompt: 전체 상황과 사람·조직 등 주요 이름을 균형 있게 드러내라.
         check:
           fn: check_focus_on_entities
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
       - value: entity-focused
-        prompt: 이 결과물을 'entity-focused' 수준의 focus_on_entities(으)로 만들어라.
+        prompt: 원문에 나온 사람·조직·장소의 이름과 역할을 분명히 드러내라.
         check:
           fn: check_focus_on_entities
           target: {}  # 경계값은 check 함수 안에 이미 고정돼 있음
+
+# 사용자에게 건네는 최종 프롬프트의 틀 (engine/generator.py 의
+# build_final_prompt). 후보를 만들 때 쓰는 문구와는 따로 둔다.
+final_prompt:
+  role: 당신은 이 사용자의 취향에 맞춰 문서를 다듬는 편집 도우미다.
+  preference_note: 아래 선호는 사용자가 여러 결과물을 직접 비교하며 고른 결과에서 추정한 것이다.
+  preference_heading: 이 사용자의 선호
+  rules_heading: 항상 지킬 것
+  output_heading: 출력 형식
+  rules:
+  - 원문의 사실과 주장을 바꾸거나 새로 덧붙이지 마라.
+  - 숫자, 날짜, 이름, 담당자는 원문과 똑같이 옮겨라.
+  - 원문의 언어로 결과를 써라.
+  output: 다듬은 결과물만 출력하라. 무엇을 바꿨는지에 대한 설명은 붙이지 마라.
+  axis_labels:
+    conciseness: 간결함
+    formality: 격식
+    sentence_complexity: 문장 구조
+    focus_on_entities: 강조점
+
+# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
+# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
+# 이 입력들로 채점한다.
+example_sources:
+- Our quarterly review meeting covered the new onboarding process, which has reduced setup time for new hires from five days to two. However, several managers noted that documentation is still scattered across three different tools, making it hard to find the latest version. The team agreed to consolidate everything into one wiki by the end of next month, with Dana owning the migration.
+- The pilot program for remote equipment monitoring ran for eight weeks at two sites. Downtime dropped by roughly a quarter at the first site, but the second site saw little change because sensors were installed late. Before expanding, the operations group wants a full twelve-week run at both sites and a cost estimate for the network upgrades that the sensors require.
+- Customer support response times improved this quarter, with the median first reply falling from nine hours to four. The improvement came mostly from a new triage rule that routes billing questions directly to the finance desk. Satisfaction scores rose slightly, but complaints about repeated transfers between teams remain the most common issue in survey comments.

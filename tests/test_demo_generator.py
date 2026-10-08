@@ -23,7 +23,8 @@ def test_demo_generation_varies_by_length_and_extractiveness() -> None:
     assert short
     assert len(long) > len(short)
     assert abstract != short
-    assert "Main focus" in abstract
+    assert abstract.startswith("Summary: A city opened a new public library on Monday.")
+    assert "study rooms and a digital media lab" in abstract
 
 
 def test_demo_generation_is_deterministic() -> None:
@@ -90,6 +91,15 @@ def test_sentiment_axis_changes_wording(review_domain) -> None:
     assert "disappointing" in negative
 
 
+def test_review_demo_uses_source_without_inventing_events(review_domain) -> None:
+    combo = {"length": "long", "sentiment": "negative", "topic": ""}
+    out = route_demo(review_domain, REVIEW_MEMO, combo)
+    assert "Waited forty minutes" in out
+    assert "room was loud" in out
+    assert "what was promised" not in out
+    assert "going back" not in out
+
+
 def test_structure_axis_toggles_bullets(email_domain) -> None:
     base = {"length": "normal", "formality": "casual"}
     prose = route_demo(email_domain, EMAIL_REQUEST, {**base, "structure": "prose"})
@@ -102,15 +112,17 @@ def test_formality_axis_expands_contractions(email_domain) -> None:
     base = {"length": "long", "structure": "prose"}
     casual = route_demo(email_domain, EMAIL_REQUEST, {**base, "formality": "casual"})
     formal = route_demo(email_domain, EMAIL_REQUEST, {**base, "formality": "formal"})
-    assert "I've" in casual
-    assert "I've" not in formal
-    assert "I have" in formal
+    assert "I'm" in casual
+    assert "I'm" not in formal
+    assert "I am" in formal
 
 
 def test_email_register_is_not_review_wording(email_domain) -> None:
     """어조 축이 없는 도메인에 의견문 문체를 쓰면 이메일이 리뷰처럼 읽힌다."""
     out = route_demo(email_domain, EMAIL_REQUEST, {"length": "normal", "formality": "casual", "structure": "prose"})
     assert "the experience was" not in out
+    assert "confirm the Q4 delivery date and share the updated invoice" in out
+    assert "Here is a short draft" not in out
 
 
 def test_freeform_axis_instruction_is_surfaced(review_domain) -> None:

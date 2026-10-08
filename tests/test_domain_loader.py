@@ -71,3 +71,11 @@ def test_malformed_domain_is_rejected(tmp_path, axes, message) -> None:
 def test_missing_top_level_key_is_rejected(tmp_path) -> None:
     with pytest.raises(DomainError, match="checks_module"):
         load_domain(_write(tmp_path, [_axis("a", ["x", "y"])], checks_module=""))
+
+
+def test_example_sources_are_optional_and_checked(tmp_path) -> None:
+    assert load_domain(_write(tmp_path, [_axis("a", ["x", "y"])])).example_sources == []
+    loaded = load_domain(_write(tmp_path, [_axis("a", ["x", "y"])], example_sources=["  one  ", "two"]))
+    assert loaded.example_sources == ["one", "two"]
+    with pytest.raises(DomainError, match="example_sources"):
+        load_domain(_write(tmp_path, [_axis("a", ["x", "y"])], example_sources=["ok", ""]))

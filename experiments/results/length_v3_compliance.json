@@ -1,0 +1,33 @@
+{
+  "n_docs": 12,
+  "human_median": {
+    "short": 0.053,
+    "normal": 0.103,
+    "long": 0.154
+  },
+  "tolerance": 0.03,
+  "median_ratio": {
+    "v1": {
+      "short": 0.0577,
+      "normal": 0.1175,
+      "long": 0.2503
+    },
+    "v2": {
+      "short": 0.109,
+      "normal": 0.1482,
+      "long": 0.188
+    },
+    "v3": {
+      "short": 0.0529,
+      "normal": 0.106,
+      "long": 0.1655
+    }
+  },
+  "gate": {
+    "within_tolerance": true,
+    "ordered": true,
+    "passed": true
+  },
+  "spend_dollars": 0.0083,
+  "model_calls": 35
+}

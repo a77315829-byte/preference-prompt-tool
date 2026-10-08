@@ -47,28 +47,28 @@ _STOPWORDS = {
 # formal 로 펼칠 때 시제가 틀어졌다("I would expected").
 _TONE_TEMPLATES = {
     "positive": (
-        "Overall the experience was excellent.",
-        "What stood out most: {k}.",
-        "I'm glad I gave this a try.",
-        "The whole thing felt well handled from start to finish.",
-        "I have no real complaints to raise.",
-        "I've already recommended it to a couple of friends.",
+        "{source}.",
+        "Overall, I found the experience excellent.",
+        "These details left a good impression on me.",
+        "For me, the positives mattered most.",
+        "I came away feeling good about the visit.",
+        "That is my view based on what I observed.",
     ),
     "neutral": (
-        "Overall the experience was about what I expected.",
-        "The parts worth noting: {k}.",
-        "Nothing here stood out in either direction.",
-        "It did the job without much to add.",
-        "I don't have strong feelings about it.",
-        "I would consider it again if the timing works out.",
+        "{source}.",
+        "Those are the main details of my experience.",
+        "I can see both positive and negative aspects in them.",
+        "My view is mixed rather than strongly one-sided.",
+        "The details speak for themselves.",
+        "That is my view based on what I observed.",
     ),
     "negative": (
-        "Overall the experience was disappointing.",
-        "The problems worth flagging: {k}.",
-        "It didn't come close to what was promised.",
-        "I'm not satisfied with how this was handled.",
-        "I wouldn't plan on going back.",
-        "I've had a noticeably better time elsewhere.",
+        "{source}.",
+        "Overall, I found the experience disappointing.",
+        "The drawbacks weighed on my impression.",
+        "For me, the negatives mattered most.",
+        "I came away with reservations about the visit.",
+        "That is my view based on what I observed.",
     ),
 }
 
@@ -77,12 +77,12 @@ _TONE_TEMPLATES = {
 # experience was..." 처럼 리뷰 말투가 나온다. 축 구성을 문체 선택의
 # 근거로 쓰는 휴리스틱이고, 도메인 이름에 의존하지 않는다.
 _DRAFT_TEMPLATES = (
-    "Here is a short draft covering the request.",
-    "Key points: {k}.",
-    "I've kept it brief so it can go out as is.",
-    "Please let me know if anything needs changing.",
-    "I can follow up with more detail if that helps.",
-    "Thanks in advance for taking a look.",
+    "I'm writing to ask if you could {request}.",
+    "Thanks for your help.",
+    "Please let me know once you have an update.",
+    "I look forward to your reply.",
+    "Please get back to me when you can.",
+    "Thank you for taking the time to review this request.",
 )
 
 # 격식 축(formality)용 축약형 펼치기. casual 은 위 틀의 축약형을 그대로
@@ -117,13 +117,23 @@ def _templates(combo: dict[str, str], has_sentiment_axis: bool) -> tuple[str, ..
 
 
 def _sentences(
-    combo: dict[str, str], keywords: list[str], has_sentiment_axis: bool = True
+    combo: dict[str, str], keywords: list[str], has_sentiment_axis: bool = True,
+    source_text: str = "",
 ) -> list[str]:
     count = _SENTENCE_LIMITS.get(combo.get("length", "normal"), 4)
     templates = _templates(combo, has_sentiment_axis)
     highlight = ", ".join(keywords[:3])
+    # 리뷰 메모의 실제 내용을 먼저 담는다. 어조는 주관적인 평가 문장에만
+    # 반영하고, 원문에 없는 방문·추천·약속 위반 등의 사건은 만들어내지 않는다.
+    source = re.sub(r"[.!?]+\s*", "; ", source_text.strip()).strip(" ;")
+    source = source or "No specific details were provided"
+    # 이메일처럼 sentiment 축이 없는 초안 과제에서는 키워드 나열 대신
+    # 원문 요청을 사용한다. 첫 두 문장에도 축약형을 두어 짧은 격식 A/B가
+    # 동일한 카드로 렌더링되지 않게 한다.
+    request = re.sub(r"^Ask\s+.+?\s+to\s+", "", source_text.strip(), flags=re.I)
+    request = request.rstrip(".!? ") or "share the details of your request"
     return [
-        templates[i % len(templates)].format(k=highlight)
+        templates[i % len(templates)].format(k=highlight, request=request, source=source)
         for i in range(count)
     ]
 
@@ -156,7 +166,7 @@ def generate_demo(source_text: str, combo: dict[str, str], domain=None) -> str:
     has_sentiment_axis = domain is not None and any(
         axis.name == "sentiment" for axis in domain.axes
     )
-    lines = _apply_formality(_sentences(combo, keywords, has_sentiment_axis), combo)
+    lines = _apply_formality(_sentences(combo, keywords, has_sentiment_axis, source_text), combo)
 
     if combo.get("structure") == "bullets":
         body = "\n".join(f"- {line}" for line in lines)

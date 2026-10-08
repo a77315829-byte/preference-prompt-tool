@@ -42,7 +42,7 @@ class DailyBudget:
             self._day = today
             self._used = 0
 
-    def left(self) -> int:
+    def left(self, _subject: str | None = None) -> int:
         """오늘 남은 횟수."""
         with self._lock:
             self._roll_over_if_needed()
@@ -60,6 +60,11 @@ class DailyBudget:
                 return False
             self._used += 1
             return True
+
+    def try_consume(self, _subject: str | None = None) -> str | None:
+        """quota.Quota 와 같은 호출 모양. 이 상한은 몫을 나누지 않으므로 subject 는 쓰지
+        않는다. 성공이면 None, 다 썼으면 "total"."""
+        return None if self.consume() else "total"
 
     def used(self) -> int:
         with self._lock:

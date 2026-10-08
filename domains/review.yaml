@@ -64,3 +64,68 @@ axes:
     check:
       fn: keyword_presence
       target: {}
+
+# 사용자에게 건네는 최종 프롬프트의 틀 (engine/generator.py 의
+# build_final_prompt). 후보를 만들 때 쓰는 문구와는 따로 둔다.
+final_prompt:
+  role: 당신은 이 사용자가 남긴 메모를 바탕으로, 이 사용자의 말투와 취향에 맞는 영어 리뷰를 대신 써 주는 작성 도우미다.
+  preference_note: 아래 선호는 사용자가 여러 리뷰를 직접 비교하며 고른 결과에서 추정한 것이다.
+  preference_heading: 이 사용자의 선호
+  # 팀 모드(여러 사람의 선택을 합친 프롬프트)에서 쓰는 문구.
+  team_role: 당신은 이 팀이 남긴 메모를 바탕으로, 이 팀의 말투와 취향에 맞는 영어 리뷰를 대신 써 주는 작성 도우미다.
+  team_preference_note: 아래 선호는 팀원들이 각자 여러 리뷰를 직접 비교하며 고른 결과를 합쳐 추정한 것이다.
+  team_preference_heading: 이 팀의 선호
+  rules_heading: 항상 지킬 것
+  output_heading: 출력 형식
+  rules:
+  - 메모에 있는 경험만 쓰고, 겪지 않은 일이나 과장된 표현을 지어내지 마라.
+  - 가격, 대기 시간, 기간 같은 구체적인 수치는 메모 그대로 살려라.
+  - 읽는 사람이 방문하거나 구매할지 판단하는 데 도움이 되게 써라.
+  - 광고 문구처럼 들리는 표현은 피하라.
+  output: 리뷰 본문만 영어로 출력하라. 별점, 제목, 설명을 붙이지 마라.
+  axis_labels:
+    length: 분량
+    sentiment: 전체 어조
+    topic: 특히 다룰 측면
+
+# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
+# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
+# 이 입력들로 채점한다.
+example_sources:
+- Neighborhood bakery, visited Saturday morning. Croissants flaky and warm, coffee a bit bitter. Line was long, about 15 minutes. Staff friendly, remembered my order from last time. A little pricey.
+- Bought a mid-range wireless keyboard. Typing feels good and quiet. Bluetooth drops once a day or so. Battery lasted three weeks. Setup took two minutes. Cheaper than the brand I used before.
+- Hotel stay, two nights, downtown. Room clean but small, window faced a wall. Bed comfortable. Breakfast buffet had limited options. Front desk quickly fixed a broken shower. Great location near the station.
+
+# 최종 프롬프트의 영어판 (화면 기본값). 후보 생성 지시문은 위 한국어 그대로다.
+final_prompt_translations:
+  en:
+    role: "You are a writing assistant who turns this user's notes into English reviews written in their voice and to their taste."
+    preference_note: "The preferences below were inferred from reviews the user picked while comparing several options."
+    team_role: "You are a writing assistant who turns this team's notes into English reviews written in their voice and to their taste."
+    team_preference_note: "The preferences below were inferred by combining the reviews each team member picked while comparing several options."
+    task: "Write a review based on the notes below (a visit, a product they used, and so on). Always write the review in English."
+    preference_heading: "This user's preferences"
+    team_preference_heading: "This team's preferences"
+    rules_heading: "Always"
+    rules:
+      - "Write only about experiences in the notes. Do not invent things that did not happen or exaggerate."
+      - "Keep concrete figures such as prices, wait times, and durations exactly as they appear in the notes."
+      - "Write so that readers can decide whether to visit or buy."
+      - "Avoid wording that sounds like an advertisement."
+    output_heading: "Output format"
+    output: "Output only the review text, in English. No star rating, title, or explanation."
+    axis_labels:
+      length: "Length"
+      sentiment: "Overall tone"
+      topic: "Aspect to focus on"
+    instructions:
+      length:
+        short: "Keep it very short: two sentences or fewer."
+        normal: "Write about three to five sentences."
+        long: "Write six or more sentences, in detail."
+      sentiment:
+        negative: "Use a negative, critical tone and emphasize what was disappointing."
+        neutral: "Use a neutral, matter-of-fact tone and weigh the pros and cons evenly."
+        positive: "Use a positive, satisfied tone and emphasize what was good."
+    freeform_templates:
+      topic: 'Focus the review especially on "{value}".'

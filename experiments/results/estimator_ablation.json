@@ -1,0 +1,224 @@
+{
+  "experiment_selector": {
+    "lr=0.1 noise=0.0": {
+      "exact@4": 0.667,
+      "exact@6": 0.905,
+      "exact@8": 1.0,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=0.1 noise=0.1": {
+      "exact@4": 0.476,
+      "exact@6": 0.619,
+      "exact@8": 0.79,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=0.1 noise=0.2": {
+      "exact@4": 0.419,
+      "exact@6": 0.381,
+      "exact@8": 0.543,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=0.25 noise=0.0": {
+      "exact@4": 0.667,
+      "exact@6": 0.905,
+      "exact@8": 1.0,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=0.25 noise=0.1": {
+      "exact@4": 0.476,
+      "exact@6": 0.619,
+      "exact@8": 0.79,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=0.25 noise=0.2": {
+      "exact@4": 0.419,
+      "exact@6": 0.381,
+      "exact@8": 0.543,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=0.5 noise=0.0": {
+      "exact@4": 0.667,
+      "exact@6": 1.0,
+      "exact@8": 1.0,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=0.5 noise=0.1": {
+      "exact@4": 0.476,
+      "exact@6": 0.676,
+      "exact@8": 0.829,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=0.5 noise=0.2": {
+      "exact@4": 0.419,
+      "exact@6": 0.4,
+      "exact@8": 0.59,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=0.75 noise=0.0": {
+      "exact@4": 0.667,
+      "exact@6": 1.0,
+      "exact@8": 1.0,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=0.75 noise=0.1": {
+      "exact@4": 0.476,
+      "exact@6": 0.676,
+      "exact@8": 0.829,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=0.75 noise=0.2": {
+      "exact@4": 0.419,
+      "exact@6": 0.4,
+      "exact@8": 0.59,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=1.0 noise=0.0": {
+      "exact@4": 0.667,
+      "exact@6": 1.0,
+      "exact@8": 1.0,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=1.0 noise=0.1": {
+      "exact@4": 0.476,
+      "exact@6": 0.657,
+      "exact@8": 0.857,
+      "mean_rounds": 8,
+      "n": 210
+    },
+    "lr=1.0 noise=0.2": {
+      "exact@4": 0.419,
+      "exact@6": 0.362,
+      "exact@8": 0.59,
+      "mean_rounds": 8,
+      "n": 210
+    }
+  },
+  "app_selector": {
+    "lr=0.1 noise=0.0": {
+      "exact@4": 1.0,
+      "exact@6": 1.0,
+      "exact@8": 1.0,
+      "mean_rounds": 4,
+      "n": 210
+    },
+    "lr=0.1 noise=0.1": {
+      "exact@4": 0.657,
+      "exact@6": 0.676,
+      "exact@8": 0.676,
+      "mean_rounds": 4.1,
+      "n": 210
+    },
+    "lr=0.1 noise=0.2": {
+      "exact@4": 0.505,
+      "exact@6": 0.505,
+      "exact@8": 0.505,
+      "mean_rounds": 4.12,
+      "n": 210
+    },
+    "lr=0.25 noise=0.0": {
+      "exact@4": 1.0,
+      "exact@6": 1.0,
+      "exact@8": 1.0,
+      "mean_rounds": 4,
+      "n": 210
+    },
+    "lr=0.25 noise=0.1": {
+      "exact@4": 0.657,
+      "exact@6": 0.676,
+      "exact@8": 0.676,
+      "mean_rounds": 4.1,
+      "n": 210
+    },
+    "lr=0.25 noise=0.2": {
+      "exact@4": 0.505,
+      "exact@6": 0.505,
+      "exact@8": 0.505,
+      "mean_rounds": 4.12,
+      "n": 210
+    },
+    "lr=0.5 noise=0.0": {
+      "exact@4": 1.0,
+      "exact@6": 1.0,
+      "exact@8": 1.0,
+      "mean_rounds": 4,
+      "n": 210
+    },
+    "lr=0.5 noise=0.1": {
+      "exact@4": 0.657,
+      "exact@6": 0.676,
+      "exact@8": 0.676,
+      "mean_rounds": 4.08,
+      "n": 210
+    },
+    "lr=0.5 noise=0.2": {
+      "exact@4": 0.505,
+      "exact@6": 0.505,
+      "exact@8": 0.505,
+      "mean_rounds": 4.12,
+      "n": 210
+    },
+    "lr=0.75 noise=0.0": {
+      "exact@4": 1.0,
+      "exact@6": 1.0,
+      "exact@8": 1.0,
+      "mean_rounds": 4,
+      "n": 210
+    },
+    "lr=0.75 noise=0.1": {
+      "exact@4": 0.657,
+      "exact@6": 0.676,
+      "exact@8": 0.676,
+      "mean_rounds": 4.1,
+      "n": 210
+    },
+    "lr=0.75 noise=0.2": {
+      "exact@4": 0.505,
+      "exact@6": 0.505,
+      "exact@8": 0.505,
+      "mean_rounds": 4.12,
+      "n": 210
+    },
+    "lr=1.0 noise=0.0": {
+      "exact@4": 1.0,
+      "exact@6": 1.0,
+      "exact@8": 1.0,
+      "mean_rounds": 4,
+      "n": 210
+    },
+    "lr=1.0 noise=0.1": {
+      "exact@4": 0.657,
+      "exact@6": 0.676,
+      "exact@8": 0.676,
+      "mean_rounds": 4.1,
+      "n": 210
+    },
+    "lr=1.0 noise=0.2": {
+      "exact@4": 0.505,
+      "exact@6": 0.505,
+      "exact@8": 0.505,
+      "mean_rounds": 4.12,
+      "n": 210
+    }
+  },
+  "app_rounds_by_domain_lr0.5_noise0": {
+    "summarization": 4.67,
+    "coding": 3,
+    "idle_tracker": 2,
+    "review": 4.67,
+    "email": 4.33
+  },
+  "note": "가상 사용자, API 0회. 선택·추정 기계만 시험한다."
+}

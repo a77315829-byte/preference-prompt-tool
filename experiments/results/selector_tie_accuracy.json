@@ -1,0 +1,2113 @@
+{
+  "rows": [
+    {
+      "persona": 0,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 60,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 3
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": false
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 4
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 2
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 1,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 39,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 6
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 3
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 3
+      }
+    },
+    {
+      "persona": 2,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 8,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 5
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 3,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 83,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": false
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 6
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": false
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 4,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 89,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 2
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 5,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 2,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 5
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 6,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 3,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": false
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 3
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 1
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    },
+    {
+      "persona": 7,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 32,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 5
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 8,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 57,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 5
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 9,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 65,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": false
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 1
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    },
+    {
+      "persona": 10,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 91,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 5
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 2
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    },
+    {
+      "persona": 11,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 41,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      }
+    },
+    {
+      "persona": 12,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 35,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": false
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 1
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    },
+    {
+      "persona": 13,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 81,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      }
+    },
+    {
+      "persona": 14,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 13,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 1
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    },
+    {
+      "persona": 15,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 9,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": false
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 4
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 2
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 16,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 55,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 4
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 5
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 2
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    },
+    {
+      "persona": 17,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 1,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 5
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 4
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 18,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 16,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": null,
+            "correct": false
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 4
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 19,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 80,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 4
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": false
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 3
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 20,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 24,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 1
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    },
+    {
+      "persona": 21,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 44,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 2
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 1
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    },
+    {
+      "persona": 22,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 78,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 4
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 5
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "fully",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 2
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    },
+    {
+      "persona": 23,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 10,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      }
+    },
+    {
+      "persona": 24,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 74,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 1
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    },
+    {
+      "persona": 25,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 56,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 4
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": false
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 4
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 26,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 82,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 1
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    },
+    {
+      "persona": 27,
+      "combo": {
+        "length": "long",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 93,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 2
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": false
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 3
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 2
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "long",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 2
+      }
+    },
+    {
+      "persona": 28,
+      "combo": {
+        "length": "normal",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 15,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "normal",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 0
+      }
+    },
+    {
+      "persona": 29,
+      "combo": {
+        "length": "short",
+        "extractiveness": "normal"
+      },
+      "learn_doc": 58,
+      "default/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 3
+      },
+      "default/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": null,
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 1,
+        "ties": 7
+      },
+      "app/legacy-a": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "high",
+            "correct": false
+          }
+        },
+        "exact": false,
+        "undecided": 0,
+        "ties": 1
+      },
+      "app/record-tie": {
+        "axes": {
+          "length": {
+            "learned": "short",
+            "correct": true
+          },
+          "extractiveness": {
+            "learned": "normal",
+            "correct": true
+          }
+        },
+        "exact": true,
+        "undecided": 0,
+        "ties": 1
+      }
+    }
+  ],
+  "summary": {
+    "n": 30,
+    "cells": {
+      "default/legacy-a": {
+        "exact": 19,
+        "per_axis": {
+          "length": 29,
+          "extractiveness": 19
+        },
+        "undecided_axes": 0,
+        "tied_comparisons": 94
+      },
+      "default/record-tie": {
+        "exact": 8,
+        "per_axis": {
+          "length": 22,
+          "extractiveness": 11
+        },
+        "undecided_axes": 18,
+        "tied_comparisons": 152
+      },
+      "app/legacy-a": {
+        "exact": 12,
+        "per_axis": {
+          "length": 28,
+          "extractiveness": 13
+        },
+        "undecided_axes": 0,
+        "tied_comparisons": 56
+      },
+      "app/record-tie": {
+        "exact": 21,
+        "per_axis": {
+          "length": 30,
+          "extractiveness": 21
+        },
+        "undecided_axes": 9,
+        "tied_comparisons": 41
+      }
+    },
+    "primary_app_record_tie_vs_legacy": {
+      "only_app/record-tie": 17,
+      "only_app/legacy-a": 8,
+      "sign_test_p": 0.1078
+    },
+    "app_vs_default_legacy": {
+      "only_app/legacy-a": 6,
+      "only_default/legacy-a": 13,
+      "sign_test_p": 0.1671
+    },
+    "app_vs_default_record_tie": {
+      "only_app/record-tie": 13,
+      "only_default/record-tie": 0,
+      "sign_test_p": 0.0002
+    }
+  },
+  "run": {
+    "requested_n": 30,
+    "spend_dollars": 0.0105,
+    "model_calls": 52,
+    "seconds": 123.4,
+    "stopped": null
+  },
+  "config": {
+    "domain": "domains/summarization.yaml",
+    "model": "openai/gpt-4o-mini",
+    "rounds": "8 (both selectors)",
+    "preregistration": "docs/history/2026-10-06_selector_tie_preregistration.md"
+  }
+}

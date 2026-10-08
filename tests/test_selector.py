@@ -144,50 +144,126 @@ def test_pairs_always_differ_on_some_axis(selector_cls, domain) -> None:
         assert identical == 0
 
 
-def _pair_key(axis_name: str, combo_a: dict, combo_b: dict) -> tuple:
-    """두 콤보가 갈리는 축과 그 값쌍 - 순서 무관하게 비교한다."""
-    axis = next(k for k in combo_a if combo_a[k] != combo_b[k])
-    return (axis,) + tuple(sorted((combo_a[axis], combo_b[axis])))
+def test_people_mode_never_repeats_for_a_flip_flopping_user(domain) -> None:
+    """확신도가 쌓이지 않는 사용자(A/B 를 번갈아 고름)에게도 같은 질문을
+    되풀이하면 안 된다 (ui/ux 3b140d1 의 걱정을 앱 전용 옵션 기준으로
+    옮겼다 - 기본 동작은 실험 재현성 때문에 바꾸지 않는다). 이미 물은
+    질문은 선택 이력에서 읽으므로 세션 재생에 내부 상태가 필요 없다.
+    물을 게 떨어지면 None 이다."""
+    from engine.selector import _question_key
 
-
-def test_uncertainty_selector_does_not_repeat_a_pair_before_exhausting_the_axis(domain) -> None:
-    """estimator 를 전혀 갱신하지 않으면(확신도가 안 바뀌면) 원래 구현은
-    매번 똑같은 쌍을 돌려줬다 - FR-03 "같은 질문 반복 금지"가 실제로는
-    보장되지 않았다. summarization.yaml 은 2축 x 3값 = 축당 3쌍, 총
-    6쌍이므로 6번까지는 전부 달라야 하고, 7번째부터는 (전부 소진됐으니)
-    반복을 허용한다."""
     estimator = Estimator(domain)
-    selector = UncertaintySelector(domain, seed=0)
-
-    seen = []
-    for _ in range(6):
-        combo_a, combo_b = selector.next_pair(estimator)
-        seen.append(_pair_key("length", combo_a, combo_b) if combo_a["length"] != combo_b["length"]
-                    else _pair_key("extractiveness", combo_a, combo_b))
-    assert len(set(seen)) == 6, f"6쌍을 다 묻기 전에 반복이 나왔다: {seen}"
-
-    # 7번째는 소진됐으니 반복이 나와도 된다 - 여기서 예외가 나면 안 된다.
-    combo_a, combo_b = selector.next_pair(estimator)
-    assert combo_a != combo_b
-
-
-def test_uncertainty_selector_moves_to_the_other_axis_once_one_is_exhausted(domain) -> None:
-    """한 축의 쌍을 전부 물었으면(내부 이력에 직접 표시), 그 축이 여전히
-    확신도 최저라도 골라지면 안 된다. RNG 운에 기대지 않도록 내부 상태를
-    직접 조작하는 화이트박스 테스트다."""
-    estimator = Estimator(domain)
-    selector = UncertaintySelector(domain, seed=0)
-    axis_name = "length"  # summarization.yaml: short/normal/long, 3쌍
-
-    for value_a, value_b in itertools.combinations(("short", "normal", "long"), 2):
-        selector._asked.add(selector._pair_key(axis_name, value_a, value_b))
-
-    assert selector._axis_has_unasked_pair(next(a for a in domain.axes if a.name == axis_name)) is False
-
-    # length 축은 소진됐으니, 확신도가 모두 동률(초기 상태)이라도 골라지면 안 된다.
-    picked = {selector._pick_axis_name(estimator) for _ in range(20)}
-    assert axis_name not in picked, f"소진된 축이 계속 골라졌다: {picked}"
+    selector = UncertaintySelector(domain, seed=0, contrast_first=True, avoid_repeats=True)
+    asked = []
+    for i in range(selector.max_questions() + 1):
+        pair = selector.next_pair(estimator)
+        if pair is None:
+            break
+        asked.append(_question_key(*pair))
+        estimator.update(Comparison(*pair, "a" if i % 2 == 0 else "b"))
+    assert asked and len(set(asked)) == len(asked), f"반복이 나왔다: {asked}"
+    assert selector.next_pair(estimator) is None
 
 
 if __name__ == "__main__":
     main()
+
+
+# --- 사람용 옵션 (contrast_first / avoid_repeats) ---------------------------
+# 앱이 켜는 옵션이다. 기본값은 꺼져 있고, 위 테스트들이 기본 동작을 고정한다.
+
+import itertools
+
+from engine.selector import _question_key
+
+PEOPLE = {"contrast_first": True, "avoid_repeats": True}
+PEOPLE_DOMAINS = ["summarization", "coding", "email", "review", "macsum_eval_agent"]
+
+
+def _people_session(domain, choose, seed: int = 0, limit: int = 8):
+    """질문이 떨어지거나 limit 에 닿을 때까지 돌린다. 물은 질문 목록을 돌려준다."""
+    estimator = Estimator(domain)
+    selector = UncertaintySelector(domain, seed=seed, **PEOPLE)
+    asked = []
+    for _ in range(limit):
+        pair = selector.next_pair(estimator)
+        if pair is None:
+            break
+        combo_a, combo_b = pair
+        asked.append((combo_a, combo_b))
+        estimator.update(Comparison(combo_a, combo_b, choose(combo_a, combo_b)))
+    return estimator, asked
+
+
+def _all_hidden(domain):
+    axes = [a for a in domain.axes if a.type == "enum"]
+    for values in itertools.product(*[[v.value for v in a.values] for a in axes]):
+        yield dict(zip([a.name for a in axes], values))
+
+
+@pytest.mark.parametrize("domain_file", PEOPLE_DOMAINS)
+def test_people_mode_never_shows_the_same_question_twice(domain_file) -> None:
+    """화면에는 묻는 축의 두 값만 보인다. 다른 축 값만 바꾼 쌍도 사람에게는
+    같은 질문이라, 질문은 (축, 두 값) 단위로 한 번씩만 묻는다."""
+    domain = load_domain(f"domains/{domain_file}.yaml")
+    for hidden in _all_hidden(domain):
+        for seed in range(3):
+            for chooser in (lambda a, b: synthetic_winner(hidden, a, b), lambda a, b: "a"):
+                _, asked = _people_session(domain, chooser, seed=seed)
+                keys = [_question_key(a, b) for a, b in asked]
+                assert None not in keys, "한 번에 축 하나만 달라야 한다"
+                assert len(set(keys)) == len(keys), f"같은 질문이 반복됐다: {keys}"
+
+
+@pytest.mark.parametrize("domain_file", PEOPLE_DOMAINS)
+def test_people_mode_recovers_every_preference(domain_file) -> None:
+    """반복을 없애고 일찍 끝내도 일관된 사용자의 선호는 전부 맞혀야 한다."""
+    domain = load_domain(f"domains/{domain_file}.yaml")
+    for hidden in _all_hidden(domain):
+        for seed in range(3):
+            estimator, _ = _people_session(
+                domain, lambda a, b: synthetic_winner(hidden, a, b), seed=seed, limit=50
+            )
+            for name, value in hidden.items():
+                assert estimator.preferred_value(name) == value, (hidden, seed)
+
+
+def test_people_mode_always_includes_the_current_leader(domain) -> None:
+    """이미 진 두 값끼리 붙이면 1위를 가리는 데 정보가 없다. 둘 다 싫은
+    선택지를 받은 사용자가 이상하다고 느낀 원인이었다."""
+    hidden = {"length": "normal", "extractiveness": "normal"}
+    estimator = Estimator(domain)
+    selector = UncertaintySelector(domain, seed=0, **PEOPLE)
+    seen_axes = set()
+    while (pair := selector.next_pair(estimator)) is not None:
+        combo_a, combo_b = pair
+        axis, values = _question_key(combo_a, combo_b)
+        if axis in seen_axes:
+            assert estimator.preferred_value(axis) in values
+        seen_axes.add(axis)
+        estimator.update(Comparison(combo_a, combo_b, synthetic_winner(hidden, combo_a, combo_b)))
+
+
+def test_people_mode_ends_early_on_two_value_axes() -> None:
+    coding = load_domain("domains/coding.yaml")
+    selector = UncertaintySelector(coding, seed=0, **PEOPLE)
+    assert selector.max_questions() == 3
+    _, asked = _people_session(coding, lambda a, b: "a", limit=8)
+    assert len(asked) == 3
+
+
+def test_people_mode_asks_extremes_first(domain) -> None:
+    """처음 묻는 축은 양 끝 값끼리여야 A/B 차이가 눈에 보인다."""
+    combo_a, combo_b = UncertaintySelector(domain, seed=0, **PEOPLE).next_pair(Estimator(domain))
+    axis, values = _question_key(combo_a, combo_b)
+    all_values = [v.value for v in domain.axis(axis).values]
+    assert values == {all_values[0], all_values[-1]}
+
+
+def test_default_behaviour_is_unchanged(domain) -> None:
+    """옵션을 명시적으로 끈 것과 안 넘긴 것이 같아야 실험 재현성이 유지된다."""
+    for seed in range(3):
+        assert run(UncertaintySelector, domain, HIDDEN, N_ROUNDS, seed=seed) == run(
+            lambda d, seed: UncertaintySelector(d, seed=seed, contrast_first=False, avoid_repeats=False),
+            domain, HIDDEN, N_ROUNDS, seed=seed,
+        )

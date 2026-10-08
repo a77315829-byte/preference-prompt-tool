@@ -29,9 +29,9 @@ def load_personas(macsum_record: dict) -> list[Persona]:
     ]
 
 
-def choose(domain: Domain, persona: Persona, candidate_a: str, candidate_b: str, source: str) -> str:
-    """페르소나의 실제 축값에 대해 checks/*.py의 검사 함수를 두 후보에 각각
-    적용해, 총점이 더 높은 쪽을 고른다.
+def comparison_scores(domain: Domain, persona: Persona, candidate_a: str,
+                      candidate_b: str, source: str) -> tuple[float, float]:
+    """모의 선택의 두 점수. 선택과 진단에서 같은 계산을 사용한다.
 
     9주차 발견: 정답 요약과의 단어 겹침으로 판단했더니, "fully"(원문 그대로
     발췌) 후보가 원문 고유명사를 그대로 가져와 정답 요약과 우연히 어휘가
@@ -54,4 +54,15 @@ def choose(domain: Domain, persona: Persona, candidate_a: str, candidate_b: str,
         score_a += s_a
         score_b += s_b
 
+    return score_a, score_b
+
+
+def choose(domain: Domain, persona: Persona, candidate_a: str, candidate_b: str, source: str,
+           *, tie_policy: str = "legacy-a") -> str:
+    """기존 실험은 동점에도 A를 선택한다. record-tie는 후속 실험의 명시적 옵션이다."""
+    if tie_policy not in {"legacy-a", "record-tie"}:
+        raise ValueError(f"알 수 없는 동점 처리: {tie_policy}")
+    score_a, score_b = comparison_scores(domain, persona, candidate_a, candidate_b, source)
+    if score_a == score_b and tie_policy == "record-tie":
+        return "tie"
     return "a" if score_a >= score_b else "b"

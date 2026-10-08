@@ -12,7 +12,9 @@ async function request(path, options = {}) {
   return body;
 }
 
-export function startPreferenceSession(domainKey, sourceText, totalRounds = 8) {
+// templateId: 템플릿 라이브러리의 "내 방식으로 바꾸기"로 시작할 때. 결과는
+// 템플릿 본문 + 추정한 선호 절이 된다.
+export function startPreferenceSession(domainKey, sourceText, totalRounds = 8, templateId = null) {
   return request('/sessions', {
     method: 'POST',
     body: JSON.stringify({
@@ -20,6 +22,7 @@ export function startPreferenceSession(domainKey, sourceText, totalRounds = 8) {
       sourceText,
       demoMode: true,
       totalRounds,
+      ...(templateId ? { templateId } : {}),
     }),
   });
 }
@@ -31,7 +34,29 @@ export function submitPreferenceChoice(sessionId, pairId, chosen) {
   });
 }
 
-export const startCodingSession = (sourceText) => startPreferenceSession('coding', sourceText, 8);
+// 마지막 선택을 지우고 그 질문으로 돌아간다. 앱은 같은 질문을 다시 묻지 않으므로
+// 잘못 누른 선택은 이것으로만 고칠 수 있다. 후보는 캐시에 있어 모델을 다시 부르지 않는다.
+export function undoPreferenceChoice(sessionId) {
+  return request(`/sessions/${sessionId}/undo`, { method: 'POST', body: '{}' });
+}
+
+// GEPA 최적화는 수십 초 걸린다. 시작만 요청하고, 진행률과 결과는
+// fetchSession 으로 폴링해 session.optimize_status/optimize_progress/prompt 에서 읽는다.
+export function startOptimization(sessionId) {
+  return request(`/sessions/${sessionId}/optimize`, { method: 'POST', body: '{}' });
+}
+
+// { live }: 서버가 실제 생성 모드(PPT_LIVE=1)인지. 그때는 화면이 열리자마자
+// 세션을 만들지 않는다 - 세션마다 하루 상한이 하나씩 줄기 때문이다.
+export function fetchHealth() {
+  return request('/health');
+}
+
+export function fetchSession(sessionId) {
+  return request(`/sessions/${sessionId}`);
+}
+
+export const startCodingSession =(sourceText) => startPreferenceSession('coding', sourceText, 8);
 export const submitCodingChoice = submitPreferenceChoice;
 
 export function fetchAwsCostReport({ demoMode = true, lookbackDays = 30 } = {}) {

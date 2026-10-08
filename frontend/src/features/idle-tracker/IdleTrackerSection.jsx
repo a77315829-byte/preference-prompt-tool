@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { fetchAwsCostReport, startPreferenceSession, submitPreferenceChoice } from '../comparison/codingApi';
+import ExportPanel from '../../shared/components/ExportPanel';
 
 const FALLBACK_PAIRS = [
   {
@@ -52,7 +53,7 @@ function remotePairToQuestion(pair) {
   };
 }
 
-function IdleTrackerSection({ onBack }) {
+function IdleTrackerSection({ onBack, template = null }) {
   const [report, setReport] = useState(null);
   const [reportState, setReportState] = useState('loading');
   const [phase, setPhase] = useState('report');
@@ -97,7 +98,7 @@ function IdleTrackerSection({ onBack }) {
     setConnection('connecting');
     try {
       const sourceText = report?.sourceText || 'AWS 비용 점검 결과에서 낭비되는 리소스와 해결 방법을 찾아주세요.';
-      const { session: nextSession } = await startPreferenceSession('idle_tracker', sourceText, 2);
+      const { session: nextSession } = await startPreferenceSession('idle_tracker', sourceText, 2, template?.id);
       setSession(nextSession);
       setConnection('connected');
     } catch {
@@ -180,12 +181,12 @@ function IdleTrackerSection({ onBack }) {
         {phase === 'compare' && (
           <>
             <p className="connection-note" role="status">
-              {connection === 'connected' && 'AWS 비용 점검 데모와 연결됨'}
+              {connection === 'connected' && (session?.demo_mode === false ? 'AWS 비용 점검 AI 실시간 생성과 연결됨' : 'AWS 비용 점검 데모와 연결됨 (규칙 기반 예시)')}
               {connection === 'connecting' && '점검 예시를 준비하는 중…'}
               {connection === 'submitting' && '선택을 기록하는 중…'}
               {connection === 'offline' && '로컬 예시로 계속 진행합니다 (API 없이도 사용 가능)'}
             </p>
-            <div className="comparison-progress"><span className="comparison-progress-bar"><span style={{ width: `${isComplete ? 100 : (session ? (session.answered / session.total_rounds) * 100 : (Object.keys(answers).length / FALLBACK_PAIRS.length) * 100)}%` }} /></span><span>{isComplete ? '선택 완료' : `${session ? session.answered : Object.keys(answers).length} / 2`}</span></div>
+            <div className="comparison-progress"><span className="comparison-progress-bar"><span style={{ width: `${isComplete ? 100 : (session ? (session.answered / session.total_rounds) * 100 : (Object.keys(answers).length / FALLBACK_PAIRS.length) * 100)}%` }} /></span><span>{isComplete ? '선택 완료' : `${session ? session.answered : Object.keys(answers).length} / ${session ? session.total_rounds : FALLBACK_PAIRS.length}`}</span></div>
             <AnimatePresence mode="wait">
               {!isComplete && question && (
                 <motion.div className="comparison-question" key={question.id || question.axis} initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -28 }}>
@@ -203,6 +204,7 @@ function IdleTrackerSection({ onBack }) {
                 <motion.div className="prompt-result" key="aws-prompt-result" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
                   <p className="question-eyebrow">Your AWS prompt</p><h3>나만의 비용 점검 프롬프트가 완성됐어요.</h3>
                   <p>다음 비용 점검에 그대로 붙여 넣을 수 있습니다.</p><pre className="prompt-box"><code>{prompt}</code></pre>
+                  <ExportPanel exports={session?.exports} />
                   <div className="prompt-actions"><button className="prompt-copy-button" type="button" onClick={copyPrompt}>{copied ? '복사했습니다 ✓' : '프롬프트 복사'}</button><button className="prompt-reset-button" type="button" onClick={onBack}>다시 선택하기</button></div>
                 </motion.div>
               )}

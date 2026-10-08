@@ -2,15 +2,16 @@
   "schema_version": 1,
   "participant_id": "P001",
   "is_test": true,
-  "model": "openai/gpt-5.6-luna",
+  "model": "openai/gpt-4o-mini",
   "temperature": 0,
   "prompts": {
     "direct": "다음 글을 한국어로 요약해 주세요. 핵심 사실을 간결하게 전달해 주세요.",
     "selected": "다음 글을 한국어 두 문장으로 요약하세요. 날짜와 수치를 정확히 보존하고 원문에 없는 주장은 추가하지 마세요."
   },
-  "selection_rounds": 8,
+  "selection_rounds": 5,
   "collection_order": "direct_first",
   "effort_seconds": {"direct": null, "selected": null},
+  "effort_details": {"direct": {"chars": null, "revisions": null}, "selected": {"chars": null, "revisions": null}},
   "calibration_sources": [
     "가상 기관인 새봄센터는 다음 달부터 독서 모임을 시범 운영한다. 모임은 월요일 오후에 열리며 참가비는 없다. 이 문서는 입력 형식을 설명하기 위해 만든 자료다."
   ],
