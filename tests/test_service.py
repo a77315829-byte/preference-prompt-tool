@@ -29,11 +29,12 @@ def test_does_not_import_streamlit() -> None:
     """UI 가 무엇이든 상관없어야 한다. 이게 이 파일의 존재 이유다."""
     import sys
 
-    sys.modules.pop("streamlit", None)
-    import importlib
+    import subprocess
 
-    importlib.reload(service)
-    assert "streamlit" not in sys.modules
+    subprocess.run(
+        [sys.executable, "-c", "import sys; import service; assert 'streamlit' not in sys.modules"],
+        check=True,
+    )
 
 
 def test_completes_the_loop_without_api() -> None:
