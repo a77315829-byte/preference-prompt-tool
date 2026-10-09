@@ -16,6 +16,39 @@
   padding: 88px max(32px, 8vw) 24px;
 }
 
+.narrative-rail {
+  height: 9rem;
+  width: 2.5rem;
+  align-items: flex-start;
+}
+.narrative-rail button {
+  width: 1.45rem;
+  height: 0.25rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #d5d7db;
+  cursor: pointer;
+  transition: width 220ms ease, background-color 220ms ease;
+}
+.narrative-rail button:hover,
+.narrative-rail button.is-active { width: 2rem; background: #15171d; }
+.narrative-rail button:focus-visible { outline: 3px solid #4468ff; outline-offset: 4px; }
+.narrative-footer { align-items: center; pointer-events: auto; }
+.narrative-footer button {
+  border: 0;
+  padding: 8px 10px;
+  border-radius: 999px;
+  color: #616b7b;
+  background: #ffffffb8;
+  font: inherit;
+  letter-spacing: normal;
+  cursor: pointer;
+}
+.narrative-footer button:hover { color: #111827; background: #fff; }
+.narrative-footer button:focus-visible { outline: 3px solid #4468ff; outline-offset: 2px; }
+.narrative-footer.is-intro { visibility: hidden; }
+
 .narrative-intro-copy { margin: 0; }
 .narrative-intro-copy .hero-kicker { font-size: 10px; min-height: 24px; }
 .narrative-intro-copy h1 {
@@ -111,6 +144,20 @@
   .narrative-category-stage .category-selection { flex-direction: column; gap: 10px; }
   .category-deck .selection-button { width: 100%; }
   .narrative-rail { display: none; }
+  .category-lab-toggle > span { display: none; }
+  .category-lab-toggle { margin-top: 8px; }
+  .narrative-category-stage .category-selection {
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 4px;
+    padding-top: 8px;
+  }
+  .category-selection p { flex-direction: column; align-items: flex-start; gap: 0; }
+  .category-deck .selection-button { width: auto; padding: 9px 12px; min-height: 40px; }
+  .category-deck-viewport .category-card-copy { padding: 0; }
+  .category-deck-viewport .category-card p { line-height: 1.35; }
+  .narrative-story-scene { padding-bottom: 4rem; }
+  .narrative-footer { bottom: 0.75rem; left: 1rem; right: 1rem; }
 }
 
 @media (max-height: 690px) {

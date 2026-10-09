@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import CategoryDeck from './CategoryDeck';
 
@@ -141,14 +141,14 @@ function StoryVisual({ type }) {
   );
 }
 
-function NarrativeScene({ scene, direction }) {
+function NarrativeScene({ scene, direction, reducedMotion }) {
   return (
     <motion.article
       className="narrative-scene narrative-story-scene"
-      initial={{ opacity: 0, y: direction > 0 ? 90 : -90, scale: 0.94 }}
+      initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: direction > 0 ? 90 : -90, scale: 0.94 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: direction > 0 ? -90 : 90, scale: 0.94 }}
-      transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+      exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: direction > 0 ? -90 : 90, scale: 0.94 }}
+      transition={reducedMotion ? { duration: 0.12 } : { duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="narrative-copy">
         <span className="scroll-story-scene-number">{scene.number}</span>
@@ -161,7 +161,7 @@ function NarrativeScene({ scene, direction }) {
   );
 }
 
-function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction }) {
+function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction, reducedMotion }) {
   const [showLab, setShowLab] = useState(labIds.has(selectedCategory));
   const options = showLab ? [...coreCategories, ...labCategories] : coreCategories;
   const toggleLab = () => {
@@ -173,10 +173,10 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction 
   return (
     <motion.article
       className="narrative-scene narrative-intro-scene"
-      initial={{ opacity: 0, y: direction > 0 ? 90 : -90, scale: 0.94 }}
+      initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: direction > 0 ? 90 : -90, scale: 0.94 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: direction > 0 ? -90 : 90, scale: 0.94 }}
-      transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+      exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: direction > 0 ? -90 : 90, scale: 0.94 }}
+      transition={reducedMotion ? { duration: 0.12 } : { duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="narrative-intro-copy">
         <p className="hero-kicker">PREFERENCE PROMPT TOOL</p>
@@ -215,6 +215,7 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequ
   const [direction, setDirection] = useState(1);
   const touchStartY = useRef(null);
   const wheelLock = useRef(false);
+  const reducedMotion = useReducedMotion();
 
   const moveScene = (nextScene) => {
     const clampedScene = Math.min(3, Math.max(0, nextScene));
@@ -225,7 +226,6 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequ
 
   useEffect(() => {
     const handleWheel = (event) => {
-      if (event.target.closest('.narrative-category-stage')) return;
       event.preventDefault();
       if (wheelLock.current || Math.abs(event.deltaY) < 12) return;
 
@@ -233,7 +233,7 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequ
       moveScene(activeScene + (event.deltaY > 0 ? 1 : -1));
       window.setTimeout(() => {
         wheelLock.current = false;
-      }, 620);
+      }, reducedMotion ? 180 : 620);
     };
 
     const handleKeyDown = (event) => {
@@ -275,7 +275,7 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequ
       root?.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [activeScene]);
+  }, [activeScene, reducedMotion]);
 
   useEffect(() => {
     if (!sceneRequest) return;
@@ -285,9 +285,11 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequ
 
   return (
     <section className="narrative-shell" id="how-it-works" aria-label="서비스 소개">
-      <div className="narrative-rail" aria-label={`현재 ${activeScene + 1}번째 장면`}>
-        {Array.from({ length: 10 }, (_, index) => (
-          <span key={index} className={index === activeScene * 3 ? 'is-active' : ''} />
+      <div className="narrative-rail" aria-label="소개 장면 선택">
+        {['카테고리 선택', '카테고리 안내', '비교 예시', '결과 예시'].map((label, index) => (
+          <button key={label} type="button" className={index === activeScene ? 'is-active' : ''}
+            aria-label={label} aria-current={index === activeScene ? 'step' : undefined}
+            onClick={() => moveScene(index)} />
         ))}
       </div>
 
@@ -300,20 +302,25 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequ
               onSelectCategory={onSelectCategory}
               onContinue={onContinue}
               direction={direction}
+              reducedMotion={reducedMotion}
             />
           ) : (
             <NarrativeScene
               key={scenes[activeScene - 1].number}
               scene={scenes[activeScene - 1]}
               direction={direction}
+              reducedMotion={reducedMotion}
             />
           )}
         </AnimatePresence>
       </div>
 
       <div className={`narrative-footer ${activeScene === 0 ? 'is-intro' : ''}`}>
-        <span>SCROLL TO EXPLORE</span>
+        <button type="button" onClick={() => moveScene(activeScene - 1)}>← 이전</button>
         <span>{String(activeScene + 1).padStart(2, '0')} / 04</span>
+        <button type="button" onClick={() => activeScene === 3 ? moveScene(0) : moveScene(activeScene + 1)}>
+          {activeScene === 3 ? '카테고리 선택 →' : '다음 →'}
+        </button>
       </div>
     </section>
   );

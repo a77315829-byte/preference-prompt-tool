@@ -279,7 +279,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
   };
 
   return (
-    <section className={`comparison-section preference-comparison ${isRemote ? 'has-session' : 'is-setup'}`} id="comparison-section">
+    <section className={`comparison-section preference-comparison ${isRemote ? `has-session ${isComplete ? 'is-complete' : 'is-choosing'}` : 'is-setup'}`} id="comparison-section">
       <div className="comparison-inner">
         <button className="back-button" type="button" onClick={onBack}>
           ← 카테고리 다시 선택
