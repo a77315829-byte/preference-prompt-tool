@@ -7,12 +7,13 @@ import TeamPanel from '../../shared/components/TeamPanel';
 import PromptLanguageSwitch from '../../shared/components/PromptLanguageSwitch';
 
 const DEFAULT_TASK = '클릭 횟수를 보여주는 TypeScript/React 버튼 컴포넌트를 만들어 주세요.';
-const CODING_DEMO_TASKS = [
-  { label: '버튼', task: DEFAULT_TASK },
-  { label: '상품 검색', task: '입력한 검색어로 상품 목록을 필터링하는 컴포넌트를 만들어 주세요.' },
-  { label: '확인 창', task: '열고 닫을 수 있는 확인 모달을 만들어 주세요.' },
-  { label: '프로필 조회', task: 'API에서 사용자 프로필을 가져와 로딩과 오류를 보여주세요.' },
-];
+
+const demoReasonText = {
+  live_disabled: '무료 데모 모드입니다. AI를 호출하지 않고 준비된 예시로 비교합니다.',
+  api_key_missing: 'API 키가 없어 무료 데모로 진행합니다. 입력한 기능의 코드는 생성하지 않습니다.',
+  daily_limit: '오늘의 AI 생성 한도에 도달해 무료 데모로 진행합니다.',
+  generation_failed: 'AI 생성이 실패해 무료 데모로 전환했습니다. 입력한 기능의 코드는 생성하지 않습니다.',
+};
 
 const remoteAxisLabels = {
   code_structure: {
@@ -82,6 +83,11 @@ const remoteAxisLabels = {
   },
 };
 
+function codePreview(text) {
+  const firstBlock = text.match(/```[^\n]*\n([\s\S]*?)```/);
+  return firstBlock ? firstBlock[1].trim() : text;
+}
+
 function getRemoteAxis(pair, demoMode = true) {
   if (!pair) return null;
   const axisId = Object.keys(remoteAxisLabels).find(
@@ -101,8 +107,9 @@ function getRemoteAxis(pair, demoMode = true) {
       title: copy.options[candidate.combo?.[axisId]] || `예시 ${index === 0 ? 'A' : 'B'}`,
       description: demoMode
         ? '규칙 기반 데모 생성기가 만든 예시입니다.'
-        : 'AI가 입력한 원문으로 직접 쓴 예시입니다.',
+        : 'AI가 입력한 내용을 기준으로 직접 쓴 예시입니다.',
       code: candidate.text,
+      preview: codePreview(candidate.text),
     })),
   };
 }
@@ -165,7 +172,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
     let cancelled = false;
     fetchHealth()
       .then((health) => {
-        if (!cancelled) setConnection(health.live ? 'live-ready' : 'demo-ready');
+        if (!cancelled) setConnection(health.liveConfigured ? 'live-ready' : 'demo-ready');
       })
       .catch(() => {
         if (!cancelled) {
@@ -182,6 +189,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
   const isComplete = Boolean(remoteSession?.done);
   const currentAxis = getRemoteAxis(remoteSession?.pair, remoteSession?.demo_mode);
   useEffect(() => { setPreviewOption(null); }, [currentAxis?.id]);
+  const otherPreviewOption = previewOption && currentAxis?.options?.find((option) => option.id !== previewOption.id);
   const identicalExamples = currentAxis?.options?.length === 2
     && currentAxis.options[0].code === currentAxis.options[1].code;
   // 서버가 언어별 프롬프트를 함께 준다. 기본값(보통 English)은 prompt_language.
@@ -279,7 +287,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
   };
 
   return (
-    <section className={`comparison-section preference-comparison ${isRemote ? `has-session ${isComplete ? 'is-complete' : 'is-choosing'}` : 'is-setup'}`} id="comparison-section">
+    <section className={`comparison-section preference-comparison ${isCoding ? 'is-coding' : ''} ${isRemote ? `has-session ${isComplete ? 'is-complete' : 'is-choosing'}` : 'is-setup'}`} id="comparison-section">
       <div className="comparison-inner">
         <button className="back-button" type="button" onClick={onBack}>
           ← 카테고리 다시 선택
@@ -310,13 +318,12 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
           </label>}
           {!isRemote && isCoding && (
             <div className="coding-demo-guide">
-              <p>만들고 싶은 기능을 적어주세요. 무료 데모에서는 아래 네 가지 기능의 실제 코드 예시를 비교할 수 있습니다.</p>
-              <div className="coding-demo-tasks" aria-label="데모 기능 예시">
-                {CODING_DEMO_TASKS.map(({ label, task }) => (
-                  <button key={label} type="button" onClick={() => setTaskDescription(task)}>{label}</button>
-                ))}
-              </div>
-              <p>데모의 네 가지 기능은 대표 예시입니다. 입력한 세부 조건까지 반영하지는 않으며, 다른 기능은 버튼 예시로 코딩 스타일만 비교합니다. 입력한 기능의 코드는 실시간 AI 모드에서 생성할 수 있습니다.</p>
+              <p>만들고 싶은 기능을 적어주세요. 두 코드를 비교하며 코드 구성, 디자인 값 관리, 타입 작성 취향을 찾습니다.</p>
+              {connection === 'live-ready' ? (
+                <p>실시간 AI 모드에서는 입력한 기능을 기준으로 A/B 코드를 생성합니다. 생성 실패나 사용 한도 도달 시 준비된 과제의 데모로 전환될 수 있으며, 화면에 표시됩니다.</p>
+              ) : (
+                <p>무료 데모에서는 준비된 작은 과제로 작성 스타일만 비교합니다. 입력한 기능은 결과 프롬프트와 함께 복사할 수 있지만, 해당 기능의 코드를 생성하지는 않습니다.</p>
+              )}
             </div>
           )}
           {!isRemote && <div className="task-input-row">
@@ -341,15 +348,16 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
             <p className="comparison-source-hint">요약 길이를 비교하려면 여러 문장으로 된 원문을 입력해 주세요. 짧은 원문은 두 예시가 같아질 수 있습니다.</p>
           )}
           {isRemote && <p className="comparison-task-summary" title={taskDescription}>입력한 내용 · {taskDescription}</p>}
-          {isRemote && isCoding && remoteSession.demo_mode && remoteSession.coding_demo_scenario === null && (
+          {isRemote && isCoding && remoteSession.demo_mode && !isComplete && (
             <p className="coding-demo-warning" role="status">
-              이 요청은 무료 데모의 지원 예시에 없습니다. 아래 버튼 코드는 기능 구현안이 아니라 스타일 비교용입니다.
+              <span className="coding-demo-warning-full">현재 비교 과제: {remoteSession.coding_demo_task || '준비된 코딩 예시'} · 입력한 기능의 구현안이 아니라 작성 스타일을 비교하는 코드입니다.</span>
+              <span className="coding-demo-warning-compact">준비된 예시입니다. 입력한 기능의 구현안은 아닙니다.</span>
             </p>
           )}
           <p className="connection-note" role="status">
             {connection === 'connected' && (remoteSession?.demo_mode === false
               ? 'AI 실시간 생성과 연결됨'
-              : '데모 생성기와 연결됨 (규칙 기반 예시)')}
+              : demoReasonText[remoteSession?.demo_reason] || '데모 생성기와 연결됨 (규칙 기반 예시)')}
             {connection === 'connecting' && '예시를 준비하는 중…'}
             {connection === 'live-ready' && 'AI 실시간 생성 모드입니다. 시작하면 모델 사용량이 발생할 수 있습니다.'}
             {connection === 'demo-ready' && '무료 데모 모드입니다. API 키 없이 예시를 만들 수 있습니다.'}
@@ -404,7 +412,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
                         <strong>{option.title}</strong>
                         <span>{option.description}</span>
                       </span>
-                      <pre className={isCoding ? undefined : 'option-prose'}><code>{option.code}</code></pre>
+                      <pre className={isCoding ? undefined : 'option-prose'}><code>{isCoding ? option.preview : option.code}</code></pre>
                       <span className="option-arrow" aria-hidden="true">→</span>
                     </button>
                     <button
@@ -412,7 +420,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
                       type="button"
                       onClick={() => setPreviewOption({ ...option, label: index === 0 ? 'A' : 'B' })}
                     >
-                      전체 보기
+                      {isCoding ? '코드 전체 보기' : '전체 보기'}
                     </button>
                   </div>
                 ))}
@@ -448,8 +456,8 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
                 <div className="coding-result-context">
                   <h4>이번에 만들 기능</h4>
                   <p>{remoteSession?.source_text}</p>
-                  {remoteSession?.demo_mode && remoteSession?.coding_demo_scenario === null && (
-                    <p>데모는 이 기능을 구현하지 않았습니다. 아래 시스템 프롬프트는 선택한 코딩 스타일만 반영합니다.</p>
+                  {remoteSession?.demo_mode && (
+                    <p>무료 데모는 이 기능을 구현하지 않았습니다. 아래 시스템 프롬프트에는 선택한 코딩 스타일이 반영되며, 기능 요청은 함께 복사해 사용할 수 있습니다.</p>
                   )}
                   <h4>선택에서 찾은 취향</h4>
                   <ul>
@@ -487,10 +495,10 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
               )}
               {canOptimize && optimizeStatus !== 'done' && (
                 <p className="connection-note">
-                  선호 기준 최적화(GEPA)의 기준: 이 카테고리의 예시 글 3개에 프롬프트를 적용해, 방금 고른
-                  선호(분량, 표현 방식 등)를 결과물이 실제로 지키는지 코드로 채점합니다. AI가 고쳐 쓴
-                  프롬프트는 이 점수가 오를 때만 채택하고, 입력한 글의 내용이 들어간 프롬프트는
-                  버립니다.
+                  선호 기준 최적화(GEPA)는 이 카테고리의 예시 {isCoding ? '개발 요청' : '입력'} 3개에 프롬프트를
+                  적용해, 선택한 선호({isCoding ? '코드 구성, 스타일 관리, 타입 작성' : '분량, 표현 방식 등'})를
+                  결과물이 실제로 지키는지 채점합니다. AI가 고쳐 쓴 프롬프트는 점수가 오를 때만 채택하고,
+                  이번에 입력한 {isCoding ? '개발 요청' : '내용'}이 박혀 재사용하기 어려운 프롬프트는 제외합니다.
                 </p>
               )}
               {canOptimize && optimizeStatus === 'done' && (
@@ -500,11 +508,11 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
                     : '최적화 후보가 기본 프롬프트보다 낫지 않아 기본 프롬프트를 그대로 유지했습니다.'}
                   {remoteSession.optimize_report && (
                     <>
-                      {' '}선호 준수 점수(예시 글 {remoteSession.optimize_report.eval_inputs}개 평균, 1이 만점):{' '}
+                      {' '}선호 준수 점수(예시 {isCoding ? '개발 요청' : '입력'} {remoteSession.optimize_report.eval_inputs}개 평균, 1이 만점):{' '}
                       기본 {remoteSession.optimize_report.seed_score.toFixed(2)} → 최종{' '}
                       {remoteSession.optimize_report.final_score.toFixed(2)}.
                       {remoteSession.optimize_report.leaky_skipped > 0
-                        && ` 입력한 글의 내용이 들어가 버린 후보 ${remoteSession.optimize_report.leaky_skipped}개는 제외했습니다.`}
+                        && ` 이번 입력 내용이 들어가 버린 후보 ${remoteSession.optimize_report.leaky_skipped}개는 제외했습니다.`}
                     </>
                   )}
                 </p>
@@ -555,6 +563,12 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
               <button type="button" onClick={() => setPreviewOption(null)} aria-label="전체 보기 닫기">닫기 ×</button>
             </div>
             <pre className={isCoding ? undefined : 'option-prose'}><code>{previewOption.code}</code></pre>
+            {otherPreviewOption && (
+              <button type="button" className="comparison-preview-switch"
+                onClick={() => setPreviewOption({ ...otherPreviewOption, label: previewOption.label === 'A' ? 'B' : 'A' })}>
+                예시 {previewOption.label === 'A' ? 'B' : 'A'}도 보기 ↔
+              </button>
+            )}
             <button type="button" className="comparison-preview-select" disabled={connection === 'submitting'}
               onClick={() => { setPreviewOption(null); handleOptionSelect(previewOption.id); }}>
               이 예시 선택

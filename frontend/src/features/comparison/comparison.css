@@ -73,6 +73,7 @@
 .coding-demo-tasks button { padding: 0.42rem 0.72rem; border: 1px solid #d9e1f0; border-radius: 999px; background: #f5f7ff; color: #354f9b; font-size: 0.76rem; cursor: pointer; }
 .coding-demo-tasks button:hover, .coding-demo-tasks button:focus-visible { border-color: #4164ee; background: #e9efff; }
 .preference-comparison .comparison-heading .coding-demo-warning { margin-top: 0.4rem; color: #9a5911; font-size: 0.76rem; }
+.coding-demo-warning-compact { display: none; }
 .coding-result-context { margin: 0.8rem 0; padding: 0.9rem 1rem; border: 1px solid #e1e7f0; border-radius: 1rem; background: #fff; }
 .coding-result-context h4 { margin: 0 0 0.3rem; font-size: 0.82rem; }
 .coding-result-context p { margin: 0 0 0.7rem; font-size: 0.82rem; line-height: 1.5; white-space: pre-wrap; }
@@ -143,6 +144,8 @@
 .comparison-preview-header button { flex: 0 0 auto; padding: 0.45rem 0.65rem; border: 0; border-radius: 0.5rem; background: #eef1f6; cursor: pointer; }
 .comparison-preview-dialog pre { min-height: 0; overflow: auto; margin: 0; padding: 1rem; border-radius: 0.75rem; color: #dce7ff; background: #111827; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.82rem; line-height: 1.6; }
 .comparison-preview-dialog pre.option-prose, .comparison-preview-dialog pre.option-prose code { font-family: inherit; font-size: 0.95rem; line-height: 1.7; }
+.comparison-preview-switch { flex: 0 0 auto; align-self: flex-start; padding: 0.4rem 0; border: 0; color: #2849b6; background: transparent; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
+.comparison-preview-switch:hover, .comparison-preview-switch:focus-visible { text-decoration: underline; }
 .comparison-preview-select { flex: 0 0 auto; padding: 0.8rem 1rem; border: 0; border-radius: 0.7rem; color: #fff; background: #4164ee; font-weight: 800; cursor: pointer; }
 .preference-comparison.has-session .comparison-option:hover,
 .preference-comparison.has-session .comparison-option:focus-visible { transform: translateY(-2px); }
@@ -180,6 +183,29 @@
   .preference-comparison.has-session .comparison-options { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 0.55rem; }
   .preference-comparison.has-session .comparison-option { padding: 0.65rem; }
   .preference-comparison.has-session .comparison-option pre { margin-top: 0.35rem; padding: 0.5rem; font-size: 0.68rem; }
+  .preference-comparison.is-coding.is-choosing { overflow-y: auto; }
+  .preference-comparison.is-coding.is-choosing .comparison-inner { min-height: 100%; gap: 0.4rem; }
+  .preference-comparison.is-coding.is-choosing .comparison-heading .eyebrow,
+  .preference-comparison.is-coding.is-choosing .comparison-task-summary,
+  .preference-comparison.is-coding.is-choosing .question-eyebrow,
+  .preference-comparison.is-coding.is-choosing .option-copy span { display: none; }
+  .preference-comparison.is-coding.is-choosing .comparison-heading h2 { margin-bottom: 0.15rem; font-size: 1.22rem; }
+  .preference-comparison.is-coding.is-choosing .coding-demo-warning { margin-top: 0.15rem; font-size: 0.7rem; }
+  .preference-comparison.is-coding.is-choosing .coding-demo-warning-full { display: none; }
+  .preference-comparison.is-coding.is-choosing .coding-demo-warning-compact { display: inline; }
+  .preference-comparison.is-coding.is-choosing .connection-note { margin-top: 0.1rem; font-size: 0.68rem; }
+  .preference-comparison.is-coding.is-choosing .comparison-progress { margin: 0; }
+  .preference-comparison.is-coding.is-choosing .comparison-question { flex: 0 0 auto; }
+  .preference-comparison.is-coding.is-choosing .comparison-question h3 { margin-bottom: 0.3rem; font-size: 1.12rem; }
+  .preference-comparison.is-coding.is-choosing .comparison-options { flex: 0 0 auto; grid-template-rows: repeat(2, 9.5rem); gap: 0.4rem; }
+  .preference-comparison.is-coding.is-choosing .comparison-option-wrap { min-height: 9.5rem; }
+  .preference-comparison.is-coding.is-choosing .comparison-option { padding: 0.5rem; }
+  .preference-comparison.is-coding.is-choosing .option-index { margin-bottom: 0.15rem; font-size: 0.58rem; }
+  .preference-comparison.is-coding.is-choosing .option-copy strong { font-size: 0.85rem; }
+  .preference-comparison.is-coding.is-choosing .comparison-option pre { min-height: 3rem; margin-top: 0.25rem; padding: 0.35rem; font-size: 0.64rem; line-height: 1.25; }
+  .preference-comparison.is-coding.is-choosing .option-arrow { margin-top: 0; font-size: 0.8rem; }
+  .preference-comparison.is-coding.is-choosing .comparison-secondary-actions { margin-top: 0.35rem; }
+  .preference-comparison.is-coding .comparison-preview-button { top: 0.65rem; right: 0.65rem; }
   .preference-comparison.has-session .comparison-secondary-actions { display: flex; gap: 0.4rem; }
   .preference-comparison.has-session .comparison-secondary-actions .prompt-reset-button { flex: 1; padding: 0.4rem; font-size: 0.68rem; }
 }
@@ -205,4 +231,7 @@
   .preference-comparison.is-choosing .comparison-options { flex: 0 0 auto; grid-template-rows: repeat(2, 13rem); }
   .preference-comparison.is-choosing .comparison-option-wrap { min-height: 13rem; }
   .preference-comparison.is-choosing .comparison-option pre { min-height: 4rem; }
+  .preference-comparison.is-coding.is-choosing .comparison-options { grid-template-rows: repeat(2, 9.5rem); }
+  .preference-comparison.is-coding.is-choosing .comparison-option-wrap { min-height: 9.5rem; }
+  .preference-comparison.is-coding.is-choosing .comparison-option pre { min-height: 3rem; }
 }

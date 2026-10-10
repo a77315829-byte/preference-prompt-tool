@@ -53,21 +53,37 @@ def failing_live_generation(monkeypatch):
 
 def test_live_off_keeps_demo(server, monkeypatch) -> None:
     monkeypatch.setattr(api_server, "LIVE", False)
-    status, body = _post(server, "/sessions", {"domainKey": "summarization", "sourceText": SOURCE})
+    status, body = _post(server, "/sessions", {"domainKey": "summarization", "sourceText": SOURCE,
+                                               "demoMode": False})
     assert status == 201
-    assert json.loads(body)["session"]["demo_mode"] is True
+    session = json.loads(body)["session"]
+    assert session["demo_mode"] is True
+    assert session["demo_reason"] == "live_disabled"
+
+
+def test_missing_openai_key_uses_demo_without_a_live_call(server, monkeypatch) -> None:
+    monkeypatch.setattr(api_server, "LIVE", True)
+    monkeypatch.setattr(api_server, "DEFAULT_MODEL", "openai/test-model")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    status, body = _post(server, "/sessions", {"domainKey": "coding", "sourceText": "예약 달력"})
+    assert status == 201
+    session = json.loads(body)["session"]
+    assert session["demo_mode"] is True
+    assert session["demo_reason"] == "api_key_missing"
 
 
 def test_live_failure_falls_back_to_demo_without_leaking(
     server, monkeypatch, failing_live_generation, capsys
 ) -> None:
     monkeypatch.setattr(api_server, "LIVE", True)
+    monkeypatch.setenv("OPENAI_API_KEY", "test-only-key")
     monkeypatch.setattr(api_server, "LIVE_SESSIONS", DailyBudget(5))
 
     status, body = _post(server, "/sessions", {"domainKey": "summarization", "sourceText": SOURCE})
     assert status == 201
     session = json.loads(body)["session"]
     assert session["demo_mode"] is True
+    assert session["demo_reason"] == "generation_failed"
     assert "sk-abc" not in body
     # 원인은 서버 터미널에는 남아야 한다.
     assert "sk-abc" in capsys.readouterr().out
@@ -92,15 +108,19 @@ def test_live_failure_mid_session_keeps_choices(
     session = json.loads(body)["session"]
     assert session["answered"] == 1
     assert session["demo_mode"] is True
+    assert session["demo_reason"] == "generation_failed"
     assert "sk-abc" not in body
 
 
 def test_daily_live_budget_falls_back_to_demo(server, monkeypatch) -> None:
     monkeypatch.setattr(api_server, "LIVE", True)
+    monkeypatch.setenv("OPENAI_API_KEY", "test-only-key")
     monkeypatch.setattr(api_server, "LIVE_SESSIONS", DailyBudget(0))
     status, body = _post(server, "/sessions", {"domainKey": "summarization", "sourceText": SOURCE})
     assert status == 201
-    assert json.loads(body)["session"]["demo_mode"] is True
+    session = json.loads(body)["session"]
+    assert session["demo_mode"] is True
+    assert session["demo_reason"] == "daily_limit"
 
 
 def _get(base: str, path: str) -> tuple[int, dict]:
@@ -238,8 +258,21 @@ def test_health_reports_live_mode(server, monkeypatch, live) -> None:
     """화면은 이 값으로 열리자마자 세션을 만들지 정한다. 실제 생성 모드에서
     자동으로 열면 방문만으로 하루 상한이 준다."""
     monkeypatch.setattr(api_server, "LIVE", live)
+    monkeypatch.setattr(api_server, "DEFAULT_MODEL", "openai/test-model")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-only-key")
     _, _, body = _get_raw(server, "/health")
     assert body["live"] is live
+    assert body["liveConfigured"] is live
+
+
+def test_health_discloses_missing_key_without_exposing_it(server, monkeypatch) -> None:
+    monkeypatch.setattr(api_server, "LIVE", True)
+    monkeypatch.setattr(api_server, "DEFAULT_MODEL", "openai/test-model")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    _, _, body = _get_raw(server, "/health")
+    assert body["live"] is True
+    assert body["liveConfigured"] is False
+    assert "key" not in body
 
 
 def test_no_cors_header_by_default(server, monkeypatch) -> None:

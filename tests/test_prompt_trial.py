@@ -9,11 +9,17 @@ import importlib
 from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
+from engine.demo_generator import generate_demo
 
 APP_PATH = Path(__file__).resolve().parents[1] / "app.py"
 DEMO_MODE = "무료 데모 (API 없이 규칙 기반)"
 TRIAL_BUTTON = "두 프롬프트로 생성해 비교"
-SOURCE = "클릭 횟수를 보여주는 버튼을 만들어 주세요."
+SOURCE = "The city opened a new public library with more study rooms and longer weekend hours."
+
+
+def _valid_generated_candidate(domain, source_text, combo, model, **kwargs):
+    """API 후보 검증을 통과하는 코드를 반환하고 외부 호출은 막는다."""
+    return generate_demo(domain, source_text, combo)
 
 
 def _button(app, label: str):
@@ -28,11 +34,13 @@ def _has_button(app, label: str) -> bool:
 
 
 def _finish_run(app, *, demo: bool) -> None:
+    # 이 테스트는 코딩 후보의 유효성이 아니라 기존 문서 요약의 결과 화면을 검증한다.
+    app.selectbox[0].select("문서 요약 (영어)").run()
     if demo:
         app.radio(key="run_mode").set_value(DEMO_MODE).run()
     app.text_area[0].input(SOURCE).run()
     app.button(key="start").click().run()
-    # 질문이 떨어지면 8회 전에 끝난다 (코딩은 3회). 끝날 때까지 고른다.
+    # 질문이 떨어지면 8회 전에 끝난다. 끝날 때까지 고른다.
     for _ in range(8):
         if app.session_state["stage"] != "compare":
             break
@@ -43,7 +51,7 @@ def _finish_run(app, *, demo: bool) -> None:
 
 def test_trial_is_offered_in_api_mode(monkeypatch) -> None:
     generator = importlib.import_module("engine.generator")
-    monkeypatch.setattr(generator, "generate", lambda *a, **k: "생성된 후보")
+    monkeypatch.setattr(generator, "generate", _valid_generated_candidate)
 
     app = AppTest.from_file(APP_PATH, default_timeout=60).run()
     _finish_run(app, demo=False)
@@ -71,7 +79,7 @@ def test_trial_is_gated_in_demo_mode(monkeypatch) -> None:
 
 def test_trial_shows_both_outputs_side_by_side(monkeypatch) -> None:
     generator = importlib.import_module("engine.generator")
-    monkeypatch.setattr(generator, "generate", lambda *a, **k: "생성된 후보")
+    monkeypatch.setattr(generator, "generate", _valid_generated_candidate)
 
     seen_prompts = []
 
@@ -105,7 +113,7 @@ def test_trial_shows_both_outputs_side_by_side(monkeypatch) -> None:
 
 def test_trial_respects_session_cap(monkeypatch) -> None:
     generator = importlib.import_module("engine.generator")
-    monkeypatch.setattr(generator, "generate", lambda *a, **k: "생성된 후보")
+    monkeypatch.setattr(generator, "generate", _valid_generated_candidate)
     monkeypatch.setattr(
         generator, "generate_with_prompt",
         lambda prompt, source_text, model, cache_dir=None, **kwargs: "결과",
@@ -135,7 +143,7 @@ NO_BUTTON = "아니요, 아쉬워요"
 
 def test_feedback_form_is_offered_after_a_run(monkeypatch) -> None:
     generator = importlib.import_module("engine.generator")
-    monkeypatch.setattr(generator, "generate", lambda *a, **k: "생성된 후보")
+    monkeypatch.setattr(generator, "generate", _valid_generated_candidate)
 
     app = AppTest.from_file(APP_PATH, default_timeout=60).run()
     _finish_run(app, demo=False)
@@ -147,7 +155,7 @@ def test_feedback_form_is_offered_after_a_run(monkeypatch) -> None:
 
 def test_answering_records_and_thanks(monkeypatch) -> None:
     generator = importlib.import_module("engine.generator")
-    monkeypatch.setattr(generator, "generate", lambda *a, **k: "생성된 후보")
+    monkeypatch.setattr(generator, "generate", _valid_generated_candidate)
 
     app = AppTest.from_file(APP_PATH, default_timeout=60).run()
     _finish_run(app, demo=False)

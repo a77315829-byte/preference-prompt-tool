@@ -57,6 +57,14 @@ SUGGEST_MODEL = os.environ.get("PPT_SUGGEST_MODEL") or service.REFLECTION_MODEL
 # 만든다. 프론트는 아직 demoMode: true 를 고정으로 보내므로, 백엔드만으로
 # 실제 생성을 켜고 끌 수 있게 하려는 스위치다. 기본은 꺼짐.
 LIVE = os.environ.get("PPT_LIVE") == "1"
+
+
+def _live_key_available() -> bool:
+    """OpenAI 모델의 키가 없으면 호출과 할당량 소비 전에 데모로 전환한다.
+
+    다른 공급자의 키는 LiteLLM이 관리하므로 여기서 추측하지 않는다.
+    """
+    return not DEFAULT_MODEL.startswith("openai/") or bool(os.environ.get("OPENAI_API_KEY"))
 # 앱 DB 하나 (app_db.py, SQLite): 사용자 · 세션 · 저장한 작업 공간 프로젝트 · 하루
 # 사용량 · 팀. 기본 위치 data/ 는 커밋되지 않는다.
 DB = Database(os.environ.get("PPT_DB_PATH") or ROOT / "data" / "app.db")
@@ -117,9 +125,13 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
     payload["round"] = state.round
     payload["answered"] = state.answered
     if state.domain_key == "coding" and state.demo_mode:
-        from demos.coding import demo_scenario
+        from demos.coding_dataset import select_coding_task
 
-        payload["coding_demo_scenario"] = demo_scenario(state.source_text)
+        # 현재 A/B에 실제 사용한 합성 과제를 그대로 노출한다.
+        payload["coding_demo_task"] = (
+            select_coding_task(state.source_text, state.answered)["request"]
+            if not state.done else None
+        )
     if state.done:
         domain, estimator = service.current_estimate(state)
         languages = _prompt_languages(domain, state.template_id)
@@ -708,7 +720,8 @@ class ApiHandler(BaseHTTPRequestHandler):
         if path == "/api/health":
             # live: 화면이 열리자마자 세션을 만들지 말지 정하는 데 쓴다. 실제
             # 생성 모드에서 자동으로 세션을 열면 방문만으로 하루 상한이 준다.
-            self._send(200, {"ok": True, "demoAvailable": True, "live": LIVE})
+            self._send(200, {"ok": True, "demoAvailable": True, "live": LIVE,
+                             "liveConfigured": LIVE and _live_key_available()})
             return
         if path == "/api/auth/me":
             user = self._current_user()
@@ -825,11 +838,15 @@ class ApiHandler(BaseHTTPRequestHandler):
         source_text = str(body.get("sourceText", "")).strip()
         if not source_text:
             raise ValueError("sourceText가 필요합니다.")
-        demo_mode = bool(body.get("demoMode", True))
+        demo_mode = True
+        demo_reason = "live_disabled" if not LIVE else None
         if LIVE:
-            if LIVE_SESSIONS.try_consume(_subject()) is None:
+            if not _live_key_available():
+                demo_reason = "api_key_missing"
+            elif LIVE_SESSIONS.try_consume(_subject()) is None:
                 demo_mode = False
             else:
+                demo_reason = "daily_limit"
                 print("[session] 오늘 실제 생성 상한에 도달해 데모로 진행한다", flush=True)
         args = dict(
             source_text=source_text[:12_000],
@@ -849,6 +866,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 raise
             _log_live_failure(exc)
             state = service.start_session(demo_mode=True, **args)
+            demo_reason = "generation_failed"
+        if state.demo_mode:
+            state.demo_reason = demo_reason
         print(f"[session] {domain_key} mode={'demo' if state.demo_mode else 'live'}", flush=True)
         with SESSIONS_LOCK:
             SESSIONS[state.session_id] = state
@@ -871,7 +891,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 raise
             # 중간에 키가 만료되거나 한도에 걸려도 지금까지의 선택은 살린다.
             _log_live_failure(exc)
-            updated = service.submit_choice(replace(state, demo_mode=True), pair_id, chosen)
+            updated = service.submit_choice(
+                replace(state, demo_mode=True, demo_reason="generation_failed"), pair_id, chosen
+            )
         with SESSIONS_LOCK:
             SESSIONS[session_id] = updated
         self._send(200, {"session": _state_payload(updated)})
