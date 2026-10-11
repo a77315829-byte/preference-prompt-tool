@@ -1,0 +1,83 @@
+{
+  "version": "1.0",
+  "purpose": "Evaluate live TypeScript/React A/B generation for user-provided feature requests, not user style preference.",
+  "baseline_model": "openai/gpt-4o-mini",
+  "generation_mode": "live",
+  "rounds_per_task": 1,
+  "required_axes": ["code_structure", "style_management", "type_detail"],
+  "tasks": [
+    {
+      "id": "counter_reset",
+      "split": "calibration",
+      "axis": "code_structure",
+      "common_profile": {"style_management": "direct", "type_detail": "explicit"},
+      "request": "React와 TypeScript로 카운터 컴포넌트를 만들어 주세요. 처음 값은 0입니다. '증가' 버튼을 누르면 1씩 올라가고 '초기화' 버튼을 누르면 0으로 돌아갑니다. 현재 숫자를 화면에 보여 주세요. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "처음 화면에 0이 표시된다.",
+        "증가 버튼을 두 번 누르면 2가 표시된다.",
+        "초기화 버튼을 누르면 0이 표시된다."
+      ]
+    },
+    {
+      "id": "product_search",
+      "split": "calibration",
+      "axis": "style_management",
+      "common_profile": {"code_structure": "compact", "type_detail": "inferred"},
+      "request": "React와 TypeScript로 상품 검색 컴포넌트를 만들어 주세요. 상품은 사과, 바나나, 딸기 세 개입니다. 입력한 글자가 이름에 포함된 상품만 즉시 보여 주세요. 대소문자를 구분하지 않고, 입력이 비어 있으면 모두 보여 주세요. 결과가 없으면 '검색 결과 없음'이라고 표시해 주세요. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "입력이 비어 있으면 세 상품이 모두 보인다.",
+        "'바나나'를 입력하면 바나나만 보인다.",
+        "일치하지 않는 글자를 입력하면 '검색 결과 없음'이 보인다."
+      ]
+    },
+    {
+      "id": "signup_validation",
+      "split": "calibration",
+      "axis": "type_detail",
+      "common_profile": {"code_structure": "separated", "style_management": "theme"},
+      "request": "React와 TypeScript로 이름과 이메일을 입력하는 가입 폼을 만들어 주세요. 이름이 비어 있거나 이메일에 @가 없으면 제출하지 말고 각 입력칸 옆에 오류를 보여 주세요. 둘 다 유효하면 '가입 완료'라고 화면에 표시해 주세요. 서버 호출이나 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "빈 폼을 제출하면 이름과 이메일 오류가 각각 보이고 완료 문구는 보이지 않는다.",
+        "이름만 입력하고 @ 없는 이메일을 제출하면 이메일 오류가 보이고 완료 문구는 보이지 않는다.",
+        "유효한 이름과 이메일을 제출하면 '가입 완료'가 보인다."
+      ]
+    },
+    {
+      "id": "todo_toggle",
+      "split": "calibration",
+      "axis": "code_structure",
+      "common_profile": {"style_management": "theme", "type_detail": "inferred"},
+      "request": "React와 TypeScript로 할 일 목록을 만들어 주세요. 처음에는 '문서 읽기'와 '테스트 작성' 두 항목이 있고 둘 다 미완료입니다. 각 항목의 체크박스로 완료 상태를 바꿀 수 있어야 합니다. 완료한 항목 수를 '완료 0/2' 형식으로 보여 주세요. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "처음에는 두 항목과 '완료 0/2'가 보인다.",
+        "첫 항목을 체크하면 '완료 1/2'가 보인다.",
+        "첫 항목을 다시 해제하면 '완료 0/2'가 보인다."
+      ]
+    },
+    {
+      "id": "confirm_dialog",
+      "split": "holdout",
+      "axis": "style_management",
+      "common_profile": {"code_structure": "separated", "type_detail": "explicit"},
+      "request": "React와 TypeScript로 삭제 확인 대화상자를 만들어 주세요. 처음에는 '삭제하기' 버튼만 보입니다. 누르면 '정말 삭제할까요?'라는 문구와 '취소', '삭제 확인' 버튼이 나타납니다. 취소하면 닫히고, 삭제 확인을 누르면 닫히면서 '삭제되었습니다'가 표시됩니다. 실제 삭제나 서버 호출은 하지 마세요. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "처음에는 대화상자 문구가 보이지 않는다.",
+        "삭제하기 버튼을 누르면 대화상자 문구와 두 버튼이 보인다.",
+        "취소하면 닫히고 삭제 완료 문구는 보이지 않는다.",
+        "다시 열어 삭제 확인을 누르면 닫히고 '삭제되었습니다'가 보인다."
+      ]
+    },
+    {
+      "id": "text_preview",
+      "split": "holdout",
+      "axis": "type_detail",
+      "common_profile": {"code_structure": "compact", "style_management": "direct"},
+      "request": "React와 TypeScript로 짧은 글 미리보기를 만들어 주세요. 여러 줄 텍스트를 입력하면 입력값의 앞 20글자만 아래에 보여 주세요. 20글자를 넘으면 뒤에 '…'을 붙이고, 비어 있으면 '미리보기 없음'을 보여 주세요. 글자 수는 공백과 줄바꿈도 포함해 세어 주세요. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "입력이 비어 있으면 '미리보기 없음'이 보인다.",
+        "20글자 이하는 입력한 그대로 보이고 말줄임표가 없다.",
+        "21글자 이상이면 앞 20글자 뒤에 '…'이 붙는다."
+      ]
+    }
+  ]
+}

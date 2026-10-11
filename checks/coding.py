@@ -183,6 +183,8 @@ def candidate_quality_issues(
         issues.append("TypeScript/React 구현이 확인되지 않는다")
     if re.search(r"\buseState\s*\(\s*\[\s*\]\s*\)", code):
         issues.append("빈 배열 상태에 요소 타입이 없어 TypeScript에서 never[]가 될 수 있다")
+    if re.search(r"(?<![\w.])JSX\.[A-Za-z_]\w*", code):
+        issues.append("React 19 타입 오류: 전역 JSX 네임스페이스 대신 React.JSX를 사용하거나 타입을 추론해야 한다")
     if combo.get("type_detail") == "inferred" and re.search(
         r"\bReact\.FC\b|\b(?:const|let)\s+\w+\s*:"
         r"|\buseState\s*<\s*(?:number|string|boolean)\s*>\s*\(",

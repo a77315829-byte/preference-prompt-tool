@@ -64,6 +64,18 @@ class StaleChoiceError(RuntimeError):
     """이미 지난 쌍에 대한 선택. HTTP 로 옮기면 409 에 해당한다."""
 
 
+class CodingCandidateQualityError(RuntimeError):
+    """한 번 수정한 코딩 후보도 정적 스타일 검사를 통과하지 못했다."""
+
+    def __init__(self, candidate: str, issues: list[str]):
+        self.candidate = candidate
+        self.issues = tuple(issues)
+        super().__init__(
+            f"코딩 후보가 스타일 검사를 통과하지 못했습니다 ({candidate}): "
+            + "; ".join(issues)
+        )
+
+
 @dataclass(frozen=True)
 class Candidate:
     """후보 하나. `combo` 는 화면에 보여주지 않는다 - 어느 축이 다른지
@@ -206,6 +218,21 @@ def _axis_views(state: SessionState, estimator: Estimator) -> list[AxisView]:
     return views
 
 
+_CODING_FUNCTION_CONTRACT = """\
+## A/B 공통 기능 계약
+사용자 메시지를 두 후보 모두의 동일한 기능 명세로 사용하라. 초기 상태와 데이터, 입력·조작,
+화면에 표시할 문구, 상태 변화, 검증과 오류 처리 중 사용자가 지정한 것은 빠짐없이 구현하라.
+사용자가 지정하지 않은 동작은 필요한 최소한으로 구현하고, 스타일 지시 때문에 기능을 추가하거나
+빼거나 바꾸지 마라. A/B의 차이는 코드 구조·스타일 관리·타입 작성 방식으로만 제한하라.
+비교 축이 스타일 관리 방식이라면 색상·간격·문구·레이아웃과 포커스/호버 상태까지
+동일하게 유지하고, 값의 관리 위치와 방법만 달리하라.
+실행 가능한 React·TypeScript 파일의 전체 내용을 제시하고, 코드에서 참조하는 로컬 파일도 모두 포함하라.
+현재 프로젝트의 React 19·TypeScript 5 환경에서 타입 검사를 통과해야 한다.
+반환 타입 등에 전역 JSX 네임스페이스(JSX.Element 등)를 쓰지 말고,
+필요하면 React.JSX.Element를 사용하거나 반환 타입을 추론하게 하라.
+"""
+
+
 def _generate_pair(
     state: SessionState,
     domain: Domain,
@@ -232,13 +259,14 @@ def _generate_pair(
     elif domain.name == "coding":
         from checks.coding import candidate_quality_issues
 
-        def checked_candidate(text: str, combo: dict[str, str]) -> str:
+        def checked_candidate(text: str, combo: dict[str, str], label: str) -> str:
             issues = candidate_quality_issues(text, combo, state.source_text)
             if not issues:
                 return text
             repair_prompt = (
                 build_prompt(domain, combo, source=state.source_text)
-                + "\n\n다음 초안의 기능과 요청에 명시된 문구·데이터는 유지하면서 "
+                + "\n\n" + _CODING_FUNCTION_CONTRACT
+                + "\n다음 초안에서 공통 기능 계약과 사용자 요청을 유지하면서 "
                 "아래 위반만 고쳐 전체 파일 코드를 다시 제시하라. "
                 "설명이나 파일 목록에만 조건을 적지 말고 실제 코드에 적용하라.\n"
                 + "\n".join(f"- {issue}" for issue in issues)
@@ -247,18 +275,27 @@ def _generate_pair(
             repaired = generator.generate_with_prompt(
                 repair_prompt, state.source_text, state.model
             )
-            if candidate_quality_issues(repaired, combo, state.source_text):
-                raise RuntimeError("코딩 후보가 스타일 검사를 통과하지 못했습니다")
+            remaining = candidate_quality_issues(repaired, combo, state.source_text)
+            if remaining:
+                raise CodingCandidateQualityError(label, remaining)
             return repaired
 
+        first_prompt = (
+            build_prompt(domain, combo_a, source=state.source_text)
+            + "\n\n" + _CODING_FUNCTION_CONTRACT
+        )
         first = checked_candidate(
-            generator.generate(domain, state.source_text, combo_a, state.model), combo_a
+            generator.generate_with_prompt(first_prompt, state.source_text, state.model),
+            combo_a,
+            "A",
         )
         second_prompt = (
             build_prompt(domain, combo_b, source=state.source_text)
-            + "\n\n아래 첫 번째 구현과 사용자에게 보이는 기능을 동일하게 유지하라. "
+            + "\n\n" + _CODING_FUNCTION_CONTRACT
+            + "\n아래 첫 번째 구현과 사용자에게 보이는 기능을 동일하게 유지하라. "
             "입력 방법, 버튼과 키보드 동작, 초기 데이터, 화면 문구, 결과와 오류 처리도 "
-            "같아야 한다. 다른 것은 코드 구조·스타일 관리·타입 작성 방식뿐이다. "
+            "같아야 한다. 포커스/호버 같은 시각적 상태, 접근성 속성과 스타일 값도 "
+            "같게 유지하라. 다른 것은 코드 구조·스타일 관리·타입 작성 방식뿐이다. "
             "첫 구현을 그대로 복사하지 말고 현재 스타일 지시에 맞춰 다시 작성하라. "
             "첫 구현이 원래 요청과 충돌하면 원래 요청을 우선하라.\n\n"
             "첫 번째 구현:\n" + first
@@ -266,6 +303,7 @@ def _generate_pair(
         second = checked_candidate(
             generator.generate_with_prompt(second_prompt, state.source_text, state.model),
             combo_b,
+            "B",
         )
         texts = [first, second]
     else:

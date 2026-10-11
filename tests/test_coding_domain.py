@@ -98,6 +98,17 @@ def test_live_quality_requires_type_for_empty_array_state() -> None:
     assert not any("타입 추론" in issue or "never[]" in issue for issue in candidate_quality_issues(good, combo))
 
 
+def test_live_quality_rejects_global_jsx_namespace_for_react_19() -> None:
+    combo = {"code_structure": "compact", "style_management": "direct", "type_detail": "inferred"}
+    bad = "```tsx\nexport function Counter(): JSX.Element { return <button>0</button>; }\n```"
+    good = bad.replace("JSX.Element", "React.JSX.Element")
+    inferred = bad.replace(": JSX.Element", "")
+
+    assert any("전역 JSX" in issue for issue in candidate_quality_issues(bad, combo))
+    assert not any("전역 JSX" in issue for issue in candidate_quality_issues(good, combo))
+    assert not any("전역 JSX" in issue for issue in candidate_quality_issues(inferred, combo))
+
+
 def test_live_quality_rejects_redundant_primitive_state_type() -> None:
     combo = {"code_structure": "separated", "style_management": "direct", "type_detail": "inferred"}
     output = (
@@ -210,26 +221,26 @@ def test_live_coding_pair_uses_the_user_request_for_both_candidates(monkeypatch)
     request = "예약 날짜를 고르는 달력 컴포넌트를 만들어 주세요."
     calls = []
 
-    def fake_generate(domain, source_text, combo, model):
-        calls.append(("first", source_text, combo, model))
-        return generate_demo(domain, source_text, combo)
-
-    def fake_second(prompt, source_text, model):
-        calls.append(("second", source_text, prompt, model))
+    def fake_generate(prompt, source_text, model):
+        calls.append((prompt, source_text, model))
         domain = load_domain("domains/coding.yaml")
         return generate_demo(domain, source_text, _combo_for_prompt(domain, source_text, prompt))
 
-    monkeypatch.setattr(service.generator, "generate", fake_generate)
-    monkeypatch.setattr(service.generator, "generate_with_prompt", fake_second)
+    monkeypatch.setattr(service.generator, "generate_with_prompt", fake_generate)
     state = service.start_session(
         request, "coding", "domains/coding.yaml", model="test-model", demo_mode=False
     )
 
-    assert calls[0][0:2] == ("first", request)
-    assert calls[0][3] == "test-model"
-    assert calls[1][0:2] == ("second", request)
-    assert "첫 번째 구현" in calls[1][2]
-    assert state.pair.a.text in calls[1][2]
+    assert len(calls) == 2
+    assert all(source == request and model == "test-model" for _, source, model in calls)
+    assert all("A/B 공통 기능 계약" in prompt for prompt, _, _ in calls)
+    assert all("사용자 메시지를 두 후보 모두의 동일한 기능 명세" in prompt for prompt, _, _ in calls)
+    assert all("React 19·TypeScript 5" in prompt for prompt, _, _ in calls)
+    assert all("포커스/호버 상태까지" in prompt for prompt, _, _ in calls)
+    assert "첫 번째 구현" not in calls[0][0]
+    assert "첫 번째 구현" in calls[1][0]
+    assert "접근성 속성과 스타일 값도" in calls[1][0]
+    assert state.pair.a.text in calls[1][0]
     assert state.pair.a.text
     assert state.pair.b.text
     assert state.pair.a.combo != state.pair.b.combo
@@ -238,43 +249,42 @@ def test_live_coding_pair_uses_the_user_request_for_both_candidates(monkeypatch)
 
 def test_live_coding_candidate_is_repaired_once_before_display(monkeypatch) -> None:
     domain = load_domain("domains/coding.yaml")
-    generated = []
     repaired = []
-
-    def fake_generate(domain, source_text, combo, model):
-        generated.append(combo)
-        return "```tsx\nexport const Empty = () => null;\n```"
 
     def fake_followup(prompt, source_text, model):
         combo = _combo_for_prompt(domain, source_text, prompt)
         if "수정할 초안" in prompt:
-            repaired.append((source_text, model))
+            repaired.append((prompt, source_text, model))
+            return generate_demo(domain, source_text, combo)
+        if not repaired:
+            return "```tsx\nexport const Empty = () => null;\n```"
         return generate_demo(domain, source_text, combo)
 
-    monkeypatch.setattr(service.generator, "generate", fake_generate)
     monkeypatch.setattr(service.generator, "generate_with_prompt", fake_followup)
     state = service.start_session(
         REQUEST, "coding", "domains/coding.yaml", model="test-model", demo_mode=False
     )
 
     assert len(repaired) == 1
+    assert "A/B 공통 기능 계약" in repaired[0][0]
+    assert repaired[0][1:] == (REQUEST, "test-model")
     assert not candidate_quality_issues(state.pair.a.text, state.pair.a.combo)
     assert not candidate_quality_issues(state.pair.b.text, state.pair.b.combo)
 
 
 def test_live_coding_candidate_that_still_violates_style_is_rejected(monkeypatch) -> None:
     monkeypatch.setattr(
-        service.generator, "generate", lambda *args, **kwargs: "코드 없음"
-    )
-    monkeypatch.setattr(
         service.generator, "generate_with_prompt", lambda *args, **kwargs: "코드 없음"
     )
     import pytest
 
-    with pytest.raises(RuntimeError, match="스타일 검사를 통과하지"):
+    with pytest.raises(service.CodingCandidateQualityError, match="스타일 검사를 통과하지") as error:
         service.start_session(
             REQUEST, "coding", "domains/coding.yaml", model="test-model", demo_mode=False
         )
+    assert error.value.candidate == "A"
+    assert error.value.issues
+    assert "코드 없음" not in str(error.value)
 
 
 def test_eight_comparisons_restore_hidden_preferences() -> None:
