@@ -6,10 +6,11 @@
 
 ## 비교 대상과 절차
 
-- 현재 서비스의 기본 실사용 모델 `openai/gpt-4o-mini`를 기준선으로 기록합니다. 2단계에서는 후보 `openai/gpt-5.4-mini`와 보정용 네 요청을 같은 코드 도메인 지시문, 같은 한 라운드 A/B 조건으로 비교했습니다. 보류용 두 요청은 건드리지 않았습니다.
+- 이전 실험의 기준선 `openai/gpt-4o-mini`와 후보 `openai/gpt-5.4-mini`를 기록합니다. 이는 **현재 서비스 모델이 아닙니다**. 2단계에서는 보정용 네 요청을 같은 코드 도메인 지시문, 같은 한 라운드 A/B 조건으로 비교했습니다. 보류용 두 요청은 건드리지 않았습니다.
+- 현재 서비스 경로는 기본 `openai/gpt-6-luna`, 스타일 검사 실패 시 `openai/gpt-6.1-sol`로 한 번 상향하는 방식입니다. `--service-route`는 이 경로를 별도의 결과 파일에서 평가합니다. 앱 서버 설정이 바뀌면 해당 설정을 읽어 계획에 반영합니다.
 - 과제마다 지정된 `axis` 하나만 A/B에서 바꾸고 `common_profile`의 두 축은 고정합니다. A/B의 방향은 과제별로 기록하며, 항상 A가 특정 스타일이 되지 않게 균형을 맞춥니다.
-- `calibration` 네 과제는 프롬프트와 검사 규칙 조정에 사용할 수 있습니다. `holdout` 두 과제는 채택 판단까지 보지 않고 보관합니다. holdout 결과로 규칙을 고치면 새 holdout을 따로 만들어야 합니다.
-- 한 모델·한 과제에서 생성된 A/B 원문, 실제 스타일 조합, 생성 시각, 호출 시도 횟수, 지연 시간, 실패 여부를 로컬 `data/coding_ai_quality_trial.json`에 남깁니다. 현재 실행기는 토큰 사용량·실제 청구 비용·캐시 적중 여부를 기록하지 못하므로 이 수치를 추정해 보고하지 않습니다.
+- `calibration` 네 과제는 프롬프트와 검사 규칙 조정에 사용했습니다. `holdout` 두 과제는 현재 서비스 경로의 별도 평가에만 사용합니다. holdout 결과로 규칙을 고치면 새 holdout을 따로 만들어야 합니다.
+- 한 모델·한 과제에서 생성된 A/B 원문, 실제 스타일 조합, 생성 시각, 호출 시도 횟수, 지연 시간, 실패 여부를 로컬 `data/coding_ai_quality_trial.json`에 남깁니다. 현재 서비스 경로의 보정 결과는 `data/coding_ai_quality_routed_trial.json`, 보류 평가 결과는 `data/coding_ai_quality_holdout_trial.json`에 분리해 남깁니다. 현재 실행기는 토큰 사용량·실제 청구 비용·캐시 적중 여부를 기록하지 못하므로 이 수치를 추정해 보고하지 않습니다.
 - 동일한 입력에 대한 결과가 항상 같다고 가정하지 않습니다. 재현을 위해 모델 이름·설정·프롬프트 버전·벤치마크 버전·원문 응답을 보관하고, 여러 번 생성할 때는 반복 횟수를 모든 모델에 동일하게 적용합니다.
 - 현재 자동 검사는 스타일 신호와 일부 형식 오류를 찾지만, 임의 기능의 동일성을 증명하지 못합니다. A와 B 각각의 기능을 독립적으로 확인한 뒤 같은 인수 조건을 만족하는지 비교합니다.
 
@@ -28,11 +29,28 @@
 
 ## 실행 방법과 다음 단계
 
+이전 보류 과제 `confirm_dialog`에서 스타일 관리만 비교하는데 한쪽에 로직 훅 파일이 추가된 문제를 확인했습니다. 이후 코딩 생성 경로는 A/B의 비교하지 않는 코드 구조가 같아야 한다고 지시하고, TSX 컴포넌트·TS 로직 파일 수가 다르면 B를 한 번 수정하게 합니다. 수정 후에도 다르면 기존 실패 처리와 상향 모델 경로를 적용합니다. 이 검사는 **파일 수를 이용한 조기 경고**이며, 파일 이름·역할이나 모든 기능의 동등성까지 증명하지는 않습니다. 규칙 변경 후 평가는 이미 사용한 v1 과제를 재활용하지 않고 [v2.json](v2.json)의 비밀번호 표시 기능으로 분리합니다. 무료 실행 계획은 `python -m benchmarks.coding_ai_quality.run_trial --holdout --tasks 1 --service-route --benchmark benchmarks/coding_ai_quality/v2.json --output data/coding_ai_quality_holdout_v2_trial.json`으로 확인할 수 있습니다. 실제 생성에는 `--execute --max-api-attempts 6`을 추가하며 이 상한은 **호출 시도 횟수**입니다. 생성 원문을 검토한 뒤 `python -m benchmarks.coding_ai_quality.evaluate_trial --trial data/coding_ai_quality_holdout_v2_trial.json --output data/coding_ai_quality_holdout_v2_evaluation.json`으로 실행 검증합니다.
+
+2026-10-12 새 보류 과제 `password_visibility`를 실제 생성·실행했습니다. 첫 호출은 네트워크 연결 오류였고, 재개 후 기본 모델 `openai/gpt-6-luna`로 A/B를 생성했습니다. 누적 API 시도는 4회(연결 오류 1회 포함, 상한 6회)이며 상향 모델은 사용하지 않았습니다. 생성 원문을 검토한 뒤 두 후보 모두 타입 검사·빌드와 비밀번호 보기/숨기기 및 입력값 유지의 고정 시나리오를 통과했습니다. A는 테마 값 참조, B는 CSS 값 직접 지정으로 비교 축이 구분됐고, 두 후보의 TSX/TS 로직 파일 수는 각각 `1/0`으로 같았습니다. 따라서 **이번에 검사한 기능·스타일 조건에서는** 통제된 A/B 비교로 판정했습니다. 다만 파일 수 검사는 역할·내용까지 비교하지 않으며, 임의 입력 전체에 대한 기능 동일성과 실제 청구 비용·사용자 선호도는 검증하지 않았습니다. 원문과 평가 결과는 Git에서 제외된 `data/coding_ai_quality_holdout_v2_{trial,evaluation}.json`에 보관합니다.
+
+2026-10-12 보류 평가용 `confirm_dialog`, `text_preview`의 실행 시나리오와 타입 검사·빌드 검사를 추가했습니다. 연결 오류와 시간 초과로 끝난 첫 2회 뒤 평가를 재개해, 두 과제의 A/B를 기본 모델 `openai/gpt-6-luna`로 생성했습니다. 누적 API 시도는 6회(실패 2회, 생성에 사용한 시도 4회)이며 상향 모델은 쓰지 않았습니다. 생성 코드를 검토한 뒤 두 쌍 모두 타입 검사·빌드와 각 과제의 고정 조작 시나리오를 통과했습니다. **이는 검사한 시나리오에서의 동작 일치**일 뿐 모든 입력에 대한 동등성은 아닙니다. `text_preview`는 타입 명시/추론 차이가 의도대로 나타났고, 다른 두 스타일 축은 자동 검사상 같았습니다. `confirm_dialog`는 직접 지정/테마 관리 차이가 나타났지만 테마 후보에 별도 로직 훅 파일도 추가돼 **스타일 관리만 다른 통제 비교에는 실패**했습니다. 따라서 보류 과제의 쌍 단위 전체 합격은 1/2이며, 한 쌍의 기능 검증만 통과했다고 스타일 통제까지 성공으로 세지 않습니다. 원문과 평가 결과는 Git에서 제외된 `data/coding_ai_quality_holdout_trial.json`, `data/coding_ai_quality_holdout_evaluation.json`에 보관합니다. 실제 청구 비용과 사용자 선호도는 측정하지 않았습니다.
+
+2026-10-11 현재 서비스 경로에서 보정 과제 `counter_reset` 한 쌍을 실제 생성했습니다. 첫 요청은 최신 모델에서 지원하지 않는 `max_tokens` 인자로 거부되어 생성 코드가 없었고, 인자를 `max_completion_tokens`로 고친 뒤 재시도했습니다. 기록된 API 시도는 처음 실패를 포함해 총 4회(설정 상한 6회)입니다. 생성된 A는 `Counter.tsx` 한 파일, B는 `Counter.tsx`와 `Counter.styles.ts` 두 파일이며, 둘 다 타입 검사·빌드와 증가 두 번→초기화의 세 검사 항목을 통과했습니다. 따라서 **이번 과제의 검사한 동작에 한해서** 기능이 일치한다고 확인했습니다. 다른 기능 입력 전체의 품질, 실제 청구 비용, 사용자 선호도는 아직 검증하지 않았습니다. 원문과 평가 결과는 Git에서 제외된 `data/coding_ai_quality_routed_trial.json`, `data/coding_ai_quality_routed_evaluation.json`에 보관합니다.
+
+같은 날 `product_search`도 현재 서비스 경로로 별도 실행했습니다. 기본 모델 호출 2회(상한 6회)로 A/B가 생성됐고 상향 모델은 사용하지 않았습니다. 두 후보는 모두 `ProductSearch.tsx` 한 파일이며 타입 검사·빌드와 초기 상품 3개 표시, 바나나 검색, 검색 결과 없음의 세 고정 시나리오를 통과했습니다. A는 테마 객체에서 색상·간격·글꼴 값을 참조하고 B는 스타일 객체에 값을 직접 적어 비교 축도 구분됩니다. 수동 검토에서 해당 값과 화면 문구는 같았지만, 두 코드의 모든 입력·상태에 대한 동등성까지 입증한 것은 아닙니다. 원문과 평가 결과는 Git에서 제외된 `data/coding_ai_quality_product_search_trial.json`, `data/coding_ai_quality_product_search_evaluation.json`에 보관합니다. 이 실행의 실제 청구 비용도 측정하지 않았습니다.
+
+같은 날 남은 보정 과제도 서비스 경로로 실행했습니다. `signup_validation`은 최초 응답이 2,048토큰 출력 한도에 걸려 생성 코드 없이 종료됐습니다. 코딩 A/B에만 출력 한도를 8,192토큰으로 높여 재시도한 뒤 A/B를 생성했고, 총 API 시도 3회(첫 실패 포함, 상한 6회)였습니다. 두 후보 모두 타입 검사·빌드와 빈 이름/이메일 오류, 잘못된 이메일 오류, 유효한 입력의 `가입 완료` 표시를 통과했습니다. A는 타입 추론, B는 상태 데이터·이벤트·함수 반환값의 타입 명시가 중심이며 구조·테마 방식은 유지됐습니다. `todo_toggle`은 API 시도 3회(상한 6회)로 A/B를 생성했고, 두 후보 모두 타입 검사·빌드와 초기 `완료 0/2`, 첫 항목 체크 후 `완료 1/2`, 재클릭 후 `완료 0/2`를 통과했습니다. A는 컴포넌트·상태·스타일을 파일로 나누고 B는 한 파일에 작성했으며 기능과 테마 방식은 유지됐습니다. 두 과제 모두 상향 모델은 사용하지 않았습니다. 원문과 평가 결과는 Git에서 제외된 `data/coding_ai_quality_signup_{trial,evaluation}.json`, `data/coding_ai_quality_todo_{trial,evaluation}.json`에 보관합니다. 이 결과는 **정해진 시나리오에서의 성공**이며 임의 기능 전체의 동등성이나 사용자 선호도, 실제 청구 비용을 입증하지 않습니다.
+
+2026-10-12 [v3.json](v3.json)의 새 보류 과제 `faq_toggle`도 현재 서비스 경로에서 실제 생성·실행했습니다. 첫 시도는 연결 오류였고, 재개한 기본 모델 `openai/gpt-6-luna`의 A/B 생성 2회를 포함해 누적 API 시도는 3회입니다. 상향 모델은 사용하지 않았습니다. 양쪽 모두 타입 검사·빌드와 최초 닫힘→열림→다시 닫힘의 세 조작 시나리오를 통과했습니다. A/B는 테마 참조와 직접 지정으로 스타일 관리 축이 구분되고, 두 후보 모두 TSX 컴포넌트 한 파일로 구성됐습니다. 이는 **FAQ의 정해진 시나리오에서만** 기능과 비교 축을 확인한 결과이며, 임의 기능 입력에 대한 보장은 아닙니다. 생성 원문과 평가는 Git에서 제외된 `data/coding_ai_quality_holdout_v3_{trial,evaluation}.json`에 보관합니다. FAQ 검사 자체도 정상 예시를 통과시키고 초기부터 답변을 노출하는 잘못된 예시를 거부하는 회귀 테스트로 고정했습니다.
+
 - 비용이 발생하지 않는 실행 계획 확인: `python -m benchmarks.coding_ai_quality.run_trial`
-- 이전 과제를 다시 호출하지 않고 한 보정 과제만 실행하려면 `--task-id product_search`처럼 지정합니다. 홀드아웃 과제는 지정할 수 없습니다.
+- 현재 서비스 모델 경로의 무료 실행 계획 확인: `python -m benchmarks.coding_ai_quality.run_trial --service-route`. 기본은 보정 과제 한 쌍이며 최대 여섯 번의 API 시도를 계획하지만, `--execute`가 없으면 실제 호출하지 않습니다.
+- 보류 과제의 무료 실행 계획 확인: `python -m benchmarks.coding_ai_quality.run_trial --service-route --holdout`. 실제 생성은 `--execute --max-api-attempts 12`를 추가하며, 실패한 시도도 이 상한에 포함됩니다. 실제 청구 금액의 상한은 아닙니다.
+- 현재 서비스 경로의 실제 생성은 팀이 호출 범위와 비용을 승인한 뒤 `python -m benchmarks.coding_ai_quality.run_trial --service-route --execute --tasks 1 --max-api-attempts 6`으로 진행합니다. 이 숫자는 **호출 횟수 상한이지 청구 금액 상한은 아닙니다**. 서비스 경로에서는 A/B 각각 기본 생성, 기본 모델의 한 번 수정, 필요한 경우 상향 모델의 한 번 재생성을 합쳐 최악 여섯 번입니다.
+- 이전 과제를 다시 호출하지 않고 한 보정 과제만 실행하려면 `--task-id product_search`처럼 지정합니다. 보류 과제는 `--holdout`을 함께 주어 `--task-id confirm_dialog`처럼 지정합니다.
 - 실제 호출은 `OPENAI_API_KEY`가 있는 환경에서 `python -m benchmarks.coding_ai_quality.run_trial --execute --tasks 4 --max-api-attempts 32`로만 수행합니다. 최악의 경우 쌍당 네 번의 애플리케이션 수준 API 호출을 허용합니다. 이미 완료된 결과는 다시 호출하지 않고, 원문은 Git에서 제외된 `data/`에 보관합니다.
-- 기존 생성 결과의 오프라인 실행 검증: 프론트 의존성을 설치한 뒤 `python -m benchmarks.coding_ai_quality.evaluate_trial`. 이 명령은 API를 호출하지 않으며 결과를 Git에서 제외된 `data/coding_ai_quality_stage4.json`에 기록합니다. 단, 생성 코드를 로컬 Node에서 실행합니다. 원문을 먼저 검토하고 신뢰할 수 있는 코드에만 사용하세요. 격리된 보안 샌드박스가 아닙니다.
+- 기존 생성 결과의 오프라인 실행 검증: 프론트 의존성을 설치한 뒤 `python -m benchmarks.coding_ai_quality.evaluate_trial`. 이 명령은 API를 호출하지 않으며 결과를 Git에서 제외된 `data/coding_ai_quality_stage4.json`에 기록합니다. 서비스 경로의 결과를 검증할 때는 `--trial data/coding_ai_quality_routed_trial.json --output data/coding_ai_quality_routed_evaluation.json`을 추가합니다. 단, 생성 코드를 로컬 Node에서 실행합니다. 원문을 먼저 검토하고 신뢰할 수 있는 코드에만 사용하세요. 격리된 보안 샌드박스가 아닙니다.
 - 별도 시도의 출력 위치는 `run_trial --output data/새시도.json`과 `evaluate_trial --trial data/새시도.json --output data/새평가.json`으로 지정합니다. 서로 다른 생성 지시 버전의 원문을 한 파일에 섞지 않습니다.
-- 2단계의 결과는 모델 교체 근거로 충분하지 않습니다. 3단계에서 공통 기능 명세와 실패 진단을 개선했고, 4단계에서 **변경 전** 생성 결과의 타입 검사·빌드·정해진 조작 시나리오 검증을 추가했습니다. 이 검사는 모든 입력에 대한 기능 동일성의 증명이 아닙니다. 개선된 생성 지시의 재측정, 보류용 과제, 사용자 평가는 후속 단계입니다.
+- 이전 모델 비교 결과는 모델 교체 근거로 충분하지 않습니다. 공통 기능 명세와 실패 진단, 비비교 축의 파일 수 검사를 개선하고 새 보류 과제의 정해진 조작 시나리오를 실행했습니다. 이 검사는 모든 입력에 대한 기능 동일성의 증명이 아닙니다. 실제 사용자 평가와 파일 역할까지 포함한 비교는 아직 남아 있습니다.
 
 스키마와 고정 조건은 `python -m pytest tests/test_coding_ai_quality_benchmark.py -q`로 확인합니다. 이 검사는 AI 생성 품질 자체를 측정하지 않습니다.

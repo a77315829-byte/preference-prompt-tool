@@ -752,7 +752,9 @@ npm run dev
 | 환경변수 | 기본값 | 뜻 |
 |---|---|---|
 | `PPT_LIVE` | 꺼짐 | `1` 이면 프론트가 보내는 `demoMode` 와 상관없이 실제 모델로 생성 |
-| `PPT_MODEL` | `openai/gpt-4o-mini` | 후보 생성 모델 (Streamlit 은 `app.py` 의 `MODEL`) |
+| `PPT_MODEL` | `openai/gpt-4o-mini` | 코딩 외 후보 생성 모델 (Streamlit 은 `app.py` 의 `MODEL`). 직접 지정하면 코딩 모델의 기본값으로도 사용 |
+| `PPT_CODING_MODEL` | `openai/gpt-6-luna` | React API 서버의 코딩 후보 생성·1회 수정 모델. `PPT_MODEL` 을 직접 지정했다면 그 값을 기본으로 사용 |
+| `PPT_CODING_ESCALATION_MODEL` | `openai/gpt-6.1-sol` | 코딩 후보가 기본 모델의 수정 후에도 정적 스타일 검사를 통과하지 못할 때만 1회 재생성. 기본 모델을 바꿨다면 기본적으로 비활성화하며, 빈 값으로도 끌 수 있음 |
 | `PPT_REFLECTION_MODEL` | `openai/gpt-5.6-luna` | GEPA 성찰 모델 (`service.REFLECTION_MODEL`) |
 | `PPT_SUGGEST_MODEL` | `PPT_REFLECTION_MODEL` 과 같음 | "서비스용 프롬프트" 개선 추천 모델 (성찰 역할이라 강한 모델) |
 | `PPT_LIVE_SESSIONS_PER_DAY` | 60 | 하루 실제 생성 세션 상한. 넘으면 데모로 진행 |
@@ -772,6 +774,9 @@ Streamlit 앱은 로그인이 없어 예전처럼 메모리 상한을 쓴다). �
 
 모델은 서버가 정한다. 요청 본문에 `model` 을 보내도 무시한다 - 따르면
 누구든 비싼 모델 이름으로 서버 키를 쓸 수 있다.
+코딩의 실제 생성은 후보마다 기본 생성 → 실패 시 기본 모델로 1회 수정 →
+그래도 실패 시 상위 모델로 1회 재생성까지만 진행한다(한 쌍 최대 6회 호출).
+`PPT_LIVE=1`이어도 OpenAI API 키가 없거나 호출이 실패하면 화면은 데모로 전환된다.
 
 CORS 는 기본으로 닫혀 있다. React 화면은 Vite 프록시(`/api`)로 같은 출처에서
 부르므로 필요가 없고, 예전처럼 `*` 를 열어 두면 `PPT_LIVE=1` 로 켜 둔 동안

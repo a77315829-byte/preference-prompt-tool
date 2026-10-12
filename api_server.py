@@ -48,6 +48,18 @@ HOST = os.environ.get("PPT_API_HOST", "127.0.0.1")
 PORT = int(os.environ.get("PPT_API_PORT", "8000"))
 # 후보 생성 모델. 근거는 app.py 의 MODEL 주석(같은 실측).
 DEFAULT_MODEL = os.environ.get("PPT_MODEL", "openai/gpt-4o-mini")
+# 코딩만 별도 경로를 사용한다. PPT_MODEL을 직접 지정한 기존 설치는 그 설정을
+# 유지하고, 기본 설정에서는 저렴한 모델로 시작해 검사 실패 시에만 상위 모델을 쓴다.
+CODING_MODEL = os.environ.get("PPT_CODING_MODEL") or (
+    DEFAULT_MODEL if "PPT_MODEL" in os.environ else "openai/gpt-6-luna"
+)
+CODING_ESCALATION_MODEL = os.environ.get("PPT_CODING_ESCALATION_MODEL")
+if CODING_ESCALATION_MODEL is None:
+    CODING_ESCALATION_MODEL = (
+        "openai/gpt-6.1-sol" if CODING_MODEL == "openai/gpt-6-luna" else None
+    )
+else:
+    CODING_ESCALATION_MODEL = CODING_ESCALATION_MODEL.strip() or None
 # 작업 공간의 개선 추천 모델. 프로젝트 방침대로 후보 생성은 싼 모델, 성찰(무엇을 고칠지)은
 # 강한 모델 - GEPA 성찰과 같은 모델을 쓴다. gpt-4o-mini 로는 실패를 고치는 제안이 한 번도
 # 나오지 않았다 (CLAUDE.md 2026-10-02 작업 공간 2차).
@@ -59,12 +71,13 @@ SUGGEST_MODEL = os.environ.get("PPT_SUGGEST_MODEL") or service.REFLECTION_MODEL
 LIVE = os.environ.get("PPT_LIVE") == "1"
 
 
-def _live_key_available() -> bool:
+def _live_key_available(model: str | None = None) -> bool:
     """OpenAI 모델의 키가 없으면 호출과 할당량 소비 전에 데모로 전환한다.
 
     다른 공급자의 키는 LiteLLM이 관리하므로 여기서 추측하지 않는다.
     """
-    return not DEFAULT_MODEL.startswith("openai/") or bool(os.environ.get("OPENAI_API_KEY"))
+    selected = model or DEFAULT_MODEL
+    return not selected.startswith("openai/") or bool(os.environ.get("OPENAI_API_KEY"))
 # 앱 DB 하나 (app_db.py, SQLite): 사용자 · 세션 · 저장한 작업 공간 프로젝트 · 하루
 # 사용량 · 팀. 기본 위치 data/ 는 커밋되지 않는다.
 DB = Database(os.environ.get("PPT_DB_PATH") or ROOT / "data" / "app.db")
@@ -835,13 +848,14 @@ class ApiHandler(BaseHTTPRequestHandler):
 
     def _start_session(self, body: dict[str, Any]) -> None:
         domain_key = str(body.get("domainKey", "coding"))
+        session_model = CODING_MODEL if domain_key == "coding" else DEFAULT_MODEL
         source_text = str(body.get("sourceText", "")).strip()
         if not source_text:
             raise ValueError("sourceText가 필요합니다.")
         demo_mode = True
         demo_reason = "live_disabled" if not LIVE else None
         if LIVE:
-            if not _live_key_available():
+            if not _live_key_available(session_model):
                 demo_reason = "api_key_missing"
             elif LIVE_SESSIONS.try_consume(_subject()) is None:
                 demo_mode = False
@@ -854,7 +868,10 @@ class ApiHandler(BaseHTTPRequestHandler):
             domain_path=_domain_path(domain_key),
             # 모델은 서버가 정한다 (요청 본문의 model 은 무시). 브라우저가
             # 고르게 두면 누구든 비싼 모델 이름으로 서버 키를 쓸 수 있다.
-            model=DEFAULT_MODEL,
+            model=session_model,
+            coding_escalation_model=(
+                CODING_ESCALATION_MODEL if domain_key == "coding" else None
+            ),
             total_rounds=min(max(int(body.get("totalRounds", service.TOTAL_ROUNDS)), 1), 8),
             # 템플릿 라이브러리의 "내 방식으로 바꾸기". 없는 id·다른 도메인은 400.
             template_id=(str(body["templateId"]) if body.get("templateId") else None),

@@ -15,6 +15,55 @@ CODE_BLOCK_PATTERN = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 
+NAMED_CODE_BLOCK_PATTERN = re.compile(
+    r"```(tsx?|typescript|javascript|jsx|css|scss)?\s*\n(.*?)```",
+    re.IGNORECASE | re.DOTALL,
+)
+FILE_COMMENT_PATTERN = re.compile(
+    r"^\s*(?://|/\*|\*)\s*(?:file:\s*)?([\w./-]+\.(?:tsx?|jsx?|css|scss))\b",
+    re.IGNORECASE,
+)
+
+
+def code_module_counts(output: str) -> tuple[int, int]:
+    """Count React and TypeScript modules, ignoring extra theme/style sheets."""
+    tsx = ts = 0
+    for match in NAMED_CODE_BLOCK_PATTERN.finditer(output):
+        language, code = match.groups()
+        preceding = output[:match.start()].rstrip().splitlines()
+        heading = preceding[-1] if preceding else ""
+        first_line = code.splitlines()[0] if code.splitlines() else ""
+        comment_name = FILE_COMMENT_PATTERN.match(first_line)
+        heading_name = FILE_PATTERN.search(heading)
+        name = comment_name.group(1) if comment_name else (
+            heading_name.group(0) if heading_name else ""
+        )
+        extension = name.rsplit(".", 1)[-1].lower() if name else (language or "").lower()
+        if extension in {"tsx", "jsx"}:
+            tsx += 1
+        elif extension in {"ts", "typescript", "javascript"} and not re.search(
+            r"(?:theme|token)", name, re.IGNORECASE
+        ):
+            ts += 1
+    return tsx, ts
+
+
+def pair_quality_issues(
+    first: str, second: str, combo_a: dict[str, str], combo_b: dict[str, str]
+) -> list[str]:
+    """Catch non-target code-structure drift; semantic equivalence needs runtime tests."""
+    if combo_a.get("code_structure") != combo_b.get("code_structure"):
+        return []
+    first_modules = code_module_counts(first)
+    second_modules = code_module_counts(second)
+    if first_modules != second_modules:
+        return [
+            "A/B 공통 코드 구조 위반: 비교하지 않는 TSX 컴포넌트/TS 로직 파일 수가 "
+            f"A={first_modules}, B={second_modules}로 다르다. "
+            "테마용 CSS/토큰 파일은 추가할 수 있지만 로직 파일 역할과 개수는 맞춰라"
+        ]
+    return []
+
 
 def count_files(output: str) -> int:
     file_names = {

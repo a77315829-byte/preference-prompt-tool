@@ -91,6 +91,105 @@ def test_trial_rejects_holdout_task_selection() -> None:
                   task_id="confirm_dialog")
 
 
+def test_holdout_dry_run_is_separate_and_balanced() -> None:
+    report = run_trial(
+        execute=False, task_limit=2, max_api_attempts=0, split="holdout",
+        route_model="openai/gpt-6-luna", escalation_model="openai/gpt-6.1-sol",
+    )
+
+    assert report["split"] == "holdout"
+    assert [pair["task"] for pair in report["planned_pairs"]] == [
+        "confirm_dialog", "text_preview",
+    ]
+    assert report["maximum_api_attempts_with_repairs"] == 12
+    assert all(sum(pair["a"][axis] != pair["b"][axis] for axis in AXIS_VALUES) == 1
+               for pair in report["planned_pairs"])
+
+
+def test_fresh_holdout_v2_uses_one_unseen_task() -> None:
+    benchmark_path = BENCHMARK.with_name("v2.json")
+    report = run_trial(
+        execute=False, task_limit=1, max_api_attempts=0, split="holdout",
+        route_model="openai/gpt-6-luna", escalation_model="openai/gpt-6.1-sol",
+        benchmark_path=benchmark_path,
+    )
+    assert [pair["task"] for pair in report["planned_pairs"]] == ["password_visibility"]
+    assert report["maximum_api_attempts_with_repairs"] == 6
+    assert sum(report["planned_pairs"][0]["a"][axis] != report["planned_pairs"][0]["b"][axis]
+               for axis in AXIS_VALUES) == 1
+
+
+def test_fresh_holdout_v3_uses_one_unseen_faq_task() -> None:
+    report = run_trial(
+        execute=False, task_limit=1, max_api_attempts=0, split="holdout",
+        route_model="openai/gpt-6-luna", escalation_model="openai/gpt-6.1-sol",
+        benchmark_path=BENCHMARK.with_name("v3.json"),
+    )
+    assert [pair["task"] for pair in report["planned_pairs"]] == ["faq_toggle"]
+    assert report["maximum_api_attempts_with_repairs"] == 6
+    assert sum(report["planned_pairs"][0]["a"][axis] != report["planned_pairs"][0]["b"][axis]
+               for axis in AXIS_VALUES) == 1
+
+
+def test_holdout_rejects_calibration_task_and_extra_task_limit() -> None:
+    with pytest.raises(ValueError, match="Unknown holdout task"):
+        run_trial(execute=False, task_limit=2, max_api_attempts=0,
+                  split="holdout", task_id="counter_reset")
+    with pytest.raises(ValueError, match="task_limit"):
+        run_trial(execute=False, task_limit=3, max_api_attempts=0, split="holdout")
+
+
+def test_service_route_dry_run_is_one_pair_and_bounded() -> None:
+    report = run_trial(
+        execute=False, task_limit=1, max_api_attempts=0,
+        route_model="openai/gpt-6-luna",
+        escalation_model="openai/gpt-6.1-sol",
+    )
+
+    assert len(report["planned_pairs"]) == 1
+    assert report["planned_pairs"][0]["model"] == "openai/gpt-6-luna"
+    assert report["escalation_model"] == "openai/gpt-6.1-sol"
+    assert report["maximum_api_attempts_with_repairs"] == 6
+
+
+def test_service_route_passes_escalation_to_product_path_without_api_calls(
+    monkeypatch, tmp_path,
+) -> None:
+    monkeypatch.setenv("OPENAI_API_KEY", "test-only-key")
+    states = []
+
+    def fake_pair(state, domain, combo_a, combo_b):
+        states.append(state)
+        raise service.CodingCandidateQualityError("A", ["파일 구성 위반"])
+
+    monkeypatch.setattr(service, "_generate_pair", fake_pair)
+    report = run_trial(
+        execute=True, task_limit=1, max_api_attempts=6,
+        output=tmp_path / "routed.json",
+        route_model="openai/gpt-6-luna",
+        escalation_model="openai/gpt-6.1-sol",
+    )
+
+    assert len(states) == 1
+    assert states[0].model == "openai/gpt-6-luna"
+    assert states[0].coding_escalation_model == "openai/gpt-6.1-sol"
+    assert report["total_api_attempts"] == 0
+    assert report["results"][0]["status"] == "quality_failure"
+
+
+def test_service_route_rejects_insufficient_attempt_limit_before_api_call(
+    monkeypatch, tmp_path,
+) -> None:
+    monkeypatch.setenv("OPENAI_API_KEY", "test-only-key")
+    with pytest.raises(ValueError, match="6 calls per pair"):
+        run_trial(
+            execute=True, task_limit=1, max_api_attempts=5,
+            output=tmp_path / "routed.json",
+            route_model="openai/gpt-6-luna",
+            escalation_model="openai/gpt-6.1-sol",
+        )
+
+
 def test_trial_records_quality_failure_reasons_without_api_calls(monkeypatch, tmp_path) -> None:
     monkeypatch.setenv("OPENAI_API_KEY", "test-only-key")
 

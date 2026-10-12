@@ -4,7 +4,10 @@ import itertools
 
 import api_server
 import service
-from checks.coding import candidate_quality_issues, count_files, count_theme_signals, count_type_signals
+from checks.coding import (
+    candidate_quality_issues, code_module_counts, count_files, count_theme_signals,
+    count_type_signals, pair_quality_issues,
+)
 from demos.coding import demo_scenario
 from engine.demo_generator import generate_demo
 from engine.domain_loader import load_domain
@@ -56,6 +59,54 @@ def test_demo_changes_with_each_axis_and_is_deterministic() -> None:
 def test_single_unnamed_code_block_counts_as_one_file() -> None:
     output = "```tsx\nexport function Example() { return <div />; }\n```"
     assert count_files(output) == 1
+
+
+def test_pair_quality_catches_extra_logic_module_but_allows_theme_css() -> None:
+    first = (
+        "ConfirmDialog.tsx\n```tsx\nimport './ConfirmDialog.css';\n"
+        "export function ConfirmDialog() { return <button>삭제하기</button>; }\n```\n"
+        "ConfirmDialog.css\n```css\nbutton { color: blue; }\n```"
+    )
+    theme_only = first + "\ntheme.css\n```css\n:root { --accent: blue; }\n```"
+    extra_logic = theme_only + "\nuseConfirm.ts\n```ts\nexport const useConfirm = () => true;\n```"
+    direct = {"code_structure": "separated", "style_management": "direct"}
+    theme = {"code_structure": "separated", "style_management": "theme"}
+
+    assert code_module_counts(first) == (1, 0)
+    assert pair_quality_issues(first, theme_only, direct, theme) == []
+    assert any("코드 구조" in issue for issue in pair_quality_issues(first, extra_logic, direct, theme))
+    assert pair_quality_issues(first, extra_logic, {**direct, "code_structure": "compact"}, theme) == []
+
+
+def test_live_pair_repairs_non_target_structure_drift(monkeypatch) -> None:
+    domain = load_domain("domains/coding.yaml")
+    direct = {"code_structure": "separated", "style_management": "direct", "type_detail": "explicit"}
+    theme = {**direct, "style_management": "theme"}
+    first = generate_demo(domain, REQUEST, direct)
+    second = generate_demo(domain, REQUEST, theme)
+    extra = "\nuseCounter.ts\n```ts\nexport const useCounter = () => 0;\n```"
+    calls = []
+
+    def fake_generate(prompt, source_text, model):
+        calls.append(prompt)
+        if len(calls) == 1:
+            return first
+        if len(calls) == 2:
+            return second + extra
+        return second
+
+    monkeypatch.setattr(service.generator, "generate_with_prompt", fake_generate)
+    state = service.SessionState(
+        session_id="pair-check", domain_key="coding", domain_path="domains/coding.yaml",
+        source_text=REQUEST, model="test-model", demo_mode=False,
+    )
+    pair = service._generate_pair(state, domain, direct, theme)
+
+    assert len(calls) == 3
+    assert "바꿀 축은 style_management뿐" in calls[1]
+    assert "공통 코드 구조 위반" in calls[2]
+    assert "구조를 맞출 기준 A" in calls[2]
+    assert pair.a.text == first and pair.b.text == second
 
 
 def test_live_quality_rejects_extra_entrypoint_and_inferred_type_annotations() -> None:
@@ -285,6 +336,71 @@ def test_live_coding_candidate_that_still_violates_style_is_rejected(monkeypatch
     assert error.value.candidate == "A"
     assert error.value.issues
     assert "코드 없음" not in str(error.value)
+
+
+def test_live_coding_escalates_only_after_primary_repair_fails(monkeypatch) -> None:
+    domain = load_domain("domains/coding.yaml")
+    calls = []
+
+    def fake_generate(prompt, source_text, model):
+        calls.append((prompt, source_text, model))
+        if len(calls) <= 2:
+            return "코드 없음"
+        combo = _combo_for_prompt(domain, source_text, prompt)
+        return generate_demo(domain, source_text, combo)
+
+    monkeypatch.setattr(service.generator, "generate_with_prompt", fake_generate)
+    state = service.start_session(
+        REQUEST, "coding", "domains/coding.yaml", model="openai/gpt-6-luna",
+        coding_escalation_model="openai/gpt-6.1-sol", demo_mode=False,
+    )
+
+    assert [model for _, _, model in calls] == [
+        "openai/gpt-6-luna", "openai/gpt-6-luna",
+        "openai/gpt-6.1-sol", "openai/gpt-6-luna",
+    ]
+    assert all(source == REQUEST for _, source, _ in calls)
+    assert "실패한 수정본" in calls[2][0]
+    assert "A/B 공통 기능 계약" in calls[2][0]
+    assert not candidate_quality_issues(state.pair.a.text, state.pair.a.combo, REQUEST)
+    assert not candidate_quality_issues(state.pair.b.text, state.pair.b.combo, REQUEST)
+
+
+def test_live_coding_escalation_stops_after_one_attempt(monkeypatch) -> None:
+    import pytest
+
+    models = []
+
+    def fake_generate(prompt, source_text, model):
+        models.append(model)
+        return "코드 없음"
+
+    monkeypatch.setattr(service.generator, "generate_with_prompt", fake_generate)
+    with pytest.raises(service.CodingCandidateQualityError) as error:
+        service.start_session(
+            REQUEST, "coding", "domains/coding.yaml", model="openai/gpt-6-luna",
+            coding_escalation_model="openai/gpt-6.1-sol", demo_mode=False,
+        )
+    assert error.value.candidate == "A"
+    assert models == ["openai/gpt-6-luna", "openai/gpt-6-luna", "openai/gpt-6.1-sol"]
+
+
+def test_live_coding_api_error_does_not_escalate(monkeypatch) -> None:
+    import pytest
+
+    models = []
+
+    def fake_generate(prompt, source_text, model):
+        models.append(model)
+        raise RuntimeError("API 호출 실패")
+
+    monkeypatch.setattr(service.generator, "generate_with_prompt", fake_generate)
+    with pytest.raises(RuntimeError, match="API 호출 실패"):
+        service.start_session(
+            REQUEST, "coding", "domains/coding.yaml", model="openai/gpt-6-luna",
+            coding_escalation_model="openai/gpt-6.1-sol", demo_mode=False,
+        )
+    assert models == ["openai/gpt-6-luna"]
 
 
 def test_eight_comparisons_restore_hidden_preferences() -> None:

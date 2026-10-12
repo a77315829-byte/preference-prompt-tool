@@ -230,6 +230,30 @@ def test_session_ignores_client_chosen_model(server, monkeypatch) -> None:
     assert json.loads(body)["session"]["model"] == api_server.DEFAULT_MODEL
 
 
+def test_coding_models_apply_only_to_coding_sessions(server, monkeypatch) -> None:
+    """코딩 모델·재검증 모델은 코딩 세션에만 연결한다."""
+    monkeypatch.setattr(api_server, "LIVE", False)
+    monkeypatch.setattr(api_server, "DEFAULT_MODEL", "openai/general-test")
+    monkeypatch.setattr(api_server, "CODING_MODEL", "openai/coding-test")
+    monkeypatch.setattr(api_server, "CODING_ESCALATION_MODEL", "openai/recheck-test")
+
+    status, body = _post(server, "/sessions", {
+        "domainKey": "coding", "sourceText": "검색 가능한 목록", "model": "openai/client-choice",
+    })
+    assert status == 201
+    coding = json.loads(body)["session"]
+    assert coding["model"] == "openai/coding-test"
+    assert coding["coding_escalation_model"] == "openai/recheck-test"
+
+    status, body = _post(server, "/sessions", {
+        "domainKey": "summarization", "sourceText": SOURCE,
+    })
+    assert status == 201
+    summary = json.loads(body)["session"]
+    assert summary["model"] == "openai/general-test"
+    assert summary["coding_escalation_model"] is None
+
+
 def test_finished_session_carries_exports(server, monkeypatch) -> None:
     """결과 화면이 도구별 내보내기를 그릴 수 있게, 끝난 세션에는 exports 가 붙는다.
     내보내기는 화면에 보이는 그 프롬프트여야 한다."""

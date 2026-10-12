@@ -1,7 +1,7 @@
 """Run a bounded, reproducible pilot through the product's live coding pair path.
 
-Dry-run is the default. Live execution requires --execute and never uses holdout
-tasks. Raw outputs stay under the ignored data/ directory.
+Dry-run is the default. Holdout requires --holdout and uses a separate output.
+Raw outputs stay under the ignored data/ directory.
 """
 
 from __future__ import annotations
@@ -24,6 +24,8 @@ from engine.domain_loader import load_domain
 ROOT = Path(__file__).resolve().parents[2]
 BENCHMARK = Path(__file__).with_name("v1.json")
 OUTPUT = ROOT / "data" / "coding_ai_quality_trial.json"
+ROUTED_OUTPUT = ROOT / "data" / "coding_ai_quality_routed_trial.json"
+HOLDOUT_OUTPUT = ROOT / "data" / "coding_ai_quality_holdout_trial.json"
 CANDIDATE_MODEL = "openai/gpt-5.4-mini"
 
 
@@ -33,20 +35,29 @@ def combinations(task: dict, domain) -> tuple[dict[str, str], dict[str, str]]:
     values = [item.value for item in axis.values]
     first = {**task["common_profile"], task["axis"]: values[0]}
     second = {**task["common_profile"], task["axis"]: values[1]}
-    return (first, second) if task["id"] in {"counter_reset", "signup_validation"} else (second, first)
+    return (first, second) if task["id"] in {"counter_reset", "signup_validation", "confirm_dialog"} else (second, first)
 
 
 def run_trial(*, execute: bool, task_limit: int, max_api_attempts: int,
-              output: Path = OUTPUT, task_id: str | None = None) -> dict:
-    if task_limit < 1 or task_limit > 4:
-        raise ValueError("task_limit must be between 1 and 4 calibration tasks")
-    benchmark = json.loads(BENCHMARK.read_text(encoding="utf-8"))
-    calibration = [task for task in benchmark["tasks"] if task["split"] == "calibration"]
-    if task_id is not None and task_id not in {task["id"] for task in calibration}:
-        raise ValueError(f"Unknown calibration task: {task_id}")
-    tasks = ([task for task in calibration if task["id"] == task_id]
-             if task_id is not None else calibration[:task_limit])
-    models = [benchmark["baseline_model"], CANDIDATE_MODEL]
+              output: Path = OUTPUT, task_id: str | None = None,
+              route_model: str | None = None,
+              escalation_model: str | None = None,
+              split: str = "calibration", benchmark_path: Path = BENCHMARK) -> dict:
+    if split not in {"calibration", "holdout"}:
+        raise ValueError("split must be calibration or holdout")
+    benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
+    selected = [task for task in benchmark["tasks"] if task["split"] == split]
+    maximum_tasks = len(selected)
+    if task_limit < 1 or task_limit > maximum_tasks:
+        raise ValueError(f"task_limit must be between 1 and {maximum_tasks} {split} tasks")
+    if escalation_model and not route_model:
+        raise ValueError("An escalation model requires a route model")
+    if task_id is not None and task_id not in {task["id"] for task in selected}:
+        raise ValueError(f"Unknown {split} task: {task_id}")
+    tasks = ([task for task in selected if task["id"] == task_id]
+             if task_id is not None else selected[:task_limit])
+    models = [route_model] if route_model else [benchmark["baseline_model"], CANDIDATE_MODEL]
+    calls_per_pair = 6 if escalation_model else 4
     domain_path = ROOT / "domains" / "coding.yaml"
     domain = load_domain(domain_path)
     planned = [
@@ -55,9 +66,11 @@ def run_trial(*, execute: bool, task_limit: int, max_api_attempts: int,
         for task in tasks for model in models
     ]
     if not execute:
-        return {"mode": "dry-run", "planned_pairs": planned, "maximum_api_attempts_with_repairs": len(planned) * 4}
-    if max_api_attempts < len(planned) * 4:
-        raise ValueError("max_api_attempts must cover the worst case: four calls per pair")
+        return {"mode": "dry-run", "split": split, "planned_pairs": planned,
+                "escalation_model": escalation_model,
+                "maximum_api_attempts_with_repairs": len(planned) * calls_per_pair}
+    if max_api_attempts < len(planned) * calls_per_pair:
+        raise ValueError(f"max_api_attempts must cover the worst case: {calls_per_pair} calls per pair")
     load_dotenv(ROOT / ".env", override=False)
     if not os.environ.get("OPENAI_API_KEY"):
         raise RuntimeError("OPENAI_API_KEY is unavailable; no API requests were sent")
@@ -65,16 +78,22 @@ def run_trial(*, execute: bool, task_limit: int, max_api_attempts: int,
     sources = {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
                for path in (domain_path, ROOT / "service.py", ROOT / "engine" / "generator.py")}
     report = {
-        "benchmark_version": benchmark["version"], "generated_at": datetime.now(timezone.utc).isoformat(),
+        "benchmark_version": benchmark["version"], "split": split,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "models": models, "api_attempt_limit": max_api_attempts, "results": [],
+        "escalation_model": escalation_model,
         "source_sha256": sources,
         "note": "Style checks run in the product path; compilation, behavior and equivalence remain unverified. API attempts are not a billing record.",
     }
     if output.exists():
         previous = json.loads(output.read_text(encoding="utf-8"))
-        if previous["benchmark_version"] != benchmark["version"] or previous["models"] != models:
-            raise ValueError("Existing trial uses different benchmark or models")
-        if previous.get("source_sha256") and previous["source_sha256"] != sources:
+        if (previous["benchmark_version"] != benchmark["version"]
+                or previous.get("split", "calibration") != split
+                or previous["models"] != models
+                or previous.get("escalation_model") != escalation_model):
+            raise ValueError("Existing trial uses different benchmark or model route")
+        if (previous.get("source_sha256") and previous["source_sha256"] != sources
+                and any(result["status"] != "error" for result in previous["results"])):
             raise ValueError("Source changed since the previous trial")
         report["generated_at"] = previous["generated_at"]
         report["results"] = previous["results"]
@@ -109,6 +128,7 @@ def run_trial(*, execute: bool, task_limit: int, max_api_attempts: int,
             state = service.SessionState(
                 session_id="benchmark", domain_key="coding", domain_path=str(domain_path),
                 source_text=task["request"], model=item["model"], demo_mode=False,
+                coding_escalation_model=escalation_model,
             )
             result = {"task": item["task"], "model": item["model"], "axis": task["axis"],
                       "combo_a": item["a"], "combo_b": item["b"]}
@@ -138,17 +158,35 @@ def run_trial(*, execute: bool, task_limit: int, max_api_attempts: int,
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--execute", action="store_true", help="Permit bounded, billable API calls")
-    parser.add_argument("--tasks", type=int, default=4, choices=range(1, 5))
-    parser.add_argument("--task-id", help="Run only one calibration task without repeating earlier tasks")
-    parser.add_argument("--max-api-attempts", type=int, default=32)
-    parser.add_argument("--output", type=Path, default=OUTPUT,
+    parser.add_argument("--service-route", action="store_true",
+                        help="Evaluate the coding model and escalation configured by the API server")
+    parser.add_argument("--holdout", action="store_true",
+                        help="Evaluate frozen holdout tasks in a separate output")
+    parser.add_argument("--tasks", type=int, choices=range(1, 5))
+    parser.add_argument("--task-id", help="Run only one task in the selected split")
+    parser.add_argument("--max-api-attempts", type=int)
+    parser.add_argument("--output", type=Path,
                         help="Save a new trial separately from earlier prompt versions")
+    parser.add_argument("--benchmark", type=Path, default=BENCHMARK,
+                        help="Benchmark file (default: frozen v1.json)")
     args = parser.parse_args()
-    result = run_trial(execute=args.execute, task_limit=args.tasks,
-                       max_api_attempts=args.max_api_attempts, output=args.output,
-                       task_id=args.task_id)
+    route_model = escalation_model = None
+    if args.service_route:
+        from api_server import CODING_ESCALATION_MODEL, CODING_MODEL
+
+        route_model, escalation_model = CODING_MODEL, CODING_ESCALATION_MODEL
+    split = "holdout" if args.holdout else "calibration"
+    task_limit = args.tasks if args.tasks is not None else (2 if args.holdout else (1 if args.service_route else 4))
+    maximum = task_limit * (6 if escalation_model else 4) * (1 if args.service_route else 2)
+    max_api_attempts = args.max_api_attempts if args.max_api_attempts is not None else maximum
+    output = args.output or (HOLDOUT_OUTPUT if args.holdout else (ROUTED_OUTPUT if args.service_route else OUTPUT))
+    result = run_trial(execute=args.execute, task_limit=task_limit,
+                       max_api_attempts=max_api_attempts, output=output,
+                       task_id=args.task_id, route_model=route_model,
+                       escalation_model=escalation_model, split=split,
+                       benchmark_path=args.benchmark)
     if args.execute:
-        print(json.dumps({"output": str(args.output), "api_attempts": result["total_api_attempts"],
+        print(json.dumps({"output": str(output), "api_attempts": result["total_api_attempts"],
                           "statuses": [{"task": r["task"], "model": r["model"], "status": r["status"]}
                                        for r in result["results"]]}, ensure_ascii=False))
     else:

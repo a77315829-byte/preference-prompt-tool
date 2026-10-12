@@ -15,9 +15,18 @@ FRONTEND = ROOT / "frontend"
 TRIAL = ROOT / "data" / "coding_ai_quality_trial.json"
 OUTPUT = ROOT / "data" / "coding_ai_quality_stage4.json"
 FENCE = re.compile(r"```(tsx|ts|css)\s*\n(.*?)```", re.DOTALL | re.IGNORECASE)
-FILENAME = re.compile(r"(?:`|//\s*)([A-Za-z][A-Za-z0-9_-]*\.(?:tsx|ts|css))(?:`|\s|$)")
-HEADING_FILENAME = re.compile(r"(?<![\w./])([A-Za-z][A-Za-z0-9_-]*\.(?:tsx|ts|css))(?![\w.])")
-ENTRY = {"counter_reset": "Counter.tsx", "product_search": "ProductSearch.tsx"}
+FILENAME = re.compile(r"(?:`|//\s*)([A-Za-z][A-Za-z0-9_.-]*\.(?:tsx|ts|css))(?:`|\s|$)")
+HEADING_FILENAME = re.compile(r"(?<![\w./])([A-Za-z][A-Za-z0-9_.-]*\.(?:tsx|ts|css))(?![\w.])")
+ENTRY = {
+    "counter_reset": "Counter.tsx",
+    "product_search": "ProductSearch.tsx",
+    "signup_validation": "SignupForm.tsx",
+    "todo_toggle": "TodoList.tsx",
+    "confirm_dialog": "ConfirmDialog.tsx",
+    "text_preview": "TextPreview.tsx",
+    "password_visibility": "PasswordVisibility.tsx",
+    "faq_toggle": "FaqToggle.tsx",
+}
 
 
 def extract_files(answer: str, default_name: str) -> dict[str, str]:
@@ -33,14 +42,28 @@ def extract_files(answer: str, default_name: str) -> dict[str, str]:
         comment = FILENAME.search(first_line)
         if comment:
             name = comment.group(1)
-        if not name.lower().endswith("." + language.lower()):
+        extension = name.rsplit(".", 1)[-1].lower()
+        if extension != language.lower() and not (extension == "ts" and language.lower() == "tsx"):
             raise ValueError(f"Filename/extension mismatch: {name}, {language}")
         if name in files:
             raise ValueError(f"Duplicate file: {name}")
         files[name] = code
-    if not files or default_name not in files:
-        raise ValueError(f"Missing entry file: {default_name}")
+    resolve_entry(files, default_name)
     return files
+
+
+def resolve_entry(files: dict[str, str], default_name: str) -> str:
+    """Accept a renamed React entry only when it is unambiguous."""
+    if default_name in files:
+        return default_name
+    candidates = [name for name, source in files.items()
+                  if name.endswith(".tsx") and (
+                      re.search(r"\bexport\s+default\b", source)
+                      or re.search(r"\bexport\s+(?:function|const)\s+[A-Z]\w*", source)
+                  )]
+    if len(candidates) != 1:
+        raise ValueError(f"Missing entry file: {default_name}")
+    return candidates[0]
 
 
 def run(command: list[str], *, cwd: Path) -> tuple[bool, str]:
@@ -52,8 +75,8 @@ def run(command: list[str], *, cwd: Path) -> tuple[bool, str]:
 
 
 def evaluate_candidate(task: str, answer: str, slot: str, folder: Path) -> dict:
-    entry = ENTRY[task]
-    files = extract_files(answer, entry)
+    files = extract_files(answer, ENTRY[task])
+    entry = resolve_entry(files, ENTRY[task])
     for name, source in files.items():
         (folder / name).write_text(source, encoding="utf-8")
     tsc = FRONTEND / "node_modules/.bin/tsc"
@@ -67,7 +90,7 @@ def evaluate_candidate(task: str, answer: str, slot: str, folder: Path) -> dict:
                                   "--jsx=automatic",
                                   "--external:react", "--external:react/jsx-runtime",
                                   "--loader:.css=empty", f"--outfile={bundle}"], cwd=folder)
-    result = {"slot": slot, "files": sorted(files), "typecheck": type_ok,
+    result = {"slot": slot, "entry": entry, "files": sorted(files), "typecheck": type_ok,
               "typecheck_output": type_output, "build": build_ok, "build_output": build_output,
               "behavior": "not_run", "checks": []}
     if type_ok and build_ok:

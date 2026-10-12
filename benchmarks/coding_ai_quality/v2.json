@@ -1,0 +1,22 @@
+{
+  "version": "2.0",
+  "purpose": "Fresh holdout for non-target structure drift after pairwise validation was added.",
+  "baseline_model": "openai/gpt-4o-mini",
+  "generation_mode": "live",
+  "rounds_per_task": 1,
+  "required_axes": ["code_structure", "style_management", "type_detail"],
+  "tasks": [
+    {
+      "id": "password_visibility",
+      "split": "holdout",
+      "axis": "style_management",
+      "common_profile": {"code_structure": "separated", "type_detail": "explicit"},
+      "request": "React와 TypeScript로 비밀번호 입력 컴포넌트를 만들어 주세요. 처음에는 비밀번호가 가려져 있고 버튼 문구는 '비밀번호 보기'입니다. 버튼을 누르면 입력한 값이 보이고 버튼 문구가 '비밀번호 숨기기'로 바뀝니다. 다시 누르면 값이 가려집니다. 표시 상태를 바꿔도 입력한 값은 유지되어야 합니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "처음 입력 유형이 password이고 '비밀번호 보기'가 보인다.",
+        "값을 입력한 뒤 보기 버튼을 누르면 유형이 text가 되고 값이 유지된다.",
+        "다시 누르면 유형이 password가 되고 값이 유지된다."
+      ]
+    }
+  ]
+}
