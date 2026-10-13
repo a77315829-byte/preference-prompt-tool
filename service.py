@@ -285,7 +285,8 @@ def _generate_pair(
                 + "\n\n수정할 초안:\n" + text
             )
             repaired = generator.generate_with_prompt(
-                repair_prompt, state.source_text, state.model
+                repair_prompt, state.source_text, state.model,
+                max_output_tokens=domain.max_output_tokens,
             )
             remaining = quality_issues(repaired)
             if not remaining:
@@ -305,7 +306,8 @@ def _generate_pair(
                 + "\n\n실패한 수정본:\n" + repaired
             )
             escalated = generator.generate_with_prompt(
-                escalation_prompt, state.source_text, state.coding_escalation_model
+                escalation_prompt, state.source_text, state.coding_escalation_model,
+                max_output_tokens=domain.max_output_tokens,
             )
             final_issues = quality_issues(escalated)
             if final_issues:
@@ -317,7 +319,8 @@ def _generate_pair(
             + "\n\n" + _CODING_FUNCTION_CONTRACT
         )
         first = checked_candidate(
-            generator.generate_with_prompt(first_prompt, state.source_text, state.model),
+            generator.generate_with_prompt(first_prompt, state.source_text, state.model,
+                                           max_output_tokens=domain.max_output_tokens),
             combo_a,
             "A",
         )
@@ -338,7 +341,8 @@ def _generate_pair(
             "첫 번째 구현:\n" + first
         )
         second = checked_candidate(
-            generator.generate_with_prompt(second_prompt, state.source_text, state.model),
+            generator.generate_with_prompt(second_prompt, state.source_text, state.model,
+                                           max_output_tokens=domain.max_output_tokens),
             combo_b,
             "B",
             first,
@@ -662,6 +666,9 @@ _API_ERROR_KINDS = (
     ("NotFoundError", "모델 없음", "설정된 모델 이름을 찾을 수 없습니다. 모델 설정을 확인해 주세요."),
     ("UnsupportedParamsError", "설정 오류", "이 모델이 지원하지 않는 요청 설정입니다. 모델 설정을 확인해 주세요."),
     ("BadRequestError", "요청 오류", "모델이 요청을 거부했습니다. 모델 설정을 확인해 주세요."),
+    # 호출은 성공했지만 만든 코드가 검사를 끝내 통과하지 못한 경우. 공급자 오류가 아니다.
+    ("CodingCandidateQualityError", "코드 검사 실패",
+     "만든 코드가 고른 스타일 검사를 끝내 통과하지 못했습니다. 요청을 조금 더 구체적으로 적어 다시 시도해 주세요."),
     ("ServiceUnavailableError", "공급자 장애", "모델 공급자 서버에 문제가 있습니다. 잠시 뒤 다시 시도해 주세요."),
     ("InternalServerError", "공급자 장애", "모델 공급자 서버에 문제가 있습니다. 잠시 뒤 다시 시도해 주세요."),
 )

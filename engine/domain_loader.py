@@ -96,6 +96,9 @@ class Domain:
     # 만든 프롬프트를 내보낼 곳의 이름 목록. 선택 항목이고, 비어 있으면
     # 화면 쪽 기본값을 쓴다. 이름의 뜻은 엔진이 아니라 화면 쪽이 안다.
     export_targets: list[str] = field(default_factory=list)
+    # 후보 하나를 만들 때의 출력 토큰 상한. 선택 항목이고, 없으면 생성기 기본값을 쓴다.
+    # 결과물이 유난히 긴 도메인(파일 여러 개를 통째로 돌려주는 등)이 YAML 에서 늘린다.
+    max_output_tokens: int | None = None
 
     def axis(self, name: str) -> Axis:
         for a in self.axes:
@@ -206,6 +209,10 @@ def _validate(raw: dict, path: Path) -> None:
     if not isinstance(examples, list) or not all(isinstance(e, str) and e.strip() for e in examples):
         raise DomainError(f"{where}: example_sources 는 비어 있지 않은 문자열 목록이어야 한다")
 
+    max_tokens = raw.get("max_output_tokens")
+    if max_tokens is not None and (isinstance(max_tokens, bool) or not isinstance(max_tokens, int) or max_tokens <= 0):
+        raise DomainError(f"{where}: max_output_tokens 는 양의 정수여야 한다")
+
 
 def _validate_final(final: dict, at: str, axis_names: set[str]) -> None:
     for key in ("role", "preference_heading", "rules_heading", "output_heading", "output"):
@@ -267,6 +274,7 @@ def load_domain(path: str | Path) -> Domain:
             language: _final_prompt(spec) for language, spec in raw.get("final_prompt_translations", {}).items()
         },
         export_targets=[t.strip() for t in raw.get("export_targets", [])],
+        max_output_tokens=raw.get("max_output_tokens"),
     )
 
 

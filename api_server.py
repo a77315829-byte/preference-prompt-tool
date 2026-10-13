@@ -11,6 +11,7 @@ import base64
 import json
 import os
 import threading
+import time
 from datetime import date, timedelta
 from dataclasses import asdict, replace
 from http.cookies import CookieError, SimpleCookie
@@ -30,7 +31,7 @@ import template_library
 from app_db import Database
 from auth import AuthError, AuthService, TooManyAttempts, User
 from budget import DailyBudget  # noqa: F401 - 테스트가 상한 자리에 끼워 넣는다
-from quota import Quota, subject_for
+from quota import ANON, Quota, subject_for
 from prompt_workspace import builder as ws_builder
 from prompt_workspace import exports as ws_exports
 from prompt_workspace import requirements as ws_requirements
@@ -101,6 +102,11 @@ DAILY_OPTIMIZATIONS = _quota("optimize", "PPT_OPTIMIZATIONS_PER_DAY", 30, "PPT_U
 OPTIMIZE_RUNS: dict[str, int] = {}
 # 최적화 근거(전후 점수 등). 화면에서 "무슨 기준으로 다듬었는지" 보여 준다.
 OPTIMIZE_REPORTS: dict[str, dict] = {}
+# AWS Cost Explorer 실제 조회 (/api/aws/costs 의 demoMode: false). 서버 주인의 AWS 계정
+# 비용을 읽으므로 브라우저 요청만으로 켜지지 않는다 - 서버가 PPT_AWS_LIVE=1 로 켜고,
+# 로그인한 사람만, 하루 상한 안에서 쓴다. 조회 한 번에 Cost Explorer 요청 요금이 붙는다.
+AWS_LIVE = os.environ.get("PPT_AWS_LIVE") == "1"
+DAILY_AWS_QUERIES = _quota("aws", "PPT_AWS_QUERIES_PER_DAY", 20, "PPT_USER_AWS_QUERIES_PER_DAY", 5)
 # 팀 모드 (team.py). DB 에 남는다. 로그인한 사람은 자기 아이디로만 참여한다.
 TEAMS = team.TeamStore(DB)
 # 다른 출처에서 이 API 를 부르도록 허용할 주소 목록 (쉼표로 구분). 기본은
@@ -110,8 +116,35 @@ TEAMS = team.TeamStore(DB)
 ALLOWED_ORIGINS = frozenset(
     o.strip() for o in os.environ.get("PPT_CORS_ORIGINS", "").split(",") if o.strip()
 )
+# 비교 세션은 메모리에만 있다. 데모 세션은 하루 상한 없이 만들 수 있어서 지우지 않으면
+# 방문할 때마다 쌓인다 (원문 12,000자에 코딩 후보 코드까지, 한 세션에 수십 KB). 새 세션을
+# 만들 때 만든 지 SESSION_TTL_SECONDS 가 지난 세션과, MAX_SESSIONS 를 넘는 가장 오래된
+# 세션을 지운다. 최적화가 돌고 있는 세션은 남긴다.
+MAX_SESSIONS = int(os.environ.get("PPT_MAX_SESSIONS", "500"))
+SESSION_TTL_SECONDS = int(float(os.environ.get("PPT_SESSION_TTL_HOURS", "12")) * 3600)
 SESSIONS: dict[str, service.SessionState] = {}
+# 세션을 만든 시각(time.monotonic). 만든 순서대로 들어간다.
+SESSION_STARTED: dict[str, float] = {}
 SESSIONS_LOCK = threading.Lock()
+
+
+def _remember_session(state: service.SessionState, now: float | None = None) -> None:
+    """새 세션을 넣기 전에 오래된 세션을 지운다. SESSIONS_LOCK 을 잡은 채로 부른다."""
+    now = time.monotonic() if now is None else now
+    removable = [sid for sid in SESSION_STARTED
+                 if getattr(SESSIONS.get(sid), "optimize_status", None) != "running"]
+    stale = [sid for sid in removable if now - SESSION_STARTED[sid] > SESSION_TTL_SECONDS]
+    overflow = len(SESSION_STARTED) - len(stale) - (MAX_SESSIONS - 1)
+    if overflow > 0:
+        stale_set = set(stale)
+        stale += [sid for sid in removable if sid not in stale_set][:overflow]
+    for sid in stale:
+        SESSIONS.pop(sid, None)
+        SESSION_STARTED.pop(sid, None)
+        OPTIMIZE_RUNS.pop(sid, None)
+        OPTIMIZE_REPORTS.pop(sid, None)
+    SESSIONS[state.session_id] = state
+    SESSION_STARTED[state.session_id] = now
 
 
 def _jsonable(value: Any) -> Any:
@@ -288,6 +321,23 @@ def _demo_aws_cost_report(lookback_days: int = 30) -> dict[str, Any]:
     return report
 
 
+def _aws_live_blocked() -> str | None:
+    """실제 조회를 막을 이유. 막지 않으면 하루 횟수를 한 번 차감하고 None.
+
+    이 경로는 서버 주인의 AWS 계정 비용을 읽어 요청한 사람에게 돌려준다. 예전에는
+    브라우저가 보낸 demoMode 하나로 켜져서, 화면을 연 누구나 서버 자격 증명으로
+    Cost Explorer 를 부를 수 있었다 (조회 한 번에 요청당 요금도 붙는다)."""
+    if not AWS_LIVE:
+        return "이 서버는 AWS 실제 조회가 꺼져 있어 데모 데이터를 표시합니다 (PPT_AWS_LIVE=1 로 켤 수 있습니다)."
+    if _subject() == ANON:
+        return "AWS 실제 조회는 로그인한 사람만 쓸 수 있어 데모 데이터를 표시합니다."
+    try:
+        _take(DAILY_AWS_QUERIES, "AWS 실제 조회")
+    except ValueError as exc:
+        return f"{exc} 데모 데이터를 표시합니다."
+    return None
+
+
 def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
     """Cost Explorer를 선택적으로 조회하고, 실패하면 안전한 데모 결과를 반환한다."""
     try:
@@ -296,6 +346,11 @@ def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("lookbackDays는 7~90 사이의 숫자여야 합니다.")
     if bool(body.get("demoMode", True)):
         return _demo_aws_cost_report(lookback_days)
+    blocked = _aws_live_blocked()
+    if blocked is not None:
+        report = _demo_aws_cost_report(lookback_days)
+        report["liveError"] = blocked
+        return report
 
     try:
         import boto3  # type: ignore
@@ -435,7 +490,7 @@ def quota_left() -> dict[str, int]:
     """지금 요청한 사람의 오늘 남은 횟수 (/api/auth/me 가 보여 준다)."""
     subject = _subject()
     quotas = {"session": LIVE_SESSIONS, "optimize": DAILY_OPTIMIZATIONS,
-              "polish": DAILY_POLISHES, "workspace": DAILY_WORKSPACE_CALLS}
+              "polish": DAILY_POLISHES, "workspace": DAILY_WORKSPACE_CALLS, "aws": DAILY_AWS_QUERIES}
     return {kind: q.left(subject) for kind, q in quotas.items() if hasattr(q, "left")}
 
 
@@ -888,7 +943,7 @@ class ApiHandler(BaseHTTPRequestHandler):
             state.demo_reason = demo_reason
         print(f"[session] {domain_key} mode={'demo' if state.demo_mode else 'live'}", flush=True)
         with SESSIONS_LOCK:
-            SESSIONS[state.session_id] = state
+            _remember_session(state)
         self._send(201, {"session": _state_payload(state)})
 
     def _submit_choice(self, session_id: str, body: dict[str, Any]) -> None:

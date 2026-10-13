@@ -46,6 +46,11 @@ def test_api_errors_are_classified_without_the_raw_message(mro, expected) -> Non
     assert "sk-" not in message and LEAK not in message
 
 
+def test_coding_quality_failure_is_not_reported_as_an_unknown_model_error() -> None:
+    message = service.describe_api_error(service.CodingCandidateQualityError("B", ["타입 추론 조건 위반"]))
+    assert message.startswith("코드 검사 실패")
+
+
 @pytest.fixture
 def fake_litellm(monkeypatch):
     calls = []
@@ -74,16 +79,35 @@ def test_generation_uses_completion_token_cap_for_new_openai_models(fake_litellm
     assert "max_tokens" not in call
 
 
-def test_coding_pair_uses_larger_completion_cap_only_for_coding(fake_litellm, tmp_path) -> None:
-    generator.generate_with_prompt(
-        "## A/B 공통 기능 계약\n동일한 기능을 구현합니다.",
-        "s",
-        "openai/gpt-6-luna",
-        cache_dir=tmp_path,
-    )
-    (call,) = fake_litellm
-    assert call["max_completion_tokens"] == generator.CODING_OUTPUT_TOKENS
-    assert "max_tokens" not in call
+def test_output_cap_comes_from_the_domain_yaml(fake_litellm, tmp_path) -> None:
+    """엔진은 도메인 문구를 보고 상한을 고르지 않는다 (절대 규칙 1). 길게 쓰는 도메인이
+    YAML 의 max_output_tokens 로 늘리고, 없는 도메인은 기본값을 쓴다."""
+    from engine.domain_loader import load_domain
+
+    coding = load_domain("domains/coding.yaml")
+    summary = load_domain("domains/summarization.yaml")
+    assert coding.max_output_tokens == 8192
+    assert summary.max_output_tokens is None
+
+    generator.generate_with_prompt("p", "s", "openai/gpt-6-luna", cache_dir=tmp_path,
+                                   max_output_tokens=coding.max_output_tokens)
+    generator.generate(summary, "s2", {"length": "short", "extractiveness": "normal", "topic": ""},
+                       "openai/gpt-6-luna", cache_dir=tmp_path)
+    coding_call, summary_call = fake_litellm
+    assert coding_call["max_completion_tokens"] == 8192
+    assert summary_call["max_completion_tokens"] == generator.MAX_OUTPUT_TOKENS
+
+
+def test_bad_output_cap_in_yaml_is_rejected(tmp_path) -> None:
+    import yaml
+    from engine.domain_loader import DomainError, load_domain
+
+    raw = yaml.safe_load(open("domains/coding.yaml", encoding="utf-8"))
+    raw["max_output_tokens"] = "8192"
+    path = tmp_path / "coding.yaml"
+    path.write_text(yaml.safe_dump(raw, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(DomainError, match="max_output_tokens"):
+        load_domain(path)
 
 
 def test_concurrent_identical_requests_call_once(fake_litellm, tmp_path) -> None:
