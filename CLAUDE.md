@@ -91,6 +91,11 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제)
   이미 나눴다 - 후보 생성은 실측으로 고른 `openai/gpt-4o-mini`(app.py 의
   `MODEL`, api_server.py 의 `PPT_MODEL`), 성찰은 `service.REFLECTION_MODEL`
   (`PPT_REFLECTION_MODEL`, 기본 `openai/gpt-5.6-luna`). 실측 표는 README.
+  **(2026-10-13)** React API 서버의 코딩 후보만 따로 간다 - 기본 `openai/gpt-6-luna`
+  (`PPT_CODING_MODEL`), 스타일 검사에 끝내 떨어지면 `openai/gpt-6.1-sol`
+  (`PPT_CODING_ESCALATION_MODEL`)로 한 번 다시 만든다. 이 경로의 청구 비용과
+  라운드당 대기 시간은 아직 재지 않았다. 근거와 남은 검증은
+  `benchmarks/coding_ai_quality/README.md`.
 
 ---
 
@@ -127,7 +132,7 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제)
 
 ```bash
 pip install -r requirements-dev.txt          # 실험·테스트용 전체 (배포용은 requirements.txt)
-python -m pytest -m "not api" -q             # API 없이 도는 테스트 (약 700개, 2분 안팎)
+python -m pytest -m "not api" -q             # API 없이 도는 테스트 (약 830개, 2분 안팎. 코딩 실행 검증은 npm ci 가 먼저 필요)
 npm ci --prefix frontend && npm run build --prefix frontend
 node --test "frontend/src/**/*.test.js"      # 프론트 순수 함수 테스트 (Node 내장, 의존성 없음)
 ```
@@ -186,6 +191,7 @@ node --test "frontend/src/**/*.test.js"      # 프론트 순수 함수 테스트
   임계값 탐색의 최고 관측값을 이론적 상한으로 표현하지 않는다.
 - 같은 프롬프트가 반환됐다는 이유만으로 GEPA 초기 점수가 만점이라고 단정하지 않는다.
 - GEPA는 실패 포함 세션 2회/프로세스 하루 30회로 제한했다. 메모리 카운터라 영속 금액 한도는 아니다.
+  (이후 React API 서버의 하루 상한은 `data/app.db` 에 남도록 바뀌었다. Streamlit 앱은 그대로 메모리다.)
 - 연구 실행기에 전체 모듈을 제공하던 구조에서 모듈 속성 접근을 발견했다.
   허용 멤버만 제공하고 자식 환경에서 API 키를 제외했다. 완전한 OS 샌드박스는 아니다.
 - 내 글 UI는 과제 원문을 받지 않아 압축률 적합성을 판단하지 못한다. 영어 Q&A의 형식 실험을 한국어/전문성 효과로 일반화하지 않는다.

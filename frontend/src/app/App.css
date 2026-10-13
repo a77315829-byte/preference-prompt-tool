@@ -1511,6 +1511,12 @@
   opacity: 0.55;
 }
 
+.aws-live-error {
+  margin: 0.6rem 0 0;
+  color: #176b50;
+  font-size: 0.82rem;
+}
+
 .aws-findings-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

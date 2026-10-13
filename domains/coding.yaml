@@ -17,6 +17,10 @@ task_description: >-
 
 checks_module: checks.coding
 
+# 후보 하나의 출력 토큰 상한. 파일 여러 개의 전체 코드를 돌려주면 기본값(2,048)에서
+# 끊겨 코드가 없는 응답이 났다 (benchmarks/coding_ai_quality 의 signup_validation).
+max_output_tokens: 8192
+
 axes:
   - name: code_structure
     type: enum
