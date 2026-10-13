@@ -64,6 +64,18 @@ class StaleChoiceError(RuntimeError):
     """이미 지난 쌍에 대한 선택. HTTP 로 옮기면 409 에 해당한다."""
 
 
+class CodingCandidateQualityError(RuntimeError):
+    """허용된 수정·재생성을 마친 코딩 후보가 정적 스타일 검사를 통과하지 못했다."""
+
+    def __init__(self, candidate: str, issues: list[str]):
+        self.candidate = candidate
+        self.issues = tuple(issues)
+        super().__init__(
+            f"코딩 후보가 스타일 검사를 통과하지 못했습니다 ({candidate}): "
+            + "; ".join(issues)
+        )
+
+
 @dataclass(frozen=True)
 class Candidate:
     """후보 하나. `combo` 는 화면에 보여주지 않는다 - 어느 축이 다른지
@@ -123,6 +135,8 @@ class SessionState:
     source_text: str
     model: str
     demo_mode: bool
+    # 실제 생성 대신 데모를 사용한 이유. 원시 API 오류는 여기에 저장하지 않는다.
+    demo_reason: str | None = None
     total_rounds: int = TOTAL_ROUNDS
     # (combo_a, combo_b, winner) 튜플들. Comparison 을 그대로 담지 않는
     # 이유는 직렬화 때문이다.
@@ -141,6 +155,8 @@ class SessionState:
     # 시작할 때 정한 최대 질문 수. 물을 게 없어 일찍 끝나면 total_rounds 가 줄어드는데,
     # "이전 선택 수정"으로 되돌릴 때 이 값으로 되돌린다.
     round_limit: int | None = None
+    # 코딩 후보가 기본 모델의 수정까지 통과하지 못할 때만 쓰는 마지막 모델.
+    coding_escalation_model: str | None = None
 
     @property
     def round(self) -> int:
@@ -204,6 +220,21 @@ def _axis_views(state: SessionState, estimator: Estimator) -> list[AxisView]:
     return views
 
 
+_CODING_FUNCTION_CONTRACT = """\
+## A/B 공통 기능 계약
+사용자 메시지를 두 후보 모두의 동일한 기능 명세로 사용하라. 초기 상태와 데이터, 입력·조작,
+화면에 표시할 문구, 상태 변화, 검증과 오류 처리 중 사용자가 지정한 것은 빠짐없이 구현하라.
+사용자가 지정하지 않은 동작은 필요한 최소한으로 구현하고, 스타일 지시 때문에 기능을 추가하거나
+빼거나 바꾸지 마라. A/B의 차이는 코드 구조·스타일 관리·타입 작성 방식으로만 제한하라.
+비교 축이 스타일 관리 방식이라면 색상·간격·문구·레이아웃과 포커스/호버 상태까지
+동일하게 유지하고, 값의 관리 위치와 방법만 달리하라.
+실행 가능한 React·TypeScript 파일의 전체 내용을 제시하고, 코드에서 참조하는 로컬 파일도 모두 포함하라.
+현재 프로젝트의 React 19·TypeScript 5 환경에서 타입 검사를 통과해야 한다.
+반환 타입 등에 전역 JSX 네임스페이스(JSX.Element 등)를 쓰지 말고,
+필요하면 React.JSX.Element를 사용하거나 반환 타입을 추론하게 하라.
+"""
+
+
 def _generate_pair(
     state: SessionState,
     domain: Domain,
@@ -212,16 +243,108 @@ def _generate_pair(
 ) -> PairView:
     """후보 두 개를 만든다. 데모 모드면 API 를 쓰지 않는다.
 
-    API 모드는 `generate_all` 로 **동시에** 호출한다. 순차로 부르면
-    라운드당 20.3초였던 것이 4.2초로 줄었다(배포 실측). 순서 보존이
-    중요하다 - 먼저 끝난 것을 앞에 놓으면 A/B 가 뒤바뀌어 사용자가 고른
-    것과 다른 축을 학습한다.
+    일반 API 모드는 후보를 동시에 만든다. 코딩은 먼저 만든 A의 동작을
+    B에 전달해 같은 기능을 구현하게 한다. 이 경우에는 순차 호출이다.
     """
-    if state.demo_mode:
+    if state.demo_mode and domain.name == "coding":
+        from demos.coding_dataset import generate_coding_pair
+
+        # A/B의 위치를 바꾸더라도 실제 코드와 축 조합은 항상 함께 이동한다.
+        if state.answered % 2:
+            combo_a, combo_b = combo_b, combo_a
+        texts = generate_coding_pair(state.source_text, state.answered, combo_a, combo_b)
+    elif state.demo_mode:
         texts = [
             generate_demo(domain, state.source_text, combo_a),
             generate_demo(domain, state.source_text, combo_b),
         ]
+    elif domain.name == "coding":
+        from checks.coding import candidate_quality_issues, pair_quality_issues
+
+        def checked_candidate(
+            text: str, combo: dict[str, str], label: str,
+            reference: str | None = None, reference_combo: dict[str, str] | None = None,
+        ) -> str:
+            def quality_issues(candidate: str) -> list[str]:
+                issues = candidate_quality_issues(candidate, combo, state.source_text)
+                if reference is not None and reference_combo is not None:
+                    issues.extend(pair_quality_issues(reference, candidate, reference_combo, combo))
+                return issues
+
+            issues = quality_issues(text)
+            if not issues:
+                return text
+            repair_prompt = (
+                build_prompt(domain, combo, source=state.source_text)
+                + "\n\n" + _CODING_FUNCTION_CONTRACT
+                + "\n다음 초안에서 공통 기능 계약과 사용자 요청을 유지하면서 "
+                "아래 위반만 고쳐 전체 파일 코드를 다시 제시하라. "
+                "설명이나 파일 목록에만 조건을 적지 말고 실제 코드에 적용하라.\n"
+                + "\n".join(f"- {issue}" for issue in issues)
+                + ("\n\n구조를 맞출 기준 A:\n" + reference if reference is not None else "")
+                + "\n\n수정할 초안:\n" + text
+            )
+            repaired = generator.generate_with_prompt(
+                repair_prompt, state.source_text, state.model
+            )
+            remaining = quality_issues(repaired)
+            if not remaining:
+                return repaired
+            if state.coding_escalation_model is None:
+                raise CodingCandidateQualityError(label, remaining)
+            # 비싼 모델은 기본 생성과 기본 모델의 1회 수정이 모두 스타일 검사에
+            # 실패한 후보에만 사용한다. 이 호출 뒤에는 재시도하지 않는다.
+            escalation_prompt = (
+                build_prompt(domain, combo, source=state.source_text)
+                + "\n\n" + _CODING_FUNCTION_CONTRACT
+                + "\n기본 모델의 초안과 수정본이 모두 아래 검사를 통과하지 못했다. "
+                "사용자의 기능 요구와 A/B 공통 기능 계약을 유지하며 전체 파일 코드를 "
+                "처음부터 다시 작성하라. 설명에만 조건을 적지 말고 실제 코드에 적용하라.\n"
+                + "\n".join(f"- {issue}" for issue in remaining)
+                + ("\n\n구조를 맞출 기준 A:\n" + reference if reference is not None else "")
+                + "\n\n실패한 수정본:\n" + repaired
+            )
+            escalated = generator.generate_with_prompt(
+                escalation_prompt, state.source_text, state.coding_escalation_model
+            )
+            final_issues = quality_issues(escalated)
+            if final_issues:
+                raise CodingCandidateQualityError(label, final_issues)
+            return escalated
+
+        first_prompt = (
+            build_prompt(domain, combo_a, source=state.source_text)
+            + "\n\n" + _CODING_FUNCTION_CONTRACT
+        )
+        first = checked_candidate(
+            generator.generate_with_prompt(first_prompt, state.source_text, state.model),
+            combo_a,
+            "A",
+        )
+        changed_axes = [axis.name for axis in domain.axes if combo_a.get(axis.name) != combo_b.get(axis.name)]
+        changed_description = ", ".join(changed_axes)
+        second_prompt = (
+            build_prompt(domain, combo_b, source=state.source_text)
+            + "\n\n" + _CODING_FUNCTION_CONTRACT
+            + "\n아래 첫 번째 구현과 사용자에게 보이는 기능을 동일하게 유지하라. "
+            "입력 방법, 버튼과 키보드 동작, 초기 데이터, 화면 문구, 결과와 오류 처리도 "
+            "같아야 한다. 포커스/호버 같은 시각적 상태, 접근성 속성과 스타일 값도 "
+            f"같게 유지하라. 이번 비교에서 바꿀 축은 {changed_description}뿐이다. "
+            "나머지 축은 A와 동일하게 유지하라. 코드 구조가 공통이면 "
+            "TSX 컴포넌트와 TS 로직 파일의 개수와 역할도 A와 맞춰라. "
+            "테마 비교에 필요한 CSS/토큰 파일만 추가할 수 있다. "
+            "첫 구현을 그대로 복사하지 말고 현재 스타일 지시에 맞춰 다시 작성하라. "
+            "첫 구현이 원래 요청과 충돌하면 원래 요청을 우선하라.\n\n"
+            "첫 번째 구현:\n" + first
+        )
+        second = checked_candidate(
+            generator.generate_with_prompt(second_prompt, state.source_text, state.model),
+            combo_b,
+            "B",
+            first,
+            combo_a,
+        )
+        texts = [first, second]
     else:
         texts = generate_all(
             domain, state.source_text, [combo_a, combo_b], model=state.model
@@ -244,6 +367,7 @@ def start_session(
     demo_mode: bool,
     total_rounds: int = TOTAL_ROUNDS,
     template_id: str | None = None,
+    coding_escalation_model: str | None = None,
 ) -> SessionState:
     """세션을 열고 첫 쌍을 만든다."""
     if template_id is not None:
@@ -259,6 +383,7 @@ def start_session(
         demo_mode=demo_mode,
         total_rounds=total_rounds,
         template_id=template_id,
+        coding_escalation_model=coding_escalation_model,
     )
     domain, estimator, selector = _rebuild(state)
     # 물을 수 있는 질문이 그보다 적으면 그만큼만 묻는다. 코딩(값 2개짜리 축
@@ -557,12 +682,14 @@ def exports_for_estimate(
 ) -> list[exporters.Export]:
     """세션 없이 추정만으로 내보내기를 만든다 (팀 프롬프트가 쓴다)."""
     combo = final_combo(domain, estimator)
+    # 내부 도메인 키(idle_tracker)는 사용자에게 보이는 AWS 파일명과 다르다.
+    export_name = "aws-cost" if domain.name == "idle_tracker" else domain.name
     return exporters.build_exports(
         prompt,
-        slug=domain.name + slug_suffix,
+        slug=export_name + slug_suffix,
         # 파일 머리의 제목도 프롬프트와 같은 언어로 (영어 파일에 한국어 제목이 섞이지 않게).
-        title=(f"선호 기반 프롬프트 ({domain.name}{slug_suffix})" if language in (None, "ko")
-               else f"Preference-based prompt ({domain.name}{slug_suffix})"),
+        title=(f"선호 기반 프롬프트 ({export_name}{slug_suffix})" if language in (None, "ko")
+               else f"Preference-based prompt ({export_name}{slug_suffix})"),
         targets=domain.export_targets or None,
         # 짧은 판도 화면에 보인 프롬프트와 같은 언어로.
         compact_prompt=build_compact_prompt(domain, combo, language=None if language in (None, "ko") else language),

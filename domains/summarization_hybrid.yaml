@@ -29,3 +29,42 @@ axes:
         check:
           fn: specificity_judge
           target: {}
+
+# 영어 결과 프롬프트에는 추가 축의 지시문도 필요하다. 부모 파일의 번역판은
+# 축 목록과 달리 자동 병합되지 않으므로, 기존 문구를 유지하며 이 축만 보탠다.
+final_prompt_translations:
+  en:
+    role: "You are a summarization assistant who summarizes English text to match this user's preferences."
+    preference_note: "The preferences below were inferred from summaries the user picked while comparing several options."
+    team_role: "You are a summarization assistant who summarizes English text to match this team's preferences."
+    team_preference_note: "The preferences below were inferred by combining the summaries each team member picked while comparing several options."
+    task: "Summarize the source text below according to these instructions. Always write the summary in English, the same language as the source."
+    preference_heading: "This user's preferences"
+    team_preference_heading: "This team's preferences"
+    rules_heading: "Always"
+    rules:
+      - "Follow the preferences above (length, use of source wording) first; apply the rules below within them."
+      - "Do not add facts, guesses, or opinions that are not in the source."
+      - "Do not misstate numbers, dates, or proper nouns."
+      - "Keep confirmed facts separate from things that are under review or uncertain."
+    output_heading: "Output format"
+    output: "Output only the summary, in English. No preamble, title, explanation, or closing."
+    axis_labels:
+      length: "Length"
+      extractiveness: "Use of source wording"
+      topic: "Focus"
+      specificity: "Detail level"
+    instructions:
+      length:
+        short: "Keep it very short: two sentences or fewer."
+        normal: "Write about three to four sentences."
+        long: "Write five or more sentences, in detail."
+      extractiveness:
+        normal: "Mostly rephrase in your own words; quote the source wording only where it helps."
+        high: "Reuse the source's words and phrases as much as possible."
+        fully: "Build the summary from sentences extracted verbatim from the source. Do not write new sentences."
+      specificity:
+        normal: "Summarize at a general level without overloading the answer with figures or proper nouns."
+        high: "Include specific information such as numbers, dates, and proper nouns where relevant."
+    freeform_templates:
+      topic: 'Focus the summary on "{value}". You may leave out other parts of the source.'

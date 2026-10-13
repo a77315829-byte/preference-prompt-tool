@@ -70,6 +70,12 @@ def test_service_uses_the_domain_targets() -> None:
     assert summary == list(exporters.DEFAULT_TARGETS)
 
 
+def test_aws_export_uses_a_user_facing_filename() -> None:
+    exports = service.exports_for(_finished("idle_tracker"), "P")
+    markdown = next(item for item in exports if item.key == "markdown")
+    assert markdown.filename == "aws-cost-prompt.md"
+
+
 def test_compact_version_is_the_short_assembly() -> None:
     state = _finished("summarization")
     domain, _ = service.current_estimate(state)

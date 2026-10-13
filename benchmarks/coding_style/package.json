@@ -1,0 +1,12 @@
+{
+  "name": "coding-style-dataset-verification",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verify": "node verify.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "react": "19.3.0"
+  }
+}

@@ -78,6 +78,8 @@
   color: #111827;
 }
 
+.nav-menu-button { display: none; }
+
 .nav-button,
 .primary-button,
 .selection-button,
@@ -2483,4 +2485,50 @@
 .comparison-secondary-actions .prompt-reset-button:disabled {
   opacity: 0.45;
   cursor: default;
+}
+
+/* 좁은 화면에서도 템플릿·다듬기·작업 공간을 열 수 있게 한다. */
+@media (max-width: 1060px) {
+  .site-nav { gap: 0.5rem; }
+  .nav-menu-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #dfe4ed;
+    border-radius: 999px;
+    color: #374151;
+    background: #fff;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .nav-links,
+  .nav-links.is-open {
+    position: absolute;
+    top: calc(100% + 0.45rem);
+    right: 0;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin: 0;
+    padding: 0.45rem;
+    border: 1px solid #e4e7ed;
+    border-radius: 1.2rem;
+    background: #fff;
+    box-shadow: 0 1rem 2.5rem #11182722;
+  }
+  .nav-links.is-open { display: flex; }
+  .nav-links button { padding: 0.8rem 1rem; text-align: left; }
+}
+
+@media (max-width: 480px) {
+  .site-nav { padding: 0.55rem; }
+  .brand-mark { max-width: 7.5rem; overflow: hidden; text-overflow: ellipsis; }
+  .nav-button { display: none; }
+  .nav-user { gap: 0.25rem; }
+  .nav-user button { max-width: 5.5rem; overflow: hidden; text-overflow: ellipsis; padding: 0.45rem 0.55rem; }
 }

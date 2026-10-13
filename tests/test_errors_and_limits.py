@@ -67,6 +67,25 @@ def test_generation_has_timeout_and_output_cap(fake_litellm, tmp_path) -> None:
     assert call["max_tokens"] == generator.MAX_OUTPUT_TOKENS
 
 
+def test_generation_uses_completion_token_cap_for_new_openai_models(fake_litellm, tmp_path) -> None:
+    generator.generate_with_prompt("p", "s", "openai/gpt-6-luna", cache_dir=tmp_path)
+    (call,) = fake_litellm
+    assert call["max_completion_tokens"] == generator.MAX_OUTPUT_TOKENS
+    assert "max_tokens" not in call
+
+
+def test_coding_pair_uses_larger_completion_cap_only_for_coding(fake_litellm, tmp_path) -> None:
+    generator.generate_with_prompt(
+        "## A/B 공통 기능 계약\n동일한 기능을 구현합니다.",
+        "s",
+        "openai/gpt-6-luna",
+        cache_dir=tmp_path,
+    )
+    (call,) = fake_litellm
+    assert call["max_completion_tokens"] == generator.CODING_OUTPUT_TOKENS
+    assert "max_tokens" not in call
+
+
 def test_concurrent_identical_requests_call_once(fake_litellm, tmp_path) -> None:
     results = []
     threads = [

@@ -67,7 +67,7 @@ function AuthSection({ onDone, onBack, signupOpen = true, reason, embedded = fal
             )}
           </div>
           <p className="ws-help">
-            이 서버의 data/app.db 에 저장됩니다. 비밀번호는 원문이 아니라 해시로만 저장합니다.
+            계정은 이 서버에 저장됩니다. 비밀번호는 원문이 아니라 해시로만 저장합니다.
           </p>
         </form>
   );

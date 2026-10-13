@@ -1,0 +1,22 @@
+{
+  "version": "3.0",
+  "purpose": "One new bounded live feature trial with a frozen FAQ interaction contract.",
+  "baseline_model": "openai/gpt-4o-mini",
+  "generation_mode": "live",
+  "rounds_per_task": 1,
+  "required_axes": ["code_structure", "style_management", "type_detail"],
+  "tasks": [
+    {
+      "id": "faq_toggle",
+      "split": "holdout",
+      "axis": "style_management",
+      "common_profile": {"code_structure": "compact", "type_detail": "inferred"},
+      "request": "React와 TypeScript로 FAQ 한 항목을 만들어 주세요. 질문은 '배송은 얼마나 걸리나요?'이고 답변은 '배송은 2~3일 걸립니다.'입니다. 처음에는 질문과 '답변 보기' 버튼만 보이고 답변은 보이지 않습니다. 버튼을 누르면 답변이 나타나고 버튼 문구가 '답변 닫기'로 바뀝니다. 다시 누르면 답변이 사라지고 버튼 문구가 '답변 보기'로 돌아옵니다. 버튼에 aria-expanded로 현재 열림 상태를 표시해 주세요. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "처음에는 질문과 '답변 보기' 버튼이 보이고 답변은 없으며 aria-expanded는 false이다.",
+        "버튼을 누르면 답변과 '답변 닫기' 버튼이 보이고 aria-expanded는 true이다.",
+        "다시 누르면 답변이 사라지고 '답변 보기' 버튼이 보이며 aria-expanded는 false이다."
+      ]
+    }
+  ]
+}

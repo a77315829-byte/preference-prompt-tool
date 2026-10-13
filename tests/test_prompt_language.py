@@ -14,7 +14,7 @@ from engine.domain_loader import DomainError, load_domain
 from engine.estimator import Comparison, Estimator
 from engine.generator import build_final_prompt, build_prompt
 
-APP_DOMAINS = ["coding", "summarization", "summarization_ko", "idle_tracker", "review", "email"]
+APP_DOMAINS = ["coding", "summarization", "summarization_ko", "summarization_hybrid", "idle_tracker", "review", "email"]
 HANGUL = re.compile(r"[가-힣ㄱ-ㆎ]")
 
 
