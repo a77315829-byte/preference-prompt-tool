@@ -3,15 +3,6 @@
 from __future__ import annotations
 
 import re
-from collections import Counter
-
-
-_STOPWORDS = {
-    "a", "an", "and", "are", "as", "at", "be", "been", "but", "by",
-    "for", "from", "had", "has", "have", "he", "her", "his", "in",
-    "is", "it", "its", "of", "on", "or", "she", "that", "the", "their",
-    "they", "this", "to", "was", "were", "will", "with",
-}
 
 
 def _sentences(text: str) -> list[str]:
@@ -30,27 +21,11 @@ def _ensure_period(text: str) -> str:
     return text if text.endswith((".", "!", "?")) else f"{text}."
 
 
-def _keywords(text: str, limit: int = 12) -> list[str]:
-    words = re.findall(r"[A-Za-z][A-Za-z'-]{2,}", text.lower())
-    counts = Counter(word for word in words if word not in _STOPWORDS)
-    return [word for word, _ in counts.most_common(limit)]
-
-
 def _abstract_summary(source_text: str, count: int) -> list[str]:
-    words = _keywords(source_text, limit=max(6, count * 3))
-    if not words:
-        return ["The source presents its main subject and supporting details."]
-
-    chunks = [words[i::count] for i in range(count)]
-    labels = (
-        "Main focus", "Key context", "Notable detail", "Related point",
-        "Further context", "Overall theme",
-    )
-    return [
-        f"{labels[index % len(labels)]}: {', '.join(chunk[:3])}."
-        for index, chunk in enumerate(chunks)
-        if chunk
-    ]
+    # 규칙 기반 데모는 안전하게 바꿔 쓸 수 없는 내용을 추측하지 않는다.
+    # 핵심 문장을 원문 그대로 가져오되, 읽기 쉬운 개요 형식으로 보여 준다.
+    sentences = _selected_sentences(source_text, count)
+    return [f"Summary: {_ensure_period(sentences[0])}", *sentences[1:]]
 
 
 def _selected_sentences(source_text: str, count: int) -> list[str]:

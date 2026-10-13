@@ -26,7 +26,9 @@ CACHE_DIR = Path(__file__).resolve().parent.parent / "cache"
 # 요약·리뷰·코드 한 벌에는 넉넉하고, 모델이 폭주하면 거기서 끊는다.
 # 캐시 키에는 넣지 않는다 - 넣으면 기존 cache/ 가 통째로 무효화된다.
 REQUEST_TIMEOUT_SECONDS = 60
+# 일반 도메인은 기존 한도를 유지하고, 여러 파일을 반환하는 코딩 A/B만 늘린다.
 MAX_OUTPUT_TOKENS = 2048
+CODING_OUTPUT_TOKENS = 8192
 
 # 같은 캐시 키를 동시에 부르면 한 번만 호출하고 나머지는 기다렸다 캐시를
 # 읽는다. 새로고침·분기 미리 만들기가 같은 요청을 겹쳐 보낸다.
@@ -304,6 +306,14 @@ def _call_and_cache(
     from litellm import completion
 
     extra = {} if temperature is None else {"temperature": temperature}
+    output_tokens = (
+        CODING_OUTPUT_TOKENS if "## A/B 공통 기능 계약" in prompt else MAX_OUTPUT_TOKENS
+    )
+    token_limit = (
+        {"max_completion_tokens": output_tokens}
+        if model.startswith(("openai/gpt-5", "openai/gpt-6", "openai/o1", "openai/o3", "openai/o4"))
+        else {"max_tokens": output_tokens}
+    )
     response = completion(
         model=model,
         messages=[
@@ -311,7 +321,7 @@ def _call_and_cache(
             {"role": "user", "content": source_text},
         ],
         timeout=REQUEST_TIMEOUT_SECONDS,
-        max_tokens=MAX_OUTPUT_TOKENS,
+        **token_limit,
         **extra,
     )
     output = response.choices[0].message.content

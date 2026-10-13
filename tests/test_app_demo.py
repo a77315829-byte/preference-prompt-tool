@@ -125,7 +125,8 @@ def test_api_failure_degrades_to_demo_instead_of_dead_ending(monkeypatch) -> Non
     def boom(*args, **kwargs):
         raise AuthenticationError("Incorrect API key provided: sk-abc*****wxyz")
 
-    monkeypatch.setattr(generator_module, "generate", boom)
+    # 코딩 A/B는 공통 generate()가 아니라 후보별 지시문을 받는 경로를 쓴다.
+    monkeypatch.setattr(generator_module, "generate_with_prompt", boom)
 
     app = AppTest.from_file(APP_PATH, default_timeout=30).run()
     # 실행 모드는 건드리지 않는다 - 기본값이 API 모드다.

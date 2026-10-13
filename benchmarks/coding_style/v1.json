@@ -1,0 +1,1509 @@
+{
+  "schema_version": 1,
+  "dataset_id": "coding-style-pairs-v1",
+  "provenance": "AI-authored synthetic stimuli, not collected human preferences",
+  "human_review_status": "pending",
+  "axes": {
+    "code_structure": [
+      "compact",
+      "separated"
+    ],
+    "style_management": [
+      "direct",
+      "theme"
+    ],
+    "type_detail": [
+      "inferred",
+      "explicit"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "counter",
+      "split": "elicitation",
+      "component": "Counter",
+      "request": "클릭 횟수를 보여주세요. 처음에는 0이며, 증가 버튼으로 1씩 늘리고 초기화 버튼으로 0으로 되돌립니다.",
+      "initial": "0",
+      "type": "number",
+      "trace": [
+        [
+          "increment",
+          1
+        ],
+        [
+          "increment",
+          2
+        ],
+        [
+          "reset",
+          0
+        ]
+      ],
+      "expected_initial": [
+        "0",
+        "증가",
+        "초기화"
+      ]
+    },
+    {
+      "id": "disclosure",
+      "split": "elicitation",
+      "component": "Disclosure",
+      "request": "설명 접기/펼치기를 만드세요. 처음에는 닫혀 있고 펼치기 버튼으로 설명을 표시하며 닫기 버튼으로 숨깁니다. 펼침 상태를 aria-expanded로 알려주세요.",
+      "initial": "false",
+      "type": "boolean",
+      "trace": [
+        [
+          "open",
+          true
+        ],
+        [
+          "open",
+          true
+        ],
+        [
+          "close",
+          false
+        ]
+      ],
+      "expected_initial": [
+        "펼치기",
+        "닫기"
+      ]
+    },
+    {
+      "id": "filter",
+      "split": "elicitation",
+      "component": "ItemFilter",
+      "request": "전체/완료 필터를 만드세요. 처음에는 '계획 세우기'와 '발표하기' 모두 표시합니다. 완료 필터에서는 완료된 '계획 세우기'만 표시하고 전체 버튼으로 복원합니다.",
+      "initial": "false",
+      "type": "boolean",
+      "trace": [
+        [
+          "showCompleted",
+          true
+        ],
+        [
+          "showAll",
+          false
+        ]
+      ],
+      "expected_initial": [
+        "전체",
+        "완료",
+        "계획 세우기",
+        "발표하기"
+      ]
+    },
+    {
+      "id": "checklist",
+      "split": "elicitation",
+      "component": "Checklist",
+      "request": "읽기와 검토 두 항목의 체크리스트를 만드세요. 처음에는 둘 다 미완료이며 각 버튼을 누르면 해당 항목만 완료/미완료로 전환됩니다. 완료 상태는 aria-pressed로 알려주세요.",
+      "initial": "[false, false]",
+      "type": "boolean[]",
+      "trace": [
+        [
+          "toggleRead",
+          [
+            true,
+            false
+          ]
+        ],
+        [
+          "toggleReview",
+          [
+            true,
+            true
+          ]
+        ],
+        [
+          "toggleRead",
+          [
+            false,
+            true
+          ]
+        ]
+      ],
+      "expected_initial": [
+        "읽기 ",
+        "미완료",
+        "검토 ",
+        "미완료"
+      ]
+    },
+    {
+      "id": "view_switcher",
+      "split": "holdout",
+      "component": "ViewSwitcher",
+      "request": "소개/사용법 화면 선택기를 만드세요. 처음에는 '프로젝트 소개'를 표시합니다. 사용법 버튼은 '버튼을 눌러 선택하세요.'를 표시하고 소개 버튼으로 돌아올 수 있습니다. 선택한 버튼은 aria-pressed로 구분합니다.",
+      "initial": "\"intro\"",
+      "type": "string",
+      "trace": [
+        [
+          "showGuide",
+          "guide"
+        ],
+        [
+          "showIntro",
+          "intro"
+        ]
+      ],
+      "expected_initial": [
+        "소개",
+        "사용법",
+        "프로젝트 소개"
+      ]
+    },
+    {
+      "id": "text_preview",
+      "split": "holdout",
+      "component": "TextPreview",
+      "request": "텍스트 미리보기를 만드세요. 입력창은 '내용' 레이블과 연결하고 입력한 내용을 즉시 output에 표시합니다. 처음에는 빈 문자열이고, 비우기 버튼으로 입력창과 미리보기를 함께 초기화합니다.",
+      "initial": "\"\"",
+      "type": "string",
+      "trace": [
+        [
+          "update",
+          "안녕하세요",
+          [
+            "안녕하세요"
+          ]
+        ],
+        [
+          "clear",
+          ""
+        ]
+      ],
+      "expected_initial": [
+        "내용",
+        "",
+        "비우기"
+      ]
+    }
+  ],
+  "variants": [
+    {
+      "id": "counter-v0",
+      "task_id": "counter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Counter.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState(0);\n  const increment = () => setValue((current) => current + 1);\n  const reset = () => setValue(0);\n  return { value, increment, reset };\n}\n\nexport function Counter() {\n  const { value, increment, reset } = useModel();\n  return <section style={panelStyle} aria-label=\"Counter\"><output>{value}</output><button onClick={increment}>증가</button><button onClick={reset}>초기화</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "counter-v1",
+      "task_id": "counter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Counter.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\ninterface Model {\n  value: number;\n  increment: () => void;\n  reset: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<number>(0);\n  const increment = (): void => setValue((current) => current + 1);\n  const reset = (): void => setValue(0);\n  return { value, increment, reset };\n}\n\nexport function Counter(): ReactElement {\n  const { value, increment, reset } = useModel();\n  return <section style={panelStyle} aria-label=\"Counter\"><output>{value}</output><button onClick={increment}>증가</button><button onClick={reset}>초기화</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "counter-v2",
+      "task_id": "counter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Counter.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState(0);\n  const increment = () => setValue((current) => current + 1);\n  const reset = () => setValue(0);\n  return { value, increment, reset };\n}\n\nexport function Counter() {\n  const { value, increment, reset } = useModel();\n  return <section style={panelStyle} aria-label=\"Counter\"><output>{value}</output><button onClick={increment}>증가</button><button onClick={reset}>초기화</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "counter-v3",
+      "task_id": "counter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Counter.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\ninterface Model {\n  value: number;\n  increment: () => void;\n  reset: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<number>(0);\n  const increment = (): void => setValue((current) => current + 1);\n  const reset = (): void => setValue(0);\n  return { value, increment, reset };\n}\n\nexport function Counter(): ReactElement {\n  const { value, increment, reset } = useModel();\n  return <section style={panelStyle} aria-label=\"Counter\"><output>{value}</output><button onClick={increment}>증가</button><button onClick={reset}>초기화</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "counter-v4",
+      "task_id": "counter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Counter.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Counter() {\n  const { value, increment, reset } = useModel();\n  return <section style={panelStyle} aria-label=\"Counter\"><output>{value}</output><button onClick={increment}>증가</button><button onClick={reset}>초기화</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState(0);\n  const increment = () => setValue((current) => current + 1);\n  const reset = () => setValue(0);\n  return { value, increment, reset };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "counter-v5",
+      "task_id": "counter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Counter.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Counter(): ReactElement {\n  const { value, increment, reset } = useModel();\n  return <section style={panelStyle} aria-label=\"Counter\"><output>{value}</output><button onClick={increment}>증가</button><button onClick={reset}>초기화</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: number;\n  increment: () => void;\n  reset: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<number>(0);\n  const increment = (): void => setValue((current) => current + 1);\n  const reset = (): void => setValue(0);\n  return { value, increment, reset };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "counter-v6",
+      "task_id": "counter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Counter.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Counter() {\n  const { value, increment, reset } = useModel();\n  return <section style={panelStyle} aria-label=\"Counter\"><output>{value}</output><button onClick={increment}>증가</button><button onClick={reset}>초기화</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState(0);\n  const increment = () => setValue((current) => current + 1);\n  const reset = () => setValue(0);\n  return { value, increment, reset };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    },
+    {
+      "id": "counter-v7",
+      "task_id": "counter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Counter.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Counter(): ReactElement {\n  const { value, increment, reset } = useModel();\n  return <section style={panelStyle} aria-label=\"Counter\"><output>{value}</output><button onClick={increment}>증가</button><button onClick={reset}>초기화</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: number;\n  increment: () => void;\n  reset: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<number>(0);\n  const increment = (): void => setValue((current) => current + 1);\n  const reset = (): void => setValue(0);\n  return { value, increment, reset };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    },
+    {
+      "id": "disclosure-v0",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Disclosure.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState(false);\n  const open = () => setValue(true);\n  const close = () => setValue(false);\n  return { value, open, close };\n}\n\nexport function Disclosure() {\n  const { value, open, close } = useModel();\n  return <section style={panelStyle} aria-label=\"Disclosure\"><button aria-expanded={value} onClick={open}>펼치기</button><button onClick={close}>닫기</button>{value && <p>추가 설명입니다.</p>}</section>;\n}\n"
+      }
+    },
+    {
+      "id": "disclosure-v1",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Disclosure.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\ninterface Model {\n  value: boolean;\n  open: () => void;\n  close: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<boolean>(false);\n  const open = (): void => setValue(true);\n  const close = (): void => setValue(false);\n  return { value, open, close };\n}\n\nexport function Disclosure(): ReactElement {\n  const { value, open, close } = useModel();\n  return <section style={panelStyle} aria-label=\"Disclosure\"><button aria-expanded={value} onClick={open}>펼치기</button><button onClick={close}>닫기</button>{value && <p>추가 설명입니다.</p>}</section>;\n}\n"
+      }
+    },
+    {
+      "id": "disclosure-v2",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Disclosure.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState(false);\n  const open = () => setValue(true);\n  const close = () => setValue(false);\n  return { value, open, close };\n}\n\nexport function Disclosure() {\n  const { value, open, close } = useModel();\n  return <section style={panelStyle} aria-label=\"Disclosure\"><button aria-expanded={value} onClick={open}>펼치기</button><button onClick={close}>닫기</button>{value && <p>추가 설명입니다.</p>}</section>;\n}\n"
+      }
+    },
+    {
+      "id": "disclosure-v3",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Disclosure.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\ninterface Model {\n  value: boolean;\n  open: () => void;\n  close: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<boolean>(false);\n  const open = (): void => setValue(true);\n  const close = (): void => setValue(false);\n  return { value, open, close };\n}\n\nexport function Disclosure(): ReactElement {\n  const { value, open, close } = useModel();\n  return <section style={panelStyle} aria-label=\"Disclosure\"><button aria-expanded={value} onClick={open}>펼치기</button><button onClick={close}>닫기</button>{value && <p>추가 설명입니다.</p>}</section>;\n}\n"
+      }
+    },
+    {
+      "id": "disclosure-v4",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Disclosure.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Disclosure() {\n  const { value, open, close } = useModel();\n  return <section style={panelStyle} aria-label=\"Disclosure\"><button aria-expanded={value} onClick={open}>펼치기</button><button onClick={close}>닫기</button>{value && <p>추가 설명입니다.</p>}</section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState(false);\n  const open = () => setValue(true);\n  const close = () => setValue(false);\n  return { value, open, close };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "disclosure-v5",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Disclosure.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Disclosure(): ReactElement {\n  const { value, open, close } = useModel();\n  return <section style={panelStyle} aria-label=\"Disclosure\"><button aria-expanded={value} onClick={open}>펼치기</button><button onClick={close}>닫기</button>{value && <p>추가 설명입니다.</p>}</section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: boolean;\n  open: () => void;\n  close: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<boolean>(false);\n  const open = (): void => setValue(true);\n  const close = (): void => setValue(false);\n  return { value, open, close };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "disclosure-v6",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Disclosure.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Disclosure() {\n  const { value, open, close } = useModel();\n  return <section style={panelStyle} aria-label=\"Disclosure\"><button aria-expanded={value} onClick={open}>펼치기</button><button onClick={close}>닫기</button>{value && <p>추가 설명입니다.</p>}</section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState(false);\n  const open = () => setValue(true);\n  const close = () => setValue(false);\n  return { value, open, close };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    },
+    {
+      "id": "disclosure-v7",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Disclosure.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Disclosure(): ReactElement {\n  const { value, open, close } = useModel();\n  return <section style={panelStyle} aria-label=\"Disclosure\"><button aria-expanded={value} onClick={open}>펼치기</button><button onClick={close}>닫기</button>{value && <p>추가 설명입니다.</p>}</section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: boolean;\n  open: () => void;\n  close: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<boolean>(false);\n  const open = (): void => setValue(true);\n  const close = (): void => setValue(false);\n  return { value, open, close };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    },
+    {
+      "id": "filter-v0",
+      "task_id": "filter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "ItemFilter.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState(false);\n  const showCompleted = () => setValue(true);\n  const showAll = () => setValue(false);\n  return { value, showCompleted, showAll };\n}\n\nexport function ItemFilter() {\n  const { value, showCompleted, showAll } = useModel();\n  return <section style={panelStyle} aria-label=\"ItemFilter\"><button aria-pressed={!value} onClick={showAll}>전체</button><button aria-pressed={value} onClick={showCompleted}>완료</button><ul><li>계획 세우기</li>{!value && <li>발표하기</li>}</ul></section>;\n}\n"
+      }
+    },
+    {
+      "id": "filter-v1",
+      "task_id": "filter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "ItemFilter.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\ninterface Model {\n  value: boolean;\n  showCompleted: () => void;\n  showAll: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<boolean>(false);\n  const showCompleted = (): void => setValue(true);\n  const showAll = (): void => setValue(false);\n  return { value, showCompleted, showAll };\n}\n\nexport function ItemFilter(): ReactElement {\n  const { value, showCompleted, showAll } = useModel();\n  return <section style={panelStyle} aria-label=\"ItemFilter\"><button aria-pressed={!value} onClick={showAll}>전체</button><button aria-pressed={value} onClick={showCompleted}>완료</button><ul><li>계획 세우기</li>{!value && <li>발표하기</li>}</ul></section>;\n}\n"
+      }
+    },
+    {
+      "id": "filter-v2",
+      "task_id": "filter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "ItemFilter.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState(false);\n  const showCompleted = () => setValue(true);\n  const showAll = () => setValue(false);\n  return { value, showCompleted, showAll };\n}\n\nexport function ItemFilter() {\n  const { value, showCompleted, showAll } = useModel();\n  return <section style={panelStyle} aria-label=\"ItemFilter\"><button aria-pressed={!value} onClick={showAll}>전체</button><button aria-pressed={value} onClick={showCompleted}>완료</button><ul><li>계획 세우기</li>{!value && <li>발표하기</li>}</ul></section>;\n}\n"
+      }
+    },
+    {
+      "id": "filter-v3",
+      "task_id": "filter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "ItemFilter.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\ninterface Model {\n  value: boolean;\n  showCompleted: () => void;\n  showAll: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<boolean>(false);\n  const showCompleted = (): void => setValue(true);\n  const showAll = (): void => setValue(false);\n  return { value, showCompleted, showAll };\n}\n\nexport function ItemFilter(): ReactElement {\n  const { value, showCompleted, showAll } = useModel();\n  return <section style={panelStyle} aria-label=\"ItemFilter\"><button aria-pressed={!value} onClick={showAll}>전체</button><button aria-pressed={value} onClick={showCompleted}>완료</button><ul><li>계획 세우기</li>{!value && <li>발표하기</li>}</ul></section>;\n}\n"
+      }
+    },
+    {
+      "id": "filter-v4",
+      "task_id": "filter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "ItemFilter.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function ItemFilter() {\n  const { value, showCompleted, showAll } = useModel();\n  return <section style={panelStyle} aria-label=\"ItemFilter\"><button aria-pressed={!value} onClick={showAll}>전체</button><button aria-pressed={value} onClick={showCompleted}>완료</button><ul><li>계획 세우기</li>{!value && <li>발표하기</li>}</ul></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState(false);\n  const showCompleted = () => setValue(true);\n  const showAll = () => setValue(false);\n  return { value, showCompleted, showAll };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "filter-v5",
+      "task_id": "filter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "ItemFilter.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function ItemFilter(): ReactElement {\n  const { value, showCompleted, showAll } = useModel();\n  return <section style={panelStyle} aria-label=\"ItemFilter\"><button aria-pressed={!value} onClick={showAll}>전체</button><button aria-pressed={value} onClick={showCompleted}>완료</button><ul><li>계획 세우기</li>{!value && <li>발표하기</li>}</ul></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: boolean;\n  showCompleted: () => void;\n  showAll: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<boolean>(false);\n  const showCompleted = (): void => setValue(true);\n  const showAll = (): void => setValue(false);\n  return { value, showCompleted, showAll };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "filter-v6",
+      "task_id": "filter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "ItemFilter.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function ItemFilter() {\n  const { value, showCompleted, showAll } = useModel();\n  return <section style={panelStyle} aria-label=\"ItemFilter\"><button aria-pressed={!value} onClick={showAll}>전체</button><button aria-pressed={value} onClick={showCompleted}>완료</button><ul><li>계획 세우기</li>{!value && <li>발표하기</li>}</ul></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState(false);\n  const showCompleted = () => setValue(true);\n  const showAll = () => setValue(false);\n  return { value, showCompleted, showAll };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    },
+    {
+      "id": "filter-v7",
+      "task_id": "filter",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "ItemFilter.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function ItemFilter(): ReactElement {\n  const { value, showCompleted, showAll } = useModel();\n  return <section style={panelStyle} aria-label=\"ItemFilter\"><button aria-pressed={!value} onClick={showAll}>전체</button><button aria-pressed={value} onClick={showCompleted}>완료</button><ul><li>계획 세우기</li>{!value && <li>발표하기</li>}</ul></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: boolean;\n  showCompleted: () => void;\n  showAll: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<boolean>(false);\n  const showCompleted = (): void => setValue(true);\n  const showAll = (): void => setValue(false);\n  return { value, showCompleted, showAll };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    },
+    {
+      "id": "checklist-v0",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Checklist.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState([false, false]);\n  const toggleRead = () => setValue((current) => current.map((done, index) => index === 0 ? !done : done));\n  const toggleReview = () => setValue((current) => current.map((done, index) => index === 1 ? !done : done));\n  return { value, toggleRead, toggleReview };\n}\n\nexport function Checklist() {\n  const { value, toggleRead, toggleReview } = useModel();\n  return <section style={panelStyle} aria-label=\"Checklist\"><button aria-pressed={value[0]} onClick={toggleRead}>읽기 {value[0] ? \"완료\" : \"미완료\"}</button><button aria-pressed={value[1]} onClick={toggleReview}>검토 {value[1] ? \"완료\" : \"미완료\"}</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "checklist-v1",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Checklist.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\ninterface Model {\n  value: boolean[];\n  toggleRead: () => void;\n  toggleReview: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<boolean[]>([false, false]);\n  const toggleRead = (): void => setValue((current) => current.map((done, index) => index === 0 ? !done : done));\n  const toggleReview = (): void => setValue((current) => current.map((done, index) => index === 1 ? !done : done));\n  return { value, toggleRead, toggleReview };\n}\n\nexport function Checklist(): ReactElement {\n  const { value, toggleRead, toggleReview } = useModel();\n  return <section style={panelStyle} aria-label=\"Checklist\"><button aria-pressed={value[0]} onClick={toggleRead}>읽기 {value[0] ? \"완료\" : \"미완료\"}</button><button aria-pressed={value[1]} onClick={toggleReview}>검토 {value[1] ? \"완료\" : \"미완료\"}</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "checklist-v2",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Checklist.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState([false, false]);\n  const toggleRead = () => setValue((current) => current.map((done, index) => index === 0 ? !done : done));\n  const toggleReview = () => setValue((current) => current.map((done, index) => index === 1 ? !done : done));\n  return { value, toggleRead, toggleReview };\n}\n\nexport function Checklist() {\n  const { value, toggleRead, toggleReview } = useModel();\n  return <section style={panelStyle} aria-label=\"Checklist\"><button aria-pressed={value[0]} onClick={toggleRead}>읽기 {value[0] ? \"완료\" : \"미완료\"}</button><button aria-pressed={value[1]} onClick={toggleReview}>검토 {value[1] ? \"완료\" : \"미완료\"}</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "checklist-v3",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Checklist.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\ninterface Model {\n  value: boolean[];\n  toggleRead: () => void;\n  toggleReview: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<boolean[]>([false, false]);\n  const toggleRead = (): void => setValue((current) => current.map((done, index) => index === 0 ? !done : done));\n  const toggleReview = (): void => setValue((current) => current.map((done, index) => index === 1 ? !done : done));\n  return { value, toggleRead, toggleReview };\n}\n\nexport function Checklist(): ReactElement {\n  const { value, toggleRead, toggleReview } = useModel();\n  return <section style={panelStyle} aria-label=\"Checklist\"><button aria-pressed={value[0]} onClick={toggleRead}>읽기 {value[0] ? \"완료\" : \"미완료\"}</button><button aria-pressed={value[1]} onClick={toggleReview}>검토 {value[1] ? \"완료\" : \"미완료\"}</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "checklist-v4",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Checklist.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Checklist() {\n  const { value, toggleRead, toggleReview } = useModel();\n  return <section style={panelStyle} aria-label=\"Checklist\"><button aria-pressed={value[0]} onClick={toggleRead}>읽기 {value[0] ? \"완료\" : \"미완료\"}</button><button aria-pressed={value[1]} onClick={toggleReview}>검토 {value[1] ? \"완료\" : \"미완료\"}</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState([false, false]);\n  const toggleRead = () => setValue((current) => current.map((done, index) => index === 0 ? !done : done));\n  const toggleReview = () => setValue((current) => current.map((done, index) => index === 1 ? !done : done));\n  return { value, toggleRead, toggleReview };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "checklist-v5",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Checklist.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Checklist(): ReactElement {\n  const { value, toggleRead, toggleReview } = useModel();\n  return <section style={panelStyle} aria-label=\"Checklist\"><button aria-pressed={value[0]} onClick={toggleRead}>읽기 {value[0] ? \"완료\" : \"미완료\"}</button><button aria-pressed={value[1]} onClick={toggleReview}>검토 {value[1] ? \"완료\" : \"미완료\"}</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: boolean[];\n  toggleRead: () => void;\n  toggleReview: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<boolean[]>([false, false]);\n  const toggleRead = (): void => setValue((current) => current.map((done, index) => index === 0 ? !done : done));\n  const toggleReview = (): void => setValue((current) => current.map((done, index) => index === 1 ? !done : done));\n  return { value, toggleRead, toggleReview };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "checklist-v6",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "Checklist.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Checklist() {\n  const { value, toggleRead, toggleReview } = useModel();\n  return <section style={panelStyle} aria-label=\"Checklist\"><button aria-pressed={value[0]} onClick={toggleRead}>읽기 {value[0] ? \"완료\" : \"미완료\"}</button><button aria-pressed={value[1]} onClick={toggleReview}>검토 {value[1] ? \"완료\" : \"미완료\"}</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState([false, false]);\n  const toggleRead = () => setValue((current) => current.map((done, index) => index === 0 ? !done : done));\n  const toggleReview = () => setValue((current) => current.map((done, index) => index === 1 ? !done : done));\n  return { value, toggleRead, toggleReview };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    },
+    {
+      "id": "checklist-v7",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "Checklist.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function Checklist(): ReactElement {\n  const { value, toggleRead, toggleReview } = useModel();\n  return <section style={panelStyle} aria-label=\"Checklist\"><button aria-pressed={value[0]} onClick={toggleRead}>읽기 {value[0] ? \"완료\" : \"미완료\"}</button><button aria-pressed={value[1]} onClick={toggleReview}>검토 {value[1] ? \"완료\" : \"미완료\"}</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: boolean[];\n  toggleRead: () => void;\n  toggleReview: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<boolean[]>([false, false]);\n  const toggleRead = (): void => setValue((current) => current.map((done, index) => index === 0 ? !done : done));\n  const toggleReview = (): void => setValue((current) => current.map((done, index) => index === 1 ? !done : done));\n  return { value, toggleRead, toggleReview };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    },
+    {
+      "id": "view_switcher-v0",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "ViewSwitcher.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState(\"intro\");\n  const showIntro = () => setValue(\"intro\");\n  const showGuide = () => setValue(\"guide\");\n  return { value, showIntro, showGuide };\n}\n\nexport function ViewSwitcher() {\n  const { value, showIntro, showGuide } = useModel();\n  return <section style={panelStyle} aria-label=\"ViewSwitcher\"><button aria-pressed={value === \"intro\"} onClick={showIntro}>소개</button><button aria-pressed={value === \"guide\"} onClick={showGuide}>사용법</button><p>{value === \"intro\" ? \"프로젝트 소개\" : \"버튼을 눌러 선택하세요.\"}</p></section>;\n}\n"
+      }
+    },
+    {
+      "id": "view_switcher-v1",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "ViewSwitcher.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\ninterface Model {\n  value: string;\n  showIntro: () => void;\n  showGuide: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<string>(\"intro\");\n  const showIntro = (): void => setValue(\"intro\");\n  const showGuide = (): void => setValue(\"guide\");\n  return { value, showIntro, showGuide };\n}\n\nexport function ViewSwitcher(): ReactElement {\n  const { value, showIntro, showGuide } = useModel();\n  return <section style={panelStyle} aria-label=\"ViewSwitcher\"><button aria-pressed={value === \"intro\"} onClick={showIntro}>소개</button><button aria-pressed={value === \"guide\"} onClick={showGuide}>사용법</button><p>{value === \"intro\" ? \"프로젝트 소개\" : \"버튼을 눌러 선택하세요.\"}</p></section>;\n}\n"
+      }
+    },
+    {
+      "id": "view_switcher-v2",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "ViewSwitcher.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState(\"intro\");\n  const showIntro = () => setValue(\"intro\");\n  const showGuide = () => setValue(\"guide\");\n  return { value, showIntro, showGuide };\n}\n\nexport function ViewSwitcher() {\n  const { value, showIntro, showGuide } = useModel();\n  return <section style={panelStyle} aria-label=\"ViewSwitcher\"><button aria-pressed={value === \"intro\"} onClick={showIntro}>소개</button><button aria-pressed={value === \"guide\"} onClick={showGuide}>사용법</button><p>{value === \"intro\" ? \"프로젝트 소개\" : \"버튼을 눌러 선택하세요.\"}</p></section>;\n}\n"
+      }
+    },
+    {
+      "id": "view_switcher-v3",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "ViewSwitcher.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\ninterface Model {\n  value: string;\n  showIntro: () => void;\n  showGuide: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<string>(\"intro\");\n  const showIntro = (): void => setValue(\"intro\");\n  const showGuide = (): void => setValue(\"guide\");\n  return { value, showIntro, showGuide };\n}\n\nexport function ViewSwitcher(): ReactElement {\n  const { value, showIntro, showGuide } = useModel();\n  return <section style={panelStyle} aria-label=\"ViewSwitcher\"><button aria-pressed={value === \"intro\"} onClick={showIntro}>소개</button><button aria-pressed={value === \"guide\"} onClick={showGuide}>사용법</button><p>{value === \"intro\" ? \"프로젝트 소개\" : \"버튼을 눌러 선택하세요.\"}</p></section>;\n}\n"
+      }
+    },
+    {
+      "id": "view_switcher-v4",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "ViewSwitcher.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function ViewSwitcher() {\n  const { value, showIntro, showGuide } = useModel();\n  return <section style={panelStyle} aria-label=\"ViewSwitcher\"><button aria-pressed={value === \"intro\"} onClick={showIntro}>소개</button><button aria-pressed={value === \"guide\"} onClick={showGuide}>사용법</button><p>{value === \"intro\" ? \"프로젝트 소개\" : \"버튼을 눌러 선택하세요.\"}</p></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState(\"intro\");\n  const showIntro = () => setValue(\"intro\");\n  const showGuide = () => setValue(\"guide\");\n  return { value, showIntro, showGuide };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "view_switcher-v5",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "ViewSwitcher.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function ViewSwitcher(): ReactElement {\n  const { value, showIntro, showGuide } = useModel();\n  return <section style={panelStyle} aria-label=\"ViewSwitcher\"><button aria-pressed={value === \"intro\"} onClick={showIntro}>소개</button><button aria-pressed={value === \"guide\"} onClick={showGuide}>사용법</button><p>{value === \"intro\" ? \"프로젝트 소개\" : \"버튼을 눌러 선택하세요.\"}</p></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: string;\n  showIntro: () => void;\n  showGuide: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<string>(\"intro\");\n  const showIntro = (): void => setValue(\"intro\");\n  const showGuide = (): void => setValue(\"guide\");\n  return { value, showIntro, showGuide };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "view_switcher-v6",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "ViewSwitcher.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function ViewSwitcher() {\n  const { value, showIntro, showGuide } = useModel();\n  return <section style={panelStyle} aria-label=\"ViewSwitcher\"><button aria-pressed={value === \"intro\"} onClick={showIntro}>소개</button><button aria-pressed={value === \"guide\"} onClick={showGuide}>사용법</button><p>{value === \"intro\" ? \"프로젝트 소개\" : \"버튼을 눌러 선택하세요.\"}</p></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState(\"intro\");\n  const showIntro = () => setValue(\"intro\");\n  const showGuide = () => setValue(\"guide\");\n  return { value, showIntro, showGuide };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    },
+    {
+      "id": "view_switcher-v7",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "ViewSwitcher.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function ViewSwitcher(): ReactElement {\n  const { value, showIntro, showGuide } = useModel();\n  return <section style={panelStyle} aria-label=\"ViewSwitcher\"><button aria-pressed={value === \"intro\"} onClick={showIntro}>소개</button><button aria-pressed={value === \"guide\"} onClick={showGuide}>사용법</button><p>{value === \"intro\" ? \"프로젝트 소개\" : \"버튼을 눌러 선택하세요.\"}</p></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: string;\n  showIntro: () => void;\n  showGuide: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<string>(\"intro\");\n  const showIntro = (): void => setValue(\"intro\");\n  const showGuide = (): void => setValue(\"guide\");\n  return { value, showIntro, showGuide };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    },
+    {
+      "id": "text_preview-v0",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "TextPreview.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState(\"\");\n  const update = (next = \"\") => setValue(next);\n  const clear = () => setValue(\"\");\n  return { value, update, clear };\n}\n\nexport function TextPreview() {\n  const { value, update, clear } = useModel();\n  return <section style={panelStyle} aria-label=\"TextPreview\"><label>내용<input value={value} onChange={(event) => update(event.currentTarget.value)} /></label><output>{value}</output><button onClick={clear}>비우기</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "text_preview-v1",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "TextPreview.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n\ninterface Model {\n  value: string;\n  update: (next?: string) => void;\n  clear: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<string>(\"\");\n  const update = (next: string = \"\"): void => setValue(next);\n  const clear = (): void => setValue(\"\");\n  return { value, update, clear };\n}\n\nexport function TextPreview(): ReactElement {\n  const { value, update, clear } = useModel();\n  return <section style={panelStyle} aria-label=\"TextPreview\"><label>내용<input value={value} onChange={(event) => update(event.currentTarget.value)} /></label><output>{value}</output><button onClick={clear}>비우기</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "text_preview-v2",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "TextPreview.tsx": "import { useState, type CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\nfunction useModel() {\n  const [value, setValue] = useState(\"\");\n  const update = (next = \"\") => setValue(next);\n  const clear = () => setValue(\"\");\n  return { value, update, clear };\n}\n\nexport function TextPreview() {\n  const { value, update, clear } = useModel();\n  return <section style={panelStyle} aria-label=\"TextPreview\"><label>내용<input value={value} onChange={(event) => update(event.currentTarget.value)} /></label><output>{value}</output><button onClick={clear}>비우기</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "text_preview-v3",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "TextPreview.tsx": "import { useState, type CSSProperties, type ReactElement } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n\ninterface Model {\n  value: string;\n  update: (next?: string) => void;\n  clear: () => void;\n}\n\nfunction useModel(): Model {\n  const [value, setValue] = useState<string>(\"\");\n  const update = (next: string = \"\"): void => setValue(next);\n  const clear = (): void => setValue(\"\");\n  return { value, update, clear };\n}\n\nexport function TextPreview(): ReactElement {\n  const { value, update, clear } = useModel();\n  return <section style={panelStyle} aria-label=\"TextPreview\"><label>내용<input value={value} onChange={(event) => update(event.currentTarget.value)} /></label><output>{value}</output><button onClick={clear}>비우기</button></section>;\n}\n"
+      }
+    },
+    {
+      "id": "text_preview-v4",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "TextPreview.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function TextPreview() {\n  const { value, update, clear } = useModel();\n  return <section style={panelStyle} aria-label=\"TextPreview\"><label>내용<input value={value} onChange={(event) => update(event.currentTarget.value)} /></label><output>{value}</output><button onClick={clear}>비우기</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState(\"\");\n  const update = (next = \"\") => setValue(next);\n  const clear = () => setValue(\"\");\n  return { value, update, clear };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "text_preview-v5",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "TextPreview.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function TextPreview(): ReactElement {\n  const { value, update, clear } = useModel();\n  return <section style={panelStyle} aria-label=\"TextPreview\"><label>내용<input value={value} onChange={(event) => update(event.currentTarget.value)} /></label><output>{value}</output><button onClick={clear}>비우기</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: string;\n  update: (next?: string) => void;\n  clear: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<string>(\"\");\n  const update = (next: string = \"\"): void => setValue(next);\n  const clear = (): void => setValue(\"\");\n  return { value, update, clear };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: \"#eef2ff\",\n  color: \"#172554\",\n  padding: 16,\n};\n"
+      }
+    },
+    {
+      "id": "text_preview-v6",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "files": {
+        "TextPreview.tsx": "import { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function TextPreview() {\n  const { value, update, clear } = useModel();\n  return <section style={panelStyle} aria-label=\"TextPreview\"><label>내용<input value={value} onChange={(event) => update(event.currentTarget.value)} /></label><output>{value}</output><button onClick={clear}>비우기</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\nexport function useModel() {\n  const [value, setValue] = useState(\"\");\n  const update = (next = \"\") => setValue(next);\n  const clear = () => setValue(\"\");\n  return { value, update, clear };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    },
+    {
+      "id": "text_preview-v7",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "files": {
+        "TextPreview.tsx": "import type { ReactElement } from \"react\";\nimport { useModel } from \"./useModel\";\nimport { panelStyle } from \"./styles\";\n\nexport function TextPreview(): ReactElement {\n  const { value, update, clear } = useModel();\n  return <section style={panelStyle} aria-label=\"TextPreview\"><label>내용<input value={value} onChange={(event) => update(event.currentTarget.value)} /></label><output>{value}</output><button onClick={clear}>비우기</button></section>;\n}\n",
+        "useModel.ts": "import { useState } from \"react\";\n\ninterface Model {\n  value: string;\n  update: (next?: string) => void;\n  clear: () => void;\n}\n\nexport function useModel(): Model {\n  const [value, setValue] = useState<string>(\"\");\n  const update = (next: string = \"\"): void => setValue(next);\n  const clear = (): void => setValue(\"\");\n  return { value, update, clear };\n}\n",
+        "styles.ts": "import type { CSSProperties } from \"react\";\n\nconst theme = {\n  colors: { background: \"#eef2ff\", text: \"#172554\" },\n  spacing: { panel: 16 },\n};\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.background,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n};\n"
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "id": "counter-code_structure-v0",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "counter-v0",
+      "b": "counter-v4",
+      "winner": null
+    },
+    {
+      "id": "counter-code_structure-v1",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "counter-v5",
+      "b": "counter-v1",
+      "winner": null
+    },
+    {
+      "id": "counter-code_structure-v2",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "counter-v2",
+      "b": "counter-v6",
+      "winner": null
+    },
+    {
+      "id": "counter-code_structure-v3",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "counter-v7",
+      "b": "counter-v3",
+      "winner": null
+    },
+    {
+      "id": "counter-style_management-v0",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "counter-v0",
+      "b": "counter-v2",
+      "winner": null
+    },
+    {
+      "id": "counter-style_management-v1",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "counter-v3",
+      "b": "counter-v1",
+      "winner": null
+    },
+    {
+      "id": "counter-style_management-v4",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "counter-v4",
+      "b": "counter-v6",
+      "winner": null
+    },
+    {
+      "id": "counter-style_management-v5",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "counter-v7",
+      "b": "counter-v5",
+      "winner": null
+    },
+    {
+      "id": "counter-type_detail-v0",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "counter-v0",
+      "b": "counter-v1",
+      "winner": null
+    },
+    {
+      "id": "counter-type_detail-v2",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "counter-v3",
+      "b": "counter-v2",
+      "winner": null
+    },
+    {
+      "id": "counter-type_detail-v4",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "counter-v4",
+      "b": "counter-v5",
+      "winner": null
+    },
+    {
+      "id": "counter-type_detail-v6",
+      "task_id": "counter",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "counter-v7",
+      "b": "counter-v6",
+      "winner": null
+    },
+    {
+      "id": "disclosure-code_structure-v0",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "disclosure-v0",
+      "b": "disclosure-v4",
+      "winner": null
+    },
+    {
+      "id": "disclosure-code_structure-v1",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "disclosure-v5",
+      "b": "disclosure-v1",
+      "winner": null
+    },
+    {
+      "id": "disclosure-code_structure-v2",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "disclosure-v2",
+      "b": "disclosure-v6",
+      "winner": null
+    },
+    {
+      "id": "disclosure-code_structure-v3",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "disclosure-v7",
+      "b": "disclosure-v3",
+      "winner": null
+    },
+    {
+      "id": "disclosure-style_management-v0",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "disclosure-v0",
+      "b": "disclosure-v2",
+      "winner": null
+    },
+    {
+      "id": "disclosure-style_management-v1",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "disclosure-v3",
+      "b": "disclosure-v1",
+      "winner": null
+    },
+    {
+      "id": "disclosure-style_management-v4",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "disclosure-v4",
+      "b": "disclosure-v6",
+      "winner": null
+    },
+    {
+      "id": "disclosure-style_management-v5",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "disclosure-v7",
+      "b": "disclosure-v5",
+      "winner": null
+    },
+    {
+      "id": "disclosure-type_detail-v0",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "disclosure-v0",
+      "b": "disclosure-v1",
+      "winner": null
+    },
+    {
+      "id": "disclosure-type_detail-v2",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "disclosure-v3",
+      "b": "disclosure-v2",
+      "winner": null
+    },
+    {
+      "id": "disclosure-type_detail-v4",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "disclosure-v4",
+      "b": "disclosure-v5",
+      "winner": null
+    },
+    {
+      "id": "disclosure-type_detail-v6",
+      "task_id": "disclosure",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "disclosure-v7",
+      "b": "disclosure-v6",
+      "winner": null
+    },
+    {
+      "id": "filter-code_structure-v0",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "filter-v0",
+      "b": "filter-v4",
+      "winner": null
+    },
+    {
+      "id": "filter-code_structure-v1",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "filter-v5",
+      "b": "filter-v1",
+      "winner": null
+    },
+    {
+      "id": "filter-code_structure-v2",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "filter-v2",
+      "b": "filter-v6",
+      "winner": null
+    },
+    {
+      "id": "filter-code_structure-v3",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "filter-v7",
+      "b": "filter-v3",
+      "winner": null
+    },
+    {
+      "id": "filter-style_management-v0",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "filter-v0",
+      "b": "filter-v2",
+      "winner": null
+    },
+    {
+      "id": "filter-style_management-v1",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "filter-v3",
+      "b": "filter-v1",
+      "winner": null
+    },
+    {
+      "id": "filter-style_management-v4",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "filter-v4",
+      "b": "filter-v6",
+      "winner": null
+    },
+    {
+      "id": "filter-style_management-v5",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "filter-v7",
+      "b": "filter-v5",
+      "winner": null
+    },
+    {
+      "id": "filter-type_detail-v0",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "filter-v0",
+      "b": "filter-v1",
+      "winner": null
+    },
+    {
+      "id": "filter-type_detail-v2",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "filter-v3",
+      "b": "filter-v2",
+      "winner": null
+    },
+    {
+      "id": "filter-type_detail-v4",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "filter-v4",
+      "b": "filter-v5",
+      "winner": null
+    },
+    {
+      "id": "filter-type_detail-v6",
+      "task_id": "filter",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "filter-v7",
+      "b": "filter-v6",
+      "winner": null
+    },
+    {
+      "id": "checklist-code_structure-v0",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "checklist-v0",
+      "b": "checklist-v4",
+      "winner": null
+    },
+    {
+      "id": "checklist-code_structure-v1",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "checklist-v5",
+      "b": "checklist-v1",
+      "winner": null
+    },
+    {
+      "id": "checklist-code_structure-v2",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "checklist-v2",
+      "b": "checklist-v6",
+      "winner": null
+    },
+    {
+      "id": "checklist-code_structure-v3",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "code_structure",
+      "a": "checklist-v7",
+      "b": "checklist-v3",
+      "winner": null
+    },
+    {
+      "id": "checklist-style_management-v0",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "checklist-v0",
+      "b": "checklist-v2",
+      "winner": null
+    },
+    {
+      "id": "checklist-style_management-v1",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "checklist-v3",
+      "b": "checklist-v1",
+      "winner": null
+    },
+    {
+      "id": "checklist-style_management-v4",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "checklist-v4",
+      "b": "checklist-v6",
+      "winner": null
+    },
+    {
+      "id": "checklist-style_management-v5",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "style_management",
+      "a": "checklist-v7",
+      "b": "checklist-v5",
+      "winner": null
+    },
+    {
+      "id": "checklist-type_detail-v0",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "checklist-v0",
+      "b": "checklist-v1",
+      "winner": null
+    },
+    {
+      "id": "checklist-type_detail-v2",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "checklist-v3",
+      "b": "checklist-v2",
+      "winner": null
+    },
+    {
+      "id": "checklist-type_detail-v4",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "checklist-v4",
+      "b": "checklist-v5",
+      "winner": null
+    },
+    {
+      "id": "checklist-type_detail-v6",
+      "task_id": "checklist",
+      "split": "elicitation",
+      "axis": "type_detail",
+      "a": "checklist-v7",
+      "b": "checklist-v6",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-code_structure-v0",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "code_structure",
+      "a": "view_switcher-v0",
+      "b": "view_switcher-v4",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-code_structure-v1",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "code_structure",
+      "a": "view_switcher-v5",
+      "b": "view_switcher-v1",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-code_structure-v2",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "code_structure",
+      "a": "view_switcher-v2",
+      "b": "view_switcher-v6",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-code_structure-v3",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "code_structure",
+      "a": "view_switcher-v7",
+      "b": "view_switcher-v3",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-style_management-v0",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "style_management",
+      "a": "view_switcher-v0",
+      "b": "view_switcher-v2",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-style_management-v1",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "style_management",
+      "a": "view_switcher-v3",
+      "b": "view_switcher-v1",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-style_management-v4",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "style_management",
+      "a": "view_switcher-v4",
+      "b": "view_switcher-v6",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-style_management-v5",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "style_management",
+      "a": "view_switcher-v7",
+      "b": "view_switcher-v5",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-type_detail-v0",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "type_detail",
+      "a": "view_switcher-v0",
+      "b": "view_switcher-v1",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-type_detail-v2",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "type_detail",
+      "a": "view_switcher-v3",
+      "b": "view_switcher-v2",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-type_detail-v4",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "type_detail",
+      "a": "view_switcher-v4",
+      "b": "view_switcher-v5",
+      "winner": null
+    },
+    {
+      "id": "view_switcher-type_detail-v6",
+      "task_id": "view_switcher",
+      "split": "holdout",
+      "axis": "type_detail",
+      "a": "view_switcher-v7",
+      "b": "view_switcher-v6",
+      "winner": null
+    },
+    {
+      "id": "text_preview-code_structure-v0",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "code_structure",
+      "a": "text_preview-v0",
+      "b": "text_preview-v4",
+      "winner": null
+    },
+    {
+      "id": "text_preview-code_structure-v1",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "code_structure",
+      "a": "text_preview-v5",
+      "b": "text_preview-v1",
+      "winner": null
+    },
+    {
+      "id": "text_preview-code_structure-v2",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "code_structure",
+      "a": "text_preview-v2",
+      "b": "text_preview-v6",
+      "winner": null
+    },
+    {
+      "id": "text_preview-code_structure-v3",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "code_structure",
+      "a": "text_preview-v7",
+      "b": "text_preview-v3",
+      "winner": null
+    },
+    {
+      "id": "text_preview-style_management-v0",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "style_management",
+      "a": "text_preview-v0",
+      "b": "text_preview-v2",
+      "winner": null
+    },
+    {
+      "id": "text_preview-style_management-v1",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "style_management",
+      "a": "text_preview-v3",
+      "b": "text_preview-v1",
+      "winner": null
+    },
+    {
+      "id": "text_preview-style_management-v4",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "style_management",
+      "a": "text_preview-v4",
+      "b": "text_preview-v6",
+      "winner": null
+    },
+    {
+      "id": "text_preview-style_management-v5",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "style_management",
+      "a": "text_preview-v7",
+      "b": "text_preview-v5",
+      "winner": null
+    },
+    {
+      "id": "text_preview-type_detail-v0",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "type_detail",
+      "a": "text_preview-v0",
+      "b": "text_preview-v1",
+      "winner": null
+    },
+    {
+      "id": "text_preview-type_detail-v2",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "type_detail",
+      "a": "text_preview-v3",
+      "b": "text_preview-v2",
+      "winner": null
+    },
+    {
+      "id": "text_preview-type_detail-v4",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "type_detail",
+      "a": "text_preview-v4",
+      "b": "text_preview-v5",
+      "winner": null
+    },
+    {
+      "id": "text_preview-type_detail-v6",
+      "task_id": "text_preview",
+      "split": "holdout",
+      "axis": "type_detail",
+      "a": "text_preview-v7",
+      "b": "text_preview-v6",
+      "winner": null
+    }
+  ]
+}

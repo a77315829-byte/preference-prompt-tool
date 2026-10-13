@@ -48,6 +48,18 @@ HOST = os.environ.get("PPT_API_HOST", "127.0.0.1")
 PORT = int(os.environ.get("PPT_API_PORT", "8000"))
 # 후보 생성 모델. 근거는 app.py 의 MODEL 주석(같은 실측).
 DEFAULT_MODEL = os.environ.get("PPT_MODEL", "openai/gpt-4o-mini")
+# 코딩만 별도 경로를 사용한다. PPT_MODEL을 직접 지정한 기존 설치는 그 설정을
+# 유지하고, 기본 설정에서는 저렴한 모델로 시작해 검사 실패 시에만 상위 모델을 쓴다.
+CODING_MODEL = os.environ.get("PPT_CODING_MODEL") or (
+    DEFAULT_MODEL if "PPT_MODEL" in os.environ else "openai/gpt-6-luna"
+)
+CODING_ESCALATION_MODEL = os.environ.get("PPT_CODING_ESCALATION_MODEL")
+if CODING_ESCALATION_MODEL is None:
+    CODING_ESCALATION_MODEL = (
+        "openai/gpt-6.1-sol" if CODING_MODEL == "openai/gpt-6-luna" else None
+    )
+else:
+    CODING_ESCALATION_MODEL = CODING_ESCALATION_MODEL.strip() or None
 # 작업 공간의 개선 추천 모델. 프로젝트 방침대로 후보 생성은 싼 모델, 성찰(무엇을 고칠지)은
 # 강한 모델 - GEPA 성찰과 같은 모델을 쓴다. gpt-4o-mini 로는 실패를 고치는 제안이 한 번도
 # 나오지 않았다 (CLAUDE.md 2026-10-02 작업 공간 2차).
@@ -57,6 +69,15 @@ SUGGEST_MODEL = os.environ.get("PPT_SUGGEST_MODEL") or service.REFLECTION_MODEL
 # 만든다. 프론트는 아직 demoMode: true 를 고정으로 보내므로, 백엔드만으로
 # 실제 생성을 켜고 끌 수 있게 하려는 스위치다. 기본은 꺼짐.
 LIVE = os.environ.get("PPT_LIVE") == "1"
+
+
+def _live_key_available(model: str | None = None) -> bool:
+    """OpenAI 모델의 키가 없으면 호출과 할당량 소비 전에 데모로 전환한다.
+
+    다른 공급자의 키는 LiteLLM이 관리하므로 여기서 추측하지 않는다.
+    """
+    selected = model or DEFAULT_MODEL
+    return not selected.startswith("openai/") or bool(os.environ.get("OPENAI_API_KEY"))
 # 앱 DB 하나 (app_db.py, SQLite): 사용자 · 세션 · 저장한 작업 공간 프로젝트 · 하루
 # 사용량 · 팀. 기본 위치 data/ 는 커밋되지 않는다.
 DB = Database(os.environ.get("PPT_DB_PATH") or ROOT / "data" / "app.db")
@@ -116,6 +137,14 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
     payload = _jsonable(state)
     payload["round"] = state.round
     payload["answered"] = state.answered
+    if state.domain_key == "coding" and state.demo_mode:
+        from demos.coding_dataset import select_coding_task
+
+        # 현재 A/B에 실제 사용한 합성 과제를 그대로 노출한다.
+        payload["coding_demo_task"] = (
+            select_coding_task(state.source_text, state.answered)["request"]
+            if not state.done else None
+        )
     if state.done:
         domain, estimator = service.current_estimate(state)
         languages = _prompt_languages(domain, state.template_id)
@@ -704,7 +733,8 @@ class ApiHandler(BaseHTTPRequestHandler):
         if path == "/api/health":
             # live: 화면이 열리자마자 세션을 만들지 말지 정하는 데 쓴다. 실제
             # 생성 모드에서 자동으로 세션을 열면 방문만으로 하루 상한이 준다.
-            self._send(200, {"ok": True, "demoAvailable": True, "live": LIVE})
+            self._send(200, {"ok": True, "demoAvailable": True, "live": LIVE,
+                             "liveConfigured": LIVE and _live_key_available()})
             return
         if path == "/api/auth/me":
             user = self._current_user()
@@ -818,14 +848,19 @@ class ApiHandler(BaseHTTPRequestHandler):
 
     def _start_session(self, body: dict[str, Any]) -> None:
         domain_key = str(body.get("domainKey", "coding"))
+        session_model = CODING_MODEL if domain_key == "coding" else DEFAULT_MODEL
         source_text = str(body.get("sourceText", "")).strip()
         if not source_text:
             raise ValueError("sourceText가 필요합니다.")
-        demo_mode = bool(body.get("demoMode", True))
+        demo_mode = True
+        demo_reason = "live_disabled" if not LIVE else None
         if LIVE:
-            if LIVE_SESSIONS.try_consume(_subject()) is None:
+            if not _live_key_available(session_model):
+                demo_reason = "api_key_missing"
+            elif LIVE_SESSIONS.try_consume(_subject()) is None:
                 demo_mode = False
             else:
+                demo_reason = "daily_limit"
                 print("[session] 오늘 실제 생성 상한에 도달해 데모로 진행한다", flush=True)
         args = dict(
             source_text=source_text[:12_000],
@@ -833,7 +868,10 @@ class ApiHandler(BaseHTTPRequestHandler):
             domain_path=_domain_path(domain_key),
             # 모델은 서버가 정한다 (요청 본문의 model 은 무시). 브라우저가
             # 고르게 두면 누구든 비싼 모델 이름으로 서버 키를 쓸 수 있다.
-            model=DEFAULT_MODEL,
+            model=session_model,
+            coding_escalation_model=(
+                CODING_ESCALATION_MODEL if domain_key == "coding" else None
+            ),
             total_rounds=min(max(int(body.get("totalRounds", service.TOTAL_ROUNDS)), 1), 8),
             # 템플릿 라이브러리의 "내 방식으로 바꾸기". 없는 id·다른 도메인은 400.
             template_id=(str(body["templateId"]) if body.get("templateId") else None),
@@ -845,6 +883,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 raise
             _log_live_failure(exc)
             state = service.start_session(demo_mode=True, **args)
+            demo_reason = "generation_failed"
+        if state.demo_mode:
+            state.demo_reason = demo_reason
         print(f"[session] {domain_key} mode={'demo' if state.demo_mode else 'live'}", flush=True)
         with SESSIONS_LOCK:
             SESSIONS[state.session_id] = state
@@ -867,7 +908,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 raise
             # 중간에 키가 만료되거나 한도에 걸려도 지금까지의 선택은 살린다.
             _log_live_failure(exc)
-            updated = service.submit_choice(replace(state, demo_mode=True), pair_id, chosen)
+            updated = service.submit_choice(
+                replace(state, demo_mode=True, demo_reason="generation_failed"), pair_id, chosen
+            )
         with SESSIONS_LOCK:
             SESSIONS[session_id] = updated
         self._send(200, {"session": _state_payload(updated)})

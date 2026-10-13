@@ -24,7 +24,9 @@ def finished_api_app(monkeypatch):
         return original(*args, **kwargs, total_rounds=1)
     monkeypatch.setattr(service, "start_session", start)
     app = AppTest.from_file(APP, default_timeout=30).run()
-    app.text_area[0].input("Create a counter button.").run()
+    # 최적화 UI 회귀 검사이므로 코드 생성 검증과 독립적인 기존 요약 도메인을 사용한다.
+    app.selectbox[0].select("문서 요약 (영어)").run()
+    app.text_area[0].input("The city opened a public library with new study rooms.").run()
     app.button(key="start").click().run()
     app.button(key="pick_a").click().run()
     assert not app.exception
