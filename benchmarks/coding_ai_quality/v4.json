@@ -1,0 +1,23 @@
+{
+  "version": "4.0",
+  "purpose": "One bounded live holdout for a quantity selector, with identical behavior and differing code structure.",
+  "baseline_model": "openai/gpt-4o-mini",
+  "generation_mode": "live",
+  "rounds_per_task": 1,
+  "required_axes": ["code_structure", "style_management", "type_detail"],
+  "tasks": [
+    {
+      "id": "cart_quantity",
+      "split": "holdout",
+      "axis": "code_structure",
+      "common_profile": {"style_management": "direct", "type_detail": "inferred"},
+      "request": "React와 TypeScript로 머그컵 수량 선택 컴포넌트를 만들어 주세요. 상품명은 '머그컵', 개당 가격은 5,000원입니다. 처음에는 '수량 1'과 '총 5,000원'을 표시합니다. '추가' 버튼을 누르면 수량이 1 늘고 총액을 수량 × 5,000원으로 다시 표시합니다. '빼기' 버튼을 누르면 수량이 1 줄지만 최소 수량 1 아래로 내려가지 않습니다. 두 번 추가하면 '수량 3'과 '총 15,000원', 이후 한 번 빼면 '수량 2'와 '총 10,000원'을 표시합니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "초기에 머그컵, 수량 1, 총 5,000원이 보인다.",
+        "추가를 두 번 누르면 수량 3, 총 15,000원이 보인다.",
+        "빼기를 누르면 수량 2, 총 10,000원이 보인다.",
+        "수량 1에서 빼기를 눌러도 수량과 총액이 내려가지 않는다."
+      ]
+    }
+  ]
+}

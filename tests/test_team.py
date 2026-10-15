@@ -247,6 +247,66 @@ def test_api_team_uses_the_signed_in_name(server) -> None:
     assert result["members"] == ["alice"] and result["signedIn"] == ["alice"]
 
 
+def test_two_accounts_merge_preferences_and_persist_without_duplicate_votes(server, monkeypatch) -> None:
+    """독립 로그인 쿠키 → 각자 선택 → 팀 합산 → 재참여·DB 재로드를 검증한다."""
+    from http.cookiejar import CookieJar
+
+    def request(client, path, body=None):
+        req = urllib.request.Request(
+            server + path, None if body is None else json.dumps(body).encode(),
+            {"Content-Type": "application/json"},
+        )
+        with client.open(req) as response:
+            return json.loads(response.read())
+
+    clients = []
+    session_ids = []
+    for username, structure in (("alice", "compact"), ("bob", "separated")):
+        client = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(CookieJar()))
+        clients.append(client)
+        credentials = {"username": username, "password": "test-only-password-123"}
+        request(client, "/auth/signup", credentials)
+        request(client, "/auth/logout", {})
+        request(client, "/auth/login", credentials)
+        assert request(client, "/auth/me")["user"]["username"] == username
+        session = request(client, "/sessions", {
+            "domainKey": "coding", "sourceText": SECRET_SOURCE, "totalRounds": 8,
+        })["session"]
+        prefer = {"code_structure": structure, "style_management": "theme", "type_detail": "explicit"}
+        while not session["done"]:
+            # 선택 순서나 A/B 위치에 의존하지 않는 모의 사용자다 (실제 사람 평가 아님).
+            pair = api_server.SESSIONS[session["session_id"]].pair
+            axis = next(k for k in pair.a.combo if pair.a.combo[k] != pair.b.combo[k])
+            pick = "a" if pair.a.combo[axis] == prefer[axis] else "b"
+            session = request(client, f"/sessions/{session['session_id']}/choices", {
+                "pairId": session["pair"]["pair_id"], "chosen": pick,
+            })["session"]
+        session_ids.append(session["session_id"])
+        result = request(client, "/teams/two-accounts/members", {
+            "sessionId": session["session_id"], "name": "ignored-name",
+        })["team"]
+
+    assert result["members"] == result["signedIn"] == ["alice", "bob"]
+    axes = {item["axis"]: item for item in result["agreements"]}
+    assert axes["code_structure"]["votes"] == {"compact": 1, "separated": 1}
+    assert axes["code_structure"]["tied"] is True
+    for axis, value in (("style_management", "theme"), ("type_detail", "explicit")):
+        assert axes[axis]["votes"] == {value: 2}
+        assert axes[axis]["team_value"] == value and axes[axis]["agreed"]
+    domain = load_domain("domains/coding.yaml")
+    estimate, _ = team.summarize(domain, api_server.TEAMS.get("two-accounts")[1])
+    for language, prompt in result["prompts"].items():
+        assert prompt == service.final_prompt(domain, estimate, team=True, language=language)
+    assert "Nightingale" not in json.dumps(result)
+    # 다시 참여해도 한 계정이 두 표를 행사하지 않는다.
+    repeated = request(clients[0], "/teams/two-accounts/members", {
+        "sessionId": session_ids[0], "name": "bob",
+    })["team"]
+    assert repeated == result
+    monkeypatch.setattr(api_server, "TEAMS", team.TeamStore(Database(api_server.DB.path)))
+    assert request(clients[1], "/teams/two-accounts")["team"] == result
+
+
 @pytest.mark.parametrize("domain_file", ["coding", "summarization", "summarization_ko", "idle_tracker",
                                          "review", "email"])
 def test_team_prompt_speaks_to_a_team_not_one_user(domain_file) -> None:

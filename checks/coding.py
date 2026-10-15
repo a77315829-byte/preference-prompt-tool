@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections import Counter
 
 
 FILE_PATTERN = re.compile(
@@ -51,18 +52,104 @@ def code_module_counts(output: str) -> tuple[int, int]:
 def pair_quality_issues(
     first: str, second: str, combo_a: dict[str, str], combo_b: dict[str, str]
 ) -> list[str]:
-    """Catch non-target code-structure drift; semantic equivalence needs runtime tests."""
-    if combo_a.get("code_structure") != combo_b.get("code_structure"):
-        return []
-    first_modules = code_module_counts(first)
-    second_modules = code_module_counts(second)
-    if first_modules != second_modules:
-        return [
-            "A/B 공통 코드 구조 위반: 비교하지 않는 TSX 컴포넌트/TS 로직 파일 수가 "
-            f"A={first_modules}, B={second_modules}로 다르다. "
-            "테마용 CSS/토큰 파일은 추가할 수 있지만 로직 파일 역할과 개수는 맞춰라"
-        ]
-    return []
+    """Catch measurable A/B drift; runtime tests still prove functional equivalence."""
+    issues = []
+    if combo_a.get("code_structure") == combo_b.get("code_structure"):
+        first_modules = code_module_counts(first)
+        second_modules = code_module_counts(second)
+        if first_modules != second_modules:
+            issues.append(
+                "A/B 공통 코드 구조 위반: 비교하지 않는 TSX 컴포넌트/TS 로직 파일 수가 "
+                f"A={first_modules}, B={second_modules}로 다르다. "
+                "테마용 CSS/토큰 파일은 추가할 수 있지만 로직 파일 역할과 개수는 맞춰라"
+            )
+
+    first_interactions = interaction_signals(first)
+    second_interactions = interaction_signals(second)
+    if first_interactions != second_interactions:
+        different = sorted(set(first_interactions) | set(second_interactions))
+        details = ", ".join(
+            f"{name}: A={first_interactions[name]}, B={second_interactions[name]}"
+            for name in different
+            if first_interactions[name] != second_interactions[name]
+        )
+        issues.append(
+            "A/B 공통 상호작용 위반: 상태·효과·이벤트 처리 또는 호버/포커스 표현이 "
+            f"서로 다르다 ({details}). 비교 축에 필요한 파일 배치·스타일 값 관리·타입만 "
+            "바꾸고 동작을 위한 상태와 이벤트는 동일하게 유지하라"
+        )
+    return issues
+
+
+def interaction_signals(output: str) -> Counter[str]:
+    """Track observable interaction machinery across all supplied code files."""
+    code = "\n".join(CODE_BLOCK_PATTERN.findall(output))
+    signals: Counter[str] = Counter()
+    for hook in ("useState", "useReducer", "useEffect", "useLayoutEffect"):
+        signals[f"hook:{hook}"] = len(
+            re.findall(rf"\b{hook}\s*(?:<|\()", code)
+        )
+    for handler in re.findall(r"\b(on[A-Z][A-Za-z]+)\s*=", code):
+        signals[f"handler:{handler}"] += 1
+    for method, event in re.findall(
+        r"\b(addEventListener|removeEventListener)\s*\(\s*['\"]([^'\"]+)['\"]", code
+    ):
+        signals[f"listener:{method}:{event}"] += 1
+    for pseudo in re.findall(r":(hover|focus-visible|focus|active)\b", code):
+        signals[f"css:{pseudo}"] += 1
+    return +signals
+
+
+def inline_pseudo_conflicts(output: str) -> list[str]:
+    """Find CSS hover/focus declarations hidden by inline styles on the same JSX element."""
+    code = "\n".join(CODE_BLOCK_PATTERN.findall(output))
+    conflicts = set()
+    for css_class, pseudo, declarations in re.findall(
+        r"\.([\w-]+):(hover|focus-visible|focus|active)\s*\{([^{}]*)\}", code
+    ):
+        css_properties = {
+            re.sub(r"-([a-z])", lambda match: match.group(1).upper(), prop)
+            for prop in re.findall(r"(?:^|[;\n])\s*([\w-]+)\s*:", declarations)
+        }
+        if not css_properties:
+            continue
+        for tag_start in re.finditer(r"<[A-Za-z][\w.]*\b", code):
+            # JSX event handlers may contain `=>`; only a top-level `>` ends the tag.
+            depth = 0
+            quote = None
+            escaped = False
+            end = None
+            for pos in range(tag_start.end(), len(code)):
+                char = code[pos]
+                if quote:
+                    if escaped:
+                        escaped = False
+                    elif char == "\\":
+                        escaped = True
+                    elif char == quote:
+                        quote = None
+                elif char in "\"'`":
+                    quote = char
+                elif char == "{":
+                    depth += 1
+                elif char == "}":
+                    depth -= 1
+                elif char == ">" and depth == 0:
+                    end = pos
+                    break
+            if end is None:
+                continue
+            tag = code[tag_start.start():end + 1]
+            classes = re.search(r"\bclassName\s*=\s*['\"]([^'\"]+)['\"]", tag)
+            if not classes or css_class not in classes.group(1).split():
+                continue
+            style = re.search(r"\bstyle\s*=\s*\{\s*\{(.*?)\}\s*\}", tag, re.DOTALL)
+            if not style:
+                continue
+            inline_properties = set(re.findall(r"\b([A-Za-z]\w*)\s*:", style.group(1)))
+            for prop in css_properties & inline_properties:
+                conflicts.add(f".{css_class}:{pseudo}의 {prop}")
+    return sorted(conflicts)
 
 
 def count_files(output: str) -> int:
@@ -232,14 +319,44 @@ def candidate_quality_issues(
         issues.append("TypeScript/React 구현이 확인되지 않는다")
     if re.search(r"\buseState\s*\(\s*\[\s*\]\s*\)", code):
         issues.append("빈 배열 상태에 요소 타입이 없어 TypeScript에서 never[]가 될 수 있다")
-    if re.search(r"(?<![\w.])JSX\.[A-Za-z_]\w*", code):
+    # JSX는 React에서 명시적으로 가져오면 유효하다. 파일별로 검사해서
+    # 한 파일의 import가 다른 파일의 전역 JSX 사용을 숨기지 않게 한다.
+    if any(
+        re.search(r"(?<![\w.])JSX\.[A-Za-z_]\w*", block)
+        and not re.search(
+            r"import\s+(?:type\s+)?\{[^}]*\bJSX\b(?!\s+as\b)[^}]*\}"
+            r"\s+from\s+['\"]react['\"]",
+            block,
+        )
+        for block in blocks
+    ):
         issues.append("React 19 타입 오류: 전역 JSX 네임스페이스 대신 React.JSX를 사용하거나 타입을 추론해야 한다")
+    conflicts = inline_pseudo_conflicts(output)
+    if conflicts:
+        issues.append(
+            "호버/포커스 스타일 위반: 같은 요소의 인라인 스타일이 CSS 상태 스타일을 "
+            f"덮어쓴다 ({', '.join(conflicts)}). 상태별 값은 인라인에서 제거하거나 "
+            "동일하게 동작하는 방식으로 작성하라"
+        )
     if combo.get("type_detail") == "inferred" and re.search(
         r"\bReact\.FC\b|\b(?:const|let)\s+\w+\s*:"
         r"|\buseState\s*<\s*(?:number|string|boolean)\s*>\s*\(",
         code,
     ):
         issues.append("타입 추론 조건 위반: 추론 가능한 타입을 명시했다")
+    if combo.get("type_detail") == "explicit":
+        # 타입 신호의 총개수가 많아도 공개 함수의 반환 타입은 빠질 수 있다.
+        # 보수적으로 단순한 named function 선언만 검사한다. 중첩 매개변수,
+        # 화살표 함수 등 모든 TypeScript 구문을 판별하는 파서는 아니다.
+        for name in re.findall(
+            r"^\s*export\s+(?:default\s+)?(?:async\s+)?function\s+"
+            r"([A-Za-z_$][\w$]*)\s*\([^()]*\)\s*\{",
+            code, re.MULTILINE,
+        ):
+            issues.append(
+                f"타입 명시 조건 위반: 공개 함수 {name}의 반환 타입이 없다. "
+                "함수 선언에 반환 타입을 명시하라"
+            )
     if source_text and not re.search(r"\b(?:index|main)\.tsx?\b", source_text, re.IGNORECASE):
         if re.search(r"\b(?:index|main)\.tsx?\b", output, re.IGNORECASE):
             issues.append("요청에 없는 실행 진입점 파일을 추가했다")

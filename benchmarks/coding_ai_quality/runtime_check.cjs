@@ -19,7 +19,8 @@ async function check() {
     task === 'confirm_dialog' ? 'ConfirmDialog' :
     task === 'text_preview' ? 'TextPreview' :
     task === 'password_visibility' ? 'PasswordVisibility' :
-    task === 'faq_toggle' ? 'FaqToggle' : null;
+    task === 'faq_toggle' ? 'FaqToggle' :
+    task === 'cart_quantity' ? 'CartQuantity' : null;
   const exportedComponents = Object.entries(exports).filter(([name, value]) =>
     /^[A-Z]/.test(name) && typeof value === 'function');
   const Component = exports.default || (namedExport && exports[namedExport]) ||
@@ -104,6 +105,30 @@ async function check() {
     await click('삭제하기');
     await click('삭제 확인');
     checks.push(!has('정말 삭제할까요?') && has('삭제되었습니다'));
+  } else if (task === 'faq_multi') {
+    const buttons = [...container.querySelectorAll('button[aria-expanded]')];
+    const states = () => buttons.map((button) => button.getAttribute('aria-expanded'));
+    const toggle = async (index) => React.act(async () => {
+      buttons[index].dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+    });
+    const answersMatch = () => buttons.every((button) => {
+      const answer = document.getElementById(button.getAttribute('aria-controls'));
+      return button.getAttribute('aria-expanded') === 'true'
+        ? Boolean(answer && !answer.hidden && answer.textContent.trim())
+        : !answer || answer.hidden;
+    });
+    checks.push(buttons.length === 3 && states().every((state) => state === 'false') && answersMatch());
+    await toggle(0);
+    checks.push(JSON.stringify(states()) === '["true","false","false"]' && answersMatch());
+    await toggle(1);
+    checks.push(JSON.stringify(states()) === '["true","true","false"]' && answersMatch());
+    await toggle(0);
+    checks.push(JSON.stringify(states()) === '["false","true","false"]' && answersMatch());
+    await toggle(2);
+    checks.push(JSON.stringify(states()) === '["false","true","true"]' && answersMatch());
+    await toggle(1);
+    await toggle(2);
+    checks.push(states().every((state) => state === 'false') && answersMatch());
   } else if (task === 'faq_toggle') {
     const answer = '배송은 2~3일 걸립니다.';
     const button = () => [...container.querySelectorAll('button')].find((item) =>
@@ -117,6 +142,22 @@ async function check() {
     await click('답변 닫기');
     checks.push(!has(answer) && button()?.textContent.trim() === '답변 보기'
       && button()?.getAttribute('aria-expanded') === 'false');
+  } else if (task === 'cart_quantity') {
+    const displays = (quantity, total) => {
+      const content = container.textContent.replace(/\s+/g, ' ');
+      return content.includes('머그컵')
+        && content.includes(`수량 ${quantity}`)
+        && content.includes(`총 ${total.toLocaleString('ko-KR')}원`);
+    };
+    checks.push(displays(1, 5000));
+    await click('추가');
+    await click('추가');
+    checks.push(displays(3, 15000));
+    await click('빼기');
+    checks.push(displays(2, 10000));
+    await click('빼기');
+    await click('빼기');
+    checks.push(displays(1, 5000));
   } else if (task === 'password_visibility') {
     const input = container.querySelector('input');
     if (!input) throw new Error('Missing password input');

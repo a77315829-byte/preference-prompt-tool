@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 import service
-from benchmarks.coding_ai_quality.run_trial import run_trial
+from benchmarks.coding_ai_quality.run_trial import run_trial, usage_record
 
 
 BENCHMARK = Path(__file__).resolve().parents[1] / "benchmarks/coding_ai_quality/v1.json"
@@ -16,6 +16,61 @@ AXIS_VALUES = {
     "style_management": {"direct", "theme"},
     "type_detail": {"inferred", "explicit"},
 }
+
+
+def test_usage_record_keeps_tokens_but_not_response_content() -> None:
+    from types import SimpleNamespace
+
+    response = SimpleNamespace(model="reported-model", usage=SimpleNamespace(
+        prompt_tokens=100, completion_tokens=50, total_tokens=150,
+        prompt_tokens_details=SimpleNamespace(cached_tokens=20),
+    ), choices=[{"content": "not for billing logs"}])
+    record = usage_record(response, "requested-model")
+    assert record["prompt_tokens"] == 100
+    assert record["cached_tokens"] == 20
+    assert record["total_tokens"] == 150
+    assert record["usage_available"] is True
+    assert "choices" not in record
+
+
+def test_usage_record_missing_usage_is_unknown_not_zero() -> None:
+    record = usage_record({"model": "reported-model"}, "requested-model")
+    assert record["usage_available"] is False
+    assert record["prompt_tokens"] is None
+    assert record["completion_tokens"] is None
+
+
+def test_trial_measures_provider_usage_and_disables_hidden_retries(monkeypatch, tmp_path) -> None:
+    import litellm
+    from engine import generator
+
+    monkeypatch.setenv("OPENAI_API_KEY", "test-only-key")
+    requests = []
+
+    def completion(**kwargs):
+        requests.append(kwargs)
+        return {"model": "reported-model", "usage": {
+            "prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150,
+        }}
+
+    def original_call():
+        return litellm.completion(model="openai/gpt-6-luna")
+
+    def pair(*args):
+        generator._call_and_cache()
+        raise service.CodingCandidateQualityError("A", ["test-only failure"])
+
+    monkeypatch.setattr(litellm, "completion", completion)
+    monkeypatch.setattr(generator, "_call_and_cache", original_call)
+    monkeypatch.setattr(service, "_generate_pair", pair)
+    report = run_trial(execute=True, task_limit=1, max_api_attempts=4,
+                       output=tmp_path / "usage.json", route_model="openai/gpt-6-luna")
+    usage = report["results"][0]["api_usage"]
+    assert len(usage) == 1
+    assert usage[0]["completion_tokens"] == 50
+    assert requests[0]["num_retries"] == 0
+    assert litellm.completion is completion
+    assert generator._call_and_cache is original_call
 
 
 def test_coding_ai_benchmark_is_frozen_and_balanced() -> None:

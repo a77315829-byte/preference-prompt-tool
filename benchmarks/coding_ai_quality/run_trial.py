@@ -13,6 +13,7 @@ import os
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 from dotenv import load_dotenv
 
@@ -27,6 +28,24 @@ OUTPUT = ROOT / "data" / "coding_ai_quality_trial.json"
 ROUTED_OUTPUT = ROOT / "data" / "coding_ai_quality_routed_trial.json"
 HOLDOUT_OUTPUT = ROOT / "data" / "coding_ai_quality_holdout_trial.json"
 CANDIDATE_MODEL = "openai/gpt-5.4-mini"
+
+
+def usage_record(response, requested_model: str) -> dict:
+    """Keep only billing metadata, never prompts, credentials or raw responses."""
+    def field(value, name, default=None):
+        return value.get(name, default) if isinstance(value, dict) else getattr(value, name, default)
+
+    usage = field(response, "usage")
+    details = field(usage, "prompt_tokens_details")
+    return {
+        "requested_model": requested_model,
+        "response_model": field(response, "model"),
+        "prompt_tokens": field(usage, "prompt_tokens"),
+        "completion_tokens": field(usage, "completion_tokens"),
+        "cached_tokens": field(details, "cached_tokens"),
+        "total_tokens": field(usage, "total_tokens"),
+        "usage_available": usage is not None,
+    }
 
 
 def combinations(task: dict, domain) -> tuple[dict[str, str], dict[str, str]]:
@@ -107,13 +126,29 @@ def run_trial(*, execute: bool, task_limit: int, max_api_attempts: int,
     if api_attempts > max_api_attempts:
         raise ValueError("Existing API attempts exceed the selected limit")
     original_call = generator._call_and_cache
+    api_usage = []
 
     def bounded_call(*args, **kwargs):
         nonlocal api_attempts
         if api_attempts >= max_api_attempts:
             raise RuntimeError("API-attempt limit reached")
         api_attempts += 1
-        return original_call(*args, **kwargs)
+        import litellm
+
+        completion = litellm.completion
+
+        def measured_completion(*call_args, **call_kwargs):
+            # One observed request per attempt; do not hide SDK retries/costs.
+            call_kwargs["num_retries"] = 0
+            record = {"requested_model": call_kwargs.get("model"),
+                      "usage_available": False, "status": "error"}
+            api_usage.append(record)
+            response = completion(*call_args, **call_kwargs)
+            record.update(usage_record(response, call_kwargs.get("model")), status="completed")
+            return response
+
+        with patch.object(litellm, "completion", measured_completion):
+            return original_call(*args, **kwargs)
 
     generator._call_and_cache = bounded_call
     try:
@@ -124,6 +159,7 @@ def run_trial(*, execute: bool, task_limit: int, max_api_attempts: int,
                 continue
             task = next(task for task in tasks if task["id"] == item["task"])
             before = api_attempts
+            usage_before = len(api_usage)
             started = time.monotonic()
             state = service.SessionState(
                 session_id="benchmark", domain_key="coding", domain_path=str(domain_path),
@@ -143,6 +179,11 @@ def run_trial(*, execute: bool, task_limit: int, max_api_attempts: int,
                     result["failed_candidate"] = exc.candidate
                     result["failure_reasons"] = list(exc.issues)
             result["api_attempts"] = api_attempts - before
+            result["api_usage"] = api_usage[usage_before:]
+            result["usage_note"] = (
+                "Provider-reported tokens, not an invoice. Cache hits send no request; "
+                "missing/error usage is unknown, not zero. SDK retries disabled for this trial."
+            )
             result["elapsed_seconds"] = round(time.monotonic() - started, 2)
             report["results"].append(result)
             report["total_api_attempts"] = api_attempts

@@ -6,11 +6,17 @@ import argparse
 import json
 import re
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from checks.coding import inline_pseudo_conflicts
+
+
 FRONTEND = ROOT / "frontend"
 TRIAL = ROOT / "data" / "coding_ai_quality_trial.json"
 OUTPUT = ROOT / "data" / "coding_ai_quality_stage4.json"
@@ -26,6 +32,8 @@ ENTRY = {
     "text_preview": "TextPreview.tsx",
     "password_visibility": "PasswordVisibility.tsx",
     "faq_toggle": "FaqToggle.tsx",
+    "faq_multi": "FAQ.tsx",
+    "cart_quantity": "CartQuantity.tsx",
 }
 
 
@@ -125,10 +133,17 @@ def evaluate(trial: Path = TRIAL) -> dict:
             b_dir.mkdir()
             a = evaluate_candidate(item["task"], item["a"], "A", a_dir)
             b = evaluate_candidate(item["task"], item["b"], "B", b_dir)
+        visual_style_issues = {
+            "a": inline_pseudo_conflicts(item["a"]),
+            "b": inline_pseudo_conflicts(item["b"]),
+        }
         equivalent = ("passed_on_covered_scenarios" if a["behavior"] == b["behavior"] == "passed"
-                      and a["checks"] == b["checks"] else "not_established")
+                      and a["checks"] == b["checks"]
+                      and not any(visual_style_issues.values()) else "not_established")
         report["results"].append({"task": item["task"], "model": item["model"],
-                                  "status": "generated", "a": a, "b": b, "equivalent": equivalent})
+                                  "status": "generated", "a": a, "b": b,
+                                  "visual_style_issues": visual_style_issues,
+                                  "equivalent": equivalent})
     return report
 
 

@@ -5,6 +5,7 @@ import { fetchHealth, fetchSession, startOptimization, startPreferenceSession, s
 import ExportPanel from '../../shared/components/ExportPanel';
 import TeamPanel from '../../shared/components/TeamPanel';
 import PromptLanguageSwitch from '../../shared/components/PromptLanguageSwitch';
+import { COPY_FAILED_NOTICE } from '../../shared/components/copyStatus';
 
 const DEFAULT_TASK = '클릭 횟수를 보여주는 TypeScript/React 버튼 컴포넌트를 만들어 주세요.';
 
@@ -83,9 +84,19 @@ const remoteAxisLabels = {
   },
 };
 
-function codePreview(text) {
-  const firstBlock = text.match(/```[^\n]*\n([\s\S]*?)```/);
-  return firstBlock ? firstBlock[1].trim() : text;
+function codePreview(text, axisId) {
+  const blocks = [...text.matchAll(/```[^\n]*\n([\s\S]*?)```/g)];
+  if (!blocks.length) return text;
+
+  if (axisId === 'style_management') {
+    const styleBlock = blocks.find((block) => {
+      const heading = text.slice(0, block.index).trimEnd().split('\n').at(-1) || '';
+      return /style|theme|token/i.test(heading);
+    });
+    if (styleBlock) return styleBlock[1].trim();
+  }
+
+  return blocks[0][1].trim();
 }
 
 function getRemoteAxis(pair, demoMode = true) {
@@ -109,7 +120,7 @@ function getRemoteAxis(pair, demoMode = true) {
         ? '규칙 기반 데모 생성기가 만든 예시입니다.'
         : 'AI가 입력한 내용을 기준으로 직접 쓴 예시입니다.',
       code: candidate.text,
-      preview: codePreview(candidate.text),
+      preview: codePreview(candidate.text, axisId),
     })),
   };
 }
@@ -127,6 +138,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
   }[domainKey] || {};
   const [copied, setCopied] = useState(false);
   const [copiedWithTask, setCopiedWithTask] = useState(false);
+  const [copyError, setCopyError] = useState('');
   const [taskDescription, setTaskDescription] = useState(initialDraft?.taskDescription || domainCopy.task);
   const [remoteSession, setRemoteSession] = useState(initialDraft?.session || null);
   const [connection, setConnection] = useState(initialDraft?.session ? 'connected' : 'checking');
@@ -269,20 +281,24 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
   };
 
   const handleCopy = async () => {
+    setCopyError('');
     try {
       await navigator.clipboard.writeText(prompt);
       setCopied(true);
     } catch {
       setCopied(false);
+      setCopyError(COPY_FAILED_NOTICE);
     }
   };
 
   const handleCopyWithTask = async () => {
+    setCopyError('');
     try {
       await navigator.clipboard.writeText(`${prompt}\n\n개발 요청:\n${remoteSession.source_text.trim()}`);
       setCopiedWithTask(true);
     } catch {
       setCopiedWithTask(false);
+      setCopyError(COPY_FAILED_NOTICE);
     }
   };
 
@@ -550,6 +566,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
                   다시 선택하기
                 </button>
               </div>
+              {copyError && <p className="connection-note" role="alert">{copyError}</p>}
             </motion.div>
           )}
         </AnimatePresence>

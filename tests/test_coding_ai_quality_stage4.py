@@ -177,3 +177,26 @@ export default function FaqToggle() {
     assert result["a"]["behavior"] == result["b"]["behavior"] == "error"
     assert "Missing button: 답변 닫기" in result["a"]["runtime_output"]
     assert result["equivalent"] != "passed_on_covered_scenarios"
+
+
+def test_evaluator_does_not_claim_equivalence_when_hover_is_overridden(tmp_path, monkeypatch) -> None:
+    import benchmarks.coding_ai_quality.evaluate_trial as evaluator
+
+    answer_a = "```tsx\nexport const Button = () => <button>Go</button>;\n```"
+    answer_b = (
+        "```tsx\nexport const Button = () => <button className=\"action\" "
+        "style={{ background: '#fff' }}>Go</button>;\n```\n"
+        "```css\n.action:hover { background: #eee; }\n```"
+    )
+    trial = tmp_path / "trial.json"
+    trial.write_text(json.dumps({"results": [{"task": "cart_quantity", "model": "test-fixture",
+                                              "status": "generated", "a": answer_a, "b": answer_b}]}),
+                     encoding="utf-8")
+    monkeypatch.setattr(evaluator, "evaluate_candidate", lambda *args: {
+        "behavior": "passed", "checks": [True],
+    })
+
+    result = evaluate(trial)["results"][0]
+
+    assert result["visual_style_issues"]["b"] == [".action:hover의 background"]
+    assert result["equivalent"] == "not_established"

@@ -6,7 +6,7 @@ import api_server
 import service
 from checks.coding import (
     candidate_quality_issues, code_module_counts, count_files, count_theme_signals,
-    count_type_signals, pair_quality_issues,
+    count_type_signals, inline_pseudo_conflicts, pair_quality_issues,
 )
 from demos.coding import demo_scenario
 from engine.demo_generator import generate_demo
@@ -78,6 +78,36 @@ def test_pair_quality_catches_extra_logic_module_but_allows_theme_css() -> None:
     assert pair_quality_issues(first, extra_logic, {**direct, "code_structure": "compact"}, theme) == []
 
 
+def test_pair_quality_catches_extra_interaction_in_structure_comparison() -> None:
+    split = (
+        "Counter.tsx\n```tsx\nimport { useState } from 'react';\n"
+        "export function Counter() { const [n, setN] = useState(0); "
+        "return <button onClick={() => setN(n + 1)}>{n}</button>; }\n```\n"
+        "Counter.css\n```css\nbutton:hover { color: blue; }\n```"
+    )
+    compact = (
+        "Counter.tsx\n```tsx\nimport { useState } from 'react';\n"
+        "export function Counter() { const [n, setN] = useState(0); "
+        "return <><style>{`button:hover { color: blue; }`}</style>"
+        "<button onClick={() => setN(n + 1)}>{n}</button></>; }\n```"
+    )
+    drifted = compact.replace(
+        "const [n, setN] = useState(0);",
+        "const [n, setN] = useState(0); const [hover, setHover] = useState(false);",
+    ).replace("button:hover", "button").replace(
+        "<button onClick", "<button onMouseEnter={() => setHover(true)} onClick"
+    )
+    separated = {"code_structure": "separated"}
+    one_file = {"code_structure": "compact"}
+
+    assert pair_quality_issues(split, compact, separated, one_file) == []
+    issues = pair_quality_issues(split, drifted, separated, one_file)
+    assert len(issues) == 1
+    assert "공통 상호작용 위반" in issues[0]
+    assert "hook:useState" in issues[0]
+    assert "handler:onMouseEnter" in issues[0]
+
+
 def test_live_pair_repairs_non_target_structure_drift(monkeypatch) -> None:
     domain = load_domain("domains/coding.yaml")
     direct = {"code_structure": "separated", "style_management": "direct", "type_detail": "explicit"}
@@ -107,6 +137,58 @@ def test_live_pair_repairs_non_target_structure_drift(monkeypatch) -> None:
     assert "공통 코드 구조 위반" in calls[2]
     assert "구조를 맞출 기준 A" in calls[2]
     assert pair.a.text == first and pair.b.text == second
+
+
+def test_live_pair_repairs_extra_hover_state_when_structure_changes(monkeypatch) -> None:
+    domain = load_domain("domains/coding.yaml")
+    split = {"code_structure": "separated", "style_management": "direct", "type_detail": "explicit"}
+    compact = {**split, "code_structure": "compact"}
+    first = generate_demo(domain, REQUEST, split)
+    second = generate_demo(domain, REQUEST, compact)
+    drifted = second.replace(
+        "const [count, setCount] = useState<number>(initialCount);",
+        "const [count, setCount] = useState<number>(initialCount);\n"
+        "  const [hovered, setHovered] = useState(false);",
+    ).replace("onClick={increment}", "onMouseEnter={() => setHovered(true)} onClick={increment}")
+    calls = []
+
+    def fake_generate(prompt, source_text, model):
+        calls.append(prompt)
+        return (first, drifted, second)[len(calls) - 1]
+
+    monkeypatch.setattr(service.generator, "generate_with_prompt", fake_generate)
+    state = service.SessionState(
+        session_id="interaction-check", domain_key="coding", domain_path="domains/coding.yaml",
+        source_text=REQUEST, model="test-model", demo_mode=False,
+    )
+    pair = service._generate_pair(state, domain, split, compact)
+
+    assert len(calls) == 3
+    assert "공통 상호작용 위반" in calls[2]
+    assert "hook:useState" in calls[2]
+    assert pair.a.text == first and pair.b.text == second
+
+
+def test_inline_style_cannot_hide_hover_background() -> None:
+    output = (
+        "```tsx\nexport const Button = () => <button className=\"action\" "
+        "style={{ background: '#fff' }}>Go</button>;\n```"
+        "```css\n.action:hover { background: #eee; }\n```"
+    )
+    combo = {"code_structure": "compact", "style_management": "direct", "type_detail": "inferred"}
+
+    assert inline_pseudo_conflicts(output) == [".action:hover의 background"]
+    assert any("호버/포커스 스타일 위반" in issue for issue in candidate_quality_issues(output, combo))
+
+
+def test_inline_style_can_keep_unrelated_property_with_hover() -> None:
+    output = (
+        "```tsx\nexport const Button = () => <button className=\"action\" "
+        "style={{ padding: 8 }}>Go</button>;\n```"
+        "```css\n.action { background: #fff; } .action:hover { background: #eee; }\n```"
+    )
+
+    assert inline_pseudo_conflicts(output) == []
 
 
 def test_live_quality_rejects_extra_entrypoint_and_inferred_type_annotations() -> None:
@@ -158,6 +240,20 @@ def test_live_quality_rejects_global_jsx_namespace_for_react_19() -> None:
     assert any("전역 JSX" in issue for issue in candidate_quality_issues(bad, combo))
     assert not any("전역 JSX" in issue for issue in candidate_quality_issues(good, combo))
     assert not any("전역 JSX" in issue for issue in candidate_quality_issues(inferred, combo))
+
+
+def test_live_quality_accepts_imported_jsx_only_in_its_own_module() -> None:
+    combo = {"code_structure": "compact", "style_management": "direct", "type_detail": "inferred"}
+    for declaration in (
+        "import type { JSX } from 'react';",
+        "import { useState, type JSX } from 'react';",
+    ):
+        imported = f"```tsx\n{declaration}\nexport function Counter(): JSX.Element {{ return <button>0</button>; }}\n```"
+        assert not any("전역 JSX" in issue for issue in candidate_quality_issues(imported, combo))
+        other_module = imported + "\n```tsx\nexport function Other(): JSX.Element { return <div />; }\n```"
+        assert any("전역 JSX" in issue for issue in candidate_quality_issues(other_module, combo))
+    aliased = "```tsx\nimport type { JSX as ReactJSX } from 'react';\nexport function Counter(): JSX.Element { return <div />; }\n```"
+    assert any("전역 JSX" in issue for issue in candidate_quality_issues(aliased, combo))
 
 
 def test_live_quality_rejects_redundant_primitive_state_type() -> None:
@@ -321,6 +417,64 @@ def test_live_coding_candidate_is_repaired_once_before_display(monkeypatch) -> N
     assert repaired[0][1:] == (REQUEST, "test-model")
     assert not candidate_quality_issues(state.pair.a.text, state.pair.a.combo)
     assert not candidate_quality_issues(state.pair.b.text, state.pair.b.combo)
+
+
+def test_explicit_public_return_type_is_required_even_with_other_type_signals() -> None:
+    domain = load_domain("domains/coding.yaml")
+    valid = generate_demo(domain, REQUEST, PREFERRED)
+    missing = valid.replace(": ReactElement {", " {", 1)
+
+    assert missing != valid
+    assert not candidate_quality_issues(valid, PREFERRED, REQUEST)
+    assert count_type_signals(missing) >= 5
+    assert any("반환 타입이 없다" in issue for issue in candidate_quality_issues(missing, PREFERRED, REQUEST))
+    # 추론 중심 선택에는 반환 타입을 강제하지 않는다.
+    assert not any("반환 타입이 없다" in issue for issue in candidate_quality_issues(missing, OPPOSITE, REQUEST))
+
+
+def test_missing_public_return_type_is_repaired_before_pair_is_displayed(monkeypatch) -> None:
+    domain = load_domain("domains/coding.yaml")
+    state = service.start_session(REQUEST, "coding", "domains/coding.yaml", model="test-model", demo_mode=True)
+    state.demo_mode = False
+    state.model = "test-model"
+    state.coding_escalation_model = None
+    calls = []
+
+    def fake_generate(prompt, source_text, model):
+        calls.append(prompt)
+        combo = _combo_for_prompt(domain, source_text, prompt)
+        output = generate_demo(domain, source_text, combo)
+        return output.replace(": ReactElement {", " {", 1) if len(calls) == 1 else output
+
+    monkeypatch.setattr(service.generator, "generate_with_prompt", fake_generate)
+    pair = service._generate_pair(state, domain, PREFERRED, OPPOSITE)
+
+    assert len(calls) == 3  # A 초안 → A 수정 → B 생성
+    assert "반환 타입이 없다" in calls[1]
+    assert "수정할 초안" in calls[1]
+    assert not candidate_quality_issues(pair.a.text, PREFERRED, REQUEST)
+    assert not candidate_quality_issues(pair.b.text, OPPOSITE, REQUEST)
+
+
+def test_missing_public_return_type_still_rejected_after_repair(monkeypatch) -> None:
+    import pytest
+
+    domain = load_domain("domains/coding.yaml")
+    state = service.start_session(REQUEST, "coding", "domains/coding.yaml", model="test-model", demo_mode=True)
+    state.demo_mode = False
+    state.model = "test-model"
+    state.coding_escalation_model = None
+    calls = []
+
+    def fake_generate(prompt, source_text, model):
+        calls.append(prompt)
+        return generate_demo(domain, source_text, PREFERRED).replace(": ReactElement {", " {", 1)
+
+    monkeypatch.setattr(service.generator, "generate_with_prompt", fake_generate)
+    with pytest.raises(service.CodingCandidateQualityError) as error:
+        service._generate_pair(state, domain, PREFERRED, OPPOSITE)
+    assert len(calls) == 2
+    assert any("반환 타입이 없다" in issue for issue in error.value.issues)
 
 
 def test_live_coding_candidate_that_still_violates_style_is_rejected(monkeypatch) -> None:
