@@ -697,8 +697,10 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
             </label>
 
             <div className="ws-block">
-              <div className="ws-block-head"><strong>목적</strong><OriginBadge item={req.purpose} /></div>
-              <textarea className="task-input" rows={2} value={req.purpose.text}
+              <div className="ws-block-head">
+                <label htmlFor="ws-purpose"><strong>목적</strong></label><OriginBadge item={req.purpose} />
+              </div>
+              <textarea id="ws-purpose" className="task-input" rows={2} value={req.purpose.text}
                 onChange={(e) => editRequirements((r) => { r.purpose.text = e.target.value; r.purpose.origin = 'user'; })} />
               {req.purpose.source_excerpt && <p className="ws-excerpt">“{req.purpose.source_excerpt}”</p>}
             </div>

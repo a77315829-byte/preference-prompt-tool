@@ -54,7 +54,7 @@
 
 .brand-mark span {
   margin-left: 0.12rem;
-  color: #4468ff;
+  color: #3556e0;
 }
 
 .nav-links {
@@ -120,7 +120,7 @@
 .section-kicker,
 .stage-index {
   margin: 0;
-  color: #6b7280;
+  color: #5d6470;
   font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 0.14em;
@@ -147,13 +147,13 @@
 }
 
 .hero-heading h1 em {
-  color: #4468ff;
+  color: #3556e0;
   font-style: normal;
 }
 
 .hero-description {
   margin: 0;
-  color: #697386;
+  color: #5d6470;
   font-size: clamp(0.92rem, 1.35vw, 1.05rem);
   line-height: 1.55;
 }
@@ -268,7 +268,7 @@
   z-index: 1;
   display: flex;
   justify-content: space-between;
-  color: #697386;
+  color: #5d6470;
   font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 0.1em;
@@ -652,7 +652,7 @@
 .scroll-story-scene-number {
   display: block;
   margin-bottom: 1rem;
-  color: #4468ff;
+  color: #3556e0;
   font-size: 0.8rem;
   font-weight: 900;
   letter-spacing: 0.12em;
@@ -832,7 +832,7 @@
   position: relative;
   z-index: 1;
   margin-top: 1.5rem;
-  color: #4468ff;
+  color: #3556e0;
   font-size: 0.85rem;
   font-weight: 900;
 }
@@ -843,7 +843,7 @@
   bottom: 1.75rem;
   display: flex;
   gap: 0.55rem;
-  color: #9aa1ae;
+  color: #5d6470;
   font-size: 0.7rem;
   font-weight: 900;
   letter-spacing: 0.12em;
@@ -926,14 +926,14 @@
 }
 
 .narrative-intro-copy h1 em {
-  color: #4468ff;
+  color: #3556e0;
   font-style: normal;
 }
 
 .narrative-intro-copy > p:last-child {
   max-width: 34rem;
   margin: 0 auto;
-  color: #697386;
+  color: #5d6470;
   font-size: 0.98rem;
   line-height: 1.55;
 }
@@ -1068,7 +1068,7 @@
   z-index: 6;
   display: flex;
   justify-content: space-between;
-  color: #9aa1ae;
+  color: #5d6470;
   font-size: 0.7rem;
   font-weight: 900;
   letter-spacing: 0.12em;
@@ -1101,7 +1101,7 @@
 .back-button {
   padding: 0;
   border: 0;
-  color: #697386;
+  color: #5d6470;
   background: transparent;
   font-weight: 800;
   cursor: pointer;
@@ -1125,7 +1125,7 @@
 .summary-notice-inner > p:last-of-type {
   max-width: 38rem;
   margin: 0;
-  color: #697386;
+  color: #5d6470;
   line-height: 1.7;
 }
 
@@ -1138,7 +1138,7 @@
 }
 
 .task-input-label span {
-  color: #9aa1ae;
+  color: #5d6470;
   font-weight: 600;
 }
 
@@ -1197,7 +1197,7 @@
 .connection-note,
 .comparison-fallback-note {
   margin: 0.6rem 0 0;
-  color: #8a93a3;
+  color: #5d6470;
   font-size: 0.76rem;
 }
 
@@ -1207,7 +1207,7 @@
   align-items: center;
   gap: 1rem;
   margin-bottom: 3rem;
-  color: #697386;
+  color: #5d6470;
   font-size: 0.82rem;
   font-weight: 800;
 }
@@ -1242,7 +1242,7 @@
 
 .question-eyebrow {
   margin: 0 0 0.75rem;
-  color: #4468ff;
+  color: #3556e0;
   font-size: 0.75rem;
   font-weight: 900;
   letter-spacing: 0.12em;
@@ -1305,7 +1305,7 @@
 }
 
 .option-copy span {
-  color: #697386;
+  color: #5d6470;
   line-height: 1.55;
 }
 
@@ -1345,12 +1345,12 @@
 .option-arrow {
   align-self: flex-end;
   margin-top: 1rem;
-  color: #4468ff;
+  color: #3556e0;
   font-size: 1.7rem;
 }
 
 .prompt-result > p:not(.question-eyebrow) {
-  color: #697386;
+  color: #5d6470;
   line-height: 1.7;
 }
 
@@ -1944,7 +1944,7 @@
 }
 
 .export-copy span {
-  color: #697386;
+  color: #5d6470;
   font-size: 0.88rem;
   line-height: 1.5;
 }
@@ -2004,7 +2004,7 @@
   align-items: center;
   gap: 0.4rem 0.9rem;
   margin-top: 1rem;
-  color: #8b93a7;
+  color: #8b93a7; /* 어두운 카테고리 영역 위 - 밝은 회색이어야 읽힌다 */
   font-size: 0.85rem;
 }
 
@@ -2066,19 +2066,19 @@
 }
 
 .template-card > span {
-  color: #697386;
+  color: #5d6470;
   line-height: 1.55;
 }
 
 .template-card small {
-  color: #8b93a7;
+  color: #5d6470;
 }
 
 .template-toggle {
   align-self: flex-start;
   padding: 0;
   border: 0;
-  color: #4468ff;
+  color: #3556e0;
   background: none;
   cursor: pointer;
 }
@@ -2099,7 +2099,7 @@
 }
 
 .team-help {
-  color: #697386;
+  color: #5d6470;
   line-height: 1.6;
 }
 
@@ -2192,7 +2192,7 @@
 
 .ws-item-id {
   min-width: 2rem;
-  color: #4468ff;
+  color: #3556e0;
   font-weight: 800;
   font-size: 0.82rem;
 }
@@ -2331,7 +2331,7 @@
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
   padding: 0.55rem 0; border-bottom: 1px solid #eef1f6;
 }
-.ws-saved-list li.is-open .ws-saved-title { color: #4468ff; }
+.ws-saved-list li.is-open .ws-saved-title { color: #3556e0; }
 .ws-saved-title { flex: 1 1 12rem; font-weight: 800; }
 .ws-question { padding: 0.4rem 0 0.6rem; border-bottom: 1px dashed #eef1f6; }
 .ws-answer { margin-left: 2.5rem; }
