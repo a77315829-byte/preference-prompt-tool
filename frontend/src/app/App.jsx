@@ -5,10 +5,12 @@ import IdleTrackerSection from '../features/idle-tracker/IdleTrackerSection';
 import ScrollStory from '../features/landing/ScrollStory';
 import PromptPolishSection from '../features/polish/PromptPolishSection';
 import PromptWorkspaceSection from '../features/prompt-workspace/PromptWorkspaceSection';
+import TeamsSection from '../features/teams/TeamsSection';
 import TemplateLibrarySection from '../features/templates/TemplateLibrarySection';
 import AccountSection from '../shared/auth/AccountSection';
 import AuthSection from '../shared/auth/AuthSection';
 import { fetchMe, logout } from '../shared/auth/authApi';
+import { flowOfDomain } from '../shared/domainLabels';
 import './App.css';
 import '../features/landing/landing.css';
 import '../features/comparison/comparison.css';
@@ -21,6 +23,8 @@ function App() {
   const [template, setTemplate] = useState(null);
   // 로그인 화면으로 잠시 이동해도 진행 중인 비교와 결과를 잃지 않는다.
   const [comparisonDraft, setComparisonDraft] = useState(null);
+  // 팀 프롬프트 화면에서 "비교하고 내 선택 더하기"로 들어왔을 때 팀 칸에 미리 채울 코드.
+  const [teamCodeDraft, setTeamCodeDraft] = useState('');
   const handleDraftChange = useCallback((draft) => {
     setComparisonDraft({ domainKey: activeFlow, ...draft });
   }, [activeFlow]);
@@ -63,6 +67,7 @@ function App() {
     setMenuOpen(false);
     setTemplate(null);
     setComparisonDraft(null);
+    setTeamCodeDraft('');
     setActiveFlow('category');
     setSceneRequest(({ sequence }) => ({ index: scene, sequence: sequence + 1 }));
   };
@@ -70,6 +75,7 @@ function App() {
   const handleCategoryContinue = () => {
     setTemplate(null);
     setComparisonDraft(null);
+    setTeamCodeDraft('');
     if (selectedCategory === 'coding') setActiveFlow('coding');
     else if (selectedCategory === 'idleTracker') setActiveFlow('idleTracker');
     else if (selectedCategory === 'review') setActiveFlow('review');
@@ -90,7 +96,17 @@ function App() {
   const handlePersonalizeTemplate = (picked) => {
     setTemplate(picked);
     setComparisonDraft(null);
+    setTeamCodeDraft('');
     setActiveFlow(picked.domain === 'idle_tracker' ? 'idleTracker' : picked.domain);
+  };
+
+  const openTeams = () => { setMenuOpen(false); setActiveFlow('teams'); };
+
+  const compareForTeam = (domainKey, code) => {
+    setTemplate(null);
+    setComparisonDraft(null);
+    setTeamCodeDraft(code);
+    setActiveFlow(flowOfDomain(domainKey));
   };
 
   return (
@@ -109,6 +125,7 @@ function App() {
           <button type="button" onClick={() => requestScene(0)}>시작하기</button>
           <button type="button" onClick={() => { setMenuOpen(false); setTemplate(null); setActiveFlow('templates'); }}>템플릿</button>
           <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('polish'); }}>프롬프트 다듬기</button>
+          <button type="button" onClick={openTeams}>팀 프롬프트</button>
           <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('workspace'); }}>서비스용 프롬프트</button>
         </div>
 
@@ -159,7 +176,7 @@ function App() {
             <ComparisonSection onBack={handleComparisonBack} domainKey={activeFlow}
               onSwitchDomain={(domain) => { setComparisonDraft(null); setActiveFlow(domain); }}
               template={template} initialDraft={comparisonDraft?.domainKey === activeFlow ? comparisonDraft : null}
-              onDraftChange={handleDraftChange} />
+              onDraftChange={handleDraftChange} teamCode={teamCodeDraft} />
           </motion.div>
         )}
 
@@ -177,8 +194,16 @@ function App() {
 
         {activeFlow === 'account' && user && (
           <motion.div className="flow-view" key="account" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-            <AccountSection user={user} onBack={() => setActiveFlow(returnFlow)}
+            <AccountSection user={user} onBack={() => setActiveFlow(returnFlow)} onOpenTeams={openTeams}
               onDeleted={() => { setUser(null); setActiveFlow('category'); }} />
+          </motion.div>
+        )}
+
+        {activeFlow === 'teams' && (
+          <motion.div className="flow-view" key="teams" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
+            <TeamsSection user={user} onBack={handleComparisonBack}
+              onLogin={() => requestLogin('로그인하면 내가 참여한 팀이 카테고리별로 모여 보입니다.')}
+              onCompare={compareForTeam} />
           </motion.div>
         )}
 

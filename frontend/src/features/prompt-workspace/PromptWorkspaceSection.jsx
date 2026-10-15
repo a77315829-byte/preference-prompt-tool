@@ -4,7 +4,9 @@ import AuthSection from '../../shared/auth/AuthSection';
 import { fetchMe } from '../../shared/auth/authApi';
 import CompareView from './CompareView';
 import ContractEditor from './ContractEditor';
-import { FIELD_TYPES, contractProblems, contractShapeError, fieldSummary, typeLabel } from './contractFields';
+import {
+  FIELD_TYPES, blankInputText, contractProblems, contractShapeError, fieldSummary, typeLabel,
+} from './contractFields';
 import SuggestionPanel from './SuggestionPanel';
 import {
   buildProject, checkProject, confirmProject, deleteProject, discardDraft, exportProject, fetchHealth, fetchSample,
@@ -71,6 +73,11 @@ const RUN_LABEL = {
   needs_review: '확인이 필요한 입력 - 모델을 부르지 않았습니다',
 };
 const MAX_RUNS = 6;
+// 오류는 누른 버튼 가까이에 보인다 - 맨 위에만 뜨면 아래쪽 버튼을 누른 사람은 보지 못한다.
+const ERROR_SPOT = {
+  build: 'requirements', resolve: 'requirements', run: 'run', apply: 'run', export: 'export',
+  save: 'versions', restore: 'versions', share: 'versions',
+};
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
@@ -183,6 +190,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
   const [includeData, setIncludeData] = useState(false);
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
+  const [errorAt, setErrorAt] = useState('');
 
   // 저장·다시 열기는 로그인한 사용자 것만 보인다. 로그인 칸은 화면을 옮기지 않고
   // 여기서 연다 - 옮기면 작성 중인 프로젝트가 사라진다.
@@ -228,10 +236,12 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
   const act = async (label, fn) => {
     setBusy(label);
     setError('');
+    setErrorAt('');
     try {
       await fn();
     } catch (e) {
       setError(e.message || '문제가 발생했습니다.');
+      setErrorAt(label);
     } finally {
       setBusy('');
       if (label === 'structure' || label === 'run') refreshQuota();
@@ -311,7 +321,16 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
     const confirmed = await confirmProject(project);
     const built = await buildProject(confirmed.project);
     adopt(built.project, notes);
+    // 시험 입력이 비어 있으면 변수 이름으로 빈 틀을 채워 둔다 - 무엇을 적는 칸인지 보이게.
+    if (!inputText.trim() && !built.project.test_input_text) {
+      setInputText(blankInputText(built.project.requirements.variables));
+    }
   });
+
+  const fillBlankInput = () => {
+    if (inputText.trim() && !window.confirm('지금 시험 입력을 지우고 변수 이름으로 만든 빈 틀로 바꿉니다.')) return;
+    setInputText(blankInputText(req.variables));
+  };
 
   const editArtifact = (field, value) => {
     setProject((current) => {
@@ -341,7 +360,8 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
     try {
       values = JSON.parse(inputText);
     } catch (e) {
-      throw new Error(`시험 입력이 올바른 JSON이 아닙니다: ${e.message}`);
+      throw new Error('시험 입력이 JSON이 아닙니다. 프롬프트 문장이 아니라 { "변수 이름": "값" } 모양으로 적어 주세요. '
+        + `"변수 이름으로 빈 틀 채우기"를 누르면 틀이 생깁니다. (${e.message})`);
     }
     const { run } = await runProject(project, values);
     // 실행 당시 입력 글을 기록에 남긴다 - 다시 열었을 때도 '이전 입력 결과'를 가를 수 있게.
@@ -539,6 +559,9 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
     setAnswers((current) => { const next = { ...current }; delete next[id]; return next; });
   });
 
+  const errorAtSpot = (spot) => (error && (ERROR_SPOT[errorAt] || 'top') === spot
+    ? <p className="ws-error" role="alert">{error}</p> : null);
+
   const lastRun = project?.runs?.[project.runs.length - 1];
   const lastRunStale = lastRun && (
     lastRun.artifact_revision !== project.artifact?.revision
@@ -641,7 +664,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
           </div>
         </div>
 
-        {error && <p className="ws-error" role="alert">{error}</p>}
+        {errorAtSpot('top')}
         {notes.length > 0 && <ul className="ws-notes">{notes.map((n) => <li key={n}>{n}</li>)}</ul>}
         {pendingDraft && (
           <div className="ws-banner">
@@ -839,6 +862,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
               </button>
               <button className="prompt-reset-button" type="button" onClick={downloadProjectJson}>초안 저장 (JSON)</button>
             </div>
+            {errorAtSpot('requirements')}
             {req.open_questions.length > 0 && (
               <p className="ws-help">미결 사항 {req.open_questions.length}개가 남아 있어 만들 수 없습니다.</p>
             )}
@@ -867,13 +891,21 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
             <textarea id="ws-template" className="task-input ws-code" rows={6} value={project.artifact.input_template}
               onChange={(e) => editArtifact('input_template', e.target.value)} />
 
-            <label className="task-input-label" htmlFor="ws-input">시험 입력 (JSON)</label>
+            <div className="ws-block-head ws-input-head">
+              <label className="task-input-label" htmlFor="ws-input">시험 입력 (JSON)</label>
+              <button className="ws-small-button" type="button" onClick={fillBlankInput}>변수 이름으로 빈 틀 채우기</button>
+            </div>
+            <p className="ws-help">
+              프롬프트를 적는 칸이 아닙니다. 위 입력 템플릿의 {'{{변수}}'} 자리에 넣을 값을 적습니다.
+              예: {'{ "customer_message": "어제 주문한 운동화가 아직 안 왔어요." }'}
+            </p>
             <textarea id="ws-input" className="task-input ws-code" rows={8} value={inputText} onChange={(e) => setInputText(e.target.value)} />
             <div className="prompt-actions">
               <button className="prompt-copy-button" type="button" disabled={Boolean(busy) || stage !== 'built'} onClick={runTest}>
                 {busy === 'run' ? '실행 중…' : live ? '시험 실행 (AI)' : '메시지 구성 확인'}
               </button>
             </div>
+            {errorAtSpot('run')}
 
             {lastRun && (
               <div className={`ws-run ${lastRunStale ? 'is-stale' : ''}`}>
@@ -905,6 +937,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
                 <button className="prompt-copy-button" type="button" disabled={Boolean(busy)} onClick={exportZip}>ZIP 내려받기</button>
                 <button className="prompt-reset-button" type="button" onClick={downloadProjectJson}>프로젝트 JSON 저장</button>
               </div>
+              {errorAtSpot('export')}
             </div>
           </motion.div>
         )}
@@ -940,6 +973,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
                 <button className="prompt-copy-button" type="button" onClick={openLogin}>로그인하고 저장</button>
               </div>
             )}
+            {errorAtSpot('versions')}
             <p className="ws-help">
               버전은 저장을 누를 때만 생기고 이전 버전을 덮어쓰지 않습니다. 그 사이의 작업 중 내용은 자동 저장되어
               다시 열 때 불러올 수 있습니다 (내 계정에만, 버전 목록에는 안 나타남).

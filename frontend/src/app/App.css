@@ -60,7 +60,7 @@
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.2rem;
   margin-left: auto;
 }
 
@@ -72,6 +72,7 @@
   font-size: 0.86rem;
   font-weight: 700;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .nav-links button:hover {
@@ -2386,6 +2387,13 @@
 .ws-contract-issues { padding-left: 1.9rem; }
 .ws-raw { margin-top: 0.8rem; font-size: 0.82rem; }
 .ws-raw summary { color: #374151; font-weight: 700; cursor: pointer; }
+.ws-input-head { flex-wrap: wrap; margin-top: 1rem; }
+.ws-input-head .task-input-label { margin: 0; }
+
+/* 팀 프롬프트 화면 */
+.teams-group { margin-top: 0.8rem; }
+.teams-category { margin: 0; color: #374151; font-size: 0.9rem; font-weight: 800; }
+.teams-section .team-form { margin-top: 0.5rem; }
 @media (max-width: 640px) {
   .ws-contract-nested { margin-left: 0; }
 }
@@ -2517,8 +2525,9 @@
   cursor: default;
 }
 
-/* 좁은 화면에서도 템플릿·다듬기·작업 공간을 열 수 있게 한다. */
-@media (max-width: 1060px) {
+/* 좁은 화면에서도 템플릿·다듬기·팀·작업 공간을 열 수 있게 한다. 메뉴가 여섯 개라
+   메뉴 줄이 최대 폭(70rem)보다 좁아지면 접는다. */
+@media (max-width: 1150px) {
   .site-nav { gap: 0.5rem; }
   .nav-menu-button {
     display: inline-flex;

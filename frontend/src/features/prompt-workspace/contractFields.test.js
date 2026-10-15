@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   OBJECT_ITEMS,
+  blankInputText,
   contractProblems,
   contractShapeError,
   fieldSummary,
@@ -118,4 +119,15 @@ test('표로 그릴 수 없는 JSON 은 내용 검사 전에 걸러 낸다', () 
 test('필수 여부가 없으면 알려 준다 (JSON 으로 붙여 넣을 때)', () => {
   assert.deepEqual(contractProblems([{ name: 'note', type: 'string' }]),
     ["'note': 필수 여부(required)를 true 나 false 로 정해 주세요."]);
+});
+
+test('시험 입력 빈 틀은 변수 이름과 타입별 빈 값이다', () => {
+  const text = blankInputText([
+    { name: 'customer_message', type: 'string' },
+    { name: 'total', type: 'number' },
+    { name: 'urgent', type: 'boolean' },
+    { name: 'items', type: 'array' },
+  ]);
+  assert.deepEqual(JSON.parse(text), { customer_message: '', total: 0, urgent: false, items: [] });
+  assert.equal(blankInputText([]), '{}');
 });

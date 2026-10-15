@@ -161,6 +161,28 @@ def test_signed_in_members_join_as_themselves_and_cannot_be_impersonated(db) -> 
     assert [(m.name, m.signed_in) for m in store.get("team-1")[1]] == [("alice", True), ("민수", False)]
 
 
+def test_my_teams_lists_only_teams_i_joined_newest_first(db) -> None:
+    """팀 결과를 보려고 비교를 다시 하지 않게, 내가 참여한 팀을 모아 준다."""
+    auth = AuthService(db)
+    alice, _ = auth.signup("alice", "alice-password-1")
+    bob, _ = auth.signup("bob", "bob-password-1")
+    clock = _Clock()
+    store = team.TeamStore(db, clock=clock)
+    history = _history("coding", {})
+    store.add("old-team", "coding", "", history, user_id=alice.id, username="alice")
+    clock.now = clock.now.replace(day=2)
+    store.add("mail-team", "email", "", _history("email", {}), user_id=alice.id, username="alice")
+    store.add("bobs-team", "coding", "", history, user_id=bob.id, username="bob")
+    clock.now = clock.now.replace(day=3)
+    # 다른 사람이 더하면 그 팀이 맨 위로 오고 인원이 는다.
+    store.add("old-team", "coding", "민수", history)
+
+    mine = store.list_for_user(alice.id)
+    assert [(t.code, t.domain_key, t.members) for t in mine] == [("old-team", "coding", 2), ("mail-team", "email", 1)]
+    assert mine[0].updated_at.startswith("2026-10-03")
+    assert [t.code for t in store.list_for_user(bob.id)] == ["bobs-team"]
+
+
 def test_deleting_an_account_removes_their_team_entry(db) -> None:
     auth = AuthService(db)
     alice, _ = auth.signup("alice", "alice-password-1")
@@ -245,6 +267,28 @@ def test_api_team_uses_the_signed_in_name(server) -> None:
     with urllib.request.urlopen(req) as resp:
         result = json.loads(resp.read())["team"]
     assert result["members"] == ["alice"] and result["signedIn"] == ["alice"]
+
+
+def test_api_my_teams_needs_login_and_shows_joined_teams(server) -> None:
+    status, data = _call(server, "/teams")
+    assert status == 401 and "팀 코드로는 로그인 없이" in data["error"]
+
+    req = urllib.request.Request(server + "/auth/signup",
+                                 json.dumps({"username": "alice", "password": "alice-password-1"}).encode(),
+                                 {"Content-Type": "application/json"})
+    with urllib.request.urlopen(req) as resp:
+        cookie = resp.headers["Set-Cookie"].split(";")[0]
+    req = urllib.request.Request(server + "/teams/devteam/members",
+                                 json.dumps({"sessionId": _finished_session(server, "a")}).encode(),
+                                 {"Content-Type": "application/json", "Cookie": cookie})
+    urllib.request.urlopen(req).close()
+    _call(server, "/teams/devteam/members", {"sessionId": _finished_session(server, "b"), "name": "민수"})
+    _call(server, "/teams/other/members", {"sessionId": _finished_session(server, "b"), "name": "지은"})
+
+    with urllib.request.urlopen(urllib.request.Request(server + "/teams", headers={"Cookie": cookie})) as resp:
+        teams = json.loads(resp.read())["teams"]
+    assert [(t["code"], t["domain_key"], t["members"]) for t in teams] == [("devteam", "coding", 2)]
+    assert set(teams[0]) == {"code", "domain_key", "members", "updated_at"}
 
 
 @pytest.mark.parametrize("domain_file", ["coding", "summarization", "summarization_ko", "idle_tracker",

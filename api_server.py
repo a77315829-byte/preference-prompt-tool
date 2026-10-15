@@ -802,6 +802,14 @@ class ApiHandler(BaseHTTPRequestHandler):
                 "quota": quota_left(),
             })
             return
+        if path == "/api/teams":
+            # 내가 참여한 팀 목록. 팀 결과 자체는 아래 경로로 팀 코드만 있으면 누구나 본다.
+            user = self._current_user()
+            if user is None:
+                self._send(401, {"error": "로그인하면 내가 참여한 팀을 모아 볼 수 있습니다. 팀 코드로는 로그인 없이 볼 수 있습니다."})
+                return
+            self._send(200, {"teams": [asdict(t) for t in TEAMS.list_for_user(user.id)]})
+            return
         if len(parts := path.split("/")) == 4 and parts[:3] == ["", "api", "teams"]:
             try:
                 self._send(200, {"team": _team_payload(parts[3])})

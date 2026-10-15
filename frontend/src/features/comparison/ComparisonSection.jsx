@@ -5,6 +5,7 @@ import { fetchHealth, fetchSession, startOptimization, startPreferenceSession, s
 import ExportPanel from '../../shared/components/ExportPanel';
 import TeamPanel from '../../shared/components/TeamPanel';
 import PromptLanguageSwitch from '../../shared/components/PromptLanguageSwitch';
+import { AXIS_LABELS as remoteAxisLabels } from '../../shared/domainLabels';
 
 const DEFAULT_TASK = '클릭 횟수를 보여주는 TypeScript/React 버튼 컴포넌트를 만들어 주세요.';
 
@@ -13,74 +14,6 @@ const demoReasonText = {
   api_key_missing: 'API 키가 없어 무료 데모로 진행합니다. 입력한 기능의 코드는 생성하지 않습니다.',
   daily_limit: '오늘의 AI 생성 한도에 도달해 무료 데모로 진행합니다.',
   generation_failed: 'AI 생성이 실패해 무료 데모로 전환했습니다. 입력한 기능의 코드는 생성하지 않습니다.',
-};
-
-const remoteAxisLabels = {
-  code_structure: {
-    eyebrow: '코드 구조',
-    question: '작은 기능을 어떤 구성으로 만들까요?',
-    options: { compact: '간결하게 작성', separated: '역할별 파일로 분리' },
-  },
-  style_management: {
-    eyebrow: '스타일 관리',
-    question: '디자인 값을 어떻게 관리할까요?',
-    options: { direct: '스타일 값을 바로 작성', theme: '나중에 전체 디자인을 쉽게 수정' },
-  },
-  type_detail: {
-    eyebrow: '타입 작성',
-    question: 'TypeScript 타입을 어느 정도로 작성할까요?',
-    options: { inferred: '필요한 타입만 작성', explicit: '타입을 꼼꼼하게 작성' },
-  },
-  length: {
-    eyebrow: '길이',
-    question: '결과를 어느 정도로 작성할까요?',
-    options: { short: '핵심만 짧게', normal: '적당한 분량으로', long: '상세하게 작성' },
-  },
-  sentiment: {
-    eyebrow: '어조',
-    question: '어떤 느낌으로 작성할까요?',
-    options: { negative: '아쉬운 점을 강조', neutral: '담담하게 정리', positive: '좋았던 점을 강조' },
-  },
-  formality: {
-    eyebrow: '말투',
-    question: '어떤 말투가 더 편한가요?',
-    options: { casual: '편하고 친근하게', neutral: '담담하게', formal: '격식 있게' },
-  },
-  structure: {
-    eyebrow: '구조',
-    question: '내용을 어떤 구조로 정리할까요?',
-    options: { prose: '문단으로 자연스럽게', bullets: '목록으로 한눈에' },
-  },
-  extractiveness: {
-    eyebrow: '표현 방식',
-    question: '원문의 표현을 얼마나 살릴까요?',
-    options: { normal: '내 표현으로 바꿔 쓰기', high: '원문 표현을 살리기', fully: '원문 문장을 그대로 발췌' },
-  },
-  specificity: {
-    eyebrow: '설명 밀도',
-    question: '얼마나 구체적으로 설명할까요?',
-    options: { normal: '큰 흐름만', high: '세부 내용까지' },
-  },
-  conciseness: {
-    eyebrow: '문장 밀도',
-    question: '문장을 얼마나 간결하게 다듬을까요?',
-    options: { concise: '짧고 선명하게', moderate: '균형 있게', detailed: '맥락을 충분히' },
-  },
-  sentence_complexity: {
-    eyebrow: '문장 난이도',
-    question: '문장 구조를 어느 정도로 만들까요?',
-    options: { simple: '쉽게 나누어 쓰기', moderate: '균형 있게', complex: '정교하게 연결하기' },
-  },
-  focus_on_entities: {
-    eyebrow: '강조점',
-    question: '무엇을 더 눈에 띄게 할까요?',
-    options: { general: '전체 흐름 중심', mixed: '흐름과 대상을 함께', 'entity-focused': '이름과 숫자 중심' },
-  },
-  topic: {
-    eyebrow: '강조할 내용',
-    question: '특히 어떤 내용을 중심으로 볼까요?',
-    options: {},
-  },
 };
 
 function codePreview(text) {
@@ -114,7 +47,9 @@ function getRemoteAxis(pair, demoMode = true) {
   };
 }
 
-function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, template = null, initialDraft = null, onDraftChange }) {
+function ComparisonSection({
+  onBack, domainKey = 'coding', onSwitchDomain, template = null, initialDraft = null, onDraftChange, teamCode = '',
+}) {
   const isCoding = domainKey === 'coding';
   const domainCopy = {
     coding: { eyebrow: 'Coding preference', title: '마음에 드는 쪽을 고르세요.', task: DEFAULT_TASK, label: '만들고 싶은 기능' },
@@ -524,7 +459,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
               {/* 최적화 중에는 옛 프롬프트를 내보내지 않도록 숨긴다. */}
               {optimizeStatus !== 'running' && <ExportPanel exports={exportsForLanguage} />}
               {isRemote && remoteSession.done && (
-                <TeamPanel sessionId={remoteSession.session_id}
+                <TeamPanel sessionId={remoteSession.session_id} initialCode={teamCode}
                   valueLabel={(axis, value) => remoteAxisLabels[axis]?.options?.[value] || value} />
               )}
               <div className="prompt-actions">

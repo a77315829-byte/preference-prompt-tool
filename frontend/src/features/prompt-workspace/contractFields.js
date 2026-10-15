@@ -18,6 +18,13 @@ export const TYPE_LABEL = {
   object: '묶음',
 };
 
+// 변수 타입별 빈 값 (prompt_workspace/exports.py 의 _BLANK 와 같다).
+const BLANK = { string: '', number: 0, integer: 0, boolean: false, array: [], object: {} };
+
+// 시험 입력 칸의 빈 틀: { "변수 이름": 빈 값 }.
+export const blankInputText = (variables) => JSON.stringify(
+  Object.fromEntries(variables.map((v) => [v.name, BLANK[v.type] ?? ''])), null, 2);
+
 // 선택지 표시: 한국어 뒤에 원래 이름을 남긴다 - 개발자는 그 이름으로 코드를 짠다.
 export const typeLabel = (type) => (TYPE_LABEL[type] ? `${TYPE_LABEL[type]} (${type})` : type);
 
