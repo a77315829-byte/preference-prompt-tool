@@ -2366,6 +2366,30 @@
   .ws-answer { margin-left: 0; }
 }
 
+/* 작업 공간 - 개발자 설정과 출력 계약 표 */
+.ws-developer-toggle {
+  margin-top: 0.8rem; padding: 0.6rem 0.8rem;
+  border: 1px dashed #dfe4ed; border-radius: 0.8rem; background: #f8f9fc;
+}
+.ws-developer-toggle .ws-help { display: block; margin: 0.2rem 0 0; }
+.ws-cell-input {
+  box-sizing: border-box; width: 100%; min-width: 6rem; padding: 0.4rem 0.5rem;
+  border: 1px solid #dfe4ed; border-radius: 0.6rem; font: inherit; font-size: 0.8rem;
+}
+.ws-cell-input.ws-count { width: 4.5rem; min-width: 0; }
+.ws-contract-sub td { background: #f8f9fc; }
+.ws-contract-list { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; font-size: 0.8rem; }
+.ws-contract-nested { margin: 0.5rem 0 0 1.2rem; }
+.ws-contract-add { margin-top: 0.5rem; }
+.ws-contract-summary { margin: 0.5rem 0; padding-left: 1.2rem; font-size: 0.85rem; }
+.ws-contract-summary li { margin: 0.25rem 0; }
+.ws-contract-issues { padding-left: 1.9rem; }
+.ws-raw { margin-top: 0.8rem; font-size: 0.82rem; }
+.ws-raw summary { color: #374151; font-weight: 700; cursor: pointer; }
+@media (max-width: 640px) {
+  .ws-contract-nested { margin-left: 0; }
+}
+
 /* 로그인 - 상단 메뉴의 상태 표시와 로그인 화면 */
 .nav-login,
 .nav-user button {
