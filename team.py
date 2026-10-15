@@ -52,6 +52,15 @@ class TeamError(ValueError):
     pass
 
 
+@dataclass(frozen=True)
+class TeamSummary:
+    """팀 목록 한 줄. 선택 기록은 담지 않는다."""
+    code: str
+    domain_key: str
+    members: int
+    updated_at: str  # 마지막으로 누가 더한 때 (UTC ISO)
+
+
 @dataclass
 class Member:
     name: str
@@ -152,6 +161,22 @@ class TeamStore:
         ).fetchall()
         return [Member(r["name"], [tuple(c) for c in json.loads(r["history_json"])], signed_in=r["user_id"] is not None)
                 for r in rows]
+
+    def list_for_user(self, user_id: int) -> list[TeamSummary]:
+        """이 계정으로 참여한 팀. 최근에 누가 더한 팀부터. 결과를 보려고 비교를
+        다시 하지 않아도 되게 화면이 모아 보여 준다."""
+        with self.db.connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT t.code, t.domain_key, COUNT(*) AS members, MAX(m.joined_at) AS updated_at
+                FROM teams t JOIN team_members m ON m.code = t.code
+                WHERE t.code IN (SELECT code FROM team_members WHERE user_id = ?)
+                GROUP BY t.code, t.domain_key
+                ORDER BY updated_at DESC, t.code
+                """,
+                (user_id,),
+            ).fetchall()
+        return [TeamSummary(r["code"], r["domain_key"], r["members"], r["updated_at"]) for r in rows]
 
     def get(self, code: str) -> tuple[str, list[Member]]:
         with self.db.connect() as conn:
