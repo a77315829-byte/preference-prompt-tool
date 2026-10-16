@@ -5,6 +5,11 @@
 분기하는 경우는 못 잡는다 - 2026-10-13 에 생성기가 코딩 프롬프트의 제목 문구를 보고
 출력 상한을 고르던 것이 그랬다. 그 경로는 domains/coding.yaml 의 max_output_tokens 로
 옮겼고 tests/test_errors_and_limits.py 가 따로 본다.
+
+축 값(short, formal 등)과 검사 함수 이름(sentence_count 등)도 본다. 축 값은 흔한 영어
+단어라 문장 속에 섞여 나오는 것까지 막으면 오류 문구 하나로도 깨지므로, 문자열 상수가
+값과 **똑같을 때**(`if value == "short"` 처럼 값으로 분기할 때)만 잡는다. 검사 함수는
+엔진이 YAML 의 이름으로 checks 모듈에서 찾아 쓰므로 엔진 코드에 이름이 나올 일이 없다.
 """
 
 import ast
@@ -47,4 +52,45 @@ def test_engine_code_names_no_domain_or_axis() -> None:
             hits = sorted(word for word in words if word in node.value)
             if hits:
                 found.append(f"{path.name}:{node.lineno} {hits}")
+    assert found == []
+
+
+def _values_and_check_functions() -> tuple[set[str], set[str]]:
+    values, functions = set(), set()
+    for path in (ROOT / "domains").glob("*.yaml"):
+        raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        for axis in raw.get("axes") or []:
+            for value in axis.get("values") or []:
+                if isinstance(value, dict):
+                    values.add(str(value["value"]))
+                    if (value.get("check") or {}).get("fn"):
+                        functions.add(value["check"]["fn"])
+                else:
+                    values.add(str(value))
+    return values, functions
+
+
+def _value_branches(tree: ast.AST, values: set[str], functions: set[str]) -> list[str]:
+    found = []
+    for node in _string_constants(tree):
+        if node.value.strip() in values | functions:
+            found.append(f"{node.lineno} '{node.value.strip()}'")
+    for node in ast.walk(tree):
+        name = getattr(node, "id", None) or getattr(node, "attr", None)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            name = node.name
+        if name in functions:
+            found.append(f"{node.lineno} {name}")
+    return found
+
+
+def test_engine_does_not_branch_on_axis_values_or_name_check_functions() -> None:
+    values, functions = _values_and_check_functions()
+    assert {"short", "formal", "compact"} <= values and "sentence_count" in functions  # 목록이 비어 통과하지 않게
+    # 검사기 자체가 잡는지: 값으로 분기하는 코드와 검사 함수를 직접 부르는 코드
+    bait = ast.parse('def f(v):\n    if v == "short":\n        return sentence_count(v)\n')
+    assert len(_value_branches(bait, values, functions)) == 2
+    found = []
+    for path in sorted((ROOT / "engine").glob("*.py")):
+        found += [f"{path.name}:{hit}" for hit in _value_branches(ast.parse(path.read_text(encoding="utf-8")), values, functions)]
     assert found == []
