@@ -1,122 +1,203 @@
 # AWS 비용 현황의 개인화 보고 및 점검 안내
 #
-# 2026-09-30 과제 서술을 좁혔다 (외부 검토 반영, 대상 사용자는 아직
-# 팀이 확정하지 않은 가설임을 전제로 함). 원래 "유휴 리소스를 찾아라"는
-# 이 도구가 실제로 하지 않는 일까지 약속했다 - 지금 조회는 Cost
-# Explorer의 서비스별 비용 합계이지, 특정 EIP·스냅샷이 유휴 상태인지
-# 확정하지 않는다(데모의 예시 리소스는 미리 정해둔 것이다). 축(엔진이
-# 개인화하는 부분)과 필수조건(항상 지켜야 하는 부분)도 나눴다 -
-# detail_level·focus는 축, 금액·리소스ID의 정확성은
-# checks/idle_tracker.py의 total_cost_accuracy·no_fabrication이
-# 별도로 검증한다(취향이 아니라서 축 채점에 안 넣는다).
+# 외부 검토 및 기획 고도화 반영:
+# 1. '실시간 영수증'이나 '유휴(Idle) 리소스 단정' 표현을 배제하고, Cost Explorer의
+#    '최신 가용 비용 데이터(Usage Type 및 리전 기반 팩트)'를 보고하는 역할로 명확히 제한한다.
+# 2. 출력 레이아웃을 4단 구조(# 타이틀/메타데이터 -> ## 1. 총 청구 금액 -> ## 2. 과금 내역 -> ## 3. 데이터 확인 안내)로
+#    자연어 강제하여 LLM 출력 편차를 통제하고 코드 채점(checks/idle_tracker.py) 성공률을 극대화한다.
+# 3. 개인화 축은 format(개조식 vs 표)과 scope(핵심 요약 vs 전체 상세) 2개로 구성하며,
+#    금액·팩트 정확성은 checks/idle_tracker.py의 total_cost_accuracy·no_fabrication이 검증한다.
 domain: idle_tracker
 
 task_description: >-
-  AWS 비용 조회 결과를 바탕으로, 사용자가 이해하기 좋은 방식으로
-  현황을 보고하고 확인할 점을 안내하라. 조회 데이터에 있는 금액과
-  리소스만 언급하고, 데이터에 없는 값은 지어내지 마라.
+  제공된 AWS 최신 가용 비용 데이터(메타데이터, 사전 연산 요약, 서비스 및 Usage Type 상세 내역)를 바탕으로,
+  사용자가 이해하기 좋은 방식으로 비용 현황 리포트를 한국어로 작성하라.
+  반드시 지정된 4단 마크다운 레이아웃(# [AWS 비용 분석 리포트] -> ## 1. 총 청구 금액 -> ## 2. 과금 내역 -> ## 3. 데이터 확인 안내)을
+  유지해야 한다. 원본 데이터에 있는 금액, 비중, 리전, 사용 유형(Usage Type) 팩트만 언급하고,
+  데이터에 없는 리소스 활성 상태나 낭비 원인은 절대 추측하여 지어내지 마라.
 
 checks_module: checks.idle_tracker
 
 axes:
-  - name: detail_level
+  - name: format
     type: enum
-    description: 비용 누수 결과를 얼마나 자세하게 보여줄지
+    description: 비용 내역을 어떤 시각적 형식으로 보여줄지
     values:
-      - value: summary
+      - value: bullet_list
         prompt: >-
-          핵심 비용과 가장 중요한 조치만 짧게 요약하라.
+          '## 2.' 과금 내역 섹션 본문을 반드시 마크다운 불릿 리스트(- )로만 구성하라.
+          마크다운 표(|)나 구분선(| --- |)은 절대 사용하지 마라.
+          각 항목은 '- **[서비스명]:** [청구 금액] ([비중]%)' 형식을 기본으로 깔끔하게 나열하라.
         check:
-          fn: detail_level
+          fn: format
           target:
-            min_actions: 1
-            max_lines: 8
-      - value: detailed
+            style: bullet_list
+            allow_table: false
+      - value: markdown_table
         prompt: >-
-          비용, 리소스 ID, 발견 근거와 AWS 콘솔에서 따라 할 해결 방법을
-          단계별로 자세하게 설명하라.
+          '## 2.' 과금 내역 섹션 본문을 반드시 마크다운 표(|) 레이아웃으로 구성하라.
+          개조식 불릿(- ) 나열을 금지하며, 표의 헤더와 정렬 구분선(| :--- | :---: |)을 명확히 출력하고
+          마지막 행에는 반드시 전체 비용을 합산한 '| **합계** |' 행을 배치하라.
         check:
-          fn: detail_level
+          fn: format
           target:
-            min_actions: 2
-            min_lines: 10
+            style: markdown_table
+            require_total_row: true
 
-  - name: focus
+  - name: scope
     type: enum
-    description: 결과에서 무엇을 먼저 강조할지
+    description: 보고 성향 및 정보 밀도를 어디까지 포함할지
     values:
-      - value: cost
+      - value: summary_brief
         prompt: >-
-          월간 예상 낭비 금액과 비용이 큰 항목을 먼저 강조하고,
-          리소스 정보는 근거로 덧붙여라.
+          한눈에 슥 훑어볼 수 있도록 섹션 제목을 '## 2. 핵심 과금 내역 (요약)'으로 작성하라.
+          비용 비중이 가장 큰 상위 2개 핵심 서비스만 개별 표시하고, 나머지 소액 서비스들은
+          반드시 '기타 서비스 합계 (N건)'이라는 단일 항목으로 묶어 합산 금액과 비중만 표시하라.
+          세부 사용 유형(Usage Type) 코드는 생략하라.
         check:
-          fn: focus
+          fn: scope
           target:
-            min_cost_signals: 2
-            min_resource_signals: 1
-      - value: resource
+            level: summary_brief
+            require_etc_group: true
+            max_lines: 18
+      - value: deep_dive
         prompt: >-
-          리소스 ID, 리소스 종류와 위치를 먼저 강조하고,
-          각 리소스가 만드는 비용은 함께 표시하라.
+          원인을 낱낱이 파헤칠 수 있도록 섹션 제목을 '## 2. 전체 과금 상세 내역 (Usage Type 기준)'으로 작성하라.
+          소액 항목을 '기타 합계'로 묶지 말고 원본 데이터의 모든 서비스(소액 포함)를 빠짐없이 개별 표시하라.
+          각 서비스의 리전(Region)과 세부 사용 유형(Usage Type 코드 및 세부 금액)을 누락 없이 전부 나열하라.
         check:
-          fn: focus
+          fn: scope
           target:
-            min_cost_signals: 1
-            min_resource_signals: 2
+            level: deep_dive
+            require_etc_group: false
+            min_usage_types: 4
 
 # 사용자에게 건네는 최종 프롬프트의 틀 (engine/generator.py 의
 # build_final_prompt). 후보를 만들 때 쓰는 문구와는 따로 둔다.
 final_prompt:
-  role: 당신은 이 사용자의 AWS 비용 데이터를 점검해 낭비를 찾아 주는 클라우드 비용 도우미다.
-  preference_note: 아래 선호는 사용자가 여러 점검 결과를 직접 비교하며 고른 결과에서 추정한 것이다.
+  role: 당신은 이 사용자의 AWS 최신 가용 비용 데이터를 바탕으로 정확하고 일관된 비용 분석 리포트를 작성하는 클라우드 FinOps 도우미다.
+  preference_note: 아래 선호는 사용자가 여러 비용 리포트 결과를 직접 비교하며 고른 결과에서 추정한 것이다.
   preference_heading: 이 사용자의 선호
   # 팀 모드(여러 사람의 선택을 합친 프롬프트)에서 쓰는 문구.
-  team_role: 당신은 이 팀의 AWS 비용 데이터를 점검해 낭비를 찾아 주는 클라우드 비용 도우미다.
-  team_preference_note: 아래 선호는 팀원들이 각자 여러 점검 결과를 직접 비교하며 고른 결과를 합쳐 추정한 것이다.
+  team_role: 당신은 이 팀의 AWS 최신 가용 비용 데이터를 바탕으로 팀 표준 비용 분석 리포트를 작성하는 클라우드 FinOps 도우미다.
+  team_preference_note: 아래 선호는 팀원들이 각자 여러 비용 리포트 결과를 직접 비교하며 고른 결과를 합쳐 추정한 것이다.
   team_preference_heading: 이 팀의 선호
   rules_heading: 항상 지킬 것
   output_heading: 출력 형식
   rules:
-  - 주어진 데이터에 근거한 항목만 짚어라. 데이터에 없는 리소스나 금액을 지어내지 마라.
-  - 삭제·중지처럼 되돌리기 어려운 조치는 먼저 확인할 것(스냅샷, 의존 관계)을 함께 적어라.
-  - 절감액은 데이터로 계산할 수 있을 때만 제시하고, 추정치면 추정이라고 밝혀라.
-  output: 점검 결과만 한국어로 출력하라. 항목마다 확인할 리소스와 해결 방법을 함께 적어라.
+    - 주어진 데이터에 근거한 항목만 짚어라. 데이터에 없는 리소스 상태(미사용, 방치 등)나 금액을 절대 추측하거나 지어내지 마라.
+    - 원본 데이터에 사전 연산된 총 청구 금액, 서비스별 소계, 비중(%) 수치를 임의로 재계산하거나 변경하지 마라.
+    - 리포트 최상단에 조회 기간(추정 여부 포함), 갱신 시각, 마스킹된 계정 ID, 통화 기준이 담긴 인용 블록(>) 헤더를 반드시 포함하라.
+    - 리포트 최하단(## 3. 데이터 확인 안내)에 청구 데이터의 한계와 AWS 콘솔(CloudWatch 등) 추가 확인 안내 문구를 반드시 적어라.
+  output: >-
+    점검 결과만 한국어로 출력하라. 반드시 '# [AWS 비용 분석 리포트]' 헤더 블록 -> '## 1. 총 청구 금액' ->
+    '## 2. 핵심 과금 내역 (요약)' 또는 '## 2. 전체 과금 상세 내역 (Usage Type 기준)' ->
+    '## 3. 데이터 확인 안내'의 4단 마크다운 레이아웃을 지켜 작성하라.
   axis_labels:
-    detail_level: 자세한 정도
-    focus: 먼저 강조할 것
+    format: 출력 형식
+    scope: 보고 성향 및 범위
 
-# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
-# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
-# 이 입력들로 채점한다.
+# 최적화 평가용 예시 입력 (확정된 표준 데모 데이터 포맷과 동일한 3종).
+# 최적화가 사용자 원문 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록,
+# 후보를 고를 때 이 입력들로 채점한다.
 example_sources:
-- Monthly AWS bill rose 22 percent. EC2 is the largest line item, followed by EBS volumes and an RDS instance used for a staging database. Two load balancers show almost no traffic.
-- Cost Explorer shows steady S3 growth over six months, several unattached EBS volumes in us-east-1, and a NAT gateway charging for data processing in a VPC with no running instances.
-- A development account spends about 900 dollars a month. Most of it is three t3.large instances that run around the clock, plus snapshots older than a year and an idle Elastic IP.
+  - |
+    [메타데이터]
+    - 조회 기간: 2026-10-01 ~ 2026-10-15 (진행 중인 달 / 추정치)
+    - 갱신 시각: 2026-10-16 00:00 UTC
+    - 계정 ID: 1234-****-9012
+    - 통화 및 기준: USD / 세금 및 크레딧 제외 (UnblendedCost)
+
+    [사전 연산 요약]
+    - 총 청구 금액: $45.20 (100.0%)
+    - 전월 동기간 대비: $40.00 -> $45.20 (+$5.20, +13.0%)
+    - 핵심 상위 2개 서비스 합계: $40.00 (88.5%) - Amazon EC2, Amazon RDS
+    - 기타 서비스 합계 (2건): $5.20 (11.5%) - Amazon S3, Amazon Route53
+
+    [서비스 및 Usage Type 상세 내역]
+    1. Amazon EC2: 소계 $25.00 (55.3%) | 리전: ap-northeast-2
+       - APN2-BoxUsage:t2.micro: $20.00
+       - APN2-EBS:VolumeUsage.gp2: $5.00
+    2. Amazon RDS: 소계 $15.00 (33.2%) | 리전: ap-northeast-2
+       - APN2-InstanceUsage:db.t2.micro: $12.00
+       - APN2-RDS:GP2-Storage: $3.00
+    3. Amazon S3: 소계 $5.00 (11.1%) | 리전: ap-northeast-2
+       - APN2-TimedStorage-ByteHrs: $4.50
+       - APN2-DataTransfer-Out-Bytes: $0.50
+    4. Amazon Route53: 소계 $0.20 (0.4%) | 리전: Global
+       - HostedZone: $0.20
+  - |
+    [메타데이터]
+    - 조회 기간: 2026-09-01 ~ 2026-09-30 (확정 청구액)
+    - 갱신 시각: 2026-10-01 00:00 UTC
+    - 계정 ID: 5678-****-3456
+    - 통화 및 기준: USD / 세금 및 크레딧 제외 (UnblendedCost)
+
+    [사전 연산 요약]
+    - 총 청구 금액: $120.00 (100.0%)
+    - 전월 동기간 대비: $100.00 -> $120.00 (+$20.00, +20.0%)
+    - 핵심 상위 2개 서비스 합계: $108.00 (90.0%) - Amazon ECS, Amazon RDS
+    - 기타 서비스 합계 (2건): $12.00 (10.0%) - Amazon CloudWatch, AWS Secrets Manager
+
+    [서비스 및 Usage Type 상세 내역]
+    1. Amazon ECS: 소계 $68.00 (56.7%) | 리전: ap-northeast-2
+       - APN2-Fargate-vCPU-Hours:perCPU: $50.00
+       - APN2-Fargate-GB-Hours: $18.00
+    2. Amazon RDS: 소계 $40.00 (33.3%) | 리전: ap-northeast-2
+       - APN2-InstanceUsage:db.t3.small: $32.00
+       - APN2-RDS:GP3-Storage: $8.00
+    3. Amazon CloudWatch: 소계 $10.00 (8.3%) | 리전: ap-northeast-2
+       - APN2-DataProcessing-Bytes: $10.00
+    4. AWS Secrets Manager: 소계 $2.00 (1.7%) | 리전: ap-northeast-2
+       - APN2-AWSSecretsManagerSecretCount: $2.00
+  - |
+    [메타데이터]
+    - 조회 기간: 2026-08-01 ~ 2026-08-31 (확정 청구액)
+    - 갱신 시각: 2026-09-01 00:00 UTC
+    - 계정 ID: 9012-****-7890
+    - 통화 및 기준: USD / 세금 및 크레딧 제외 (UnblendedCost)
+
+    [사전 연산 요약]
+    - 총 청구 금액: $18.50 (100.0%)
+    - 전월 동기간 대비: $18.00 -> $18.50 (+$0.50, +2.8%)
+    - 핵심 상위 2개 서비스 합계: $17.00 (91.9%) - Amazon Lightsail, Amazon S3
+    - 기타 서비스 합계 (2건): $1.50 (8.1%) - Amazon CloudFront, Amazon Route53
+
+    [서비스 및 Usage Type 상세 내역]
+    1. Amazon Lightsail: 소계 $12.00 (64.9%) | 리전: ap-northeast-2
+       - APN2-BundleUsage:2GB: $12.00
+    2. Amazon S3: 소계 $5.00 (27.0%) | 리전: ap-northeast-2
+       - APN2-TimedStorage-ByteHrs: $5.00
+    3. Amazon CloudFront: 소계 $1.00 (5.4%) | 리전: Global
+       - AP-DataTransfer-Out-Bytes: $1.00
+    4. Amazon Route53: 소계 $0.50 (2.7%) | 리전: Global
+       - HostedZone: $0.50
 
 # 최종 프롬프트의 영어판 (화면 기본값). 보고서는 원래대로 한국어로 쓰게 한다.
 final_prompt_translations:
   en:
-    role: "You are a cloud cost assistant who reviews this user's AWS cost data and finds waste."
-    preference_note: "The preferences below were inferred from review results the user picked while comparing several options."
-    team_role: "You are a cloud cost assistant who reviews this team's AWS cost data and finds waste."
-    team_preference_note: "The preferences below were inferred by combining the review results each team member picked while comparing several options."
-    task: "Based on the AWS cost query results, report the current situation in a way that is easy to understand and point out what to check. Mention only amounts and resources that appear in the data, and do not invent values that are not in it."
+    role: "You are a Cloud FinOps assistant who writes accurate and consistent AWS cost analysis reports based on the user's latest available AWS billing data."
+    preference_note: "The preferences below were inferred from cost report options the user picked while comparing several pairs."
+    team_role: "You are a Cloud FinOps assistant who writes standardized team AWS cost analysis reports based on this team's latest available AWS billing data."
+    team_preference_note: "The preferences below were inferred by combining the cost report options each team member picked while comparing several pairs."
+    task: "Based on the latest available AWS cost query results (metadata, pre-computed summary, and breakdown by service and Usage Type), write an easy-to-understand cost analysis report in Korean. Strictly maintain the 4-part Markdown layout (# [AWS 비용 분석 리포트] -> ## 1. 총 청구 금액 -> ## 2. 과금 내역 -> ## 3. 데이터 확인 안내). Mention only amounts, shares, regions, and Usage Types present in the data, and never speculate or invent resource idle status or waste causes."
     preference_heading: "This user's preferences"
     team_preference_heading: "This team's preferences"
     rules_heading: "Always"
     rules:
-      - "Only point out items supported by the given data. Do not invent resources or amounts that are not in it."
-      - "For hard-to-undo actions such as deleting or stopping, also list what to check first (snapshots, dependencies)."
-      - "Give savings only when they can be calculated from the data, and say so when a figure is an estimate."
+      - "Only point out items supported by the given data. Never speculate or invent resource states (e.g., unused, forgotten) or amounts not present in the data."
+      - "Do not recalculate or alter the pre-computed total cost, service subtotals, or percentage shares provided in the source data."
+      - "Always include the metadata blockquote (>) header at the top containing the query period (including estimate status), updated timestamp, masked Account ID, and currency."
+      - "Always include the '## 3. 데이터 확인 안내' section at the bottom explaining the limitations of billing data and advising further checks in the AWS Console (e.g., CloudWatch)."
     output_heading: "Output format"
-    output: "Output only the review results, in Korean. For each item, include the resource to check and how to resolve it."
+    output: "Output only the cost report in Korean. Strictly follow the 4-part Markdown layout: '# [AWS 비용 분석 리포트]' header block -> '## 1. 총 청구 금액' -> '## 2. 핵심 과금 내역 (요약)' or '## 2. 전체 과금 상세 내역 (Usage Type 기준)' -> '## 3. 데이터 확인 안내'."
     axis_labels:
-      detail_level: "Level of detail"
-      focus: "What to lead with"
+      format: "Output format"
+      scope: "Report scope and density"
     instructions:
-      detail_level:
-        summary: "Briefly summarize only the key costs and the most important actions."
-        detailed: "Explain the costs, resource IDs, the evidence found, and step-by-step fixes to follow in the AWS console in detail."
-      focus:
-        cost: "Lead with the estimated monthly waste and the most expensive items, and add resource details as supporting evidence."
-        resource: "Lead with resource IDs, resource types, and locations, and show the cost each resource generates alongside."
+      format:
+        bullet_list: "Format the '## 2.' breakdown section strictly as a Markdown bullet list (- ). Never use Markdown tables (|) or table dividers (| --- |). Present each item using the pattern '- **[Service Name]:** [Cost] ([Share]%) — [Details]'."
+        markdown_table: "Format the '## 2.' breakdown section strictly as a Markdown table (|). Do not use bullet lists (- ) in the breakdown body. Clearly output the table header and alignment divider (| :--- | :---: |), and always place a '| **합계** |' (Total) row at the bottom of the table."
+      scope:
+        summary_brief: "Title the section '## 2. 핵심 과금 내역 (요약)'. Show only the top 2 highest-cost core services individually, and group all remaining minor services into a single item labeled '기타 서비스 합계 (N건)' with their combined cost and share. Omit detailed Usage Type codes."
+        deep_dive: "Title the section '## 2. 전체 과금 상세 내역 (Usage Type 기준)'. Do not group minor items into '기타 합계'; list every service in the source data individually (including minor costs). Include the region and all detailed Usage Type codes and sub-amounts without omission."
