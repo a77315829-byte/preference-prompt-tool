@@ -13,6 +13,8 @@ _최신 master의 React UI - 로컬에서 직접 캡처_
 
 ![코드를 기준으로 정리한 처리 흐름](docs/portfolio/architecture.png)
 
+[구성도 SVG 원본](docs/portfolio/architecture.svg)
+
 ## 본인 기여
 
 선택 기반 프롬프트 생성 도구를 기획하고, 선호를 반영하는 구조와 평가 방식 개선을 맡았습니다. 기능 구현과 품질 개선 실험을 구분해 기록했습니다.
