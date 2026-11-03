@@ -35,6 +35,11 @@ ENTRY = {
     "faq_toggle": "FaqToggle.tsx",
     "faq_multi": "FAQ.tsx",
     "cart_quantity": "CartQuantity.tsx",
+    "tab_switch": "TabSwitch.tsx",
+    "char_counter": "CharCounter.tsx",
+    "star_rating": "StarRating.tsx",
+    "like_toggle": "LikeToggle.tsx",
+    "temperature_convert": "TemperatureConvert.tsx",
 }
 
 

@@ -805,6 +805,8 @@ PROMPT_RESULTS_DIR = os.environ.get("PPT_PROMPT_RESULTS_DIR")
 # 실제 모드에서 AI 개선을 켤지. 기본은 끔 - 사전등록 비교에서 기본 조립본보다 낫다는 기준을
 # 충족하지 못했다 (docs/personalized_prompt_preregistration.md 결과 절). 끄면 rule_based.
 PROMPT_IMPROVEMENT_ENABLED = os.environ.get("PPT_PROMPT_IMPROVEMENT", "0") == "1"
+# 개선 단계 모델. 비우면 세션의 후보 생성 모델을 쓴다 (1차 사전등록 설계).
+PROMPT_IMPROVEMENT_MODEL = os.environ.get("PPT_PROMPT_IMPROVEMENT_MODEL") or None
 
 
 def _improvement_context(state: SessionState, domain: Domain, combo: dict[str, str],
@@ -848,14 +850,16 @@ def _improvement_context(state: SessionState, domain: Domain, combo: dict[str, s
 
 
 def complete_personalized_prompt(state: SessionState, languages: list[str], before_call=lambda: None,
-                                 record_dir=None, enabled: bool | None = None) -> SessionState:
+                                 record_dir=None, enabled: bool | None = None,
+                                 model: str | None = None) -> SessionState:
     """끝난 세션의 최종 프롬프트를 확정한다: rule_based / ai_improved / fallback.
 
     데모와 꺼 둔 실제 모드(PPT_PROMPT_IMPROVEMENT 가 1 이 아님)는 모델을 부르지 않고 규칙 기반
     조립만 쓴다. 켠 실제 모드는 근거가 있는 선호 줄만 AI 가
     다시 쓰고 나머지는 기본 조립본 그대로다. 문맥 구성·호출·검증 중 무엇이 실패해도 기본
     조립본을 fallback 으로 돌려준다. 이미 확정했으면(중복 완료 요청) 아무것도 하지 않는다.
-    before_call 은 실제 요청 직전에만 불린다 - 캐시를 타면 한도를 깎지 않는다."""
+    before_call 은 실제 요청 직전에만 불린다 - 캐시를 타면 한도를 깎지 않는다.
+    model 은 개선 단계 모델이다. 없으면 PPT_PROMPT_IMPROVEMENT_MODEL, 그것도 없으면 세션 모델."""
     if not state.done or state.prompt_improvement:
         return state
     from pathlib import Path
@@ -864,8 +868,9 @@ def complete_personalized_prompt(state: SessionState, languages: list[str], befo
     combo = final_combo(domain, estimator)
     base = {lang: final_prompt(domain, estimator, template_id=state.template_id, language=lang)
             for lang in languages}
+    improvement_model = model or PROMPT_IMPROVEMENT_MODEL or state.model
     empty = {"calls": 0, "input_tokens": 0, "output_tokens": 0, "elapsed_seconds": 0.0,
-             "cache_hit": False, "model": state.model, "changed": False}
+             "cache_hit": False, "model": improvement_model, "changed": False}
     context = {"base_prompts": base, "history": state.history, "inferred": combo,
                "evidence": {}, "instructions": {}}
     if enabled is None:
@@ -889,7 +894,7 @@ def complete_personalized_prompt(state: SessionState, languages: list[str], befo
                     raise
                 except Exception as exc:  # 하루 상한 등 호출하는 쪽의 거부
                     raise LimitReached("daily") from exc
-            result = improve(context, state.model, reserve)
+            result = improve(context, improvement_model, reserve)
     prompts = result.pop("prompts")
     if result["method"] != "ai_improved":
         prompts = dict(base)  # 실패면 정확히 기본 조립본이다.

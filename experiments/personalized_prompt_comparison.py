@@ -65,6 +65,11 @@ PREREGISTERED_PROFILES = [
     {"code_structure": "separated", "style_management": "direct", "type_detail": "explicit"},
 ]
 BENCHMARKS = [ROOT / "benchmarks" / "coding_ai_quality" / f"v{n}.json" for n in (1, 2, 3, 4)]
+# 2차 사전등록(docs/personalized_prompt_preregistration_v2.md)의 새 holdout. 1차 결과를 본 뒤 만들었고
+# 개선 단계 설계에는 쓰지 않았다.
+BENCHMARK_V2 = ROOT / "benchmarks" / "coding_ai_quality" / "v5.json"
+SPLITS = ("calibration", "holdout", "holdout_v2")
+CONFIRMATORY_SPLITS = ("holdout", "holdout_v2")
 # 판정 기준 (사전등록 문서와 같은 값). 결과를 본 뒤 바꾸지 않는다.
 MIN_STYLE_GAIN = 0.10          # (c)-(b) 축 검사 통과율 평균 차이의 하한
 MAX_FUNCTIONAL_DROP = 0.05     # (b)-(c) 기능 통과율 차이의 상한 (비열등 한계)
@@ -82,10 +87,12 @@ def profile_label(profile: dict[str, str]) -> str:
 
 
 def select_tasks(split: str, limit: int | None = None) -> list[dict]:
-    """calibration 은 v1 의 네 과제, holdout 은 v1~v4 의 보류 과제 전부(실행 시나리오가 있는 것)."""
-    if split not in ("calibration", "holdout"):
-        raise ValueError("split must be calibration or holdout")
-    paths = BENCHMARKS[:1] if split == "calibration" else BENCHMARKS
+    """calibration 은 v1 의 네 과제, holdout 은 v1~v4 의 보류 과제 전부(실행 시나리오가 있는 것),
+    holdout_v2 는 2차 사전등록의 새 과제(v5)."""
+    if split not in SPLITS:
+        raise ValueError(f"split must be one of {SPLITS}")
+    paths = (BENCHMARKS[:1] if split == "calibration" else [BENCHMARK_V2] if split == "holdout_v2"
+             else BENCHMARKS)
     tasks, seen = [], set()
     for path in paths:
         for task in json.loads(path.read_text(encoding="utf-8"))["tasks"]:
@@ -113,7 +120,7 @@ def simulate_history(profile: dict[str, str], source: str, rounds: int) -> servi
 
 
 def build_prompts(history_state: service.SessionState, model: str, language: str, *,
-                  execute: bool, reserve) -> tuple[dict[str, str | None], dict]:
+                  execute: bool, reserve, improvement_model: str | None = None) -> tuple[dict[str, str | None], dict]:
     """(a)(b)(c) 의 시스템 프롬프트와 개선 단계 메타데이터. 사전 확인에서는 (c) 를 만들지 않는다."""
     domain, estimator = service.current_estimate(history_state)
     base = service.final_prompt(domain, estimator, language=None if language == "ko" else language)
@@ -123,7 +130,7 @@ def build_prompts(history_state: service.SessionState, model: str, language: str
     live = replace(history_state, demo_mode=False, model=model)
     # 서비스 기본값(PPT_PROMPT_IMPROVEMENT)과 무관하게 (c) 를 만든다 - 이 비교가 그 기본값을 정할 근거다.
     done = service.complete_personalized_prompt(live, [language], before_call=reserve, record_dir=RECORD_DIR,
-                                                enabled=True)
+                                                enabled=True, model=improvement_model or model)
     meta = {k: v for k, v in done.prompt_improvement.items() if k != "base_prompts"}
     if meta["method"] == "ai_improved":
         prompts["ai_improved"] = done.personalized_prompts[language]
@@ -335,7 +342,7 @@ def markdown(report: dict) -> str:
                          f"{d['functional_diff']} {d['functional_diff_ci95']} |")
         # 실행 검사는 설계상 캐시 재생(--cached-only)으로 잰다. holdout 이면서 이전 프롬프트 재생이 아닐 때만 확증이다.
         replayed = any((item.get("improvement") or {}).get("method") == "replayed" for item in profiles)
-        role = ("확증(판정에 쓴다)" if report.get("split") == "holdout" and not replayed
+        role = ("확증(판정에 쓴다)" if report.get("split") in CONFIRMATORY_SPLITS and not replayed
                 else "판정에 쓰지 않는다 (pilot·재생·calibration)")
         lines += ["", f"- 사전등록 기준 ({role}): {json.dumps(summary['criteria'], ensure_ascii=False)}"
                   f" → 전부 충족: `{summary['all_criteria_met']}` · 미적용 비율 {summary['fallback_rate']}"]
@@ -358,7 +365,8 @@ def run(*, execute: bool, task_limit: int | None, max_api_calls: int, model: str
         profile: dict[str, str] | None = None, rounds: int, temperature: float | None,
         cached_only: bool = False, behavior: bool = False, reviewed_outputs: bool = False,
         ai_prompt_from: Path | None = None, profiles: list[dict[str, str]] | None = None,
-        split: str = "calibration", repeats: int = 1, fallback_as_base: bool = False) -> dict:
+        split: str = "calibration", repeats: int = 1, fallback_as_base: bool = False,
+        improvement_model: str | None = None) -> dict:
     """execute: 상한 안에서 실제 호출. cached_only: 호출 0회, 캐시에 있는 출력만 다시 꺼낸다."""
     if execute and cached_only:
         raise ValueError("--execute and --cached-only are exclusive")
@@ -375,6 +383,7 @@ def run(*, execute: bool, task_limit: int | None, max_api_calls: int, model: str
     tasks = select_tasks(split, task_limit)
     worst_case = len(profiles) * (1 + len(tasks) * len(CONDITIONS) * repeats)
     plan = {"tasks": [t["id"] for t in tasks], "split": split, "conditions": list(CONDITIONS), "model": model,
+            "improvement_model": improvement_model or model,
             "language": language, "profiles": profiles, "rounds": rounds, "repeats": repeats,
             "temperature": temperature, "fallback_as_base": fallback_as_base,
             "max_api_requests_worst_case": worst_case,
@@ -400,7 +409,7 @@ def run(*, execute: bool, task_limit: int | None, max_api_calls: int, model: str
         # 과제와 무관하게 같은 가상 사용자·같은 선택 이력 (이력은 축 조합만 담는다).
         history_state = simulate_history(target, tasks[0]["request"], rounds)
         prompts, improvement = build_prompts(history_state, model, language, execute=execute or cached_only,
-                                             reserve=reserve)
+                                             reserve=reserve, improvement_model=improvement_model)
         if ai_prompt_from is not None:
             if not cached_only:
                 raise ValueError("--ai-prompt-from only replays a recorded prompt with --cached-only")
@@ -497,7 +506,8 @@ def run(*, execute: bool, task_limit: int | None, max_api_calls: int, model: str
     first = built[0]
     return {
         "mode": "cached-only" if cached_only else "execute", "generated_at": datetime.now(timezone.utc).isoformat(),
-        "model": model, "language": language, "split": split, "repeats": repeats, "temperature": temperature,
+        "model": model, "improvement_model": improvement_model or model,
+        "language": language, "split": split, "repeats": repeats, "temperature": temperature,
         "plan": plan, "profiles": built,
         # 한 프로필 실행과 같은 모양의 요약 필드 (예전 결과 파일과 호환).
         "profile": first["profile"], "history": first["history"], "prompts": first["prompts"],
@@ -511,9 +521,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--execute", action="store_true", help="실제 API 를 부른다 (기본은 사전 확인)")
     parser.add_argument("--task-limit", type=int, default=None, help="기본: split 의 과제 전부")
-    parser.add_argument("--split", default="calibration", choices=["calibration", "holdout"])
+    parser.add_argument("--split", default="calibration", choices=list(SPLITS))
     parser.add_argument("--max-api-calls", type=int, default=4)
     parser.add_argument("--model", default=DEFAULT_MODEL)
+    parser.add_argument("--improvement-model", default=None,
+                        help="개선 단계 (c) 모델. 기본은 --model 과 같다 (1차 사전등록)")
     parser.add_argument("--language", default="ko", choices=["ko", "en"])
     parser.add_argument("--rounds", type=int, default=service.TOTAL_ROUNDS)
     parser.add_argument("--profile", default=",".join(f"{k}={v}" for k, v in DEFAULT_PROFILE.items()))
@@ -539,7 +551,8 @@ def main() -> None:
                  model=args.model, language=args.language, profiles=profiles, rounds=args.rounds,
                  temperature=temperature, cached_only=args.cached_only, behavior=args.behavior,
                  reviewed_outputs=args.reviewed_outputs, ai_prompt_from=args.ai_prompt_from,
-                 split=args.split, repeats=args.repeats, fallback_as_base=args.fallback_as_base)
+                 split=args.split, repeats=args.repeats, fallback_as_base=args.fallback_as_base,
+                 improvement_model=args.improvement_model)
     if report["mode"] == "dry-run":
         print(json.dumps(report["plan"], ensure_ascii=False, indent=2))
         print("dry-run: no API requests sent. Use --execute to run.")

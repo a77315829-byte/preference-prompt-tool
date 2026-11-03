@@ -1,0 +1,62 @@
+{
+  "version": "5.0",
+  "purpose": "Fresh holdout for the second preregistered AI prompt improvement comparison (docs/personalized_prompt_preregistration_v2.md). Written before any generation; not used to design the improvement step.",
+  "baseline_model": "openai/gpt-4o-mini",
+  "generation_mode": "live",
+  "rounds_per_task": 1,
+  "required_axes": 3,
+  "tasks": [
+    {
+      "id": "tab_switch",
+      "split": "holdout_v2",
+      "request": "React와 TypeScript로 탭 전환 컴포넌트를 만들어 주세요. 탭은 '공지'와 '이벤트' 두 개이고 각각 버튼(role='tab')입니다. 처음에는 '공지' 탭이 선택되어 aria-selected='true'이고 내용 '이번 주 점검은 없습니다.'를 표시합니다. '이벤트' 탭을 누르면 그 탭이 선택되고 내용 '신규 가입 시 쿠폰을 드립니다.'를 표시하며, 공지 내용은 보이지 않습니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "처음에 공지 탭이 선택되고 공지 내용만 보인다.",
+        "이벤트 탭을 누르면 이벤트 탭이 선택되고 이벤트 내용만 보인다.",
+        "공지 탭을 다시 누르면 공지 내용으로 돌아간다."
+      ]
+    },
+    {
+      "id": "char_counter",
+      "split": "holdout_v2",
+      "request": "React와 TypeScript로 글자 수 제한 입력란을 만들어 주세요. textarea 하나와 '제출' 버튼이 있습니다. 입력한 글자 수를 '0/20자' 형식으로 표시합니다. 20자를 넘으면 '20자를 넘었습니다' 문구를 표시하고 '제출' 버튼을 비활성화합니다. 20자 이하이면 문구가 없고 버튼은 활성화됩니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "처음에 0/20자가 보이고 제출 버튼이 활성화되어 있다.",
+        "5자를 입력하면 5/20자가 보인다.",
+        "21자를 입력하면 21/20자와 초과 문구가 보이고 제출 버튼이 비활성화된다.",
+        "20자로 줄이면 초과 문구가 사라지고 버튼이 다시 활성화된다."
+      ]
+    },
+    {
+      "id": "star_rating",
+      "split": "holdout_v2",
+      "request": "React와 TypeScript로 별점 선택 컴포넌트를 만들어 주세요. 버튼 다섯 개가 있고 aria-label은 각각 '별 1개'부터 '별 5개'입니다. 처음에는 '평점 0점'을 표시합니다. n번째 버튼을 누르면 '평점 n점'을 표시하고, 1번부터 n번 버튼은 aria-pressed='true', 나머지는 'false'입니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "처음에 평점 0점이 보이고 모든 버튼이 눌리지 않은 상태다.",
+        "별 3개를 누르면 평점 3점, 앞의 세 버튼만 눌린 상태다.",
+        "별 1개를 누르면 평점 1점, 첫 버튼만 눌린 상태다."
+      ]
+    },
+    {
+      "id": "like_toggle",
+      "split": "holdout_v2",
+      "request": "React와 TypeScript로 좋아요 버튼을 만들어 주세요. 처음 좋아요 수는 10이고 '좋아요 10'을 표시합니다. 버튼의 글자는 처음에 '좋아요'이고 aria-pressed='false'입니다. 버튼을 누르면 수가 11이 되어 '좋아요 11'을 표시하고, 버튼 글자는 '좋아요 취소', aria-pressed='true'가 됩니다. 다시 누르면 원래 상태로 돌아갑니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "처음에 좋아요 10과 좋아요 버튼(aria-pressed false)이 보인다.",
+        "누르면 좋아요 11과 좋아요 취소 버튼(aria-pressed true)이 보인다.",
+        "다시 누르면 좋아요 10과 좋아요 버튼으로 돌아간다."
+      ]
+    },
+    {
+      "id": "temperature_convert",
+      "split": "holdout_v2",
+      "request": "React와 TypeScript로 섭씨-화씨 변환기를 만들어 주세요. 섭씨를 입력하는 input 하나가 있고 처음 값은 '0'입니다. 입력값을 화씨로 바꿔 '화씨 32°F' 형식으로 표시합니다(화씨 = 섭씨 × 9 / 5 + 32, 소수점 첫째 자리까지 반올림, 정수면 소수점 없이). 입력이 비어 있거나 숫자가 아니면 '숫자를 입력하세요'를 표시합니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": [
+        "처음에 화씨 32°F가 보인다.",
+        "100을 입력하면 화씨 212°F가 보인다.",
+        "37.5를 입력하면 화씨 99.5°F가 보인다.",
+        "입력을 지우면 숫자를 입력하세요가 보인다."
+      ]
+    }
+  ]
+}

@@ -123,3 +123,33 @@ def test_summary_applies_the_preregistered_thresholds() -> None:
     assert comparison.summarize(no_behavior, profiles)["all_criteria_met"] is None
     # 개선이 적용되지 않은 프로필이 많으면 미충족.
     assert comparison.summarize(rows, [{"improvement": {"method": "fallback"}}])["criteria"]["fallback_rate"] is False
+
+
+def test_holdout_v2_tasks_are_new_and_scripted() -> None:
+    """2차 사전등록의 holdout 은 1차 holdout·calibration 과 겹치지 않고 모두 실행 시나리오가 있다."""
+    from pathlib import Path
+    from benchmarks.coding_ai_quality.evaluate_trial import ENTRY
+    v2 = [t["id"] for t in comparison.select_tasks("holdout_v2")]
+    assert v2 == ["tab_switch", "char_counter", "star_rating", "like_toggle", "temperature_convert"]
+    earlier = {t["id"] for split in ("calibration", "holdout") for t in comparison.select_tasks(split)}
+    assert not set(v2) & earlier
+    script = (Path(comparison.ROOT) / "benchmarks" / "coding_ai_quality" / "runtime_check.cjs").read_text()
+    assert all(task in ENTRY and f"task === '{task}'" in script for task in v2)
+    assert set(comparison.CONFIRMATORY_SPLITS) == {"holdout", "holdout_v2"}
+
+
+def test_improvement_model_reaches_the_plan_and_service(monkeypatch) -> None:
+    seen = {}
+
+    def fake_complete(state, languages, **kwargs):
+        from dataclasses import replace
+        seen.update(kwargs)
+        return replace(state, prompt_improvement={"method": "rule_based", "model": kwargs["model"]})
+    monkeypatch.setattr(comparison.service, "complete_personalized_prompt", fake_complete)
+    report = comparison.run(execute=False, task_limit=1, max_api_calls=0, model="m", language="ko",
+                            rounds=4, temperature=None, improvement_model="strong")
+    assert report["plan"]["improvement_model"] == "strong"
+    history = comparison.simulate_history(PROFILE, "x", 4)
+    _, meta = comparison.build_prompts(history, "m", "ko", execute=True, reserve=lambda: None,
+                                       improvement_model="strong")
+    assert seen["model"] == meta["model"] == "strong"

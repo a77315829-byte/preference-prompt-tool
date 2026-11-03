@@ -554,3 +554,16 @@ def test_streamlit_result_screen_labels_each_method_and_shows_the_matching_promp
     app.run()
     assert "`fallback`" in method_caption() and app.code[0].value == base
     assert any("호출 한도" in w.value for w in app.warning)
+
+
+def test_improvement_model_is_separate_from_the_generation_model(fake_llm, tmp_path, monkeypatch) -> None:
+    """2차 사전등록: 개선 단계만 다른 모델로 부를 수 있다. 기본은 세션 모델 그대로다."""
+    fake = fake_llm()
+    state = _complete(_live(_finished("a")), tmp_path)
+    assert fake.calls[-1]["model"] == state.model == state.prompt_improvement["model"]
+    chosen = _complete(_live(_finished("b")), tmp_path, model="openai/strong-reflection")
+    assert fake.calls[-1]["model"] == "openai/strong-reflection" == chosen.prompt_improvement["model"]
+    assert chosen.model != "openai/strong-reflection"  # 후보 생성 모델은 바뀌지 않는다
+    monkeypatch.setattr(service, "PROMPT_IMPROVEMENT_MODEL", "openai/from-env")
+    from_env = _complete(_live(_finished("a", rounds=3)), tmp_path)
+    assert fake.calls[-1]["model"] == "openai/from-env" == from_env.prompt_improvement["model"]

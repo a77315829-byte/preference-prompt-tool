@@ -20,7 +20,12 @@ async function check() {
     task === 'text_preview' ? 'TextPreview' :
     task === 'password_visibility' ? 'PasswordVisibility' :
     task === 'faq_toggle' ? 'FaqToggle' :
-    task === 'cart_quantity' ? 'CartQuantity' : null;
+    task === 'cart_quantity' ? 'CartQuantity' :
+    task === 'tab_switch' ? 'TabSwitch' :
+    task === 'char_counter' ? 'CharCounter' :
+    task === 'star_rating' ? 'StarRating' :
+    task === 'like_toggle' ? 'LikeToggle' :
+    task === 'temperature_convert' ? 'TemperatureConvert' : null;
   const exportedComponents = Object.entries(exports).filter(([name, value]) =>
     /^[A-Z]/.test(name) && typeof value === 'function');
   const Component = exports.default || (namedExport && exports[namedExport]) ||
@@ -158,6 +163,82 @@ async function check() {
     await click('빼기');
     await click('빼기');
     checks.push(displays(1, 5000));
+  } else if (task === 'tab_switch') {
+    const notice = '이번 주 점검은 없습니다.';
+    const event = '신규 가입 시 쿠폰을 드립니다.';
+    const tab = (label) => [...container.querySelectorAll('[role="tab"]')].find((item) =>
+      item.textContent.trim() === label);
+    const shown = (el) => {
+      for (let node = el; node && node !== container; node = node.parentElement) {
+        if (node.hidden || window.getComputedStyle(node).display === 'none') return false;
+      }
+      return true;
+    };
+    const visible = (text) => [...container.querySelectorAll('*')].some((el) =>
+      el.children.length === 0 && el.textContent.includes(text) && shown(el));
+    const selected = (label) => tab(label)?.getAttribute('aria-selected') === 'true';
+    checks.push(Boolean(tab('공지') && tab('이벤트')) && selected('공지') && !selected('이벤트')
+      && visible(notice) && !visible(event));
+    await React.act(async () => tab('이벤트').dispatchEvent(new window.MouseEvent('click', { bubbles: true })));
+    checks.push(selected('이벤트') && !selected('공지') && visible(event) && !visible(notice));
+    await React.act(async () => tab('공지').dispatchEvent(new window.MouseEvent('click', { bubbles: true })));
+    checks.push(selected('공지') && !selected('이벤트') && visible(notice) && !visible(event));
+  } else if (task === 'char_counter') {
+    const input = container.querySelector('textarea');
+    if (!input) throw new Error('Missing textarea');
+    const submit = () => [...container.querySelectorAll('button')].find((item) => item.textContent.trim() === '제출');
+    const setValue = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+    const enter = async (value) => React.act(async () => {
+      setValue.call(input, value);
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+    const over = '20자를 넘었습니다';
+    checks.push(has('0/20자') && !has(over) && submit() && !submit().disabled);
+    await enter('가나다라마');
+    checks.push(has('5/20자') && !has(over) && !submit().disabled);
+    await enter('가'.repeat(21));
+    checks.push(has('21/20자') && has(over) && submit().disabled);
+    await enter('가'.repeat(20));
+    checks.push(has('20/20자') && !has(over) && !submit().disabled);
+  } else if (task === 'star_rating') {
+    const star = (n) => [...container.querySelectorAll('button')].find((item) =>
+      item.getAttribute('aria-label') === `별 ${n}개`);
+    const pressed = () => [1, 2, 3, 4, 5].map((n) => star(n)?.getAttribute('aria-pressed'));
+    checks.push([1, 2, 3, 4, 5].every((n) => star(n)) && has('평점 0점')
+      && pressed().every((value) => value === 'false'));
+    await click('별 3개');
+    checks.push(has('평점 3점') && JSON.stringify(pressed()) === '["true","true","true","false","false"]');
+    await click('별 1개');
+    checks.push(has('평점 1점') && !has('평점 3점')
+      && JSON.stringify(pressed()) === '["true","false","false","false","false"]');
+  } else if (task === 'like_toggle') {
+    const button = () => [...container.querySelectorAll('button')].find((item) =>
+      ['좋아요', '좋아요 취소'].includes(item.textContent.trim()));
+    const text = () => container.textContent.replace(/\s+/g, ' ');
+    checks.push(text().includes('좋아요 10') && button()?.textContent.trim() === '좋아요'
+      && button()?.getAttribute('aria-pressed') === 'false');
+    await click('좋아요');
+    checks.push(text().includes('좋아요 11') && !text().includes('좋아요 10')
+      && button()?.textContent.trim() === '좋아요 취소' && button()?.getAttribute('aria-pressed') === 'true');
+    await click('좋아요 취소');
+    checks.push(text().includes('좋아요 10') && !text().includes('좋아요 11')
+      && button()?.textContent.trim() === '좋아요' && button()?.getAttribute('aria-pressed') === 'false');
+  } else if (task === 'temperature_convert') {
+    const input = container.querySelector('input');
+    if (!input) throw new Error('Missing input');
+    const setValue = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    const enter = async (value) => React.act(async () => {
+      setValue.call(input, value);
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+    const prompt = '숫자를 입력하세요';
+    checks.push(has('화씨 32°F') && !has(prompt));
+    await enter('100');
+    checks.push(has('화씨 212°F') && !has(prompt));
+    await enter('37.5');
+    checks.push(has('화씨 99.5°F') && !has(prompt));
+    await enter('');
+    checks.push(has(prompt) && !/화씨\s*-?\d/.test(container.textContent));
   } else if (task === 'password_visibility') {
     const input = container.querySelector('input');
     if (!input) throw new Error('Missing password input');
