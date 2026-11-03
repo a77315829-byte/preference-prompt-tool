@@ -29,6 +29,7 @@ import team
 import template_library
 from personal_prompts import PersonalPromptStore, PromptConflict, expected_revision
 from coding_instructions import build_coding_instructions
+from handoffs import HandoffStore, HandoffConflict
 from preference_comparison import compare_preferences, compose_task_prompt, team_basis
 from saved_preference_remix import remix_saved_prompt
 from saved_preference_restore import restore_saved_prompt
@@ -109,6 +110,7 @@ OPTIMIZE_REPORTS: dict[str, dict] = {}
 # 팀 모드 (team.py). DB 에 남는다. 로그인한 사람은 자기 아이디로만 참여한다.
 TEAMS = team.TeamStore(DB)
 PERSONAL_PROMPTS = PersonalPromptStore(lambda: DB)
+HANDOFFS = HandoffStore(lambda: DB)
 DAILY_PREFERENCE_RUNS = _quota("preference", "PPT_PREFERENCE_RUNS_PER_DAY", 60, "PPT_USER_PREFERENCE_RUNS_PER_DAY", 20)
 # 다른 출처에서 이 API 를 부르도록 허용할 주소 목록 (쉼표로 구분). 기본은
 # 비어 있다 - React 화면은 Vite 프록시(/api)로 같은 출처에서 부르므로 CORS
@@ -702,6 +704,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         if path == "/api/preferences" or path.startswith("/api/preferences/"):
             self._personal_prompts(path)
             return
+        if path == "/api/handoffs" or path.startswith("/api/handoffs/"):
+            self._handoffs(path)
+            return
         # 최적화 진행률을 폴링하는 경로. /api/sessions/<id>
         parts = path.split("/")
         if len(parts) == 4 and parts[:3] == ["", "api", "sessions"]:
@@ -727,6 +732,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/preferences" or path.startswith("/api/preferences/"):
                 self._personal_prompts(path, body)
+                return
+            if path == "/api/handoffs" or path.startswith("/api/handoffs/"):
+                self._handoffs(path, body)
                 return
             if path == "/api/coding-instructions/preview":
                 self._send(200, {"draft": build_coding_instructions(body.get("profile"))})
@@ -775,6 +783,41 @@ class ApiHandler(BaseHTTPRequestHandler):
             # 원문은 서버 터미널에만. 공급자 오류 문구에는 키 일부가 들어 있다.
             print(f"[error] {type(exc).__name__}: {exc}", flush=True)
             self._send(500, {"error": service.describe_api_error(exc)})
+
+    def _handoffs(self, path: str, body: dict | None = None) -> None:
+        user = self._current_user()
+        if user is None:
+            self._send(401, {"error": "로그인하면 내 작업과 나에게 공유된 인수인계를 볼 수 있습니다."})
+            return
+        parts = path.split("/")
+        try:
+            if len(parts) == 3:
+                if body is None:
+                    self._send(200, {"handoffs": HANDOFFS.list_for(user.id)})
+                else:
+                    self._send(201, {"handoff": HANDOFFS.create(user.id, body)})
+                return
+            if len(parts) == 4 and body is None:
+                self._send(200, {"handoff": HANDOFFS.get(user.id, parts[3])})
+                return
+            if len(parts) in (5, 6) and parts[4] == "history" and body is None:
+                if len(parts) == 5:
+                    self._send(200, {"history": HANDOFFS.history(user.id, parts[3])})
+                else:
+                    self._send(200, {"snapshot": HANDOFFS.history(user.id, parts[3], int(parts[5]))})
+                return
+            if len(parts) == 5 and body is not None and parts[4] in ("update", "share", "claim", "complete", "reopen"):
+                self._send(200, {"handoff": HANDOFFS.change(user.id, parts[3], parts[4], body)})
+                return
+            self._send(404, {"error": "찾을 수 없는 경로입니다."})
+        except HandoffConflict as exc:
+            self._send(409, {"error": str(exc)})
+        except LookupError as exc:
+            self._send(404, {"error": str(exc)})
+        except PermissionError as exc:
+            self._send(403, {"error": str(exc)})
+        except ValueError as exc:
+            self._send(400, {"error": str(exc)})
 
     def _personal_prompts(self, path: str, body: dict | None = None) -> None:
         user = self._current_user()

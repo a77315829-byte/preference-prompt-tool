@@ -42,7 +42,7 @@ function AccountSection({ user, onBack, onDeleted, onOpenTeams, onOpenLibrary })
 
   const submitDelete = (event) => {
     event.preventDefault();
-    if (!window.confirm(`'${user.username}' 계정과 저장한 프로젝트를 모두 지웁니다. 되돌릴 수 없습니다.`)) return;
+    if (!window.confirm(`'${user.username}' 계정과 개인 지침·프로젝트·직접 만든 인수인계를 모두 지웁니다. 되돌릴 수 없습니다.`)) return;
     run('delete', async () => {
       await deleteAccount(deletePassword);
       onDeleted();
@@ -103,6 +103,7 @@ function AccountSection({ user, onBack, onDeleted, onOpenTeams, onOpenLibrary })
           <p className="ws-help">
             계정과 저장한 개인 지침·프로젝트·버전·자동 저장본이 모두 지워지고 되돌릴 수 없습니다.
             남이 나에게 공유한 프로젝트는 지워지지 않습니다.
+            직접 만든 인수인계와 이전 기록은 받는 팀원에게서도 사라집니다. 다른 사람이 나에게 보낸 인수인계는 작성자에게 남고 받는 계정 지정이 해제됩니다.
           </p>
           {ownedShared > 0 && (
             <p className="ws-error">

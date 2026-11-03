@@ -1558,6 +1558,20 @@
 .saved-coding-profile { border: 1px solid #dce3f0; background: #f6f9fc; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
 .saved-coding-profile ul { padding-left: 1.2rem; line-height: 1.8; }
 .coding-extra-snapshot { white-space: pre-wrap; overflow-wrap: anywhere; }
+.handoffs-section .comparison-heading { margin: 2rem 0 1.5rem; }
+.handoffs-section .comparison-heading h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; letter-spacing: -0.06em; }
+.handoff-list { list-style: none; margin: 1rem 0; padding: 0; max-height: 28rem; overflow: auto; }
+.handoff-list li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #dce3f0; }
+.handoff-list li > div { min-width: 0; overflow-wrap: anywhere; }
+.handoff-list li > button { flex-shrink: 0; }
+.handoff-editor { scroll-margin-top: 7rem; }
+.handoff-share, .handoff-link, .handoff-history, .handoff-from-preference { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #dce3f0; }
+.handoff-open-form .prompt-reset-button, .handoff-link .prompt-reset-button { margin-top: 0.6rem; }
+.handoff-snapshot { background: #fff7e8; border: 1px solid #e3d3b2; padding: 1rem; border-radius: 10px; }
+.handoff-references li { overflow-wrap: anywhere; margin-bottom: 0.6rem; }
+.handoff-history ol { padding-left: 1.2rem; max-height: 16rem; overflow: auto; }
+.handoff-history li { margin: 0.8rem 0; line-height: 1.7; }
+.handoff-history li > span { display: block; }
 @media (max-width: 600px) { .coding-profile-grid { grid-template-columns: minmax(0, 1fr); } }
 .comparison-pending { display: block; color: #7a4a00; font-size: 0.8rem; }
 .preference-diff { list-style: none; padding: 0; max-height: 28rem; overflow-y: auto; }

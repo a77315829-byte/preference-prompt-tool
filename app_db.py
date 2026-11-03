@@ -133,6 +133,32 @@ MIGRATIONS: list[str] = [
     """
     ALTER TABLE personal_prompts ADD COLUMN coding_profile_json TEXT;
     """,
+    # 9: 명시적으로 저장·공유하는 인수인계 작업과 변경 전 버전.
+    """
+    CREATE TABLE handoffs (
+        id TEXT PRIMARY KEY,
+        owner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        recipient_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+        recipient_from_revision INTEGER NOT NULL DEFAULT 0,
+        title TEXT NOT NULL,
+        body_json TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'draft' CHECK(status IN ('draft','shared','active','done')),
+        revision INTEGER NOT NULL DEFAULT 1,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    CREATE INDEX handoffs_owner ON handoffs(owner_id, updated_at);
+    CREATE INDEX handoffs_recipient ON handoffs(recipient_id, updated_at);
+    CREATE TABLE handoff_versions (
+        handoff_id TEXT NOT NULL REFERENCES handoffs(id) ON DELETE CASCADE,
+        revision INTEGER NOT NULL,
+        actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+        event TEXT NOT NULL,
+        snapshot_json TEXT NOT NULL,
+        saved_at TEXT NOT NULL,
+        PRIMARY KEY (handoff_id, revision)
+    );
+    """,
 ]
 
 

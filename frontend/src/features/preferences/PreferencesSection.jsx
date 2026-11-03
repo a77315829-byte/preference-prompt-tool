@@ -15,7 +15,7 @@ import SavedCodingProfile, { codingEnvironmentLabel } from '../coding-instructio
 
 const formOf = (item) => ({ title: item.title, domainKey: item.domain_key, prompt: item.prompt, note: item.note || '' });
 
-function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparison, onCreateCoding, initialId = '' }) {
+function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparison, onCreateCoding, onHandoff, initialId = '' }) {
   const [items, setItems] = useState(null);
   const [item, setItem] = useState(null);
   const [form, setForm] = useState(null);
@@ -236,6 +236,13 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
                 {!teamComparison && ' · 팀용을 쓰려면 먼저 위에서 팀 기준을 확인하세요.'}</p>
               </>}
               <details className="ws-raw"><summary>이번에 사용할 지침 보기</summary><pre className="prompt-box"><code>{chosenPrompt}</code></pre></details>
+              {onHandoff && <div className="handoff-from-preference">
+                <button className="prompt-reset-button" type="button" disabled={Boolean(busy)} onClick={() => {
+                  if (leaveOk()) onHandoff({ title: `${item.title} 작업 인수인계`.slice(0, 100), prompt: chosenPrompt,
+                    purpose: item.domain_key === 'coding' ? task : '' });
+                }}>이 지침으로 작업 넘기기</button>
+                <p className="ws-help">현재 선택한 지침을 다음 화면에 가져갑니다. 진행 상황·남은 일을 확인하고 직접 저장·공유하며, 보관함 원본은 바뀌지 않습니다.</p>
+              </div>}
               {basis === 'custom' && taskDraft && <SaveTaskPreferencePanel key={`${item.id}-${taskDraft.snapshot}`}
                 item={item} comparison={teamComparison} draft={taskDraft} disabled={Boolean(busy)} onBusy={setBusy}
                 onSaved={(saved) => setItems((current) => [saved, ...(current || []).filter((p) => p.id !== saved.id)])} onOpen={open} />}

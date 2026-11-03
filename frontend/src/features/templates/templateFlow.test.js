@@ -18,13 +18,11 @@ function server() {
   } };
 }
 
-test('세 번째 시작점은 팀 업무 템플릿으로 이동하고 검색·복사·지원 범위가 분명하다', async () => {
+test('팀 업무 템플릿의 검색·복사·지원 범위가 분명하다', async () => {
   const api = server(); const ui = await mount('https://example.test/', 'coding', api.fetch);
   try {
     assert.equal(document.querySelectorAll('.category-deck-dots button').length, 3);
-    await ui.act(async () => document.querySelector('[aria-label="팀 업무 정리 선택"]').click());
-    assert.ok(document.querySelector('.selection-button').textContent.includes('업무 템플릿 보기'));
-    await ui.act(async () => document.querySelector('.selection-button').click());
+    await ui.click('템플릿'); await ui.click('팀 업무');
     assert.equal(document.querySelectorAll('.template-card').length, 1);
     assert.ok(document.body.textContent.includes('회의에서 할 일 뽑기'));
     assert.equal([...document.querySelectorAll('button')].some((b) => b.textContent.trim() === '내 방식으로 바꾸기'), false);

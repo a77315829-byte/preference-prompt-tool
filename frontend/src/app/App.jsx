@@ -16,11 +16,14 @@ import '../features/comparison/comparison.css';
 
 const PreferencesSection = lazy(() => import('../features/preferences/PreferencesSection'));
 const CodingInstructionsSection = lazy(() => import('../features/coding-instructions/CodingInstructionsSection'));
+const HandoffsSection = lazy(() => import('../features/handoffs/HandoffsSection'));
 
 function App() {
   const [initialInvite] = useState(() => new URLSearchParams(window.location.search).get('team') || '');
+  const [handoffId, setHandoffId] = useState(() => new URLSearchParams(window.location.search).get('handoff') || '');
+  const [handoffDraft, setHandoffDraft] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('summary');
-  const [activeFlow, setActiveFlow] = useState(initialInvite ? 'teams' : 'category');
+  const [activeFlow, setActiveFlow] = useState(handoffId ? 'handoffs' : initialInvite ? 'teams' : 'category');
   const [sceneRequest, setSceneRequest] = useState({ index: 0, sequence: 0 });
   // 템플릿 라이브러리에서 "내 방식으로 바꾸기"로 들어왔을 때의 템플릿.
   const [template, setTemplate] = useState(null);
@@ -80,7 +83,7 @@ function App() {
   };
 
   const handleCategoryContinue = () => {
-    if (selectedCategory === 'teamWork') { openTemplates('팀 업무'); return; }
+    if (selectedCategory === 'teamWork') { openHandoffs(); return; }
     setTemplate(null);
     setComparisonDraft(null);
     setTeamCodeDraft('');
@@ -110,6 +113,7 @@ function App() {
   const openTeams = () => { setMenuOpen(false); setActiveFlow('teams'); };
   const openTemplates = (category = '전체') => { setTemplateCategory(category); setMenuOpen(false); setActiveFlow('templates'); };
   const openLibrary = (id = '') => { setPreferenceId(id); setMenuOpen(false); setActiveFlow('preferences'); };
+  const openHandoffs = (draft = null) => { setHandoffId(''); setHandoffDraft(draft); setMenuOpen(false); setActiveFlow('handoffs'); };
   const openCodingInstructions = (profile = null) => {
     setCodingProfileDraft(profile); setTemplate(null); setComparisonDraft(null); setTeamCodeDraft(''); setTeamNameDraft('');
     setActiveFlow('coding-instructions');
@@ -224,7 +228,15 @@ function App() {
           <motion.div className="flow-view" key="preferences" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <Suspense fallback={<p className="comparison-section" role="status">내 선호 보관함을 여는 중…</p>}>
               <PreferencesSection key={user?.id || 'anonymous'} user={user} signupOpen={signupOpen} onLogin={setUser}
-                initialId={preferenceId} onBack={handleComparisonBack} onStartComparison={compareForMyself} onCreateCoding={openCodingInstructions} />
+                initialId={preferenceId} onBack={handleComparisonBack} onStartComparison={compareForMyself} onCreateCoding={openCodingInstructions} onHandoff={openHandoffs} />
+            </Suspense>
+          </motion.div>
+        )}
+
+        {activeFlow === 'handoffs' && (
+          <motion.div className="flow-view" key="handoffs" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <Suspense fallback={<p className="comparison-section" role="status">작업 인수인계를 여는 중…</p>}>
+              <HandoffsSection user={user} signupOpen={signupOpen} onLogin={setUser} onBack={handleComparisonBack} initialId={handoffId} initialDraft={handoffDraft} />
             </Suspense>
           </motion.div>
         )}
@@ -246,7 +258,7 @@ function App() {
           <motion.div className="flow-view" key="teams" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
             <TeamsSection user={user} onBack={handleComparisonBack}
               onLogin={() => requestLogin('로그인하면 내가 참여한 팀이 카테고리별로 모여 보입니다.')}
-              onCompare={compareForTeam} initialInvite={teamCodeDraft || initialInvite} />
+              onCompare={compareForTeam} initialInvite={teamCodeDraft || initialInvite} onOpenHandoffs={openHandoffs} />
           </motion.div>
         )}
 

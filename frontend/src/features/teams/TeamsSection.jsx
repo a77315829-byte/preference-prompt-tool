@@ -9,7 +9,7 @@ import {
 // 팀 프롬프트 보기. 팀에 더하려면 그 카테고리 비교를 끝내야 하지만, 결과를 보는 데는
 // 비교가 필요 없다 - 팀 코드만 있으면 된다 (GET /api/teams/<코드>). 로그인했으면 내가
 // 참여한 팀을 카테고리별로 모아 보여 준다 (GET /api/teams).
-function TeamsSection({ user, onBack, onLogin, onCompare, initialInvite = '' }) {
+function TeamsSection({ user, onBack, onLogin, onCompare, onOpenHandoffs, initialInvite = '' }) {
   const [code, setCode] = useState('');
   const [mode, setMode] = useState(initialInvite ? 'join' : 'create');
   const [teamName, setTeamName] = useState('');
@@ -113,6 +113,12 @@ function TeamsSection({ user, onBack, onLogin, onCompare, initialInvite = '' }) 
             <p className="ws-help">팀원별 선호를 한 사람당 한 표로 모아 항목별 기준을 만듭니다. 가장 많이 고른 값을 기본으로 삼고, 의견이 갈리거나 동률·미정인 항목을 표시합니다. 각자가 마지막에 ‘합치기’를 눌러야 반영됩니다. 실제 업무 기준으로 채택할지는 팀에서 검토해 결정하세요.</p>
           </details>
         </div>
+
+        {onOpenHandoffs && <div className="ws-step">
+          <h3>진행하던 작업을 팀원에게 넘기나요?</h3>
+          <p className="ws-help">목적·진행 상황·남은 일과 프롬프트를 함께 저장하고 받을 팀원 계정에 공유하세요. 선호 비교를 마치지 않아도 사용할 수 있어요.</p>
+          <button className="prompt-reset-button" type="button" onClick={() => onOpenHandoffs()}>작업 인수인계 열기</button>
+        </div>}
 
         <div className="ws-step">
           <p className="question-eyebrow">처음이라면, 여기서 시작하세요</p>
