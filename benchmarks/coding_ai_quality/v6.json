@@ -1,0 +1,40 @@
+{
+  "version": "6.0",
+  "purpose": "Fresh holdout for the third preregistration (docs/rule_based_function_preregistration.md): does the assembled prompt lower functional pass, and does a request-check rule recover it. Written before any generation. Each request names the exact button labels and keeps status text outside buttons, after the v5 char_counter ambiguity.",
+  "baseline_model": "openai/gpt-4o-mini",
+  "generation_mode": "live",
+  "rounds_per_task": 1,
+  "required_axes": 3,
+  "tasks": [
+    {
+      "id": "notify_switch",
+      "split": "holdout_v3",
+      "request": "React와 TypeScript로 알림 설정 스위치를 만들어 주세요. 버튼 하나가 있고 role='switch', 버튼 글자는 정확히 '알림'입니다. 처음에는 aria-checked='false'이고, 버튼 바깥의 별도 문단에 '알림 꺼짐'을 표시합니다. 버튼을 누르면 aria-checked='true'가 되고 문단은 '알림 켜짐'으로 바뀝니다. 다시 누르면 처음 상태로 돌아갑니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": ["처음에 알림 꺼짐, aria-checked false", "누르면 알림 켜짐, aria-checked true", "다시 누르면 알림 꺼짐"]
+    },
+    {
+      "id": "step_counter",
+      "split": "holdout_v3",
+      "request": "React와 TypeScript로 5씩 늘어나는 카운터를 만들어 주세요. 버튼은 두 개이고 글자는 정확히 '5 더하기'와 '초기화'입니다. 버튼 바깥의 별도 문단에 '값 0'을 표시합니다. '5 더하기'를 누를 때마다 값이 5 늘어 '값 5', '값 10'처럼 표시하고, '초기화'를 누르면 '값 0'으로 돌아갑니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": ["처음에 값 0", "두 번 더하면 값 10", "초기화하면 값 0"]
+    },
+    {
+      "id": "todo_add",
+      "split": "holdout_v3",
+      "request": "React와 TypeScript로 할 일 추가 목록을 만들어 주세요. label이 '할 일'인 input 하나와 글자가 정확히 '추가'인 버튼이 있습니다. 목록은 ul/li로 그리고 처음에는 비어 있으며, 목록 바깥의 별도 문단에 '할 일 0개'를 표시합니다. 입력값의 앞뒤 공백을 뺀 내용이 있으면 '추가'를 눌렀을 때 그 내용을 목록 끝에 li로 넣고 입력란을 비우며 개수를 '할 일 1개'처럼 갱신합니다. 공백뿐이면 아무것도 넣지 않습니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": ["처음에 할 일 0개, li 없음", "우유 사기 추가 시 li 1개, 입력란 비움, 할 일 1개", "공백만 넣으면 그대로"]
+    },
+    {
+      "id": "color_choice",
+      "split": "holdout_v3",
+      "request": "React와 TypeScript로 색 선택 버튼 묶음을 만들어 주세요. 버튼은 세 개이고 글자는 정확히 '빨강', '초록', '파랑'입니다. 처음에는 모두 aria-pressed='false'이고, 버튼 바깥의 별도 문단에 '선택한 색: 없음'을 표시합니다. 버튼을 누르면 그 버튼만 aria-pressed='true'가 되고 문단은 '선택한 색: 초록'처럼 바뀝니다. 다른 버튼을 누르면 선택이 그 버튼으로 옮겨 갑니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": ["처음에 선택한 색: 없음", "초록 누르면 초록만 눌림", "파랑 누르면 파랑만 눌림"]
+    },
+    {
+      "id": "word_count",
+      "split": "holdout_v3",
+      "request": "React와 TypeScript로 단어 수 세기를 만들어 주세요. textarea 하나가 있고, 그 바깥의 별도 문단에 '단어 0개'를 표시합니다. 입력 내용을 공백(스페이스, 줄바꿈)으로 나눠 빈 조각을 뺀 개수를 '단어 2개'처럼 바로 표시합니다. 외부 라이브러리는 사용하지 마세요.",
+      "acceptance": ["처음에 단어 0개", "hello world 는 단어 2개", "앞뒤·여러 공백과 줄바꿈이 섞인 세 단어는 단어 3개", "지우면 단어 0개"]
+    }
+  ]
+}

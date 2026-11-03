@@ -40,6 +40,11 @@ ENTRY = {
     "star_rating": "StarRating.tsx",
     "like_toggle": "LikeToggle.tsx",
     "temperature_convert": "TemperatureConvert.tsx",
+    "notify_switch": "NotifySwitch.tsx",
+    "step_counter": "StepCounter.tsx",
+    "todo_add": "TodoAdd.tsx",
+    "color_choice": "ColorChoice.tsx",
+    "word_count": "WordCount.tsx",
 }
 
 

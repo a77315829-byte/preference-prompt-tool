@@ -25,7 +25,12 @@ async function check() {
     task === 'char_counter' ? 'CharCounter' :
     task === 'star_rating' ? 'StarRating' :
     task === 'like_toggle' ? 'LikeToggle' :
-    task === 'temperature_convert' ? 'TemperatureConvert' : null;
+    task === 'temperature_convert' ? 'TemperatureConvert' :
+    task === 'notify_switch' ? 'NotifySwitch' :
+    task === 'step_counter' ? 'StepCounter' :
+    task === 'todo_add' ? 'TodoAdd' :
+    task === 'color_choice' ? 'ColorChoice' :
+    task === 'word_count' ? 'WordCount' : null;
   const exportedComponents = Object.entries(exports).filter(([name, value]) =>
     /^[A-Z]/.test(name) && typeof value === 'function');
   const Component = exports.default || (namedExport && exports[namedExport]) ||
@@ -239,6 +244,67 @@ async function check() {
     checks.push(has('화씨 99.5°F') && !has(prompt));
     await enter('');
     checks.push(has(prompt) && !/화씨\s*-?\d/.test(container.textContent));
+  } else if (task === 'notify_switch') {
+    const sw = () => container.querySelector('[role="switch"]');
+    const outside = (text) => [...container.querySelectorAll('*')].some((el) =>
+      !el.closest('button') && el.children.length === 0 && el.textContent.includes(text));
+    checks.push(sw()?.textContent.trim() === '알림' && sw()?.getAttribute('aria-checked') === 'false'
+      && outside('알림 꺼짐') && !has('알림 켜짐'));
+    await click('알림');
+    checks.push(sw().getAttribute('aria-checked') === 'true' && outside('알림 켜짐') && !has('알림 꺼짐'));
+    await click('알림');
+    checks.push(sw().getAttribute('aria-checked') === 'false' && outside('알림 꺼짐') && !has('알림 켜짐'));
+  } else if (task === 'step_counter') {
+    // 버튼 글자("5 더하기")와 이어 붙지 않도록 버튼이 아닌 요소의 글자만 본다.
+    const value = (n) => [...container.querySelectorAll('*')].some((el) => !el.closest('button')
+      && new RegExp(`(^|\\s)값\\s*${n}$`).test(el.textContent.replace(/\s+/g, ' ').trim()));
+    checks.push(value(0));
+    await click('5 더하기');
+    await click('5 더하기');
+    checks.push(value(10) && !value(0));
+    await click('초기화');
+    checks.push(value(0) && !value(10));
+  } else if (task === 'todo_add') {
+    const input = container.querySelector('input');
+    if (!input) throw new Error('Missing input');
+    const setValue = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    const enter = async (value) => React.act(async () => {
+      setValue.call(input, value);
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+    const items = () => [...container.querySelectorAll('li')].map((li) => li.textContent.trim());
+    checks.push(items().length === 0 && has('할 일 0개'));
+    await enter('  우유 사기 ');
+    await click('추가');
+    checks.push(JSON.stringify(items()) === '["우유 사기"]' && input.value === '' && has('할 일 1개'));
+    await enter('   ');
+    await click('추가');
+    checks.push(items().length === 1 && has('할 일 1개'));
+  } else if (task === 'color_choice') {
+    const names = ['빨강', '초록', '파랑'];
+    const btn = (name) => [...container.querySelectorAll('button')].find((b) => b.textContent.trim() === name);
+    const pressed = () => names.map((name) => btn(name)?.getAttribute('aria-pressed'));
+    checks.push(names.every(btn) && pressed().every((v) => v === 'false') && has('선택한 색: 없음'));
+    await click('초록');
+    checks.push(JSON.stringify(pressed()) === '["false","true","false"]' && has('선택한 색: 초록'));
+    await click('파랑');
+    checks.push(JSON.stringify(pressed()) === '["false","false","true"]' && has('선택한 색: 파랑')
+      && !has('선택한 색: 초록'));
+  } else if (task === 'word_count') {
+    const input = container.querySelector('textarea');
+    if (!input) throw new Error('Missing textarea');
+    const setValue = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+    const enter = async (value) => React.act(async () => {
+      setValue.call(input, value);
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+    checks.push(has('단어 0개'));
+    await enter('hello world');
+    checks.push(has('단어 2개'));
+    await enter('  one   two\nthree  ');
+    checks.push(has('단어 3개'));
+    await enter('');
+    checks.push(has('단어 0개'));
   } else if (task === 'password_visibility') {
     const input = container.querySelector('input');
     if (!input) throw new Error('Missing password input');
