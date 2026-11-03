@@ -333,7 +333,9 @@ def markdown(report: dict) -> str:
         for name, d in summary["paired"].items():
             lines.append(f"| {name} | {d['units']} | {d['axis_pass_diff']} {d['axis_pass_diff_ci95']} | "
                          f"{d['functional_diff']} {d['functional_diff_ci95']} |")
-        role = ("확증(판정에 쓴다)" if report.get("split") == "holdout" and report["mode"] == "execute"
+        # 실행 검사는 설계상 캐시 재생(--cached-only)으로 잰다. holdout 이면서 이전 프롬프트 재생이 아닐 때만 확증이다.
+        replayed = any((item.get("improvement") or {}).get("method") == "replayed" for item in profiles)
+        role = ("확증(판정에 쓴다)" if report.get("split") == "holdout" and not replayed
                 else "판정에 쓰지 않는다 (pilot·재생·calibration)")
         lines += ["", f"- 사전등록 기준 ({role}): {json.dumps(summary['criteria'], ensure_ascii=False)}"
                   f" → 전부 충족: `{summary['all_criteria_met']}` · 미적용 비율 {summary['fallback_rate']}"]

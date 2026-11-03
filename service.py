@@ -762,8 +762,8 @@ def final_prompt(
 # 보낸 요청 수다. "이전 선택 수정" 뒤 다시 끝내도 이 수는 초기화되지 않는다.
 MAX_PROMPT_IMPROVEMENTS_PER_SESSION = 2
 PROMPT_RESULTS_DIR = os.environ.get("PPT_PROMPT_RESULTS_DIR")
-# 실제 모드에서 AI 개선을 켤지. 기본은 끔 - 개선이 프롬프트를 낫게 만든다는 측정 결과가
-# 아직 없다 (docs/history/2026-11-03_personalized_prompt_improvement.md). 끄면 rule_based.
+# 실제 모드에서 AI 개선을 켤지. 기본은 끔 - 사전등록 비교에서 기본 조립본보다 낫다는 기준을
+# 충족하지 못했다 (docs/personalized_prompt_preregistration.md 결과 절). 끄면 rule_based.
 PROMPT_IMPROVEMENT_ENABLED = os.environ.get("PPT_PROMPT_IMPROVEMENT", "0") == "1"
 
 

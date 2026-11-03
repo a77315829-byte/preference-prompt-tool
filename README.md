@@ -782,7 +782,7 @@ npm run dev
 | `PPT_OPTIMIZATIONS_PER_DAY` | 30 | 하루 GEPA 최적화("선호 기준으로 최적화") 상한 (세션당 2회) |
 | `PPT_POLISHES_PER_DAY` | 60 | 하루 "프롬프트 다듬기" LLM 재작성 상한 (`PPT_LIVE=1` 일 때만 동작) |
 | `PPT_WORKSPACE_CALLS_PER_DAY` | 60 | 하루 "서비스용 프롬프트" AI 호출 상한 (요구사항 정리 + 시험 실행 + AI 추천. 입력 오류로 멈춘 시험은 차감 안 함) |
-| `PPT_PROMPT_IMPROVEMENT` | 꺼짐 | `1` 이면 실제 모드에서 선택을 마친 뒤 근거 있는 선호 줄만 AI 가 다시 쓴다. 효과는 아직 측정되지 않았다 (`docs/history/2026-11-03_personalized_prompt_improvement.md`) |
+| `PPT_PROMPT_IMPROVEMENT` | 꺼짐 | `1` 이면 실제 모드에서 선택을 마친 뒤 근거 있는 선호 줄만 AI 가 다시 쓴다. 사전등록 비교(holdout 60단위)에서 기본 조립본보다 낫다는 기준을 충족하지 못해 기본은 꺼 둔다 (`docs/personalized_prompt_preregistration.md`) |
 | `PPT_PROMPT_IMPROVEMENTS_PER_DAY` · `PPT_USER_PROMPT_IMPROVEMENTS_PER_DAY` | 60 · 20 | 위 개선 요청의 하루 상한 (서버 전체 · 사람마다). 캐시를 타면 차감 안 함, 세션당 2회 |
 | `PPT_USER_SESSIONS_PER_DAY` · `PPT_USER_OPTIMIZATIONS_PER_DAY` · `PPT_USER_POLISHES_PER_DAY` · `PPT_USER_WORKSPACE_CALLS_PER_DAY` | 20 · 5 · 20 · 30 | 위 네 상한의 **사람마다 몫**. 위 값은 서버 전체 상한으로 그대로 남는다 |
 | `PPT_ANON_..._PER_DAY` (같은 네 가지) | 사람마다 몫과 같음 | 로그인하지 않은 방문자 **전체가 나눠 쓰는** 한 몫 |
