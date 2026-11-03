@@ -12,7 +12,6 @@ import json
 import os
 import threading
 import time
-from datetime import date, timedelta
 from dataclasses import asdict, replace
 from http.cookies import CookieError, SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -102,11 +101,6 @@ DAILY_OPTIMIZATIONS = _quota("optimize", "PPT_OPTIMIZATIONS_PER_DAY", 30, "PPT_U
 OPTIMIZE_RUNS: dict[str, int] = {}
 # 최적화 근거(전후 점수 등). 화면에서 "무슨 기준으로 다듬었는지" 보여 준다.
 OPTIMIZE_REPORTS: dict[str, dict] = {}
-# AWS Cost Explorer 실제 조회 (/api/aws/costs 의 demoMode: false). 서버 주인의 AWS 계정
-# 비용을 읽으므로 브라우저 요청만으로 켜지지 않는다 - 서버가 PPT_AWS_LIVE=1 로 켜고,
-# 로그인한 사람만, 하루 상한 안에서 쓴다. 조회 한 번에 Cost Explorer 요청 요금이 붙는다.
-AWS_LIVE = os.environ.get("PPT_AWS_LIVE") == "1"
-DAILY_AWS_QUERIES = _quota("aws", "PPT_AWS_QUERIES_PER_DAY", 20, "PPT_USER_AWS_QUERIES_PER_DAY", 5)
 # 팀 모드 (team.py). DB 에 남는다. 로그인한 사람은 자기 아이디로만 참여한다.
 TEAMS = team.TeamStore(DB)
 # 다른 출처에서 이 API 를 부르도록 허용할 주소 목록 (쉼표로 구분). 기본은
@@ -249,7 +243,6 @@ def _team_payload(code: str) -> dict[str, Any]:
 def _domain_path(domain_key: str) -> str:
     allowed = {
         "coding": ROOT / "domains" / "coding.yaml",
-        "idle_tracker": ROOT / "domains" / "idle_tracker.yaml",
         "review": ROOT / "domains" / "review.yaml",
         "email": ROOT / "domains" / "email.yaml",
         "summarization": ROOT / "domains" / "summarization.yaml",
@@ -261,138 +254,6 @@ def _domain_path(domain_key: str) -> str:
     if path is None:
         raise ValueError(f"지원하지 않는 도메인입니다: {domain_key}")
     return str(path)
-
-
-def _report_source_text(report: dict[str, Any]) -> str:
-    """findings 를 생성기가 실제로 인용할 수 있는 형태로 적는다.
-
-    이전 sourceText는 "찾았으니 확인하세요" 정도의 안내문 한 줄이었다 -
-    그 문장만 생성기에 들어가면 실제 금액·리소스ID를 하나도 못 받은
-    채로 "요약"을 만드는 셈이라, 출력에 나오는 구체적인 숫자는 전부
-    모델이 지어낸 것일 수밖에 없다(사용자에게 보여주는 카드에는 진짜
-    데이터가 있는데, 그걸 요약하는 모델만 못 보고 있었다). 개인화(상세도
-    ·강조점)와 정확성(금액·리소스ID가 실제와 일치)을 따로 검증하려면
-    검증 대상 자체가 먼저 정확해야 한다."""
-    period = report.get("period", {})
-    lines = [
-        f"조회 기간: {period.get('start', '?')} ~ {period.get('end', '?')}",
-        f"총 예상 비용: {report.get('totalCost', '?')}",
-    ]
-    for finding in report.get("findings", []):
-        lines.append(
-            f"- {finding.get('service', '?')} ({finding.get('resourceId', '?')}): "
-            f"{finding.get('cost', '?')} - {finding.get('reason', '')} "
-            f"해결: {finding.get('resolution', '')}"
-        )
-    return "\n".join(lines)
-
-
-def _demo_aws_cost_report(lookback_days: int = 30) -> dict[str, Any]:
-    """API 키 없이도 항상 같은 화면을 보여주는 AWS 비용 점검 결과."""
-    end = date.today()
-    start = end - timedelta(days=lookback_days)
-    report: dict[str, Any] = {
-        "mode": "demo",
-        "period": {"start": start.isoformat(), "end": end.isoformat()},
-        "totalCost": "₩16,800",
-        "currency": "KRW",
-        "findings": [
-            {
-                "id": "eip",
-                "service": "EC2 탄력적 IP",
-                "resourceId": "eipalloc-0a12bc34de56f7890",
-                "cost": "₩10,000",
-                "severity": "high",
-                "reason": "연결되지 않은 탄력적 IP가 계속 과금되고 있습니다.",
-                "resolution": "AWS 콘솔 > EC2 > 탄력적 IP 메뉴에서 릴리스하세요.",
-            },
-            {
-                "id": "snapshot",
-                "service": "EBS 스냅샷",
-                "resourceId": "snap-0f1234567890abcd1",
-                "cost": "₩6,800",
-                "severity": "medium",
-                "reason": "오래된 스냅샷이 남아 있어 저장 비용이 발생합니다.",
-                "resolution": "AWS 콘솔 > EC2 > 스냅샷에서 필요 없는 항목을 확인 후 삭제하세요.",
-            },
-        ],
-    }
-    report["sourceText"] = _report_source_text(report)
-    return report
-
-
-def _aws_live_blocked() -> str | None:
-    """실제 조회를 막을 이유. 막지 않으면 하루 횟수를 한 번 차감하고 None.
-
-    이 경로는 서버 주인의 AWS 계정 비용을 읽어 요청한 사람에게 돌려준다. 예전에는
-    브라우저가 보낸 demoMode 하나로 켜져서, 화면을 연 누구나 서버 자격 증명으로
-    Cost Explorer 를 부를 수 있었다 (조회 한 번에 요청당 요금도 붙는다)."""
-    if not AWS_LIVE:
-        return "이 서버는 AWS 실제 조회가 꺼져 있어 데모 데이터를 표시합니다 (PPT_AWS_LIVE=1 로 켤 수 있습니다)."
-    if _subject() == ANON:
-        return "AWS 실제 조회는 로그인한 사람만 쓸 수 있어 데모 데이터를 표시합니다."
-    try:
-        _take(DAILY_AWS_QUERIES, "AWS 실제 조회")
-    except ValueError as exc:
-        return f"{exc} 데모 데이터를 표시합니다."
-    return None
-
-
-def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
-    """Cost Explorer를 선택적으로 조회하고, 실패하면 안전한 데모 결과를 반환한다."""
-    try:
-        lookback_days = min(max(int(body.get("lookbackDays", 30)), 7), 90)
-    except (TypeError, ValueError):
-        raise ValueError("lookbackDays는 7~90 사이의 숫자여야 합니다.")
-    if bool(body.get("demoMode", True)):
-        return _demo_aws_cost_report(lookback_days)
-    blocked = _aws_live_blocked()
-    if blocked is not None:
-        report = _demo_aws_cost_report(lookback_days)
-        report["liveError"] = blocked
-        return report
-
-    try:
-        import boto3  # type: ignore
-
-        end = date.today()
-        start = end - timedelta(days=lookback_days)
-        client = boto3.client("ce", region_name=os.environ.get("AWS_REGION", "us-east-1"))
-        response = client.get_cost_and_usage(
-            TimePeriod={"Start": start.isoformat(), "End": end.isoformat()},
-            Granularity="MONTHLY",
-            Metrics=["UnblendedCost"],
-            GroupBy=[{"Type": "DIMENSION", "Key": "SERVICE"}],
-        )
-        groups: list[dict[str, Any]] = []
-        total = 0.0
-        for result in response.get("ResultsByTime", []):
-            for group in result.get("Groups", []):
-                amount = float(group.get("Metrics", {}).get("UnblendedCost", {}).get("Amount", 0) or 0)
-                total += amount
-                if amount > 0:
-                    groups.append({"service": group.get("Keys", ["알 수 없는 서비스"])[0], "amount": amount})
-        groups.sort(key=lambda item: item["amount"], reverse=True)
-        findings = [
-            {
-                "id": f"service-{index}",
-                "service": item["service"],
-                "resourceId": "서비스 단위 비용",
-                "cost": f"${item['amount']:.2f}",
-                "severity": "high" if index == 0 else "medium",
-                "reason": "최근 사용량이 높은 서비스입니다.",
-                "resolution": "AWS Cost Explorer에서 세부 리소스와 사용량을 확인하세요.",
-            }
-            for index, item in enumerate(groups[:4])
-        ]
-        report = _demo_aws_cost_report(lookback_days)
-        report.update({"mode": "aws", "currency": "USD", "totalCost": f"${total:.2f}", "findings": findings})
-        report["sourceText"] = _report_source_text(report)
-        return report
-    except Exception:  # noqa: BLE001 - 자격 증명/SDK/권한 오류를 비밀 없이 처리
-        report = _demo_aws_cost_report(lookback_days)
-        report["liveError"] = "AWS Cost Explorer를 사용할 수 없어 데모 데이터를 표시합니다."
-        return report
 
 
 # 프롬프트 자체는 비교 세션의 sourceText(과제 원문, 12,000자 한도)보다
@@ -490,7 +351,7 @@ def quota_left() -> dict[str, int]:
     """지금 요청한 사람의 오늘 남은 횟수 (/api/auth/me 가 보여 준다)."""
     subject = _subject()
     quotas = {"session": LIVE_SESSIONS, "optimize": DAILY_OPTIMIZATIONS,
-              "polish": DAILY_POLISHES, "workspace": DAILY_WORKSPACE_CALLS, "aws": DAILY_AWS_QUERIES}
+              "polish": DAILY_POLISHES, "workspace": DAILY_WORKSPACE_CALLS}
     return {kind: q.left(subject) for kind, q in quotas.items() if hasattr(q, "left")}
 
 
@@ -516,7 +377,7 @@ def _workspace_sample() -> dict[str, Any]:
     project["requirements"] = ws_sample.sample_requirements()
     project["check_set"] = ws_sample.NAME
     return {**_ws_payload(project), "input": ws_sample.SAMPLE_INPUT, "live": LIVE,
-            "notes": ["샘플 요구사항은 미리 정리해 둔 것입니다 (AI 호출 없음). 실제 AWS 데이터가 아닙니다."]}
+            "notes": ["샘플 요구사항은 미리 정리해 둔 것입니다 (AI 호출 없음). 실제 계정 데이터가 아닙니다."]}
 
 
 def _workspace_structure(body: dict[str, Any]) -> dict[str, Any]:
@@ -808,12 +669,13 @@ class ApiHandler(BaseHTTPRequestHandler):
             if user is None:
                 self._send(401, {"error": "로그인하면 내가 참여한 팀을 모아 볼 수 있습니다. 팀 코드로는 로그인 없이 볼 수 있습니다."})
                 return
-            self._send(200, {"teams": [asdict(t) for t in TEAMS.list_for_user(user.id)]})
+            self._send(200, {"teams": [asdict(t) for t in TEAMS.list_for_user(user.id)
+                                       if t.domain_key != "idle_tracker"]})
             return
         if len(parts := path.split("/")) == 4 and parts[:3] == ["", "api", "teams"]:
             try:
                 self._send(200, {"team": _team_payload(parts[3])})
-            except team.TeamError as exc:
+            except (team.TeamError, ValueError) as exc:
                 self._send(404, {"error": str(exc)})
             return
         if path == "/api/workspace/sample":
@@ -850,9 +712,6 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/sessions":
                 self._start_session(body)
-                return
-            if path == "/api/aws/costs":
-                self._send(200, {"report": _aws_cost_report(body)})
                 return
             if path == "/api/polish/checklist":
                 self._send(200, _polish_checklist_only(body))
@@ -911,6 +770,7 @@ class ApiHandler(BaseHTTPRequestHandler):
 
     def _start_session(self, body: dict[str, Any]) -> None:
         domain_key = str(body.get("domainKey", "coding"))
+        domain_path = _domain_path(domain_key)
         session_model = CODING_MODEL if domain_key == "coding" else DEFAULT_MODEL
         source_text = str(body.get("sourceText", "")).strip()
         if not source_text:
@@ -928,7 +788,7 @@ class ApiHandler(BaseHTTPRequestHandler):
         args = dict(
             source_text=source_text[:12_000],
             domain_key=domain_key,
-            domain_path=_domain_path(domain_key),
+            domain_path=domain_path,
             # 모델은 서버가 정한다 (요청 본문의 model 은 무시). 브라우저가
             # 고르게 두면 누구든 비싼 모델 이름으로 서버 키를 쓸 수 있다.
             model=session_model,

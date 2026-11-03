@@ -29,7 +29,7 @@ test('최근 본 팀: 같은 코드는 맨 앞으로 옮기고 개수를 제한�
 test('화면 이름: 카테고리, 비교 화면 흐름, 축 값', () => {
   assert.equal(categoryLabel('coding'), '코딩 도움');
   assert.equal(categoryLabel('unknown'), 'unknown');
-  assert.equal(flowOfDomain('idle_tracker'), 'idleTracker');
+  assert.equal(flowOfDomain('coding'), 'coding');
   assert.equal(flowOfDomain('email'), 'email');
   assert.equal(axisValueLabel('code_structure', 'compact'), '간결하게 작성');
   assert.equal(axisValueLabel('code_structure', 'other'), 'other');

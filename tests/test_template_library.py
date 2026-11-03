@@ -16,7 +16,7 @@ SOURCE = "The council approved a housing plan. It adds homes. Critics worry abou
 def test_shipped_library_loads_and_covers_the_core_categories() -> None:
     templates = template_library.load_library()
     assert len({t.id for t in templates}) == len(templates)
-    assert {t.domain for t in templates} >= {"summarization", "summarization_ko", "coding", "idle_tracker"}
+    assert {t.domain for t in templates} == {"summarization", "summarization_ko", "coding"}
     for t in templates:
         load_domain(f"domains/{t.domain}.yaml")  # 도메인이 실제로 로드돼야 한다
 

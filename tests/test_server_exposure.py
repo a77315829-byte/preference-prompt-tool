@@ -1,75 +1,10 @@
-"""api_server 를 다른 사람이 쓸 수 있게 열었을 때 문제가 되는 두 경로. 네트워크는 쓰지 않는다.
+"""비교 세션의 만료와 보관 개수 상한을 모델 API 호출 없이 검증한다."""
 
-- AWS 실제 조회는 서버 주인의 계정 비용을 읽는다. 브라우저가 보낸 demoMode 하나로 켜지면
-  화면을 연 누구나 서버 자격 증명으로 Cost Explorer 를 부를 수 있었다.
-- 비교 세션은 메모리에만 있고 데모 세션은 상한 없이 만들 수 있어서, 지우지 않으면 쌓인다.
-"""
-
-import sys
 from types import SimpleNamespace
 
 import pytest
 
 import api_server
-from budget import DailyBudget
-
-
-class _FakeCostExplorer:
-    calls = 0
-
-    def get_cost_and_usage(self, **_):
-        _FakeCostExplorer.calls += 1
-        return {"ResultsByTime": [{"Groups": [
-            {"Keys": ["Amazon EC2"], "Metrics": {"UnblendedCost": {"Amount": "12.5"}}},
-        ]}]}
-
-
-@pytest.fixture
-def fake_boto3(monkeypatch):
-    _FakeCostExplorer.calls = 0
-    monkeypatch.setitem(sys.modules, "boto3", SimpleNamespace(client=lambda *a, **k: _FakeCostExplorer()))
-    return _FakeCostExplorer
-
-
-def _live_request():
-    return api_server._aws_cost_report({"demoMode": False, "lookbackDays": 30})
-
-
-def test_demo_request_never_queries_aws(monkeypatch, fake_boto3) -> None:
-    monkeypatch.setattr(api_server, "AWS_LIVE", True)
-    report = api_server._aws_cost_report({"demoMode": True})
-    assert report["mode"] != "aws" and "liveError" not in report
-    assert fake_boto3.calls == 0
-
-
-def test_live_request_is_ignored_unless_the_server_turns_it_on(monkeypatch, fake_boto3) -> None:
-    monkeypatch.setattr(api_server, "AWS_LIVE", False)
-    monkeypatch.setattr(api_server, "_subject", lambda: "user:1")
-    report = _live_request()
-    assert report["mode"] != "aws"
-    assert "PPT_AWS_LIVE" in report["liveError"]
-    assert fake_boto3.calls == 0
-
-
-def test_live_request_needs_a_signed_in_user(monkeypatch, fake_boto3) -> None:
-    monkeypatch.setattr(api_server, "AWS_LIVE", True)
-    monkeypatch.setattr(api_server, "_subject", lambda: api_server.ANON)
-    report = _live_request()
-    assert report["mode"] != "aws"
-    assert "로그인" in report["liveError"]
-    assert fake_boto3.calls == 0
-
-
-def test_live_request_counts_against_a_daily_limit(monkeypatch, fake_boto3) -> None:
-    monkeypatch.setattr(api_server, "AWS_LIVE", True)
-    monkeypatch.setattr(api_server, "_subject", lambda: "user:1")
-    monkeypatch.setattr(api_server, "DAILY_AWS_QUERIES", DailyBudget(1))
-
-    first = _live_request()
-    assert first["mode"] == "aws" and first["totalCost"] == "$12.50"
-    second = _live_request()
-    assert second["mode"] != "aws" and second["liveError"]
-    assert fake_boto3.calls == 1
 
 
 @pytest.fixture

@@ -7,7 +7,7 @@ const scenes = [
     number: '01',
     kicker: 'CHOOSE',
     title: '좋아하는 결과를 고르면',
-    description: '문서 요약, 코딩, AWS 비용 점검처럼 지금 필요한 카테고리를 선택합니다.',
+    description: '회의록을 정리하거나 코드를 작성할 때, 원하는 AI 결과의 기준부터 찾아보세요.',
     visual: 'category',
   },
   {
@@ -21,13 +21,13 @@ const scenes = [
     number: '03',
     kicker: 'REUSE',
     title: '나만의 프롬프트를 다시 씁니다',
-    description: '선택 기록이 하나의 코딩 기준이 되어 다음 작업에도 이어집니다.',
+    description: '찾은 기준을 다음 작업에 다시 쓰고, 팀원들의 선택과 모아 공통 지침을 만듭니다.',
     visual: 'result',
   },
 ];
 
 // 앞에 보이는 핵심 카테고리. 타깃("AI 를 매일 쓰는 작은 개발팀")이 반복하는 일에
-// 맞춘 세 가지다. 요약은 영어·한국어를 한 카드로 두고 비교 화면에서 언어를 고른다.
+// 맞춘 두 가지다. 요약은 영어·한국어를 한 카드로 두고 비교 화면에서 언어를 고른다.
 const coreCategories = [
   {
     id: 'summary',
@@ -44,14 +44,6 @@ const coreCategories = [
     title: '코딩 도움',
     description: '선호하는 TypeScript와 React 작성 방식을 찾아 Copilot·Cursor 설정 파일로 가져갑니다.',
     accent: 'purple',
-  },
-  {
-    id: 'idleTracker',
-    number: '03',
-    label: 'AWS COST',
-    title: 'AWS 비용 보고',
-    description: '서비스별 비용 현황을 내가 보기 편한 상세도와 강조점으로 보고받습니다.',
-    accent: 'green',
   },
 ];
 
@@ -102,7 +94,6 @@ function StoryVisual({ type }) {
           <div className="story-mini-options">
           <div className="story-mini-option story-mini-blue">문서 요약</div>
           <div className="story-mini-option story-mini-purple">코딩 도움</div>
-          <div className="story-mini-option story-mini-green">AWS 비용</div>
         </div>
         <div className="story-visual-arrow" aria-hidden="true">↗</div>
       </div>
@@ -181,11 +172,11 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction,
       <div className="narrative-intro-copy">
         <p className="hero-kicker">PREFERENCE PROMPT TOOL</p>
         <h1>
-          좋아하는 결과를
+          작은 개발팀의 AI,
           <br />
-          <em>고르는 것</em>부터 시작하세요.
+          <em>함께 쓸 기준</em>을 만드세요.
         </h1>
-        <p>복잡한 프롬프트를 직접 작성하지 않아도, 선택만으로 나만의 기준을 만들 수 있습니다.</p>
+        <p>문서와 코드 예시를 골라 내 취향을 찾고, 팀 기준으로 모아 함께 쓰세요. 반복 업무의 AI 지침도 만들고 다듬을 수 있습니다.</p>
       </div>
 
       <div className="narrative-category-stage">

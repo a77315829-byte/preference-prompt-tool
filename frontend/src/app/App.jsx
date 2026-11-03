@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useCallback, useEffect, useState } from 'react';
 import ComparisonSection from '../features/comparison/ComparisonSection';
-import IdleTrackerSection from '../features/idle-tracker/IdleTrackerSection';
 import ScrollStory from '../features/landing/ScrollStory';
 import PromptPolishSection from '../features/polish/PromptPolishSection';
 import PromptWorkspaceSection from '../features/prompt-workspace/PromptWorkspaceSection';
@@ -77,7 +76,6 @@ function App() {
     setComparisonDraft(null);
     setTeamCodeDraft('');
     if (selectedCategory === 'coding') setActiveFlow('coding');
-    else if (selectedCategory === 'idleTracker') setActiveFlow('idleTracker');
     else if (selectedCategory === 'review') setActiveFlow('review');
     else if (selectedCategory === 'email') setActiveFlow('email');
     else if (selectedCategory === 'summaryKo') setActiveFlow('summarization_ko');
@@ -92,12 +90,12 @@ function App() {
     requestScene(0);
   };
 
-  // 템플릿의 도메인 이름이 곧 비교 화면의 흐름 이름이다 (AWS 만 화면 이름이 다르다).
+  // 템플릿의 도메인 이름이 곧 비교 화면의 흐름 이름이다.
   const handlePersonalizeTemplate = (picked) => {
     setTemplate(picked);
     setComparisonDraft(null);
     setTeamCodeDraft('');
-    setActiveFlow(picked.domain === 'idle_tracker' ? 'idleTracker' : picked.domain);
+    setActiveFlow(picked.domain);
   };
 
   const openTeams = () => { setMenuOpen(false); setActiveFlow('teams'); };
@@ -124,9 +122,9 @@ function App() {
           <button type="button" onClick={() => requestScene(1)}>사용 방법</button>
           <button type="button" onClick={() => requestScene(0)}>시작하기</button>
           <button type="button" onClick={() => { setMenuOpen(false); setTemplate(null); setActiveFlow('templates'); }}>템플릿</button>
-          <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('polish'); }}>프롬프트 다듬기</button>
-          <button type="button" onClick={openTeams}>팀 프롬프트</button>
-          <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('workspace'); }}>서비스용 프롬프트</button>
+          <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('polish'); }}>요청문 다듬기</button>
+          <button type="button" onClick={openTeams}>팀 기준 맞추기</button>
+          <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('workspace'); }}>업무 지침 만들기</button>
         </div>
 
         {user ? (
@@ -219,12 +217,6 @@ function App() {
           <motion.div className="flow-view" key="workspace" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
             <PromptWorkspaceSection onBack={handleComparisonBack} user={user} signupOpen={signupOpen}
               onLogin={setUser} loginRequest={workspaceLoginRequest} />
-          </motion.div>
-        )}
-
-        {activeFlow === 'idleTracker' && (
-          <motion.div className="flow-view" key="idleTracker" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-            <IdleTrackerSection onBack={handleComparisonBack} template={template} />
           </motion.div>
         )}
 

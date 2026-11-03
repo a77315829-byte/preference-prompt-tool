@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import { checkPromptStructure, polishPrompt } from './polishApi';
 
 const EXAMPLE_PROMPTS = [
-  '요약해줘',
-  '이 코드 리뷰해줘',
-  '고객 문의에 답장 써줘',
+  '회의록에서 결정 사항과 다음 할 일을 정리해줘',
+  '이 코드에서 오류 가능성과 필요한 테스트를 검토해줘',
+  '기술 문서에서 우리 팀이 바꿔야 할 부분을 알려줘',
 ];
 
 // GEPA는 프롬프트가 실제로 만든 결과물을 채점하는 도구라, 여기 가져온
@@ -89,15 +89,15 @@ function PromptPolishSection({ onBack }) {
 
         <div className="comparison-heading">
           <p className="eyebrow">PROMPT POLISH</p>
-          <h2>가진 프롬프트, 구조부터 점검하고 다듬어요.</h2>
+          <h2>AI에게 보낼 요청을 더 명확하게 다듬어요</h2>
           <p>
-            어디서 가져온 프롬프트든 붙여넣어 보세요. 역할·형식·제약·예시가
-            빠졌는지 코드로 먼저 확인하고, 빠진 부분만 모델이 채워 다시
-            씁니다.
+            팀에서 쓰던 요청문을 붙여 넣으세요. 어떤 일을 맡길지, 어떤 결과가 필요한지,
+            꼭 지켜야 할 조건이 있는지 점검하고 AI로 수정안을 만듭니다.
+            수정안을 확인한 뒤 복사해 팀원과 함께 쓰세요.
           </p>
 
           <label className="task-input-label" htmlFor="polish-input">
-            다듬을 프롬프트 <span>(어디서든 가져온 것이면 됩니다)</span>
+            다듬을 요청문 <span>(AI에게 보내던 문장)</span>
           </label>
           <div className="task-input-row">
             <textarea
@@ -182,7 +182,7 @@ function PromptPolishSection({ onBack }) {
               <p className="question-eyebrow">무엇을 고쳤는지</p>
               <p className="polish-suggestions">{result.suggestions}</p>
 
-              <h3>다듬은 프롬프트</h3>
+              <h3>다듬은 요청문</h3>
               <p>
                 [ ] 로 남은 자리는 사용자가 채울 내용입니다 - 모델이 없는 내용을
                 지어내지 않습니다.
@@ -190,7 +190,7 @@ function PromptPolishSection({ onBack }) {
               <pre className="prompt-box"><code>{result.revisedPrompt}</code></pre>
               <div className="prompt-actions">
                 <button className="prompt-copy-button" type="button" onClick={handleCopy}>
-                  {copied ? '복사했습니다 ✓' : '프롬프트 복사'}
+                  {copied ? '복사했습니다 ✓' : '요청문 복사'}
                 </button>
                 <button className="prompt-reset-button" type="button" onClick={handleAgain}>
                   다시 다듬기

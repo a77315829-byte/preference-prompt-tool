@@ -38,11 +38,11 @@ function TeamPanel({ sessionId, valueLabel = (axis, value) => value, initialCode
 
   return (
     <div className="team-panel">
-      <p className="question-eyebrow">팀 프롬프트</p>
+      <p className="question-eyebrow">내 선택을 팀 기준에 더하기</p>
       <p className="team-help">
-        팀원이 같은 팀 코드로 각자 비교를 마치고 더하면, 모두의 선택을 합친 팀 공통 프롬프트가 만들어집니다.
-        원문은 보내지 않고 선택 기록만 더합니다. 로그인하면 내 아이디로 참여하고, 다른 사람이 그 이름을 쓸 수 없습니다.
-        더한 뒤에는 상단 <strong>팀 프롬프트</strong> 메뉴에서 비교 없이 팀 결과를 다시 볼 수 있습니다.
+        방금 찾은 내 취향을 팀원들의 선택과 합쳐 보세요. 처음이면 팀 코드를 하나 정하고,
+        참여하는 팀원에게 같은 코드를 알려 주세요. 원문은 팀에 공유하지 않고 선택 기록만 합칩니다.
+        다음에는 상단 <strong>팀 기준 맞추기</strong> 메뉴에서 결과를 다시 볼 수 있습니다.
       </p>
       <div className="team-form">
         <input aria-label="팀 코드" placeholder="팀 코드 (예: frontend-team)" value={code}
@@ -54,10 +54,10 @@ function TeamPanel({ sessionId, valueLabel = (axis, value) => value, initialCode
             onChange={(e) => setName(e.target.value)} maxLength={20} />
         )}
         <button className="prompt-copy-button" type="button" disabled={busy || !code.trim() || (!me && !name.trim())} onClick={join}>
-          팀에 더하기
+          내 선택 합치기
         </button>
         <button className="prompt-reset-button" type="button" disabled={busy || !code.trim()} onClick={refresh}>
-          팀 결과 보기
+          모인 팀 기준 보기
         </button>
       </div>
       {error && <p className="connection-note">{error}</p>}

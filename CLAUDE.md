@@ -127,7 +127,12 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제. CI·.devcontaine
 ## 브랜치와 CI
 
 - `submission` 은 `submission-final` 태그로 고정했고 Streamlit 공개 배포는 그 브랜치를 본다.
-  모든 작업은 `master` 에서 한다.
+  기존 프로젝트 작업은 `master` 에서 한다.
+- 사용자가 요청한 새 대회용 작업은 `codex/summary-coding-no-aws` 에서 한다.
+  문서 요약·코딩과 공통 기능을 유지하고 AWS 화면·조회 API·템플릿은 제외한다.
+  과거 AWS 실험·검사 자료는 기록으로 보존한다. 제품 방향은 작은 개발팀의 AI 사용 기준 공유다.
+  React 메뉴는 `팀 기준 맞추기`·`업무 지침 만들기`·`요청문 다듬기`로 안내한다.
+  인수인계는 업무 설명 예시 중 하나이며 전용 인수인계 서비스는 아직 구현하지 않았다.
 - CI(`.github/workflows/tests.yml`)는 push·PR 마다 `pytest -m "not api"`, 프론트 빌드,
   프론트 단위 테스트(`node --test`)를 돌린다.
 

@@ -64,10 +64,10 @@ function AccountSection({ user, onBack, onDeleted, onOpenTeams }) {
 
         {onOpenTeams && (
           <div className="ws-step">
-            <p className="question-eyebrow">내 팀 프롬프트</p>
+            <p className="question-eyebrow">우리 팀의 AI 사용 기준</p>
             <p className="ws-help">내 아이디로 참여한 팀을 카테고리별로 모아 보고, 비교 없이 팀 결과를 엽니다.</p>
             <div className="prompt-actions">
-              <button className="prompt-copy-button" type="button" onClick={onOpenTeams}>팀 프롬프트 보기</button>
+              <button className="prompt-copy-button" type="button" onClick={onOpenTeams}>팀 기준 보기</button>
             </div>
           </div>
         )}
