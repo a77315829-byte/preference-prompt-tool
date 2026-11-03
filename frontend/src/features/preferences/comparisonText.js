@@ -11,8 +11,9 @@ export function promptChanges(personal, team) {
   return lineDiff(before, after).filter((row) => row.type !== 'same' && row.text.trim());
 }
 
-export function selectionMatches(output, task, item, basis, comparison) {
+export function selectionMatches(output, task, item, basis, comparison, draft) {
   return output && output.task === task && output.revision === item.revision
     && (output.basis || 'personal') === basis
-    && (basis !== 'team' || output.team_snapshot === comparison?.team_snapshot);
+    && (basis === 'personal' || output.team_snapshot === comparison?.team_snapshot)
+    && (basis !== 'custom' || output.task_snapshot === draft?.snapshot);
 }

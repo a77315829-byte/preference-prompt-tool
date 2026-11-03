@@ -18,3 +18,11 @@ test('개인·팀 선택이나 팀 스냅샷이 달라지면 이전 실행 결�
   assert.equal(selectionMatches(output, '작업', item, 'personal', null), false);
   assert.equal(selectionMatches(output, '작업', item, 'team', { team_snapshot: 'next' }), false);
 });
+
+test('작업용 선택 조합이나 팀 기준이 달라지면 이전 결과로 구분한다', () => {
+  const output = { task: '작업', revision: 1, basis: 'custom', team_snapshot: 't1', task_snapshot: 'mixed1' };
+  assert.equal(selectionMatches(output, '작업', { revision: 1 }, 'custom', { team_snapshot: 't1' }, { snapshot: 'mixed1' }), true);
+  assert.equal(selectionMatches(output, '작업', { revision: 1 }, 'custom', { team_snapshot: 't1' }, { snapshot: 'mixed2' }), false);
+  assert.equal(selectionMatches(output, '작업', { revision: 1 }, 'custom', { team_snapshot: 't2' }, { snapshot: 'mixed1' }), false);
+  assert.equal(selectionMatches(output, '작업', { revision: 1 }, 'custom', { team_snapshot: 't1' }, null), false);
+});

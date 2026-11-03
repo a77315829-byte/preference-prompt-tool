@@ -4,7 +4,7 @@ import { mount } from '../../../test-support/appHarness.js';
 
 function shelfServer({ loggedIn = true, live = false } = {}) {
   const state = { loggedIn, records: [], writes: 0, runs: 0, deletes: 0, failSave: false,
-    teamDomain: 'coding', teamSnapshot: 'team-v1', lastRun: null };
+    teamDomain: 'coding', teamSnapshot: 'team-v1', lastRun: null, recognized: true, failCompose: false };
   const response = (data, status = 200) => ({ ok: status < 400, status, json: async () => structuredClone(data) });
   const fetch = async (path, options) => {
     const body = options.body ? JSON.parse(options.body) : {};
@@ -31,11 +31,19 @@ function shelfServer({ loggedIn = true, live = false } = {}) {
       if (item.domain_key !== state.teamDomain) return response({ error: '같은 종류의 지침끼리 비교해 주세요.' }, 400);
       return response({ comparison: {
         preference_id: id, revision: item.revision, team_code: body.teamCode, team_name: '함께 개발팀', domain_key: item.domain_key,
-        team_members: 3, personal_recognized: true, team_prompt: '팀 기준의 지침', comparison_prompt: '팀 기준의 비교용 문장',
+        team_members: 3, personal_recognized: state.recognized, team_prompt: '팀 기준의 지침', comparison_prompt: '팀 기준의 비교용 문장',
         team_snapshot: state.teamSnapshot, team_language: 'ko', languages: ['ko', 'en'],
         axes: [{ axis: 'code_structure', label: '코드 구성', personal_value: 'compact', team_value: 'separated',
-          status: 'different', team_agreed: false, team_tied: false, team_votes: { separated: 2, compact: 1 } }],
+          status: 'different', team_agreed: false, team_tied: false, team_votes: { separated: 2, compact: 1 } },
+        { axis: 'type_detail', label: '타입 작성', personal_value: 'explicit', team_value: 'inferred', status: 'different', team_agreed: true, team_votes: { inferred: 3 } }],
       } });
+    }
+    if (action === 'compose-task') {
+      if (state.failCompose || body.teamSnapshot !== state.teamSnapshot) return response({ error: '팀 기준이 바뀌었습니다. 새로 확인해 주세요.' }, 409);
+      assert.ok(['personal', 'team'].includes(body.choices.code_structure));
+      assert.ok(['personal', 'team'].includes(body.choices.type_detail));
+      return response({ draft: { prompt: `작업용: ${body.choices.code_structure} 구성 / ${body.choices.type_detail} 타입`,
+        choices: body.choices, snapshot: JSON.stringify(body.choices) + state.teamSnapshot } });
     }
     if (action === 'update') {
       if (state.failSave) return response({ error: '다른 창에서 수정된 항목입니다. 다시 열어 주세요.' }, 409);
@@ -43,12 +51,12 @@ function shelfServer({ loggedIn = true, live = false } = {}) {
       return response({ preference: item });
     }
     if (action === 'run') {
-      if (body.basis === 'team' && body.teamSnapshot !== state.teamSnapshot) return response({ error: '팀 기준이 바뀌었습니다. 새로 확인해 주세요.' }, 409);
+      if (body.basis !== 'personal' && body.teamSnapshot !== state.teamSnapshot) return response({ error: '팀 기준이 바뀌었습니다. 새로 확인해 주세요.' }, 409);
       state.runs += 1;
       state.lastRun = body;
       assert.equal(body.revision, item.revision);
       return response({ output: '새 작업의 실행 결과', model: 'test-model', revision: item.revision, preference_id: item.id,
-        basis: body.basis || 'personal', team_snapshot: body.teamSnapshot || null });
+        basis: body.basis || 'personal', team_snapshot: body.teamSnapshot || null, task_snapshot: body.taskSnapshot || null });
     }
     if (action === 'delete') {
       state.deletes += 1; state.records = state.records.filter((p) => p.id !== id);
@@ -203,5 +211,61 @@ test('다른 팀으로 바꾸다 비교가 실패하면 이전 팀용을 사용�
     assert.equal(document.querySelector('#preference-task').value, '유지할 개발 요청');
     await ui.click('지침 + 새 작업 복사');
     assert.ok(ui.state.copied.includes('개인 지침'));
+  } finally { await ui.close(); }
+});
+
+test('항목별 선택 → 작업용 만들기 → 복사·실행 → 선택 수정·기준 갱신 시 이전 작업용 해제', async () => {
+  const api = shelfServer({ live: true });
+  const ui = await mount('https://example.test/', 'coding', api.fetch);
+  const choose = async (axis, source) => ui.act(async () => document.querySelector(`input[name="task-choice-${axis}"][value="${source}"]`).click());
+  const button = (name) => [...document.querySelectorAll('button')].find((b) => b.textContent === name);
+  try {
+    await finishCoding(ui);
+    await ui.click('내 선호 보관함에 저장');
+    await ui.click('저장한 지침 열기');
+    await ui.fill('#preference-task', '계속 유지할 작업');
+    await ui.fill('#preference-team-list', 'devteam');
+    await ui.click('개인·팀 기준 비교하기');
+    assert.equal(button('이번 작업용 만들기').disabled, true);
+    await choose('code_structure', 'team');
+    assert.equal(button('이번 작업용 만들기').disabled, true);
+    await choose('type_detail', 'personal');
+    await ui.click('이번 작업용 만들기');
+    assert.equal(button('이번 작업용으로 사용').getAttribute('aria-pressed'), 'true');
+    await ui.click('지침 + 새 작업 복사');
+    assert.ok(ui.state.copied.includes('작업용: team 구성 / personal 타입'));
+    assert.ok(ui.state.copied.includes('계속 유지할 작업'));
+    await ui.click('이 지침으로 AI 실행');
+    assert.equal(api.state.lastRun.basis, 'custom');
+    assert.deepEqual(api.state.lastRun.choices, { code_structure: 'team', type_detail: 'personal' });
+    assert.ok(document.body.textContent.includes('이번 작업용 지침'));
+    await ui.click('개인용으로 사용');
+    await ui.click('이번 작업용으로 사용');
+    await choose('code_structure', 'personal');
+    assert.equal(button('이번 작업용으로 사용').disabled, true);
+    assert.ok(document.body.textContent.includes('이전 입력·지침으로 실행한 결과'));
+    api.state.failCompose = true;
+    await ui.click('이번 작업용 만들기');
+    assert.ok(document.querySelector('[role="alert"]').textContent.includes('팀 기준이 바뀌'));
+    assert.equal(button('이번 작업용으로 사용').disabled, true);
+    api.state.failCompose = false;
+    await ui.click('팀 기준 새로 확인');
+    assert.equal(document.querySelector('input[name="task-choice-code_structure"]:checked'), null);
+    assert.equal(document.querySelector('#preference-task').value, '계속 유지할 작업');
+    assert.equal(api.state.records[0].prompt, '개인 지침');
+    assert.equal(api.state.records[0].revision, 1);
+    assert.equal(api.state.writes, 1);
+  } finally { await ui.close(); }
+});
+
+test('항목을 확정할 수 없는 수정 지침은 조합 제한 이유와 전체 선택을 안내한다', async () => {
+  const api = shelfServer(); api.state.recognized = false;
+  const ui = await mount('https://example.test/', 'coding', api.fetch);
+  try {
+    await finishCoding(ui); await ui.click('내 선호 보관함에 저장'); await ui.click('저장한 지침 열기');
+    await ui.fill('#preference-team-list', 'devteam'); await ui.click('개인·팀 기준 비교하기');
+    assert.ok(document.querySelector('.task-preference-mixer').textContent.includes('항목을 정확히 구분할 수 없어'));
+    assert.equal(document.querySelector('input[name^="task-choice-"]'), null);
+    await ui.click('팀용으로 사용');
   } finally { await ui.close(); }
 });

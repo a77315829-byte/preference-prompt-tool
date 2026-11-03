@@ -13,4 +13,8 @@ export const createPreference = (body) => call('', body).then((d) => d.preferenc
 export const updatePreference = (id, body) => call(`/${encodeURIComponent(id)}/update`, body).then((d) => d.preference);
 export const deletePreference = (id, revision) => call(`/${encodeURIComponent(id)}/delete`, { revision });
 export const comparePreferenceTeam = (id, revision, teamCode, language = '') => call(`/${encodeURIComponent(id)}/compare-team`, { revision, teamCode, language }).then((d) => d.comparison);
+export const composeTaskPreference = (item, comparison, choices) => call(`/${encodeURIComponent(item.id)}/compose-task`, {
+  revision: item.revision, teamCode: comparison.team_code, teamSnapshot: comparison.team_snapshot,
+  language: comparison.team_language, choices,
+}).then((d) => d.draft);
 export const runPreference = (id, revision, task, selection = {}) => call(`/${encodeURIComponent(id)}/run`, { revision, task, ...selection });

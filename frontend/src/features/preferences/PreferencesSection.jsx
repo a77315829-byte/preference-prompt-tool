@@ -4,6 +4,7 @@ import { fetchHealth } from '../comparison/codingApi';
 import { createPreference, deletePreference, getPreference, listPreferences, runPreference, updatePreference } from './preferencesApi';
 import { composePreferenceRequest, PREFERENCE_CATEGORIES, WORK_EXAMPLES } from './preferenceText';
 import TeamPreferenceComparison from './TeamPreferenceComparison';
+import TaskPreferenceMixer from './TaskPreferenceMixer';
 import { selectionMatches } from './comparisonText';
 
 const formOf = (item) => ({ title: item.title, domainKey: item.domain_key, prompt: item.prompt, note: item.note || '' });
@@ -19,6 +20,7 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
   const [output, setOutput] = useState(null);
   const [basis, setBasis] = useState('personal');
   const [teamComparison, setTeamComparison] = useState(null);
+  const [taskDraft, setTaskDraft] = useState(null);
   const [health, setHealth] = useState(null);
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
@@ -29,12 +31,16 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
   const dirty = form && (!item?.id || JSON.stringify(form) !== JSON.stringify(formOf(item)));
   const leaveOk = () => !(dirty || task.trim()) || window.confirm('저장하지 않은 수정 내용과 새 작업 입력이 사라집니다. 계속할까요?');
   const teamChanged = useCallback((next) => {
-    setTeamComparison(next); setBasis('personal'); setCopied(''); setError('');
+    setTeamComparison(next); setTaskDraft(null); setBasis('personal'); setCopied(''); setError('');
+  }, []);
+  const draftChanged = useCallback((next) => {
+    setTaskDraft(next); setBasis((current) => next ? 'custom' : current === 'custom' ? 'personal' : current);
+    setCopied(''); setError('');
   }, []);
 
   const adopt = (next, mode = 'use') => {
     setItem(next); setForm(formOf(next)); setView(mode); setTask(''); setOutput(null); setCopied(''); setNotice('');
-    setBasis('personal'); setTeamComparison(null);
+    setBasis('personal'); setTeamComparison(null); setTaskDraft(null);
     window.setTimeout(() => editorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
   };
 
@@ -77,7 +83,7 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
     try {
       const saved = item.id ? await updatePreference(item.id, { ...form, revision: item.revision }) : await createPreference(form);
       setItem(saved); setForm(formOf(saved));
-      setBasis('personal'); setTeamComparison(null);
+      setBasis('personal'); setTeamComparison(null); setTaskDraft(null);
       setItems((current) => [saved, ...(current || []).filter((p) => p.id !== saved.id)]);
       setNotice('저장했어요. 새 작업에 사용할 수 있습니다.');
     } catch (e) { setError(e.message); }
@@ -100,7 +106,7 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
     finally { setBusy(''); }
   };
 
-  const chosenPrompt = basis === 'team' ? teamComparison?.team_prompt || '' : item?.prompt || '';
+  const chosenPrompt = basis === 'custom' ? taskDraft?.prompt || '' : basis === 'team' ? teamComparison?.team_prompt || '' : item?.prompt || '';
   const requestText = item?.id ? composePreferenceRequest(chosenPrompt, task, item.domain_key) : '';
   const copy = async (kind, text) => {
     try { await navigator.clipboard.writeText(text); setCopied(kind); setError(''); }
@@ -109,8 +115,9 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
   const run = async () => {
     setBusy('run'); setError(''); setCopied('');
     const snapshot = { task, revision: item.revision, id: item.id };
-    const selection = basis === 'team' ? { basis, teamCode: teamComparison.team_code,
-      teamSnapshot: teamComparison.team_snapshot, teamLanguage: teamComparison.team_language } : { basis: 'personal' };
+    const selection = basis !== 'personal' ? { basis, teamCode: teamComparison.team_code,
+      teamSnapshot: teamComparison.team_snapshot, teamLanguage: teamComparison.team_language,
+      ...(basis === 'custom' ? { choices: taskDraft.choices, taskSnapshot: taskDraft.snapshot } : {}) } : { basis: 'personal' };
     try {
       const result = await runPreference(snapshot.id, snapshot.revision, snapshot.task, selection);
       setOutput({ ...result, task: snapshot.task });
@@ -186,16 +193,20 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
             </form> : <>
               <h3>{item.title} · 새 작업에 사용하기</h3>
               <TeamPreferenceComparison key={item.id} item={item} disabled={Boolean(busy)} onChange={teamChanged} />
+              {teamComparison && <TaskPreferenceMixer key={`${item.id}-${item.revision}-${teamComparison.team_snapshot}`}
+                item={item} comparison={teamComparison} disabled={Boolean(busy)} onChange={draftChanged} />}
               <h4>이번 작업에는 어떤 지침을 쓸까요?</h4>
               <div className="prompt-actions" role="group" aria-label="이번 작업에 사용할 지침">
                 <button className={basis === 'personal' ? 'prompt-copy-button' : 'prompt-reset-button'} type="button" aria-pressed={basis === 'personal'} disabled={Boolean(busy)}
                   onClick={() => { setBasis('personal'); setCopied(''); setError(''); }}>개인용으로 사용</button>
                 <button className={basis === 'team' ? 'prompt-copy-button' : 'prompt-reset-button'} type="button" aria-pressed={basis === 'team'} disabled={Boolean(busy) || !teamComparison}
                   onClick={() => { setBasis('team'); setCopied(''); setError(''); }}>팀용으로 사용</button>
+                <button className={basis === 'custom' ? 'prompt-copy-button' : 'prompt-reset-button'} type="button" aria-pressed={basis === 'custom'} disabled={Boolean(busy) || !taskDraft}
+                  onClick={() => { setBasis('custom'); setCopied(''); setError(''); }}>이번 작업용으로 사용</button>
               </div>
-              <p className="ws-help" role="status">{basis === 'team' ? `이번 작업: ${teamComparison?.team_name}의 팀 기준` : '이번 작업: 보관한 내 개인 지침'}
+              <p className="ws-help" role="status">{basis === 'custom' ? '이번 작업: 항목별로 고른 작업용 지침 · 원본은 그대로 유지' : basis === 'team' ? `이번 작업: ${teamComparison?.team_name}의 팀 기준` : '이번 작업: 보관한 내 개인 지침'}
                 {!teamComparison && ' · 팀용을 쓰려면 먼저 위에서 팀 기준을 확인하세요.'}</p>
-              <details className="ws-raw"><summary>이번에 사용할 저장된 지침 보기</summary><pre className="prompt-box"><code>{chosenPrompt}</code></pre></details>
+              <details className="ws-raw"><summary>이번에 사용할 지침 보기</summary><pre className="prompt-box"><code>{chosenPrompt}</code></pre></details>
               <label className="task-input-label" htmlFor="preference-task">{item.domain_key === 'coding' ? '이번에 만들 기능이나 개발 요청' : '이번에 요약할 원문'}</label>
               <textarea id="preference-task" className="task-input" rows={6} maxLength={12000} value={task} onChange={(e) => { setTask(e.target.value); setCopied(''); }} placeholder="새 작업 내용을 여기에 넣으세요." />
               <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => {
@@ -212,8 +223,8 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
               </>}
               <p className="ws-help">{health?.liveConfigured ? 'AI 실행을 누르면 입력 자료가 모델에 전송되며 모델 사용 비용이 발생할 수 있습니다. 실행 결과는 자동 저장하지 않습니다.' : '현재는 복사해서 사용할 수 있어요. 실제 생성 모드에서는 이 화면에서 AI를 실행할 수도 있습니다.'}</p>
               {output && <div className="preference-output">
-                <h4>{selectionMatches(output, task, item, basis, teamComparison) ? 'AI 실행 결과' : '이전 입력·지침으로 실행한 결과'}</h4>
-                <p className="ws-help">{output.basis === 'team' ? '팀용 지침' : '개인용 지침'} · {output.model} · 저장 버전 {output.revision} · 생성한 코드는 자동 실행하지 않습니다.</p>
+                <h4>{selectionMatches(output, task, item, basis, teamComparison, taskDraft) ? 'AI 실행 결과' : '이전 입력·지침으로 실행한 결과'}</h4>
+                <p className="ws-help">{output.basis === 'custom' ? '이번 작업용 지침' : output.basis === 'team' ? '팀용 지침' : '개인용 지침'} · {output.model} · 저장 버전 {output.revision} · 생성한 코드는 자동 실행하지 않습니다.</p>
                 <textarea className="task-input" aria-label="AI 실행 결과 내용" readOnly rows={10} value={output.output} onFocus={(e) => e.target.select()} />
                 <button className="prompt-reset-button" type="button" onClick={() => copy('output', output.output)}>{copied === 'output' ? '결과를 복사했어요' : '결과 복사'}</button>
               </div>}

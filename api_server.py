@@ -28,7 +28,7 @@ import service
 import team
 import template_library
 from personal_prompts import PersonalPromptStore, PromptConflict, expected_revision
-from preference_comparison import compare_preferences, team_basis
+from preference_comparison import compare_preferences, compose_task_prompt, team_basis
 from app_db import Database
 from auth import AuthError, AuthService, TooManyAttempts, User
 from budget import DailyBudget  # noqa: F401 - 테스트가 상한 자리에 끼워 넣는다
@@ -795,7 +795,7 @@ class ApiHandler(BaseHTTPRequestHandler):
                     PERSONAL_PROMPTS.delete(user.id, prompt_id, body.get("revision"))
                     self._send(200, {"ok": True})
                     return
-                if action == "compare-team":
+                if action in ("compare-team", "compose-task"):
                     item = PERSONAL_PROMPTS.get(user.id, prompt_id)
                     if item["revision"] != expected_revision(body.get("revision")):
                         raise PromptConflict("저장된 지침이 바뀌었습니다. 다시 열어 확인한 뒤 비교해 주세요.")
@@ -807,6 +807,11 @@ class ApiHandler(BaseHTTPRequestHandler):
                         raise ValueError("같은 종류의 지침끼리 비교할 수 있어요. 코딩·한국어 요약·영어 요약 분류를 확인해 주세요.")
                     domain = service.load_domain_for(_domain_path(domain_key))
                     comparison = compare_preferences(item, domain, code, TEAMS.name_for(code), members, body.get("language") or None)
+                    if action == "compose-task":
+                        if comparison["team_snapshot"] != body.get("teamSnapshot"):
+                            raise PromptConflict("팀 기준이 바뀌었습니다. 팀 기준을 새로 확인한 뒤 다시 골라 주세요.")
+                        self._send(200, {"draft": compose_task_prompt(item, domain, comparison, body.get("choices"))})
+                        return
                     self._send(200, {"comparison": comparison})
                     return
                 if action == "run":
@@ -820,9 +825,10 @@ class ApiHandler(BaseHTTPRequestHandler):
                     prompt = item["prompt"]
                     team_code = None
                     team_snapshot = None
-                    if basis not in ("personal", "team"):
-                        raise ValueError("개인용 또는 팀용 지침을 선택해 주세요.")
-                    if basis == "team":
+                    task_snapshot = None
+                    if basis not in ("personal", "team", "custom"):
+                        raise ValueError("개인용·팀용 또는 이번 작업용 지침을 선택해 주세요.")
+                    if basis in ("team", "custom"):
                         team_code = body.get("teamCode")
                         if not isinstance(team_code, str) or not 3 <= len(team_code) <= 32:
                             raise ValueError("팀을 먼저 확인해 주세요.")
@@ -834,6 +840,12 @@ class ApiHandler(BaseHTTPRequestHandler):
                         if current["snapshot"] != body.get("teamSnapshot"):
                             raise PromptConflict("팀 기준이 바뀌었습니다. 팀 기준을 새로 확인한 뒤 다시 실행해 주세요.")
                         prompt, team_snapshot = current["prompt"], current["snapshot"]
+                        if basis == "custom":
+                            comparison = compare_preferences(item, domain, team_code, TEAMS.name_for(team_code), members, body.get("teamLanguage"))
+                            draft = compose_task_prompt(item, domain, comparison, body.get("choices"))
+                            if draft["snapshot"] != body.get("taskSnapshot"):
+                                raise PromptConflict("이번 작업의 선택이 바뀌었습니다. 작업용 지침을 다시 만들어 주세요.")
+                            prompt, task_snapshot = draft["prompt"], draft["snapshot"]
                     model = CODING_MODEL if item["domain_key"] == "coding" else DEFAULT_MODEL
                     if not LIVE or not _live_key_available(model):
                         raise ValueError("AI 실행은 실제 생성 모드에서만 사용할 수 있습니다. 준비한 요청문을 복사해 다른 AI에서 사용할 수 있어요.")
@@ -844,7 +856,7 @@ class ApiHandler(BaseHTTPRequestHandler):
                         self._send(502, {"error": service.describe_api_error(exc)})
                         return
                     self._send(200, {"output": output, "model": model, "revision": item["revision"], "preference_id": item["id"],
-                                     "basis": basis, "team_code": team_code, "team_snapshot": team_snapshot})
+                                     "basis": basis, "team_code": team_code, "team_snapshot": team_snapshot, "task_snapshot": task_snapshot})
                     return
             self._send(404, {"error": "찾을 수 없는 경로입니다."})
         except PromptConflict as exc:

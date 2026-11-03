@@ -67,3 +67,22 @@ def compare_preferences(item: dict, domain, code: str, name: str, members: list,
             "domain_key": domain.name, "team_members": len(members), "personal_recognized": personal is not None,
             "axes": axes, "team_prompt": basis["prompt"], "team_snapshot": basis["snapshot"],
             "comparison_prompt": comparison_prompt, "team_language": language, "languages": languages}
+
+
+def compose_task_prompt(item: dict, domain, comparison: dict, choices: dict) -> dict:
+    """확인된 축만 조합한다. 원본 저장·팀 갱신·모델 호출은 하지 않는다."""
+    if not comparison["personal_recognized"]:
+        raise ValueError("수정한 지침은 항목을 정확히 구분할 수 없어 조합할 수 없어요. 개인용 또는 팀용 전체를 선택해 주세요.")
+    differing = {a["axis"] for a in comparison["axes"] if a["personal_value"] != a["team_value"]}
+    if not isinstance(choices, dict) or set(choices) != differing or any(v not in ("personal", "team") for v in choices.values()):
+        raise ValueError("서로 다른 모든 항목에서 내 선호 또는 팀 기준을 하나씩 골라 주세요.")
+    combo = {a["axis"]: a[f"{choices.get(a['axis'], 'personal')}_value"] for a in comparison["axes"]}
+    language = comparison["team_language"]
+    prompt = build_final_prompt(domain, combo, language=None if language == "ko" else language)
+    spec = domain.final_prompt if language == "ko" else domain.final_prompt_translations[language]
+    if spec and spec.preference_note:
+        note = "이번 작업에서 선택한 방식입니다." if language == "ko" else "Preferences selected for this task."
+        prompt = prompt.replace(spec.preference_note, note)
+    snapshot = {"id": item["id"], "revision": item["revision"], "team": comparison["team_snapshot"], "choices": choices, "prompt": prompt}
+    return {"prompt": prompt, "choices": choices,
+            "snapshot": hashlib.sha256(json.dumps(snapshot, sort_keys=True, ensure_ascii=False).encode()).hexdigest()}

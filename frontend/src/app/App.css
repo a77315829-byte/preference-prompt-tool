@@ -1507,6 +1507,11 @@
 .preference-comparison-table th, .preference-comparison-table td { text-align: left; padding: 0.85rem; border: 1px solid #dfe4ed; line-height: 1.6; }
 .preference-comparison-table caption { text-align: left; margin-bottom: 0.6rem; font-weight: 700; }
 .preference-comparison-table .is-different { background: #fff3dd; }
+.task-preference-mixer { margin: 1.5rem 0; padding: 1rem; border: 1px solid #dfe4ed; border-radius: 12px; background: #f8fafc; }
+.preference-axis-choice { min-width: 0; border: 1px solid #dfe4ed; border-radius: 8px; margin: 0.8rem 0; padding: 0.8rem; }
+.preference-axis-choice legend { font-weight: 700; }
+.preference-axis-choice label { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.6rem 0; line-height: 1.6; cursor: pointer; }
+.preference-axis-choice input { flex-shrink: 0; }
 .comparison-pending { display: block; color: #7a4a00; font-size: 0.8rem; }
 .preference-diff { list-style: none; padding: 0; max-height: 28rem; overflow-y: auto; }
 .preference-diff li { margin: 0.6rem 0; padding: 0.8rem; border-radius: 0.6rem; border: 1px solid #dfe4ed; }
