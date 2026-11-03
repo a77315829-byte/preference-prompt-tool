@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mount } from '../../../test-support/appHarness.js';
-import { continuationRequest, handoffLink, parseHandoffLink } from './handoffApi.js';
+import { continuationRequest, handoffFileUrl, handoffLink, parseHandoffLink, readHandoffFile } from './handoffApi.js';
 
 const initialBody = { purpose: '로그인 API 완성', progress: '라우트 구현 완료', remaining: '예외 응답과 테스트 추가', references: ['src/auth.py', 'https://example.test/spec'], prompt: 'Python으로 역할별 함수를 나눠 작성하라.' };
 function handoffServer() {
@@ -43,7 +43,9 @@ function handoffServer() {
     if (action === 'share') { if (body.username === 'missing') return response({ error: '사용자가 없습니다.' }, 400); r.recipient = body.username; r.status = 'shared'; }
     if (action === 'claim' || action === 'reopen') r.status = 'active';
     if (action === 'complete') r.status = 'done';
-    if (action === 'update') { r.body = bodyOf(); r.title = body.title; }
+    if (action === 'update') { r.body = { ...bodyOf(), attachments: r.body.attachments || [] }; r.title = body.title; }
+    if (action === 'attach') r.body.attachments = [...(r.body.attachments || []), { id: 'f'.repeat(32), name: body.name, size: Buffer.from(body.data, 'base64').length, content_type: 'text/plain; charset=utf-8' }];
+    if (action === 'detach') r.body.attachments = r.body.attachments.filter((f) => f.id !== body.fileId);
     r.revision += 1; state.writes += 1; remember(r, action);
     return response({ handoff: publicItem(r) });
   };
@@ -144,4 +146,74 @@ test('인수인계 링크는 다른 쿼리를 제거하고 맥락 요청문은 �
   const request = continuationRequest({ title: '작업', body: initialBody });
   assert.ok(request.startsWith(initialBody.prompt));
   for (const text of [initialBody.purpose, initialBody.progress, initialBody.remaining, ...initialBody.references]) assert.ok(request.includes(text));
+});
+
+async function selectFile(ui, content = '인수인계 파일 내용', name = '작업 메모.txt') {
+  const file = new ui.dom.window.File([content], name, { type: 'text/plain' });
+  await ui.act(async () => {
+    const input = document.querySelector('#handoff-file');
+    Object.defineProperty(input, 'files', { configurable: true, value: [file] });
+    input.dispatchEvent(new ui.dom.window.Event('change', { bubbles: true }));
+  });
+  return file;
+}
+async function attachSelected(ui) {
+  await ui.click('첨부 파일 저장');
+  await ui.act(async () => { await new Promise((resolve) => setTimeout(resolve, 30)); });
+}
+
+test('실제 파일 선택·실패 재시도·공유 후 내려받기 링크·이전 첨부본 보존', async () => {
+  const api = handoffServer(); let ui = await mount('https://example.test/', 'coding', api.fetch);
+  let link;
+  try {
+    await openNew(ui); await fillWork(ui);
+    assert.ok(document.querySelector('.handoff-attachments').textContent.includes('먼저 ‘내 작업으로 저장’'));
+    await ui.click('내 작업으로 저장');
+    await selectFile(ui); api.state.failSave = true; await attachSelected(ui);
+    assert.ok(document.querySelector('[role="alert"]').textContent.includes('다른 팀원이 수정'));
+    assert.ok(document.querySelector('.handoff-attachments').textContent.includes('아직 저장하지 않았어요'));
+    api.state.failSave = false; await attachSelected(ui);
+    assert.equal(api.state.records[0].body.attachments[0].name, '작업 메모.txt');
+    assert.ok(document.querySelector('.handoff-attachments a[download]').href.includes('revision=2'));
+    await ui.fill('#handoff-recipient', 'bob'); await ui.click('이 팀원에게 공유');
+    await ui.click('인수인계 링크 복사'); link = ui.state.copied;
+  } finally { await ui.close(); }
+  api.state.username = 'bob'; ui = await mount(link, 'coding', api.fetch);
+  try {
+    assert.ok(document.querySelector('.handoff-attachments a[target="_blank"]').href.endsWith('revision=3&view=1'));
+    assert.equal(document.querySelector('#handoff-file'), null);
+    assert.equal(document.querySelector('#handoff-prompt').value, initialBody.prompt);
+    assert.ok(document.querySelector('.handoff-references a').href.includes('example.test/spec'));
+    await ui.click('이어서 맡기'); await ui.click('맥락 + 프롬프트 복사');
+    assert.ok(ui.state.copied.includes('작업 메모.txt') && ui.state.copied.includes('내용은 이 요청문에 포함되지 않습니다'));
+    const remove = document.querySelector('.handoff-attachments button');
+    await ui.act(async () => remove.click());
+    assert.equal(document.querySelector('.handoff-attachments a[download]'), null);
+    await ui.click('이전 기록 확인'); await ui.click('3번째 기록 보기');
+    assert.ok(document.querySelector('.handoff-attachments a[download]').href.endsWith('revision=3'));
+    assert.equal(document.querySelector('#handoff-file'), null);
+    assert.equal(api.state.records[0].body.attachments.length, 0);
+  } finally { await ui.close(); }
+});
+
+test('저장 전 본문 변경·선택 파일 보존과 파일 크기 검증', async () => {
+  const api = handoffServer(); const ui = await mount('https://example.test/', 'coding', api.fetch);
+  try {
+    await openNew(ui); await fillWork(ui); await ui.click('내 작업으로 저장');
+    await selectFile(ui); await ui.fill('#handoff-progress', '새 진행 상황');
+    let attach = [...document.querySelectorAll('button')].find((b) => b.textContent === '첨부 파일 저장');
+    assert.equal(attach.disabled, true);
+    await ui.click('변경 내용 저장');
+    assert.ok(document.querySelector('.handoff-attachments').textContent.includes('작업 메모.txt'));
+    await attachSelected(ui);
+    assert.equal(api.state.records[0].body.progress, '새 진행 상황');
+    assert.equal(api.state.records[0].body.attachments.length, 1);
+    await selectFile(ui, '', 'empty.txt');
+    attach = [...document.querySelectorAll('button')].find((b) => b.textContent === '첨부 파일 저장');
+    assert.equal(attach.disabled, true);
+    await assert.rejects(readHandoffFile({ size: 5 * 1024 * 1024 + 1 }), /5MB/);
+    await ui.click('선택 취소');
+    assert.equal(handoffFileUrl('a', 'b', 2, true), '/api/handoffs/a/files/b?revision=2&view=1');
+    assert.equal(api.state.records[0].revision, 3);
+  } finally { await ui.close(); }
 });

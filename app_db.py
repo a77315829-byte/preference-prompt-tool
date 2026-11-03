@@ -159,6 +159,19 @@ MIGRATIONS: list[str] = [
         PRIMARY KEY (handoff_id, revision)
     );
     """,
+    # 10: 인수인계 첨부 원본. 버전에는 메타데이터만 남기며 계정 삭제 시 함께 삭제한다.
+    """
+    CREATE TABLE handoff_files (
+        id TEXT PRIMARY KEY,
+        handoff_id TEXT NOT NULL REFERENCES handoffs(id) ON DELETE CASCADE,
+        name TEXT NOT NULL,
+        content_type TEXT NOT NULL,
+        size INTEGER NOT NULL,
+        data BLOB NOT NULL,
+        created_at TEXT NOT NULL
+    );
+    CREATE INDEX handoff_files_work ON handoff_files(handoff_id);
+    """,
 ]
 
 

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import AuthSection from '../../shared/auth/AuthSection';
 import HandoffFields from './HandoffFields';
+import HandoffAttachments from './HandoffAttachments';
 import { HANDOFF_EVENTS, HANDOFF_STATUS, changeHandoff, continuationRequest, createHandoff, getHandoff,
-  getHandoffHistory, getHandoffVersion, handoffBody, handoffForm, handoffLink, listHandoffs, parseHandoffLink } from './handoffApi';
+  getHandoffHistory, getHandoffVersion, handoffBody, handoffForm, handoffLink, listHandoffs, parseHandoffLink, readHandoffFile } from './handoffApi';
 
 function HandoffsSection({ user, signupOpen, onLogin, onBack, initialId = '', initialDraft = null }) {
   const [items, setItems] = useState(null);
@@ -17,13 +18,15 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, initialId = '', in
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [copied, setCopied] = useState('');
+  const [file, setFile] = useState(null);
   const request = useRef(0);
   const account = useRef(user?.id);
   const editor = useRef(null);
-  const dirty = Boolean(form && (item ? JSON.stringify(form) !== JSON.stringify(handoffForm(item)) : Object.values(form).some((v) => v.trim())));
+  const contentDirty = Boolean(form && (item ? JSON.stringify(form) !== JSON.stringify(handoffForm(item)) : Object.values(form).some((v) => v.trim())));
+  const dirty = contentDirty || Boolean(file);
   const leaveOk = () => !dirty || window.confirm('아직 저장하지 않은 작업 내용이 사라집니다. 이동할까요?');
-  const adopt = (next) => {
-    setItem(next); setForm(handoffForm(next)); setRecipient(next.recipient || ''); setHistory(null); setSnapshot(null); setCopied('');
+  const adopt = (next, preserveFile = false) => {
+    setItem(next); setForm(handoffForm(next)); setRecipient(next.recipient || ''); setHistory(null); setSnapshot(null); setCopied(''); if (!preserveFile) setFile(null);
     window.setTimeout(() => editor.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
   };
   const upsert = (next) => setItems((current) => [next, ...(current || []).filter((r) => r.id !== next.id)]);
@@ -32,7 +35,7 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, initialId = '', in
     const token = ++request.current;
     setItems(null); setError(''); setBusy('');
     if (account.current && account.current !== user?.id) {
-      setItem(null); setForm(null); setHistory(null); setSnapshot(null); setRecipient(''); setNotice(''); setCopied('');
+      setItem(null); setForm(null); setHistory(null); setSnapshot(null); setRecipient(''); setNotice(''); setCopied(''); setFile(null);
     }
     account.current = user?.id;
     if (!user) return undefined;
@@ -58,11 +61,14 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, initialId = '', in
     if (busy || !user) return;
     const token = ++request.current; setBusy(action); setError(''); setNotice('');
     try {
+      if (action === 'attach') payload = await readHandoffFile(file);
+      if (token !== request.current) return;
       const next = action === 'create' ? await createHandoff(payload) : await changeHandoff(item, action, payload);
       if (token === request.current) {
-        adopt(next); upsert(next);
+        adopt(next, action === 'update'); upsert(next);
         setNotice(({ create: '내 작업으로 저장했어요. 받을 팀원을 지정하면 공유됩니다.', update: '진행 상황을 저장했어요. 이전 버전도 남아 있어요.',
-          share: '지정한 팀원이 열 수 있어요. 링크를 복사해 전달하세요.', claim: '이 작업을 이어서 맡았어요. 진행 상황과 남은 일을 갱신하세요.', complete: '작업을 완료로 표시했어요.', reopen: '다시 진행 중으로 바꿨어요.' })[action]);
+          share: '지정한 팀원이 열 수 있어요. 링크를 복사해 전달하세요.', claim: '이 작업을 이어서 맡았어요. 진행 상황과 남은 일을 갱신하세요.', complete: '작업을 완료로 표시했어요.', reopen: '다시 진행 중으로 바꿨어요.',
+          attach: '파일을 저장했어요. 이 작업을 볼 수 있는 팀원도 열거나 내려받을 수 있어요.', detach: '현재 첨부에서 뺐어요. 이전 기록에는 파일이 그대로 남아 있어요.' })[action]);
       }
     } catch (e) { if (token === request.current) setError(e.message); }
     finally { if (token === request.current) setBusy(''); }
@@ -98,7 +104,7 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, initialId = '', in
         reason="인수인계 내용은 작성자와 지정된 받는 팀원만 볼 수 있어요. 링크를 받았다면 지정된 계정으로 로그인하세요. 보관함에서 가져온 내용은 로그인 후 확인하고 저장합니다." /> : <>
         <div className="ws-step">
           <div className="prompt-actions"><button className="prompt-copy-button" type="button" disabled={Boolean(busy)} onClick={() => {
-            if (leaveOk()) { request.current += 1; setItem(null); setForm(handoffForm()); setHistory(null); setSnapshot(null); setRecipient(''); setError(''); setNotice(''); setCopied(''); }
+            if (leaveOk()) { request.current += 1; setItem(null); setForm(handoffForm()); setHistory(null); setSnapshot(null); setRecipient(''); setError(''); setNotice(''); setCopied(''); setFile(null); }
           }}>새 작업 넘기기</button>
           <button className="prompt-reset-button" type="button" disabled={Boolean(busy)} onClick={async () => {
             const token = ++request.current; setBusy('list'); setError('');
@@ -133,8 +139,10 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, initialId = '', in
             </div>
           </>}
           <HandoffFields form={snapshot ? handoffForm(displayed) : form} readOnly={Boolean(snapshot || (item && !item.can_edit))}
-            busy={Boolean(busy)} existing={Boolean(item)} changed={dirty} onSave={save} onChange={(key, value) => { setForm((current) => ({ ...current, [key]: value })); setCopied(''); }} />
+            busy={Boolean(busy)} existing={Boolean(item)} changed={contentDirty} onSave={save} onChange={(key, value) => { setForm((current) => ({ ...current, [key]: value })); setCopied(''); }} />
           {!snapshot && <p className="ws-help" role="status">{!item ? '아직 저장하지 않은 새 작업입니다.' : dirty ? '작성 중 · 아직 저장하지 않은 내용이 있어요. 공유·완료 전에 저장해 주세요.' : '저장된 내용입니다.'}</p>}
+          <HandoffAttachments key={`${item?.id || 'new'}-${displayed?.revision || 0}-${Boolean(snapshot)}`} item={displayed} saved={Boolean(item)} canEdit={Boolean(item?.can_edit && !snapshot)}
+            busy={Boolean(busy)} contentDirty={contentDirty} file={file} onSelect={setFile} onAttach={() => mutate('attach')} onDetach={(fileId) => mutate('detach', { fileId })} />
           {item?.can_share && !snapshot && <form className="handoff-share" onSubmit={(e) => { e.preventDefault(); mutate('share', { username: recipient }); }}>
             <h4>저장한 내용을 받을 팀원에게 공유</h4>
             <label className="task-input-label" htmlFor="handoff-recipient">받을 팀원 아이디</label>

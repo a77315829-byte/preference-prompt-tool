@@ -14,7 +14,7 @@ function HandoffFields({ form, readOnly, busy, onChange, onSave, existing, chang
       <label className="task-input-label" htmlFor={`handoff-${key}`}>{label}</label>
       <textarea id={`handoff-${key}`} className="task-input" maxLength={limit} rows={rows} required={['purpose', 'progress', 'remaining'].includes(key)}
         readOnly={readOnly} disabled={busy} value={form[key]} onChange={(e) => onChange(key, e.target.value)} placeholder={placeholder} />
-      {key === 'references' && <p className="ws-help">파일 내용은 업로드하지 않습니다. 팀원이 접근할 수 있는 저장소 경로·공유 링크를 적어 주세요. 최대 20개입니다.</p>}
+      {key === 'references' && <p className="ws-help">팀원이 접근할 수 있는 저장소 경로·공유 링크를 적어 주세요. 최대 20개입니다. 파일 자체는 작업을 저장한 뒤 ‘참고 파일 첨부’에서 추가할 수 있어요.</p>}
     </div>)}
     {!readOnly && <div className="prompt-actions"><button className="prompt-copy-button" type="submit" disabled={busy || !changed || !form.title.trim() || !form.purpose.trim() || !form.progress.trim() || !form.remaining.trim()}>
       {busy ? '처리하는 중…' : existing ? '변경 내용 저장' : '내 작업으로 저장'}

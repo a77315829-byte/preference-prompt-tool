@@ -17,7 +17,7 @@ from http.cookies import CookieError, SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, quote, urlparse
 
 from dotenv import load_dotenv
 
@@ -30,6 +30,7 @@ import template_library
 from personal_prompts import PersonalPromptStore, PromptConflict, expected_revision
 from coding_instructions import build_coding_instructions
 from handoffs import HandoffStore, HandoffConflict
+from handoff_files import MAX_UPLOAD_JSON
 from preference_comparison import compare_preferences, compose_task_prompt, team_basis
 from saved_preference_remix import remix_saved_prompt
 from saved_preference_restore import restore_saved_prompt
@@ -551,12 +552,12 @@ class ApiHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(encoded)
 
-    def _read_json(self) -> dict[str, Any]:
+    def _read_json(self, limit: int = 256_000) -> dict[str, Any]:
         length = int(self.headers.get("Content-Length", "0"))
         # 음수면 rfile.read(-1) 이 연결이 끊길 때까지 기다린다.
         if length < 0:
             raise ValueError("Content-Length가 올바르지 않습니다.")
-        if length > 256_000:
+        if length > limit:
             raise ValueError("요청 본문이 너무 큽니다.")
         raw = self.rfile.read(length)
         data = json.loads(raw.decode("utf-8") or "{}")
@@ -726,7 +727,12 @@ class ApiHandler(BaseHTTPRequestHandler):
             self._send(403, {"error": "다른 사이트에서 보낸 요청은 받지 않습니다."})
             return
         try:
-            body = self._read_json()
+            parts = path.split("/")
+            uploading = len(parts) == 5 and parts[:3] == ["", "api", "handoffs"] and parts[4] == "attach"
+            if uploading and self._current_user() is None:
+                self._send(401, {"error": "파일을 첨부하려면 로그인해 주세요."})
+                return
+            body = self._read_json(MAX_UPLOAD_JSON if uploading else 256_000)
             if path.startswith("/api/auth/"):
                 self._auth_route(path, body)
                 return
@@ -800,13 +806,29 @@ class ApiHandler(BaseHTTPRequestHandler):
             if len(parts) == 4 and body is None:
                 self._send(200, {"handoff": HANDOFFS.get(user.id, parts[3])})
                 return
+            if len(parts) == 6 and parts[4] == "files" and body is None:
+                query = parse_qs(urlparse(self.path).query)
+                file = HANDOFFS.file(user.id, parts[3], parts[5], int(query.get("revision", ["0"])[0]))
+                inline = query.get("view") == ["1"] and file["content_type"] != "application/octet-stream"
+                self.send_response(200)
+                self.send_header("Content-Type", file["content_type"] if inline else "application/octet-stream")
+                disposition = "inline" if inline else "attachment"
+                self.send_header("Content-Disposition", f"{disposition}; filename=\"attachment\"; filename*=UTF-8''{quote(file['name'], safe='')}")
+                self.send_header("Content-Length", str(file["size"]))
+                self.send_header("Cache-Control", "no-store")
+                self.send_header("X-Content-Type-Options", "nosniff")
+                self.send_header("Content-Security-Policy", "sandbox; default-src 'none'; base-uri 'none'; form-action 'none'")
+                self.send_header("Cross-Origin-Resource-Policy", "same-origin")
+                self.end_headers()
+                self.wfile.write(file["data"])
+                return
             if len(parts) in (5, 6) and parts[4] == "history" and body is None:
                 if len(parts) == 5:
                     self._send(200, {"history": HANDOFFS.history(user.id, parts[3])})
                 else:
                     self._send(200, {"snapshot": HANDOFFS.history(user.id, parts[3], int(parts[5]))})
                 return
-            if len(parts) == 5 and body is not None and parts[4] in ("update", "share", "claim", "complete", "reopen"):
+            if len(parts) == 5 and body is not None and parts[4] in ("update", "share", "claim", "complete", "reopen", "attach", "detach"):
                 self._send(200, {"handoff": HANDOFFS.change(user.id, parts[3], parts[4], body)})
                 return
             self._send(404, {"error": "찾을 수 없는 경로입니다."})

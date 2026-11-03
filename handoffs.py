@@ -8,6 +8,7 @@ import uuid
 
 from auth import USERNAME
 from personal_prompts import expected_revision
+from handoff_files import MAX_FILES, MAX_STORED_BYTES, upload_fields
 
 MAX_HANDOFFS = 100
 MAX_VERSIONS = 200
@@ -127,6 +128,29 @@ class HandoffStore:
                 if not public["can_edit"]:
                     raise PermissionError("현재 편집 담당자만 수정할 수 있습니다. 받은 작업은 먼저 ‘이어서 맡기’를 누르세요.")
                 row["title"], body = handoff_fields(raw)
+                body["attachments"] = json.loads(row["body_json"]).get("attachments", [])
+                row["body_json"] = json.dumps(body, ensure_ascii=False)
+            elif action in ("attach", "detach"):
+                if not public["can_edit"]:
+                    raise PermissionError("현재 편집 담당자만 첨부 파일을 변경할 수 있습니다. 받은 작업은 먼저 ‘이어서 맡기’를 누르세요.")
+                body = json.loads(row["body_json"])
+                files = body.get("attachments", [])
+                if action == "attach":
+                    name, data, content_type = upload_fields(raw)
+                    if len(files) >= MAX_FILES:
+                        raise ValueError("현재 작업에는 파일을 10개까지 첨부할 수 있습니다.")
+                    stored = conn.execute("SELECT COALESCE(SUM(size),0) FROM handoff_files WHERE handoff_id=?", (handoff_id,)).fetchone()[0]
+                    if stored + len(data) > MAX_STORED_BYTES:
+                        raise ValueError("이전 기록을 포함한 첨부 용량은 작업당 20MB까지입니다. 별도 공유 링크를 이용해 주세요.")
+                    file_id = uuid.uuid4().hex
+                    conn.execute("INSERT INTO handoff_files VALUES (?,?,?,?,?,?,?)", (file_id, handoff_id, name, content_type, len(data), data, _now()))
+                    files = [*files, {"id": file_id, "name": name, "content_type": content_type, "size": len(data)}]
+                else:
+                    file_id = raw.get("fileId")
+                    if not any(f["id"] == file_id for f in files):
+                        raise LookupError("현재 작업에서 첨부 파일을 찾을 수 없습니다.")
+                    files = [f for f in files if f["id"] != file_id]
+                body["attachments"] = files
                 row["body_json"] = json.dumps(body, ensure_ascii=False)
             elif action == "share":
                 if not public["can_share"]:
@@ -154,6 +178,23 @@ class HandoffStore:
             current = self._load(conn, user_id, handoff_id)
             self._version(conn, current, user_id, action)
             return self._public(current, user_id)
+
+    def file(self, user_id, handoff_id, file_id, revision):
+        # 현재 권한과 해당 버전의 목록을 모두 확인한다. 개인 초안에서 뺀 파일은
+        # 공유 후 ID를 알고 있어도 받을 수 없다. 이전 대상의 파일 접근도 차단한다.
+        revision = expected_revision(revision)
+        with self.db.connect() as conn:
+            current = self._load(conn, user_id, handoff_id)
+            first = 1 if current["owner_id"] == user_id else current["recipient_from_revision"]
+            if revision < first:
+                raise LookupError("공유 전의 개인 첨부 파일은 열 수 없습니다.")
+            version = conn.execute("SELECT snapshot_json FROM handoff_versions WHERE handoff_id=? AND revision=?", (handoff_id, revision)).fetchone()
+            if version is None or not any(f["id"] == file_id for f in json.loads(version["snapshot_json"])["body"].get("attachments", [])):
+                raise LookupError("이 저장 버전에서 첨부 파일을 찾을 수 없습니다.")
+            row = conn.execute("SELECT name,content_type,size,data FROM handoff_files WHERE handoff_id=? AND id=?", (handoff_id, file_id)).fetchone()
+            if row is None:
+                raise LookupError("첨부 파일을 찾을 수 없습니다.")
+            return dict(row)
 
     def history(self, user_id, handoff_id, revision=None):
         with self.db.connect() as conn:
