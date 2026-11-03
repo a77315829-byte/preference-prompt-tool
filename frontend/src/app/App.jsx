@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { useCallback, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import ComparisonSection from '../features/comparison/ComparisonSection';
 import ScrollStory from '../features/landing/ScrollStory';
 import PromptPolishSection from '../features/polish/PromptPolishSection';
@@ -14,6 +14,8 @@ import './App.css';
 import '../features/landing/landing.css';
 import '../features/comparison/comparison.css';
 
+const PreferencesSection = lazy(() => import('../features/preferences/PreferencesSection'));
+
 function App() {
   const [initialInvite] = useState(() => new URLSearchParams(window.location.search).get('team') || '');
   const [selectedCategory, setSelectedCategory] = useState('summary');
@@ -26,6 +28,7 @@ function App() {
   // 팀 프롬프트 화면에서 "비교하고 내 선택 더하기"로 들어왔을 때 팀 칸에 미리 채울 코드.
   const [teamCodeDraft, setTeamCodeDraft] = useState('');
   const [teamNameDraft, setTeamNameDraft] = useState('');
+  const [preferenceId, setPreferenceId] = useState('');
   const handleDraftChange = useCallback((draft) => {
     setComparisonDraft({ domainKey: activeFlow, ...draft });
   }, [activeFlow]);
@@ -101,6 +104,11 @@ function App() {
   };
 
   const openTeams = () => { setMenuOpen(false); setActiveFlow('teams'); };
+  const openLibrary = (id = '') => { setPreferenceId(id); setMenuOpen(false); setActiveFlow('preferences'); };
+  const compareForMyself = (domainKey) => {
+    setTemplate(null); setComparisonDraft(null); setTeamCodeDraft(''); setTeamNameDraft('');
+    setActiveFlow(domainKey);
+  };
   const showTeam = (team) => {
     setTeamCodeDraft(team.code);
     setTeamNameDraft(team.name || team.code);
@@ -129,6 +137,7 @@ function App() {
         <div className={`nav-links ${menuOpen ? 'is-open' : ''}`} id="site-nav-links" aria-label="페이지 이동">
           <button type="button" onClick={() => requestScene(1)}>사용 방법</button>
           <button type="button" onClick={() => requestScene(0)}>시작하기</button>
+          <button type="button" onClick={() => openLibrary()}>내 선호 보관함</button>
           <button type="button" onClick={() => { setMenuOpen(false); setTemplate(null); setActiveFlow('templates'); }}>템플릿</button>
           <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('polish'); }}>요청문 다듬기</button>
           <button type="button" onClick={openTeams}>팀 기준 맞추기</button>
@@ -167,6 +176,7 @@ function App() {
               onContinue={handleCategoryContinue}
               sceneRequest={sceneRequest}
               onOpenTeams={openTeams}
+              onOpenLibrary={() => openLibrary()}
             />
           </motion.div>
         )}
@@ -183,13 +193,23 @@ function App() {
             <ComparisonSection onBack={teamCodeDraft ? openTeams : handleComparisonBack} domainKey={activeFlow}
               onSwitchDomain={(domain) => { setComparisonDraft(null); setActiveFlow(domain); }}
               template={template} initialDraft={comparisonDraft?.domainKey === activeFlow ? comparisonDraft : null}
-              onDraftChange={handleDraftChange} teamCode={teamCodeDraft} teamName={teamNameDraft} onOpenTeam={showTeam} />
+              onDraftChange={handleDraftChange} teamCode={teamCodeDraft} teamName={teamNameDraft} onOpenTeam={showTeam}
+              user={user} signupOpen={signupOpen} onLogin={setUser} onOpenLibrary={openLibrary} />
           </motion.div>
         )}
 
         {activeFlow === 'templates' && (
           <motion.div className="flow-view" key="templates" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
             <TemplateLibrarySection onBack={handleComparisonBack} onPersonalize={handlePersonalizeTemplate} />
+          </motion.div>
+        )}
+
+        {activeFlow === 'preferences' && (
+          <motion.div className="flow-view" key="preferences" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <Suspense fallback={<p className="comparison-section" role="status">내 선호 보관함을 여는 중…</p>}>
+              <PreferencesSection key={user?.id || 'anonymous'} user={user} signupOpen={signupOpen} onLogin={setUser}
+                initialId={preferenceId} onBack={handleComparisonBack} onStartComparison={compareForMyself} />
+            </Suspense>
           </motion.div>
         )}
 
@@ -201,7 +221,7 @@ function App() {
 
         {activeFlow === 'account' && user && (
           <motion.div className="flow-view" key="account" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-            <AccountSection user={user} onBack={() => setActiveFlow(returnFlow)} onOpenTeams={openTeams}
+            <AccountSection user={user} onBack={() => setActiveFlow(returnFlow)} onOpenTeams={openTeams} onOpenLibrary={() => openLibrary()}
               onDeleted={() => { setUser(null); setActiveFlow('category'); }} />
           </motion.div>
         )}

@@ -110,6 +110,21 @@ MIGRATIONS: list[str] = [
     """
     ALTER TABLE teams ADD COLUMN name TEXT NOT NULL DEFAULT '';
     """,
+    # 6: 개인별 요약·코딩 프롬프트 보관함. 원문이나 새 작업 자료는 저장하지 않는다.
+    """
+    CREATE TABLE personal_prompts (
+        id TEXT PRIMARY KEY,
+        owner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        title TEXT NOT NULL,
+        domain_key TEXT NOT NULL,
+        prompt TEXT NOT NULL,
+        note TEXT NOT NULL DEFAULT '',
+        revision INTEGER NOT NULL DEFAULT 1,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    CREATE INDEX personal_prompts_owner ON personal_prompts(owner_id, updated_at);
+    """,
 ]
 
 

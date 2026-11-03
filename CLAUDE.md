@@ -132,6 +132,8 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제. CI·.devcontaine
   문서 요약·코딩과 공통 기능을 유지하고 AWS 화면·조회 API·템플릿은 제외한다.
   과거 AWS 실험·검사 자료는 기록으로 보존한다. 제품 방향은 작은 개발팀의 AI 사용 기준 공유다.
   React 메뉴는 `팀 기준 맞추기`·`업무 지침 만들기`·`요청문 다듬기`로 안내한다.
+  `내 선호 보관함`은 개인 계정의 요약·코딩 지침 저장·수정·새 작업 재사용 기능이다.
+  비교 결과의 현재 프롬프트만 저장하며 원문·새 작업·실행 결과는 보관함에 자동 저장하지 않는다.
   팀은 선호 비교 전에 이름과 기준을 정해 만들 수 있고 초대 링크로 참여한다.
   개인용 비교도 유지하며, 선호는 사용자가 마지막에 합치기 버튼을 눌러야 팀에 반영한다.
   인수인계는 업무 설명 예시 중 하나이며 전용 인수인계 서비스는 아직 구현하지 않았다.
@@ -164,6 +166,7 @@ node --test "frontend/src/**/*.test.js"      # 프론트 순수 함수 테스트
 | `api_server.py`, `frontend/` | React 화면용 API 서버와 프론트 |
 | `prompt_workspace/` | 서비스용 프롬프트 작업 공간 (요구사항 정리, 조립, 시험, 개선 추천) |
 | `app_db.py`, `auth.py`, `quota.py`, `team.py` | SQLite, 로그인, 사용자별 하루 상한, 팀 모드 |
+| `personal_prompts.py`, `frontend/src/features/preferences/` | 개인 지침 보관함과 새 작업 재사용 화면 |
 | `budget.py`, `feedback.py`, `exporters.py`, `expert_profile.py`, `template_library.py` | Streamlit 메모리 상한, 응답 로그, 도구별 내보내기 형식, 내 글 프로필, 템플릿 |
 | `scripts/`, `tests/`, `docs/` | 운영 스크립트, 테스트, 문서 |
 | `data/`, `cache/`, `.env` | 커밋하지 않는다 |

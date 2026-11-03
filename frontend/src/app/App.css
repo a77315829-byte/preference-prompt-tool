@@ -1491,6 +1491,16 @@
 .team-joined { border-color: #b9dfce; background: #ecf8f1; color: #176b50; }
 .team-start { scroll-margin-top: 6rem; }
 
+.preference-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1rem; padding: 0; list-style: none; }
+.preference-list li { padding: 1.25rem; border: 1px solid #dfe4ed; border-radius: 1rem; min-width: 0; }
+.preference-list li.is-selected { border-color: #4468ff; background: #f5f7ff; }
+.preference-list h3 { margin: 0.4rem 0; overflow-wrap: anywhere; }
+.preference-list p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.preference-save { border: 1px solid #d8e4f8; background: #f6f8ff; border-radius: 1rem; padding: 1.25rem; }
+.preference-editor { scroll-margin-top: 6rem; }
+.preferences-section .task-input { box-sizing: border-box; width: 100%; }
+.preferences-section .prompt-actions, .preference-save .prompt-actions { flex-wrap: wrap; }
+
 @media (max-width: 760px) {
   .site-nav {
     top: 0.65rem;

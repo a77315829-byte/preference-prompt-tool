@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import SavePreferencePanel from '../preferences/SavePreferencePanel';
 import { fetchHealth, fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice, undoPreferenceChoice } from './codingApi';
 import ExportPanel from '../../shared/components/ExportPanel';
 import TeamPanel from '../../shared/components/TeamPanel';
@@ -50,6 +51,7 @@ function getRemoteAxis(pair, demoMode = true) {
 function ComparisonSection({
   onBack, domainKey = 'coding', onSwitchDomain, template = null, initialDraft = null, onDraftChange, teamCode = '',
   teamName = '', onOpenTeam,
+  user, signupOpen = true, onLogin, onOpenLibrary,
 }) {
   const isCoding = domainKey === 'coding';
   const domainCopy = {
@@ -428,6 +430,10 @@ function ComparisonSection({
                 </p>
               )}
               <pre className="prompt-box"><code>{prompt}</code></pre>
+              {optimizeStatus !== 'running' && (
+                <SavePreferencePanel key={remoteSession.session_id} domainKey={domainKey} prompt={prompt}
+                  user={user} signupOpen={signupOpen} onLogin={onLogin} onOpenLibrary={onOpenLibrary} />
+              )}
               {canOptimize && optimizeStatus === 'running' && (
                 <>
                   <p className="connection-note">최적화 중입니다. 완료 전에는 이전 프롬프트를 복사하거나 내보낼 수 없습니다.</p>

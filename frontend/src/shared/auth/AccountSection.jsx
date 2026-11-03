@@ -3,7 +3,7 @@ import { changePassword, deleteAccount, fetchMe } from './authApi';
 
 // 내 계정: 내 팀 바로가기, 비밀번호 변경과 탈퇴. 비밀번호 변경과 탈퇴는 지금 비밀번호를
 // 다시 받는다 - 로그인된 화면만 가진 사람이 바꾸거나 지우지 못하게.
-function AccountSection({ user, onBack, onDeleted, onOpenTeams }) {
+function AccountSection({ user, onBack, onDeleted, onOpenTeams, onOpenLibrary }) {
   const [current, setCurrent] = useState('');
   const [next, setNext] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -62,6 +62,11 @@ function AccountSection({ user, onBack, onDeleted, onOpenTeams }) {
         {state.error && <p className="ws-error" role="alert">{state.error}</p>}
         {state.done && <p className="ws-banner" role="status"><span>{state.done}</span></p>}
 
+        {onOpenLibrary && <div className="ws-step">
+          <p className="question-eyebrow">내 선호 보관함</p>
+          <p className="ws-help">저장한 요약·코딩 지침을 수정하고 새 작업에 다시 쓰세요.</p>
+          <button className="prompt-copy-button" type="button" onClick={onOpenLibrary}>내 선호 보관함 열기</button>
+        </div>}
         {onOpenTeams && (
           <div className="ws-step">
             <p className="question-eyebrow">우리 팀의 AI 사용 기준</p>
@@ -96,7 +101,7 @@ function AccountSection({ user, onBack, onDeleted, onOpenTeams }) {
         <form className="auth-form ws-step" onSubmit={submitDelete}>
           <p className="question-eyebrow">탈퇴</p>
           <p className="ws-help">
-            계정과 저장한 프로젝트·버전·자동 저장본이 모두 지워지고 되돌릴 수 없습니다.
+            계정과 저장한 개인 지침·프로젝트·버전·자동 저장본이 모두 지워지고 되돌릴 수 없습니다.
             남이 나에게 공유한 프로젝트는 지워지지 않습니다.
           </p>
           {ownedShared > 0 && (

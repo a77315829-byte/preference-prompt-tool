@@ -27,6 +27,7 @@ from agents.prompt_polish import polish as polish_prompt
 import service
 import team
 import template_library
+from personal_prompts import PersonalPromptStore, PromptConflict, expected_revision
 from app_db import Database
 from auth import AuthError, AuthService, TooManyAttempts, User
 from budget import DailyBudget  # noqa: F401 - 테스트가 상한 자리에 끼워 넣는다
@@ -103,6 +104,8 @@ OPTIMIZE_RUNS: dict[str, int] = {}
 OPTIMIZE_REPORTS: dict[str, dict] = {}
 # 팀 모드 (team.py). DB 에 남는다. 로그인한 사람은 자기 아이디로만 참여한다.
 TEAMS = team.TeamStore(DB)
+PERSONAL_PROMPTS = PersonalPromptStore(lambda: DB)
+DAILY_PREFERENCE_RUNS = _quota("preference", "PPT_PREFERENCE_RUNS_PER_DAY", 60, "PPT_USER_PREFERENCE_RUNS_PER_DAY", 20)
 # 다른 출처에서 이 API 를 부르도록 허용할 주소 목록 (쉼표로 구분). 기본은
 # 비어 있다 - React 화면은 Vite 프록시(/api)로 같은 출처에서 부르므로 CORS
 # 헤더가 필요 없다. 예전처럼 "*" 를 주면 PPT_LIVE=1 로 켜 둔 동안 사용자가
@@ -356,7 +359,7 @@ def quota_left() -> dict[str, int]:
     """지금 요청한 사람의 오늘 남은 횟수 (/api/auth/me 가 보여 준다)."""
     subject = _subject()
     quotas = {"session": LIVE_SESSIONS, "optimize": DAILY_OPTIMIZATIONS,
-              "polish": DAILY_POLISHES, "workspace": DAILY_WORKSPACE_CALLS}
+              "polish": DAILY_POLISHES, "workspace": DAILY_WORKSPACE_CALLS, "preference": DAILY_PREFERENCE_RUNS}
     return {kind: q.left(subject) for kind, q in quotas.items() if hasattr(q, "left")}
 
 
@@ -692,6 +695,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         if path == "/api/templates":
             self._send(200, {"templates": [asdict(t) for t in template_library.library()]})
             return
+        if path == "/api/preferences" or path.startswith("/api/preferences/"):
+            self._personal_prompts(path)
+            return
         # 최적화 진행률을 폴링하는 경로. /api/sessions/<id>
         parts = path.split("/")
         if len(parts) == 4 and parts[:3] == ["", "api", "sessions"]:
@@ -714,6 +720,9 @@ class ApiHandler(BaseHTTPRequestHandler):
             body = self._read_json()
             if path.startswith("/api/auth/"):
                 self._auth_route(path, body)
+                return
+            if path == "/api/preferences" or path.startswith("/api/preferences/"):
+                self._personal_prompts(path, body)
                 return
             if path == "/api/sessions":
                 self._start_session(body)
@@ -759,6 +768,57 @@ class ApiHandler(BaseHTTPRequestHandler):
             # 원문은 서버 터미널에만. 공급자 오류 문구에는 키 일부가 들어 있다.
             print(f"[error] {type(exc).__name__}: {exc}", flush=True)
             self._send(500, {"error": service.describe_api_error(exc)})
+
+    def _personal_prompts(self, path: str, body: dict | None = None) -> None:
+        user = self._current_user()
+        if user is None:
+            self._send(401, {"error": "로그인하면 내 선호 보관함에 저장하고 다시 열 수 있습니다."})
+            return
+        parts = path.split("/")
+        try:
+            if len(parts) == 3:
+                if body is None:
+                    self._send(200, {"preferences": PERSONAL_PROMPTS.list_for(user.id)})
+                else:
+                    self._send(201, {"preference": PERSONAL_PROMPTS.create(user.id, body)})
+                return
+            if len(parts) == 4 and body is None:
+                self._send(200, {"preference": PERSONAL_PROMPTS.get(user.id, parts[3])})
+                return
+            if len(parts) == 5 and body is not None:
+                prompt_id, action = parts[3:]
+                if action == "update":
+                    self._send(200, {"preference": PERSONAL_PROMPTS.update(user.id, prompt_id, body)})
+                    return
+                if action == "delete":
+                    PERSONAL_PROMPTS.delete(user.id, prompt_id, body.get("revision"))
+                    self._send(200, {"ok": True})
+                    return
+                if action == "run":
+                    item = PERSONAL_PROMPTS.get(user.id, prompt_id)
+                    if item["revision"] != expected_revision(body.get("revision")):
+                        raise PromptConflict("저장된 지침이 바뀌었습니다. 다시 열어 확인한 뒤 실행해 주세요.")
+                    task = body.get("task")
+                    if not isinstance(task, str) or not task.strip() or len(task) > 12_000:
+                        raise ValueError("새 작업 내용은 1~12,000자로 적어 주세요.")
+                    model = CODING_MODEL if item["domain_key"] == "coding" else DEFAULT_MODEL
+                    if not LIVE or not _live_key_available(model):
+                        raise ValueError("AI 실행은 실제 생성 모드에서만 사용할 수 있습니다. 준비한 요청문을 복사해 다른 AI에서 사용할 수 있어요.")
+                    _take(DAILY_PREFERENCE_RUNS, "보관한 지침으로 실행")
+                    try:
+                        output = service.generator.generate_with_prompt(item["prompt"], task.strip(), model=model)
+                    except Exception as exc:
+                        self._send(502, {"error": service.describe_api_error(exc)})
+                        return
+                    self._send(200, {"output": output, "model": model, "revision": item["revision"], "preference_id": item["id"]})
+                    return
+            self._send(404, {"error": "찾을 수 없는 경로입니다."})
+        except PromptConflict as exc:
+            self._send(409, {"error": str(exc)})
+        except LookupError:
+            self._send(404, {"error": "보관한 프롬프트를 찾을 수 없습니다."})
+        except ValueError as exc:
+            self._send(400, {"error": str(exc)})
 
     def _workspace_store(self, handle, path: str) -> None:
         """저장소 경로 공통 처리. 로그인이 없으면 401, 없는(또는 남의) 프로젝트·버전은
