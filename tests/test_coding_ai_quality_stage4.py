@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from benchmarks.coding_ai_quality.evaluate_trial import evaluate, extract_files
+from benchmarks.coding_ai_quality.evaluate_trial import evaluate, extract_files, resolve_entry
 
 
 def test_extracts_an_unlabeled_single_file() -> None:
@@ -92,6 +92,19 @@ def test_rejects_ambiguous_renamed_component_entries() -> None:
               "### `Second.tsx`\n```tsx\nexport default function Second() { return <div />; }\n```")
     with pytest.raises(ValueError, match="Missing entry"):
         extract_files(answer, "ConfirmDialog.tsx")
+
+
+def test_host_app_file_that_imports_the_component_is_not_the_entry() -> None:
+    """역할별로 나눈 답의 App.tsx 가 컴포넌트를 import 해 렌더링만 하면 그 컴포넌트가 진입점이다."""
+    answer = ("### `LikeButton.tsx`\n```tsx\nexport default function LikeButton() { return <button />; }\n```\n"
+              "### `App.tsx`\n```tsx\nimport LikeButton from './LikeButton';\n"
+              "export default function App() { return <LikeButton />; }\n```")
+    files = extract_files(answer, "LikeToggle.tsx")
+    assert resolve_entry(files, "LikeToggle.tsx") == "LikeButton.tsx"
+    # App.tsx 가 다른 후보를 import 하지 않으면 여전히 모호하다.
+    standalone = answer.replace("import LikeButton from './LikeButton';\n", "")
+    with pytest.raises(ValueError, match="Missing entry"):
+        extract_files(standalone, "LikeToggle.tsx")
 
 
 @pytest.mark.parametrize("task,source", [

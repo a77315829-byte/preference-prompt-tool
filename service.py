@@ -897,13 +897,15 @@ def complete_personalized_prompt(state: SessionState, languages: list[str], befo
                     raise LimitReached("daily") from exc
             result = improve(context, improvement_model, reserve)
     prompts = result.pop("prompts")
+    rejected = result.pop("rejected_content", None)
     if result["method"] != "ai_improved":
         prompts = dict(base)  # 실패면 정확히 기본 조립본이다.
     metadata = {**result, "base_prompts": base}
     try:
         save_record({"session_id": state.session_id, **context, "prompts": prompts,
                      "improvement": metadata, "model": state.model,
-                     "source_text": state.source_text},
+                     "source_text": state.source_text,
+                     **({"rejected_content": rejected} if rejected is not None else {})},
                     Path(record_dir or PROMPT_RESULTS_DIR or Path(__file__).parent / "data/prompt_results"))
         metadata["record_saved"] = True
     except Exception:  # noqa: BLE001 - 기록 실패가 결과 화면을 막지 않는다

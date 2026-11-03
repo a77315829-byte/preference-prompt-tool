@@ -17,6 +17,7 @@ from engine.generator import CACHE_DIR, _lock_for
 
 CACHE_VERSION = "personalized-v4"
 MAX_INSTRUCTION_CHARS = 1200
+MAX_REJECTED_CHARS = 4000
 VALIDATION_STAGES = {"languages", "axes", "entry", "evidence", "protected_boundary", "empty", "weakened"}
 REQUEST_TIMEOUT_SECONDS = 45
 MAX_OUTPUT_TOKENS = 2048
@@ -132,6 +133,7 @@ def improve(context: dict, model: str, before_call=lambda: None) -> dict:
         return {**result, "reason": "no_supported_preferences"}
     path = cache_path(context, model)
     started = time.monotonic()
+    content = None
     try:
         with _lock_for(path.stem):
             if path.exists():
@@ -182,6 +184,9 @@ def improve(context: dict, model: str, before_call=lambda: None) -> dict:
         stage = (str(exc) if isinstance(exc, ValueError) and str(exc) in VALIDATION_STAGES
                  else "json" if isinstance(exc, json.JSONDecodeError) else "other")
         result.update(method="fallback", prompts=base, reason="invalid_response", validation_error=stage)
+        # 검증에 떨어진 응답 원문은 진단용으로 기록 파일에만 남긴다 (화면·세션에는 싣지 않는다).
+        if isinstance(content, str):
+            result["rejected_content"] = content[:MAX_REJECTED_CHARS]
     finally:
         result["elapsed_seconds"] = round(time.monotonic() - started, 3)
     return result

@@ -43,6 +43,10 @@ ENTRY = {
 }
 
 
+# 컴포넌트를 실행하려고 덧붙이는 진입 파일 이름 (resolve_entry).
+WRAPPER_FILES = {"App.tsx", "index.tsx", "main.tsx"}
+
+
 def extract_files(answer: str, default_name: str) -> dict[str, str]:
     """Use explicit code-fence labels; never interpret prose as executable code."""
     files: dict[str, str] = {}
@@ -75,6 +79,15 @@ def resolve_entry(files: dict[str, str], default_name: str) -> str:
                       re.search(r"\bexport\s+default\b", source)
                       or re.search(r"\bexport\s+(?:function|const)\s+[A-Z]\w*", source)
                   )]
+    if len(candidates) > 1:
+        # 여러 파일로 나눈 답은 실행용 App.tsx·index.tsx·main.tsx 를 덧붙이곤 한다. 그 파일이 다른
+        # 후보를 import 하는 껍데기일 때만 빼고 본다 - 컴포넌트를 직접 담은 App.tsx 는 남는다.
+        def imports(source: str, name: str) -> bool:
+            stem = re.escape(name.rsplit(".", 1)[0])
+            return re.search(rf"from\s+['\"]\./{stem}(?:\.tsx)?['\"]", source) is not None
+        hosts = [name for name in candidates if name in WRAPPER_FILES
+                 and any(imports(files[name], other) for other in candidates if other != name)]
+        candidates = [name for name in candidates if name not in hosts]
     if len(candidates) != 1:
         raise ValueError(f"Missing entry file: {default_name}")
     return candidates[0]

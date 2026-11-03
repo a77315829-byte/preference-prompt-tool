@@ -19,6 +19,7 @@
     {
       "id": "char_counter",
       "split": "holdout_v2",
+      "known_issue": "Ambiguous wording found after the v2 run: models showed the warning instead of the count above 20, while the scenario expects both. 0/12 in every condition. Kept in the v2 result (no post-hoc exclusion); do not reuse this wording.",
       "request": "React와 TypeScript로 글자 수 제한 입력란을 만들어 주세요. textarea 하나와 '제출' 버튼이 있습니다. 입력한 글자 수를 '0/20자' 형식으로 표시합니다. 20자를 넘으면 '20자를 넘었습니다' 문구를 표시하고 '제출' 버튼을 비활성화합니다. 20자 이하이면 문구가 없고 버튼은 활성화됩니다. 외부 라이브러리는 사용하지 마세요.",
       "acceptance": [
         "처음에 0/20자가 보이고 제출 버튼이 활성화되어 있다.",

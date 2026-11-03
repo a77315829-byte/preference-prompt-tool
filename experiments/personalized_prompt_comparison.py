@@ -176,7 +176,8 @@ def behavior_check(task_id: str, output: str) -> dict:
             "functional_pass": result["typecheck"] and result["build"] and result["behavior"] == "passed",
             "typecheck": result["typecheck"], "build": result["build"], "behavior": result["behavior"],
             "checks": result["checks"], "files": result["files"],
-            "typecheck_output": result["typecheck_output"][:600], "build_output": result["build_output"][:300]}
+            "typecheck_output": result["typecheck_output"][:600], "build_output": result["build_output"][:300],
+            "runtime_output": result.get("runtime_output", "")[:600]}
 
 
 def _unit(row: dict) -> str:

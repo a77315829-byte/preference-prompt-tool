@@ -211,6 +211,9 @@ def test_unsupported_or_malformed_reply_falls_back_to_the_exact_base(fake_llm, t
     # 검증에 실패한 응답은 캐시하지 않는다 - 같은 입력에서 실패가 굳지 않게.
     again = _complete(_live(_finished("a")), tmp_path)
     assert again.prompt_improvement["cache_hit"] is False and len(fake.calls) == 2
+    # 떨어진 응답 원문은 기록 파일에만 남고 세션(화면으로 가는 값)에는 없다.
+    assert "rejected_content" not in meta
+    assert all(isinstance(r.get("rejected_content"), str) for r in _records(tmp_path))
 
 
 def test_api_failure_falls_back_without_leaking_the_error(fake_llm, tmp_path) -> None:
