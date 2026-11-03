@@ -815,7 +815,8 @@ class ApiHandler(BaseHTTPRequestHandler):
                             if draft["snapshot"] != body.get("taskSnapshot"):
                                 raise PromptConflict("이번 작업의 선택이 바뀌었습니다. 작업용 지침을 다시 만든 뒤 저장해 주세요.")
                             saved = PERSONAL_PROMPTS.create(user.id, {"title": body.get("title"), "note": body.get("note", ""),
-                                                                     "domainKey": item["domain_key"], "prompt": draft["prompt"]})
+                                                                     "domainKey": item["domain_key"], "prompt": draft["prompt"]},
+                                                            provenance=draft["provenance"])
                             self._send(201, {"preference": saved})
                             return
                         self._send(200, {"draft": draft})

@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import hashlib
+import json
 import uuid
 
 SUPPORTED_DOMAINS = frozenset({"coding", "summarization", "summarization_ko"})
@@ -56,24 +58,33 @@ class PersonalPromptStore:
     @staticmethod
     def _get(conn, owner_id: int, prompt_id: str) -> dict:
         row = conn.execute(
-            "SELECT id, title, domain_key, prompt, note, revision, created_at, updated_at FROM personal_prompts "
+            "SELECT id, title, domain_key, prompt, note, revision, created_at, updated_at, provenance_json FROM personal_prompts "
             "WHERE id = ? AND owner_id = ?", (prompt_id, owner_id),
         ).fetchone()
         if row is None:
             raise LookupError("보관한 프롬프트를 찾을 수 없습니다.")
-        return dict(row)
+        item = dict(row)
+        raw = item.pop("provenance_json")
+        provenance = json.loads(raw) if raw else None
+        item["provenance"] = provenance
+        item["provenance_matches"] = (provenance["domain_key"] == item["domain_key"] and
+                                      provenance["prompt_sha256"] == hashlib.sha256(item["prompt"].encode()).hexdigest()) if provenance else None
+        return item
 
-    def create(self, owner_id: int, body: dict) -> dict:
+    def create(self, owner_id: int, body: dict, *, provenance: dict | None = None) -> dict:
         title, domain, prompt, note = _fields(body)
         prompt_id = uuid.uuid4().hex
         now = datetime.now(timezone.utc).isoformat(timespec="microseconds")
+        # 출처는 검증된 서버 호출만 전달한다. 일반 CRUD 요청 body의 메타데이터는 무시한다.
+        provenance_json = json.dumps({**provenance, "domain_key": domain, "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest()},
+                                     ensure_ascii=False) if provenance is not None else None
         with self.db.connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
             if conn.execute("SELECT COUNT(*) FROM personal_prompts WHERE owner_id = ?", (owner_id,)).fetchone()[0] >= MAX_PROMPTS:
                 raise ValueError(f"보관함에는 {MAX_PROMPTS}개까지 저장할 수 있습니다. 쓰지 않는 항목을 정리해 주세요.")
             conn.execute(
-                "INSERT INTO personal_prompts (id, owner_id, title, domain_key, prompt, note, created_at, updated_at) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (prompt_id, owner_id, title, domain, prompt, note, now, now),
+                "INSERT INTO personal_prompts (id, owner_id, title, domain_key, prompt, note, created_at, updated_at, provenance_json) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (prompt_id, owner_id, title, domain, prompt, note, now, now, provenance_json),
             )
             return self._get(conn, owner_id, prompt_id)
 

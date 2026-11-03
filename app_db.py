@@ -125,6 +125,10 @@ MIGRATIONS: list[str] = [
     );
     CREATE INDEX personal_prompts_owner ON personal_prompts(owner_id, updated_at);
     """,
+    # 7: 작업용 지침을 저장할 때 선택한 출처의 스냅샷. 기존 항목은 기록 없음(NULL).
+    """
+    ALTER TABLE personal_prompts ADD COLUMN provenance_json TEXT;
+    """,
 ]
 
 

@@ -48,11 +48,22 @@ function shelfServer({ loggedIn = true, live = false } = {}) {
     if (action === 'save-task') {
       if (state.failSave || body.teamSnapshot !== state.teamSnapshot) return response({ error: '팀 기준이 바뀌었습니다. 다시 확인해 주세요.' }, 409);
       assert.equal(body.taskSnapshot, JSON.stringify(body.choices) + state.teamSnapshot);
-      return fetch('/api/preferences', { method: 'POST', body: JSON.stringify({ title: body.title, note: body.note,
+      await fetch('/api/preferences', { method: 'POST', body: JSON.stringify({ title: body.title, note: body.note,
         domainKey: item.domain_key, prompt: `작업용: ${body.choices.code_structure} 구성 / ${body.choices.type_detail} 타입` }) });
+      const saved = state.records[0];
+      saved.provenance_matches = true;
+      saved.provenance = { version: 1, personal: { title: item.title, revision: item.revision }, team: { name: '함께 개발팀' }, axes: [
+        { axis: 'code_structure', label: '코드 구성', source: body.choices.code_structure,
+          value: body.choices.code_structure === 'team' ? 'separated' : 'compact', team_agreed: false },
+        { axis: 'type_detail', label: '타입 작성', source: body.choices.type_detail,
+          value: body.choices.type_detail === 'team' ? 'inferred' : 'explicit', team_agreed: true },
+        { axis: 'style_management', label: '스타일 관리', source: 'shared', value: 'theme', team_agreed: true },
+      ] };
+      return response({ preference: saved }, 201);
     }
     if (action === 'update') {
       if (state.failSave) return response({ error: '다른 창에서 수정된 항목입니다. 다시 열어 주세요.' }, 409);
+      if (item.provenance) item.provenance_matches = item.provenance_matches && body.prompt === item.prompt && body.domainKey === item.domain_key;
       Object.assign(item, { title: body.title, domain_key: body.domainKey, prompt: body.prompt, note: body.note, revision: item.revision + 1 });
       return response({ preference: item });
     }
@@ -310,6 +321,12 @@ test('작업용 이름·설명으로 새로 저장 → 현재 작업 유지 → 
     await ui.click('저장한 작업용 열기');
     assert.equal(document.querySelector('#preference-task').value, '');
     assert.equal(document.querySelector('.preference-editor h3').textContent, '팀 구성과 내 타입 방식 · 새 작업에 사용하기');
+    const sources = document.querySelector('.saved-preference-sources');
+    assert.ok(sources.textContent.includes('내 선호 1개') && sources.textContent.includes('팀 기준 1개') && sources.textContent.includes('같은 기준 1개'));
+    const rows = [...sources.querySelectorAll('tbody tr')].map((r) => r.textContent);
+    assert.ok(rows[0].includes('역할별 파일로 분리') && rows[0].includes('팀 기준') && rows[0].includes('저장 당시 팀 합의 전'));
+    assert.ok(rows[1].includes('타입을 꼼꼼하게 작성') && rows[1].includes('내 선호'));
+    assert.ok(rows[2].includes('같은 기준') && rows[2].includes('개인·팀이 같았어요'));
     await ui.fill('#preference-task', '다음 작업'); await ui.click('지침 + 새 작업 복사');
     assert.ok(ui.state.copied.includes('작업용: team 구성 / personal 타입'));
     assert.ok(ui.state.copied.includes('다음 작업'));
@@ -317,5 +334,25 @@ test('작업용 이름·설명으로 새로 저장 → 현재 작업 유지 → 
     await ui.click('이 지침으로 AI 실행');
     assert.equal(api.state.lastRun.basis, 'personal');
     assert.equal(api.state.lastRun.task, '다음 작업');
+    await ui.click('지침 수정');
+    await ui.fill('#preference-title', '이름만 바꾼 작업용'); await ui.click('변경 내용 저장');
+    assert.equal(document.querySelector('.saved-preference-sources [role="status"]'), null);
+    await ui.fill('#preference-prompt', '수정한 새 지침');
+    assert.ok(document.querySelector('.saved-preference-sources [role="status"]').textContent.includes('수정 중'));
+    await ui.click('변경 내용 저장');
+    assert.ok(document.querySelector('.saved-preference-sources [role="status"]').textContent.includes('현재 지침과 다를 수'));
+    assert.ok(document.querySelector('.saved-preference-sources').textContent.includes('내 선호 1개'));
+  } finally { await ui.close(); }
+});
+
+test('출처 기록 없는 기존 지침에서는 저장 당시 선택을 추측하지 않는다', async () => {
+  const api = shelfServer();
+  const ui = await mount('https://example.test/', 'coding', api.fetch);
+  try {
+    await finishCoding(ui); await ui.click('내 선호 보관함에 저장'); await ui.click('저장한 지침 열기');
+    assert.equal(document.querySelector('.saved-preference-sources'), null);
+    assert.ok(document.querySelector('.preference-editor').textContent.includes('선택 출처 기록이 없어요'));
+    await ui.fill('#preference-task', '작업'); await ui.click('지침 + 새 작업 복사');
+    assert.ok(ui.state.copied.includes('개인 지침'));
   } finally { await ui.close(); }
 });

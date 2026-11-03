@@ -1512,6 +1512,17 @@
 .preference-axis-choice legend { font-weight: 700; }
 .preference-axis-choice label { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.6rem 0; line-height: 1.6; cursor: pointer; }
 .preference-axis-choice input { flex-shrink: 0; }
+.saved-preference-sources { margin: 1rem 0 1.5rem; padding: 1rem; border: 1px solid #dfe4ed; border-radius: 12px; background: #f8fafc; }
+.preference-source-counts { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.preference-source { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; }
+.preference-source--personal { background: #e9e7ff; color: #41358c; }
+.preference-source--team { background: #dff2e9; color: #1d6247; }
+.preference-source--shared { background: #edf0f5; color: #43516a; }
+.saved-preference-sources table { min-width: 0; table-layout: fixed; }
+.saved-preference-sources th, .saved-preference-sources td { padding: 0.65rem 0.5rem; overflow-wrap: anywhere; }
+.saved-preference-sources thead th:first-child { width: 22%; }
+.saved-preference-sources thead th:nth-child(2) { width: 48%; }
+.saved-preference-sources thead th:last-child { width: 30%; }
 .comparison-pending { display: block; color: #7a4a00; font-size: 0.8rem; }
 .preference-diff { list-style: none; padding: 0; max-height: 28rem; overflow-y: auto; }
 .preference-diff li { margin: 0.6rem 0; padding: 0.8rem; border-radius: 0.6rem; border: 1px solid #dfe4ed; }
