@@ -136,8 +136,30 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제. CI·.devcontaine
   템플릿 24개 중 기존 6개만 선택 비교를 지원한다. 새 업무 초안 18개는 확인·복사·점검용이다.
   반복 업무·공동 지침의 근거와 효과 검증 계획은 `docs/product_direction_small_teams.md`에 둔다. 다수 선호 집계를 합의 완료나 협업 효과로 주장하지 않는다.
   `내 선호 보관함`은 개인 계정의 요약·코딩 지침 저장·수정·새 작업 재사용 기능이다.
-  코딩 시작 화면에서는 언어·프레임워크 선택/직접 입력과 작성 선호로 지침을 조립한다. 기존 React 예시 비교는 별도 버튼으로 유지한다.
-  `coding_instructions.py`는 모델 호출 없이 지침을 조립하며 `engine/`·기존 coding 도메인과 분리한다. 직접 선택을 비교 추정·언어별 코드 검증으로 주장하지 않는다.
+  코딩은 파스텔 선택 카드로 개발 환경 → 선호 선택 → 확인·프롬프트 완성의 순서로 진행한다. 새 사용자는 언어·프레임워크와 네 가지 선호를 미선택 상태에서 시작한다.
+  예시 비교는 A/B를 고른 표시를 확인한 뒤 다음 버튼으로 진행한다. 보류한 미선택 항목은 확인 화면에서 직접 골라야 생성할 수 있다. 저장한 설정의 명시적 재사용은 유지한다.
+  선호 선택 상단의 `코드 예시로 고르기`(추천)·`설정만 빠르게 고르기`로 방법을 전환한다. 확인 화면에서도 코드 예시를 다시 열 수 있다. 비교는 완료할 때만 반영하고 취소 시 진입 화면·기존 선택·생성문을 유지한다. 코드 비교의 언어 기본/프레임워크 전용 범위 안내는 접지 않고 표시한다.
+  드롭다운 대신 언어·프레임워크·작성 선호의 선택 버튼을 사용한다. 완료 상태는 `답변 방식 4가지 선택 완료`로 안내하며, 선택 요약과 실제 프롬프트 전문을 별도 영역에 바로 표시한다. 복사→AI 대화창→작업 요청의 사용 안내와 작업 요청 함께 복사를 제공하되 보관함에는 지침만 저장한다. 기존 React 예시 비교는 접힌 별도 진입점으로 유지한다.
+  `coding_instructions.py`는 모델 호출 없이 지침을 조립하며 `engine/`·기존 coding 도메인과 분리한다.
+  Python의 FastAPI·Flask·Django, Java/Spring Boot와 JavaScript/TypeScript의 React·Express·Vue·Next.js 및 TypeScript/NestJS(총 13조합)는 선택적 GEPA 개선을 지원한다. 환경 목록은 `coding_environments.py`, 공통 실행·저장은 `coding_gepa.py`·`coding_optimization_jobs.py`, 환경별 평가는 `fastapi_evaluation.py`·`python_web_evaluation.py`·`spring_boot_evaluation.py`·`web_coding_evaluation.py`·`vue_coding_evaluation.py`·`nextjs_coding_evaluation.py`·`nestjs_coding_evaluation.py`다. `fastapi_optimization.py`는 기존 호출 호환용이다. 원본 지침은 고정하고 보충 안내만 탐색하며 환경별 준비 과제 2개·후보 선택 과제 2개·개선에 쓰지 않은 과제 2개를 구분한다. 과제·평가 버전·캐시는 환경별로 분리한다.
+  FastAPI는 AST 기반 문법·API 선언·제한된 계산식, Spring Boot는 Java 코드 구조·요청 매핑·입력 거절 패턴·제한된 계산식 검사다. v2는 제목의 번호도 설명 형식으로 인식하고, 주석·역할 구성은 개수가 아닌 사람이 실제 답변으로 확인한다. 생성 코드를 실행하거나 Java 컴파일·HTTP·보안·사용자 만족도를 검증했다고 주장하지 않는다. 전후 지침과 별도 과제 답변을 비교하고 사용자가 채택해야 새 항목으로 저장한다. 더 나은 후보가 없으면 원본을 유지한다.
+  React/Express는 `scripts/check_web_coding.mjs`가 설치된 TypeScript 파서로 JS/TS·JSX를 읽고 제한된 AST를 해석한다. 생성 코드를 import/eval하지 않는다. React props·오류 표시·계산값과 Express GET·필수 숫자 쿼리·400·반환식을 확인하며 부분 return/함수는 제공된 기존 파일 맥락에서 검사한다. 실제 렌더링·서버·타입·보안 검증이 아니다. Node.js와 기존 프론트 의존성이 없으면 유료 시작 전에 비활성화한다.
+  Flask/Django는 `python_web_ast.py`의 제한된 AST 해석으로 app.get/app.route 또는 path/require_GET 함수형 뷰, 정수 쿼리·JSON 400·계산식을 확인한다. URL/뷰 분리·계산 함수·부분 수정 맥락을 다루며 프레임워크 패키지나 생성 코드를 import/exec하지 않는다. 실제 모듈 경로·프로젝트 설정·미들웨어·DB·서버·보안 검증이 아니다. Django REST Framework·클래스 기반 뷰는 별도 지원하지 않는다.
+  Vue 3는 같은 JS/TS 파서·제한된 해석기로 script setup의 숫자 defineProps·computed와 v-if/else·보간 템플릿을 확인한다. 변경된 script/template 블록은 준비된 기존 컴포넌트 맥락에 적용한다. Vue 컴파일러 의존성·실제 컴파일·렌더링·반응성·타입 검증은 추가하지 않는다. Options API·외부 컴포넌트·이벤트 등 미지원 표현은 자동 미확인될 수 있다. 전후 비교·직접 판단·새 저장·재사용은 공통 경로다.
+  Next.js는 App Router의 route.ts/js 제목·export GET·NextRequest.nextUrl 또는 URL 쿼리·NextResponse/Response.json의 400과 계산값을 제한된 AST로 확인한다. 변경 함수/return은 제공된 기존 맥락에 적용하며 원본을 갱신하지 않는다. 실제 파일 생성·모듈 경로·Next 빌드·HTTP·화면·캐싱·타입·보안 검증은 아니며 Pages Router·동적 경로·Server Actions는 별도 지원하지 않는다.
+  NestJS는 TypeScript의 Controller/Get/Query 데코레이터 import·Module controllers/providers·Injectable 서비스의 제한된 생성자 주입·BadRequestException·반환 계산식을 AST로 확인한다. 변경 메서드/return은 준비된 기존 컨트롤러 맥락에 적용한다. 실제 Nest 빌드·DI 컨테이너·HTTP·파이프·DB·보안 검증이 아니며 커스텀 provider/guard/pipe·상속·비동기 IO는 별도 지원하지 않는다. JavaScript/NestJS를 자동 지원 처리하지 않는다.
+  새 개선 API는 로그인 계정별 작업만 조회·저장하며 클라이언트가 보낸 후보 본문·평가 기록으로 저장하지 않는다. 기존 최적화 하루 한도를 공유하고 작업당 AI 요청 최대 32회·성찰 최대 4회·동시 서버 2개/계정 1개로 제한한다. 과제·성찰 호출 모두 캐시한다. 작업 결과는 서버 메모리에 최대 약 2시간, 보관한 개선본은 SQLite에 남는다.
+  `PPT_FASTAPI_GEPA_LIVE=1`·`PPT_SPRING_BOOT_GEPA_LIVE=1`은 다른 기능의 데모 설정을 유지하면서 해당 환경만 독립적으로 켠다(미지정 시 `PPT_LIVE`를 따름). 두 환경의 동시 실행·하루 한도는 공유한다. 모델은 기존 `PPT_CODING_MODEL`과 성찰 모델 설정을 사용한다. 시작 버튼을 누르기 전에는 모델을 호출하지 않는다.
+  `PPT_WEB_GEPA_LIVE=1`은 JS/TS의 React/Express/Vue/Next.js와 TypeScript/NestJS 아홉 조합을 켠다(미지정 시 `PPT_LIVE`를 따름). 모든 환경은 기존 작업당 32회·성찰 4회·서버 동시 2개/계정 1개·하루 한도를 공유한다. 다른 프레임워크를 이름이 비슷하다는 이유로 지원 환경으로 취급하지 않는다.
+  `PPT_PYTHON_WEB_GEPA_LIVE=1`은 Flask/Django를 켠다(미지정 시 `PPT_LIVE`를 따름). 모델·할당량·작업 조회/새 저장·직접 판단은 다른 환경과 같은 경로를 사용한다. 표준 라이브러리만 사용하므로 정적 평가 서버에 Flask/Django 설치는 필요하지 않는다.
+  개선본은 기존 `coding_profile_json`에 고정한 선택·원본·보충 안내·평가 기록을 함께 저장한다. DB migration은 추가하지 않는다. 기존 저장본·팀 기준은 갱신하지 않으며 개선본 수동 편집 시 과거 설정과 불일치를 안내한다.
+  GEPA 비교는 기능 정적 검사와 네 선호의 전후 확인·직접 판단이 우선이다. v2 참고 점수는 기능 65%·자동 형식 35%(설명/출력 2항목)·기본 구조 미확인 0점이며 주석/역할 구성은 제외한다(`coding_evaluation_report.py`). v1 저장 점수는 재계산하지 않고 v2와 직접 비교하지 않는다. 동일 모델 요청은 v1 응답 캐시도 재사용한다. 과거 미기록 내역은 추측하지 않는다. 자동 검사 미확인은 선호 미반영의 확정 판정이 아니고, 개선이 없으면 원본 유지 후의 같은 점수임을 명시한다.
+  `coding_answer_review.py`는 모든 목록/직접 입력 환경에서 받은 답변의 형식·주석 예시·선언/파일 단서와 직접 확인 질문을 제공한다. 서버에서 분석하지만 모델 호출·코드 실행·자동 저장·외부 AI 전송은 하지 않는다. 붙여 넣은 답변의 직접 판단은 화면 내 임시 기록이다. GEPA 별도 과제의 항목별 판단은 새 후보 저장 시 검증해 `human_review`로 함께 보관하며 점수·후보 선택에 쓰거나 기존 항목에 덮어쓰지 않는다. 다른 환경의 GEPA·기능 검사가 연결됐다고 표시하지 않는다.
+  `coding_examples.py`는 목록의 14개 언어에 설명·주석·코드 구성·출력 방식의 준비된 예시 비교를 제공한다.
+  `coding_framework_examples.py`는 Python/FastAPI와 Java/Spring Boot의 API 코드를 제공한다. 파일별 전체 코드·분리 구조·수정 전후를 비교하며 미지원 프레임워크는 언어 기본 문법 예시임을 표시한다.
+  네 항목의 선택 또는 판단 보류를 `coding_profile.comparison`에 버전과 함께 저장한다. 이미 고른 설정은 재사용하고, 미선택 보류를 기본값으로 채우지 않는다. 환경 변경은 네 선택과 출처를 초기화하며, 선호 한 항목을 카드에서 다시 고르면 해당 출처만 직접 설정으로 바꾼다.
+  프레임워크 비교는 version 2에 예시 ID·이름을 기록하고 서버에서 환경과 대조한다. 기존 version 1 저장본은 기본 문법 비교로 유지하고 프레임워크 비교로 재해석하지 않는다.
+  준비 예시에서 직접 고른 설정이며 기존 React의 추정·최적화나 언어별 실행 검증으로 주장하지 않는다. 미지원 직접 입력 언어는 직접 설정으로 안내한다.
   직접 설정 지침은 개발 환경·선호 스냅샷과 함께 저장한다(DB migration 8). 본문·종류 수정 시 불일치를 안내하고 설정으로 새 항목을 만들 수 있다.
   직접 설정 지침은 개인용으로 재사용하며 React 팀 기준과 비교·조합·팀용 실행하지 않는다. 언어별 팀 기준 연결은 후속 범위다.
   비교 결과의 현재 프롬프트만 저장하며 원문·새 작업·실행 결과는 보관함에 자동 저장하지 않는다.
@@ -156,6 +178,7 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제. CI·.devcontaine
   팀은 선호 비교 전에 이름과 기준을 정해 만들 수 있고 초대 링크로 참여한다.
   개인용 비교도 유지하며, 선호는 사용자가 마지막에 합치기 버튼을 눌러야 팀에 반영한다.
   작업 인수인계는 `handoffs.py`와 별도 화면/API로 구현한다(DB migration 9). 목적·진행·남은 일·파일 경로/링크·사용한 프롬프트를 명시적으로 저장한다.
+  팀 업무 정리는 파스텔 카드로 새 작업 작성과 받은 링크 열기를 구분한다. 상태·담당자·버전을 목록에 표시하며, 작성 화면의 목적·진행·다음 행동과 자료 영역을 나눠 저장→첨부→계정 지정→이어받기 순서를 안내한다.
   저장만 하면 개인 기록이며, 작성자가 지정한 같은 서버의 계정에 공유한다. 링크만으로 접근 권한은 생기지 않으며 팀 초대/선호 비교와 별개다.
   지정된 팀원이 이어서 맡은 뒤 편집·완료·다시 진행할 수 있다. 버전 충돌을 거절하고 변경 기록을 남긴다. 수신자는 자신에게 공유된 시점 이후의 버전만 볼 수 있다.
   보관함의 현재 선택 지침을 초안에 복사할 수 있고 원본은 갱신하지 않는다. 모델 자동 실행·알림 발송은 제공하지 않는다.
@@ -192,7 +215,7 @@ node --test "frontend/src/**/*.test.js"      # 프론트 순수 함수 테스트
 | `prompt_workspace/` | 서비스용 프롬프트 작업 공간 (요구사항 정리, 조립, 시험, 개선 추천) |
 | `app_db.py`, `auth.py`, `quota.py`, `team.py` | SQLite, 로그인, 사용자별 하루 상한, 팀 모드 |
 | `personal_prompts.py`, `frontend/src/features/preferences/` | 개인 지침 보관함과 새 작업 재사용 화면 |
-| `coding_instructions.py`, `frontend/src/features/coding-instructions/` | 직접 고른 언어·프레임워크·작성 선호의 지침 조립과 설정 재사용 |
+| `coding_instructions.py`, `coding_examples.py`, `coding_framework_examples.py`, `frontend/src/features/coding-instructions/` | 언어·프레임워크별 준비 예시 비교·직접 설정, 지침 조립과 비교 출처·설정 재사용 |
 | `handoffs.py`, `frontend/src/features/handoffs/` | 계정별 작업 인수인계 저장·공유·이어받기와 버전 기록 |
 | `budget.py`, `feedback.py`, `exporters.py`, `expert_profile.py`, `template_library.py` | Streamlit 메모리 상한, 응답 로그, 도구별 내보내기 형식, 내 글 프로필, 템플릿 |
 | `scripts/`, `tests/`, `docs/` | 운영 스크립트, 테스트, 문서 |

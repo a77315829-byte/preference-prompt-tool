@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import AuthSection from '../../shared/auth/AuthSection';
 import HandoffFields from './HandoffFields';
 import HandoffAttachments from './HandoffAttachments';
+import './handoffFlow.css';
 import { HANDOFF_EVENTS, HANDOFF_STATUS, changeHandoff, continuationRequest, createHandoff, getHandoff,
   getHandoffHistory, getHandoffVersion, handoffBody, handoffForm, handoffLink, listHandoffs, parseHandoffLink, readHandoffFile } from './handoffApi';
 
@@ -93,40 +94,44 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, initialId = '', in
   return <section className="comparison-section handoffs-section">
     <div className="comparison-inner">
       <button className="back-button" type="button" disabled={Boolean(busy)} onClick={() => { if (leaveOk()) onBack(); }}>← 시작 화면으로</button>
-      <div className="comparison-heading"><p className="eyebrow">WORK HANDOFF</p><h2>다음 사람이 이어갈 수 있게 넘겨요</h2>
-        <p>목적·현재 상태·남은 일·참고 자료·사용한 프롬프트를 함께 기록하세요. 저장 후 받을 팀원 아이디를 지정하면 그 팀원이 열어 이어서 진행할 수 있어요.</p></div>
-      <ol className="workflow-guide">
-        <li><strong>1. 맥락을 저장해요</strong><span>내 작업으로 저장할 때는 나만 볼 수 있어요.</span></li>
-        <li><strong>2. 받을 팀원을 정해요</strong><span>같은 서비스의 아이디를 지정하고 링크를 전달해요.</span></li>
-        <li><strong>3. 열어서 이어서 맡아요</strong><span>받은 사람이 진행 내용을 갱신하고 이전 기록도 확인해요.</span></li>
+      <header className="handoff-heading"><div><p className="eyebrow">TEAM WORKSPACE</p><h2>하던 일의 다음을,<br />팀원과 이어가요.</h2>
+        <p>어디까지 했고, 다음에는 무엇을 하면 될까요?<br />작업 맥락과 자료, AI 프롬프트를 한곳에 남겨 주세요.</p></div><span className="handoff-heading-note">내 작업 기록 → 팀원에게 전달 → 이어서 진행</span></header>
+      <ol className="handoff-journey" aria-label="인수인계 사용 순서">
+        <li><span>01</span><div><strong>하던 일 정리</strong><p>목적·진행 상황·다음 행동을 저장해요.</p></div></li>
+        <li><span>02</span><div><strong>자료와 함께 전달</strong><p>파일을 첨부하고 받을 계정을 지정해요.</p></div></li>
+        <li><span>03</span><div><strong>열어서 이어서 맡기</strong><p>받은 팀원이 진행을 갱신해요.</p></div></li>
       </ol>
       {user === undefined ? <p role="status">계정을 확인하는 중…</p> : !user ? <AuthSection embedded signupOpen={signupOpen} onDone={onLogin}
         reason="인수인계 내용은 작성자와 지정된 받는 팀원만 볼 수 있어요. 링크를 받았다면 지정된 계정으로 로그인하세요. 보관함에서 가져온 내용은 로그인 후 확인하고 저장합니다." /> : <>
-        <div className="ws-step">
-          <div className="prompt-actions"><button className="prompt-copy-button" type="button" disabled={Boolean(busy)} onClick={() => {
-            if (leaveOk()) { request.current += 1; setItem(null); setForm(handoffForm()); setHistory(null); setSnapshot(null); setRecipient(''); setError(''); setNotice(''); setCopied(''); setFile(null); }
-          }}>새 작업 넘기기</button>
-          <button className="prompt-reset-button" type="button" disabled={Boolean(busy)} onClick={async () => {
+        <div className="ws-step handoff-workspace">
+          <div className="handoff-entry-grid"><div className="handoff-new-card"><span className="handoff-section-label">내가 넘길 일이 있나요?</span><h3>다음 담당자를 위한 작업 기록</h3><p>먼저 내 작업으로 저장하세요.<br />공유할 계정을 정하기 전에는 나만 볼 수 있어요.</p><button className="prompt-copy-button" type="button" disabled={Boolean(busy)} onClick={() => {
+            if (leaveOk()) { request.current += 1; setItem(null); setForm(handoffForm()); setHistory(null); setSnapshot(null); setRecipient(''); setError(''); setNotice(''); setCopied(''); setFile(null);
+              window.setTimeout(() => editor.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30); }
+          }}>새 작업 넘기기</button></div>
+          <form className="handoff-open-form" onSubmit={(e) => { e.preventDefault(); try { open(parseHandoffLink(linkInput)); } catch (err) { setError(err.message); } }}>
+            <span className="handoff-section-label">팀원이 링크를 보냈나요?</span><h3>받은 작업 이어가기</h3><p>지정된 계정으로 로그인한 뒤 열어 주세요.</p>
+            <label className="task-input-label" htmlFor="handoff-link-input">받은 인수인계 링크·작업 코드 열기</label>
+            <input id="handoff-link-input" className="ws-input" placeholder="받은 링크 또는 작업 코드를 붙여넣으세요" maxLength={2048} disabled={Boolean(busy)} value={linkInput} onChange={(e) => setLinkInput(e.target.value)} />
+            <button className="prompt-reset-button" type="submit" disabled={Boolean(busy) || !linkInput.trim()}>받은 링크 열기</button>
+          </form></div>
+          <div className="handoff-list-heading"><div><span className="handoff-section-label">함께 이어가는 작업</span><h3>내 작업 모아보기</h3></div><button className="handoff-text-button" type="button" disabled={Boolean(busy)} onClick={async () => {
             const token = ++request.current; setBusy('list'); setError('');
             try { const next = await listHandoffs(); if (token === request.current) setItems(next); }
             catch (e) { if (token === request.current) setError(e.message); }
             finally { if (token === request.current) setBusy(''); }
           }}>목록 새로고침</button></div>
-          <form className="handoff-open-form" onSubmit={(e) => { e.preventDefault(); try { open(parseHandoffLink(linkInput)); } catch (err) { setError(err.message); } }}>
-            <label className="task-input-label" htmlFor="handoff-link-input">받은 인수인계 링크·작업 코드 열기</label>
-            <input id="handoff-link-input" className="ws-input" maxLength={2048} disabled={Boolean(busy)} value={linkInput} onChange={(e) => setLinkInput(e.target.value)} />
-            <button className="prompt-reset-button" type="submit" disabled={Boolean(busy) || !linkInput.trim()}>받은 링크 열기</button>
-          </form>
-          <div className="prompt-actions" role="group" aria-label="인수인계 분류">{[['all', '전체'], ['owner', '내가 만든 작업'], ['recipient', '내가 받은 작업']].map(([value, label]) =>
-            <button className={filter === value ? 'prompt-copy-button' : 'prompt-reset-button'} key={value} type="button" aria-pressed={filter === value} onClick={() => setFilter(value)}>{label}</button>)}</div>
-          {items === null ? <p role="status">작업을 불러오는 중…</p> : !visible.length ? <p>아직 이 분류의 인수인계가 없어요. 새 작업을 저장하거나 받은 링크를 열어 보세요.</p>
-            : <ul className="handoff-list">{visible.map((entry) => <li key={entry.id}>
-              <div><strong>{entry.title}</strong><p className="ws-help">{HANDOFF_STATUS[entry.status]} · {entry.owner} → {entry.recipient || '아직 지정 안 함'} · {entry.revision}번째 버전</p></div>
+          <div className="handoff-filters" role="group" aria-label="인수인계 분류">{[['all', '전체'], ['owner', '내가 만든 작업'], ['recipient', '내가 받은 작업']].map(([value, label]) =>
+            <button key={value} type="button" aria-pressed={filter === value} onClick={() => setFilter(value)}>{label}<span aria-hidden="true">{items === null ? '…' : items.filter(entry => value === 'all' || entry.role === value).length}</span></button>)}</div>
+          {items === null ? <p role="status">작업을 불러오는 중…</p> : !visible.length ? <p className="handoff-empty">아직 이 분류의 인수인계가 없어요.<br />새 작업을 저장하거나 받은 링크를 열어 보세요.</p>
+            : <ul className="handoff-list">{visible.map((entry) => <li key={entry.id} className={item?.id === entry.id ? 'is-current' : ''}>
+              <div><span className={`handoff-status handoff-status-${entry.status}`}>{HANDOFF_STATUS[entry.status]}</span><strong>{entry.title}</strong><p className="ws-help">{entry.owner} → {entry.recipient || '받을 팀원 지정 전'} · {entry.revision}번째 버전</p></div>
               <button className="prompt-reset-button" type="button" disabled={Boolean(busy)} onClick={() => open(entry.id)}>작업 열기</button>
             </li>)}</ul>}
         </div>
         {form && <div className="ws-step handoff-editor" ref={editor}>
-          <h3>{item ? `${item.title} · ${HANDOFF_STATUS[item.status]}` : '새 작업의 맥락을 남겨요'}</h3>
+          <div className="handoff-editor-heading"><span className="handoff-section-label">{snapshot ? '이전 기록' : item ? '지금 보고 있는 작업' : '새 인수인계 작성'}</span><h3>{item ? item.title : '새 작업의 맥락을 남겨요'}</h3>
+            <p>{snapshot ? '지난 시점의 내용입니다. 현재 작업은 바뀌지 않아요.' : !item ? '필수 항목 네 가지를 채우고 저장하면 자료 첨부와 팀원 공유를 할 수 있어요.' : item.can_claim ? '맥락과 자료를 확인한 뒤 ‘이어서 맡기’를 눌러 주세요.' : item.can_edit ? '달라진 진행 상황과 다음 행동을 갱신하고 저장해 주세요.' : '저장된 맥락과 자료를 확인할 수 있어요.'}</p>
+            {item && <span className={`handoff-status handoff-status-${item.status}`}>{HANDOFF_STATUS[item.status]}</span>}</div>
           {item && <p className="ws-help">작성자 {item.owner} · 받는 팀원 {item.recipient || '아직 지정 안 함'} · 현재 {item.revision}번째 저장 버전</p>}
           {snapshot ? <div className="handoff-snapshot" role="status"><strong>{snapshot.revision}번째 이전 기록을 보고 있어요 · 읽기 전용</strong>
             <p>{HANDOFF_STATUS[snapshot.status]} · 당시 받는 팀원 {snapshot.recipient || '지정 전'}</p>

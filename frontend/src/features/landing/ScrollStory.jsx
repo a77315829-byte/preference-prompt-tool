@@ -42,7 +42,7 @@ const coreCategories = [
     number: '02',
     label: 'CODE',
     title: '코딩 도움',
-    description: '원하는 언어·프레임워크와 작성 선호로 지침을 만듭니다. React는 예시 비교로 취향을 찾을 수도 있어요.',
+    description: '언어와 프레임워크를 고르고, 더 편한 코드 예시를 선택해 내 방식의 프롬프트를 만듭니다.',
     accent: 'purple', cta: '내 코딩 지침 만들기',
   },
   {

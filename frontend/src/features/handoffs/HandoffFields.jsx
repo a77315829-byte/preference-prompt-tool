@@ -8,14 +8,14 @@ const FIELDS = [
 
 function HandoffFields({ form, readOnly, busy, onChange, onSave, existing, changed = true }) {
   return <form className="handoff-fields" onSubmit={onSave}>
-    <label className="task-input-label" htmlFor="handoff-title">작업 이름</label>
+    <div className="handoff-name-field"><label className="task-input-label" htmlFor="handoff-title">작업 이름 <span className="handoff-required">필수</span></label>
     <input id="handoff-title" className="ws-input" required maxLength={100} readOnly={readOnly} disabled={busy} value={form.title} onChange={(e) => onChange('title', e.target.value)} placeholder="예: 로그인 API 구현 이어받기" />
-    {FIELDS.map(([key, label, limit, rows, placeholder]) => <div key={key}>
-      <label className="task-input-label" htmlFor={`handoff-${key}`}>{label}</label>
+    </div><div className="handoff-field-grid">{FIELDS.map(([key, label, limit, rows, placeholder], index) => <div key={key} className={`handoff-field-card handoff-field-${key}`}>
+      <label className="task-input-label" htmlFor={`handoff-${key}`}><span className="handoff-field-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>{label}{['purpose', 'progress', 'remaining'].includes(key) && <span className="handoff-required">필수</span>}</label>
       <textarea id={`handoff-${key}`} className="task-input" maxLength={limit} rows={rows} required={['purpose', 'progress', 'remaining'].includes(key)}
         readOnly={readOnly} disabled={busy} value={form[key]} onChange={(e) => onChange(key, e.target.value)} placeholder={placeholder} />
       {key === 'references' && <p className="ws-help">팀원이 접근할 수 있는 저장소 경로·공유 링크를 적어 주세요. 최대 20개입니다. 파일 자체는 작업을 저장한 뒤 ‘참고 파일 첨부’에서 추가할 수 있어요.</p>}
-    </div>)}
+    </div>)}</div>
     {!readOnly && <div className="prompt-actions"><button className="prompt-copy-button" type="submit" disabled={busy || !changed || !form.title.trim() || !form.purpose.trim() || !form.progress.trim() || !form.remaining.trim()}>
       {busy ? '처리하는 중…' : existing ? '변경 내용 저장' : '내 작업으로 저장'}
     </button></div>}

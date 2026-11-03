@@ -1555,8 +1555,34 @@
 .coding-profile-fields .task-input-label { margin-top: 1rem; }
 .coding-profile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1rem; }
 .coding-instructions-result { scroll-margin-top: 7rem; }
-.saved-coding-profile { border: 1px solid #dce3f0; background: #f6f9fc; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
+.coding-compare-entry { margin: 0.5rem 0 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #dce3f0; }
+.coding-example-comparison { margin: 1.5rem 0; }
+.coding-example-comparison h3 { scroll-margin-top: 7rem; }
+.coding-example-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.2rem 0; }
+.coding-example-card { display: flex; flex-direction: column; min-width: 0; padding: 1.2rem; border: 1px solid #dce3f0; border-radius: 12px; background: #fff; }
+.coding-example-card h4 { margin: 0 0 1rem; }
+.coding-example-card p { white-space: pre-wrap; line-height: 1.7; }
+.coding-example-card button { align-self: flex-start; margin-top: auto; }
+.coding-example-files { min-width: 0; max-height: 24rem; overflow: auto; padding: 0.2rem; }
+.coding-example-files h5 { margin: 0.6rem 0; font-size: 0.85rem; }
+.coding-example-card .coding-example-files pre { max-height: none; }
+.coding-example-card pre, .coding-existing-code pre { margin: 0; padding: 1rem; overflow: auto; max-height: 22rem; color: #e5eaf5; background: #151a29; border-radius: 8px; font-size: 0.88rem; line-height: 1.7; tab-size: 4; }
+.coding-existing-code { margin: 1rem 0; }
+.coding-existing-code summary { margin-bottom: 0.6rem; cursor: pointer; }
+.coding-comparison-summary { padding: 1rem; margin: 1rem 0; background: #f6f9fc; border-radius: 12px; }
+.coding-comparison-summary ul { padding-left: 1.2rem; line-height: 1.8; }
+@media (max-width: 700px) { .coding-example-options { grid-template-columns: minmax(0, 1fr); } }
+.saved-coding-profile { border: 1px solid #e2d9ef; background: #f8f5ff; border-radius: 20px; padding: 1.2rem; margin: 1rem 0; }
 .saved-coding-profile ul { padding-left: 1.2rem; line-height: 1.8; }
+.saved-coding-profile .saved-coding-choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; padding: 0; list-style: none; }
+.saved-coding-choices li { min-width: 0; padding: 0.9rem; border: 1px solid #e3dbf0; border-radius: 12px; background: #eee7ff; }
+.saved-coding-choices li:nth-child(2) { background: #fff0d8; border-color: #eedfc6; }
+.saved-coding-choices li:nth-child(3) { background: #dff7ed; border-color: #cde6da; }
+.saved-coding-choices li:nth-child(4) { background: #e5edff; border-color: #d5dff3; }
+.saved-coding-choices span, .saved-coding-choices strong, .saved-coding-choices small { display: block; }
+.saved-coding-choices span, .saved-coding-choices small { font-size: 0.75rem; color: #6f627b; }
+.saved-coding-choices strong { margin: 0.25rem 0; font-size: 0.9rem; overflow-wrap: anywhere; }
+@media (max-width: 600px) { .saved-coding-profile .saved-coding-choices { grid-template-columns: minmax(0, 1fr); } }
 .coding-extra-snapshot { white-space: pre-wrap; overflow-wrap: anywhere; }
 .handoffs-section .comparison-heading { margin: 2rem 0 1.5rem; }
 .handoffs-section .comparison-heading h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; letter-spacing: -0.06em; }

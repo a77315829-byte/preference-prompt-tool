@@ -29,6 +29,13 @@ import team
 import template_library
 from personal_prompts import PersonalPromptStore, PromptConflict, expected_revision
 from coding_instructions import build_coding_instructions
+from coding_examples import build_coding_examples
+from coding_optimization_jobs import CodingOptimizationJobs
+from fastapi_optimization import MAX_MODEL_CALLS as FASTAPI_GEPA_CALL_LIMIT, optimize_fastapi
+from coding_gepa import coding_draft, coding_optimization_kind, optimize_coding
+from coding_answer_review import inspect_answer
+from coding_environments import ENVIRONMENTS
+from web_coding_evaluation import available as web_gepa_available
 from handoffs import HandoffStore, HandoffConflict
 from handoff_files import MAX_UPLOAD_JSON
 from preference_comparison import compare_preferences, compose_task_prompt, team_basis
@@ -76,6 +83,10 @@ SUGGEST_MODEL = os.environ.get("PPT_SUGGEST_MODEL") or service.REFLECTION_MODEL
 # 만든다. 프론트는 아직 demoMode: true 를 고정으로 보내므로, 백엔드만으로
 # 실제 생성을 켜고 끌 수 있게 하려는 스위치다. 기본은 꺼짐.
 LIVE = os.environ.get("PPT_LIVE") == "1"
+FASTAPI_GEPA_LIVE = os.environ.get("PPT_FASTAPI_GEPA_LIVE", "1" if LIVE else "0") == "1"
+SPRING_BOOT_GEPA_LIVE = os.environ.get("PPT_SPRING_BOOT_GEPA_LIVE", "1" if LIVE else "0") == "1"
+WEB_GEPA_LIVE = os.environ.get("PPT_WEB_GEPA_LIVE", "1" if LIVE else "0") == "1"
+PYTHON_WEB_GEPA_LIVE = os.environ.get("PPT_PYTHON_WEB_GEPA_LIVE", "1" if LIVE else "0") == "1"
 
 
 def _live_key_available(model: str | None = None) -> bool:
@@ -112,6 +123,7 @@ OPTIMIZE_REPORTS: dict[str, dict] = {}
 TEAMS = team.TeamStore(DB)
 PERSONAL_PROMPTS = PersonalPromptStore(lambda: DB)
 HANDOFFS = HandoffStore(lambda: DB)
+CODING_OPTIMIZATIONS = CodingOptimizationJobs()
 DAILY_PREFERENCE_RUNS = _quota("preference", "PPT_PREFERENCE_RUNS_PER_DAY", 60, "PPT_USER_PREFERENCE_RUNS_PER_DAY", 20)
 # 다른 출처에서 이 API 를 부르도록 허용할 주소 목록 (쉼표로 구분). 기본은
 # 비어 있다 - React 화면은 Vite 프록시(/api)로 같은 출처에서 부르므로 CORS
@@ -708,6 +720,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         if path == "/api/handoffs" or path.startswith("/api/handoffs/"):
             self._handoffs(path)
             return
+        if path.startswith("/api/coding-instructions/optimizations"):
+            self._coding_optimizations(path)
+            return
         # 최적화 진행률을 폴링하는 경로. /api/sessions/<id>
         parts = path.split("/")
         if len(parts) == 4 and parts[:3] == ["", "api", "sessions"]:
@@ -744,6 +759,17 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/coding-instructions/preview":
                 self._send(200, {"draft": build_coding_instructions(body.get("profile"))})
+                return
+            if path == "/api/coding-instructions/review":
+                profile = build_coding_instructions(body.get("profile"))["profile"]
+                self._send(200, {"inspection": inspect_answer(profile, body.get("answer"), body.get("isPatch"))})
+                return
+            if path == "/api/coding-instructions/examples":
+                profile = build_coding_instructions(body.get("profile"))["profile"]
+                self._send(200, {"examples": build_coding_examples(profile)})
+                return
+            if path.startswith("/api/coding-instructions/optimizations"):
+                self._coding_optimizations(path, body)
                 return
             if path == "/api/sessions":
                 self._start_session(body)
@@ -840,6 +866,72 @@ class ApiHandler(BaseHTTPRequestHandler):
             self._send(403, {"error": str(exc)})
         except ValueError as exc:
             self._send(400, {"error": str(exc)})
+
+    def _coding_optimizations(self, path: str, body: dict | None = None) -> None:
+        parts = path.split('/')
+        model_ready = _live_key_available(CODING_MODEL) and _live_key_available(service.REFLECTION_MODEL)
+        environments = {key: {'enabled': flag and model_ready, 'reason': '' if flag and model_ready else
+            f'현재 서버는 {label} GEPA 실제 AI 호출이 꺼져 있거나 모델 설정이 준비되지 않았어요.'}
+            for key, flag, label in [('fastapi', FASTAPI_GEPA_LIVE, 'FastAPI'), ('spring_boot', SPRING_BOOT_GEPA_LIVE, 'Spring Boot')]}
+        tooling = web_gepa_available()
+        for key, (language, framework, mode) in ENVIRONMENTS.items():
+            if mode in ('flask','django'):
+                enabled = PYTHON_WEB_GEPA_LIVE and model_ready
+                environments[key] = {'enabled':enabled,
+                    'evaluation_scope': ('Flask GET 경로·request.args·정수 입력·JSON 400 응답·반환 계산식을 코드 구조에서 확인합니다.' if mode == 'flask' else
+                        'Django URL 설정·GET 전용 함수형 뷰·정수 입력·JsonResponse의 400 응답·반환 계산식을 코드 구조에서 확인합니다.')
+                        + ' 실제 서버·DB·설정·보안 검사는 하지 않습니다.',
+                    'reason': '' if enabled else f'현재 서버는 {framework} GEPA 실제 호출이 꺼져 있거나 모델 설정이 준비되지 않았어요.'}
+            if mode in ('react', 'express', 'vue', 'nextjs', 'nestjs'):
+                environments[key] = {'enabled': WEB_GEPA_LIVE and model_ready and tooling,
+                    'evaluation_scope': ('NestJS의 컨트롤러·GET/Query·모듈 등록·서비스 주입·BadRequestException과 계산값을 제한된 코드 구조에서 확인합니다. 실제 Nest 빌드·DI 컨테이너·HTTP·파이프·DB·보안 검사는 하지 않습니다.' if mode == 'nestjs' else
+                        'Next.js App Router의 route.ts/js 파일 위치·export GET·쿼리 입력·JSON 400 응답·반환 계산식을 제한된 코드 구조에서 확인합니다. 실제 Next.js 빌드·서버·화면·캐싱·타입·보안 검사는 하지 않습니다.' if mode == 'nextjs' else
+                        'Vue 3 script setup·숫자 props·v-if 오류 표시·계산값을 제한된 코드·템플릿 구조에서 확인합니다. 실제 Vue 컴파일·브라우저 렌더링·반응성·타입 검사는 하지 않습니다.' if mode == 'vue' else
+                        'React props·오류 표시·계산값을 코드 구조에서 확인합니다. 실제 브라우저 화면·타입 검사는 하지 않습니다.' if mode == 'react' else
+                        'Express GET 경로·쿼리 입력·400 오류 응답·반환 계산식을 코드 구조에서 확인합니다. 실제 서버를 실행하지 않습니다.'),
+                    'reason': '' if WEB_GEPA_LIVE and model_ready and tooling else
+                    ('이 환경의 정적 검사에는 Node.js와 기존 프론트 의존성(npm ci --prefix frontend)이 필요해요.' if not tooling else
+                     f'현재 서버는 {language}/{framework} GEPA 실제 호출이 꺼져 있거나 모델 설정이 준비되지 않았어요.')}
+        try:
+            if parts[:4] != ['', 'api', 'coding-instructions', 'optimizations']:
+                raise LookupError('찾을 수 없는 개선 경로입니다.')
+            if len(parts) == 4 and body is None:
+                self._send(200, {**environments['fastapi'], 'environments': environments, 'call_limit': FASTAPI_GEPA_CALL_LIMIT,
+                    'retention_seconds': 7200})
+                return
+            user = self._current_user()
+            if user is None:
+                self._send(401, {'error': '로그인한 뒤 코딩 지침을 개선하고 새 항목으로 저장할 수 있어요.'})
+                return
+            if len(parts) == 4 and body is not None:
+                draft = coding_draft(body.get('profile'))
+                kind = coding_optimization_kind(draft['profile'])
+                if draft['prompt'] != body.get('originalPrompt'):
+                    raise ValueError('선택과 현재 프롬프트가 달라요. 지침을 다시 만든 뒤 개선해 주세요.')
+                if not environments[kind]['enabled']:
+                    raise ValueError(environments[kind]['reason'])
+                run = optimize_fastapi if kind == 'fastapi' else optimize_coding
+                job = CODING_OPTIMIZATIONS.start(user.id, draft['profile'],
+                    run=lambda profile, progress: run(profile, task_model=CODING_MODEL,
+                        reflection_model=service.REFLECTION_MODEL, progress=progress),
+                    consume=lambda: _take(DAILY_OPTIMIZATIONS, '최적화'), describe_error=service.describe_api_error)
+                self._send(202, {'job': job})
+                return
+            if len(parts) == 5 and body is None:
+                self._send(200, {'job': CODING_OPTIMIZATIONS.get(user.id, parts[4])})
+                return
+            if len(parts) == 6 and parts[5] == 'save' and body is not None:
+                # Only the server-held result is saved. Ignore client prompt/report/owner fields.
+                item = CODING_OPTIMIZATIONS.save(user.id, parts[4], body.get('title'), PERSONAL_PROMPTS, body.get('humanReview'))
+                self._send(201, {'preference': item})
+                return
+            raise LookupError('찾을 수 없는 개선 경로입니다.')
+        except LookupError as exc:
+            self._send(404, {'error': str(exc)})
+        except (ValueError, TypeError, KeyError) as exc:
+            self._send(400, {'error': str(exc)})
+        except Exception as exc:
+            self._send(500, {'error': service.describe_api_error(exc)})
 
     def _personal_prompts(self, path: str, body: dict | None = None) -> None:
         user = self._current_user()

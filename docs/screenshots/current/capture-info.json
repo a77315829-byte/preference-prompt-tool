@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-04",
+  "account": "isolated preview fixtures",
+  "mode": "local UI / no paid AI calls",
+  "images": [
+    {
+      "file": "01-start.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "selector": "viewport"
+    },
+    {
+      "file": "02-code-comparison.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "selector": ".coding-example-options"
+    },
+    {
+      "file": "03-my-prompt.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "selector": ".coding-result-layout"
+    },
+    {
+      "file": "04-task-request.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "selector": ".coding-how-to-use"
+    },
+    {
+      "file": "05-preference-library.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "selector": ".preference-editor"
+    },
+    {
+      "file": "06-handoff.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "selector": ".handoff-fields"
+    },
+    {
+      "file": "07-team-start.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "selector": ".teams-section .ws-step (second section: usage guide and participation buttons)",
+      "account": "anonymous"
+    }
+  ]
+}

@@ -79,6 +79,7 @@ class PersonalPromptStore:
         item = dict(row)
         coding = json.loads(item.pop("coding_profile_json") or "null")
         item["coding_profile"] = coding["profile"] if coding else None
+        item["coding_optimization"] = coding.get("optimization") if coding else None
         item["coding_profile_matches"] = (item["domain_key"] == "coding" and coding["prompt_sha256"] == hashlib.sha256(item["prompt"].encode()).hexdigest()) if coding else None
         raw = item.pop("provenance_json")
         provenance = json.loads(raw) if raw else None
@@ -87,14 +88,25 @@ class PersonalPromptStore:
                                       provenance["prompt_sha256"] == hashlib.sha256(item["prompt"].encode()).hexdigest()) if provenance else None
         return item
 
-    def create(self, owner_id: int, body: dict, *, provenance: dict | None = None) -> dict:
+    def create(self, owner_id: int, body: dict, *, provenance: dict | None = None, optimization: dict | None = None) -> dict:
         title, domain, prompt, note = _fields(body)
         coding_json = None
+        if optimization is not None and body.get("codingProfile") is None:
+            raise ValueError("개선한 지침의 개발 환경 기록이 필요합니다.")
         if body.get("codingProfile") is not None:
             draft = build_coding_instructions(body["codingProfile"])
-            if domain != "coding" or prompt != draft["prompt"] or provenance is not None:
+            expected = draft["prompt"]
+            if optimization is not None:
+                from coding_gepa import compose_prompt, coding_draft
+                coding_draft(draft['profile'])
+                if (optimization.get('method') != 'gepa' or optimization.get('original_prompt') != expected
+                        or not isinstance(optimization.get('report'), dict) or not optimization.get('guidance')):
+                    raise ValueError("GEPA 개선 기록을 확인해 주세요.")
+                expected = compose_prompt(expected, optimization['guidance'], draft['profile'])
+            if domain != "coding" or prompt != expected or provenance is not None:
                 raise ValueError("개발 환경 설정과 지침이 다릅니다. 지침을 다시 만든 뒤 저장해 주세요.")
-            coding_json = json.dumps({"profile": draft["profile"], "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest()}, ensure_ascii=False)
+            coding_json = json.dumps({"profile": draft["profile"], "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(),
+                                      **({"optimization": optimization} if optimization is not None else {})}, ensure_ascii=False)
         prompt_id = uuid.uuid4().hex
         now = datetime.now(timezone.utc).isoformat(timespec="microseconds")
         # 개인/팀 조합 출처는 검증된 서버 호출만 전달한다. body의 조합 출처는 무시한다.

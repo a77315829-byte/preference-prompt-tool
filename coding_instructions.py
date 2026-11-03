@@ -1,6 +1,9 @@
 """직접 고른 개발 환경·선호로 재사용할 지침을 조립한다. 모델·코드는 실행하지 않는다."""
 from __future__ import annotations
 
+from coding_examples import SNIPPETS
+from coding_framework_examples import framework_example_source
+
 PREFERENCES = {
     "explanation": {
         "brief": "코드를 먼저 제시하고 핵심 이유와 사용 방법만 간결하게 설명하라.",
@@ -40,12 +43,37 @@ def build_coding_instructions(raw: dict) -> dict:
     if set(choices) != set(PREFERENCES) or any(not isinstance(choices[k], str) or choices[k] not in opts for k, opts in PREFERENCES.items()):
         raise ValueError("설명·주석·코드 구성·출력 방식의 선호를 확인해 주세요.")
     profile = {"language": language, "framework": framework, "preferences": dict(choices), "extra": extra}
+    comparison = raw.get("comparison")
+    if comparison is not None:
+        if (not isinstance(comparison, dict) or type(comparison.get("version")) is not int
+                or comparison["version"] not in (1, 2) or language not in SNIPPETS
+                or not isinstance(comparison.get("choices"), dict)
+                or set(comparison["choices"]) != set(PREFERENCES)):
+            raise ValueError("예시 비교 기록을 확인한 뒤 지침을 다시 만들어 주세요.")
+        for key, options in PREFERENCES.items():
+            pick = comparison["choices"][key]
+            if pick is not None and (not isinstance(pick, str) or pick not in options or pick != choices[key]):
+                raise ValueError("비교에서 고른 방식과 현재 설정이 다릅니다. 다시 비교하거나 직접 설정해 주세요.")
+        profile["comparison"] = {"version": comparison["version"], "choices": dict(comparison["choices"])}
+        if comparison["version"] == 2:
+            source = framework_example_source(language, framework)
+            recorded = comparison.get("example")
+            if (source is None or not isinstance(recorded, dict) or recorded.get("id") != source["id"]
+                    or recorded.get("kind") != "framework"):
+                raise ValueError("비교한 프레임워크와 현재 설정이 다릅니다. 다시 비교해 주세요.")
+            profile["comparison"]["example"] = source
+    preference_heading = ("## 예시 비교에서 정한 내 작성 선호\n"
+                          "네 가지 항목의 예시를 보고 고른 방식이다. 판단을 보류한 항목은 직접 설정한 값을 유지했다.\n"
+                          if comparison is not None else
+                          "## 직접 고른 내 작성 선호\n아래는 사용자가 직접 정한 선호이며 예시 비교로 추정한 결과가 아니다.\n")
+    if comparison is not None and comparison["version"] == 2:
+        preference_heading += f"비교 예시: {profile['comparison']['example']['label']}\n"
     environment = f"개발 언어: {language}\n프레임워크·라이브러리: {framework or '별도 지정 없음 - 임의로 추가하지 말고 필요하면 먼저 확인하라.'}"
     preferences = "\n".join(f"- {opts[choices[key]]}" for key, opts in PREFERENCES.items())
     prompt = (
         "당신은 사용자가 지정한 개발 환경과 작성 선호에 맞춰 개발을 돕는 페어 프로그래머다.\n\n"
         f"## 개발 환경\n{environment}\n\n"
-        "## 직접 고른 내 작성 선호\n아래는 사용자가 직접 정한 선호이며 예시 비교로 추정한 결과가 아니다.\n"
+        f"{preference_heading}"
         f"{preferences}\n"
         + (f"\n## 추가 선호\n{extra}\n" if extra else "")
         + "\n## 항상 지킬 것\n"
