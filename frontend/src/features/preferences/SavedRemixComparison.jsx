@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { axisValueLabel } from '../../shared/domainLabels';
 import { compareRemixAxes } from './remixComparison';
+import RestoreComparedPreferencePanel from './RestoreComparedPreferencePanel';
 
 const SOURCES = { personal: '내 선호', team: '팀 기준', shared: '같은 기준' };
 const STATUS = { changed: '방식 변경', source: '출처만 변경', same: '같음', unknown: '확인 필요' };
 
-function SavedRemixComparison({ before, afterAxes, afterTitle, matches = true, preview = false }) {
+function SavedRemixComparison({ before, afterAxes, afterTitle, matches = true, preview = false, restoreContext = null }) {
   const [showAll, setShowAll] = useState(false);
+  const [selectedAxes, setSelectedAxes] = useState([]);
   if (!before) return null;
   if (!Array.isArray(before.axes)) return <p className="ws-help">이 저장본에는 바꾸기 전 항목 기록이 없어 전·후를 비교할 수 없어요. 다음에 선택을 바꿔 새 항목으로 저장하면 비교 기록도 함께 남습니다.</p>;
   const rows = compareRemixAxes(before.axes, afterAxes);
@@ -14,6 +16,7 @@ function SavedRemixComparison({ before, afterAxes, afterTitle, matches = true, p
   const same = rows.filter((r) => r.status === 'same').length;
   const unknown = rows.filter((r) => r.status === 'unknown').length;
   const shown = showAll ? rows : rows.filter((r) => r.status !== 'same');
+  const canRestore = restoreContext && matches && !preview && changed > 0;
   const cell = (axis, entry) => !entry || typeof entry.value !== 'string' ? '기록 없음' : <>
     <span className="remix-value">{entry.value ? axisValueLabel(axis, entry.value) : '정하지 않음 · 지시 제외'}</span>
     <span className={`preference-source preference-source--${entry.source}`}>{SOURCES[entry.source] || '출처 확인 필요'}</span>
@@ -31,10 +34,16 @@ function SavedRemixComparison({ before, afterAxes, afterTitle, matches = true, p
       <caption>{showAll ? '전체 항목의 바꾸기 전·후' : '바뀐 항목의 바꾸기 전·후'}</caption>
       <thead><tr><th scope="col">항목</th><th scope="col">바꾸기 전</th><th scope="col">바꾼 후</th></tr></thead>
       <tbody>{shown.map((r) => <tr key={r.axis} className={r.status === 'same' ? '' : 'is-different'}>
-        <th scope="row">{r.label}<span className="remix-row-status">{STATUS[r.status]}</span></th>
+        <th scope="row">{r.label}<span className="remix-row-status">{STATUS[r.status]}</span>
+          {canRestore && (r.status === 'changed' || r.status === 'source') && <label className="restore-axis-choice">
+            <input type="checkbox" aria-label={`${r.label} 항목 이전 방식으로 되돌리기`} checked={selectedAxes.includes(r.axis)} disabled={restoreContext.disabled}
+              onChange={(e) => setSelectedAxes((current) => e.target.checked ? [...current, r.axis] : current.filter((axis) => axis !== r.axis))} />
+            이전 방식으로
+          </label>}</th>
         <td>{cell(r.axis, r.before)}</td><td>{cell(r.axis, r.after)}</td>
       </tr>)}</tbody>
     </table></div>}
+    {canRestore && <RestoreComparedPreferencePanel {...restoreContext} selectedAxes={selectedAxes} />}
   </div>;
 }
 

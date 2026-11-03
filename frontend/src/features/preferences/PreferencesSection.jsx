@@ -178,7 +178,9 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
             </div>
             {item.id && item.provenance?.remixed_from && <SavedRemixComparison key={`comparison-${item.id}-${item.revision}`}
               before={item.provenance.remixed_from} afterAxes={item.provenance.axes} afterTitle={item.title}
-              matches={item.provenance_matches && form.prompt === item.prompt && form.domainKey === item.domain_key} />}
+              matches={item.provenance_matches && form.prompt === item.prompt && form.domainKey === item.domain_key}
+              restoreContext={view === 'use' ? { item, disabled: Boolean(busy), onBusy: setBusy, onOpen: open,
+                onSaved: (saved) => setItems((current) => [saved, ...(current || []).filter((p) => p.id !== saved.id)]) } : null} />}
             {item.id && <SavedPreferenceSources item={item} editingPrompt={form.prompt !== item.prompt || form.domainKey !== item.domain_key} />}
             {item.id && view === 'use' && item.provenance && <RemixSavedPreferencePanel key={`${item.id}-${item.revision}`}
               item={item} disabled={Boolean(busy)} onBusy={setBusy} onOpen={open}

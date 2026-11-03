@@ -30,6 +30,7 @@ import template_library
 from personal_prompts import PersonalPromptStore, PromptConflict, expected_revision
 from preference_comparison import compare_preferences, compose_task_prompt, team_basis
 from saved_preference_remix import remix_saved_prompt
+from saved_preference_restore import restore_saved_prompt
 from app_db import Database
 from auth import AuthError, AuthService, TooManyAttempts, User
 from budget import DailyBudget  # noqa: F401 - 테스트가 상한 자리에 끼워 넣는다
@@ -796,13 +797,14 @@ class ApiHandler(BaseHTTPRequestHandler):
                     PERSONAL_PROMPTS.delete(user.id, prompt_id, body.get("revision"))
                     self._send(200, {"ok": True})
                     return
-                if action in ("remix-preview", "remix-save"):
+                if action in ("remix-preview", "remix-save", "restore-preview", "restore-save"):
                     item = PERSONAL_PROMPTS.get(user.id, prompt_id)
                     if item["revision"] != expected_revision(body.get("revision")):
                         raise PromptConflict("저장한 지침이 바뀌었습니다. 다시 열고 선택을 확인해 주세요.")
                     domain = service.load_domain_for(_domain_path(item["domain_key"]))
-                    draft = remix_saved_prompt(item, domain, body.get("choices"))
-                    if action == "remix-preview":
+                    draft = (restore_saved_prompt(item, domain, body.get("restoreAxes")) if action.startswith("restore-")
+                             else remix_saved_prompt(item, domain, body.get("choices")))
+                    if action.endswith("-preview"):
                         self._send(200, {"draft": draft})
                         return
                     if draft["snapshot"] != body.get("draftSnapshot"):

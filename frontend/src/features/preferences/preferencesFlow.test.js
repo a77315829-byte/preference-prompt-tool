@@ -79,6 +79,25 @@ function shelfServer({ loggedIn = true, live = false } = {}) {
       const next = state.records[0]; next.provenance_matches = true; next.provenance = structuredClone(draft.provenance);
       return response({ preference: next }, 201);
     }
+    if (action === 'restore-preview' || action === 'restore-save') {
+      if (body.revision !== item.revision) return response({ error: '저장한 지침이 바뀌었습니다.' }, 409);
+      const provenance = structuredClone(item.provenance);
+      for (const axis of body.restoreAxes) {
+        const old = item.provenance.remixed_from.axes.find((a) => a.axis === axis);
+        const next = provenance.axes.find((a) => a.axis === axis);
+        Object.assign(next, { value: old.value, source: old.source });
+      }
+      provenance.remixed_from = { title: item.title, revision: item.revision,
+        axes: item.provenance.axes.map(({ axis, label, value, source }) => ({ axis, label, value, source })) };
+      const snapshot = `restore:${id}:${body.revision}:${JSON.stringify(body.restoreAxes)}`;
+      const draft = { restore_axes: body.restoreAxes, snapshot, provenance, prompt: `복원: ${body.restoreAxes.join(',')}` };
+      if (action === 'restore-preview') return response({ draft });
+      if (state.failSave || body.draftSnapshot !== snapshot) return response({ error: '다시 확인해 주세요.' }, 409);
+      assert.notEqual(body.title, item.title);
+      await fetch('/api/preferences', { method: 'POST', body: JSON.stringify({ title: body.title, note: body.note, domainKey: item.domain_key, prompt: draft.prompt }) });
+      const next = state.records[0]; next.provenance_matches = true; next.provenance = provenance;
+      return response({ preference: next }, 201);
+    }
     if (action === 'update') {
       if (state.failSave) return response({ error: '다른 창에서 수정된 항목입니다. 다시 열어 주세요.' }, 409);
       if (item.provenance) item.provenance_matches = item.provenance_matches && body.prompt === item.prompt && body.domainKey === item.domain_key;
@@ -458,5 +477,63 @@ test('변경 전 기록이 없는 이전 조합은 비교를 추측하지 않고
     assert.equal(document.querySelector('.saved-remix-comparison'), null);
     await ui.fill('#preference-task', '새 작업'); await ui.click('지침 + 새 작업 복사');
     assert.ok(ui.state.copied.includes('기존 본문'));
+  } finally { await ui.close(); }
+});
+
+test('비교에서 원하는 항목만 되돌리기 → 미리 보기 무효화 → 다른 이름 저장·재사용, 기존 조합 유지', async () => {
+  const api = shelfServer();
+  const axes = [
+    { axis: 'code_structure', label: '코드 구성', value: 'compact', source: 'personal', personal_value: 'compact', team_value: 'separated', team_agreed: true },
+    { axis: 'type_detail', label: '타입 작성', value: 'inferred', source: 'team', personal_value: 'explicit', team_value: 'inferred', team_agreed: true },
+    { axis: 'style_management', label: '스타일 관리', value: 'theme', source: 'shared', personal_value: 'theme', team_value: 'theme', team_agreed: true },
+  ];
+  const previous = axes.map((a) => ({ axis: a.axis, label: a.label, value: a.axis === 'code_structure' ? 'separated' : a.axis === 'type_detail' ? 'explicit' : a.value,
+    source: a.axis === 'code_structure' ? 'team' : a.axis === 'type_detail' ? 'personal' : a.source }));
+  api.state.records.push({ id: 'current', title: '현재 조합', note: '', domain_key: 'coding', prompt: '현재 본문', revision: 1, updated_at: '2026-11-03T00:00:00Z',
+    provenance_matches: true, provenance: { version: 1, personal: { title: '개인', revision: 1 }, team: { name: '팀' }, axes,
+      remixed_from: { title: '이전 작업용', revision: 1, axes: previous } } });
+  const original = structuredClone(api.state.records[0]);
+  const ui = await mount('https://example.test/', 'coding', api.fetch);
+  ui.dom.window.confirm = () => true;
+  const toggle = async (label) => ui.act(async () => document.querySelector(`input[aria-label="${label} 항목 이전 방식으로 되돌리기"]`).click());
+  const button = (text) => [...document.querySelectorAll('button')].find((b) => b.textContent === text);
+  try {
+    await ui.click('내 선호 보관함'); await ui.click('새 작업에 사용');
+    await ui.fill('#preference-task', '유지할 작업');
+    assert.equal(button('되돌릴 결과 미리 보기').disabled, true);
+    assert.equal(document.querySelectorAll('.restore-axis-choice input').length, 2);
+    await ui.click('전체 항목 보기');
+    assert.equal(document.querySelectorAll('.restore-axis-choice input').length, 2);
+    await toggle('코드 구성'); await ui.click('되돌릴 결과 미리 보기');
+    assert.ok(document.querySelector('.restore-result-list').textContent.includes('역할별 파일로 분리'));
+    assert.equal(document.querySelectorAll('.restore-result-list li').length, 1);
+    await ui.fill('#restore-title', '코드 구성만 이전 방식');
+    await toggle('타입 작성');
+    assert.equal(document.querySelector('#restore-title'), null);
+    await toggle('타입 작성'); await ui.click('되돌릴 결과 미리 보기');
+    assert.equal(document.querySelector('#restore-title').value, '코드 구성만 이전 방식');
+    await ui.fill('#restore-title', '현재 조합');
+    assert.equal(button('되돌린 결과를 다른 이름으로 저장').disabled, true);
+    await ui.fill('#restore-title', '코드 구성만 이전 방식');
+    api.state.failSave = true; await ui.click('되돌린 결과를 다른 이름으로 저장');
+    assert.ok(document.querySelector('.restore-compared-preference [role="alert"]'));
+    assert.equal(api.state.writes, 0);
+    api.state.failSave = false; await ui.click('되돌린 결과를 다른 이름으로 저장');
+    assert.equal(api.state.writes, 1);
+    assert.deepEqual(api.state.records.find((p) => p.id === 'current'), original);
+    assert.equal(document.querySelector('#preference-task').value, '유지할 작업');
+    const restored = api.state.records[0];
+    assert.equal(restored.provenance.axes[0].value, 'separated');
+    assert.equal(restored.provenance.axes[1].value, 'inferred');
+    assert.equal(button('되돌린 결과를 새로 저장했어요').disabled, true);
+    await ui.click('저장한 되돌리기 결과 열기');
+    assert.ok(document.querySelector('.saved-remix-comparison').textContent.includes('1개 변경'));
+    await ui.fill('#preference-task', '다음 작업'); await ui.click('지침 + 새 작업 복사');
+    assert.ok(ui.state.copied.includes('복원: code_structure'));
+    await ui.click('지침 수정');
+    assert.equal(document.querySelector('.restore-axis-choice'), null);
+    await ui.fill('#preference-prompt', '직접 수정'); await ui.click('변경 내용 저장'); await ui.click('새 작업에 쓰기');
+    assert.equal(document.querySelector('.restore-axis-choice'), null);
+    assert.equal(document.querySelector('.restore-compared-preference'), null);
   } finally { await ui.close(); }
 });
