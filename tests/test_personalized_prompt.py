@@ -459,3 +459,38 @@ def test_every_required_term_appears_in_its_original_instruction() -> None:
                 text = (domain.axis(axis).instruction_for(value) if language is None
                         else spec.instructions[axis][value])
                 assert all(t.lower() in text.lower() for t in terms), (language, axis, value)
+
+
+def test_streamlit_result_screen_labels_each_method_and_shows_the_matching_prompt() -> None:
+    """화면 확인: 결과 화면이 방식 이름을 구분해 보여 주고, 표시한 프롬프트가 그 방식의 것이다."""
+    from pathlib import Path
+    from streamlit.testing.v1 import AppTest
+
+    app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / "app.py"), default_timeout=30).run()
+    app.radio(key="run_mode").set_value("무료 데모 (API 없이 규칙 기반)").run()
+    app.text_area[0].input("클릭 횟수를 보여주는 버튼을 만들어 주세요.").run()
+    app.button(key="start").click().run()
+    for _ in range(8):
+        if app.session_state["stage"] != "compare":
+            break
+        app.button(key="pick_a").click().run()
+    assert app.session_state["stage"] == "done" and not app.exception
+
+    def method_caption():
+        return next(c.value for c in app.caption if c.value.startswith("생성 방식"))
+
+    session = app.session_state["session"]
+    base = session.prompt_improvement["base_prompts"]["ko"]
+    assert "`rule_based`" in method_caption() and app.code[0].value == base
+
+    improved = base.replace("- 코드 구성: ", "- 코드 구성: [AI] ", 1)
+    app.session_state["session"] = replace(session, personalized_prompts={"ko": improved}, prompt_improvement={
+        **session.prompt_improvement, "method": "ai_improved", "changed": True, "reason": None})
+    app.run()
+    assert "`ai_improved`" in method_caption() and app.code[0].value == improved
+
+    app.session_state["session"] = replace(session, prompt_improvement={
+        **session.prompt_improvement, "method": "fallback", "reason": "limit_reached"})
+    app.run()
+    assert "`fallback`" in method_caption() and app.code[0].value == base
+    assert any("호출 한도" in w.value for w in app.warning)

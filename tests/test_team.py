@@ -318,3 +318,17 @@ def test_team_prompt_speaks_to_a_team_not_one_user(domain_file) -> None:
     assert "이 사용자" not in prompt and "팀" in prompt
     # 개인 프롬프트는 그대로다.
     assert "이 사용자" in service.final_prompt(domain, estimator)
+
+
+def test_rejoining_later_keeps_the_original_member_order(tmp_path) -> None:
+    """재참여가 다른 초에 들어와도 순서가 바뀌지 않는다 (joined_at 정렬일 때 간헐적으로 실패했다)."""
+    from datetime import datetime, timedelta, timezone
+    clock = {"now": datetime(2026, 11, 3, tzinfo=timezone.utc)}
+    store = team.TeamStore(Database(tmp_path / "t.db"), clock=lambda: clock["now"])
+    history = [({"code_structure": "compact", "style_management": "theme", "type_detail": "explicit"},
+                {"code_structure": "separated", "style_management": "theme", "type_detail": "explicit"}, "a")]
+    store.add("order", "coding", "alice", history)
+    store.add("order", "coding", "bob", history)
+    clock["now"] += timedelta(seconds=5)
+    members = store.add("order", "coding", "alice", history)
+    assert [m.name for m in members] == ["alice", "bob"]

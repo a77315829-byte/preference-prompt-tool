@@ -113,6 +113,18 @@ python -m experiments.personalized_prompt_comparison --cached-only --behavior --
   무한 반복)를 전수 검색하고 일부를 읽어 검토했다. 설치되지 않은 `styled-components`·`@emotion/react` 를 쓴 출력은
   빌드 실패로 셌다.
 
+## 마무리 (6단계 이후)
+
+- **GEPA 와 보호 규칙**: GEPA 성찰 모델은 프롬프트를 통째로 다시 써 "항상 지킬 것" 줄을 지울 수 있었다.
+  고른 후보에서 시드에 있던 규칙 줄이 빠지면 그 줄만 YAML 원문 그대로 규칙 머리말 아래에 다시 붙인다
+  (`service._restore_protected_rules`, 보고에 `rules_restored`). 빠진 후보를 버리는 방식은 GEPA 를 거의 항상 시드로
+  되돌려 택하지 않았다. 규칙을 다시 붙인 프롬프트는 GEPA 가 점수를 낸 그 텍스트와 다르다 - 점수는 붙이기 전 기준이다.
+- **팀 순서 흔들림**: `team.TeamStore` 가 `joined_at` 으로 정렬해, 재참여가 다른 초에 들어오면 순서가 바뀌어
+  `test_team` 이 간헐 실패했다. upsert 가 유지하는 `rowid`(처음 참여한 순서)로 정렬하고, 시계를 주입한 재현 테스트를 더했다.
+- **화면 확인**: Streamlit 결과 화면은 `AppTest` 로 세 방식(`rule_based`/`ai_improved`/`fallback`)의 표시 문구와
+  보이는 프롬프트를 확인했다(테스트로 고정). React 결과 영역은 브라우저 없이 `react-dom/server` 렌더로 같은 세 경우의
+  문구와 프롬프트를 확인했다 - 실제 브라우저 상호작용(복사 버튼, 언어 전환)은 보지 않았다.
+
 ## 남은 것
 
 - 사전등록 비교에서 개선 단계를 켤 근거는 확인되지 않았다. 다시 시도하려면 개선 방식을 바꾸고 새 holdout 으로 새 사전등록을 해야 한다.

@@ -584,14 +584,35 @@ def optimize(
     if on_progress is not None:
         on_progress(1.0)
     prompt, score, skipped = _best_without_leak(result, seed_prompt, state.source_text, domain)
+    prompt, restored = _restore_protected_rules(prompt, seed_prompt, domain, language)
     if report is not None:
         report.update(
             seed_score=float(result.val_aggregate_scores[0]),
             final_score=float(score),
             eval_inputs=len(valset),
             leaky_skipped=skipped,
+            rules_restored=restored,
         )
     return prompt
+
+
+def _restore_protected_rules(prompt: str, seed_prompt: str, domain: Domain,
+                             language: str | None) -> tuple[str, int]:
+    """GEPA 후보가 시드의 "항상 지킬 것" 규칙 줄을 지웠으면 그 줄만 원문 그대로 다시 붙인다.
+
+    성찰 모델은 프롬프트를 통째로 다시 쓰므로 기능 우선·요청에 없는 기능 금지·접근성 같은
+    규칙이 빠질 수 있다. 빠진 후보를 버리면 GEPA 가 거의 항상 시드로 돌아가므로, 고른 후보는
+    두고 빠진 규칙만 YAML 의 규칙 머리말 아래에 되살린다. 규칙 문구는 YAML 에서 온다."""
+    spec = generator._final_spec(domain, None if language in (None, "ko") else language)
+    if spec is None:
+        return prompt, 0
+    seed_lines = seed_prompt.split("\n")
+    lines = prompt.split("\n")
+    missing = [line for line in (f"- {rule}" for rule in spec.rules)
+               if line in seed_lines and line not in lines]
+    if not missing:
+        return prompt, 0
+    return prompt.rstrip() + "\n\n" + "\n".join([f"## {spec.rules_heading}", *missing]), len(missing)
 
 
 def _best_without_leak(result, seed_prompt: str, source: str, domain: Domain) -> tuple[str, float, int]:

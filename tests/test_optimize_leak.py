@@ -105,7 +105,8 @@ def test_best_leaky_candidate_is_skipped(monkeypatch) -> None:
 
     monkeypatch.setattr(gepa, "optimize", fake_optimize)
     state = _finished_state("domains/summarization.yaml", SOURCE)
-    assert service.optimize(state) == clean
+    # 원문이 든 후보 대신 깨끗한 후보를 고른다 (지워진 규칙 줄은 뒤에 되살아난다 - 아래 보고 테스트).
+    assert service.optimize(state).startswith(clean.rstrip())
 
 
 def test_all_leaky_falls_back_to_seed(monkeypatch) -> None:
@@ -141,5 +142,27 @@ def test_report_explains_what_was_chosen(monkeypatch) -> None:
     monkeypatch.setattr(gepa, "optimize", fake_optimize)
     state = _finished_state("domains/summarization.yaml", SOURCE)
     report: dict = {}
-    assert service.optimize(state, report=report) == clean
-    assert report == {"seed_score": 0.6, "final_score": 0.8, "eval_inputs": 3, "leaky_skipped": 1}
+    chosen = service.optimize(state, report=report)
+    # 고른 후보는 그대로 두고, 시드에 있던 규칙 줄 중 후보가 지운 것만 뒤에 되살린다.
+    assert chosen.startswith(clean.rstrip())
+    restored = chosen[len(clean.rstrip()):].strip().split("\n")
+    domain = service.load_domain_for("domains/summarization.yaml")
+    assert restored[0] == f"## {domain.final_prompt.rules_heading}"
+    assert restored[1:] == [f"- {r}" for r in domain.final_prompt.rules if f"- {r}" not in clean.split("\n")]
+    assert report == {"seed_score": 0.6, "final_score": 0.8, "eval_inputs": 3, "leaky_skipped": 1,
+                      "rules_restored": len(restored) - 1}
+
+
+def test_restore_protected_rules_only_adds_rules_the_candidate_dropped() -> None:
+    from engine.domain_loader import load_domain
+    from engine.estimator import Estimator
+    domain = load_domain("domains/coding.yaml")
+    seed = service.final_prompt(domain, Estimator(domain), language="en")
+    # 규칙을 그대로 둔 후보는 바뀌지 않는다.
+    assert service._restore_protected_rules(seed + "\nExtra line.", seed, domain, "en") == (seed + "\nExtra line.", 0)
+    # 통째로 다시 쓴 후보에는 영어판 규칙 줄만 원문 그대로 되살아난다.
+    rewritten, restored = service._restore_protected_rules("Write great React code.", seed, domain, "en")
+    spec = domain.final_prompt_translations["en"]
+    assert restored == len(spec.rules)
+    assert rewritten.split("\n")[2:] == [f"## {spec.rules_heading}", *(f"- {r}" for r in spec.rules)]
+    assert "- Implement all requested behavior." in rewritten
