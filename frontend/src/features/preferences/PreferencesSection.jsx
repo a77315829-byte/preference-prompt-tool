@@ -11,10 +11,11 @@ import RemixSavedPreferencePanel from './RemixSavedPreferencePanel';
 import SavedRemixComparison from './SavedRemixComparison';
 import { selectionMatches } from './comparisonText';
 import PreferenceLineage, { PreviousPreference } from './PreferenceLineage.jsx';
+import SavedCodingProfile, { codingEnvironmentLabel } from '../coding-instructions/SavedCodingProfile';
 
 const formOf = (item) => ({ title: item.title, domainKey: item.domain_key, prompt: item.prompt, note: item.note || '' });
 
-function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparison, initialId = '' }) {
+function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparison, onCreateCoding, initialId = '' }) {
   const [items, setItems] = useState(null);
   const [item, setItem] = useState(null);
   const [form, setForm] = useState(null);
@@ -146,7 +147,7 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
           <p>마음에 들었던 요약·코딩 방식을 모아 두세요. 저장한 지침을 고치고, 새 작업에도 같은 방식으로 요청할 수 있어요.</p>
         </div>
         <ol className="workflow-guide">
-          <li><strong>1. 내 방식을 저장해요</strong><span>예시 비교를 마친 뒤 결과 화면에서 보관함에 담습니다.</span></li>
+          <li><strong>1. 내 방식을 저장해요</strong><span>예시 비교나 개발 환경 설정으로 만든 지침을 보관함에 담습니다.</span></li>
           <li><strong>2. 필요할 때 고쳐요</strong><span>이름·설명·지침을 수정하고 저장합니다.</span></li>
           <li><strong>3. 새 작업에 사용해요</strong><span>새 원문이나 개발 요청을 넣고 복사하거나 AI로 실행합니다.</span></li>
         </ol>
@@ -172,7 +173,7 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
               : libraryView === 'lineage' ? <PreferenceLineage items={items} visibleIds={shown.map((p) => p.id)} activeId={item?.id} disabled={Boolean(busy)} onOpen={(id) => open(id)} />
               : <ul className="preference-list">{shown.map((p) => (
                 <li key={p.id} className={p.id === item?.id ? 'is-selected' : ''}>
-                  <div><span className="ws-help">{PREFERENCE_CATEGORIES[p.domain_key]}</span><h3>{p.title}</h3>{p.note && <p>{p.note}</p>}
+                  <div><span className="ws-help">{PREFERENCE_CATEGORIES[p.domain_key]}{codingEnvironmentLabel(p) && ` · ${codingEnvironmentLabel(p)}`}</span><h3>{p.title}</h3>{p.note && <p>{p.note}</p>}
                     <span className="ws-help">수정: {new Date(p.updated_at).toLocaleString('ko-KR')}</span></div>
                   <div className="prompt-actions">
                     <button className="prompt-copy-button" type="button" disabled={Boolean(busy)} onClick={() => open(p.id)}>새 작업에 사용</button>
@@ -187,12 +188,14 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
               {item.id && <button className="prompt-reset-button" type="button" disabled={Boolean(busy) || dirty} aria-pressed={view === 'use'} onClick={() => setView('use')}>새 작업에 쓰기</button>}
             </div>
             {item.id && <PreviousPreference item={item} items={items || []} disabled={Boolean(busy)} onOpen={(id, revision) => open(id, 'use', false, revision)} />}
+            {item.id && <SavedCodingProfile item={item} editingPrompt={form.prompt !== item.prompt || form.domainKey !== item.domain_key}
+              disabled={Boolean(busy)} onCreate={onCreateCoding ? (profile) => { if (leaveOk()) onCreateCoding(profile); } : null} />}
             {item.id && item.provenance?.remixed_from && <SavedRemixComparison key={`comparison-${item.id}-${item.revision}`}
               before={item.provenance.remixed_from} afterAxes={item.provenance.axes} afterTitle={item.title}
               matches={item.provenance_matches && form.prompt === item.prompt && form.domainKey === item.domain_key}
               restoreContext={view === 'use' ? { item, disabled: Boolean(busy), onBusy: setBusy, onOpen: open,
                 onSaved: (saved) => setItems((current) => [saved, ...(current || []).filter((p) => p.id !== saved.id)]) } : null} />}
-            {item.id && <SavedPreferenceSources item={item} editingPrompt={form.prompt !== item.prompt || form.domainKey !== item.domain_key} />}
+            {item.id && !item.coding_profile && <SavedPreferenceSources item={item} editingPrompt={form.prompt !== item.prompt || form.domainKey !== item.domain_key} />}
             {item.id && view === 'use' && item.provenance && <RemixSavedPreferencePanel key={`${item.id}-${item.revision}`}
               item={item} disabled={Boolean(busy)} onBusy={setBusy} onOpen={open}
               onSaved={(saved) => setItems((current) => [saved, ...(current || []).filter((p) => p.id !== saved.id)])} />}
@@ -216,6 +219,7 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
               </div>
             </form> : <>
               <h3>{item.title} · 새 작업에 사용하기</h3>
+              {!item.coding_profile && <>
               <TeamPreferenceComparison key={item.id} item={item} disabled={Boolean(busy)} onChange={teamChanged} />
               {teamComparison && <TaskPreferenceMixer key={`${item.id}-${item.revision}-${teamComparison.team_snapshot}`}
                 item={item} comparison={teamComparison} disabled={Boolean(busy)} onChange={draftChanged} />}
@@ -230,6 +234,7 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
               </div>
               <p className="ws-help" role="status">{basis === 'custom' ? '이번 작업: 항목별로 고른 작업용 지침 · 원본은 그대로 유지' : basis === 'team' ? `이번 작업: ${teamComparison?.team_name}의 팀 기준` : '이번 작업: 보관한 내 개인 지침'}
                 {!teamComparison && ' · 팀용을 쓰려면 먼저 위에서 팀 기준을 확인하세요.'}</p>
+              </>}
               <details className="ws-raw"><summary>이번에 사용할 지침 보기</summary><pre className="prompt-box"><code>{chosenPrompt}</code></pre></details>
               {basis === 'custom' && taskDraft && <SaveTaskPreferencePanel key={`${item.id}-${taskDraft.snapshot}`}
                 item={item} comparison={teamComparison} draft={taskDraft} disabled={Boolean(busy)} onBusy={setBusy}
@@ -237,7 +242,8 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
               <label className="task-input-label" htmlFor="preference-task">{item.domain_key === 'coding' ? '이번에 만들 기능이나 개발 요청' : '이번에 요약할 원문'}</label>
               <textarea id="preference-task" className="task-input" rows={6} maxLength={12000} value={task} onChange={(e) => { setTask(e.target.value); setCopied(''); }} placeholder="새 작업 내용을 여기에 넣으세요." />
               <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => {
-                if (!task.trim() || window.confirm('입력한 작업을 예시로 바꿀까요?')) { setTask(WORK_EXAMPLES[item.domain_key]); setCopied(''); }
+                if (!task.trim() || window.confirm('입력한 작업을 예시로 바꿀까요?')) { setTask(item.coding_profile && item.domain_key === 'coding'
+                  ? '위 지침의 개발 환경에 맞춰 할 일 목록을 만들어 주세요. 항목 추가, 완료 표시, 삭제 기능이 필요합니다.' : WORK_EXAMPLES[item.domain_key]); setCopied(''); }
               }}>예시 자료 넣어보기</button>
               <p className="ws-help">새 작업 내용은 보관함에 저장하지 않습니다. 아래 요청문을 복사해 평소 사용하는 AI에 붙여 넣으세요.</p>
               {requestText && <>
@@ -265,6 +271,7 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
           <div className="prompt-actions">
             <button className="prompt-reset-button" type="button" onClick={() => startComparison('summarization_ko')}>요약 취향 찾기</button>
             <button className="prompt-reset-button" type="button" onClick={() => startComparison('coding')}>코딩 취향 찾기</button>
+            {onCreateCoding && <button className="prompt-reset-button" type="button" onClick={() => { if (leaveOk()) onCreateCoding(); }}>언어·프레임워크로 지침 만들기</button>}
           </div>
         </div>
       </div>

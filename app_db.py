@@ -129,6 +129,10 @@ MIGRATIONS: list[str] = [
     """
     ALTER TABLE personal_prompts ADD COLUMN provenance_json TEXT;
     """,
+    # 8: 직접 선택한 개발 환경·선호. 기존 React 비교 지침과 별도로 기록한다.
+    """
+    ALTER TABLE personal_prompts ADD COLUMN coding_profile_json TEXT;
+    """,
 ]
 
 

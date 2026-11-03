@@ -42,8 +42,8 @@ const coreCategories = [
     number: '02',
     label: 'CODE',
     title: '코딩 도움',
-    description: '선호하는 TypeScript와 React 작성 방식을 찾아 Copilot·Cursor 설정 파일로 가져갑니다.',
-    accent: 'purple',
+    description: '원하는 언어·프레임워크와 작성 선호로 지침을 만듭니다. React는 예시 비교로 취향을 찾을 수도 있어요.',
+    accent: 'purple', cta: '내 코딩 지침 만들기',
   },
   {
     id: 'teamWork', number: '03', label: 'TEAM WORK', title: '팀 업무 정리',

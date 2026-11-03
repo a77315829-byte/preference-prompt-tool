@@ -6,6 +6,8 @@ import hashlib
 import json
 import uuid
 
+from coding_instructions import build_coding_instructions
+
 SUPPORTED_DOMAINS = frozenset({"coding", "summarization", "summarization_ko"})
 MAX_PROMPTS = 100
 MAX_PROMPT_CHARS = 20_000
@@ -46,12 +48,14 @@ class PersonalPromptStore:
     def list_for(self, owner_id: int) -> list[dict]:
         with self.db.connect() as conn:
             rows = conn.execute(
-                "SELECT id, title, domain_key, note, revision, created_at, updated_at, provenance_json FROM personal_prompts "
+                "SELECT id, title, domain_key, note, revision, created_at, updated_at, provenance_json, coding_profile_json FROM personal_prompts "
                 "WHERE owner_id = ? ORDER BY updated_at DESC, rowid DESC", (owner_id,),
             ).fetchall()
             result = []
             for row in rows:
                 item = dict(row)
+                coding = json.loads(item.pop("coding_profile_json") or "null")
+                item["coding_environment"] = {k: coding["profile"][k] for k in ("language", "framework")} if coding else None
                 raw = item.pop("provenance_json")
                 origin = json.loads(raw) if raw else {}
                 parent = origin.get("remixed_from")
@@ -67,12 +71,15 @@ class PersonalPromptStore:
     @staticmethod
     def _get(conn, owner_id: int, prompt_id: str) -> dict:
         row = conn.execute(
-            "SELECT id, title, domain_key, prompt, note, revision, created_at, updated_at, provenance_json FROM personal_prompts "
+            "SELECT id, title, domain_key, prompt, note, revision, created_at, updated_at, provenance_json, coding_profile_json FROM personal_prompts "
             "WHERE id = ? AND owner_id = ?", (prompt_id, owner_id),
         ).fetchone()
         if row is None:
             raise LookupError("보관한 프롬프트를 찾을 수 없습니다.")
         item = dict(row)
+        coding = json.loads(item.pop("coding_profile_json") or "null")
+        item["coding_profile"] = coding["profile"] if coding else None
+        item["coding_profile_matches"] = (item["domain_key"] == "coding" and coding["prompt_sha256"] == hashlib.sha256(item["prompt"].encode()).hexdigest()) if coding else None
         raw = item.pop("provenance_json")
         provenance = json.loads(raw) if raw else None
         item["provenance"] = provenance
@@ -82,9 +89,15 @@ class PersonalPromptStore:
 
     def create(self, owner_id: int, body: dict, *, provenance: dict | None = None) -> dict:
         title, domain, prompt, note = _fields(body)
+        coding_json = None
+        if body.get("codingProfile") is not None:
+            draft = build_coding_instructions(body["codingProfile"])
+            if domain != "coding" or prompt != draft["prompt"] or provenance is not None:
+                raise ValueError("개발 환경 설정과 지침이 다릅니다. 지침을 다시 만든 뒤 저장해 주세요.")
+            coding_json = json.dumps({"profile": draft["profile"], "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest()}, ensure_ascii=False)
         prompt_id = uuid.uuid4().hex
         now = datetime.now(timezone.utc).isoformat(timespec="microseconds")
-        # 출처는 검증된 서버 호출만 전달한다. 일반 CRUD 요청 body의 메타데이터는 무시한다.
+        # 개인/팀 조합 출처는 검증된 서버 호출만 전달한다. body의 조합 출처는 무시한다.
         provenance_json = json.dumps({**provenance, "domain_key": domain, "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest()},
                                      ensure_ascii=False) if provenance is not None else None
         with self.db.connect() as conn:
@@ -92,8 +105,8 @@ class PersonalPromptStore:
             if conn.execute("SELECT COUNT(*) FROM personal_prompts WHERE owner_id = ?", (owner_id,)).fetchone()[0] >= MAX_PROMPTS:
                 raise ValueError(f"보관함에는 {MAX_PROMPTS}개까지 저장할 수 있습니다. 쓰지 않는 항목을 정리해 주세요.")
             conn.execute(
-                "INSERT INTO personal_prompts (id, owner_id, title, domain_key, prompt, note, created_at, updated_at, provenance_json) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (prompt_id, owner_id, title, domain, prompt, note, now, now, provenance_json),
+                "INSERT INTO personal_prompts (id, owner_id, title, domain_key, prompt, note, created_at, updated_at, provenance_json, coding_profile_json) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (prompt_id, owner_id, title, domain, prompt, note, now, now, provenance_json, coding_json),
             )
             return self._get(conn, owner_id, prompt_id)
 

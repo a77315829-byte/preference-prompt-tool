@@ -136,6 +136,10 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제. CI·.devcontaine
   템플릿 24개 중 기존 6개만 선택 비교를 지원한다. 새 업무 초안 18개는 확인·복사·점검용이다.
   반복 업무·공동 지침의 근거와 효과 검증 계획은 `docs/product_direction_small_teams.md`에 둔다. 다수 선호 집계를 합의 완료나 협업 효과로 주장하지 않는다.
   `내 선호 보관함`은 개인 계정의 요약·코딩 지침 저장·수정·새 작업 재사용 기능이다.
+  코딩 시작 화면에서는 언어·프레임워크 선택/직접 입력과 작성 선호로 지침을 조립한다. 기존 React 예시 비교는 별도 버튼으로 유지한다.
+  `coding_instructions.py`는 모델 호출 없이 지침을 조립하며 `engine/`·기존 coding 도메인과 분리한다. 직접 선택을 비교 추정·언어별 코드 검증으로 주장하지 않는다.
+  직접 설정 지침은 개발 환경·선호 스냅샷과 함께 저장한다(DB migration 8). 본문·종류 수정 시 불일치를 안내하고 설정으로 새 항목을 만들 수 있다.
+  직접 설정 지침은 개인용으로 재사용하며 React 팀 기준과 비교·조합·팀용 실행하지 않는다. 언어별 팀 기준 연결은 후속 범위다.
   비교 결과의 현재 프롬프트만 저장하며 원문·새 작업·실행 결과는 보관함에 자동 저장하지 않는다.
   보관함에서 같은 분류의 팀과 비교하고 개인용·팀용을 골라 재사용한다. 원본 지침은 변경하지 않는다.
   확인된 개인 선호와 팀 기준이 다른 항목은 따를 쪽을 골라 이번 작업용으로 조합·복사·실행한다.
@@ -182,6 +186,7 @@ node --test "frontend/src/**/*.test.js"      # 프론트 순수 함수 테스트
 | `prompt_workspace/` | 서비스용 프롬프트 작업 공간 (요구사항 정리, 조립, 시험, 개선 추천) |
 | `app_db.py`, `auth.py`, `quota.py`, `team.py` | SQLite, 로그인, 사용자별 하루 상한, 팀 모드 |
 | `personal_prompts.py`, `frontend/src/features/preferences/` | 개인 지침 보관함과 새 작업 재사용 화면 |
+| `coding_instructions.py`, `frontend/src/features/coding-instructions/` | 직접 고른 언어·프레임워크·작성 선호의 지침 조립과 설정 재사용 |
 | `budget.py`, `feedback.py`, `exporters.py`, `expert_profile.py`, `template_library.py` | Streamlit 메모리 상한, 응답 로그, 도구별 내보내기 형식, 내 글 프로필, 템플릿 |
 | `scripts/`, `tests/`, `docs/` | 운영 스크립트, 테스트, 문서 |
 | `data/`, `cache/`, `.env` | 커밋하지 않는다 |

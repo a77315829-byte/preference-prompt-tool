@@ -1548,6 +1548,17 @@
 .polish-embedded .comparison-inner { width: 100%; max-width: none; }
 .polish-embedded .comparison-heading h2 { font-size: 1.4rem; }
 .template-card a { font-size: 0.8rem; }
+.coding-instructions-section .comparison-heading { margin: 2rem 0 1.5rem; }
+.coding-instructions-section .comparison-heading h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; letter-spacing: -0.06em; }
+.coding-profile-fields { border: 0; margin: 0 0 1.5rem; padding: 0; min-width: 0; }
+.coding-profile-fields legend { font-weight: 800; font-size: 1.1rem; padding: 0; margin-bottom: 0.5rem; }
+.coding-profile-fields .task-input-label { margin-top: 1rem; }
+.coding-profile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1rem; }
+.coding-instructions-result { scroll-margin-top: 7rem; }
+.saved-coding-profile { border: 1px solid #dce3f0; background: #f6f9fc; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
+.saved-coding-profile ul { padding-left: 1.2rem; line-height: 1.8; }
+.coding-extra-snapshot { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 600px) { .coding-profile-grid { grid-template-columns: minmax(0, 1fr); } }
 .comparison-pending { display: block; color: #7a4a00; font-size: 0.8rem; }
 .preference-diff { list-style: none; padding: 0; max-height: 28rem; overflow-y: auto; }
 .preference-diff li { margin: 0.6rem 0; padding: 0.8rem; border-radius: 0.6rem; border: 1px solid #dfe4ed; }

@@ -28,6 +28,7 @@ import service
 import team
 import template_library
 from personal_prompts import PersonalPromptStore, PromptConflict, expected_revision
+from coding_instructions import build_coding_instructions
 from preference_comparison import compare_preferences, compose_task_prompt, team_basis
 from saved_preference_remix import remix_saved_prompt
 from saved_preference_restore import restore_saved_prompt
@@ -727,6 +728,9 @@ class ApiHandler(BaseHTTPRequestHandler):
             if path == "/api/preferences" or path.startswith("/api/preferences/"):
                 self._personal_prompts(path, body)
                 return
+            if path == "/api/coding-instructions/preview":
+                self._send(200, {"draft": build_coding_instructions(body.get("profile"))})
+                return
             if path == "/api/sessions":
                 self._start_session(body)
                 return
@@ -818,6 +822,8 @@ class ApiHandler(BaseHTTPRequestHandler):
                     return
                 if action in ("compare-team", "compose-task", "save-task"):
                     item = PERSONAL_PROMPTS.get(user.id, prompt_id)
+                    if item.get("coding_profile"):
+                        raise ValueError("직접 설정한 개발 지침은 개인용으로 재사용합니다. 현재 팀 비교는 React 예시 비교 지침만 지원합니다.")
                     if item["revision"] != expected_revision(body.get("revision")):
                         raise PromptConflict("저장된 지침이 바뀌었습니다. 다시 열어 확인한 뒤 비교해 주세요.")
                     code = body.get("teamCode")
@@ -859,6 +865,8 @@ class ApiHandler(BaseHTTPRequestHandler):
                     if basis not in ("personal", "team", "custom"):
                         raise ValueError("개인용·팀용 또는 이번 작업용 지침을 선택해 주세요.")
                     if basis in ("team", "custom"):
+                        if item.get("coding_profile"):
+                            raise ValueError("직접 설정한 개발 지침에는 React 팀 기준을 적용할 수 없습니다. 개인용으로 실행해 주세요.")
                         team_code = body.get("teamCode")
                         if not isinstance(team_code, str) or not 3 <= len(team_code) <= 32:
                             raise ValueError("팀을 먼저 확인해 주세요.")

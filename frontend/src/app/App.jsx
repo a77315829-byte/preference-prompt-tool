@@ -15,6 +15,7 @@ import '../features/landing/landing.css';
 import '../features/comparison/comparison.css';
 
 const PreferencesSection = lazy(() => import('../features/preferences/PreferencesSection'));
+const CodingInstructionsSection = lazy(() => import('../features/coding-instructions/CodingInstructionsSection'));
 
 function App() {
   const [initialInvite] = useState(() => new URLSearchParams(window.location.search).get('team') || '');
@@ -30,6 +31,7 @@ function App() {
   const [teamNameDraft, setTeamNameDraft] = useState('');
   const [preferenceId, setPreferenceId] = useState('');
   const [templateCategory, setTemplateCategory] = useState('전체');
+  const [codingProfileDraft, setCodingProfileDraft] = useState(null);
   const handleDraftChange = useCallback((draft) => {
     setComparisonDraft({ domainKey: activeFlow, ...draft });
   }, [activeFlow]);
@@ -82,7 +84,7 @@ function App() {
     setTemplate(null);
     setComparisonDraft(null);
     setTeamCodeDraft('');
-    if (selectedCategory === 'coding') setActiveFlow('coding');
+    if (selectedCategory === 'coding') openCodingInstructions();
     else if (selectedCategory === 'review') setActiveFlow('review');
     else if (selectedCategory === 'email') setActiveFlow('email');
     else if (selectedCategory === 'summaryKo') setActiveFlow('summarization_ko');
@@ -108,6 +110,10 @@ function App() {
   const openTeams = () => { setMenuOpen(false); setActiveFlow('teams'); };
   const openTemplates = (category = '전체') => { setTemplateCategory(category); setMenuOpen(false); setActiveFlow('templates'); };
   const openLibrary = (id = '') => { setPreferenceId(id); setMenuOpen(false); setActiveFlow('preferences'); };
+  const openCodingInstructions = (profile = null) => {
+    setCodingProfileDraft(profile); setTemplate(null); setComparisonDraft(null); setTeamCodeDraft(''); setTeamNameDraft('');
+    setActiveFlow('coding-instructions');
+  };
   const compareForMyself = (domainKey) => {
     setTemplate(null); setComparisonDraft(null); setTeamCodeDraft(''); setTeamNameDraft('');
     setActiveFlow(domainKey);
@@ -181,6 +187,15 @@ function App() {
           </motion.div>
         )}
 
+        {activeFlow === 'coding-instructions' && (
+          <motion.div className="flow-view" key="coding-instructions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <Suspense fallback={<p className="comparison-section" role="status">코딩 지침 설정을 여는 중…</p>}>
+              <CodingInstructionsSection user={user} signupOpen={signupOpen} onLogin={setUser} onOpenLibrary={openLibrary}
+                initialProfile={codingProfileDraft} onBack={handleComparisonBack} onReactComparison={() => compareForMyself('coding')} />
+            </Suspense>
+          </motion.div>
+        )}
+
         {['coding', 'review', 'email', 'summarization', 'summarization_ko', 'summarization_hybrid', 'macsum_eval_agent'].includes(activeFlow) && (
           <motion.div
             className="flow-view"
@@ -194,7 +209,7 @@ function App() {
               onSwitchDomain={(domain) => { setComparisonDraft(null); setActiveFlow(domain); }}
               template={template} initialDraft={comparisonDraft?.domainKey === activeFlow ? comparisonDraft : null}
               onDraftChange={handleDraftChange} teamCode={teamCodeDraft} teamName={teamNameDraft} onOpenTeam={showTeam}
-              user={user} signupOpen={signupOpen} onLogin={setUser} onOpenLibrary={openLibrary} />
+              user={user} signupOpen={signupOpen} onLogin={setUser} onOpenLibrary={openLibrary} onCreateCoding={openCodingInstructions} />
           </motion.div>
         )}
 
@@ -209,7 +224,7 @@ function App() {
           <motion.div className="flow-view" key="preferences" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <Suspense fallback={<p className="comparison-section" role="status">내 선호 보관함을 여는 중…</p>}>
               <PreferencesSection key={user?.id || 'anonymous'} user={user} signupOpen={signupOpen} onLogin={setUser}
-                initialId={preferenceId} onBack={handleComparisonBack} onStartComparison={compareForMyself} />
+                initialId={preferenceId} onBack={handleComparisonBack} onStartComparison={compareForMyself} onCreateCoding={openCodingInstructions} />
             </Suspense>
           </motion.div>
         )}

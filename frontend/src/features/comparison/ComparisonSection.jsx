@@ -51,7 +51,7 @@ function getRemoteAxis(pair, demoMode = true) {
 function ComparisonSection({
   onBack, domainKey = 'coding', onSwitchDomain, template = null, initialDraft = null, onDraftChange, teamCode = '',
   teamName = '', onOpenTeam,
-  user, signupOpen = true, onLogin, onOpenLibrary,
+  user, signupOpen = true, onLogin, onOpenLibrary, onCreateCoding,
 }) {
   const isCoding = domainKey === 'coding';
   const domainCopy = {
@@ -230,6 +230,9 @@ function ComparisonSection({
         <button className="back-button" type="button" onClick={onBack}>
           {teamCode ? '← 팀 안내로 돌아가기' : '← 카테고리 다시 선택'}
         </button>
+        {!isRemote && isCoding && !teamCode && !template && onCreateCoding && <div className="prompt-actions">
+          <button className="prompt-reset-button" type="button" onClick={() => onCreateCoding()}>다른 언어·프레임워크로 지침 만들기</button>
+        </div>}
 
         <div className="comparison-heading">
           {teamCode && (
@@ -262,7 +265,7 @@ function ComparisonSection({
           </label>}
           {!isRemote && isCoding && (
             <div className="coding-demo-guide">
-              <p>만들고 싶은 기능을 적어주세요. 두 코드를 비교하며 코드 구성, 디자인 값 관리, 타입 작성 취향을 찾습니다.</p>
+              <p>TypeScript/React로 만들고 싶은 기능을 적어주세요. 두 코드를 비교하며 코드 구성, 디자인 값 관리, 타입 작성 취향을 찾습니다.</p>
               {connection === 'live-ready' ? (
                 <p>실시간 AI 모드에서는 입력한 기능을 기준으로 A/B 코드를 생성합니다. 생성 실패나 사용 한도 도달 시 준비된 과제의 데모로 전환될 수 있으며, 화면에 표시됩니다.</p>
               ) : (
