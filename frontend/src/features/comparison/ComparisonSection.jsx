@@ -468,6 +468,22 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
               <p className="question-eyebrow">Your preference prompt</p>
               <h3>나만의 {isCoding ? '코딩' : domainKey === 'review' ? '리뷰' : domainKey === 'email' ? '이메일' : domainKey === 'macsum_eval_agent' ? '문서 품질' : '요약'} 프롬프트가 완성됐어요.</h3>
               <p>아래 내용을 복사해서 ChatGPT나 Claude에 바로 사용할 수 있습니다.</p>
+              <div className="coding-result-context" role="status">
+                <h4>프롬프트 생성 방식</h4>
+                <p>{remoteSession?.prompt_improvement?.method === 'ai_improved'
+                  ? '선택 근거를 바탕으로 AI가 문구를 다시 작성했습니다. 품질 향상을 보장하는 표시는 아닙니다.'
+                  : remoteSession?.prompt_improvement?.method === 'fallback'
+                    ? (remoteSession.prompt_improvement.reason === 'limit_reached'
+                      ? '프롬프트 개선 호출 한도에 걸려 기본 규칙 기반 프롬프트를 그대로 사용합니다. AI 개선 결과가 아닙니다.'
+                      : 'AI 개선을 적용하지 못해 기본 규칙 기반 프롬프트를 그대로 사용합니다. AI 개선 결과가 아닙니다.')
+                    : '규칙 기반으로 조립했습니다. AI 개선 결과가 아닙니다.'}
+                  {' '}<code>{remoteSession?.prompt_improvement?.method || 'rule_based'}</code></p>
+                {remoteSession?.prompt_improvement?.method === 'ai_improved' && remoteSession.prompt_improvement.changed === false && <p>기본 프롬프트와 문구 차이가 없습니다.</p>}
+                {remoteSession?.prompt_improvement && <p>
+                  개선 호출 {remoteSession.prompt_improvement.calls}회 · 입력 {remoteSession.prompt_improvement.input_tokens ?? '미확인'} / 출력 {remoteSession.prompt_improvement.output_tokens ?? '미확인'} 토큰 · {remoteSession.prompt_improvement.elapsed_seconds}초
+                  {remoteSession.prompt_improvement.cache_hit ? ' · 저장된 개선 결과 재사용' : ''}
+                </p>}
+              </div>
               {isCoding && (
                 <div className="coding-result-context">
                   <h4>이번에 만들 기능</h4>

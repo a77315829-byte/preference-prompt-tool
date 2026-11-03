@@ -113,6 +113,7 @@ final_prompt:
   rules_heading: 항상 지킬 것
   output_heading: 출력 형식
   rules:
+  - 요청된 기능과 동작을 빠짐없이 구현하라. 스타일 선호와 충돌하면 기능 요구를 우선하고, 요청에 없는 기능은 추가하지 마라.
   - 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.
   - 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.
   - 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.
@@ -122,6 +123,18 @@ final_prompt:
     code_structure: 코드 구성
     style_management: 스타일 관리
     type_detail: 타입 작성
+  # AI 프롬프트 개선(agents/personalized_prompt.py)이 선호 줄을 다시 쓸 때 남아야 하는 낱말.
+  # 빠지면 개선본을 버리고 기본 조립본을 쓴다. 대소문자는 가리지 않는다.
+  required_terms:
+    code_structure:
+      compact: [한 파일, 인라인 스타일]
+      separated: [역할별 파일, 분리, 전체 코드]
+    style_management:
+      direct: [직접]
+      theme: [theme, 토큰]
+    type_detail:
+      inferred: [추론, Props]
+      explicit: [Props, 반환값, 꼼꼼]
 
 # 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
 # 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
@@ -144,6 +157,7 @@ final_prompt_translations:
     team_preference_heading: "This team's preferences"
     rules_heading: "Always"
     rules:
+      - "Implement all requested behavior. Functional requirements take priority over style preferences; do not add unrequested features."
       - "Write complete code that can be pasted in and run as is. Do not skip parts with ellipses (...)."
       - "Do not introduce libraries the request does not mention. If one is truly needed, say why in one line."
       - "Apply the preferred structure and style consistently across the whole example."
@@ -154,6 +168,16 @@ final_prompt_translations:
       code_structure: "Code structure"
       style_management: "Style management"
       type_detail: "Typing"
+    required_terms:
+      code_structure:
+        compact: ["one file"]
+        separated: ["by role", "split"]
+      style_management:
+        direct: ["directly"]
+        theme: ["theme", "tokens"]
+      type_detail:
+        inferred: ["infer", "public boundaries"]
+        explicit: ["explicitly", "props", "return values"]
     instructions:
       code_structure:
         compact: "For small features, keep the component, state logic, and styles together in one file and keep it concise."

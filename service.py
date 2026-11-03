@@ -157,6 +157,9 @@ class SessionState:
     round_limit: int | None = None
     # 코딩 후보가 기본 모델의 수정까지 통과하지 못할 때만 쓰는 마지막 모델.
     coding_escalation_model: str | None = None
+    personalized_prompts: dict[str, str] = field(default_factory=dict)
+    prompt_improvement: dict = field(default_factory=dict)
+    prompt_improvement_calls: int = 0
 
     @property
     def round(self) -> int:
@@ -467,6 +470,8 @@ def undo_choice(state: SessionState) -> SessionState:
         pair=None,
         done=False,
         prompt=None,
+        personalized_prompts={},
+        prompt_improvement={},
         optimize_status="idle",
         optimize_progress=0.0,
         total_rounds=state.round_limit or state.total_rounds,
@@ -543,7 +548,8 @@ def optimize(
     # 정하지 못한 축은 채점하지 않는다 - 채점하면 최적화가 그 축의 첫 값을 밀어 넣는다.
     metric = build_metric(domain, estimator, skip_axes=set(undecided))
     # GEPA 는 사용자에게 보여 준 것과 같은 최종 프롬프트에서 출발한다.
-    seed_prompt = final_prompt(domain, estimator, template_id=state.template_id, language=language)
+    seed_prompt = state.personalized_prompts.get(language or "ko") or final_prompt(
+        domain, estimator, template_id=state.template_id, language=language)
     examples = [e for e in domain.example_sources if e != state.source_text.strip()]
 
     calls = {"n": 0}
@@ -750,6 +756,113 @@ def final_prompt(
         return build_template_prompt(domain, combo, template_library.get(template_id).prompt)
     # "ko" 는 원본 문구다 (prompt_languages 참고).
     return build_final_prompt(domain, combo, team=team, language=None if language in (None, "ko") else language)
+
+
+# AI 프롬프트 개선(agents/personalized_prompt.py) 세션 상한. 실패·한도 거부를 뺀, 실제로
+# 보낸 요청 수다. "이전 선택 수정" 뒤 다시 끝내도 이 수는 초기화되지 않는다.
+MAX_PROMPT_IMPROVEMENTS_PER_SESSION = 2
+PROMPT_RESULTS_DIR = os.environ.get("PPT_PROMPT_RESULTS_DIR")
+# 실제 모드에서 AI 개선을 켤지. 기본은 끔 - 개선이 프롬프트를 낫게 만든다는 측정 결과가
+# 아직 없다 (docs/history/2026-11-03_personalized_prompt_improvement.md). 끄면 rule_based.
+PROMPT_IMPROVEMENT_ENABLED = os.environ.get("PPT_PROMPT_IMPROVEMENT", "0") == "1"
+
+
+def _improvement_context(state: SessionState, domain: Domain, combo: dict[str, str],
+                         base: dict[str, str]) -> dict:
+    """선택 이력에서 근거가 있는 축만 골라 개선 요청 문맥을 만든다.
+
+    근거: 그 축 값이 갈린 비교에서 사용자가 이 값을 가진 쪽을 직접 골랐다("비슷해요" 제외).
+    모든 언어판에서 선호 줄이 정확히 한 번 나오는 축만 남긴다 - 그 줄만 바꿀 수 있다."""
+    evidence = {}
+    for axis, value in combo.items():
+        rounds = [i for i, (a, b, winner) in enumerate(state.history, 1)
+                  if winner in ("a", "b") and a.get(axis) != b.get(axis)
+                  and (a if winner == "a" else b).get(axis) == value]
+        if value and rounds:
+            evidence[axis] = {"value": value, "rounds": rounds}
+    instructions = {}
+    for lang in base:
+        language = None if lang == "ko" else lang
+        spec = generator._final_spec(domain, language)
+        instructions[lang] = {}
+        for axis in domain.axes:
+            if axis.name not in evidence:
+                continue
+            instruction = generator._final_instruction(domain, axis, combo[axis.name], spec, language)
+            label = ((spec.axis_labels.get(axis.name) if spec else None)
+                     or (axis.name if language is not None else axis.description))
+            prefix = f"- {label}: "
+            line = prefix + instruction if instruction else ""
+            terms = ((spec.required_terms if spec else {}).get(axis.name, {})
+                     .get(combo[axis.name], []))
+            # 원래 줄에도 없는 낱말을 요구하면 YAML 오류다 - 그 축은 다시 쓰지 않는다.
+            if (line and base[lang].split("\n").count(line) == 1
+                    and all(t.lower() in line.lower() for t in terms)):
+                instructions[lang][axis.name] = {"line": line, "prefix": prefix, "required_terms": terms}
+    supported = set.intersection(*(set(v) for v in instructions.values())) if instructions else set()
+    return {"base_prompts": base, "history": state.history, "inferred": combo,
+            "evidence": {k: v for k, v in evidence.items() if k in supported},
+            "instructions": {lang: {k: v for k, v in rows.items() if k in supported}
+                             for lang, rows in instructions.items()}}
+
+
+def complete_personalized_prompt(state: SessionState, languages: list[str], before_call=lambda: None,
+                                 record_dir=None, enabled: bool | None = None) -> SessionState:
+    """끝난 세션의 최종 프롬프트를 확정한다: rule_based / ai_improved / fallback.
+
+    데모와 꺼 둔 실제 모드(PPT_PROMPT_IMPROVEMENT 가 1 이 아님)는 모델을 부르지 않고 규칙 기반
+    조립만 쓴다. 켠 실제 모드는 근거가 있는 선호 줄만 AI 가
+    다시 쓰고 나머지는 기본 조립본 그대로다. 문맥 구성·호출·검증 중 무엇이 실패해도 기본
+    조립본을 fallback 으로 돌려준다. 이미 확정했으면(중복 완료 요청) 아무것도 하지 않는다.
+    before_call 은 실제 요청 직전에만 불린다 - 캐시를 타면 한도를 깎지 않는다."""
+    if not state.done or state.prompt_improvement:
+        return state
+    from pathlib import Path
+    from agents.personalized_prompt import LimitReached, improve, save_record
+    domain, estimator = current_estimate(state)
+    combo = final_combo(domain, estimator)
+    base = {lang: final_prompt(domain, estimator, template_id=state.template_id, language=lang)
+            for lang in languages}
+    empty = {"calls": 0, "input_tokens": 0, "output_tokens": 0, "elapsed_seconds": 0.0,
+             "cache_hit": False, "model": state.model, "changed": False}
+    context = {"base_prompts": base, "history": state.history, "inferred": combo,
+               "evidence": {}, "instructions": {}}
+    if enabled is None:
+        enabled = PROMPT_IMPROVEMENT_ENABLED
+    if state.demo_mode:
+        result = {**empty, "method": "rule_based", "prompts": base, "reason": "demo_mode"}
+    elif not enabled:
+        result = {**empty, "method": "rule_based", "prompts": base, "reason": "disabled"}
+    else:
+        try:
+            context = _improvement_context(state, domain, combo, base)
+        except Exception:  # noqa: BLE001 - 문맥을 못 만들어도 기본 조립본은 쓸 수 있다
+            result = {**empty, "method": "fallback", "prompts": base, "reason": "context_unavailable"}
+        else:
+            def reserve():
+                if state.prompt_improvement_calls >= MAX_PROMPT_IMPROVEMENTS_PER_SESSION:
+                    raise LimitReached("session")
+                try:
+                    before_call()
+                except LimitReached:
+                    raise
+                except Exception as exc:  # 하루 상한 등 호출하는 쪽의 거부
+                    raise LimitReached("daily") from exc
+            result = improve(context, state.model, reserve)
+    prompts = result.pop("prompts")
+    if result["method"] != "ai_improved":
+        prompts = dict(base)  # 실패면 정확히 기본 조립본이다.
+    metadata = {**result, "base_prompts": base}
+    try:
+        save_record({"session_id": state.session_id, **context, "prompts": prompts,
+                     "improvement": metadata, "model": state.model,
+                     "source_text": state.source_text},
+                    Path(record_dir or PROMPT_RESULTS_DIR or Path(__file__).parent / "data/prompt_results"))
+        metadata["record_saved"] = True
+    except Exception:  # noqa: BLE001 - 기록 실패가 결과 화면을 막지 않는다
+        metadata["record_saved"] = False
+    return replace(state, personalized_prompts=prompts, prompt_improvement=metadata,
+                   prompt_improvement_calls=state.prompt_improvement_calls + result["calls"])
 
 
 def check_optimizable(estimator: Estimator) -> None:

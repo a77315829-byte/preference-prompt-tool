@@ -1,0 +1,106 @@
+# 2026-11-03 실시간 모드 AI 프롬프트 개선 단계와 3조건 비교
+
+## 무엇이 바뀌었나
+
+선택이 끝나면 `service.complete_personalized_prompt` 가 최종 프롬프트를 한 번 확정하고
+`SessionState.prompt_improvement["method"]` 에 방식을 남긴다.
+
+| method | 언제 | 프롬프트 |
+|---|---|---|
+| `rule_based` | 데모(`reason: demo_mode`), 실제 모드인데 꺼 둠(`disabled`, 기본값), 근거 있는 선호 없음(`no_supported_preferences`) | 기본 조립본. 모델 호출 없음 |
+| `ai_improved` | 실제 모드에서 응답이 검증을 통과 | 근거 있는 선호 줄만 바뀐 조립본 |
+| `fallback` | 문맥 구성 실패(`context_unavailable`), 한도(`limit_reached`), 호출 실패(`api_error`), 검증 실패(`invalid_response` + `validation_error` 단계) | 기본 조립본과 글자까지 같다 |
+
+- **근거**: 그 축 값이 갈린 비교에서 사용자가 그 값을 가진 쪽을 직접 고른 라운드. "비슷해요"는 근거가 아니다.
+  모델 응답의 축·값·라운드가 근거 밖이면 전부 버리고 `fallback`.
+- **보호 문구**: 모델은 선호 줄(`- 라벨: 지시문`)의 지시문 부분만 한 줄로 바꿀 수 있다. 역할·과제·
+  "항상 지킬 것"(기능 우선, 요청에 없는 기능 금지, 접근성, 완성 코드)·출력 형식은 코드가 원문에서 복사한다.
+  다시 쓴 줄에는 `domains/*.yaml` 의 `final_prompt.required_terms`(축 → 값 → 낱말)가 모두 남아야 한다.
+  빠지면 `validation_error: weakened` 로 폴백한다. 낱말 보존은 최소한의 경계일 뿐 의미 보존을 증명하지 않는다.
+- **켜고 끄기**: 실제 모드에서도 기본은 끔(`PPT_PROMPT_IMPROVEMENT=1` 로 켠다). 비교 스크립트는 `enabled=True` 로 강제한다.
+- **비용 기록**: `calls`, `input_tokens`, `output_tokens`, `elapsed_seconds` 는 이번에 보낸 요청만 센다.
+  캐시를 타면 0 이고 저장된 요청의 사용량은 `original_usage` 로 따로 둔다. 검증을 통과한 응답만 캐시한다.
+- **한도**: 세션당 실제 요청 2회(`service.MAX_PROMPT_IMPROVEMENTS_PER_SESSION`, 이전 선택 수정 후에도 유지),
+  하루 상한은 React 경로 `PPT_PROMPT_IMPROVEMENTS_PER_DAY`/`PPT_USER_PROMPT_IMPROVEMENTS_PER_DAY`(DB 영속),
+  Streamlit 경로 `MAX_PROMPT_IMPROVEMENTS_PER_DAY`(메모리, GEPA 예산과 분리). 한도 차감은 실제 요청 직전에만.
+- **저장**: `data/prompt_results/`(또는 `PPT_PROMPT_RESULTS_DIR`)에 이력·근거·방식·프롬프트를 남긴다.
+  공급자 오류 문구는 남기지 않는다. 저장이 실패해도 결과 화면은 그대로(`record_saved: false`).
+- **중복·수정**: 같은 쌍에 대한 늦은 완료 요청은 409. 개선 중에 "이전 선택 수정"이 들어오면 그 상태를 덮어쓰지 않는다.
+  선택을 되돌리면 개선 결과는 지워진다.
+- **GEPA 와의 관계**: GEPA 는 개선 단계를 다시 부르지 않고 화면에 보인 프롬프트(개선본 또는 기본 조립본)를
+  시드로 쓴다. GEPA 자신의 후보는 보호 문구를 보존한다는 보장이 없다 - 이 변경 전과 같다.
+
+## 3조건 비교 실행
+
+```bash
+python -m experiments.personalized_prompt_comparison                      # 사전 확인, 호출 0회
+python -m experiments.personalized_prompt_comparison --execute --task-limit 1 --max-api-calls 4
+```
+
+- 조건: (a) 시스템 프롬프트 없음 (b) 기본 조립본 (c) AI 개선본. 같은 과제(`benchmarks/coding_ai_quality/v1.json`
+  calibration), 같은 모델(기본 `openai/gpt-4o-mini`, 개선 단계도 같은 모델), temperature 0, 같은 검사.
+- 선택 이력은 목표 선호(`--profile`, 기본 separated/theme/explicit)를 가진 가상 사용자가 데모 후보로 만든다.
+- 검사: 도메인 YAML 이 축 값마다 지정한 함수(`file_structure`, `theme_usage`, `type_explicitness`)의 통과 여부와
+  원 신호 수, `candidate_quality_issues` 개수.
+- 결과: `experiments/results/personalized_prompt_comparison.{json,md}`. 원 출력은 저장하지 않는다(캐시에만 있다).
+- `--max-api-calls` 는 최악의 경우(개선 1 + 과제 × 3)보다 작으면 실행을 거부한다.
+
+## 2026-11-03 실측 (과제 1개, n=1)
+
+| 조건 | 파일 구성 | 스타일 관리 | 타입 작성 | 파일/테마/타입 신호 |
+|---|---|---|---|---|
+| (a) 없음 | ❌ | ❌ | ✅ | 1 / 0 / 5 |
+| (b) 기본 조립 | ✅ | ✅ | ❌ | 2 / 19 / 3 |
+| (c) AI 개선 | ✅ | ❌ | ❌ | 2 / 0 / 4 |
+
+- 첫 실행은 개선 응답이 검증에 걸려 `fallback` 이었고 (c)는 측정하지 않았다(생성 2회 + 개선 1회, 입력 1,926 / 출력
+  1,301 토큰, 31.7초). 요청 형식을 축별 `current_instruction`·`allowed_rounds`·응답 틀로 명시한 뒤 두 번째 실행에서
+  `ai_improved`(생성 1회 + 개선 1회, 입력 1,957 / 출력 662 토큰, 14.9초; 개선 단계만 1,284 / 181 토큰, 8.1초).
+  두 실행 합계 새 요청 5회. 토큰은 공급자 보고값이고 청구서가 아니다. 잔액·청구 금액은 확인하지 않았다.
+- AI 개선본은 세 선호 줄을 바꿔 쓴 수준이었고 "꼼꼼하게 명시하라"가 "명확히 명시하라"로 약해졌다.
+- 이 한 사례에서 (c)는 (b)보다 스타일 관리 검사를 하나 덜 통과했다. 과제 1개·생성 1회라 결론이 아니다
+  (절대 규칙 11). **AI 개선이 프롬프트를 낫게 만든다는 증거는 아직 없다.**
+- 정적 검사 통과는 기능 동일성, 실행 가능성, 사용자 만족을 보여 주지 않는다.
+
+## 독립 지표: 실행 검사 (3단계)
+
+```bash
+python -m experiments.personalized_prompt_comparison --cached-only \
+    --ai-prompt-from experiments/results/personalized_prompt_comparison.json      # 호출 0회, 원문을 data/ 에 꺼냄
+# data/personalized_prompt_comparison_outputs/*.md 를 읽고 검토한 뒤
+python -m experiments.personalized_prompt_comparison --cached-only --behavior --reviewed-outputs \
+    --ai-prompt-from experiments/results/personalized_prompt_comparison.json
+```
+
+- 스타일 검사·GEPA 와 다른 기준으로 `benchmarks/coding_ai_quality/evaluate_trial` 의 기존 실행 검사를 그대로 쓴다:
+  tsc 타입 검사 → esbuild 번들 → jsdom 에서 과제의 고정 인수 시나리오. 셋 다 통과해야 "기능 통과(독립)".
+- 생성 코드를 로컬 Node 에서 실행한다(보안 샌드박스 아님). `--reviewed-outputs` 없이는 거부한다(절대 규칙 9).
+- 기존 추출기는 ```` ```typescript ```` 블록을 읽지 못해 그 표기만 ```` ```tsx ```` 로 바꾼다(`fence_normalized` 로 기록).
+  그래도 파일을 확정하지 못하면 실패가 아니라 미확인(`functional_pass: null`)으로 남긴다.
+- `--cached-only` 결과는 `experiments/results/personalized_prompt_comparison_cached.{json,md}` 에 따로 쓴다.
+  `--ai-prompt-from` 은 이전 실행의 (c) 프롬프트를 재생한다 - 현재 검증(`weakened`)이라면 거부됐을 프롬프트다.
+
+2026-11-03 결과 (위 실측의 같은 출력 3개, 새 호출 0회, 원문 검토 후 실행):
+
+| 조건 | 타입 검사 | 빌드 | 시나리오(증가·증가·초기화) | 기능 통과 |
+|---|---|---|---|---|
+| (a) 없음 | ✅ | ✅ | 3/3 | ✅ |
+| (b) 기본 조립 | ✅ (블록 표기 정규화) | ✅ | 3/3 | ✅ |
+| (c) AI 개선 | ✅ | ✅ | 3/3 | ✅ |
+
+- **독립 지표로는 세 조건의 차이가 없다.** 스타일 검사의 차이는 기능 차이를 동반하지 않았다.
+- `counter_reset` 시나리오는 약하다(예: 첫 항목은 화면 어딘가에 `0` 이 있는지만 본다). 과제 1개·생성 1회다.
+
+## 사전등록 (4단계)
+
+확대 비교의 설계·지표·판정 기준을 `docs/personalized_prompt_preregistration.md` 에 결과 전에 고정했다.
+스크립트에 여러 프로필(`--preregistered-profiles`), 반복(`--repeats`, 반복마다 캐시 폴더 분리), holdout 과제 모음
+(`--split holdout`, v1~v4 의 보류 과제 5개), 서비스와 같은 폴백 처리(`--fallback-as-base`), 결과 파일 이름
+(`--output-name`), 판정 기준의 기계적 계산(`summary.criteria`), 사용한 코드의 해시(`source_sha256`)를 더했다.
+아직 실행하지 않았다(새 호출 0회).
+
+## 남은 것
+
+- 과제 수·반복을 늘린 비교(holdout 포함)와 독립 지표(절대 규칙 7). 현재 결과만으로는 개선 단계의 효과를 판단할 수 없다.
+- 2026-11-03 후속: 위 실측의 "꼼꼼" 탈락은 `required_terms` 검사로 이제 폴백된다(저장된 결과로 오프라인 확인,
+  새 호출 없음). 낱말을 지키면서 의미를 약하게 만드는 경우는 여전히 못 잡는다.
