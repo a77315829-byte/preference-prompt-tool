@@ -22,3 +22,9 @@ export const saveTaskPreference = (item, comparison, draft, title, note) => call
   language: comparison.team_language, choices: draft.choices, taskSnapshot: draft.snapshot, title, note,
 }).then((d) => d.preference);
 export const runPreference = (id, revision, task, selection = {}) => call(`/${encodeURIComponent(id)}/run`, { revision, task, ...selection });
+export const previewSavedRemix = (item, choices) => call(`/${encodeURIComponent(item.id)}/remix-preview`, {
+  revision: item.revision, choices,
+}).then((d) => d.draft);
+export const saveSavedRemix = (item, draft, title, note) => call(`/${encodeURIComponent(item.id)}/remix-save`, {
+  revision: item.revision, choices: draft.choices, draftSnapshot: draft.snapshot, title, note,
+}).then((d) => d.preference);

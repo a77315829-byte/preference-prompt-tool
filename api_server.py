@@ -29,6 +29,7 @@ import team
 import template_library
 from personal_prompts import PersonalPromptStore, PromptConflict, expected_revision
 from preference_comparison import compare_preferences, compose_task_prompt, team_basis
+from saved_preference_remix import remix_saved_prompt
 from app_db import Database
 from auth import AuthError, AuthService, TooManyAttempts, User
 from budget import DailyBudget  # noqa: F401 - 테스트가 상한 자리에 끼워 넣는다
@@ -794,6 +795,24 @@ class ApiHandler(BaseHTTPRequestHandler):
                 if action == "delete":
                     PERSONAL_PROMPTS.delete(user.id, prompt_id, body.get("revision"))
                     self._send(200, {"ok": True})
+                    return
+                if action in ("remix-preview", "remix-save"):
+                    item = PERSONAL_PROMPTS.get(user.id, prompt_id)
+                    if item["revision"] != expected_revision(body.get("revision")):
+                        raise PromptConflict("저장한 지침이 바뀌었습니다. 다시 열고 선택을 확인해 주세요.")
+                    domain = service.load_domain_for(_domain_path(item["domain_key"]))
+                    draft = remix_saved_prompt(item, domain, body.get("choices"))
+                    if action == "remix-preview":
+                        self._send(200, {"draft": draft})
+                        return
+                    if draft["snapshot"] != body.get("draftSnapshot"):
+                        raise PromptConflict("선택이 바뀌었습니다. 새 조합 미리 보기를 다시 확인해 주세요.")
+                    title = body.get("title")
+                    if isinstance(title, str) and title.strip() == item["title"]:
+                        raise ValueError("기존 작업용과 구분할 수 있게 다른 이름을 붙여 주세요.")
+                    saved = PERSONAL_PROMPTS.create(user.id, {"title": title, "note": body.get("note", ""),
+                        "domainKey": item["domain_key"], "prompt": draft["prompt"]}, provenance=draft["provenance"])
+                    self._send(201, {"preference": saved})
                     return
                 if action in ("compare-team", "compose-task", "save-task"):
                     item = PERSONAL_PROMPTS.get(user.id, prompt_id)

@@ -7,6 +7,7 @@ import TeamPreferenceComparison from './TeamPreferenceComparison';
 import TaskPreferenceMixer from './TaskPreferenceMixer';
 import SaveTaskPreferencePanel from './SaveTaskPreferencePanel';
 import SavedPreferenceSources from './SavedPreferenceSources';
+import RemixSavedPreferencePanel from './RemixSavedPreferencePanel';
 import { selectionMatches } from './comparisonText';
 
 const formOf = (item) => ({ title: item.title, domainKey: item.domain_key, prompt: item.prompt, note: item.note || '' });
@@ -175,6 +176,9 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
               {item.id && <button className="prompt-reset-button" type="button" disabled={Boolean(busy) || dirty} aria-pressed={view === 'use'} onClick={() => setView('use')}>새 작업에 쓰기</button>}
             </div>
             {item.id && <SavedPreferenceSources item={item} editingPrompt={form.prompt !== item.prompt || form.domainKey !== item.domain_key} />}
+            {item.id && view === 'use' && item.provenance && <RemixSavedPreferencePanel key={`${item.id}-${item.revision}`}
+              item={item} disabled={Boolean(busy)} onBusy={setBusy} onOpen={open}
+              onSaved={(saved) => setItems((current) => [saved, ...(current || []).filter((p) => p.id !== saved.id)])} />}
             {view === 'edit' ? <form onSubmit={save}>
               <h3>{item.id ? '내 방식에 맞게 수정하기' : '가진 프롬프트 보관하기'}</h3>
               <label className="task-input-label" htmlFor="preference-title">기억하기 쉬운 이름</label>

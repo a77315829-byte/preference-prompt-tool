@@ -89,7 +89,7 @@ def compose_task_prompt(item: dict, domain, comparison: dict, choices: dict) -> 
     prompt = build_final_prompt(domain, combo, language=None if language == "ko" else language)
     prompt = _task_wording(domain, prompt, language)
     snapshot = {"id": item["id"], "revision": item["revision"], "team": comparison["team_snapshot"], "choices": choices, "prompt": prompt}
-    provenance = {"version": 1, "personal": {"title": item.get("title", "개인 지침"), "revision": item["revision"]},
+    provenance = {"version": 1, "language": language, "personal": {"title": item.get("title", "개인 지침"), "revision": item["revision"]},
                   "team": {"name": comparison["team_name"]}, "axes": [
                       {"axis": a["axis"], "label": a["label"], "source": choices.get(a["axis"], "shared"),
                        "value": combo[a["axis"]], "personal_value": a["personal_value"], "team_value": a["team_value"],

@@ -54,12 +54,28 @@ function shelfServer({ loggedIn = true, live = false } = {}) {
       saved.provenance_matches = true;
       saved.provenance = { version: 1, personal: { title: item.title, revision: item.revision }, team: { name: '함께 개발팀' }, axes: [
         { axis: 'code_structure', label: '코드 구성', source: body.choices.code_structure,
-          value: body.choices.code_structure === 'team' ? 'separated' : 'compact', team_agreed: false },
+          value: body.choices.code_structure === 'team' ? 'separated' : 'compact', personal_value: 'compact', team_value: 'separated', team_agreed: false },
         { axis: 'type_detail', label: '타입 작성', source: body.choices.type_detail,
-          value: body.choices.type_detail === 'team' ? 'inferred' : 'explicit', team_agreed: true },
-        { axis: 'style_management', label: '스타일 관리', source: 'shared', value: 'theme', team_agreed: true },
+          value: body.choices.type_detail === 'team' ? 'inferred' : 'explicit', personal_value: 'explicit', team_value: 'inferred', team_agreed: true },
+        { axis: 'style_management', label: '스타일 관리', source: 'shared', value: 'theme', personal_value: 'theme', team_value: 'theme', team_agreed: true },
       ] };
       return response({ preference: saved }, 201);
+    }
+    if (action === 'remix-preview' || action === 'remix-save') {
+      if (body.revision !== item.revision) return response({ error: '저장한 지침이 바뀌었습니다.' }, 409);
+      const snapshot = `remix:${id}:${body.revision}:${JSON.stringify(body.choices)}`;
+      const draft = { choices: body.choices, snapshot, prompt: `재조합: ${body.choices.code_structure} 구성 / ${body.choices.type_detail} 타입` };
+      if (action === 'remix-preview') return response({ draft });
+      if (state.failSave || body.draftSnapshot !== snapshot) return response({ error: '다시 확인해 주세요.' }, 409);
+      assert.notEqual(body.title, item.title);
+      await fetch('/api/preferences', { method: 'POST', body: JSON.stringify({ title: body.title, note: body.note, domainKey: item.domain_key, prompt: draft.prompt }) });
+      const next = state.records[0]; next.provenance_matches = true; next.provenance = structuredClone(item.provenance);
+      next.provenance.remixed_from = { title: item.title, revision: item.revision };
+      for (const a of next.provenance.axes) {
+        a.source = body.choices[a.axis] || 'shared';
+        a.value = a[`${a.source === 'shared' ? 'personal' : a.source}_value`];
+      }
+      return response({ preference: next }, 201);
     }
     if (action === 'update') {
       if (state.failSave) return response({ error: '다른 창에서 수정된 항목입니다. 다시 열어 주세요.' }, 409);
@@ -342,6 +358,8 @@ test('작업용 이름·설명으로 새로 저장 → 현재 작업 유지 → 
     await ui.click('변경 내용 저장');
     assert.ok(document.querySelector('.saved-preference-sources [role="status"]').textContent.includes('현재 지침과 다를 수'));
     assert.ok(document.querySelector('.saved-preference-sources').textContent.includes('내 선호 1개'));
+    await ui.click('새 작업에 쓰기');
+    assert.equal([...document.querySelectorAll('button')].find((b) => b.textContent === '선택 바꿔 새 항목으로 저장').disabled, true);
   } finally { await ui.close(); }
 });
 
@@ -354,5 +372,53 @@ test('출처 기록 없는 기존 지침에서는 저장 당시 선택을 추측
     assert.ok(document.querySelector('.preference-editor').textContent.includes('선택 출처 기록이 없어요'));
     await ui.fill('#preference-task', '작업'); await ui.click('지침 + 새 작업 복사');
     assert.ok(ui.state.copied.includes('개인 지침'));
+  } finally { await ui.close(); }
+});
+
+test('저장한 작업용에서 기존 선택 확인 → 다시 선택·미리 보기 → 다른 이름으로 저장·재사용', async () => {
+  const api = shelfServer();
+  api.state.records.push({ id: 'work', title: '보관한 작업용', note: '', domain_key: 'coding', prompt: '기존 작업용 본문', revision: 1,
+    created_at: '2026-11-03T00:00:00Z', updated_at: '2026-11-03T00:00:00Z', provenance_matches: true,
+    provenance: { personal: { title: '원래 개인 지침', revision: 1 }, team: { name: '저장 당시 팀' }, axes: [
+      { axis: 'code_structure', label: '코드 구성', source: 'team', value: 'separated', personal_value: 'compact', team_value: 'separated', team_agreed: false },
+      { axis: 'type_detail', label: '타입 작성', source: 'personal', value: 'explicit', personal_value: 'explicit', team_value: 'inferred', team_agreed: true },
+      { axis: 'style_management', label: '스타일 관리', source: 'shared', value: 'theme', personal_value: 'theme', team_value: 'theme', team_agreed: true },
+    ] } });
+  const original = structuredClone(api.state.records[0]);
+  const ui = await mount('https://example.test/', 'coding', api.fetch);
+  ui.dom.window.confirm = () => true;
+  const choose = async (axis, source) => ui.act(async () => document.querySelector(`input[name="remix-choice-${axis}"][value="${source}"]`).click());
+  try {
+    await ui.click('내 선호 보관함'); await ui.click('새 작업에 사용');
+    await ui.fill('#preference-task', '유지할 작업');
+    await ui.click('선택 바꿔 새 항목으로 저장');
+    assert.equal(document.querySelector('input[name="remix-choice-code_structure"]:checked').value, 'team');
+    assert.equal(document.querySelector('input[name="remix-choice-type_detail"]:checked').value, 'personal');
+    assert.equal(document.querySelector('input[name="remix-choice-style_management"]'), null);
+    await choose('code_structure', 'personal'); await ui.click('새 조합 미리 보기');
+    await ui.fill('#remix-title', original.title);
+    const saveButton = () => [...document.querySelectorAll('button')].find((b) => b.textContent === '다른 이름으로 새 조합 저장');
+    assert.equal(saveButton().disabled, true);
+    await choose('type_detail', 'team');
+    assert.equal(document.querySelector('#remix-prompt-preview'), null);
+    await ui.click('새 조합 미리 보기');
+    await ui.fill('#remix-title', '개인 구성 + 팀 타입'); await ui.fill('#remix-note', '다음 기능 작업용');
+    api.state.failSave = true; await ui.click('다른 이름으로 새 조합 저장');
+    assert.ok(document.querySelector('.saved-preference-remix [role="alert"]'));
+    assert.equal(document.querySelector('#remix-title').value, '개인 구성 + 팀 타입');
+    assert.equal(api.state.writes, 0);
+    api.state.failSave = false; await ui.click('다른 이름으로 새 조합 저장');
+    assert.equal(api.state.writes, 1);
+    assert.deepEqual(api.state.records.find((p) => p.id === 'work'), original);
+    assert.equal(document.querySelector('#preference-task').value, '유지할 작업');
+    assert.equal(document.querySelectorAll('.preference-list li').length, 2);
+    assert.equal([...document.querySelectorAll('button')].find((b) => b.textContent === '새 조합을 저장했어요').disabled, true);
+    await ui.click('저장한 새 조합 열기');
+    assert.ok(document.querySelector('.saved-preference-sources').textContent.includes('보관한 작업용'));
+    const rows = [...document.querySelectorAll('.saved-preference-sources tbody tr')].map((r) => r.textContent);
+    assert.ok(rows[0].includes('간결하게 작성') && rows[0].includes('내 선호'));
+    assert.ok(rows[1].includes('필요한 타입만 작성') && rows[1].includes('팀 기준'));
+    await ui.fill('#preference-task', '다음 작업'); await ui.click('지침 + 새 작업 복사');
+    assert.ok(ui.state.copied.includes('재조합: personal 구성 / team 타입'));
   } finally { await ui.close(); }
 });

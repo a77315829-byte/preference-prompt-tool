@@ -12,6 +12,7 @@ function SavedPreferenceSources({ item, editingPrompt = false }) {
   return <div className="saved-preference-sources">
     <h4>이 지침의 항목별 선택 출처</h4>
     <p className="ws-help">저장 당시의 선택입니다. 내 선호는 ‘{origin.personal.title}’의 {origin.personal.revision}번째 저장 버전, 팀 기준은 ‘{origin.team.name}’에서 가져왔어요. 이후 원본이나 팀 기준이 바뀌어도 이 기록은 그대로입니다.</p>
+    {origin.remixed_from && <p className="ws-help">‘{origin.remixed_from.title}’의 {origin.remixed_from.revision}번째 저장 버전에서 선택을 바꿔 새 항목으로 저장했어요.</p>}
     {(editingPrompt || !item.provenance_matches) && <p className="comparison-pending" role="status">
       {editingPrompt ? '지침 본문·종류를 수정 중입니다. 아래는 수정 전 저장 당시의 기록입니다.'
         : '저장 후 지침 본문·종류가 수정되었습니다. 아래는 처음 조합해 저장한 기록이며 현재 지침과 다를 수 있어요.'}
