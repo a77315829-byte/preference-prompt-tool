@@ -3,8 +3,9 @@
 Streamlit 을 import 하지 않는다 (`service.py`, `exporters.py` 와 같은 층).
 
 타깃을 "AI 를 매일 쓰는 작은 개발팀"으로 잡은 근거가 되는 기능이다. 예를 들어
-팀원 셋이 각자 코딩 비교를 하면, 세 사람의 비교를 모두 한 추정기에 넣어 팀
-선호를 정하고, 사람마다 갈린 축은 "합의가 필요한 항목"으로 보여 준다.
+팀원 셋이 각자 코딩 비교를 하면, 사람마다 자기 기록으로 1위 값을 따로 추정한 뒤
+축마다 한 사람 한 표로 팀 선호를 정하고(_equal_weight_team), 사람마다 갈린 축은
+"합의가 필요한 항목"으로 보여 준다.
 
 **저장하는 것:** 팀 코드, 이름, 선택 기록(어느 두 조합 중 무엇을 골랐는지).
 원문과 생성 결과는 저장하지 않는다. 앱 DB(app_db.py, SQLite)에 남아 서버를 다시
@@ -49,6 +50,15 @@ History = list[tuple[dict[str, str], dict[str, str], str]]
 
 class TeamError(ValueError):
     pass
+
+
+@dataclass(frozen=True)
+class TeamSummary:
+    """팀 목록 한 줄. 선택 기록은 담지 않는다."""
+    code: str
+    domain_key: str
+    members: int
+    updated_at: str  # 마지막으로 누가 더한 때 (UTC ISO)
 
 
 @dataclass
@@ -153,6 +163,22 @@ class TeamStore:
         ).fetchall()
         return [Member(r["name"], [tuple(c) for c in json.loads(r["history_json"])], signed_in=r["user_id"] is not None)
                 for r in rows]
+
+    def list_for_user(self, user_id: int) -> list[TeamSummary]:
+        """이 계정으로 참여한 팀. 최근에 누가 더한 팀부터. 결과를 보려고 비교를
+        다시 하지 않아도 되게 화면이 모아 보여 준다."""
+        with self.db.connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT t.code, t.domain_key, COUNT(*) AS members, MAX(m.joined_at) AS updated_at
+                FROM teams t JOIN team_members m ON m.code = t.code
+                WHERE t.code IN (SELECT code FROM team_members WHERE user_id = ?)
+                GROUP BY t.code, t.domain_key
+                ORDER BY updated_at DESC, t.code
+                """,
+                (user_id,),
+            ).fetchall()
+        return [TeamSummary(r["code"], r["domain_key"], r["members"], r["updated_at"]) for r in rows]
 
     def get(self, code: str) -> tuple[str, list[Member]]:
         with self.db.connect() as conn:

@@ -162,6 +162,7 @@ function IdleTrackerSection({ onBack, template = null }) {
                 </button>
               </div>
             </div>
+            {report?.liveError && <p className="aws-live-error" role="status">{report.liveError}</p>}
             <div className="aws-findings-grid">
               {(report?.findings || []).map((finding) => (
                 <article className="aws-finding-card" key={finding.id}>

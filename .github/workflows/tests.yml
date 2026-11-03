@@ -30,6 +30,17 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements-dev.txt
 
+      # 코딩 생성 코드의 실행 검증 테스트(tests/test_coding_ai_quality_stage4.py)가
+      # frontend/node_modules 의 tsc · esbuild · jsdom 과 node 를 직접 부른다.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci --prefix frontend
+
       - name: Run tests without API
         run: python -m pytest -m "not api" -q
 

@@ -40,7 +40,7 @@ def _finish_run(app, *, demo: bool) -> None:
         app.radio(key="run_mode").set_value(DEMO_MODE).run()
     app.text_area[0].input(SOURCE).run()
     app.button(key="start").click().run()
-    # 질문이 떨어지면 8회 전에 끝난다. 끝날 때까지 고른다.
+    # 질문이 떨어지면 8회 전에 끝난다 (코딩은 3회). 끝날 때까지 고른다.
     for _ in range(8):
         if app.session_state["stage"] != "compare":
             break

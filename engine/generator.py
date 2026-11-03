@@ -23,12 +23,11 @@ from engine.domain_loader import Domain
 CACHE_DIR = Path(__file__).resolve().parent.parent / "cache"
 
 # 한 번의 생성 호출이 기다릴 최대 시간(초)과 출력 토큰 상한. 상한은
-# 요약·리뷰·코드 한 벌에는 넉넉하고, 모델이 폭주하면 거기서 끊는다.
+# 대부분의 결과물 한 벌에는 넉넉하고, 모델이 폭주하면 거기서 끊는다.
+# 더 긴 결과물이 필요한 도메인은 YAML 의 max_output_tokens 로 늘린다.
 # 캐시 키에는 넣지 않는다 - 넣으면 기존 cache/ 가 통째로 무효화된다.
 REQUEST_TIMEOUT_SECONDS = 60
-# 일반 도메인은 기존 한도를 유지하고, 여러 파일을 반환하는 코딩 A/B만 늘린다.
 MAX_OUTPUT_TOKENS = 2048
-CODING_OUTPUT_TOKENS = 8192
 
 # 같은 캐시 키를 동시에 부르면 한 번만 호출하고 나머지는 기다렸다 캐시를
 # 읽는다. 새로고침·분기 미리 만들기가 같은 요청을 겹쳐 보낸다.
@@ -229,7 +228,8 @@ def generate(
 ) -> str:
     """축조합으로 프롬프트를 조립해 결과물을 만든다."""
     return generate_with_prompt(
-        build_prompt(domain, combo, source=source_text), source_text, model, cache_dir=cache_dir
+        build_prompt(domain, combo, source=source_text), source_text, model, cache_dir=cache_dir,
+        max_output_tokens=domain.max_output_tokens,
     )
 
 
@@ -277,6 +277,7 @@ def generate_with_prompt(
     model: str,
     cache_dir: Path = CACHE_DIR,
     temperature: float | None = None,
+    max_output_tokens: int | None = None,
 ) -> str:
     """조립이 끝난 시스템 프롬프트로 결과물을 만든다.
 
@@ -295,20 +296,20 @@ def generate_with_prompt(
         # 기다리는 동안 다른 스레드가 채웠을 수 있다.
         if cache_file.exists():
             return json.loads(cache_file.read_text(encoding="utf-8"))["output"]
-        return _call_and_cache(prompt, source_text, model, temperature, cache_file)
+        return _call_and_cache(prompt, source_text, model, temperature, cache_file,
+                               max_output_tokens=max_output_tokens)
 
 
 def _call_and_cache(
-    prompt: str, source_text: str, model: str, temperature: float | None, cache_file: Path
+    prompt: str, source_text: str, model: str, temperature: float | None, cache_file: Path,
+    max_output_tokens: int | None = None,
 ) -> str:
     # litellm은 import에만 11초가 걸린다. 첫 화면 렌더에는 필요 없으므로
     # 실제 API 호출 시점까지 미룬다 (배포 콜드스타트 12.6초 -> 약 2초).
     from litellm import completion
 
     extra = {} if temperature is None else {"temperature": temperature}
-    output_tokens = (
-        CODING_OUTPUT_TOKENS if "## A/B 공통 기능 계약" in prompt else MAX_OUTPUT_TOKENS
-    )
+    output_tokens = max_output_tokens or MAX_OUTPUT_TOKENS
     token_limit = (
         {"max_completion_tokens": output_tokens}
         if model.startswith(("openai/gpt-5", "openai/gpt-6", "openai/o1", "openai/o3", "openai/o4"))

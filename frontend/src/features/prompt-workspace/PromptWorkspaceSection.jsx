@@ -3,6 +3,10 @@ import { useEffect, useRef, useState } from 'react';
 import AuthSection from '../../shared/auth/AuthSection';
 import { fetchMe } from '../../shared/auth/authApi';
 import CompareView from './CompareView';
+import ContractEditor from './ContractEditor';
+import {
+  FIELD_TYPES, blankInputText, contractProblems, contractShapeError, fieldSummary, typeLabel,
+} from './contractFields';
 import SuggestionPanel from './SuggestionPanel';
 import {
   buildProject, checkProject, confirmProject, deleteProject, discardDraft, exportProject, fetchHealth, fetchSample,
@@ -15,6 +19,8 @@ import {
 // 생기지 않게. 브라우저 보관은 다른 기기에서 보이지 않고 지워질 수 있다.
 const AUTOSAVE_MS = 2500;
 const LOCAL_KEY = 'ppt-workspace-unsaved';
+// 개발자 설정(입력 타입·필수, 출력 계약 편집)을 펼쳐 둘지. 이 브라우저의 보기 설정일 뿐이다.
+const DEVELOPER_KEY = 'ppt-workspace-developer';
 const ROLE_LABEL = { owner: '소유자', editor: '편집', viewer: '보기' };
 
 function readLocal() {
@@ -23,6 +29,23 @@ function readLocal() {
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
+  }
+}
+
+function readDeveloperMode() {
+  try {
+    return window.localStorage.getItem(DEVELOPER_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function writeDeveloperMode(on) {
+  try {
+    if (on) window.localStorage.setItem(DEVELOPER_KEY, '1');
+    else window.localStorage.removeItem(DEVELOPER_KEY);
+  } catch {
+    // 보관하지 못해도 이번 화면에서는 켜진 채로 둔다.
   }
 }
 
@@ -50,6 +73,11 @@ const RUN_LABEL = {
   needs_review: '확인이 필요한 입력 - 모델을 부르지 않았습니다',
 };
 const MAX_RUNS = 6;
+// 오류는 누른 버튼 가까이에 보인다 - 맨 위에만 뜨면 아래쪽 버튼을 누른 사람은 보지 못한다.
+const ERROR_SPOT = {
+  build: 'requirements', resolve: 'requirements', run: 'run', apply: 'run', export: 'export',
+  save: 'versions', restore: 'versions', share: 'versions',
+};
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
@@ -158,9 +186,11 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
   const [contractText, setContractText] = useState('');
   const [newVariable, setNewVariable] = useState('');
   const [contractError, setContractError] = useState('');
+  const [developerMode, setDeveloperMode] = useState(() => readDeveloperMode());
   const [includeData, setIncludeData] = useState(false);
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
+  const [errorAt, setErrorAt] = useState('');
 
   // 저장·다시 열기는 로그인한 사용자 것만 보인다. 로그인 칸은 화면을 옮기지 않고
   // 여기서 연다 - 옮기면 작성 중인 프로젝트가 사라진다.
@@ -206,10 +236,12 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
   const act = async (label, fn) => {
     setBusy(label);
     setError('');
+    setErrorAt('');
     try {
       await fn();
     } catch (e) {
       setError(e.message || '문제가 발생했습니다.');
+      setErrorAt(label);
     } finally {
       setBusy('');
       if (label === 'structure' || label === 'run') refreshQuota();
@@ -224,6 +256,19 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
     setContractText(JSON.stringify(nextProject.requirements.output_contract.fields, null, 2));
     setContractError('');
     setArtifactDirty(false);
+  };
+
+  // JSON 칸은 지금 출력 계약을 따라간다 - 표에서 고쳐도, 프로젝트를 새로 열어도.
+  const contractJson = project ? JSON.stringify(project.requirements.output_contract.fields, null, 2) : '';
+  useEffect(() => {
+    setContractText(contractJson);
+    setContractError('');
+  }, [contractJson]);
+  const contractIssues = project ? contractProblems(project.requirements.output_contract.fields) : [];
+
+  const toggleDeveloperMode = (on) => {
+    setDeveloperMode(on);
+    writeDeveloperMode(on);
   };
 
   // 요구사항을 고치면 revision 이 오르고 확인 상태가 풀린다.
@@ -276,7 +321,16 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
     const confirmed = await confirmProject(project);
     const built = await buildProject(confirmed.project);
     adopt(built.project, notes);
+    // 시험 입력이 비어 있으면 변수 이름으로 빈 틀을 채워 둔다 - 무엇을 적는 칸인지 보이게.
+    if (!inputText.trim() && !built.project.test_input_text) {
+      setInputText(blankInputText(built.project.requirements.variables));
+    }
   });
+
+  const fillBlankInput = () => {
+    if (inputText.trim() && !window.confirm('지금 시험 입력을 지우고 변수 이름으로 만든 빈 틀로 바꿉니다.')) return;
+    setInputText(blankInputText(req.variables));
+  };
 
   const editArtifact = (field, value) => {
     setProject((current) => {
@@ -292,7 +346,8 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
   const applyContract = () => {
     try {
       const fields = JSON.parse(contractText);
-      if (!Array.isArray(fields)) throw new Error('필드 목록(배열)이어야 합니다.');
+      const shape = contractShapeError(fields);
+      if (shape) throw new Error(shape);
       editRequirements((r) => { r.output_contract.fields = fields; });
       setContractError('');
     } catch (e) {
@@ -305,7 +360,8 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
     try {
       values = JSON.parse(inputText);
     } catch (e) {
-      throw new Error(`시험 입력이 올바른 JSON이 아닙니다: ${e.message}`);
+      throw new Error('시험 입력이 JSON이 아닙니다. 프롬프트 문장이 아니라 { "변수 이름": "값" } 모양으로 적어 주세요. '
+        + `"변수 이름으로 빈 틀 채우기"를 누르면 틀이 생깁니다. (${e.message})`);
     }
     const { run } = await runProject(project, values);
     // 실행 당시 입력 글을 기록에 남긴다 - 다시 열었을 때도 '이전 입력 결과'를 가를 수 있게.
@@ -503,6 +559,9 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
     setAnswers((current) => { const next = { ...current }; delete next[id]; return next; });
   });
 
+  const errorAtSpot = (spot) => (error && (ERROR_SPOT[errorAt] || 'top') === spot
+    ? <p className="ws-error" role="alert">{error}</p> : null);
+
   const lastRun = project?.runs?.[project.runs.length - 1];
   const lastRunStale = lastRun && (
     lastRun.artifact_revision !== project.artifact?.revision
@@ -605,7 +664,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
           </div>
         </div>
 
-        {error && <p className="ws-error" role="alert">{error}</p>}
+        {errorAtSpot('top')}
         {notes.length > 0 && <ul className="ws-notes">{notes.map((n) => <li key={n}>{n}</li>)}</ul>}
         {pendingDraft && (
           <div className="ws-banner">
@@ -626,53 +685,84 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
           <motion.div className="ws-step" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             <p className="question-eyebrow">2. 요구사항 확인</p>
             <p className={`ws-stage ws-stage-${stage}`}>{STAGE_LABEL[stage]} · revision {project.requirements_revision}</p>
+            <label className="ws-check-row ws-developer-toggle">
+              <input type="checkbox" checked={developerMode} onChange={(e) => toggleDeveloperMode(e.target.checked)} />
+              <span>
+                <strong>개발자 설정 보기</strong> (입력 타입·필수 여부, 출력 계약 편집)
+                <span className="ws-help">
+                  앱에 연결하는 개발자가 정하는 칸입니다. 업무 담당자는 AI가 채운 그대로 두고 목적·규칙·선호·미결 사항만
+                  확인하면 됩니다.
+                </span>
+              </span>
+            </label>
 
             <div className="ws-block">
-              <div className="ws-block-head"><strong>목적</strong><OriginBadge item={req.purpose} /></div>
-              <textarea className="task-input" rows={2} value={req.purpose.text}
+              <div className="ws-block-head">
+                <label htmlFor="ws-purpose"><strong>목적</strong></label><OriginBadge item={req.purpose} />
+              </div>
+              <textarea id="ws-purpose" className="task-input" rows={2} value={req.purpose.text}
                 onChange={(e) => editRequirements((r) => { r.purpose.text = e.target.value; r.purpose.origin = 'user'; })} />
               {req.purpose.source_excerpt && <p className="ws-excerpt">“{req.purpose.source_excerpt}”</p>}
             </div>
 
             <div className="ws-block">
               <strong>입력 변수</strong>
-              <p className="ws-help">요청마다 코드가 채우는 값입니다. 템플릿에는 {'{{이름}}'} 으로 들어갑니다.</p>
+              <p className="ws-help">요청마다 앱 코드가 채워 AI에 넘기는 값입니다. 템플릿에는 {'{{이름}}'} 으로 들어갑니다.</p>
               <table className="ws-table">
-                <thead><tr><th>이름</th><th>타입</th><th>필수</th><th>설명</th><th>출처</th><th /></tr></thead>
+                <thead>
+                  <tr>
+                    <th>이름</th>
+                    {developerMode && <><th>타입</th><th>필수</th></>}
+                    <th>설명</th><th>출처</th>
+                    {developerMode && <th />}
+                  </tr>
+                </thead>
                 <tbody>
                   {req.variables.map((v, i) => (
                     <tr key={v.name}>
                       <td><code>{v.name}</code></td>
-                      <td>
-                        <select value={v.type} onChange={(e) => editRequirements((r) => { r.variables[i].type = e.target.value; })}>
-                          {['string', 'number', 'integer', 'boolean', 'array', 'object'].map((t) => <option key={t}>{t}</option>)}
-                        </select>
-                      </td>
-                      <td><input type="checkbox" checked={v.required} onChange={(e) => editRequirements((r) => { r.variables[i].required = e.target.checked; })} /></td>
+                      {developerMode && (
+                        <>
+                          <td>
+                            <select aria-label={`${v.name} 타입`} value={v.type}
+                              onChange={(e) => editRequirements((r) => { r.variables[i].type = e.target.value; })}>
+                              {FIELD_TYPES.map((t) => <option key={t} value={t}>{typeLabel(t)}</option>)}
+                            </select>
+                          </td>
+                          <td>
+                            <input type="checkbox" aria-label={`${v.name} 필수`} checked={v.required}
+                              onChange={(e) => editRequirements((r) => { r.variables[i].required = e.target.checked; })} />
+                          </td>
+                        </>
+                      )}
                       <td>{v.description}</td>
                       <td><OriginBadge item={v} /></td>
-                      <td>
-                        <button className="ws-small-button" type="button" aria-label={`${v.name} 삭제`}
-                          onClick={() => editRequirements((r) => { r.variables.splice(i, 1); })}>삭제</button>
-                      </td>
+                      {developerMode && (
+                        <td>
+                          <button className="ws-small-button" type="button" aria-label={`${v.name} 삭제`}
+                            onClick={() => editRequirements((r) => { r.variables.splice(i, 1); })}>삭제</button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <div className="ws-item">
-                <input aria-label="새 변수 이름" placeholder="새 변수 이름 (영문 소문자·_)" value={newVariable}
-                  onChange={(e) => setNewVariable(e.target.value)} />
-                <button className="ws-small-button" type="button"
-                  disabled={!/^[a-z_][a-z0-9_]{0,39}$/.test(newVariable) || req.variables.some((v) => v.name === newVariable)}
-                  onClick={() => {
-                    editRequirements((r) => {
-                      r.variables.push({ name: newVariable, description: '', type: 'string', required: true, origin: 'user', source_excerpt: '' });
-                    });
-                    setNewVariable('');
-                  }}>
-                  + 변수 추가
-                </button>
-              </div>
+              {developerMode && (
+                <div className="ws-item">
+                  <input aria-label="새 변수 이름" placeholder="새 변수 이름 (영문 소문자·_)" value={newVariable}
+                    onChange={(e) => setNewVariable(e.target.value)} />
+                  <button className="ws-small-button" type="button"
+                    disabled={!/^[a-z_][a-z0-9_]{0,39}$/.test(newVariable) || req.variables.some((v) => v.name === newVariable)}
+                    onClick={() => {
+                      editRequirements((r) => {
+                        r.variables.push({ name: newVariable, description: '', type: 'string', required: true, origin: 'user', source_excerpt: '' });
+                      });
+                      setNewVariable('');
+                    }}>
+                    + 변수 추가
+                  </button>
+                </div>
+              )}
             </div>
 
             <ItemList label="필수 규칙" items={req.hard_rules} {...editList('hard_rules')}
@@ -727,26 +817,59 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
             </div>
 
             <div className="ws-block">
-              <strong>출력 계약</strong>
-              <p className="ws-help">
-                이 도구의 제한된 형식입니다 (JSON Schema 표준 아님). 타입: string·number·integer·boolean·array·object,
-                배열은 item_type 또는 item_fields, min_items·max_items.
-              </p>
-              <textarea className="task-input ws-code" rows={8} value={contractText} onChange={(e) => setContractText(e.target.value)} />
-              <button className="ws-small-button" type="button" onClick={applyContract}>출력 계약 반영</button>
-              {contractError && <p className="ws-error">{contractError}</p>}
+              <strong>출력 계약</strong> <span className="ws-help">AI가 돌려줄 답의 항목</span>
+              <p className="ws-help">앱 코드가 이 이름으로 결과를 꺼내 화면이나 DB에 넣습니다. 시험할 때 이 모양을 지켰는지 코드로 검사합니다.</p>
+              {developerMode ? (
+                <>
+                  <ContractEditor fields={req.output_contract.fields}
+                    onChange={(fields) => editRequirements((r) => { r.output_contract.fields = fields; })} />
+                  <details className="ws-raw">
+                    <summary>JSON으로 보기 · 붙여넣기</summary>
+                    <p className="ws-help">
+                      이 도구의 제한된 형식입니다 (JSON Schema 표준 아님). 배열은 item_type 또는 item_fields,
+                      min_items·max_items.
+                    </p>
+                    <textarea className="task-input ws-code" rows={8} value={contractText} onChange={(e) => setContractText(e.target.value)} />
+                    <button className="ws-small-button" type="button" onClick={applyContract}>JSON 반영</button>
+                    {contractError && <p className="ws-error">{contractError}</p>}
+                  </details>
+                </>
+              ) : (
+                <>
+                  {req.output_contract.fields.length === 0
+                    ? <p className="ws-help">정한 항목이 없습니다.</p>
+                    : (
+                      <ul className="ws-contract-summary">
+                        {req.output_contract.fields.map((f, i) => (
+                          <li key={i}>
+                            <code>{f.name}</code> {f.description}
+                            <span className="ws-help"> · {fieldSummary(f)} · {f.required ? '필수' : '선택'}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  <p className="ws-help">고치려면 위의 "개발자 설정 보기"를 켜세요.</p>
+                </>
+              )}
+              {contractIssues.length > 0 && (
+                <ul className="ws-error ws-contract-issues">{contractIssues.map((p) => <li key={p}>{p}</li>)}</ul>
+              )}
             </div>
 
             <div className="prompt-actions">
               <button className="prompt-copy-button" type="button"
-                disabled={Boolean(busy) || req.open_questions.length > 0}
+                disabled={Boolean(busy) || req.open_questions.length > 0 || contractIssues.length > 0}
                 onClick={confirmAndBuild}>
                 {busy === 'build' ? '만드는 중…' : '이 요구사항으로 만들기'}
               </button>
               <button className="prompt-reset-button" type="button" onClick={downloadProjectJson}>초안 저장 (JSON)</button>
             </div>
+            {errorAtSpot('requirements')}
             {req.open_questions.length > 0 && (
               <p className="ws-help">미결 사항 {req.open_questions.length}개가 남아 있어 만들 수 없습니다.</p>
+            )}
+            {contractIssues.length > 0 && (
+              <p className="ws-help">출력 계약에 고칠 곳이 있어 만들 수 없습니다 (위 빨간 칸).</p>
             )}
           </motion.div>
         )}
@@ -770,13 +893,21 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
             <textarea id="ws-template" className="task-input ws-code" rows={6} value={project.artifact.input_template}
               onChange={(e) => editArtifact('input_template', e.target.value)} />
 
-            <label className="task-input-label" htmlFor="ws-input">시험 입력 (JSON)</label>
+            <div className="ws-block-head ws-input-head">
+              <label className="task-input-label" htmlFor="ws-input">시험 입력 (JSON)</label>
+              <button className="ws-small-button" type="button" onClick={fillBlankInput}>변수 이름으로 빈 틀 채우기</button>
+            </div>
+            <p className="ws-help">
+              프롬프트를 적는 칸이 아닙니다. 위 입력 템플릿의 {'{{변수}}'} 자리에 넣을 값을 적습니다.
+              예: {'{ "customer_message": "어제 주문한 운동화가 아직 안 왔어요." }'}
+            </p>
             <textarea id="ws-input" className="task-input ws-code" rows={8} value={inputText} onChange={(e) => setInputText(e.target.value)} />
             <div className="prompt-actions">
               <button className="prompt-copy-button" type="button" disabled={Boolean(busy) || stage !== 'built'} onClick={runTest}>
                 {busy === 'run' ? '실행 중…' : live ? '시험 실행 (AI)' : '메시지 구성 확인'}
               </button>
             </div>
+            {errorAtSpot('run')}
 
             {lastRun && (
               <div className={`ws-run ${lastRunStale ? 'is-stale' : ''}`}>
@@ -808,6 +939,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
                 <button className="prompt-copy-button" type="button" disabled={Boolean(busy)} onClick={exportZip}>ZIP 내려받기</button>
                 <button className="prompt-reset-button" type="button" onClick={downloadProjectJson}>프로젝트 JSON 저장</button>
               </div>
+              {errorAtSpot('export')}
             </div>
           </motion.div>
         )}
@@ -843,6 +975,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
                 <button className="prompt-copy-button" type="button" onClick={openLogin}>로그인하고 저장</button>
               </div>
             )}
+            {errorAtSpot('versions')}
             <p className="ws-help">
               버전은 저장을 누를 때만 생기고 이전 버전을 덮어쓰지 않습니다. 그 사이의 작업 중 내용은 자동 저장되어
               다시 열 때 불러올 수 있습니다 (내 계정에만, 버전 목록에는 안 나타남).

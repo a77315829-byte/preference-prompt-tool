@@ -28,8 +28,10 @@ from litellm import completion
 # getattr(checks_module, fn)으로 찾을 수 있다.
 from checks.summarization import keyword_presence, lexical_overlap, sentence_count  # noqa: F401
 
-CLASSIFIER_PATH = Path("models/specificity_classifier.joblib")
-CACHE_DIR = Path("cache/hybrid_judge")
+# 저장소 기준 경로. 상대 경로면 서버를 다른 폴더에서 켰을 때 분류기를 못 찾았다.
+_ROOT = Path(__file__).resolve().parent.parent
+CLASSIFIER_PATH = _ROOT / "models" / "specificity_classifier.joblib"
+CACHE_DIR = _ROOT / "cache" / "hybrid_judge"
 
 SMALL_MODEL = "openai/gpt-4.1-mini"
 LARGE_MODEL = "openai/gpt-4.1"

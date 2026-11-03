@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -74,12 +75,25 @@ def resolve_entry(files: dict[str, str], default_name: str) -> str:
     return candidates[0]
 
 
-def run(command: list[str], *, cwd: Path) -> tuple[bool, str]:
+def node_bin(name: str) -> Path:
+    """frontend/node_modules/.bin 의 실행 파일. Windows 에서는 확장자 없는 파일이 셸
+    스크립트라 바로 실행할 수 없고(WinError 193) npm 이 함께 만드는 .cmd 를 써야 한다."""
+    path = FRONTEND / "node_modules" / ".bin" / name
+    if os.name == "nt" and path.with_name(name + ".cmd").exists():
+        return path.with_name(name + ".cmd")
+    return path
+
+
+def run(command: list[str], *, cwd: Path) -> tuple[bool, str, str]:
     try:
         result = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=30, check=False)
     except subprocess.TimeoutExpired:
-        return False, "Timed out after 30 seconds"
-    return result.returncode == 0, (result.stdout + result.stderr).strip()[:4000]
+        return False, "", "Timed out after 30 seconds"
+    return result.returncode == 0, result.stdout, result.stderr
+
+
+def combined(stdout: str, stderr: str) -> str:
+    return (stdout + stderr).strip()[:4000]
 
 
 def evaluate_candidate(task: str, answer: str, slot: str, folder: Path) -> dict:
@@ -87,29 +101,33 @@ def evaluate_candidate(task: str, answer: str, slot: str, folder: Path) -> dict:
     entry = resolve_entry(files, ENTRY[task])
     for name, source in files.items():
         (folder / name).write_text(source, encoding="utf-8")
-    tsc = FRONTEND / "node_modules/.bin/tsc"
-    esbuild = FRONTEND / "node_modules/.bin/esbuild"
+    tsc = node_bin("tsc")
+    esbuild = node_bin("esbuild")
     type_command = [str(tsc), "--noEmit", "--strict", "--skipLibCheck", "--esModuleInterop",
                     "--jsx", "react-jsx", "--target", "es2020", "--module", "esnext",
                     "--moduleResolution", "bundler", entry]
-    type_ok, type_output = run(type_command, cwd=folder)
+    type_ok, out, err = run(type_command, cwd=folder)
+    type_output = combined(out, err)
     bundle = folder / "bundle.cjs"
-    build_ok, build_output = run([str(esbuild), entry, "--bundle", "--platform=node", "--format=cjs",
-                                  "--jsx=automatic",
-                                  "--external:react", "--external:react/jsx-runtime",
-                                  "--loader:.css=empty", f"--outfile={bundle}"], cwd=folder)
+    build_ok, out, err = run([str(esbuild), entry, "--bundle", "--platform=node", "--format=cjs",
+                              "--jsx=automatic",
+                              "--external:react", "--external:react/jsx-runtime",
+                              "--loader:.css=empty", f"--outfile={bundle}"], cwd=folder)
+    build_output = combined(out, err)
     result = {"slot": slot, "entry": entry, "files": sorted(files), "typecheck": type_ok,
               "typecheck_output": type_output, "build": build_ok, "build_output": build_output,
               "behavior": "not_run", "checks": []}
     if type_ok and build_ok:
-        ok, output = run(["node", str(Path(__file__).with_name("runtime_check.cjs")), task,
-                          str(bundle)], cwd=FRONTEND)
+        ok, out, err = run(["node", str(Path(__file__).with_name("runtime_check.cjs")), task,
+                            str(bundle)], cwd=FRONTEND)
+        # Only stdout carries the JSON result. Node writes warnings to stderr - on
+        # Node 21+ jsdom 20 triggers a punycode deprecation warning on every run.
         try:
-            result["checks"] = json.loads(output)
+            result["checks"] = json.loads(out)
             result["behavior"] = "passed" if ok and all(result["checks"]) else "failed"
         except json.JSONDecodeError:
             result["behavior"] = "error"
-            result["runtime_output"] = output
+            result["runtime_output"] = combined(out, err)
     return result
 
 

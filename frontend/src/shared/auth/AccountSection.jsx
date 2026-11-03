@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { changePassword, deleteAccount, fetchMe } from './authApi';
 
-// 내 계정: 비밀번호 변경과 탈퇴. 둘 다 지금 비밀번호를 다시 받는다 - 로그인된 화면만
-// 가진 사람이 바꾸거나 지우지 못하게.
-function AccountSection({ user, onBack, onDeleted }) {
+// 내 계정: 내 팀 바로가기, 비밀번호 변경과 탈퇴. 비밀번호 변경과 탈퇴는 지금 비밀번호를
+// 다시 받는다 - 로그인된 화면만 가진 사람이 바꾸거나 지우지 못하게.
+function AccountSection({ user, onBack, onDeleted, onOpenTeams }) {
   const [current, setCurrent] = useState('');
   const [next, setNext] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -61,6 +61,16 @@ function AccountSection({ user, onBack, onDeleted }) {
 
         {state.error && <p className="ws-error" role="alert">{state.error}</p>}
         {state.done && <p className="ws-banner" role="status"><span>{state.done}</span></p>}
+
+        {onOpenTeams && (
+          <div className="ws-step">
+            <p className="question-eyebrow">내 팀 프롬프트</p>
+            <p className="ws-help">내 아이디로 참여한 팀을 카테고리별로 모아 보고, 비교 없이 팀 결과를 엽니다.</p>
+            <div className="prompt-actions">
+              <button className="prompt-copy-button" type="button" onClick={onOpenTeams}>팀 프롬프트 보기</button>
+            </div>
+          </div>
+        )}
 
         <form className="auth-form ws-step" onSubmit={submitPassword}>
           <p className="question-eyebrow">비밀번호 변경</p>

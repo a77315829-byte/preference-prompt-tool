@@ -117,7 +117,7 @@ def test_live_pair_repairs_non_target_structure_drift(monkeypatch) -> None:
     extra = "\nuseCounter.ts\n```ts\nexport const useCounter = () => 0;\n```"
     calls = []
 
-    def fake_generate(prompt, source_text, model):
+    def fake_generate(prompt, source_text, model, **_):
         calls.append(prompt)
         if len(calls) == 1:
             return first
@@ -152,7 +152,7 @@ def test_live_pair_repairs_extra_hover_state_when_structure_changes(monkeypatch)
     ).replace("onClick={increment}", "onMouseEnter={() => setHovered(true)} onClick={increment}")
     calls = []
 
-    def fake_generate(prompt, source_text, model):
+    def fake_generate(prompt, source_text, model, **_):
         calls.append(prompt)
         return (first, drifted, second)[len(calls) - 1]
 
@@ -367,9 +367,11 @@ def test_demo_session_exposes_actual_comparison_task() -> None:
 def test_live_coding_pair_uses_the_user_request_for_both_candidates(monkeypatch) -> None:
     request = "예약 날짜를 고르는 달력 컴포넌트를 만들어 주세요."
     calls = []
+    caps = []
 
-    def fake_generate(prompt, source_text, model):
+    def fake_generate(prompt, source_text, model, **kwargs):
         calls.append((prompt, source_text, model))
+        caps.append(kwargs.get("max_output_tokens"))
         domain = load_domain("domains/coding.yaml")
         return generate_demo(domain, source_text, _combo_for_prompt(domain, source_text, prompt))
 
@@ -379,6 +381,8 @@ def test_live_coding_pair_uses_the_user_request_for_both_candidates(monkeypatch)
     )
 
     assert len(calls) == 2
+    # 여러 파일 코드를 돌려주므로 출력 상한은 도메인 YAML 의 값을 쓴다.
+    assert caps == [load_domain("domains/coding.yaml").max_output_tokens] * 2
     assert all(source == request and model == "test-model" for _, source, model in calls)
     assert all("A/B 공통 기능 계약" in prompt for prompt, _, _ in calls)
     assert all("사용자 메시지를 두 후보 모두의 동일한 기능 명세" in prompt for prompt, _, _ in calls)
@@ -398,7 +402,7 @@ def test_live_coding_candidate_is_repaired_once_before_display(monkeypatch) -> N
     domain = load_domain("domains/coding.yaml")
     repaired = []
 
-    def fake_followup(prompt, source_text, model):
+    def fake_followup(prompt, source_text, model, **_):
         combo = _combo_for_prompt(domain, source_text, prompt)
         if "수정할 초안" in prompt:
             repaired.append((prompt, source_text, model))
@@ -440,7 +444,7 @@ def test_missing_public_return_type_is_repaired_before_pair_is_displayed(monkeyp
     state.coding_escalation_model = None
     calls = []
 
-    def fake_generate(prompt, source_text, model):
+    def fake_generate(prompt, source_text, model, **_):
         calls.append(prompt)
         combo = _combo_for_prompt(domain, source_text, prompt)
         output = generate_demo(domain, source_text, combo)
@@ -466,7 +470,7 @@ def test_missing_public_return_type_still_rejected_after_repair(monkeypatch) -> 
     state.coding_escalation_model = None
     calls = []
 
-    def fake_generate(prompt, source_text, model):
+    def fake_generate(prompt, source_text, model, **_):
         calls.append(prompt)
         return generate_demo(domain, source_text, PREFERRED).replace(": ReactElement {", " {", 1)
 
@@ -496,7 +500,7 @@ def test_live_coding_escalates_only_after_primary_repair_fails(monkeypatch) -> N
     domain = load_domain("domains/coding.yaml")
     calls = []
 
-    def fake_generate(prompt, source_text, model):
+    def fake_generate(prompt, source_text, model, **_):
         calls.append((prompt, source_text, model))
         if len(calls) <= 2:
             return "코드 없음"
@@ -525,7 +529,7 @@ def test_live_coding_escalation_stops_after_one_attempt(monkeypatch) -> None:
 
     models = []
 
-    def fake_generate(prompt, source_text, model):
+    def fake_generate(prompt, source_text, model, **_):
         models.append(model)
         return "코드 없음"
 
@@ -544,7 +548,7 @@ def test_live_coding_api_error_does_not_escalate(monkeypatch) -> None:
 
     models = []
 
-    def fake_generate(prompt, source_text, model):
+    def fake_generate(prompt, source_text, model, **_):
         models.append(model)
         raise RuntimeError("API 호출 실패")
 

@@ -30,14 +30,17 @@
    문구, 검사 함수 지정은 전부 `domains/*.yaml`에서 읽는다. 엔진은 "축이 N개
    있고 각 축에 값이 M개 있다"까지만 안다.
    → 이 규칙이 확장성 주장의 실체다. 어기면 도메인 추가 시 엔진을 다시 짜야 한다.
+   `tests/test_engine_domain_agnostic.py` 가 도메인·축 이름, 축 값 분기, 검사 함수 이름을 검사한다
+   (프롬프트 문구로 분기하는 경우는 못 잡는다).
 
 2. **API 호출 결과는 반드시 캐싱한다.** 같은 (원문, 축조합) 쌍은 두 번
    호출하지 않는다. 실험을 수백 회 돌리므로 캐싱 없이는 비용이 폭발한다.
 
 3. **새 라이브러리를 추가하기 전에 먼저 물어본다.** 의존성을 늘리지 않는다.
+   `.claude/settings.json` 이 `requirements*.txt`·`frontend/package*.json` 수정 때 확인을 받는다.
 
 4. **API 키를 코드에 하드코딩하지 않는다.** `.env`에서만 읽는다.
-   `.env`는 절대 커밋하지 않는다.
+   `.env`는 절대 커밋하지 않는다. `.claude/settings.json` 이 `.env` 읽기·수정을 막는다.
 
 5. **한 번에 파일 하나 또는 함수 하나 단위로 작업한다.** 전체를 한꺼번에
    생성하지 않는다.
@@ -67,7 +70,7 @@
 ## 스택
 
 ```
-Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제)
+Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제. CI·.devcontainer 도 3.12)
 ├─ dspy         최적화 프레임워크
 ├─ gepa         프롬프트 최적화기
 ├─ litellm      여러 모델 API 통합 인터페이스
@@ -91,6 +94,11 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제)
   이미 나눴다 - 후보 생성은 실측으로 고른 `openai/gpt-4o-mini`(app.py 의
   `MODEL`, api_server.py 의 `PPT_MODEL`), 성찰은 `service.REFLECTION_MODEL`
   (`PPT_REFLECTION_MODEL`, 기본 `openai/gpt-5.6-luna`). 실측 표는 README.
+  **(2026-10-13)** React API 서버의 코딩 후보만 따로 간다 - 기본 `openai/gpt-6-luna`
+  (`PPT_CODING_MODEL`), 스타일 검사에 끝내 떨어지면 `openai/gpt-6.1-sol`
+  (`PPT_CODING_ESCALATION_MODEL`)로 한 번 다시 만든다. 이 경로의 청구 비용과
+  라운드당 대기 시간은 아직 재지 않았다. 근거와 남은 검증은
+  `benchmarks/coding_ai_quality/README.md`.
 
 ---
 
@@ -127,7 +135,7 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제)
 
 ```bash
 pip install -r requirements-dev.txt          # 실험·테스트용 전체 (배포용은 requirements.txt)
-python -m pytest -m "not api" -q             # API 없이 도는 테스트 (약 700개, 2분 안팎)
+python -m pytest -m "not api" -q             # API 없이 도는 테스트 (약 830개, 2분 안팎. 코딩 실행 검증은 npm ci 가 먼저 필요)
 npm ci --prefix frontend && npm run build --prefix frontend
 node --test "frontend/src/**/*.test.js"      # 프론트 순수 함수 테스트 (Node 내장, 의존성 없음)
 ```
@@ -186,6 +194,7 @@ node --test "frontend/src/**/*.test.js"      # 프론트 순수 함수 테스트
   임계값 탐색의 최고 관측값을 이론적 상한으로 표현하지 않는다.
 - 같은 프롬프트가 반환됐다는 이유만으로 GEPA 초기 점수가 만점이라고 단정하지 않는다.
 - GEPA는 실패 포함 세션 2회/프로세스 하루 30회로 제한했다. 메모리 카운터라 영속 금액 한도는 아니다.
+  (이후 React API 서버의 하루 상한은 `data/app.db` 에 남도록 바뀌었다. Streamlit 앱은 그대로 메모리다.)
 - 연구 실행기에 전체 모듈을 제공하던 구조에서 모듈 속성 접근을 발견했다.
   허용 멤버만 제공하고 자식 환경에서 API 키를 제외했다. 완전한 OS 샌드박스는 아니다.
 - 내 글 UI는 과제 원문을 받지 않아 압축률 적합성을 판단하지 못한다. 영어 Q&A의 형식 실험을 한국어/전문성 효과로 일반화하지 않는다.
