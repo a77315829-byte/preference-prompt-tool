@@ -447,6 +447,66 @@ def test_dropping_a_required_term_is_rejected_as_weakened(fake_llm, tmp_path) ->
     assert state.personalized_prompts == meta["base_prompts"]
 
 
+@pytest.mark.parametrize("lang,marker", [("ko", "가능하면"), ("en", "if possible")])
+def test_new_hedge_with_all_required_terms_is_rejected_as_weakened(fake_llm, tmp_path, lang, marker) -> None:
+    """필수 낱말을 다 남겨도 원래 줄에 없던 완화 표현("가능하면")이 생기면 약해진 것이다."""
+    def hedge(context):
+        reply = _valid_reply(context)
+        rows = reply["languages"][lang]
+        axis = next(iter(rows))
+        rows[axis]["instruction"] = f"{marker} " + rows[axis]["instruction"]
+        return reply
+    fake_llm(make_reply=hedge)
+    state = _complete(_live(_finished("a")), tmp_path)
+    meta = state.prompt_improvement
+    assert meta["method"] == "fallback" and meta["validation_error"] == "weakened"
+    assert state.personalized_prompts == meta["base_prompts"]
+
+
+def test_live_observed_dropped_clause_is_rejected() -> None:
+    """실측(2026-11-03 실제 모드 화면 확인): 역할별 파일 줄에서 "필요 없는 하위 컴포넌트와 타입 전용
+    파일을 억지로 만들지 말고"가 빠진 개선본이 검증을 통과했다. 이제 "억지로"가 빠지면 버린다."""
+    from agents.personalized_prompt import apply_rewrite
+    state = _finished("a")
+    domain, estimator = service.current_estimate(state)
+    combo = service.final_combo(domain, estimator)
+    base = {"ko": service.final_prompt(domain, estimator, language="ko")}
+    context = service._improvement_context(state, domain, combo, base)
+    assert combo["code_structure"] == "separated" and "code_structure" in context["evidence"]
+    def reply(instruction):
+        rows = {axis: {"value": ev["value"], "rounds": ev["rounds"],
+                       "instruction": context["instructions"]["ko"][axis]["line"].split(": ", 1)[1]}
+                for axis, ev in context["evidence"].items()}
+        rows["code_structure"]["instruction"] = instruction
+        return json.dumps({"languages": {"ko": rows}}, ensure_ascii=False)
+    observed = "컴포넌트와 스타일 또는 상태 로직을 역할별 파일로 분리하고, 각 파일의 이름과 전체 코드를 명확히 제시하라."
+    with pytest.raises(ValueError, match="weakened"):
+        apply_rewrite(context, reply(observed))
+    # 같은 내용을 낱말을 지켜 다시 쓰면 받아들인다.
+    kept = ("컴포넌트와 스타일 또는 상태 로직을 역할별 파일로 분리하고, 하위 컴포넌트나 타입 전용 파일을 "
+            "억지로 만들지 말며, 각 파일의 이름과 전체 코드를 명확히 제시하라.")
+    assert kept in apply_rewrite(context, reply(kept))["ko"]
+
+
+def test_weakening_markers_already_in_an_original_line_are_known() -> None:
+    """원래 줄에 이미 있는 표현은 그 줄에서 검사하지 않는다 (예: 한국어 "필요한 타입만" 줄의
+    "가능하면"·"필요하면"). 그런 줄이 늘어나면 보호가 약해지므로 목록을 고정해 둔다."""
+    from engine.domain_loader import load_domain
+    domain = load_domain("domains/coding.yaml")
+    specs = {None: domain.final_prompt, **domain.final_prompt_translations}
+    found = {}
+    for language, spec in specs.items():
+        assert spec.weakening_markers
+        for axis in domain.axes:
+            for value in axis.values:
+                text = (axis.instruction_for(value.value) if language is None
+                        else spec.instructions[axis.name][value.value]).lower()
+                hits = [m for m in spec.weakening_markers if m.lower() in text]
+                if hits:
+                    found[(language, axis.name, value.value)] = hits
+    assert found == {(None, "type_detail", "inferred"): ["가능하면", "필요하면"]}
+
+
 def test_every_required_term_appears_in_its_original_instruction() -> None:
     """YAML 의 required_terms 가 원래 문구에 없으면 그 축은 다시 쓸 수 없게 된다."""
     from engine.domain_loader import load_domain

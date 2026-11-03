@@ -101,6 +101,10 @@ def apply_rewrite(context: dict, content: str) -> dict[str, str]:
             # 원래 지시문의 핵심 낱말(domains/*.yaml required_terms)이 빠지면 약해진 것으로 본다.
             if not all(term.lower() in text.lower() for term in source.get("required_terms", [])):
                 raise ValueError("weakened")
+            # 낱말은 남기고 뜻만 누그러뜨린 경우: 원래 줄에 없던 완화 표현이 새로 생겼다.
+            if any(m.lower() in text.lower() and m.lower() not in source["line"].lower()
+                   for m in source.get("weakening_markers", [])):
+                raise ValueError("weakened")
             old = source["line"]
             if rewritten.split("\n").count(old) != 1:
                 raise ValueError("protected_boundary")

@@ -546,7 +546,7 @@ function ComparisonSection({ onBack, domainKey = 'coding', onSwitchDomain, templ
                       {remoteSession.optimize_report.leaky_skipped > 0
                         && ` 이번 입력 내용이 들어가 버린 후보 ${remoteSession.optimize_report.leaky_skipped}개는 제외했습니다.`}
                       {remoteSession.optimize_report.rules_restored > 0
-                        && ` 최적화 후보에서 빠진 기본 규칙 ${remoteSession.optimize_report.rules_restored}줄은 원문 그대로 다시 붙였습니다.`}
+                        && ` 최적화 후보에서 빠진 기본 규칙 ${remoteSession.optimize_report.rules_restored}줄은 원문 그대로 다시 붙였고, 최종 점수는 붙인 뒤 다시 잰 값입니다.`}
                     </>
                   )}
                 </p>

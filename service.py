@@ -585,13 +585,25 @@ def optimize(
         on_progress(1.0)
     prompt, score, skipped = _best_without_leak(result, seed_prompt, state.source_text, domain)
     prompt, restored = _restore_protected_rules(prompt, seed_prompt, domain, language)
+    seed_score = float(result.val_aggregate_scores[0])
+    score_before_restore = None
+    if restored:
+        # GEPA 점수는 규칙이 빠진 후보의 것이다. 화면의 최종 점수가 실제로 내보내는 프롬프트의
+        # 점수가 되도록 같은 평가 세트로 다시 잰다 (평가 입력 수만큼 호출이 늘고 캐시를 탄다).
+        # 다시 잰 점수가 시드보다 높지 않으면 고쳐 쓴 프롬프트를 채택하지 않는다.
+        score_before_restore = float(score)
+        scores = adapter.evaluate(valset, {"system_prompt": prompt}).scores
+        score = sum(scores) / len(scores)
+        if score <= seed_score:
+            prompt, score, restored = seed_prompt, seed_score, 0
     if report is not None:
         report.update(
-            seed_score=float(result.val_aggregate_scores[0]),
+            seed_score=seed_score,
             final_score=float(score),
             eval_inputs=len(valset),
             leaky_skipped=skipped,
             rules_restored=restored,
+            score_before_restore=score_before_restore,
         )
     return prompt
 
@@ -819,7 +831,8 @@ def _improvement_context(state: SessionState, domain: Domain, combo: dict[str, s
             # 원래 줄에도 없는 낱말을 요구하면 YAML 오류다 - 그 축은 다시 쓰지 않는다.
             if (line and base[lang].split("\n").count(line) == 1
                     and all(t.lower() in line.lower() for t in terms)):
-                instructions[lang][axis.name] = {"line": line, "prefix": prefix, "required_terms": terms}
+                instructions[lang][axis.name] = {"line": line, "prefix": prefix, "required_terms": terms,
+                                                 "weakening_markers": spec.weakening_markers if spec else []}
     supported = set.intersection(*(set(v) for v in instructions.values())) if instructions else set()
     return {"base_prompts": base, "history": state.history, "inferred": combo,
             "evidence": {k: v for k, v in evidence.items() if k in supported},

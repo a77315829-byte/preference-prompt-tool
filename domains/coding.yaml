@@ -128,13 +128,15 @@ final_prompt:
   required_terms:
     code_structure:
       compact: [한 파일, 인라인 스타일]
-      separated: [역할별 파일, 분리, 전체 코드]
+      separated: [역할별 파일, 분리, 억지로, 전체 코드]
     style_management:
       direct: [직접]
       theme: [theme, 토큰]
     type_detail:
       inferred: [추론, Props]
       explicit: [Props, 반환값, 꼼꼼]
+  # 다시 쓴 선호 줄에 원래 없던 이 표현이 생기면 약해진 것으로 보고 개선본을 버린다.
+  weakening_markers: [가능하면, 가급적, 원하면, 선택적으로, 경우에 따라, 않아도, 필요하면, 굳이]
 
 # 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
 # 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
@@ -178,6 +180,7 @@ final_prompt_translations:
       type_detail:
         inferred: ["infer", "public boundaries"]
         explicit: ["explicitly", "props", "return values"]
+    weakening_markers: ["if possible", "optional", "where convenient", "if you like", "feel free", "not required", "no need", "if needed", "when needed"]
     instructions:
       code_structure:
         compact: "For small features, keep the component, state logic, and styles together in one file and keep it concise."
