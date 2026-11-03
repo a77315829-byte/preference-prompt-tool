@@ -802,8 +802,9 @@ def final_prompt(
 # 보낸 요청 수다. "이전 선택 수정" 뒤 다시 끝내도 이 수는 초기화되지 않는다.
 MAX_PROMPT_IMPROVEMENTS_PER_SESSION = 2
 PROMPT_RESULTS_DIR = os.environ.get("PPT_PROMPT_RESULTS_DIR")
-# 실제 모드에서 AI 개선을 켤지. 기본은 끔 - 사전등록 비교에서 기본 조립본보다 낫다는 기준을
-# 충족하지 못했다 (docs/personalized_prompt_preregistration.md 결과 절). 끄면 rule_based.
+# 실제 모드에서 AI 개선을 켤지. 기본은 끔 - 사전등록 비교 두 번(개선 모델 gpt-4o-mini, gpt-5.6-luna)
+# 모두 기본 조립본보다 낫다는 기준을 충족하지 못했다 (docs/personalized_prompt_preregistration*.md
+# 결과 절). 끄면 rule_based.
 PROMPT_IMPROVEMENT_ENABLED = os.environ.get("PPT_PROMPT_IMPROVEMENT", "0") == "1"
 # 개선 단계 모델. 비우면 세션의 후보 생성 모델을 쓴다 (1차 사전등록 설계).
 PROMPT_IMPROVEMENT_MODEL = os.environ.get("PPT_PROMPT_IMPROVEMENT_MODEL") or None

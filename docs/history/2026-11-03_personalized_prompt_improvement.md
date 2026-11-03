@@ -152,3 +152,11 @@ python -m experiments.personalized_prompt_comparison --cached-only --behavior --
    지웠는데 검증을 통과했다. `required_terms` 에 "억지로"를 더했고, 원래 줄에 없던 완화 표현(`weakening_markers`:
    "가능하면", "if possible" 등)이 생기면 `weakened` 로 버린다. 한국어 "필요한 타입만" 줄은 원래 "가능하면·필요하면"을
    담고 있어 그 줄에서는 그 두 표현을 검사하지 못한다(테스트로 고정). 낱말 목록 검사라 바꿔 말한 약화는 여전히 못 잡는다.
+
+## 5단계 재시도: 2차 사전등록 (같은 날)
+
+개선 단계 모델만 `gpt-5.6-luna` 로 바꾸고(`complete_personalized_prompt(model=)`, `PPT_PROMPT_IMPROVEMENT_MODEL`),
+새 holdout 5과제(`benchmarks/coding_ai_quality/v5.json`, 정답·변형 구현으로 시나리오 검증)를 만들어 결과 보기 전에
+`docs/personalized_prompt_preregistration_v2.md` 를 커밋했다. 확증 결과 (c)−(b) 축 검사 통과율 +0.0167
+[-0.0444, 0.0722] 로 **기준 미충족 — 계속 꺼 둔다.** 판정 밖에서 기본 조립본의 기능 통과율이 프롬프트 없음보다
+낮았고(-0.1833 [-0.3333, -0.05]), `char_counter` 과제 문구가 모호했다는 것을 확인했다. 자세한 수치·사용량은 그 문서의 결과 절.
