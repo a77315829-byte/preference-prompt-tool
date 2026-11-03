@@ -1500,6 +1500,19 @@
 .preference-editor { scroll-margin-top: 6rem; }
 .preferences-section .task-input { box-sizing: border-box; width: 100%; }
 .preferences-section .prompt-actions, .preference-save .prompt-actions { flex-wrap: wrap; }
+.preference-team-comparison { margin: 1.25rem 0; padding: 1.25rem; border: 1px solid #dce3f0; border-radius: 1rem; background: #f8faff; }
+.preference-team-comparison h4 { margin-top: 0; }
+.preference-comparison-table { overflow-x: auto; margin: 1rem 0; }
+.preference-comparison-table table { border-collapse: collapse; width: 100%; min-width: 32rem; background: #fff; }
+.preference-comparison-table th, .preference-comparison-table td { text-align: left; padding: 0.85rem; border: 1px solid #dfe4ed; line-height: 1.6; }
+.preference-comparison-table caption { text-align: left; margin-bottom: 0.6rem; font-weight: 700; }
+.preference-comparison-table .is-different { background: #fff3dd; }
+.comparison-pending { display: block; color: #7a4a00; font-size: 0.8rem; }
+.preference-diff { list-style: none; padding: 0; max-height: 28rem; overflow-y: auto; }
+.preference-diff li { margin: 0.6rem 0; padding: 0.8rem; border-radius: 0.6rem; border: 1px solid #dfe4ed; }
+.preference-diff .removed { background: #f1f4ff; }
+.preference-diff .added { background: #edf8f2; }
+.preference-diff pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; line-height: 1.65; margin: 0.5rem 0 0; }
 
 @media (max-width: 760px) {
   .site-nav {

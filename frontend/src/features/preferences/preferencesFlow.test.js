@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { mount } from '../../../test-support/appHarness.js';
 
 function shelfServer({ loggedIn = true, live = false } = {}) {
-  const state = { loggedIn, records: [], writes: 0, runs: 0, deletes: 0, failSave: false };
+  const state = { loggedIn, records: [], writes: 0, runs: 0, deletes: 0, failSave: false,
+    teamDomain: 'coding', teamSnapshot: 'team-v1', lastRun: null };
   const response = (data, status = 200) => ({ ok: status < 400, status, json: async () => structuredClone(data) });
   const fetch = async (path, options) => {
     const body = options.body ? JSON.parse(options.body) : {};
@@ -11,6 +12,7 @@ function shelfServer({ loggedIn = true, live = false } = {}) {
     if (path === '/api/auth/login') { state.loggedIn = true; return response({ user: { id: 1, username: 'alice' } }); }
     if (path === '/api/auth/logout') { state.loggedIn = false; return response({ user: null }); }
     if (path === '/api/health') return response({ live, liveConfigured: live });
+    if (path === '/api/teams') return response({ teams: [{ code: 'devteam', name: '함께 개발팀', domain_key: state.teamDomain }] });
     if (!path.startsWith('/api/preferences')) return null;
     if (!state.loggedIn) return response({ error: '로그인이 필요합니다.' }, 401);
     if (path === '/api/preferences' && !options.method) return response({ preferences: state.records });
@@ -25,15 +27,28 @@ function shelfServer({ loggedIn = true, live = false } = {}) {
     const item = state.records.find((p) => p.id === id);
     if (!item) return response({ error: '찾을 수 없습니다.' }, 404);
     if (!action) return response({ preference: item });
+    if (action === 'compare-team') {
+      if (item.domain_key !== state.teamDomain) return response({ error: '같은 종류의 지침끼리 비교해 주세요.' }, 400);
+      return response({ comparison: {
+        preference_id: id, revision: item.revision, team_code: body.teamCode, team_name: '함께 개발팀', domain_key: item.domain_key,
+        team_members: 3, personal_recognized: true, team_prompt: '팀 기준의 지침', comparison_prompt: '팀 기준의 비교용 문장',
+        team_snapshot: state.teamSnapshot, team_language: 'ko', languages: ['ko', 'en'],
+        axes: [{ axis: 'code_structure', label: '코드 구성', personal_value: 'compact', team_value: 'separated',
+          status: 'different', team_agreed: false, team_tied: false, team_votes: { separated: 2, compact: 1 } }],
+      } });
+    }
     if (action === 'update') {
       if (state.failSave) return response({ error: '다른 창에서 수정된 항목입니다. 다시 열어 주세요.' }, 409);
       Object.assign(item, { title: body.title, domain_key: body.domainKey, prompt: body.prompt, note: body.note, revision: item.revision + 1 });
       return response({ preference: item });
     }
     if (action === 'run') {
+      if (body.basis === 'team' && body.teamSnapshot !== state.teamSnapshot) return response({ error: '팀 기준이 바뀌었습니다. 새로 확인해 주세요.' }, 409);
       state.runs += 1;
+      state.lastRun = body;
       assert.equal(body.revision, item.revision);
-      return response({ output: '새 작업의 실행 결과', model: 'test-model', revision: item.revision, preference_id: item.id });
+      return response({ output: '새 작업의 실행 결과', model: 'test-model', revision: item.revision, preference_id: item.id,
+        basis: body.basis || 'personal', team_snapshot: body.teamSnapshot || null });
     }
     if (action === 'delete') {
       state.deletes += 1; state.records = state.records.filter((p) => p.id !== id);
@@ -126,5 +141,67 @@ test('빈 보관함 안내·직접 추가·저장 실패 보존·삭제 확인·
     await ui.click('로그아웃');
     assert.equal(document.querySelector('#preference-prompt'), null);
     assert.ok(document.querySelector('.auth-embedded'));
+  } finally { await ui.close(); }
+});
+
+test('기준 차이 확인 → 팀용·개인용 전환 → 복사·실행 → 바뀐 팀 기준 다시 확인', async () => {
+  const api = shelfServer({ live: true });
+  const ui = await mount('https://example.test/', 'coding', api.fetch);
+  try {
+    await finishCoding(ui);
+    await ui.click('내 선호 보관함에 저장');
+    await ui.click('저장한 지침 열기');
+    await ui.fill('#preference-task', '새 개발 요청');
+    await ui.fill('#preference-team-list', 'devteam');
+    await ui.click('개인·팀 기준 비교하기');
+    const row = document.querySelector('.preference-comparison-table tbody tr');
+    assert.ok(row.textContent.includes('간결하게 작성'));
+    assert.ok(row.textContent.includes('역할별 파일로 분리'));
+    assert.ok(row.textContent.includes('다름') && row.textContent.includes('팀 합의 필요'));
+    await ui.click('팀용으로 사용');
+    await ui.click('지침 + 새 작업 복사');
+    assert.ok(ui.state.copied.includes('팀 기준의 지침'));
+    assert.equal(ui.state.copied.includes('팀 기준의 비교용 문장'), false);
+    await ui.click('이 지침으로 AI 실행');
+    assert.equal(api.state.lastRun.basis, 'team');
+    assert.equal(api.state.lastRun.teamSnapshot, 'team-v1');
+    await ui.click('개인용으로 사용');
+    assert.ok(document.body.textContent.includes('이전 입력·지침으로 실행한 결과'));
+    await ui.click('지침 + 새 작업 복사');
+    assert.ok(ui.state.copied.includes('개인 지침'));
+    assert.equal(api.state.records[0].prompt, '개인 지침');
+    await ui.click('팀용으로 사용');
+    api.state.teamSnapshot = 'team-v2';
+    await ui.click('이 지침으로 AI 실행');
+    assert.ok(document.querySelector('[role="alert"]').textContent.includes('팀 기준이 바뀌'));
+    assert.equal(api.state.runs, 1);
+    await ui.click('팀 기준 새로 확인');
+    await ui.click('팀용으로 사용');
+    await ui.click('이 지침으로 AI 실행');
+    assert.equal(api.state.lastRun.teamSnapshot, 'team-v2');
+    assert.equal(api.state.records[0].revision, 1);
+  } finally { await ui.close(); }
+});
+
+test('다른 팀으로 바꾸다 비교가 실패하면 이전 팀용을 사용할 수 없고 작업은 유지한다', async () => {
+  const api = shelfServer();
+  const ui = await mount('https://example.test/', 'coding', api.fetch);
+  try {
+    await finishCoding(ui);
+    await ui.click('내 선호 보관함에 저장');
+    await ui.click('저장한 지침 열기');
+    await ui.fill('#preference-task', '유지할 개발 요청');
+    await ui.fill('#preference-team-invite', 'devteam');
+    await ui.click('개인·팀 기준 비교하기');
+    await ui.click('팀용으로 사용');
+    api.state.teamDomain = 'summarization_ko';
+    await ui.fill('#preference-team-invite', 'another-team');
+    await ui.click('개인·팀 기준 비교하기');
+    assert.ok(document.querySelector('[role="alert"]').textContent.includes('같은 종류'));
+    const teamButton = [...document.querySelectorAll('button')].find((b) => b.textContent === '팀용으로 사용');
+    assert.equal(teamButton.disabled, true);
+    assert.equal(document.querySelector('#preference-task').value, '유지할 개발 요청');
+    await ui.click('지침 + 새 작업 복사');
+    assert.ok(ui.state.copied.includes('개인 지침'));
   } finally { await ui.close(); }
 });
