@@ -64,17 +64,19 @@ function shelfServer({ loggedIn = true, live = false } = {}) {
     if (action === 'remix-preview' || action === 'remix-save') {
       if (body.revision !== item.revision) return response({ error: '저장한 지침이 바뀌었습니다.' }, 409);
       const snapshot = `remix:${id}:${body.revision}:${JSON.stringify(body.choices)}`;
-      const draft = { choices: body.choices, snapshot, prompt: `재조합: ${body.choices.code_structure} 구성 / ${body.choices.type_detail} 타입` };
+      const provenance = structuredClone(item.provenance);
+      provenance.remixed_from = { title: item.title, revision: item.revision,
+        axes: item.provenance.axes.map(({ axis, label, value, source }) => ({ axis, label, value, source })) };
+      for (const a of provenance.axes) {
+        a.source = body.choices[a.axis] || 'shared';
+        a.value = a[`${a.source === 'shared' ? 'personal' : a.source}_value`];
+      }
+      const draft = { choices: body.choices, snapshot, provenance, prompt: `재조합: ${body.choices.code_structure} 구성 / ${body.choices.type_detail} 타입` };
       if (action === 'remix-preview') return response({ draft });
       if (state.failSave || body.draftSnapshot !== snapshot) return response({ error: '다시 확인해 주세요.' }, 409);
       assert.notEqual(body.title, item.title);
       await fetch('/api/preferences', { method: 'POST', body: JSON.stringify({ title: body.title, note: body.note, domainKey: item.domain_key, prompt: draft.prompt }) });
-      const next = state.records[0]; next.provenance_matches = true; next.provenance = structuredClone(item.provenance);
-      next.provenance.remixed_from = { title: item.title, revision: item.revision };
-      for (const a of next.provenance.axes) {
-        a.source = body.choices[a.axis] || 'shared';
-        a.value = a[`${a.source === 'shared' ? 'personal' : a.source}_value`];
-      }
+      const next = state.records[0]; next.provenance_matches = true; next.provenance = structuredClone(draft.provenance);
       return response({ preference: next }, 201);
     }
     if (action === 'update') {
@@ -395,7 +397,16 @@ test('저장한 작업용에서 기존 선택 확인 → 다시 선택·미리 �
     assert.equal(document.querySelector('input[name="remix-choice-code_structure"]:checked').value, 'team');
     assert.equal(document.querySelector('input[name="remix-choice-type_detail"]:checked').value, 'personal');
     assert.equal(document.querySelector('input[name="remix-choice-style_management"]'), null);
+    await ui.click('새 조합 미리 보기');
+    assert.ok(document.querySelector('.saved-preference-remix .saved-remix-comparison').textContent.includes('0개 변경'));
+    assert.ok(document.querySelector('.saved-preference-remix .saved-remix-comparison').textContent.includes('바뀐 항목이 없어요'));
     await choose('code_structure', 'personal'); await ui.click('새 조합 미리 보기');
+    const previewComparison = document.querySelector('.saved-preference-remix .saved-remix-comparison');
+    assert.ok(previewComparison.textContent.includes('1개 변경') && previewComparison.textContent.includes('2개 같음'));
+    assert.equal(previewComparison.querySelectorAll('tbody tr').length, 1);
+    const values = previewComparison.querySelector('tbody tr').querySelectorAll('td');
+    assert.ok(values[0].textContent.includes('역할별 파일로 분리') && values[0].textContent.includes('팀 기준'));
+    assert.ok(values[1].textContent.includes('간결하게 작성') && values[1].textContent.includes('내 선호'));
     await ui.fill('#remix-title', original.title);
     const saveButton = () => [...document.querySelectorAll('button')].find((b) => b.textContent === '다른 이름으로 새 조합 저장');
     assert.equal(saveButton().disabled, true);
@@ -414,11 +425,38 @@ test('저장한 작업용에서 기존 선택 확인 → 다시 선택·미리 �
     assert.equal(document.querySelectorAll('.preference-list li').length, 2);
     assert.equal([...document.querySelectorAll('button')].find((b) => b.textContent === '새 조합을 저장했어요').disabled, true);
     await ui.click('저장한 새 조합 열기');
+    const savedComparison = document.querySelector('.preference-editor > .saved-remix-comparison');
+    assert.ok(savedComparison.textContent.includes('2개 변경') && savedComparison.textContent.includes('1개 같음'));
+    assert.equal(savedComparison.querySelectorAll('tbody tr').length, 2);
+    await ui.click('전체 항목 보기');
+    assert.equal(savedComparison.querySelectorAll('tbody tr').length, 3);
+    assert.ok(savedComparison.querySelector('tbody tr:last-child').textContent.includes('같음'));
+    await ui.click('바뀐 항목만 보기');
+    assert.equal(savedComparison.querySelectorAll('tbody tr').length, 2);
     assert.ok(document.querySelector('.saved-preference-sources').textContent.includes('보관한 작업용'));
     const rows = [...document.querySelectorAll('.saved-preference-sources tbody tr')].map((r) => r.textContent);
     assert.ok(rows[0].includes('간결하게 작성') && rows[0].includes('내 선호'));
     assert.ok(rows[1].includes('필요한 타입만 작성') && rows[1].includes('팀 기준'));
     await ui.fill('#preference-task', '다음 작업'); await ui.click('지침 + 새 작업 복사');
     assert.ok(ui.state.copied.includes('재조합: personal 구성 / team 타입'));
+    await ui.click('지침 수정'); await ui.fill('#preference-prompt', '수정한 본문');
+    assert.ok(document.querySelector('.saved-remix-comparison .comparison-pending').textContent.includes('현재 내용과 다를 수'));
+  } finally { await ui.close(); }
+});
+
+test('변경 전 기록이 없는 이전 조합은 비교를 추측하지 않고 그대로 사용할 수 있다', async () => {
+  const api = shelfServer();
+  api.state.records.push({ id: 'old-remix', title: '이전 새 조합', domain_key: 'coding', prompt: '기존 본문', note: '', revision: 1,
+    updated_at: '2026-11-03T00:00:00Z', provenance_matches: true, provenance: {
+      personal: { title: '개인', revision: 1 }, team: { name: '팀' }, remixed_from: { title: '원본 작업용', revision: 1 },
+      axes: [{ axis: 'code_structure', label: '코드 구성', source: 'personal', value: 'compact', personal_value: 'compact', team_value: 'separated' }],
+    } });
+  const ui = await mount('https://example.test/', 'coding', api.fetch);
+  try {
+    await ui.click('내 선호 보관함'); await ui.click('새 작업에 사용');
+    assert.ok(document.querySelector('.preference-editor').textContent.includes('바꾸기 전 항목 기록이 없어'));
+    assert.equal(document.querySelector('.saved-remix-comparison'), null);
+    await ui.fill('#preference-task', '새 작업'); await ui.click('지침 + 새 작업 복사');
+    assert.ok(ui.state.copied.includes('기존 본문'));
   } finally { await ui.close(); }
 });

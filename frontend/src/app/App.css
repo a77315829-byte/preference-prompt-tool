@@ -1523,6 +1523,15 @@
 .saved-preference-sources thead th:first-child { width: 22%; }
 .saved-preference-sources thead th:nth-child(2) { width: 48%; }
 .saved-preference-sources thead th:last-child { width: 30%; }
+.saved-remix-comparison { margin: 1rem 0; padding: 1rem; border: 1px solid #dce3f0; border-radius: 12px; background: #f8faff; }
+.saved-remix-comparison table { min-width: 0; table-layout: fixed; }
+.saved-remix-comparison th, .saved-remix-comparison td { padding: 0.65rem 0.5rem; overflow-wrap: anywhere; vertical-align: top; }
+.saved-remix-comparison thead th:first-child { width: 24%; }
+.saved-remix-comparison thead th:not(:first-child) { width: 38%; }
+.saved-remix-comparison .remix-value { display: block; margin-bottom: 0.45rem; }
+.saved-remix-comparison .is-different td:last-child .remix-value { font-weight: 700; }
+.remix-row-status { display: block; font-size: 0.75rem; font-weight: 400; margin-top: 0.4rem; color: #625338; }
+.remix-change-summary { line-height: 1.7; }
 .comparison-pending { display: block; color: #7a4a00; font-size: 0.8rem; }
 .preference-diff { list-style: none; padding: 0; max-height: 28rem; overflow-y: auto; }
 .preference-diff li { margin: 0.6rem 0; padding: 0.8rem; border-radius: 0.6rem; border: 1px solid #dfe4ed; }

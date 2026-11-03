@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { axisValueLabel } from '../../shared/domainLabels';
 import { previewSavedRemix, saveSavedRemix } from './preferencesApi';
+import SavedRemixComparison from './SavedRemixComparison';
 
 function RemixSavedPreferencePanel({ item, disabled, onBusy, onSaved, onOpen }) {
   const [open, setOpen] = useState(false);
@@ -52,6 +53,7 @@ function RemixSavedPreferencePanel({ item, disabled, onBusy, onSaved, onOpen }) 
       <button className="prompt-reset-button" type="button" disabled={disabled} onClick={preview}>새 조합 미리 보기</button>
       {!draft && <p className="ws-help" role="status">선택을 확인하고 미리 보기를 눌러 주세요. 선택을 바꾸면 다시 확인해야 저장할 수 있습니다.</p>}
       {draft && <>
+        <SavedRemixComparison before={draft.provenance.remixed_from} afterAxes={draft.provenance.axes} afterTitle={title} preview />
         <label className="task-input-label" htmlFor="remix-prompt-preview">새 항목에 저장할 지침 미리 보기</label>
         <textarea id="remix-prompt-preview" className="task-input" readOnly rows={8} value={draft.prompt} />
         <form onSubmit={save}>

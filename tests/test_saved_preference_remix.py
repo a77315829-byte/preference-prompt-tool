@@ -35,7 +35,9 @@ def test_remix_uses_recorded_values_preserves_language_and_keeps_original(db, do
     assert remixed["prompt"] == compose_task_prompt(item, domain, comparison, changed)["prompt"]
     assert remixed["provenance"]["personal"] == saved["provenance"]["personal"]
     assert remixed["provenance"]["team"] == saved["provenance"]["team"]
-    assert remixed["provenance"]["remixed_from"] == {"title": "작업용", "revision": 1}
+    parent = remixed["provenance"]["remixed_from"]
+    assert parent["title"] == "작업용" and parent["revision"] == 1
+    assert parent["axes"] == [{k: a[k] for k in ("axis", "label", "value", "source")} for a in saved["provenance"]["axes"]]
     assert remixed["provenance"]["language"] == language
     assert all(a["source"] == ("personal" if a["axis"] in choices else "shared") for a in remixed["provenance"]["axes"])
     assert store.get(user.id, saved["id"]) == before
@@ -86,3 +88,11 @@ def test_saved_remix_creates_new_item_without_accessing_or_changing_source_team(
     assert len(api_server.PERSONAL_PROMPTS.list_for(1)) == 2
     # 새 항목에서도 같은 두 출처 값으로 다시 조합할 수 있다.
     assert request(server, f"/preferences/{new['id']}/remix-preview", {"revision": 1, "choices": {"code_structure": "team"}}, cookie)[0] == 200
+    # 비교 기준은 직전 작업용의 당시 값이며 원본 삭제 후에도 남는다.
+    baseline = new["provenance"]["remixed_from"]
+    assert baseline["axes"] == [{k: a[k] for k in ("axis", "label", "value", "source")} for a in saved["provenance"]["axes"]]
+    api_server.PERSONAL_PROMPTS.delete(1, saved["id"], 1)
+    assert api_server.PERSONAL_PROMPTS.get(1, new["id"])["provenance"]["remixed_from"] == baseline
+    _, data, _ = request(server, f"/preferences/{new['id']}/remix-preview", {"revision": 1, "choices": {"code_structure": "team"}}, cookie)
+    assert data["draft"]["provenance"]["remixed_from"]["title"] == new["title"]
+    assert data["draft"]["provenance"]["remixed_from"]["axes"] == [{k: a[k] for k in ("axis", "label", "value", "source")} for a in new["provenance"]["axes"]]

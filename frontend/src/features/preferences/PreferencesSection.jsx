@@ -8,6 +8,7 @@ import TaskPreferenceMixer from './TaskPreferenceMixer';
 import SaveTaskPreferencePanel from './SaveTaskPreferencePanel';
 import SavedPreferenceSources from './SavedPreferenceSources';
 import RemixSavedPreferencePanel from './RemixSavedPreferencePanel';
+import SavedRemixComparison from './SavedRemixComparison';
 import { selectionMatches } from './comparisonText';
 
 const formOf = (item) => ({ title: item.title, domainKey: item.domain_key, prompt: item.prompt, note: item.note || '' });
@@ -175,6 +176,9 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
               <button className="prompt-reset-button" type="button" disabled={Boolean(busy)} aria-pressed={view === 'edit'} onClick={() => setView('edit')}>지침 수정</button>
               {item.id && <button className="prompt-reset-button" type="button" disabled={Boolean(busy) || dirty} aria-pressed={view === 'use'} onClick={() => setView('use')}>새 작업에 쓰기</button>}
             </div>
+            {item.id && item.provenance?.remixed_from && <SavedRemixComparison key={`comparison-${item.id}-${item.revision}`}
+              before={item.provenance.remixed_from} afterAxes={item.provenance.axes} afterTitle={item.title}
+              matches={item.provenance_matches && form.prompt === item.prompt && form.domainKey === item.domain_key} />}
             {item.id && <SavedPreferenceSources item={item} editingPrompt={form.prompt !== item.prompt || form.domainKey !== item.domain_key} />}
             {item.id && view === 'use' && item.provenance && <RemixSavedPreferencePanel key={`${item.id}-${item.revision}`}
               item={item} disabled={Boolean(busy)} onBusy={setBusy} onOpen={open}

@@ -37,7 +37,8 @@ def remix_saved_prompt(item: dict, domain, choices: dict) -> dict:
         axis["value"] = axis[f"{source if source != 'shared' else 'personal'}_value"]
     combo = {a["axis"]: a["value"] for a in provenance["axes"]}
     prompt = _task_wording(domain, build_final_prompt(domain, combo, language=None if language == "ko" else language), language)
-    provenance.update(language=language, remixed_from={"title": item["title"], "revision": item["revision"]})
+    provenance.update(language=language, remixed_from={"title": item["title"], "revision": item["revision"],
+        "axes": [{k: a[k] for k in ("axis", "label", "value", "source")} for a in axes]})
     provenance.pop("prompt_sha256", None)
     provenance.pop("domain_key", None)
     snapshot = {"id": item["id"], "revision": item["revision"], "choices": choices, "prompt": prompt}
