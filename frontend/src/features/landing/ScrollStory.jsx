@@ -27,7 +27,7 @@ const scenes = [
 ];
 
 // 앞에 보이는 핵심 카테고리. 타깃("AI 를 매일 쓰는 작은 개발팀")이 반복하는 일에
-// 맞춘 두 가지다. 요약은 영어·한국어를 한 카드로 두고 비교 화면에서 언어를 고른다.
+// 맞춘 시작점이다. 팀 업무는 템플릿으로 이어지며 별도 선호 추정 분야가 아니다.
 const coreCategories = [
   {
     id: 'summary',
@@ -44,6 +44,11 @@ const coreCategories = [
     title: '코딩 도움',
     description: '선호하는 TypeScript와 React 작성 방식을 찾아 Copilot·Cursor 설정 파일로 가져갑니다.',
     accent: 'purple',
+  },
+  {
+    id: 'teamWork', number: '03', label: 'TEAM WORK', title: '팀 업무 정리',
+    description: '회의에서 할 일 뽑기, 주간 공유, 인수인계 지침을 골라 새 자료에 다시 씁니다.',
+    accent: 'teal', cta: '업무 템플릿 보기',
   },
 ];
 
@@ -94,6 +99,7 @@ function StoryVisual({ type }) {
           <div className="story-mini-options">
           <div className="story-mini-option story-mini-blue">문서 요약</div>
           <div className="story-mini-option story-mini-purple">코딩 도움</div>
+          <div className="story-mini-option">팀 업무 정리</div>
         </div>
         <div className="story-visual-arrow" aria-hidden="true">↗</div>
       </div>
@@ -174,9 +180,9 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, onOpenTeam
         <h1>
           작은 개발팀의 AI,
           <br />
-          <em>함께 쓸 기준</em>을 만드세요.
+          <em>내 방식에서 팀 기준</em>으로.
         </h1>
-        <p>문서와 코드 예시를 골라 내 취향을 찾고, 팀 기준으로 모아 함께 쓰세요. 반복 업무의 AI 지침도 만들고 다듬을 수 있습니다.</p>
+        <p>예시를 골라 내 선호를 찾고, 팀원과 다른 항목을 확인해 이번 작업의 지침을 고르세요. 회의·주간 공유·인수인계는 템플릿에서 시작할 수 있어요.</p>
         {onOpenTeams && <button className="ws-small-button" type="button" onClick={onOpenTeams}>팀 만들기 · 초대로 참여</button>}
         {onOpenLibrary && <button className="ws-small-button" type="button" onClick={onOpenLibrary}>저장한 내 선호 다시 쓰기</button>}
       </div>

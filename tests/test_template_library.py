@@ -15,6 +15,10 @@ SOURCE = "The council approved a housing plan. It adds homes. Critics worry abou
 
 def test_shipped_library_loads_and_covers_the_core_categories() -> None:
     templates = template_library.load_library()
+    assert len(templates) == 24
+    assert sum(t.category == "팀 업무" for t in templates) == 8
+    assert sum(not t.personalizable for t in templates) == 18
+    assert all(not t.source_url or t.source_url.startswith("https://") for t in templates)
     assert len({t.id for t in templates}) == len(templates)
     assert {t.domain for t in templates} == {"summarization", "summarization_ko", "coding"}
     for t in templates:
@@ -27,6 +31,8 @@ def test_shipped_library_loads_and_covers_the_core_categories() -> None:
         ({"domain": "no_such_domain"}, "도메인"),
         ({"prompt": ""}, "prompt"),
         ({"license": None}, "license"),
+        ({"personalizable": "false"}, "개인화"),
+        ({"source_url": "javascript:alert(1)"}, "출처"),
     ],
 )
 def test_malformed_template_is_rejected(tmp_path, broken, message) -> None:
@@ -68,6 +74,12 @@ def test_template_for_another_domain_is_refused() -> None:
     with pytest.raises(ValueError, match="summarization_ko"):
         service.start_session(SOURCE, "summarization", "domains/summarization.yaml",
                               model="m", demo_mode=True, template_id="meeting-notes-ko")
+
+
+def test_workflow_draft_cannot_start_an_unvalidated_preference_comparison() -> None:
+    with pytest.raises(ValueError, match="선택 비교를 지원하지"):
+        service.start_session(SOURCE, "summarization_ko", "domains/summarization_ko.yaml",
+                              model="m", demo_mode=True, template_id="action-items")
 
 
 def test_api_lists_templates_and_uses_them(monkeypatch) -> None:

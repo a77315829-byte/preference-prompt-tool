@@ -10,6 +10,7 @@ import SavedPreferenceSources from './SavedPreferenceSources';
 import RemixSavedPreferencePanel from './RemixSavedPreferencePanel';
 import SavedRemixComparison from './SavedRemixComparison';
 import { selectionMatches } from './comparisonText';
+import PreferenceLineage, { PreviousPreference } from './PreferenceLineage.jsx';
 
 const formOf = (item) => ({ title: item.title, domainKey: item.domain_key, prompt: item.prompt, note: item.note || '' });
 
@@ -20,6 +21,7 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
   const [view, setView] = useState('use');
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const [libraryView, setLibraryView] = useState('list');
   const [task, setTask] = useState('');
   const [output, setOutput] = useState(null);
   const [basis, setBasis] = useState('personal');
@@ -48,7 +50,7 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
     window.setTimeout(() => editorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
   };
 
-  const open = async (id, mode = 'use', reload = false) => {
+  const open = async (id, mode = 'use', reload = false, expectedVersion = null) => {
     if (!reload && id === item?.id) {
       if (mode === 'use' && dirty) { setError('수정 내용을 먼저 저장한 뒤 새 작업에 사용해 주세요.'); return; }
       setView(mode); setError(''); return;
@@ -58,7 +60,10 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
     setBusy('open'); setError('');
     try {
       const next = await getPreference(id);
-      if (token === requestId.current) adopt(next, mode);
+      if (token === requestId.current) {
+        adopt(next, mode);
+        if (expectedVersion && next.revision !== expectedVersion) setNotice(`이전 작업용이 이후 수정되어 현재 ${next.revision}번째 버전을 열었어요. 저장 당시 비교 기록은 그대로입니다.`);
+      }
     } catch (e) { if (token === requestId.current) setError(e.message); }
     finally { if (token === requestId.current) setBusy(''); }
   };
@@ -158,8 +163,13 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
               ))}
               <button className="prompt-reset-button" type="button" disabled={Boolean(busy)} onClick={add}>가진 프롬프트 직접 추가</button>
             </div>
+            <div className="prompt-actions" role="group" aria-label="보관함 보기 방식">
+              <button className="prompt-reset-button" type="button" aria-pressed={libraryView === 'list'} onClick={() => setLibraryView('list')}>목록으로 보기</button>
+              <button className="prompt-reset-button" type="button" aria-pressed={libraryView === 'lineage'} onClick={() => setLibraryView('lineage')}>이어진 조합 보기</button>
+            </div>
             {items === null ? <p role="status">보관함을 불러오는 중…</p> : items.length === 0 ? <p>아직 저장한 지침이 없어요. 아래에서 요약·코딩 취향을 찾거나 가진 프롬프트를 직접 추가하세요.</p>
               : shown.length === 0 ? <p>이 조건에 맞는 항목이 없어요. 검색어나 분류를 바꿔 보세요.</p>
+              : libraryView === 'lineage' ? <PreferenceLineage items={items} visibleIds={shown.map((p) => p.id)} activeId={item?.id} disabled={Boolean(busy)} onOpen={(id) => open(id)} />
               : <ul className="preference-list">{shown.map((p) => (
                 <li key={p.id} className={p.id === item?.id ? 'is-selected' : ''}>
                   <div><span className="ws-help">{PREFERENCE_CATEGORIES[p.domain_key]}</span><h3>{p.title}</h3>{p.note && <p>{p.note}</p>}
@@ -176,6 +186,7 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
               <button className="prompt-reset-button" type="button" disabled={Boolean(busy)} aria-pressed={view === 'edit'} onClick={() => setView('edit')}>지침 수정</button>
               {item.id && <button className="prompt-reset-button" type="button" disabled={Boolean(busy) || dirty} aria-pressed={view === 'use'} onClick={() => setView('use')}>새 작업에 쓰기</button>}
             </div>
+            {item.id && <PreviousPreference item={item} items={items || []} disabled={Boolean(busy)} onOpen={(id, revision) => open(id, 'use', false, revision)} />}
             {item.id && item.provenance?.remixed_from && <SavedRemixComparison key={`comparison-${item.id}-${item.revision}`}
               before={item.provenance.remixed_from} afterAxes={item.provenance.axes} afterTitle={item.title}
               matches={item.provenance_matches && form.prompt === item.prompt && form.domainKey === item.domain_key}

@@ -1537,6 +1537,17 @@
 .restore-compared-preference { margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid #dce3f0; }
 .restore-result-list { padding-left: 1.2rem; line-height: 1.8; }
 .restore-result-list .preference-source { margin-left: 0.5rem; }
+.preference-lineage-group { list-style: none; padding: 0; border-left: 2px solid #dce3f0; margin: 1rem 0; }
+.preference-lineage-group li { display: grid; gap: 0.35rem; padding: 0.8rem; border-bottom: 1px solid #e8ecf3; }
+.preference-lineage-group li[aria-current="true"] { background: #eff3ff; border-radius: 8px; }
+.lineage-open { border: 0; background: transparent; color: #243f80; font: inherit; font-weight: 700; text-align: left; cursor: pointer; overflow-wrap: anywhere; padding: 0; }
+.lineage-open:disabled { color: #39445c; cursor: default; }
+.previous-preference { margin: 1rem 0; padding: 0.8rem; background: #f8fafc; border: 1px solid #dce3f0; border-radius: 8px; }
+.template-toolbar .prompt-actions { margin-top: 0.8rem; flex-wrap: wrap; }
+.template-polish-panel { border: 1px solid #dce3f0; border-radius: 12px; margin: 1.5rem 0; padding: 1rem; scroll-margin-top: 7rem; }
+.polish-embedded .comparison-inner { width: 100%; max-width: none; }
+.polish-embedded .comparison-heading h2 { font-size: 1.4rem; }
+.template-card a { font-size: 0.8rem; }
 .comparison-pending { display: block; color: #7a4a00; font-size: 0.8rem; }
 .preference-diff { list-style: none; padding: 0; max-height: 28rem; overflow-y: auto; }
 .preference-diff li { margin: 0.6rem 0; padding: 0.8rem; border-radius: 0.6rem; border: 1px solid #dfe4ed; }
@@ -1999,6 +2010,9 @@
 }
 
 /* 템플릿 라이브러리 (features/templates/TemplateLibrarySection.jsx) */
+.template-library > .comparison-inner > .comparison-heading { margin: 2rem 0 1.5rem; }
+.template-library > .comparison-inner > .comparison-heading h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; letter-spacing: -0.06em; }
+.template-toolbar .task-input-label { margin-top: 0; }
 .template-group {
   margin-top: 2rem;
 }

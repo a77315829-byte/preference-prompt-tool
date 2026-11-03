@@ -587,10 +587,10 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
         <button className="back-button" type="button" onClick={onBack}>← 카테고리로 돌아가기</button>
         <div className="comparison-heading">
           <p className="eyebrow">WORK GUIDE</p>
-          <h2>반복하는 업무, 함께 쓸 AI 지침으로 만들어요</h2>
+          <h2>새 자료에도 다시 쓸 업무 지침을 만들어요</h2>
           <p>
             회의록 정리나 코드 리뷰를 AI에 맡길 때, 원하는 결과와 꼭 지킬 규칙을 매번 설명하고 있나요?
-            업무를 한 번 정리하고, 예시로 시험한 뒤 팀원이 함께 고쳐 쓸 지침을 만드세요.
+            회의 정리·코드 리뷰·새 팀원 안내처럼 반복되는 작업의 규칙을 정리합니다. 예시 자료로 확인하고, 저장한 프로젝트를 팀원에게 공유해 검토·수정할 수 있어요.
           </p>
         </div>
         <ol className="workflow-guide">

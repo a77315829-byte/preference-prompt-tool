@@ -376,6 +376,8 @@ def start_session(
     """세션을 열고 첫 쌍을 만든다."""
     if template_id is not None:
         template = template_library.get(template_id)
+        if not template.personalizable:
+            raise ValueError("이 업무 템플릿은 아직 선택 비교를 지원하지 않습니다. 내용을 확인하고 복사해 사용해 주세요.")
         if template.domain != domain_key:
             raise ValueError(f"템플릿 '{template_id}' 은 '{template.domain}' 용이다 (요청: {domain_key}).")
     state = SessionState(

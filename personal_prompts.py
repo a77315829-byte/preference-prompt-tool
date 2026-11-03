@@ -46,10 +46,19 @@ class PersonalPromptStore:
     def list_for(self, owner_id: int) -> list[dict]:
         with self.db.connect() as conn:
             rows = conn.execute(
-                "SELECT id, title, domain_key, note, revision, created_at, updated_at FROM personal_prompts "
+                "SELECT id, title, domain_key, note, revision, created_at, updated_at, provenance_json FROM personal_prompts "
                 "WHERE owner_id = ? ORDER BY updated_at DESC, rowid DESC", (owner_id,),
             ).fetchall()
-            return [dict(r) for r in rows]
+            result = []
+            for row in rows:
+                item = dict(row)
+                raw = item.pop("provenance_json")
+                origin = json.loads(raw) if raw else {}
+                parent = origin.get("remixed_from")
+                kind = origin.get("operation") or ("derived" if parent else "task" if origin else "personal")
+                item["lineage"] = {"kind": kind, "parent": {k: parent[k] for k in ("id", "title", "revision") if k in parent} if parent else None}
+                result.append(item)
+            return result
 
     def get(self, owner_id: int, prompt_id: str) -> dict:
         with self.db.connect() as conn:

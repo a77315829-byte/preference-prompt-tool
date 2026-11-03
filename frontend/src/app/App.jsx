@@ -29,6 +29,7 @@ function App() {
   const [teamCodeDraft, setTeamCodeDraft] = useState('');
   const [teamNameDraft, setTeamNameDraft] = useState('');
   const [preferenceId, setPreferenceId] = useState('');
+  const [templateCategory, setTemplateCategory] = useState('전체');
   const handleDraftChange = useCallback((draft) => {
     setComparisonDraft({ domainKey: activeFlow, ...draft });
   }, [activeFlow]);
@@ -77,6 +78,7 @@ function App() {
   };
 
   const handleCategoryContinue = () => {
+    if (selectedCategory === 'teamWork') { openTemplates('팀 업무'); return; }
     setTemplate(null);
     setComparisonDraft(null);
     setTeamCodeDraft('');
@@ -104,6 +106,7 @@ function App() {
   };
 
   const openTeams = () => { setMenuOpen(false); setActiveFlow('teams'); };
+  const openTemplates = (category = '전체') => { setTemplateCategory(category); setMenuOpen(false); setActiveFlow('templates'); };
   const openLibrary = (id = '') => { setPreferenceId(id); setMenuOpen(false); setActiveFlow('preferences'); };
   const compareForMyself = (domainKey) => {
     setTemplate(null); setComparisonDraft(null); setTeamCodeDraft(''); setTeamNameDraft('');
@@ -135,13 +138,10 @@ function App() {
           {menuOpen ? '닫기' : '메뉴'}
         </button>
         <div className={`nav-links ${menuOpen ? 'is-open' : ''}`} id="site-nav-links" aria-label="페이지 이동">
-          <button type="button" onClick={() => requestScene(1)}>사용 방법</button>
           <button type="button" onClick={() => requestScene(0)}>시작하기</button>
           <button type="button" onClick={() => openLibrary()}>내 선호 보관함</button>
-          <button type="button" onClick={() => { setMenuOpen(false); setTemplate(null); setActiveFlow('templates'); }}>템플릿</button>
-          <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('polish'); }}>요청문 다듬기</button>
+          <button type="button" onClick={() => openTemplates()}>템플릿</button>
           <button type="button" onClick={openTeams}>팀 기준 맞추기</button>
-          <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('workspace'); }}>업무 지침 만들기</button>
         </div>
 
         {user ? (
@@ -200,7 +200,8 @@ function App() {
 
         {activeFlow === 'templates' && (
           <motion.div className="flow-view" key="templates" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-            <TemplateLibrarySection onBack={handleComparisonBack} onPersonalize={handlePersonalizeTemplate} />
+            <TemplateLibrarySection key={templateCategory} initialCategory={templateCategory} onBack={handleComparisonBack} onPersonalize={handlePersonalizeTemplate}
+              onWorkspace={() => setActiveFlow('workspace')} />
           </motion.div>
         )}
 

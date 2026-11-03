@@ -33,4 +33,5 @@ def restore_saved_prompt(item: dict, domain, selected_axes: list) -> dict:
     snapshot = {"operation": "restore", "base": draft["snapshot"], "axes": selected}
     draft["snapshot"] = hashlib.sha256(json.dumps(snapshot, sort_keys=True).encode()).hexdigest()
     draft["restore_axes"] = selected
+    draft["provenance"]["operation"] = "restore"
     return draft

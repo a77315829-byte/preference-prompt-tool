@@ -10,13 +10,12 @@ const EXAMPLE_PROMPTS = [
 
 // GEPA는 프롬프트가 실제로 만든 결과물을 채점하는 도구라, 여기 가져온
 // 프롬프트 텍스트 하나만으로는 돌릴 수 없다(과제 입력도 채점 기준도
-// 없다). 대신 GEPA가 증명한 원리 - 구조화된 피드백이 막연한 피드백보다
-// 낫다 - 를 그대로 쓴다. 코드가 구조를 점검하고, 그 결과를 근거로
-// 모델이 설명과 재작성본을 낸다. agents/prompt_polish.py 참고.
+// 없다). 여기서는 코드가 구조를 점검하고 모델이 설명과 재작성본을 낸다.
+// 실제 결과물의 개선 효과는 별도 검증 대상이다. agents/prompt_polish.py 참고.
 const DEBOUNCE_MS = 500;
 
-function PromptPolishSection({ onBack }) {
-  const [prompt, setPrompt] = useState('');
+function PromptPolishSection({ onBack, initialPrompt = '', embedded = false }) {
+  const [prompt, setPrompt] = useState(initialPrompt);
   const [checklist, setChecklist] = useState(null);
   const [checklistError, setChecklistError] = useState(false);
   const [polishState, setPolishState] = useState('idle'); // idle | loading | done | error
@@ -24,8 +23,10 @@ function PromptPolishSection({ onBack }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [copied, setCopied] = useState(false);
   const debounceRef = useRef(null);
+  const editPrompt = (value) => { setPrompt(value); setResult(null); setPolishState('idle'); setCopied(false); setErrorMessage(''); };
 
   useEffect(() => {
+    let cancelled = false;
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
     const trimmed = prompt.trim();
     if (!trimmed) {
@@ -36,14 +37,16 @@ function PromptPolishSection({ onBack }) {
     debounceRef.current = window.setTimeout(() => {
       checkPromptStructure(trimmed)
         .then((data) => {
+          if (cancelled) return;
           setChecklist(data.checklist);
           setChecklistError(false);
         })
         .catch(() => {
+          if (cancelled) return;
           setChecklistError(true);
         });
     }, DEBOUNCE_MS);
-    return () => window.clearTimeout(debounceRef.current);
+    return () => { cancelled = true; window.clearTimeout(debounceRef.current); };
   }, [prompt]);
 
   const handlePolish = () => {
@@ -81,19 +84,18 @@ function PromptPolishSection({ onBack }) {
   };
 
   return (
-    <section className="comparison-section polish-section" id="polish-section">
+    <section className={embedded ? 'polish-section polish-embedded' : 'comparison-section polish-section'} id="polish-section">
       <div className="comparison-inner">
         <button className="back-button" type="button" onClick={onBack}>
-          ← 카테고리로 돌아가기
+          {embedded ? '요청문 점검 닫기' : '← 카테고리로 돌아가기'}
         </button>
 
         <div className="comparison-heading">
           <p className="eyebrow">PROMPT POLISH</p>
           <h2>AI에게 보낼 요청을 더 명확하게 다듬어요</h2>
           <p>
-            팀에서 쓰던 요청문을 붙여 넣으세요. 어떤 일을 맡길지, 어떤 결과가 필요한지,
-            꼭 지켜야 할 조건이 있는지 점검하고 AI로 수정안을 만듭니다.
-            수정안을 확인한 뒤 복사해 팀원과 함께 쓰세요.
+            맡길 일·원하는 결과·조건을 구조 점검합니다. AI 수정안은 버튼을 눌렀을 때 만들며, 검토 후 복사해 사용하세요.
+            표현을 명확히 하는 도구이며 결과 품질이나 개인 선호 적합성을 검증하는 기능은 아닙니다.
           </p>
 
           <label className="task-input-label" htmlFor="polish-input">
@@ -104,7 +106,8 @@ function PromptPolishSection({ onBack }) {
               id="polish-input"
               className="task-input polish-search-input"
               value={prompt}
-              onChange={(event) => setPrompt(event.target.value)}
+              onChange={(event) => editPrompt(event.target.value)}
+              disabled={polishState === 'loading'}
               rows={3}
               placeholder="예: 회의록을 팀에 보낼 수 있게 정리해줘"
             />
@@ -114,7 +117,7 @@ function PromptPolishSection({ onBack }) {
               disabled={!prompt.trim() || polishState === 'loading'}
               onClick={handlePolish}
             >
-              {polishState === 'loading' ? '다듬는 중…' : '다듬기'}
+              {polishState === 'loading' ? '다듬는 중…' : embedded ? 'AI 수정안 만들기' : '다듬기'}
             </button>
           </div>
 
@@ -124,7 +127,7 @@ function PromptPolishSection({ onBack }) {
                 key={example}
                 type="button"
                 className="polish-example-chip"
-                onClick={() => setPrompt(example)}
+                disabled={polishState === 'loading'} onClick={() => editPrompt(example)}
               >
                 {example}
               </button>

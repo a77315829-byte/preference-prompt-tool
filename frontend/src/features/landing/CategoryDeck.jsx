@@ -103,7 +103,7 @@ export default function CategoryDeck({ options, selectedCategory, onSelect, onCo
       <div className="category-selection">
         <p role="status" aria-live="polite"><span className="category-count">{String(index + 1).padStart(2, '0')} / {String(options.length).padStart(2, '0')}</span><strong>{selected.title}</strong></p>
         <button className="selection-button" type="button" onClick={onContinue}>
-          선택 비교 시작하기<span aria-hidden="true">→</span>
+          {selected.cta || '선택 비교 시작하기'}<span aria-hidden="true">→</span>
         </button>
       </div>
     </div>

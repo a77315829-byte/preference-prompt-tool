@@ -36,6 +36,7 @@ def test_remix_uses_recorded_values_preserves_language_and_keeps_original(db, do
     assert remixed["provenance"]["personal"] == saved["provenance"]["personal"]
     assert remixed["provenance"]["team"] == saved["provenance"]["team"]
     parent = remixed["provenance"]["remixed_from"]
+    assert parent["id"] == saved["id"] and remixed["provenance"]["operation"] == "remix"
     assert parent["title"] == "작업용" and parent["revision"] == 1
     assert parent["axes"] == [{k: a[k] for k in ("axis", "label", "value", "source")} for a in saved["provenance"]["axes"]]
     assert remixed["provenance"]["language"] == language

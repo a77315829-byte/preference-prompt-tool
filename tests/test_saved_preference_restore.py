@@ -40,6 +40,8 @@ def test_restore_only_selected_changed_axes_and_keep_current_record(db, domain_k
     restored = restore_saved_prompt(current, domain, selected)
     assert restored["prompt"] == remix_saved_prompt(current, domain, {**new_choices, selected[0]: "personal"})["prompt"]
     assert restored["restore_axes"] == selected
+    assert restored["provenance"]["operation"] == "restore"
+    assert restored["provenance"]["remixed_from"]["id"] == current["id"]
     assert store.get(user.id, current["id"]) == untouched
     assert restore_saved_prompt(current, domain, list(choices))["prompt"] == old["prompt"]
     assert restore_saved_prompt(current, domain, list(reversed(choices)))["snapshot"] == restore_saved_prompt(current, domain, list(choices))["snapshot"]

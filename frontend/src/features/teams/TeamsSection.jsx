@@ -109,6 +109,9 @@ function TeamsSection({ user, onBack, onLogin, onCompare, initialInvite = '' }) 
             코드 작성 방식이나 회의록 분량처럼, 팀원마다 원하는 AI 결과가 다를 수 있어요.
             각자의 선택을 모아 공통 지침을 만들고, 의견이 갈린 항목은 함께 확인하세요.
           </p>
+          <details className="ws-raw"><summary>팀 기준은 어떻게 정해지나요?</summary>
+            <p className="ws-help">팀원별 선호를 한 사람당 한 표로 모아 항목별 기준을 만듭니다. 가장 많이 고른 값을 기본으로 삼고, 의견이 갈리거나 동률·미정인 항목을 표시합니다. 각자가 마지막에 ‘합치기’를 눌러야 반영됩니다. 실제 업무 기준으로 채택할지는 팀에서 검토해 결정하세요.</p>
+          </details>
         </div>
 
         <div className="ws-step">

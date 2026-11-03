@@ -52,7 +52,7 @@ function shelfServer({ loggedIn = true, live = false } = {}) {
         domainKey: item.domain_key, prompt: `작업용: ${body.choices.code_structure} 구성 / ${body.choices.type_detail} 타입` }) });
       const saved = state.records[0];
       saved.provenance_matches = true;
-      saved.provenance = { version: 1, personal: { title: item.title, revision: item.revision }, team: { name: '함께 개발팀' }, axes: [
+      saved.provenance = { version: 1, operation: 'task', personal: { title: item.title, revision: item.revision }, team: { name: '함께 개발팀' }, axes: [
         { axis: 'code_structure', label: '코드 구성', source: body.choices.code_structure,
           value: body.choices.code_structure === 'team' ? 'separated' : 'compact', personal_value: 'compact', team_value: 'separated', team_agreed: false },
         { axis: 'type_detail', label: '타입 작성', source: body.choices.type_detail,
@@ -65,7 +65,8 @@ function shelfServer({ loggedIn = true, live = false } = {}) {
       if (body.revision !== item.revision) return response({ error: '저장한 지침이 바뀌었습니다.' }, 409);
       const snapshot = `remix:${id}:${body.revision}:${JSON.stringify(body.choices)}`;
       const provenance = structuredClone(item.provenance);
-      provenance.remixed_from = { title: item.title, revision: item.revision,
+      provenance.operation = 'remix';
+      provenance.remixed_from = { id: item.id, title: item.title, revision: item.revision,
         axes: item.provenance.axes.map(({ axis, label, value, source }) => ({ axis, label, value, source })) };
       for (const a of provenance.axes) {
         a.source = body.choices[a.axis] || 'shared';
@@ -87,7 +88,8 @@ function shelfServer({ loggedIn = true, live = false } = {}) {
         const next = provenance.axes.find((a) => a.axis === axis);
         Object.assign(next, { value: old.value, source: old.source });
       }
-      provenance.remixed_from = { title: item.title, revision: item.revision,
+      provenance.operation = 'restore';
+      provenance.remixed_from = { id: item.id, title: item.title, revision: item.revision,
         axes: item.provenance.axes.map(({ axis, label, value, source }) => ({ axis, label, value, source })) };
       const snapshot = `restore:${id}:${body.revision}:${JSON.stringify(body.restoreAxes)}`;
       const draft = { restore_axes: body.restoreAxes, snapshot, provenance, prompt: `복원: ${body.restoreAxes.join(',')}` };
@@ -535,5 +537,31 @@ test('비교에서 원하는 항목만 되돌리기 → 미리 보기 무효화 
     await ui.fill('#preference-prompt', '직접 수정'); await ui.click('변경 내용 저장'); await ui.click('새 작업에 쓰기');
     assert.equal(document.querySelector('.restore-axis-choice'), null);
     assert.equal(document.querySelector('.restore-compared-preference'), null);
+  } finally { await ui.close(); }
+});
+
+test('보관함 연결 흐름에서 조합을 열고 이전 작업용으로 이동하며 수정된 버전을 안내한다', async () => {
+  const api = shelfServer();
+  const entry = (id, title, revision, kind, parent) => ({ id, title, revision, note: '', domain_key: 'coding', prompt: title,
+    created_at: `2026-11-03T00:00:0${id.length}Z`, updated_at: '2026-11-03T00:00:00Z', lineage: { kind, parent } });
+  api.state.records = [entry('restore', '일부 되돌린 조합', 1, 'restore', { id: 'mix', title: '새 조합', revision: 1 }),
+    entry('mix', '새 조합', 1, 'remix', { id: 'root', title: '원래 작업용', revision: 1 }), entry('root', '고친 원래 작업용', 2, 'task', null)];
+  const ui = await mount('https://example.test/', 'coding', api.fetch);
+  try {
+    await ui.click('내 선호 보관함'); await ui.click('이어진 조합 보기');
+    assert.equal(document.querySelectorAll('.preference-lineage-group').length, 1);
+    assert.equal(document.querySelectorAll('.preference-lineage-group li').length, 3);
+    await ui.click('일부 되돌린 조합');
+    await ui.fill('#preference-task', '작성 중 작업');
+    ui.dom.window.confirm = () => false;
+    await ui.click('이전 작업용 바로 열기');
+    assert.equal(document.querySelector('#preference-task').value, '작성 중 작업');
+    ui.dom.window.confirm = () => true;
+    await ui.click('이전 작업용 바로 열기');
+    assert.ok(document.querySelector('.preference-editor h3').textContent.includes('새 조합'));
+    assert.ok(document.querySelector('.previous-preference').textContent.includes('이후 수정'));
+    await ui.click('이전 작업용 바로 열기');
+    assert.ok(document.querySelector('.preference-editor h3').textContent.includes('고친 원래 작업용'));
+    assert.ok(document.body.textContent.includes('현재 2번째 버전을 열었어요'));
   } finally { await ui.close(); }
 });
