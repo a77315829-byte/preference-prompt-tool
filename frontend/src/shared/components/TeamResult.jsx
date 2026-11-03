@@ -8,7 +8,7 @@ function TeamResult({ teamResult, valueLabel = (axis, value) => value }) {
   const [language, setLanguage] = useState(null);
   return (
     <div className="team-result">
-      <p><strong>{teamResult.code}</strong> · 팀원 {teamResult.members.length}명: {teamResult.members
+      <p><strong>{teamResult.name || teamResult.code}</strong> · 팀원 {teamResult.members.length}명: {teamResult.members
         .map((m) => ((teamResult.signedIn || []).includes(m) ? `${m} (로그인)` : m)).join(', ')}</p>
       <ul className="team-agreements">
         {teamResult.agreements.map((a) => (

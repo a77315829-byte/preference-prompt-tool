@@ -106,6 +106,10 @@ MIGRATIONS: list[str] = [
         PRIMARY KEY (code, member_key)
     );
     """,
+    # 5: 비교를 시작하기 전에 만드는 팀의 표시 이름. 기존 팀은 코드로 표시한다.
+    """
+    ALTER TABLE teams ADD COLUMN name TEXT NOT NULL DEFAULT '';
+    """,
 ]
 
 

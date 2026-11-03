@@ -1474,6 +1474,23 @@
   font-size: 0.88rem;
 }
 
+.team-progress,
+.team-invitation,
+.team-joined {
+  margin: 1.2rem 0;
+  padding: 1.2rem;
+  border: 1px solid #d8e4f8;
+  border-radius: 1rem;
+  background: #f2f6ff;
+  line-height: 1.6;
+}
+
+.team-progress p { margin: 0.4rem 0 0; }
+.team-invitation h3 { margin: 0 0 0.6rem; }
+.team-invitation input { min-width: 0; width: 100%; box-sizing: border-box; }
+.team-joined { border-color: #b9dfce; background: #ecf8f1; color: #176b50; }
+.team-start { scroll-margin-top: 6rem; }
+
 @media (max-width: 760px) {
   .site-nav {
     top: 0.65rem;

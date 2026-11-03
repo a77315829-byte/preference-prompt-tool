@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { MAX_RECENT, formatUtc, groupByCategory, withRecent } from './teams.js';
+import { MAX_RECENT, formatUtc, groupByCategory, parseTeamInvite, teamInviteUrl, withRecent } from './teams.js';
 import { categoryLabel, flowOfDomain, axisValueLabel } from './domainLabels.js';
 
 test('팀 목록을 카테고리별로 묶고, 최근 카테고리가 위에 온다', () => {
@@ -38,4 +38,14 @@ test('화면 이름: 카테고리, 비교 화면 흐름, 축 값', () => {
 test('시각은 분까지 UTC 로', () => {
   assert.equal(formatUtc('2026-10-15T09:30:12+00:00'), '2026-10-15 09:30 UTC');
   assert.equal(formatUtc(''), '');
+});
+
+test('초대 링크와 기존 코드는 같은 팀을 가리킨다', () => {
+  const link = teamInviteUrl('team-abc_123', 'https://example.test/app?old=1#view');
+  assert.equal(link, 'https://example.test/app?team=team-abc_123');
+  assert.equal(parseTeamInvite(` ${link} `), 'team-abc_123');
+  assert.equal(parseTeamInvite(' frontend-team '), 'frontend-team');
+  for (const invalid of ['x', '../team', 'https://example.test/?other=abc', 'javascript:alert(1)']) {
+    assert.throws(() => parseTeamInvite(invalid));
+  }
 });

@@ -212,6 +212,10 @@ def _team_payload(code: str) -> dict[str, Any]:
     내보내기. 팀원별 원문이나 생성 결과는 담지 않는다."""
     domain_key, members = TEAMS.get(code)
     domain = service.load_domain_for(_domain_path(domain_key))
+    name = TEAMS.name_for(code)
+    if not members:
+        return {"code": code, "name": name, "domain_key": domain_key, "members": [], "signedIn": [],
+                "agreements": [], "prompt": "", "prompts": {}, "exports": [], "exports_by_language": {}}
     estimator, agreements = team.summarize(domain, members)
     languages = _prompt_languages(domain, None)
     prompts = {lang: service.final_prompt(domain, estimator, team=True, language=lang) for lang in languages}
@@ -219,6 +223,7 @@ def _team_payload(code: str) -> dict[str, Any]:
     labels = domain.final_prompt.axis_labels if domain.final_prompt else {}
     return {
         "code": code,
+        "name": name,
         "domain_key": domain_key,
         "members": [m.name for m in members],
         # 로그인한 계정으로 참여한 사람 (화면이 이름 옆에 표시한다).
@@ -713,6 +718,13 @@ class ApiHandler(BaseHTTPRequestHandler):
             if path == "/api/sessions":
                 self._start_session(body)
                 return
+            if path == "/api/teams":
+                domain_key = str(body.get("domainKey", "coding"))
+                _domain_path(domain_key)
+                user = self._current_user()
+                code = TEAMS.create(str(body.get("name", "")), domain_key, user.id if user else None)
+                self._send(201, {"team": _team_payload(code)})
+                return
             if path == "/api/polish/checklist":
                 self._send(200, _polish_checklist_only(body))
                 return
@@ -864,7 +876,8 @@ class ApiHandler(BaseHTTPRequestHandler):
         # 로그인했으면 이름 칸은 무시하고 아이디로 참여한다.
         user = self._current_user()
         TEAMS.add(code, state.domain_key, str(body.get("name", "")), state.history,
-                  user_id=user.id if user else None, username=user.username if user else None)
+                  user_id=user.id if user else None, username=user.username if user else None,
+                  require_existing=body.get("requireExisting") is True)
         self._send(200, {"team": _team_payload(code)})
 
     def _start_optimize(self, session_id: str) -> None:

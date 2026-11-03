@@ -15,8 +15,9 @@ import '../features/landing/landing.css';
 import '../features/comparison/comparison.css';
 
 function App() {
+  const [initialInvite] = useState(() => new URLSearchParams(window.location.search).get('team') || '');
   const [selectedCategory, setSelectedCategory] = useState('summary');
-  const [activeFlow, setActiveFlow] = useState('category');
+  const [activeFlow, setActiveFlow] = useState(initialInvite ? 'teams' : 'category');
   const [sceneRequest, setSceneRequest] = useState({ index: 0, sequence: 0 });
   // 템플릿 라이브러리에서 "내 방식으로 바꾸기"로 들어왔을 때의 템플릿.
   const [template, setTemplate] = useState(null);
@@ -24,6 +25,7 @@ function App() {
   const [comparisonDraft, setComparisonDraft] = useState(null);
   // 팀 프롬프트 화면에서 "비교하고 내 선택 더하기"로 들어왔을 때 팀 칸에 미리 채울 코드.
   const [teamCodeDraft, setTeamCodeDraft] = useState('');
+  const [teamNameDraft, setTeamNameDraft] = useState('');
   const handleDraftChange = useCallback((draft) => {
     setComparisonDraft({ domainKey: activeFlow, ...draft });
   }, [activeFlow]);
@@ -99,11 +101,17 @@ function App() {
   };
 
   const openTeams = () => { setMenuOpen(false); setActiveFlow('teams'); };
+  const showTeam = (team) => {
+    setTeamCodeDraft(team.code);
+    setTeamNameDraft(team.name || team.code);
+    openTeams();
+  };
 
-  const compareForTeam = (domainKey, code) => {
+  const compareForTeam = (domainKey, code, name = '') => {
     setTemplate(null);
     setComparisonDraft(null);
     setTeamCodeDraft(code);
+    setTeamNameDraft(name || code);
     setActiveFlow(flowOfDomain(domainKey));
   };
 
@@ -158,6 +166,7 @@ function App() {
               onSelectCategory={setSelectedCategory}
               onContinue={handleCategoryContinue}
               sceneRequest={sceneRequest}
+              onOpenTeams={openTeams}
             />
           </motion.div>
         )}
@@ -171,10 +180,10 @@ function App() {
             exit={{ opacity: 0, y: -24, scale: 0.99 }}
             transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
           >
-            <ComparisonSection onBack={handleComparisonBack} domainKey={activeFlow}
+            <ComparisonSection onBack={teamCodeDraft ? openTeams : handleComparisonBack} domainKey={activeFlow}
               onSwitchDomain={(domain) => { setComparisonDraft(null); setActiveFlow(domain); }}
               template={template} initialDraft={comparisonDraft?.domainKey === activeFlow ? comparisonDraft : null}
-              onDraftChange={handleDraftChange} teamCode={teamCodeDraft} />
+              onDraftChange={handleDraftChange} teamCode={teamCodeDraft} teamName={teamNameDraft} onOpenTeam={showTeam} />
           </motion.div>
         )}
 
@@ -201,7 +210,7 @@ function App() {
           <motion.div className="flow-view" key="teams" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
             <TeamsSection user={user} onBack={handleComparisonBack}
               onLogin={() => requestLogin('로그인하면 내가 참여한 팀이 카테고리별로 모여 보입니다.')}
-              onCompare={compareForTeam} />
+              onCompare={compareForTeam} initialInvite={teamCodeDraft || initialInvite} />
           </motion.div>
         )}
 

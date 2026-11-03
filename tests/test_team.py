@@ -288,7 +288,7 @@ def test_api_my_teams_needs_login_and_shows_joined_teams(server) -> None:
     with urllib.request.urlopen(urllib.request.Request(server + "/teams", headers={"Cookie": cookie})) as resp:
         teams = json.loads(resp.read())["teams"]
     assert [(t["code"], t["domain_key"], t["members"]) for t in teams] == [("devteam", "coding", 2)]
-    assert set(teams[0]) == {"code", "domain_key", "members", "updated_at"}
+    assert set(teams[0]) == {"code", "name", "domain_key", "members", "updated_at"}
 
 
 @pytest.mark.parametrize("domain_file", ["coding", "summarization", "summarization_ko", "idle_tracker",

@@ -152,7 +152,7 @@ function NarrativeScene({ scene, direction, reducedMotion }) {
   );
 }
 
-function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction, reducedMotion }) {
+function IntroScene({ selectedCategory, onSelectCategory, onContinue, onOpenTeams, direction, reducedMotion }) {
   const [showLab, setShowLab] = useState(labIds.has(selectedCategory));
   const options = showLab ? [...coreCategories, ...labCategories] : coreCategories;
   const toggleLab = () => {
@@ -177,6 +177,7 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction,
           <em>함께 쓸 기준</em>을 만드세요.
         </h1>
         <p>문서와 코드 예시를 골라 내 취향을 찾고, 팀 기준으로 모아 함께 쓰세요. 반복 업무의 AI 지침도 만들고 다듬을 수 있습니다.</p>
+        {onOpenTeams && <button className="ws-small-button" type="button" onClick={onOpenTeams}>팀 만들기 · 초대로 참여</button>}
       </div>
 
       <div className="narrative-category-stage">
@@ -201,7 +202,7 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction,
   );
 }
 
-function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequest }) {
+function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequest, onOpenTeams }) {
   const [activeScene, setActiveScene] = useState(0);
   const [direction, setDirection] = useState(1);
   const touchStartY = useRef(null);
@@ -292,6 +293,7 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequ
               selectedCategory={selectedCategory}
               onSelectCategory={onSelectCategory}
               onContinue={onContinue}
+              onOpenTeams={onOpenTeams}
               direction={direction}
               reducedMotion={reducedMotion}
             />
