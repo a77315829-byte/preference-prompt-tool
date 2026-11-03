@@ -8,7 +8,7 @@ import team
 from budget import DailyBudget
 from engine.domain_loader import load_domain
 from engine.generator import build_final_prompt
-from preference_comparison import compare_preferences, compose_task_prompt
+from preference_comparison import compare_preferences, compose_task_prompt, recognize_standard_prompt
 from tests.test_personal_prompts import request, signup
 from tests.test_preference_comparison import COMBO, prepare
 from tests.test_team import _history, server
@@ -91,3 +91,47 @@ def test_compose_and_run_validate_choices_and_snapshots_without_writes(server, m
     api_server.TEAMS.add("devteam", "coding", "지은", _history("coding", COMBO))
     assert request(server, path + "/run", run, cookie)[0] == 409
     assert seen == [draft["prompt"]]
+
+
+def test_save_task_creates_independent_named_item_for_reuse(server, monkeypatch):
+    cookie, original, path = prepare(server)
+    api_server.TEAMS.add("devteam", "coding", "민수", _history("coding", {**COMBO, "code_structure": "separated"}))
+    before_team = copy.deepcopy(api_server.TEAMS.get("devteam"))
+    _, data, _ = request(server, path + "/compare-team", {"revision": 1, "teamCode": "devteam"}, cookie)
+    comparison = data["comparison"]
+    body = {"revision": 1, "teamCode": "devteam", "teamSnapshot": comparison["team_snapshot"],
+            "language": comparison["team_language"], "choices": {"code_structure": "team"}}
+    _, data, _ = request(server, path + "/compose-task", body, cookie)
+    draft = data["draft"]
+    save = {**body, "taskSnapshot": draft["snapshot"], "title": "팀 구성 + 내 타입", "note": "React 작업에 재사용",
+            "prompt": "클라이언트 본문은 무시", "domainKey": "summarization_ko", "task": "저장하면 안 되는 새 작업", "output": "저장하면 안 되는 결과"}
+    status, data, _ = request(server, path + "/save-task", save, cookie)
+    assert status == 201
+    saved = data["preference"]
+    assert saved["id"] != original["id"] and saved["revision"] == 1
+    assert saved["title"] == save["title"] and saved["note"] == save["note"]
+    assert saved["domain_key"] == "coding" and saved["prompt"] == draft["prompt"]
+    assert "task" not in saved and "output" not in saved
+    assert api_server.PERSONAL_PROMPTS.get(1, original["id"]) == original
+    assert api_server.TEAMS.get("devteam") == before_team
+    assert len(api_server.PERSONAL_PROMPTS.list_for(1)) == 2
+    assert request(server, path + "/save-task", save)[0] == 401
+    bob = signup(server, "bob")
+    assert request(server, path + "/save-task", save, bob)[0] == 404
+    for changes, status in (({"title": " "}, 400), ({"title": "x" * 101}, 400), ({"note": "x" * 1001}, 400),
+                            ({"choices": {}}, 400), ({"taskSnapshot": "old"}, 409), ({"revision": 2}, 409), ({"teamSnapshot": "old"}, 409)):
+        assert request(server, path + "/save-task", {**save, **changes}, cookie)[0] == status
+    assert len(api_server.PERSONAL_PROMPTS.list_for(1)) == 2
+    # 저장한 지침은 이후 팀 기준이 바뀌어도 독립적으로 열고 사용할 수 있다.
+    api_server.TEAMS.add("devteam", "coding", "지은", _history("coding", COMBO))
+    assert request(server, path + "/save-task", save, cookie)[0] == 409
+    status, data, _ = request(server, f"/preferences/{saved['id']}", cookie=cookie)
+    assert status == 200 and data["preference"] == saved
+    assert recognize_standard_prompt(load_domain("domains/coding.yaml"), saved["prompt"])["combo"]["code_structure"] == "separated"
+    seen = []
+    monkeypatch.setattr(api_server, "LIVE", True)
+    monkeypatch.setattr(api_server, "_live_key_available", lambda _: True)
+    monkeypatch.setattr(api_server, "DAILY_PREFERENCE_RUNS", DailyBudget(3))
+    monkeypatch.setattr(service.generator, "generate_with_prompt", lambda prompt, source, model: seen.append((prompt, source)) or "결과")
+    status, _, _ = request(server, f"/preferences/{saved['id']}/run", {"revision": 1, "task": "다음 작업", "basis": "personal"}, cookie)
+    assert status == 200 and seen == [(draft["prompt"], "다음 작업")]

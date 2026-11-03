@@ -17,4 +17,8 @@ export const composeTaskPreference = (item, comparison, choices) => call(`/${enc
   revision: item.revision, teamCode: comparison.team_code, teamSnapshot: comparison.team_snapshot,
   language: comparison.team_language, choices,
 }).then((d) => d.draft);
+export const saveTaskPreference = (item, comparison, draft, title, note) => call(`/${encodeURIComponent(item.id)}/save-task`, {
+  revision: item.revision, teamCode: comparison.team_code, teamSnapshot: comparison.team_snapshot,
+  language: comparison.team_language, choices: draft.choices, taskSnapshot: draft.snapshot, title, note,
+}).then((d) => d.preference);
 export const runPreference = (id, revision, task, selection = {}) => call(`/${encodeURIComponent(id)}/run`, { revision, task, ...selection });

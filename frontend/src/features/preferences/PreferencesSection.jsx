@@ -5,6 +5,7 @@ import { createPreference, deletePreference, getPreference, listPreferences, run
 import { composePreferenceRequest, PREFERENCE_CATEGORIES, WORK_EXAMPLES } from './preferenceText';
 import TeamPreferenceComparison from './TeamPreferenceComparison';
 import TaskPreferenceMixer from './TaskPreferenceMixer';
+import SaveTaskPreferencePanel from './SaveTaskPreferencePanel';
 import { selectionMatches } from './comparisonText';
 
 const formOf = (item) => ({ title: item.title, domainKey: item.domain_key, prompt: item.prompt, note: item.note || '' });
@@ -207,6 +208,9 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
               <p className="ws-help" role="status">{basis === 'custom' ? '이번 작업: 항목별로 고른 작업용 지침 · 원본은 그대로 유지' : basis === 'team' ? `이번 작업: ${teamComparison?.team_name}의 팀 기준` : '이번 작업: 보관한 내 개인 지침'}
                 {!teamComparison && ' · 팀용을 쓰려면 먼저 위에서 팀 기준을 확인하세요.'}</p>
               <details className="ws-raw"><summary>이번에 사용할 지침 보기</summary><pre className="prompt-box"><code>{chosenPrompt}</code></pre></details>
+              {basis === 'custom' && taskDraft && <SaveTaskPreferencePanel key={`${item.id}-${taskDraft.snapshot}`}
+                item={item} comparison={teamComparison} draft={taskDraft} disabled={Boolean(busy)} onBusy={setBusy}
+                onSaved={(saved) => setItems((current) => [saved, ...(current || []).filter((p) => p.id !== saved.id)])} onOpen={open} />}
               <label className="task-input-label" htmlFor="preference-task">{item.domain_key === 'coding' ? '이번에 만들 기능이나 개발 요청' : '이번에 요약할 원문'}</label>
               <textarea id="preference-task" className="task-input" rows={6} maxLength={12000} value={task} onChange={(e) => { setTask(e.target.value); setCopied(''); }} placeholder="새 작업 내용을 여기에 넣으세요." />
               <button className="ws-small-button" type="button" disabled={Boolean(busy)} onClick={() => {

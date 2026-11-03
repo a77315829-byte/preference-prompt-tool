@@ -27,7 +27,7 @@ function TaskPreferenceMixer({ item, comparison, disabled, onChange }) {
   };
   return <div className="task-preference-mixer">
     <h4>항목별로 골라 이번 작업용 만들기</h4>
-    <p className="ws-help">다른 항목마다 따를 쪽을 고르세요. 같은 항목은 그대로 반영합니다. 내 보관함과 팀 기준에는 저장하지 않습니다.</p>
+    <p className="ws-help">다른 항목마다 따를 쪽을 고르세요. 같은 항목은 그대로 반영하고 기존 개인 지침과 팀 기준은 유지합니다. 조합한 뒤 이름을 붙여 새 항목으로 보관할 수도 있어요.</p>
     {!comparison.personal_recognized ? <p className="ws-help">직접 수정·추가하거나 최적화한 지침은 항목을 정확히 구분할 수 없어 조합할 수 없어요. 본문 차이를 확인하고 개인용 또는 팀용 전체를 선택해 주세요.</p> : <>
       {differing.length === 0 ? <p>다른 항목이 없어요. 같은 기준으로 이번 작업용 지침을 만들 수 있습니다.</p> : differing.map((a) => (
         <fieldset key={a.axis} disabled={disabled || busy} className="preference-axis-choice">

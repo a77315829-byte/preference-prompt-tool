@@ -11,6 +11,14 @@ import service
 import team
 
 
+def _task_wording(domain, prompt: str, language: str) -> str:
+    spec = domain.final_prompt if language == "ko" else domain.final_prompt_translations[language]
+    if spec and spec.preference_note:
+        note = "이번 작업에서 선택한 방식입니다." if language == "ko" else "Preferences selected for this task."
+        return prompt.replace(spec.preference_note, note)
+    return prompt
+
+
 def recognize_standard_prompt(domain, prompt: str):
     """기본 생성문 전체가 일치할 때만 축을 확인한다. 수정·최적화 문구는 추측하지 않는다."""
     options = [["", *[v.value for v in a.values]] if a.type == "enum" else [""] for a in domain.axes]
@@ -24,7 +32,7 @@ def recognize_standard_prompt(domain, prompt: str):
         for values in product(*options):
             combo = dict(zip((a.name for a in domain.axes), values))
             candidate = build_final_prompt(domain, combo, language=None if language == "ko" else language)
-            if candidate.strip() == normalized:
+            if normalized in (candidate.strip(), _task_wording(domain, candidate, language).strip()):
                 return {"combo": combo, "language": language}
     return None
 
@@ -79,10 +87,7 @@ def compose_task_prompt(item: dict, domain, comparison: dict, choices: dict) -> 
     combo = {a["axis"]: a[f"{choices.get(a['axis'], 'personal')}_value"] for a in comparison["axes"]}
     language = comparison["team_language"]
     prompt = build_final_prompt(domain, combo, language=None if language == "ko" else language)
-    spec = domain.final_prompt if language == "ko" else domain.final_prompt_translations[language]
-    if spec and spec.preference_note:
-        note = "이번 작업에서 선택한 방식입니다." if language == "ko" else "Preferences selected for this task."
-        prompt = prompt.replace(spec.preference_note, note)
+    prompt = _task_wording(domain, prompt, language)
     snapshot = {"id": item["id"], "revision": item["revision"], "team": comparison["team_snapshot"], "choices": choices, "prompt": prompt}
     return {"prompt": prompt, "choices": choices,
             "snapshot": hashlib.sha256(json.dumps(snapshot, sort_keys=True, ensure_ascii=False).encode()).hexdigest()}
