@@ -1,0 +1,48 @@
+# Review the paid service + disk total in Render before creating resources.
+# Domain registration and paid AI calls are separate; neither is purchased here.
+services:
+  - type: web
+    name: microstone
+    runtime: docker
+    branch: microstone
+    region: singapore
+    plan: 0.5c-512mb
+    numInstances: 1
+    autoDeployTrigger: "off"
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    disk:
+      name: microstone-storage
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PPT_COOKIE_SECURE
+        value: "1"
+      - key: PPT_STORAGE_DIR
+        value: /var/data
+      - key: PPT_DB_PATH
+        value: /var/data/data/app.db
+      - key: PPT_ALLOW_SIGNUP
+        value: "1"
+      - key: PPT_LIVE
+        value: "0"
+      - key: PPT_FASTAPI_GEPA_LIVE
+        value: "0"
+      - key: PPT_SPRING_BOOT_GEPA_LIVE
+        value: "0"
+      - key: PPT_WEB_GEPA_LIVE
+        value: "0"
+      - key: PPT_PYTHON_WEB_GEPA_LIVE
+        value: "0"
+      - key: PPT_LIVE_SESSIONS_PER_DAY
+        value: "20"
+      - key: PPT_USER_SESSIONS_PER_DAY
+        value: "5"
+      - key: PPT_ANON_SESSIONS_PER_DAY
+        value: "0"
+      - key: PPT_OPTIMIZATIONS_PER_DAY
+        value: "3"
+      - key: PPT_USER_OPTIMIZATIONS_PER_DAY
+        value: "1"
+      - key: PPT_ANON_OPTIMIZATIONS_PER_DAY
+        value: "0"

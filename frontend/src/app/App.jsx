@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { useCallback, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import ComparisonSection from '../features/comparison/ComparisonSection';
-import IdleTrackerSection from '../features/idle-tracker/IdleTrackerSection';
 import ScrollStory from '../features/landing/ScrollStory';
 import PromptPolishSection from '../features/polish/PromptPolishSection';
 import PromptWorkspaceSection from '../features/prompt-workspace/PromptWorkspaceSection';
@@ -15,9 +14,16 @@ import './App.css';
 import '../features/landing/landing.css';
 import '../features/comparison/comparison.css';
 
+const PreferencesSection = lazy(() => import('../features/preferences/PreferencesSection'));
+const CodingInstructionsSection = lazy(() => import('../features/coding-instructions/CodingInstructionsSection'));
+const HandoffsSection = lazy(() => import('../features/handoffs/HandoffsSection'));
+
 function App() {
+  const [initialInvite] = useState(() => new URLSearchParams(window.location.search).get('team') || '');
+  const [handoffId, setHandoffId] = useState(() => new URLSearchParams(window.location.search).get('handoff') || '');
+  const [handoffDraft, setHandoffDraft] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('summary');
-  const [activeFlow, setActiveFlow] = useState('category');
+  const [activeFlow, setActiveFlow] = useState(handoffId ? 'handoffs' : initialInvite ? 'teams' : 'category');
   const [sceneRequest, setSceneRequest] = useState({ index: 0, sequence: 0 });
   // 템플릿 라이브러리에서 "내 방식으로 바꾸기"로 들어왔을 때의 템플릿.
   const [template, setTemplate] = useState(null);
@@ -25,6 +31,10 @@ function App() {
   const [comparisonDraft, setComparisonDraft] = useState(null);
   // 팀 프롬프트 화면에서 "비교하고 내 선택 더하기"로 들어왔을 때 팀 칸에 미리 채울 코드.
   const [teamCodeDraft, setTeamCodeDraft] = useState('');
+  const [teamNameDraft, setTeamNameDraft] = useState('');
+  const [preferenceId, setPreferenceId] = useState('');
+  const [templateCategory, setTemplateCategory] = useState('전체');
+  const [codingProfileDraft, setCodingProfileDraft] = useState(null);
   const handleDraftChange = useCallback((draft) => {
     setComparisonDraft({ domainKey: activeFlow, ...draft });
   }, [activeFlow]);
@@ -73,11 +83,11 @@ function App() {
   };
 
   const handleCategoryContinue = () => {
+    if (selectedCategory === 'teamWork') { openHandoffs(); return; }
     setTemplate(null);
     setComparisonDraft(null);
     setTeamCodeDraft('');
-    if (selectedCategory === 'coding') setActiveFlow('coding');
-    else if (selectedCategory === 'idleTracker') setActiveFlow('idleTracker');
+    if (selectedCategory === 'coding') openCodingInstructions();
     else if (selectedCategory === 'review') setActiveFlow('review');
     else if (selectedCategory === 'email') setActiveFlow('email');
     else if (selectedCategory === 'summaryKo') setActiveFlow('summarization_ko');
@@ -92,20 +102,37 @@ function App() {
     requestScene(0);
   };
 
-  // 템플릿의 도메인 이름이 곧 비교 화면의 흐름 이름이다 (AWS 만 화면 이름이 다르다).
+  // 템플릿의 도메인 이름이 곧 비교 화면의 흐름 이름이다.
   const handlePersonalizeTemplate = (picked) => {
     setTemplate(picked);
     setComparisonDraft(null);
     setTeamCodeDraft('');
-    setActiveFlow(picked.domain === 'idle_tracker' ? 'idleTracker' : picked.domain);
+    setActiveFlow(picked.domain);
   };
 
   const openTeams = () => { setMenuOpen(false); setActiveFlow('teams'); };
+  const openTemplates = (category = '전체') => { setTemplateCategory(category); setMenuOpen(false); setActiveFlow('templates'); };
+  const openLibrary = (id = '') => { setPreferenceId(id); setMenuOpen(false); setActiveFlow('preferences'); };
+  const openHandoffs = (draft = null) => { setHandoffId(''); setHandoffDraft(draft); setMenuOpen(false); setActiveFlow('handoffs'); };
+  const openCodingInstructions = (profile = null) => {
+    setCodingProfileDraft(profile); setTemplate(null); setComparisonDraft(null); setTeamCodeDraft(''); setTeamNameDraft('');
+    setActiveFlow('coding-instructions');
+  };
+  const compareForMyself = (domainKey) => {
+    setTemplate(null); setComparisonDraft(null); setTeamCodeDraft(''); setTeamNameDraft('');
+    setActiveFlow(domainKey);
+  };
+  const showTeam = (team) => {
+    setTeamCodeDraft(team.code);
+    setTeamNameDraft(team.name || team.code);
+    openTeams();
+  };
 
-  const compareForTeam = (domainKey, code) => {
+  const compareForTeam = (domainKey, code, name = '') => {
     setTemplate(null);
     setComparisonDraft(null);
     setTeamCodeDraft(code);
+    setTeamNameDraft(name || code);
     setActiveFlow(flowOfDomain(domainKey));
   };
 
@@ -121,12 +148,10 @@ function App() {
           {menuOpen ? '닫기' : '메뉴'}
         </button>
         <div className={`nav-links ${menuOpen ? 'is-open' : ''}`} id="site-nav-links" aria-label="페이지 이동">
-          <button type="button" onClick={() => requestScene(1)}>사용 방법</button>
           <button type="button" onClick={() => requestScene(0)}>시작하기</button>
-          <button type="button" onClick={() => { setMenuOpen(false); setTemplate(null); setActiveFlow('templates'); }}>템플릿</button>
-          <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('polish'); }}>프롬프트 다듬기</button>
-          <button type="button" onClick={openTeams}>팀 프롬프트</button>
-          <button type="button" onClick={() => { setMenuOpen(false); setActiveFlow('workspace'); }}>서비스용 프롬프트</button>
+          <button type="button" onClick={() => openLibrary()}>내 선호 보관함</button>
+          <button type="button" onClick={() => openTemplates()}>템플릿</button>
+          <button type="button" onClick={openTeams}>팀 기준 맞추기</button>
         </div>
 
         {user ? (
@@ -160,7 +185,18 @@ function App() {
               onSelectCategory={setSelectedCategory}
               onContinue={handleCategoryContinue}
               sceneRequest={sceneRequest}
+              onOpenTeams={openTeams}
+              onOpenLibrary={() => openLibrary()}
             />
+          </motion.div>
+        )}
+
+        {activeFlow === 'coding-instructions' && (
+          <motion.div className="flow-view" key="coding-instructions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <Suspense fallback={<p className="comparison-section" role="status">코딩 지침 설정을 여는 중…</p>}>
+              <CodingInstructionsSection user={user} signupOpen={signupOpen} onLogin={setUser} onOpenLibrary={openLibrary}
+                initialProfile={codingProfileDraft} onBack={handleComparisonBack} onReactComparison={() => compareForMyself('coding')} />
+            </Suspense>
           </motion.div>
         )}
 
@@ -173,16 +209,35 @@ function App() {
             exit={{ opacity: 0, y: -24, scale: 0.99 }}
             transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
           >
-            <ComparisonSection onBack={handleComparisonBack} domainKey={activeFlow}
+            <ComparisonSection onBack={teamCodeDraft ? openTeams : handleComparisonBack} domainKey={activeFlow}
               onSwitchDomain={(domain) => { setComparisonDraft(null); setActiveFlow(domain); }}
               template={template} initialDraft={comparisonDraft?.domainKey === activeFlow ? comparisonDraft : null}
-              onDraftChange={handleDraftChange} teamCode={teamCodeDraft} />
+              onDraftChange={handleDraftChange} teamCode={teamCodeDraft} teamName={teamNameDraft} onOpenTeam={showTeam}
+              user={user} signupOpen={signupOpen} onLogin={setUser} onOpenLibrary={openLibrary} onCreateCoding={openCodingInstructions} />
           </motion.div>
         )}
 
         {activeFlow === 'templates' && (
           <motion.div className="flow-view" key="templates" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-            <TemplateLibrarySection onBack={handleComparisonBack} onPersonalize={handlePersonalizeTemplate} />
+            <TemplateLibrarySection key={templateCategory} initialCategory={templateCategory} onBack={handleComparisonBack} onPersonalize={handlePersonalizeTemplate}
+              onWorkspace={() => setActiveFlow('workspace')} />
+          </motion.div>
+        )}
+
+        {activeFlow === 'preferences' && (
+          <motion.div className="flow-view" key="preferences" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <Suspense fallback={<p className="comparison-section" role="status">내 선호 보관함을 여는 중…</p>}>
+              <PreferencesSection key={user?.id || 'anonymous'} user={user} signupOpen={signupOpen} onLogin={setUser}
+                initialId={preferenceId} onBack={handleComparisonBack} onStartComparison={compareForMyself} onCreateCoding={openCodingInstructions} onHandoff={openHandoffs} />
+            </Suspense>
+          </motion.div>
+        )}
+
+        {activeFlow === 'handoffs' && (
+          <motion.div className="flow-view" key="handoffs" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <Suspense fallback={<p className="comparison-section" role="status">작업 인수인계를 여는 중…</p>}>
+              <HandoffsSection user={user} signupOpen={signupOpen} onLogin={setUser} onBack={handleComparisonBack} initialId={handoffId} initialDraft={handoffDraft} />
+            </Suspense>
           </motion.div>
         )}
 
@@ -194,7 +249,7 @@ function App() {
 
         {activeFlow === 'account' && user && (
           <motion.div className="flow-view" key="account" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-            <AccountSection user={user} onBack={() => setActiveFlow(returnFlow)} onOpenTeams={openTeams}
+            <AccountSection user={user} onBack={() => setActiveFlow(returnFlow)} onOpenTeams={openTeams} onOpenLibrary={() => openLibrary()}
               onDeleted={() => { setUser(null); setActiveFlow('category'); }} />
           </motion.div>
         )}
@@ -203,7 +258,7 @@ function App() {
           <motion.div className="flow-view" key="teams" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
             <TeamsSection user={user} onBack={handleComparisonBack}
               onLogin={() => requestLogin('로그인하면 내가 참여한 팀이 카테고리별로 모여 보입니다.')}
-              onCompare={compareForTeam} />
+              onCompare={compareForTeam} initialInvite={teamCodeDraft || initialInvite} onOpenHandoffs={openHandoffs} />
           </motion.div>
         )}
 
@@ -219,12 +274,6 @@ function App() {
           <motion.div className="flow-view" key="workspace" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
             <PromptWorkspaceSection onBack={handleComparisonBack} user={user} signupOpen={signupOpen}
               onLogin={setUser} loginRequest={workspaceLoginRequest} />
-          </motion.div>
-        )}
-
-        {activeFlow === 'idleTracker' && (
-          <motion.div className="flow-view" key="idleTracker" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-            <IdleTrackerSection onBack={handleComparisonBack} template={template} />
           </motion.div>
         )}
 

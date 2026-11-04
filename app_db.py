@@ -106,6 +106,72 @@ MIGRATIONS: list[str] = [
         PRIMARY KEY (code, member_key)
     );
     """,
+    # 5: 비교를 시작하기 전에 만드는 팀의 표시 이름. 기존 팀은 코드로 표시한다.
+    """
+    ALTER TABLE teams ADD COLUMN name TEXT NOT NULL DEFAULT '';
+    """,
+    # 6: 개인별 요약·코딩 프롬프트 보관함. 원문이나 새 작업 자료는 저장하지 않는다.
+    """
+    CREATE TABLE personal_prompts (
+        id TEXT PRIMARY KEY,
+        owner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        title TEXT NOT NULL,
+        domain_key TEXT NOT NULL,
+        prompt TEXT NOT NULL,
+        note TEXT NOT NULL DEFAULT '',
+        revision INTEGER NOT NULL DEFAULT 1,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    CREATE INDEX personal_prompts_owner ON personal_prompts(owner_id, updated_at);
+    """,
+    # 7: 작업용 지침을 저장할 때 선택한 출처의 스냅샷. 기존 항목은 기록 없음(NULL).
+    """
+    ALTER TABLE personal_prompts ADD COLUMN provenance_json TEXT;
+    """,
+    # 8: 직접 선택한 개발 환경·선호. 기존 React 비교 지침과 별도로 기록한다.
+    """
+    ALTER TABLE personal_prompts ADD COLUMN coding_profile_json TEXT;
+    """,
+    # 9: 명시적으로 저장·공유하는 인수인계 작업과 변경 전 버전.
+    """
+    CREATE TABLE handoffs (
+        id TEXT PRIMARY KEY,
+        owner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        recipient_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+        recipient_from_revision INTEGER NOT NULL DEFAULT 0,
+        title TEXT NOT NULL,
+        body_json TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'draft' CHECK(status IN ('draft','shared','active','done')),
+        revision INTEGER NOT NULL DEFAULT 1,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    CREATE INDEX handoffs_owner ON handoffs(owner_id, updated_at);
+    CREATE INDEX handoffs_recipient ON handoffs(recipient_id, updated_at);
+    CREATE TABLE handoff_versions (
+        handoff_id TEXT NOT NULL REFERENCES handoffs(id) ON DELETE CASCADE,
+        revision INTEGER NOT NULL,
+        actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+        event TEXT NOT NULL,
+        snapshot_json TEXT NOT NULL,
+        saved_at TEXT NOT NULL,
+        PRIMARY KEY (handoff_id, revision)
+    );
+    """,
+    # 10: 인수인계 첨부 원본. 버전에는 메타데이터만 남기며 계정 삭제 시 함께 삭제한다.
+    """
+    CREATE TABLE handoff_files (
+        id TEXT PRIMARY KEY,
+        handoff_id TEXT NOT NULL REFERENCES handoffs(id) ON DELETE CASCADE,
+        name TEXT NOT NULL,
+        content_type TEXT NOT NULL,
+        size INTEGER NOT NULL,
+        data BLOB NOT NULL,
+        created_at TEXT NOT NULL
+    );
+    CREATE INDEX handoff_files_work ON handoff_files(handoff_id);
+    """,
 ]
 
 

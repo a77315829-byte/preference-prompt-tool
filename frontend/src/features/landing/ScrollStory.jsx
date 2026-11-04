@@ -7,7 +7,7 @@ const scenes = [
     number: '01',
     kicker: 'CHOOSE',
     title: '좋아하는 결과를 고르면',
-    description: '문서 요약, 코딩, AWS 비용 점검처럼 지금 필요한 카테고리를 선택합니다.',
+    description: '회의록을 정리하거나 코드를 작성할 때, 원하는 AI 결과의 기준부터 찾아보세요.',
     visual: 'category',
   },
   {
@@ -21,13 +21,13 @@ const scenes = [
     number: '03',
     kicker: 'REUSE',
     title: '나만의 프롬프트를 다시 씁니다',
-    description: '선택 기록이 하나의 코딩 기준이 되어 다음 작업에도 이어집니다.',
+    description: '찾은 기준을 다음 작업에 다시 쓰고, 팀원들의 선택과 모아 공통 지침을 만듭니다.',
     visual: 'result',
   },
 ];
 
 // 앞에 보이는 핵심 카테고리. 타깃("AI 를 매일 쓰는 작은 개발팀")이 반복하는 일에
-// 맞춘 세 가지다. 요약은 영어·한국어를 한 카드로 두고 비교 화면에서 언어를 고른다.
+// 맞춘 시작점이다. 팀 업무는 인수인계로 이어지며 별도 선호 추정 분야가 아니다.
 const coreCategories = [
   {
     id: 'summary',
@@ -42,16 +42,13 @@ const coreCategories = [
     number: '02',
     label: 'CODE',
     title: '코딩 도움',
-    description: '선호하는 TypeScript와 React 작성 방식을 찾아 Copilot·Cursor 설정 파일로 가져갑니다.',
-    accent: 'purple',
+    description: '언어와 프레임워크를 고르고, 더 편한 코드 예시를 선택해 내 방식의 프롬프트를 만듭니다.',
+    accent: 'purple', cta: '내 코딩 지침 만들기',
   },
   {
-    id: 'idleTracker',
-    number: '03',
-    label: 'AWS COST',
-    title: 'AWS 비용 보고',
-    description: '서비스별 비용 현황을 내가 보기 편한 상세도와 강조점으로 보고받습니다.',
-    accent: 'green',
+    id: 'teamWork', number: '03', label: 'TEAM WORK', title: '팀 업무 정리',
+    description: '작업 목적·진행 상황·남은 일과 사용한 프롬프트를 팀원에게 넘기고 이어서 진행합니다.',
+    accent: 'teal', cta: '작업 인수인계 시작하기',
   },
 ];
 
@@ -102,7 +99,7 @@ function StoryVisual({ type }) {
           <div className="story-mini-options">
           <div className="story-mini-option story-mini-blue">문서 요약</div>
           <div className="story-mini-option story-mini-purple">코딩 도움</div>
-          <div className="story-mini-option story-mini-green">AWS 비용</div>
+          <div className="story-mini-option">팀 업무 정리</div>
         </div>
         <div className="story-visual-arrow" aria-hidden="true">↗</div>
       </div>
@@ -161,7 +158,7 @@ function NarrativeScene({ scene, direction, reducedMotion }) {
   );
 }
 
-function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction, reducedMotion }) {
+function IntroScene({ selectedCategory, onSelectCategory, onContinue, onOpenTeams, onOpenLibrary, direction, reducedMotion }) {
   const [showLab, setShowLab] = useState(labIds.has(selectedCategory));
   const options = showLab ? [...coreCategories, ...labCategories] : coreCategories;
   const toggleLab = () => {
@@ -181,11 +178,13 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction,
       <div className="narrative-intro-copy">
         <p className="hero-kicker">PREFERENCE PROMPT TOOL</p>
         <h1>
-          좋아하는 결과를
+          작은 개발팀의 AI,
           <br />
-          <em>고르는 것</em>부터 시작하세요.
+          <em>내 방식에서 팀 기준</em>으로.
         </h1>
-        <p>복잡한 프롬프트를 직접 작성하지 않아도, 선택만으로 나만의 기준을 만들 수 있습니다.</p>
+        <p>예시를 골라 내 선호를 찾고, 팀원과 다른 항목을 확인해 이번 작업의 지침을 고르세요. 작업 맥락과 프롬프트를 함께 넘겨 다음 사람이 이어갈 수 있어요.</p>
+        {onOpenTeams && <button className="ws-small-button" type="button" onClick={onOpenTeams}>팀 만들기 · 초대로 참여</button>}
+        {onOpenLibrary && <button className="ws-small-button" type="button" onClick={onOpenLibrary}>저장한 내 선호 다시 쓰기</button>}
       </div>
 
       <div className="narrative-category-stage">
@@ -210,7 +209,7 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction,
   );
 }
 
-function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequest }) {
+function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequest, onOpenTeams, onOpenLibrary }) {
   const [activeScene, setActiveScene] = useState(0);
   const [direction, setDirection] = useState(1);
   const touchStartY = useRef(null);
@@ -301,6 +300,8 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequ
               selectedCategory={selectedCategory}
               onSelectCategory={onSelectCategory}
               onContinue={onContinue}
+              onOpenTeams={onOpenTeams}
+              onOpenLibrary={onOpenLibrary}
               direction={direction}
               reducedMotion={reducedMotion}
             />

@@ -13,8 +13,28 @@ async function call(path, options = {}) {
 export const fetchTeam = (code) => call(`/teams/${encodeURIComponent(code)}`).then((body) => body.team);
 export const joinTeam = (code, sessionId, name) => call(`/teams/${encodeURIComponent(code)}/members`, {
   method: 'POST',
-  body: JSON.stringify({ sessionId, name }),
+  body: JSON.stringify({ sessionId, name, requireExisting: true }),
 }).then((body) => body.team);
+export const createTeam = (name, domainKey) => call('/teams', {
+  method: 'POST', body: JSON.stringify({ name, domainKey }),
+}).then((body) => body.team);
+
+export function parseTeamInvite(value) {
+  let code = String(value || '').trim();
+  if (/^https?:\/\//i.test(code)) {
+    try { code = new URL(code).searchParams.get('team') || ''; } catch { code = ''; }
+  }
+  if (!/^[A-Za-z0-9_-]{3,32}$/.test(code)) throw new Error('초대 링크 또는 팀 코드를 확인해 주세요.');
+  return code;
+}
+
+export function teamInviteUrl(code, pageUrl) {
+  const url = new URL(pageUrl);
+  url.search = '';
+  url.hash = '';
+  url.searchParams.set('team', parseTeamInvite(code));
+  return url.href;
+}
 // 로그인한 사람이 참여한 팀 목록 (팀원 수와 마지막 참여 시각만).
 export const fetchMyTeams = () => call('/teams').then((body) => body.teams);
 
@@ -50,7 +70,7 @@ export function readRecentTeams() {
 
 export function rememberTeam(team) {
   try {
-    const next = withRecent(readRecentTeams(), { code: team.code, domain_key: team.domain_key });
+    const next = withRecent(readRecentTeams(), { code: team.code, domain_key: team.domain_key, name: team.name || team.code });
     window.localStorage.setItem(RECENT_KEY, JSON.stringify(next));
   } catch {
     // 보관하지 못해도 팀 결과는 그대로 보인다.

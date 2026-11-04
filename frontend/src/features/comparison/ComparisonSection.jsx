@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import SavePreferencePanel from '../preferences/SavePreferencePanel';
 import { fetchHealth, fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice, undoPreferenceChoice } from './codingApi';
 import ExportPanel from '../../shared/components/ExportPanel';
 import TeamPanel from '../../shared/components/TeamPanel';
@@ -49,6 +50,8 @@ function getRemoteAxis(pair, demoMode = true) {
 
 function ComparisonSection({
   onBack, domainKey = 'coding', onSwitchDomain, template = null, initialDraft = null, onDraftChange, teamCode = '',
+  teamName = '', onOpenTeam,
+  user, signupOpen = true, onLogin, onOpenLibrary, onCreateCoding,
 }) {
   const isCoding = domainKey === 'coding';
   const domainCopy = {
@@ -225,10 +228,19 @@ function ComparisonSection({
     <section className={`comparison-section preference-comparison ${isCoding ? 'is-coding' : ''} ${isRemote ? `has-session ${isComplete ? 'is-complete' : 'is-choosing'}` : 'is-setup'}`} id="comparison-section">
       <div className="comparison-inner">
         <button className="back-button" type="button" onClick={onBack}>
-          ← 카테고리 다시 선택
+          {teamCode ? '← 팀 안내로 돌아가기' : '← 카테고리 다시 선택'}
         </button>
+        {!isRemote && isCoding && !teamCode && !template && onCreateCoding && <div className="prompt-actions">
+          <button className="prompt-reset-button" type="button" onClick={() => onCreateCoding()}>다른 언어·프레임워크로 지침 만들기</button>
+        </div>}
 
         <div className="comparison-heading">
+          {teamCode && (
+            <div className="team-progress" role="status">
+              <strong>{teamName || teamCode} · {isComplete ? '3. 내 선호 합치기' : '2. 내 선호 고르기'}</strong>
+              <p>{isComplete ? '아래 합치기 버튼으로 내 선택을 팀 기준에 반영하세요.' : '더 편한 예시를 골라 주세요. 비교가 끝나면 내 선택을 팀 기준에 합칠 수 있어요.'}</p>
+            </div>
+          )}
           <p className="eyebrow">{domainCopy.eyebrow}</p>
           <h2>{isRemote ? (isComplete ? '선택이 프롬프트가 됐어요.' : domainCopy.title) : '비교할 내용을 알려주세요.'}</h2>
           {!isRemote && <p>내 작업에 가까운 내용을 적고, 두 예시 중 더 편한 쪽을 고르세요.</p>}
@@ -238,7 +250,7 @@ function ComparisonSection({
               고른 선호가 더해진 프롬프트입니다.
             </p>
           )}
-          {!isRemote && !template && onSwitchDomain && (domainKey === 'summarization' || domainKey === 'summarization_ko') && (
+          {!isRemote && !teamCode && !template && onSwitchDomain && (domainKey === 'summarization' || domainKey === 'summarization_ko') && (
             <div className="language-switch" role="group" aria-label="요약 언어">
               {[['summarization', '영어 요약'], ['summarization_ko', '한국어 요약']].map(([key, label]) => (
                 <button key={key} type="button" aria-pressed={domainKey === key}
@@ -253,7 +265,7 @@ function ComparisonSection({
           </label>}
           {!isRemote && isCoding && (
             <div className="coding-demo-guide">
-              <p>만들고 싶은 기능을 적어주세요. 두 코드를 비교하며 코드 구성, 디자인 값 관리, 타입 작성 취향을 찾습니다.</p>
+              <p>TypeScript/React로 만들고 싶은 기능을 적어주세요. 두 코드를 비교하며 코드 구성, 디자인 값 관리, 타입 작성 취향을 찾습니다.</p>
               {connection === 'live-ready' ? (
                 <p>실시간 AI 모드에서는 입력한 기능을 기준으로 A/B 코드를 생성합니다. 생성 실패나 사용 한도 도달 시 준비된 과제의 데모로 전환될 수 있으며, 화면에 표시됩니다.</p>
               ) : (
@@ -387,6 +399,10 @@ function ComparisonSection({
               <p className="question-eyebrow">Your preference prompt</p>
               <h3>나만의 {isCoding ? '코딩' : domainKey === 'review' ? '리뷰' : domainKey === 'email' ? '이메일' : domainKey === 'macsum_eval_agent' ? '문서 품질' : '요약'} 프롬프트가 완성됐어요.</h3>
               <p>아래 내용을 복사해서 ChatGPT나 Claude에 바로 사용할 수 있습니다.</p>
+              {teamCode && (
+                <TeamPanel sessionId={remoteSession.session_id} initialCode={teamCode} teamName={teamName} domainKey={domainKey}
+                  onOpenTeam={onOpenTeam} valueLabel={(axis, value) => remoteAxisLabels[axis]?.options?.[value] || value} />
+              )}
               {isCoding && (
                 <div className="coding-result-context">
                   <h4>이번에 만들 기능</h4>
@@ -417,6 +433,10 @@ function ComparisonSection({
                 </p>
               )}
               <pre className="prompt-box"><code>{prompt}</code></pre>
+              {optimizeStatus !== 'running' && (
+                <SavePreferencePanel key={remoteSession.session_id} domainKey={domainKey} prompt={prompt}
+                  user={user} signupOpen={signupOpen} onLogin={onLogin} onOpenLibrary={onOpenLibrary} />
+              )}
               {canOptimize && optimizeStatus === 'running' && (
                 <>
                   <p className="connection-note">최적화 중입니다. 완료 전에는 이전 프롬프트를 복사하거나 내보낼 수 없습니다.</p>
@@ -458,8 +478,8 @@ function ComparisonSection({
               {optimizeError && <p className="connection-note">{optimizeError}</p>}
               {/* 최적화 중에는 옛 프롬프트를 내보내지 않도록 숨긴다. */}
               {optimizeStatus !== 'running' && <ExportPanel exports={exportsForLanguage} />}
-              {isRemote && remoteSession.done && (
-                <TeamPanel sessionId={remoteSession.session_id} initialCode={teamCode}
+              {isRemote && remoteSession.done && !teamCode && (
+                <TeamPanel sessionId={remoteSession.session_id} domainKey={domainKey} onOpenTeam={onOpenTeam}
                   valueLabel={(axis, value) => remoteAxisLabels[axis]?.options?.[value] || value} />
               )}
               <div className="prompt-actions">

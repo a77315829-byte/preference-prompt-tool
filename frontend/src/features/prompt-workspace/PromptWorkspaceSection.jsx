@@ -8,6 +8,7 @@ import {
   FIELD_TYPES, blankInputText, contractProblems, contractShapeError, fieldSummary, typeLabel,
 } from './contractFields';
 import SuggestionPanel from './SuggestionPanel';
+import { readTrialInput, updateTrialInput } from './trialInput';
 import {
   buildProject, checkProject, confirmProject, deleteProject, discardDraft, exportProject, fetchHealth, fetchSample,
   listProjects, openProject, resolveQuestion, restoreVersion, runProject, saveDraft, saveProject as saveProjectVersion,
@@ -22,6 +23,11 @@ const LOCAL_KEY = 'ppt-workspace-unsaved';
 // 개발자 설정(입력 타입·필수, 출력 계약 편집)을 펼쳐 둘지. 이 브라우저의 보기 설정일 뿐이다.
 const DEVELOPER_KEY = 'ppt-workspace-developer';
 const ROLE_LABEL = { owner: '소유자', editor: '편집', viewer: '보기' };
+const WORK_EXAMPLES = [
+  { title: '회의록 정리', description: '회의록을 받아 결정 사항, 담당자, 기한, 아직 정하지 못한 일을 나눠 정리해 주세요. 원문에 없는 담당자나 기한은 확인 필요로 표시하세요. 팀원이 빠르게 읽을 수 있도록 짧은 목록으로 써 주세요.' },
+  { title: '코드 리뷰', description: '코드와 변경 목적을 받아 오류 가능성, 읽기 어려운 부분, 필요한 테스트를 검토해 주세요. 중요한 문제부터 위치와 이유를 설명하고 수정 방향을 제안해 주세요. 실행하지 않은 코드는 실행했다고 말하지 마세요.' },
+  { title: '새 팀원 안내', description: '프로젝트 소개와 회의 기록을 받아 새 팀원에게 목적, 현재 진행 상황, 주요 결정과 이유, 다음 할 일을 설명해 주세요. 문서에 없는 내용은 추측하지 말고 확인할 질문으로 남겨 주세요.' },
+];
 
 function readLocal() {
   try {
@@ -65,7 +71,7 @@ function writeLocal(value) {
 
 const ORIGIN_LABEL = { extracted: '입력에서 추출', suggested: 'AI 제안', user: '직접 입력' };
 const STATUS_LABEL = { pass: '통과', fail: '실패', not_evaluated: '미평가' };
-const GROUP_LABEL = { input: '입력 확인', contract: '형식 (출력 계약)', meaning: '의미 (값 대조)', rules: '필수 규칙' };
+const GROUP_LABEL = { input: '입력 확인', contract: '결과 형식', meaning: '내용 대조', rules: '꼭 지킬 규칙' };
 const RUN_LABEL = {
   ran: '모델 실행 완료',
   preview: '메시지 구성만 (모델 실행 안 함)',
@@ -232,6 +238,9 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
 
   const stage = stageOf(project);
   const req = project?.requirements;
+  const inputValues = readTrialInput(inputText, req?.variables || []);
+  const simpleInput = !developerMode && inputValues !== null;
+  const editInputValue = (name, value) => setInputText(updateTrialInput(inputText, name, value));
 
   const act = async (label, fn) => {
     setBusy(label);
@@ -577,14 +586,18 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
       <div className="comparison-inner">
         <button className="back-button" type="button" onClick={onBack}>← 카테고리로 돌아가기</button>
         <div className="comparison-heading">
-          <p className="eyebrow">SERVICE PROMPT</p>
-          <h2>서비스에 연결할 프롬프트 만들기</h2>
+          <p className="eyebrow">WORK GUIDE</p>
+          <h2>새 자료에도 다시 쓸 업무 지침을 만들어요</h2>
           <p>
-            한 번에 끝내는 생성기가 아니라 다시 열고, 답을 보완하고, 이전 결과와 비교하며 고쳐 쓰는
-            작업 공간입니다. 업무 설명을 요구사항으로 정리하고, 확인한 요구사항으로 변수형 프롬프트를 만들어
-            시험한 뒤 개발용 파일로 내려받습니다.
+            회의록 정리나 코드 리뷰를 AI에 맡길 때, 원하는 결과와 꼭 지킬 규칙을 매번 설명하고 있나요?
+            회의 정리·코드 리뷰·새 팀원 안내처럼 반복되는 작업의 규칙을 정리합니다. 예시 자료로 확인하고, 저장한 프로젝트를 팀원에게 공유해 검토·수정할 수 있어요.
           </p>
         </div>
+        <ol className="workflow-guide">
+          <li><strong>1. 할 일을 설명해요</strong><span>어떤 자료로 어떤 결과를 받고 싶은지 적습니다.</span></li>
+          <li><strong>2. 규칙을 확인해요</strong><span>AI가 정리한 내용을 우리 팀의 요구에 맞게 고칩니다.</span></li>
+          <li><strong>3. 시험하고 함께 써요</strong><span>예시 결과를 확인하고 저장·공유하거나 파일로 받습니다.</span></li>
+        </ol>
 
         {/* 로그인 (화면을 옮기지 않는다) */}
         {loginOpen && !user && (
@@ -628,19 +641,32 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
                 </li>
               ))}
             </ul>
-            <p className="ws-help">내가 만든 것과 나에게 공유된 것만 보입니다. 이 서버의 data/app.db 에 저장됩니다.</p>
+            <p className="ws-help">내가 만든 것과 나에게 공유된 것만 보입니다.</p>
           </div>
         )}
 
         {/* A. 설명 입력 */}
         <div className="ws-step">
-          <p className="question-eyebrow">1. 설명 입력</p>
+          <p className="question-eyebrow">1. AI에게 맡길 일을 알려 주세요</p>
+          {!project && (
+            <div className="ws-block">
+              <p className="ws-help">어떻게 적을지 막막하면 예시를 골라 우리 팀에 맞게 고치세요. 예시 선택만으로 AI를 호출하지 않습니다.</p>
+              <div className="polish-examples" aria-label="개발팀 업무 예시">
+                {WORK_EXAMPLES.map((example) => (
+                  <button className="polish-example-chip" type="button" key={example.title} disabled={Boolean(busy)}
+                    onClick={() => { setTitle(example.title); setDescription(example.description); setExampleOutput(''); }}>
+                    {example.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           <label className="task-input-label" htmlFor="ws-title">작업 이름</label>
           <input id="ws-title" className="ws-input" value={title} maxLength={100} onChange={(e) => setTitle(e.target.value)} />
           <label className="task-input-label" htmlFor="ws-desc">업무 설명 <span>(자유롭게)</span></label>
           <textarea id="ws-desc" className="task-input" rows={4} value={description} maxLength={6000}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="예: 비용 보고를 핵심부터 읽고 싶습니다. 입력에 없는 금액은 만들지 마세요. JSON으로 받고 싶습니다." />
+            placeholder="예: 회의록에서 결정 사항과 할 일을 나눠 주세요. 담당자와 기한이 없으면 확인 필요라고 적어 주세요." />
           <label className="task-input-label" htmlFor="ws-example">좋은 결과 예시 <span>(선택)</span></label>
           <textarea id="ws-example" className="task-input" rows={2} value={exampleOutput} maxLength={6000}
             onChange={(e) => setExampleOutput(e.target.value)} />
@@ -652,10 +678,10 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
           </p>
           <div className="prompt-actions">
             <button className="prompt-reset-button" type="button" disabled={Boolean(busy)} onClick={startSample}>
-              샘플로 시작 (합성 비용 데이터)
+              완성된 예제로 체험 (가상 비용 보고)
             </button>
             <button className="prompt-copy-button" type="button" disabled={Boolean(busy) || !live || !description.trim()} onClick={structure}>
-              {busy === 'structure' ? '정리하는 중…' : '요구사항 정리 (AI)'}
+              {busy === 'structure' ? '정리하는 중…' : '내 설명으로 시작하기 (AI)'}
             </button>
             <label className="ws-small-button ws-file">
               프로젝트 불러오기
@@ -683,12 +709,12 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
         {/* B. 요구사항 확인 */}
         {project && (
           <motion.div className="ws-step" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="question-eyebrow">2. 요구사항 확인</p>
+            <p className="question-eyebrow">2. 우리 팀의 규칙이 맞는지 확인하세요</p>
             <p className={`ws-stage ws-stage-${stage}`}>{STAGE_LABEL[stage]} · revision {project.requirements_revision}</p>
             <label className="ws-check-row ws-developer-toggle">
               <input type="checkbox" checked={developerMode} onChange={(e) => toggleDeveloperMode(e.target.checked)} />
               <span>
-                <strong>개발자 설정 보기</strong> (입력 타입·필수 여부, 출력 계약 편집)
+                <strong>앱 연동 설정 보기</strong> (입력 형식과 결과 항목 편집)
                 <span className="ws-help">
                   앱에 연결하는 개발자가 정하는 칸입니다. 업무 담당자는 AI가 채운 그대로 두고 목적·규칙·선호·미결 사항만
                   확인하면 됩니다.
@@ -817,8 +843,8 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
             </div>
 
             <div className="ws-block">
-              <strong>출력 계약</strong> <span className="ws-help">AI가 돌려줄 답의 항목</span>
-              <p className="ws-help">앱 코드가 이 이름으로 결과를 꺼내 화면이나 DB에 넣습니다. 시험할 때 이 모양을 지켰는지 코드로 검사합니다.</p>
+              <strong>결과에 담을 항목</strong>
+              <p className="ws-help">AI 답변에 어떤 정보가 있어야 하는지 확인하세요. 이름과 데이터 형식은 앱 연동 설정에서 고칠 수 있습니다.</p>
               {developerMode ? (
                 <>
                   <ContractEditor fields={req.output_contract.fields}
@@ -848,7 +874,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
                         ))}
                       </ul>
                     )}
-                  <p className="ws-help">고치려면 위의 "개발자 설정 보기"를 켜세요.</p>
+                  <p className="ws-help">항목을 고치려면 위의 "앱 연동 설정 보기"를 켜세요.</p>
                 </>
               )}
               {contractIssues.length > 0 && (
@@ -877,7 +903,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
         {/* C. 편집·시험·내보내기 */}
         {project?.artifact && (
           <motion.div className="ws-step" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="question-eyebrow">3. 프롬프트 편집 · 시험 · 내보내기</p>
+            <p className="question-eyebrow">3. 예시 자료로 결과를 확인하세요</p>
             {stage === 'stale_artifact' && (
               <p className="ws-error">요구사항이 바뀌었습니다. 위에서 다시 만들기 전에는 시험할 수 없습니다.</p>
             )}
@@ -886,22 +912,44 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
                 필수 규칙 {missingRules.map((r) => r.id).join(', ')} 의 문장이 지금 프롬프트에 없습니다. 의도한 변경이면 요구사항을 고쳐 다시 만드세요.
               </p>
             )}
-            <label className="task-input-label" htmlFor="ws-system">시스템 지침 <span>(revision {project.artifact.revision})</span></label>
+            <details className="ws-raw" open={developerMode || undefined}>
+            <summary>만들어진 AI 지침 확인 · 직접 수정</summary>
+            <label className="task-input-label" htmlFor="ws-system">AI가 항상 지킬 지침 <span>(revision {project.artifact.revision})</span></label>
             <textarea id="ws-system" className="task-input ws-code" rows={14} value={project.artifact.system_prompt}
               onChange={(e) => editArtifact('system_prompt', e.target.value)} />
             <label className="task-input-label" htmlFor="ws-template">입력 템플릿</label>
             <textarea id="ws-template" className="task-input ws-code" rows={6} value={project.artifact.input_template}
               onChange={(e) => editArtifact('input_template', e.target.value)} />
+            </details>
 
             <div className="ws-block-head ws-input-head">
-              <label className="task-input-label" htmlFor="ws-input">시험 입력 (JSON)</label>
-              <button className="ws-small-button" type="button" onClick={fillBlankInput}>변수 이름으로 빈 틀 채우기</button>
+              <strong>시험할 자료</strong>
+              <button className="ws-small-button" type="button" onClick={fillBlankInput}>빈 입력칸 만들기</button>
             </div>
             <p className="ws-help">
-              프롬프트를 적는 칸이 아닙니다. 위 입력 템플릿의 {'{{변수}}'} 자리에 넣을 값을 적습니다.
-              예: {'{ "customer_message": "어제 주문한 운동화가 아직 안 왔어요." }'}
+              실제 업무에 쓸 예시 자료를 넣어 보세요. 회의록 정리라면 회의 내용을 넣습니다.
+              목록·묶음 형태의 복잡한 자료는 JSON으로 입력하며, 앱 연동 설정을 켜면 JSON을 직접 편집할 수 있습니다.
             </p>
-            <textarea id="ws-input" className="task-input ws-code" rows={8} value={inputText} onChange={(e) => setInputText(e.target.value)} />
+            {simpleInput ? req.variables.map((v) => (
+              <div className="ws-block" key={v.name}>
+                <label className="task-input-label" htmlFor={`ws-value-${v.name}`}>{v.description || v.name} <span>({v.required ? '필수' : '선택'})</span></label>
+                {v.type === 'boolean' ? (
+                  <select id={`ws-value-${v.name}`} className="ws-input" value={inputValues[v.name] == null ? '' : String(inputValues[v.name])}
+                    onChange={(e) => editInputValue(v.name, e.target.value === '' ? null : e.target.value === 'true')}>
+                    <option value="">선택하세요</option><option value="true">예</option><option value="false">아니오</option>
+                  </select>
+                ) : v.type === 'string' ? (
+                  <textarea id={`ws-value-${v.name}`} className="task-input" rows={4} value={inputValues[v.name] ?? ''}
+                    onChange={(e) => editInputValue(v.name, e.target.value)} />
+                ) : (
+                  <input id={`ws-value-${v.name}`} className="ws-input" type="number" step={v.type === 'integer' ? 1 : 'any'} value={inputValues[v.name] ?? ''}
+                    onChange={(e) => editInputValue(v.name, e.target.value === '' ? null : Number(e.target.value))} />
+                )}
+              </div>
+            )) : (
+              <><label className="task-input-label" htmlFor="ws-input">시험 자료 (JSON)</label>
+              <textarea id="ws-input" className="task-input ws-code" rows={8} value={inputText} onChange={(e) => setInputText(e.target.value)} /></>
+            )}
             <div className="prompt-actions">
               <button className="prompt-copy-button" type="button" disabled={Boolean(busy) || stage !== 'built'} onClick={runTest}>
                 {busy === 'run' ? '실행 중…' : live ? '시험 실행 (AI)' : '메시지 구성 확인'}
@@ -947,7 +995,7 @@ function PromptWorkspaceSection({ onBack, user, signupOpen = true, onLogin, logi
         {/* D. 저장 · 버전 · 비교 */}
         {project && (
           <div className="ws-step">
-            <p className="question-eyebrow">4. 저장 · 버전 · 비교</p>
+            <p className="question-eyebrow">4. 저장하고 팀원과 함께 고쳐 쓰세요</p>
             <p className={`ws-stage ${unsaved ? 'ws-stage-stale_artifact' : ''}`}>
               {savedId ? `저장된 프로젝트 · 최신 v${versions[versions.length - 1]?.version}` : '아직 저장하지 않은 프로젝트'}
               {savedId && role !== 'owner' && ` · ${owner} 님 공유 (${ROLE_LABEL[role]})`}
