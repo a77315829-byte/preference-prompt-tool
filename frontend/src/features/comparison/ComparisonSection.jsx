@@ -325,7 +325,7 @@ function ComparisonSection({
           </span>
           <span>
               {isComplete
-              ? '선택 완료'
+              ? `선택 완료 · ${remoteSession.answered}회`
               : `${remoteSession.answered} / ${remoteSession.total_rounds}`}
           </span>
         </div>}
