@@ -128,7 +128,10 @@ Python 3.12   (3.13/3.14 금지 — 패키지 호환성 문제. CI·.devcontaine
 
 - `submission` 은 `submission-final` 태그로 고정했고 Streamlit 공개 배포는 그 브랜치를 본다.
   기존 프로젝트 작업은 `master` 에서 한다.
-- 사용자가 요청한 새 대회용 작업은 `codex/summary-coding-no-aws` 에서 한다.
+- 사용자가 요청한 서비스 작업은 `microstone` 에서 한다(이전 이름 `codex/summary-coding-no-aws`).
+  인터넷 배포는 `hosting_server.py`·`Dockerfile`·`render.yaml`을 사용하며 React 빌드와 API를 같은 주소에서 제공한다.
+  DB·첨부·캐시는 영구 디스크에 두고 로컬 `.env`·사용자 DB·캐시를 이미지에 포함하지 않는다.
+  배포·도메인·백업과 실제 AI 모드 설정은 `docs/DEPLOYMENT.md`에 있다. master에는 자동 병합하지 않는다.
   문서 요약·코딩과 공통 기능을 유지하고 AWS 화면·조회 API·템플릿은 제외한다.
   과거 AWS 실험·검사 자료는 기록으로 보존한다. 제품 방향은 작은 개발팀의 AI 사용 기준 공유다.
   React 상단 메뉴는 `시작하기`·`내 선호 보관함`·`템플릿`·`팀 기준 맞추기`다.

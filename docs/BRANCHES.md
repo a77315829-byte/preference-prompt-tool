@@ -1,8 +1,10 @@
 # 브랜치 현황과 정리 제안
 
 2026-11-04 `git fetch origin` 후의 원격 이력과 GitHub PR 상태를 확인했다.
-현재 브랜치는 `codex/summary-coding-no-aws`이며, 이번 작업에서는 브랜치를 삭제하지 않았다.
-원격 브랜치는 12개이고 `origin/HEAD`는 기본 브랜치를 가리키는 별칭이라 개수에 넣지 않는다.
+개발 브랜치는 GitHub에서 `microstone`으로 이름이 변경됐으며 로컬 이름·추적 대상도 맞췄다.
+이전 이름은 `codex/summary-coding-no-aws`다. 이름 변경 때 PR #12는 닫혔고 그 검토 이력은 보존한다.
+아래 목록은 최초 점검의 원격 12개 기준이며, 이후 삭제·이름 변경은 삭제 전에 다시 확인한다.
+`origin/HEAD`는 기본 브랜치를 가리키는 별칭이라 개수에 넣지 않는다.
 
 ## 정리해도 되는 후보
 
@@ -26,7 +28,7 @@
 | 브랜치 | 이유 |
 |---|---|
 | `master` | 현재 기본·통합 브랜치 |
-| `codex/summary-coding-no-aws` | 현재 개발 브랜치, [PR #12](https://github.com/a77315829-byte/preference-prompt-tool/pull/12) 열림 |
+| `microstone` | 현재 개발·배포 준비 브랜치. [변경 비교](https://github.com/a77315829-byte/preference-prompt-tool/compare/master...microstone), 이전 PR #12 이력 유지 |
 | `codex/coding-ai-upgrade` | [PR #11](https://github.com/a77315829-byte/preference-prompt-tool/pull/11) 열림. master에 없는 커밋 10개와 프롬프트 개선 실험·사전등록·검증 수정이 남아 있음 |
 | `submission` | 기존 공개 제출·배포 이력이 연결되어 있음. `submission-final` 태그도 유지 |
 

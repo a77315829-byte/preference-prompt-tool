@@ -300,6 +300,18 @@ flowchart LR
 
 [전체 검토 기록과 재현 방법](docs/history/2026-11-04_project_review.md)
 
+## 인터넷에 올려서 사용하기
+
+`microstone` 브랜치에는 화면과 API를 한 주소에서 실행하는 Docker 설정이 있습니다.
+영구 디스크에 보관함·인수인계·첨부와 캐시를 저장하고, 이후 원하는 도메인을 연결할 수 있습니다.
+실제 AI 호출은 처음에는 꺼 둡니다. 서버 설정을 준비한 상태이며 공개 서비스가 이미 운영 중이라는 뜻은 아닙니다.
+
+`render.yaml`은 **유료 선택지**입니다. 서버와 1GB 디스크의 기본 요금은 월 **$7.25**이며 세금·초과 사용량·AI·도메인 비용은 별도입니다.
+[Render 유료 구성을 검토하는 화면](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2Fa77315829-byte%2Fpreference-prompt-tool%2Ftree%2Fmicrostone)에서 생성 전 금액을 확인합니다.
+무료 가상서버를 사용한다면 같은 Docker 이미지와 영구 볼륨을 사용할 수 있으나, 무료 할당 가능 여부와 운영 조건을 먼저 확인해야 합니다.
+
+[배포 설정·도메인 연결·데이터 유지 안내](docs/DEPLOYMENT.md)
+
 ## 로컬 실행
 
 Python **3.12**, Node.js **20.19+ 또는 22.12+**가 필요합니다.
@@ -343,5 +355,6 @@ npm run build --prefix frontend
 - [브랜치 현황과 정리 제안](docs/BRANCHES.md)
 - [저장소 작업 지침](CLAUDE.md)
 
-현재 개발 브랜치는 `codex/summary-coding-no-aws`이며, `master` 대상 [PR #12](https://github.com/a77315829-byte/preference-prompt-tool/pull/12)에서 검토합니다.
+현재 개발 브랜치는 `microstone`이며, `master` 대상 [변경 비교](https://github.com/a77315829-byte/preference-prompt-tool/compare/master...microstone)와 PR에서 검토합니다.
+이전 이름은 `codex/summary-coding-no-aws`이며, 이름 변경 시 닫힌 PR #12의 이력은 보존합니다.
 과거 공개 제출본과 현재 개발 화면의 범위는 다르며 자동으로 병합하지 않습니다.

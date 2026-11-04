@@ -1,0 +1,53 @@
+name: Hosted container
+
+on:
+  push:
+    branches: [microstone]
+    paths:
+      - '*.py'
+      - 'requirements.txt'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'frontend/**'
+      - 'engine/**'
+      - 'checks/**'
+      - 'domains/**'
+      - 'demos/**'
+      - 'optimize/**'
+      - 'agents/**'
+      - 'prompt_workspace/**'
+      - 'scripts/**'
+      - 'benchmarks/coding_style/v1.json'
+      - '.github/workflows/hosting.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  container-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build hosted image
+        run: docker build -t microstone:test .
+      - name: Run with disposable persistent storage
+        run: |
+          docker volume create microstone-smoke-data
+          docker run -d --name microstone-smoke -p 127.0.0.1:18080:8000 -v microstone-smoke-data:/var/data -e PPT_COOKIE_SECURE=0 -e PPT_LIVE=0 -e PPT_FASTAPI_GEPA_LIVE=0 -e PPT_SPRING_BOOT_GEPA_LIVE=0 -e PPT_WEB_GEPA_LIVE=0 -e PPT_PYTHON_WEB_GEPA_LIVE=0 microstone:test
+          python scripts/smoke_hosting.py --state-file "$RUNNER_TEMP/hosting-smoke.json" --phase create
+      - name: Verify JS/TS tooling
+        run: |
+          docker exec microstone-smoke node --version
+          docker exec microstone-smoke node -e "console.log(require('/app/frontend/node_modules/typescript').version)"
+      - name: Verify data after restart
+        run: |
+          docker restart microstone-smoke
+          python scripts/smoke_hosting.py --state-file "$RUNNER_TEMP/hosting-smoke.json" --phase verify
+      - name: Diagnostics and cleanup
+        if: always()
+        run: |
+          docker logs microstone-smoke 2>&1 || true
+          docker rm -f microstone-smoke 2>/dev/null || true
+          docker volume rm microstone-smoke-data 2>/dev/null || true
