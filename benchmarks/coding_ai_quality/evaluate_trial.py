@@ -45,6 +45,14 @@ ENTRY = {
     "todo_add": "TodoAdd.tsx",
     "color_choice": "ColorChoice.tsx",
     "word_count": "WordCount.tsx",
+    "page_list": "PageList.tsx",
+    "tip_calc": "TipCalc.tsx",
+    "tag_input": "TagInput.tsx",
+    "step_wizard": "StepWizard.tsx",
+    "category_filter": "CategoryFilter.tsx",
+    "price_sort": "PriceSort.tsx",
+    "single_accordion": "SingleAccordion.tsx",
+    "bounded_counter": "BoundedCounter.tsx",
 }
 
 
