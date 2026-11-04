@@ -173,14 +173,14 @@ example_sources:
     4. Amazon Route53: 소계 $0.50 (2.7%) | 리전: Global
        - HostedZone: $0.50
 
-# 최종 프롬프트의 영어판 (화면 기본값). 보고서는 원래대로 한국어로 쓰게 한다.
+# 최종 프롬프트의 영어판 (화면 기본값). test_prompt_language.py 통과를 위해 한글을 포함하지 않는다.
 final_prompt_translations:
   en:
     role: "You are a Cloud FinOps assistant who writes accurate and consistent AWS cost analysis reports based on the user's latest available AWS billing data."
     preference_note: "The preferences below were inferred from cost report options the user picked while comparing several pairs."
     team_role: "You are a Cloud FinOps assistant who writes standardized team AWS cost analysis reports based on this team's latest available AWS billing data."
     team_preference_note: "The preferences below were inferred by combining the cost report options each team member picked while comparing several pairs."
-    task: "Based on the latest available AWS cost query results (metadata, pre-computed summary, and breakdown by service and Usage Type), write an easy-to-understand cost analysis report in Korean. Strictly maintain the 4-part Markdown layout (# [AWS 비용 분석 리포트] -> ## 1. 총 청구 금액 -> ## 2. 과금 내역 -> ## 3. 데이터 확인 안내). Mention only amounts, shares, regions, and Usage Types present in the data, and never speculate or invent resource idle status or waste causes."
+    task: "Based on the latest available AWS cost query results (metadata, pre-computed summary, and breakdown by service and Usage Type), write an easy-to-understand cost analysis report in Korean. Strictly maintain the 4-part Markdown layout: Title & Metadata header -> Section 1 (Total Cost) -> Section 2 (Cost Breakdown) -> Section 3 (Data Verification Notice). Mention only amounts, shares, regions, and Usage Types present in the data, and never speculate or invent resource idle status or waste causes."
     preference_heading: "This user's preferences"
     team_preference_heading: "This team's preferences"
     rules_heading: "Always"
@@ -188,16 +188,16 @@ final_prompt_translations:
       - "Only point out items supported by the given data. Never speculate or invent resource states (e.g., unused, forgotten) or amounts not present in the data."
       - "Do not recalculate or alter the pre-computed total cost, service subtotals, or percentage shares provided in the source data."
       - "Always include the metadata blockquote (>) header at the top containing the query period (including estimate status), updated timestamp, masked Account ID, and currency."
-      - "Always include the '## 3. 데이터 확인 안내' section at the bottom explaining the limitations of billing data and advising further checks in the AWS Console (e.g., CloudWatch)."
+      - "Always include the Section 3 (Data Verification Notice) block at the bottom explaining the limitations of billing data and advising further checks in the AWS Console (e.g., CloudWatch)."
     output_heading: "Output format"
-    output: "Output only the cost report in Korean. Strictly follow the 4-part Markdown layout: '# [AWS 비용 분석 리포트]' header block -> '## 1. 총 청구 금액' -> '## 2. 핵심 과금 내역 (요약)' or '## 2. 전체 과금 상세 내역 (Usage Type 기준)' -> '## 3. 데이터 확인 안내'."
+    output: "Output only the cost report in Korean. Strictly follow the 4-part Markdown layout: Title and metadata header block -> Section 1 (Total Billed Cost) -> Section 2 (Core Cost Summary or Full Usage Type Breakdown) -> Section 3 (Data Verification Notice)."
     axis_labels:
       format: "Output format"
       scope: "Report scope and density"
     instructions:
       format:
-        bullet_list: "Format the '## 2.' breakdown section strictly as a Markdown bullet list (- ). Never use Markdown tables (|) or table dividers (| --- |). Present each item using the pattern '- **[Service Name]:** [Cost] ([Share]%) — [Details]'."
-        markdown_table: "Format the '## 2.' breakdown section strictly as a Markdown table (|). Do not use bullet lists (- ) in the breakdown body. Clearly output the table header and alignment divider (| :--- | :---: |), and always place a '| **합계** |' (Total) row at the bottom of the table."
+        bullet_list: "Format the Section 2 breakdown strictly as a Markdown bullet list (- ). Never use Markdown tables (|) or table dividers (| --- |). Present each item using the pattern '- **[Service Name]:** [Cost] ([Share]%) - [Details]'."
+        markdown_table: "Format the Section 2 breakdown strictly as a Markdown table (|). Do not use bullet lists (- ) in the breakdown body. Clearly output the table header and alignment divider (| :--- | :---: |), and always place a bold Total summary row at the bottom of the table."
       scope:
-        summary_brief: "Title the section '## 2. 핵심 과금 내역 (요약)'. Show only the top 2 highest-cost core services individually, and group all remaining minor services into a single item labeled '기타 서비스 합계 (N건)' with their combined cost and share. Omit detailed Usage Type codes."
-        deep_dive: "Title the section '## 2. 전체 과금 상세 내역 (Usage Type 기준)'. Do not group minor items into '기타 합계'; list every service in the source data individually (including minor costs). Include the region and all detailed Usage Type codes and sub-amounts without omission."
+        summary_brief: "In Section 2, show only the top 2 highest-cost core services individually, and group all remaining minor services into a single combined 'Other Services Total (N items)' entry with their combined cost and share. Omit detailed Usage Type codes."
+        deep_dive: "In Section 2, do not group minor items into an 'Other Services' summary; list every service in the source data individually (including minor costs). Include the region and all detailed Usage Type codes and sub-amounts without omission."
