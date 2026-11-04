@@ -1,4 +1,4 @@
-"""checks/idle_tracker.py 의 total_cost_accuracy·no_fabrication 회귀 테스트.
+"""checks/idle_tracker.py 의 축 채점표(format·scope) 및 정확성(total_cost_accuracy·no_fabrication) 회귀 테스트.
 
 API 없이 돈다 - demos/idle_tracker.py 는 결정적 생성기라 실제 API 응답
 없이도 "정확한 출력"과 "지어낸 출력"을 둘 다 만들 수 있다.
@@ -6,7 +6,8 @@ API 없이 돈다 - demos/idle_tracker.py 는 결정적 생성기라 실제 API 
 
 from __future__ import annotations
 
-from checks.idle_tracker import no_fabrication, total_cost_accuracy
+from checks.idle_tracker import format as check_format
+from checks.idle_tracker import no_fabrication, scope, total_cost_accuracy
 from demos.idle_tracker import generate_demo
 
 REPORT = {
@@ -30,6 +31,35 @@ REPORT = {
     ],
 }
 
+REPORT_4520 = {
+    "totalCost": "$45.20",
+    "currency": "USD",
+    "topSummary": "$40.00 (88.5%) - Amazon EC2, Amazon RDS",
+    "otherSummary": "$5.20 (11.5%, 2건) - Amazon S3, Amazon Route53",
+    "findings": [
+        {
+            "service": "Amazon EC2",
+            "resourceId": "APN2-BoxUsage:t2.micro ($20.00), APN2-EBS:VolumeUsage.gp2 ($5.00)",
+            "cost": "$25.00",
+        },
+        {
+            "service": "Amazon RDS",
+            "resourceId": "APN2-InstanceUsage:db.t2.micro ($12.00), APN2-RDS:GP2-Storage ($3.00)",
+            "cost": "$15.00",
+        },
+        {
+            "service": "Amazon S3",
+            "resourceId": "APN2-TimedStorage-ByteHrs ($4.50), APN2-DataTransfer-Out-Bytes ($0.50)",
+            "cost": "$5.00",
+        },
+        {
+            "service": "Amazon Route53",
+            "resourceId": "HostedZone ($0.20)",
+            "cost": "$0.20",
+        },
+    ],
+}
+
 
 def test_demo_generator_output_passes_both_checks() -> None:
     """demos/idle_tracker.py 는 REPORT 의 실제 값만 쓰므로 두 검사 모두
@@ -42,8 +72,31 @@ def test_demo_generator_output_passes_both_checks() -> None:
         cost_score, cost_note = total_cost_accuracy(output, REPORT)
         fab_score, fab_note = no_fabrication(output, REPORT)
         assert fab_score == 1.0, f"{combo}: {fab_note}"
-        # detail_level=summary 는 합계 금액을 안 낼 수도 있다 - "검사 생략"도 1.0.
         assert cost_score == 1.0, f"{combo}: {cost_note}"
+
+
+def test_new_4520_layout_demos_pass_accuracy_and_rubric_checks() -> None:
+    """새로 개편한 4단 레이아웃($45.20) 4종 조합이 정확성 검사와 각 축의 채점표를
+    모두 1.0점으로 통과하고, 반대 축 기준에서는 감점되는지 확인한다."""
+    for fmt in ("bullet_list", "markdown_table"):
+        for scp in ("summary_brief", "deep_dive"):
+            combo = {"format": fmt, "scope": scp}
+            output = generate_demo("AWS 비용 분석", combo)
+
+            cost_score, cost_note = total_cost_accuracy(output, REPORT_4520)
+            fab_score, fab_note = no_fabrication(output, REPORT_4520)
+            assert cost_score == 1.0, f"{combo}: {cost_note}"
+            assert fab_score == 1.0, f"{combo}: {fab_note}"
+
+            fmt_score, fmt_note = check_format(output, "", fmt, {"style": fmt})
+            scp_score, scp_note = scope(output, "", scp, {"level": scp})
+            assert fmt_score == 1.0, f"{combo} format 실패: {fmt_note}"
+            assert scp_score == 1.0, f"{combo} scope 실패: {scp_note}"
+
+            # 반대 스타일로 채점하면 1.0점을 받지 않아야 판별력이 있다.
+            other_fmt = "markdown_table" if fmt == "bullet_list" else "bullet_list"
+            wrong_fmt_score, _ = check_format(output, "", other_fmt, {"style": other_fmt})
+            assert wrong_fmt_score < 1.0
 
 
 def test_no_fabrication_catches_a_made_up_dollar_amount() -> None:
