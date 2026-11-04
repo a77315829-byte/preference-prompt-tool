@@ -31,13 +31,88 @@
     {
       "file": "06-handoff.jpg",
       "source": "http://127.0.0.1:5173/",
-      "selector": ".handoff-fields"
+      "selector": ".handoff-fields",
+      "feature": "출시 회의 후속 업무의 목적·진행·남은 일·자료·프롬프트"
     },
     {
       "file": "07-team-start.jpg",
       "source": "http://127.0.0.1:5173/",
       "selector": ".teams-section .ws-step (second section: usage guide and participation buttons)",
       "account": "anonymous"
+    },
+    {
+      "file": "08-summary-comparison.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "문서 요약 A/B 선택",
+      "account": "isolated preview fixtures"
+    },
+    {
+      "file": "09-summary-prompt.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "선택 후 한국어 요약 지침",
+      "account": "isolated preview fixtures"
+    },
+    {
+      "file": "10-personal-team-summary.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "회의록 개인·팀 기준 비교",
+      "account": "isolated preview fixtures"
+    },
+    {
+      "file": "11-task-preference-mix.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "항목별 작업용 조합",
+      "account": "isolated preview fixtures"
+    },
+    {
+      "file": "12-library-overview.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "요약·코딩·조합을 함께 보는 보관함",
+      "account": "isolated preview fixtures"
+    },
+    {
+      "file": "13-templates.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "팀 업무 템플릿 목록",
+      "account": "isolated preview fixtures"
+    },
+    {
+      "file": "14-request-checklist.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "요청문 구조 점검",
+      "account": "isolated preview fixtures"
+    },
+    {
+      "file": "15-work-guidelines.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "반복 업무 지침 작성 시작",
+      "account": "isolated preview fixtures"
+    },
+    {
+      "file": "16-handoff-attachments.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "저장한 참고 파일 열기·다운로드",
+      "account": "isolated preview fixtures"
+    },
+    {
+      "file": "17-team-invitation.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "실제 예시 팀의 초대 링크",
+      "account": "isolated preview fixtures"
+    },
+    {
+      "file": "18-gepa-entry.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "GEPA 실행 안내, 실행하지 않음",
+      "account": "isolated preview fixtures"
+    },
+    {
+      "file": "19-answer-review.jpg",
+      "source": "http://127.0.0.1:5173/",
+      "feature": "시연용 입력에 대한 답변 직접 확인",
+      "account": "isolated preview fixtures"
     }
-  ]
+  ],
+  "coverage": "문서 요약, 코딩, 보관함, 팀 초대, 개인·팀 비교/조합, 템플릿, 요청문 점검, 반복 업무 지침, 인수인계와 첨부, GEPA 안내, 답변 직접 확인",
+  "notes": "고정 메뉴가 부분 캡처를 가리는 경우 캡처 순간 메뉴만 숨김. 제품 내용 합성 없음. 19번에는 시연용이라고 표시한 준비 답변을 사용. 실제 AI/GEPA 실행 없음."
 }
