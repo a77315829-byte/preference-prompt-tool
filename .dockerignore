@@ -8,6 +8,8 @@
 !engine/**
 !domains/
 !domains/**
+!templates/
+!templates/**
 !checks/
 !checks/**
 !demos/

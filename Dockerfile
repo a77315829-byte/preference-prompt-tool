@@ -30,6 +30,7 @@ COPY frontend/package.json ./frontend/package.json
 COPY *.py ./
 COPY engine/ ./engine/
 COPY domains/ ./domains/
+COPY templates/ ./templates/
 COPY checks/ ./checks/
 COPY demos/ ./demos/
 COPY optimize/ ./optimize/
