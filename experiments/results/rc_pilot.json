@@ -1,0 +1,2361 @@
+{
+  "mode": "execute",
+  "split": "calibration",
+  "model": "openai/gpt-4o-mini",
+  "repeats": 1,
+  "temperature": 0.7,
+  "plan": {
+    "split": "calibration",
+    "tasks": [
+      "counter_reset",
+      "product_search",
+      "signup_validation",
+      "todo_toggle"
+    ],
+    "conditions": [
+      "none",
+      "rule_based",
+      "request_check"
+    ],
+    "model": "openai/gpt-4o-mini",
+    "profiles": [
+      {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      }
+    ],
+    "repeats": 1,
+    "temperature": 0.7,
+    "max_api_requests_worst_case": 36
+  },
+  "profiles": [
+    {
+      "label": "separated-theme-explicit",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "history": [
+        [
+          {
+            "code_structure": "separated",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          {
+            "code_structure": "compact",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          "a"
+        ],
+        [
+          {
+            "code_structure": "separated",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          {
+            "code_structure": "separated",
+            "style_management": "theme",
+            "type_detail": "inferred"
+          },
+          "b"
+        ],
+        [
+          {
+            "code_structure": "separated",
+            "style_management": "theme",
+            "type_detail": "explicit"
+          },
+          {
+            "code_structure": "separated",
+            "style_management": "theme",
+            "type_detail": "inferred"
+          },
+          "a"
+        ]
+      ],
+      "prompts": {
+        "none": "",
+        "rule_based": "당신은 이 사용자의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.\n\n아래 개발 요청을 해결하는 TypeScript/React 코드를 작성하라. 요청된 기능과 동작을 빠짐없이 구현하되, 요청에 없는 기능은 추가하지 마라. 비교 후보 사이에서 달라질 수 있는 것은 코드 구조, 스타일 관리 방식, 타입 작성 방식뿐이다. 이 스타일 지시가 기능 요구와 충돌하면 기능을 우선하라. 개발 요청에 명시된 데이터, 화면 문구, 입력·출력 동작을 그대로 사용하라. 임의의 데이터 모델, 기능, 라이브러리, 실행 진입점 파일을 덧붙이지 마라. 컴포넌트의 접근성 레이블과 키보드 조작을 챙겨라. TypeScript/React에서 그대로 사용할 수 있는 유효한 코드만 제시하라. 실행에 필요한 모든 파일의 이름과 전체 코드를 제시하고 생략하지 마라. 사용자가 선호하는 코드 구성, 스타일 관리, 타입 작성 방식을 일관되게 적용하라.\n\n## 이 사용자의 선호\n아래 선호는 사용자가 여러 코드 예시를 직접 비교하며 고른 결과에서 추정한 것이다.\n- 코드 구성: 컴포넌트와 스타일 또는 상태 로직을 역할별 파일로 분리하라. 필요 없는 하위 컴포넌트와 타입 전용 파일을 억지로 만들지 말고, 각 파일의 이름과 전체 코드를 명확히 제시하라.\n- 스타일 관리: 색상, 간격, 글꼴 같은 디자인 값은 theme 또는 디자인 토큰으로 모아서 관리하라. 컴포넌트에서는 해당 값을 참조하여 전체 디자인을 쉽게 수정할 수 있게 하라.\n- 타입 작성: Props, 함수 매개변수, 반환값, 상태와 주요 데이터 구조의 타입을 꼼꼼하게 명시하라.\n\n## 항상 지킬 것\n- 요청된 기능과 동작을 빠짐없이 구현하라. 스타일 선호와 충돌하면 기능 요구를 우선하고, 요청에 없는 기능은 추가하지 마라.\n- 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.\n- 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.\n- 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.\n- 접근성(레이블, 키보드 조작)을 기본으로 챙겨라.\n\n## 출력 형식\n코드를 먼저 보여 주고, 그 방식을 고른 이유를 두세 문장으로 덧붙여라.",
+        "request_check": "당신은 이 사용자의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.\n\n아래 개발 요청을 해결하는 TypeScript/React 코드를 작성하라. 요청된 기능과 동작을 빠짐없이 구현하되, 요청에 없는 기능은 추가하지 마라. 비교 후보 사이에서 달라질 수 있는 것은 코드 구조, 스타일 관리 방식, 타입 작성 방식뿐이다. 이 스타일 지시가 기능 요구와 충돌하면 기능을 우선하라. 개발 요청에 명시된 데이터, 화면 문구, 입력·출력 동작을 그대로 사용하라. 임의의 데이터 모델, 기능, 라이브러리, 실행 진입점 파일을 덧붙이지 마라. 컴포넌트의 접근성 레이블과 키보드 조작을 챙겨라. TypeScript/React에서 그대로 사용할 수 있는 유효한 코드만 제시하라. 실행에 필요한 모든 파일의 이름과 전체 코드를 제시하고 생략하지 마라. 사용자가 선호하는 코드 구성, 스타일 관리, 타입 작성 방식을 일관되게 적용하라.\n\n## 이 사용자의 선호\n아래 선호는 사용자가 여러 코드 예시를 직접 비교하며 고른 결과에서 추정한 것이다.\n- 코드 구성: 컴포넌트와 스타일 또는 상태 로직을 역할별 파일로 분리하라. 필요 없는 하위 컴포넌트와 타입 전용 파일을 억지로 만들지 말고, 각 파일의 이름과 전체 코드를 명확히 제시하라.\n- 스타일 관리: 색상, 간격, 글꼴 같은 디자인 값은 theme 또는 디자인 토큰으로 모아서 관리하라. 컴포넌트에서는 해당 값을 참조하여 전체 디자인을 쉽게 수정할 수 있게 하라.\n- 타입 작성: Props, 함수 매개변수, 반환값, 상태와 주요 데이터 구조의 타입을 꼼꼼하게 명시하라.\n\n## 항상 지킬 것\n- 코드를 내기 전에 개발 요청에 따옴표로 적힌 화면 문구, 버튼 글자, 표시 형식을 하나씩 대조하라. 글자를 바꾸거나 덧붙이지 말고, 요청에 없는 라이브러리(예: styled-components)를 쓰지 마라.\n- 요청된 기능과 동작을 빠짐없이 구현하라. 스타일 선호와 충돌하면 기능 요구를 우선하고, 요청에 없는 기능은 추가하지 마라.\n- 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.\n- 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.\n- 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.\n- 접근성(레이블, 키보드 조작)을 기본으로 챙겨라.\n\n## 출력 형식\n코드를 먼저 보여 주고, 그 방식을 고른 이유를 두세 문장으로 덧붙여라."
+      }
+    },
+    {
+      "label": "compact-direct-inferred",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "history": [
+        [
+          {
+            "code_structure": "separated",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          {
+            "code_structure": "compact",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          "b"
+        ],
+        [
+          {
+            "code_structure": "compact",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          {
+            "code_structure": "compact",
+            "style_management": "theme",
+            "type_detail": "inferred"
+          },
+          "a"
+        ],
+        [
+          {
+            "code_structure": "compact",
+            "style_management": "direct",
+            "type_detail": "explicit"
+          },
+          {
+            "code_structure": "compact",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          "b"
+        ]
+      ],
+      "prompts": {
+        "none": "",
+        "rule_based": "당신은 이 사용자의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.\n\n아래 개발 요청을 해결하는 TypeScript/React 코드를 작성하라. 요청된 기능과 동작을 빠짐없이 구현하되, 요청에 없는 기능은 추가하지 마라. 비교 후보 사이에서 달라질 수 있는 것은 코드 구조, 스타일 관리 방식, 타입 작성 방식뿐이다. 이 스타일 지시가 기능 요구와 충돌하면 기능을 우선하라. 개발 요청에 명시된 데이터, 화면 문구, 입력·출력 동작을 그대로 사용하라. 임의의 데이터 모델, 기능, 라이브러리, 실행 진입점 파일을 덧붙이지 마라. 컴포넌트의 접근성 레이블과 키보드 조작을 챙겨라. TypeScript/React에서 그대로 사용할 수 있는 유효한 코드만 제시하라. 실행에 필요한 모든 파일의 이름과 전체 코드를 제시하고 생략하지 마라. 사용자가 선호하는 코드 구성, 스타일 관리, 타입 작성 방식을 일관되게 적용하라.\n\n## 이 사용자의 선호\n아래 선호는 사용자가 여러 코드 예시를 직접 비교하며 고른 결과에서 추정한 것이다.\n- 코드 구성: 작은 기능은 한 파일 안에 컴포넌트, 상태 로직, 스타일을 함께 두어 간결하게 작성하라. 별도 CSS 파일도 만들지 말고 TSX 파일의 인라인 스타일 또는 스타일 객체를 사용하라.\n- 스타일 관리: 색상, 간격, 크기 같은 스타일 값은 스타일 파일이나 컴포넌트에 직접 작성하여 바로 확인할 수 있게 하라.\n- 타입 작성: 타입 추론 중심으로 작성하라. React.FC와 단순한 변수·함수의 반환 타입처럼 추론 가능한 타입은 반복해서 쓰지 마라. 숫자·문자열·불리언 초기값의 useState<number>(0) 같은 불필요한 제네릭도 쓰지 마라. 단, 빈 배열이나 null로 시작하는 상태처럼 요소 타입을 추론할 수 없는 곳에는 useState<Item[]>([])처럼 필요한 타입을 명시하라. 이벤트 매개변수는 가능하면 인라인 핸들러로 추론하게 하고, 별도 함수가 필요하면 이벤트 타입만 명시하라. Props처럼 TypeScript가 추론할 수 없는 공개 경계에도 타입을 작성하라.\n\n## 항상 지킬 것\n- 요청된 기능과 동작을 빠짐없이 구현하라. 스타일 선호와 충돌하면 기능 요구를 우선하고, 요청에 없는 기능은 추가하지 마라.\n- 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.\n- 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.\n- 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.\n- 접근성(레이블, 키보드 조작)을 기본으로 챙겨라.\n\n## 출력 형식\n코드를 먼저 보여 주고, 그 방식을 고른 이유를 두세 문장으로 덧붙여라.",
+        "request_check": "당신은 이 사용자의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.\n\n아래 개발 요청을 해결하는 TypeScript/React 코드를 작성하라. 요청된 기능과 동작을 빠짐없이 구현하되, 요청에 없는 기능은 추가하지 마라. 비교 후보 사이에서 달라질 수 있는 것은 코드 구조, 스타일 관리 방식, 타입 작성 방식뿐이다. 이 스타일 지시가 기능 요구와 충돌하면 기능을 우선하라. 개발 요청에 명시된 데이터, 화면 문구, 입력·출력 동작을 그대로 사용하라. 임의의 데이터 모델, 기능, 라이브러리, 실행 진입점 파일을 덧붙이지 마라. 컴포넌트의 접근성 레이블과 키보드 조작을 챙겨라. TypeScript/React에서 그대로 사용할 수 있는 유효한 코드만 제시하라. 실행에 필요한 모든 파일의 이름과 전체 코드를 제시하고 생략하지 마라. 사용자가 선호하는 코드 구성, 스타일 관리, 타입 작성 방식을 일관되게 적용하라.\n\n## 이 사용자의 선호\n아래 선호는 사용자가 여러 코드 예시를 직접 비교하며 고른 결과에서 추정한 것이다.\n- 코드 구성: 작은 기능은 한 파일 안에 컴포넌트, 상태 로직, 스타일을 함께 두어 간결하게 작성하라. 별도 CSS 파일도 만들지 말고 TSX 파일의 인라인 스타일 또는 스타일 객체를 사용하라.\n- 스타일 관리: 색상, 간격, 크기 같은 스타일 값은 스타일 파일이나 컴포넌트에 직접 작성하여 바로 확인할 수 있게 하라.\n- 타입 작성: 타입 추론 중심으로 작성하라. React.FC와 단순한 변수·함수의 반환 타입처럼 추론 가능한 타입은 반복해서 쓰지 마라. 숫자·문자열·불리언 초기값의 useState<number>(0) 같은 불필요한 제네릭도 쓰지 마라. 단, 빈 배열이나 null로 시작하는 상태처럼 요소 타입을 추론할 수 없는 곳에는 useState<Item[]>([])처럼 필요한 타입을 명시하라. 이벤트 매개변수는 가능하면 인라인 핸들러로 추론하게 하고, 별도 함수가 필요하면 이벤트 타입만 명시하라. Props처럼 TypeScript가 추론할 수 없는 공개 경계에도 타입을 작성하라.\n\n## 항상 지킬 것\n- 코드를 내기 전에 개발 요청에 따옴표로 적힌 화면 문구, 버튼 글자, 표시 형식을 하나씩 대조하라. 글자를 바꾸거나 덧붙이지 말고, 요청에 없는 라이브러리(예: styled-components)를 쓰지 마라.\n- 요청된 기능과 동작을 빠짐없이 구현하라. 스타일 선호와 충돌하면 기능 요구를 우선하고, 요청에 없는 기능은 추가하지 마라.\n- 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.\n- 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.\n- 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.\n- 접근성(레이블, 키보드 조작)을 기본으로 챙겨라.\n\n## 출력 형식\n코드를 먼저 보여 주고, 그 방식을 고른 이유를 두세 문장으로 덧붙여라."
+      }
+    },
+    {
+      "label": "compact-theme-inferred",
+      "profile": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "history": [
+        [
+          {
+            "code_structure": "separated",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          {
+            "code_structure": "compact",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          "b"
+        ],
+        [
+          {
+            "code_structure": "compact",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          {
+            "code_structure": "compact",
+            "style_management": "theme",
+            "type_detail": "inferred"
+          },
+          "b"
+        ],
+        [
+          {
+            "code_structure": "compact",
+            "style_management": "theme",
+            "type_detail": "explicit"
+          },
+          {
+            "code_structure": "compact",
+            "style_management": "theme",
+            "type_detail": "inferred"
+          },
+          "b"
+        ]
+      ],
+      "prompts": {
+        "none": "",
+        "rule_based": "당신은 이 사용자의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.\n\n아래 개발 요청을 해결하는 TypeScript/React 코드를 작성하라. 요청된 기능과 동작을 빠짐없이 구현하되, 요청에 없는 기능은 추가하지 마라. 비교 후보 사이에서 달라질 수 있는 것은 코드 구조, 스타일 관리 방식, 타입 작성 방식뿐이다. 이 스타일 지시가 기능 요구와 충돌하면 기능을 우선하라. 개발 요청에 명시된 데이터, 화면 문구, 입력·출력 동작을 그대로 사용하라. 임의의 데이터 모델, 기능, 라이브러리, 실행 진입점 파일을 덧붙이지 마라. 컴포넌트의 접근성 레이블과 키보드 조작을 챙겨라. TypeScript/React에서 그대로 사용할 수 있는 유효한 코드만 제시하라. 실행에 필요한 모든 파일의 이름과 전체 코드를 제시하고 생략하지 마라. 사용자가 선호하는 코드 구성, 스타일 관리, 타입 작성 방식을 일관되게 적용하라.\n\n## 이 사용자의 선호\n아래 선호는 사용자가 여러 코드 예시를 직접 비교하며 고른 결과에서 추정한 것이다.\n- 코드 구성: 작은 기능은 한 파일 안에 컴포넌트, 상태 로직, 스타일을 함께 두어 간결하게 작성하라. 별도 CSS 파일도 만들지 말고 TSX 파일의 인라인 스타일 또는 스타일 객체를 사용하라.\n- 스타일 관리: 색상, 간격, 글꼴 같은 디자인 값은 theme 또는 디자인 토큰으로 모아서 관리하라. 컴포넌트에서는 해당 값을 참조하여 전체 디자인을 쉽게 수정할 수 있게 하라.\n- 타입 작성: 타입 추론 중심으로 작성하라. React.FC와 단순한 변수·함수의 반환 타입처럼 추론 가능한 타입은 반복해서 쓰지 마라. 숫자·문자열·불리언 초기값의 useState<number>(0) 같은 불필요한 제네릭도 쓰지 마라. 단, 빈 배열이나 null로 시작하는 상태처럼 요소 타입을 추론할 수 없는 곳에는 useState<Item[]>([])처럼 필요한 타입을 명시하라. 이벤트 매개변수는 가능하면 인라인 핸들러로 추론하게 하고, 별도 함수가 필요하면 이벤트 타입만 명시하라. Props처럼 TypeScript가 추론할 수 없는 공개 경계에도 타입을 작성하라.\n\n## 항상 지킬 것\n- 요청된 기능과 동작을 빠짐없이 구현하라. 스타일 선호와 충돌하면 기능 요구를 우선하고, 요청에 없는 기능은 추가하지 마라.\n- 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.\n- 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.\n- 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.\n- 접근성(레이블, 키보드 조작)을 기본으로 챙겨라.\n\n## 출력 형식\n코드를 먼저 보여 주고, 그 방식을 고른 이유를 두세 문장으로 덧붙여라.",
+        "request_check": "당신은 이 사용자의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.\n\n아래 개발 요청을 해결하는 TypeScript/React 코드를 작성하라. 요청된 기능과 동작을 빠짐없이 구현하되, 요청에 없는 기능은 추가하지 마라. 비교 후보 사이에서 달라질 수 있는 것은 코드 구조, 스타일 관리 방식, 타입 작성 방식뿐이다. 이 스타일 지시가 기능 요구와 충돌하면 기능을 우선하라. 개발 요청에 명시된 데이터, 화면 문구, 입력·출력 동작을 그대로 사용하라. 임의의 데이터 모델, 기능, 라이브러리, 실행 진입점 파일을 덧붙이지 마라. 컴포넌트의 접근성 레이블과 키보드 조작을 챙겨라. TypeScript/React에서 그대로 사용할 수 있는 유효한 코드만 제시하라. 실행에 필요한 모든 파일의 이름과 전체 코드를 제시하고 생략하지 마라. 사용자가 선호하는 코드 구성, 스타일 관리, 타입 작성 방식을 일관되게 적용하라.\n\n## 이 사용자의 선호\n아래 선호는 사용자가 여러 코드 예시를 직접 비교하며 고른 결과에서 추정한 것이다.\n- 코드 구성: 작은 기능은 한 파일 안에 컴포넌트, 상태 로직, 스타일을 함께 두어 간결하게 작성하라. 별도 CSS 파일도 만들지 말고 TSX 파일의 인라인 스타일 또는 스타일 객체를 사용하라.\n- 스타일 관리: 색상, 간격, 글꼴 같은 디자인 값은 theme 또는 디자인 토큰으로 모아서 관리하라. 컴포넌트에서는 해당 값을 참조하여 전체 디자인을 쉽게 수정할 수 있게 하라.\n- 타입 작성: 타입 추론 중심으로 작성하라. React.FC와 단순한 변수·함수의 반환 타입처럼 추론 가능한 타입은 반복해서 쓰지 마라. 숫자·문자열·불리언 초기값의 useState<number>(0) 같은 불필요한 제네릭도 쓰지 마라. 단, 빈 배열이나 null로 시작하는 상태처럼 요소 타입을 추론할 수 없는 곳에는 useState<Item[]>([])처럼 필요한 타입을 명시하라. 이벤트 매개변수는 가능하면 인라인 핸들러로 추론하게 하고, 별도 함수가 필요하면 이벤트 타입만 명시하라. Props처럼 TypeScript가 추론할 수 없는 공개 경계에도 타입을 작성하라.\n\n## 항상 지킬 것\n- 코드를 내기 전에 개발 요청에 따옴표로 적힌 화면 문구, 버튼 글자, 표시 형식을 하나씩 대조하라. 글자를 바꾸거나 덧붙이지 말고, 요청에 없는 라이브러리(예: styled-components)를 쓰지 마라.\n- 요청된 기능과 동작을 빠짐없이 구현하라. 스타일 선호와 충돌하면 기능 요구를 우선하고, 요청에 없는 기능은 추가하지 마라.\n- 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.\n- 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.\n- 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.\n- 접근성(레이블, 키보드 조작)을 기본으로 챙겨라.\n\n## 출력 형식\n코드를 먼저 보여 주고, 그 방식을 고른 이유를 두세 문장으로 덧붙여라."
+      }
+    },
+    {
+      "label": "separated-direct-explicit",
+      "profile": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "history": [
+        [
+          {
+            "code_structure": "separated",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          {
+            "code_structure": "compact",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          "a"
+        ],
+        [
+          {
+            "code_structure": "separated",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          {
+            "code_structure": "separated",
+            "style_management": "theme",
+            "type_detail": "inferred"
+          },
+          "a"
+        ],
+        [
+          {
+            "code_structure": "separated",
+            "style_management": "direct",
+            "type_detail": "explicit"
+          },
+          {
+            "code_structure": "separated",
+            "style_management": "direct",
+            "type_detail": "inferred"
+          },
+          "a"
+        ]
+      ],
+      "prompts": {
+        "none": "",
+        "rule_based": "당신은 이 사용자의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.\n\n아래 개발 요청을 해결하는 TypeScript/React 코드를 작성하라. 요청된 기능과 동작을 빠짐없이 구현하되, 요청에 없는 기능은 추가하지 마라. 비교 후보 사이에서 달라질 수 있는 것은 코드 구조, 스타일 관리 방식, 타입 작성 방식뿐이다. 이 스타일 지시가 기능 요구와 충돌하면 기능을 우선하라. 개발 요청에 명시된 데이터, 화면 문구, 입력·출력 동작을 그대로 사용하라. 임의의 데이터 모델, 기능, 라이브러리, 실행 진입점 파일을 덧붙이지 마라. 컴포넌트의 접근성 레이블과 키보드 조작을 챙겨라. TypeScript/React에서 그대로 사용할 수 있는 유효한 코드만 제시하라. 실행에 필요한 모든 파일의 이름과 전체 코드를 제시하고 생략하지 마라. 사용자가 선호하는 코드 구성, 스타일 관리, 타입 작성 방식을 일관되게 적용하라.\n\n## 이 사용자의 선호\n아래 선호는 사용자가 여러 코드 예시를 직접 비교하며 고른 결과에서 추정한 것이다.\n- 코드 구성: 컴포넌트와 스타일 또는 상태 로직을 역할별 파일로 분리하라. 필요 없는 하위 컴포넌트와 타입 전용 파일을 억지로 만들지 말고, 각 파일의 이름과 전체 코드를 명확히 제시하라.\n- 스타일 관리: 색상, 간격, 크기 같은 스타일 값은 스타일 파일이나 컴포넌트에 직접 작성하여 바로 확인할 수 있게 하라.\n- 타입 작성: Props, 함수 매개변수, 반환값, 상태와 주요 데이터 구조의 타입을 꼼꼼하게 명시하라.\n\n## 항상 지킬 것\n- 요청된 기능과 동작을 빠짐없이 구현하라. 스타일 선호와 충돌하면 기능 요구를 우선하고, 요청에 없는 기능은 추가하지 마라.\n- 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.\n- 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.\n- 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.\n- 접근성(레이블, 키보드 조작)을 기본으로 챙겨라.\n\n## 출력 형식\n코드를 먼저 보여 주고, 그 방식을 고른 이유를 두세 문장으로 덧붙여라.",
+        "request_check": "당신은 이 사용자의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.\n\n아래 개발 요청을 해결하는 TypeScript/React 코드를 작성하라. 요청된 기능과 동작을 빠짐없이 구현하되, 요청에 없는 기능은 추가하지 마라. 비교 후보 사이에서 달라질 수 있는 것은 코드 구조, 스타일 관리 방식, 타입 작성 방식뿐이다. 이 스타일 지시가 기능 요구와 충돌하면 기능을 우선하라. 개발 요청에 명시된 데이터, 화면 문구, 입력·출력 동작을 그대로 사용하라. 임의의 데이터 모델, 기능, 라이브러리, 실행 진입점 파일을 덧붙이지 마라. 컴포넌트의 접근성 레이블과 키보드 조작을 챙겨라. TypeScript/React에서 그대로 사용할 수 있는 유효한 코드만 제시하라. 실행에 필요한 모든 파일의 이름과 전체 코드를 제시하고 생략하지 마라. 사용자가 선호하는 코드 구성, 스타일 관리, 타입 작성 방식을 일관되게 적용하라.\n\n## 이 사용자의 선호\n아래 선호는 사용자가 여러 코드 예시를 직접 비교하며 고른 결과에서 추정한 것이다.\n- 코드 구성: 컴포넌트와 스타일 또는 상태 로직을 역할별 파일로 분리하라. 필요 없는 하위 컴포넌트와 타입 전용 파일을 억지로 만들지 말고, 각 파일의 이름과 전체 코드를 명확히 제시하라.\n- 스타일 관리: 색상, 간격, 크기 같은 스타일 값은 스타일 파일이나 컴포넌트에 직접 작성하여 바로 확인할 수 있게 하라.\n- 타입 작성: Props, 함수 매개변수, 반환값, 상태와 주요 데이터 구조의 타입을 꼼꼼하게 명시하라.\n\n## 항상 지킬 것\n- 코드를 내기 전에 개발 요청에 따옴표로 적힌 화면 문구, 버튼 글자, 표시 형식을 하나씩 대조하라. 글자를 바꾸거나 덧붙이지 말고, 요청에 없는 라이브러리(예: styled-components)를 쓰지 마라.\n- 요청된 기능과 동작을 빠짐없이 구현하라. 스타일 선호와 충돌하면 기능 요구를 우선하고, 요청에 없는 기능은 추가하지 마라.\n- 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.\n- 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.\n- 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.\n- 접근성(레이블, 키보드 조작)을 기본으로 챙겨라.\n\n## 출력 형식\n코드를 먼저 보여 주고, 그 방식을 고른 이유를 두세 문장으로 덧붙여라."
+      }
+    }
+  ],
+  "rows": [
+    {
+      "task": "counter_reset",
+      "condition": "none",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 0.6,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상).",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상).",
+          "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "counter_reset",
+      "condition": "rule_based",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 2개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 11개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 5개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 2,
+          "theme_signals": 11,
+          "type_signals": 5
+        },
+        "quality_issues": []
+      }
+    },
+    {
+      "task": "counter_reset",
+      "condition": "request_check",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 2개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 0.6,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 2,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상).",
+          "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "none",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 0.6,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상).",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상).",
+          "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "rule_based",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 3개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 8개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 3,
+          "theme_signals": 0,
+          "type_signals": 8
+        },
+        "quality_issues": [
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "request_check",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 0.8,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 4개 (목표 5개 이상)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 4
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상).",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상).",
+          "타입 작성 위반: 명시적 타입 신호 4개 (목표 5개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "none",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 12개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 12
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상).",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "rule_based",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 2개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 10개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 15개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 2,
+          "theme_signals": 10,
+          "type_signals": 15
+        },
+        "quality_issues": []
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "request_check",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 2개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 15개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 7개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 2,
+          "theme_signals": 15,
+          "type_signals": 7
+        },
+        "quality_issues": []
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "none",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 8개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 8
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상).",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "rule_based",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 4개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 11개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 14개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 4,
+          "theme_signals": 11,
+          "type_signals": 14
+        },
+        "quality_issues": []
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "request_check",
+      "profile": "separated-theme-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 2개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 9개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 2,
+          "theme_signals": 0,
+          "type_signals": 9
+        },
+        "quality_issues": [
+          "요청에 없는 App 래퍼 파일을 추가했다",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "counter_reset",
+      "condition": "none",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 3개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다"
+        ]
+      }
+    },
+    {
+      "task": "counter_reset",
+      "condition": "rule_based",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 2개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 2
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다"
+        ]
+      }
+    },
+    {
+      "task": "counter_reset",
+      "condition": "request_check",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 0개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 0
+        },
+        "quality_issues": []
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "none",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 3개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다"
+        ]
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "rule_based",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 3개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다"
+        ]
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "request_check",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 3개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다"
+        ]
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "none",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 0.25,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 12개 (목표 3개 이하)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 12
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다"
+        ]
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "rule_based",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 0.429,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 7개 (목표 3개 이하)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 7
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다"
+        ]
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "request_check",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 1개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 1
+        },
+        "quality_issues": []
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "none",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 0.375,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 8개 (목표 3개 이하)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 8
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다"
+        ]
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "rule_based",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 6개 (목표 3개 이하)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 6
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다"
+        ]
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "request_check",
+      "profile": "compact-direct-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 0.375,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 8개 (목표 3개 이하)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 8
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다"
+        ]
+      }
+    },
+    {
+      "task": "counter_reset",
+      "condition": "none",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 3개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "counter_reset",
+      "condition": "rule_based",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 2개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 2
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "counter_reset",
+      "condition": "request_check",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 2개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 2
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "none",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 3개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "rule_based",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 3개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "request_check",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 3개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "none",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 0.25,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 12개 (목표 3개 이하)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 12
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "rule_based",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 0.75,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 4개 (목표 3개 이하)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 4
+        },
+        "quality_issues": [
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "request_check",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 3개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "none",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 0.375,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 8개 (목표 3개 이하)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 8
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다",
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "rule_based",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 5개."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 0.375,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 8개 (목표 3개 이하)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 5,
+          "type_signals": 8
+        },
+        "quality_issues": [
+          "타입 추론 조건 위반: 추론 가능한 타입을 명시했다"
+        ]
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "request_check",
+      "profile": "compact-theme-inferred",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "compact",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 1개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "theme",
+            "check": "theme_usage",
+            "score": 0.0,
+            "passed": false,
+            "feedback": "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+          },
+          "type_detail": {
+            "value": "inferred",
+            "check": "type_explicitness",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 6개 (목표 3개 이하)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 6
+        },
+        "quality_issues": [
+          "스타일 관리 위반: 테마 사용 신호 0개 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "counter_reset",
+      "condition": "none",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 0.6,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상).",
+          "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "counter_reset",
+      "condition": "rule_based",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 4개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 5개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 4,
+          "theme_signals": 0,
+          "type_signals": 5
+        },
+        "quality_issues": [
+          "요청에 없는 실행 진입점 파일을 추가했다",
+          "요청에 없는 App 래퍼 파일을 추가했다"
+        ]
+      }
+    },
+    {
+      "task": "counter_reset",
+      "condition": "request_check",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 0.6,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상).",
+          "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "none",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 0.6,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 3
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상).",
+          "타입 작성 위반: 명시적 타입 신호 3개 (목표 5개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "rule_based",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 2개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 5개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 2,
+          "theme_signals": 0,
+          "type_signals": 5
+        },
+        "quality_issues": []
+      }
+    },
+    {
+      "task": "product_search",
+      "condition": "request_check",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 0.8,
+            "passed": false,
+            "feedback": "타입 작성 위반: 명시적 타입 신호 4개 (목표 5개 이상)."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 4
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상).",
+          "타입 작성 위반: 명시적 타입 신호 4개 (목표 5개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "none",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 12개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 12
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "rule_based",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 2개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 8개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 2,
+          "theme_signals": 0,
+          "type_signals": 8
+        },
+        "quality_issues": []
+      }
+    },
+    {
+      "task": "signup_validation",
+      "condition": "request_check",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": true,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 14개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 14
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "none",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 0.5,
+            "passed": false,
+            "feedback": "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 8개."
+          }
+        },
+        "all_passed": false,
+        "signals": {
+          "files": 1,
+          "theme_signals": 0,
+          "type_signals": 8
+        },
+        "quality_issues": [
+          "파일 구성 위반: 1개 파일 (목표 2개 이상)."
+        ]
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "rule_based",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 2개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 11개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 2,
+          "theme_signals": 0,
+          "type_signals": 11
+        },
+        "quality_issues": []
+      }
+    },
+    {
+      "task": "todo_toggle",
+      "condition": "request_check",
+      "profile": "separated-direct-explicit",
+      "repeat": 0,
+      "status": "generated",
+      "new_request": false,
+      "evaluation": {
+        "axes": {
+          "code_structure": {
+            "value": "separated",
+            "check": "file_structure",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "파일 구성 충족: 2개 파일로 제시됨."
+          },
+          "style_management": {
+            "value": "direct",
+            "check": "theme_usage",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "스타일 관리 충족: 테마 사용 신호 0개."
+          },
+          "type_detail": {
+            "value": "explicit",
+            "check": "type_explicitness",
+            "score": 1.0,
+            "passed": true,
+            "feedback": "타입 작성 충족: 명시적 타입 신호 9개."
+          }
+        },
+        "all_passed": true,
+        "signals": {
+          "files": 2,
+          "theme_signals": 0,
+          "type_signals": 9
+        },
+        "quality_issues": []
+      }
+    }
+  ],
+  "summary": {
+    "conditions": {
+      "none": {
+        "outputs": 16,
+        "missing": 0,
+        "axis_pass_rate": 0.5,
+        "functional_pass_rate": null,
+        "functional_unknown": null
+      },
+      "rule_based": {
+        "outputs": 16,
+        "missing": 0,
+        "axis_pass_rate": 0.8333,
+        "functional_pass_rate": null,
+        "functional_unknown": null
+      },
+      "request_check": {
+        "outputs": 16,
+        "missing": 0,
+        "axis_pass_rate": 0.6458,
+        "functional_pass_rate": null,
+        "functional_unknown": null
+      }
+    },
+    "paired": {
+      "request_check-rule_based": {
+        "units": 16,
+        "axis_pass_diff": -0.1875,
+        "axis_pass_diff_ci95": [
+          -0.3542,
+          -0.0208
+        ],
+        "functional_diff": null,
+        "functional_diff_ci95": null
+      },
+      "rule_based-none": {
+        "units": 16,
+        "axis_pass_diff": 0.3333,
+        "axis_pass_diff_ci95": [
+          0.1667,
+          0.5
+        ],
+        "functional_diff": null,
+        "functional_diff_ci95": null
+      }
+    },
+    "criteria": {
+      "functional_gain": null,
+      "style_non_inferior": false
+    },
+    "all_criteria_met": null,
+    "rule_based_functional_drop_replicated": null,
+    "thresholds": {
+      "min_functional_gain": 0.1,
+      "max_style_drop": 0.05
+    }
+  },
+  "usage": {
+    "generation_requests": 1,
+    "input_tokens": 734,
+    "output_tokens": 743,
+    "unknown_usage_requests": 0,
+    "elapsed_seconds": 12.77
+  },
+  "generated_at": "2026-11-03T16:54:03.003970+00:00",
+  "source_sha256": {
+    "experiments/request_check_comparison.py": "8d6edd9ceabdc74d",
+    "experiments/personalized_prompt_comparison.py": "3c642916f3792c0d",
+    "benchmarks/coding_ai_quality/evaluate_trial.py": "96d4b2eb689b89c2",
+    "benchmarks/coding_ai_quality/runtime_check.cjs": "0d5912c958360ed1",
+    "benchmarks/coding_ai_quality/v6.json": "a35a915c022c4685",
+    "domains/coding.yaml": "601e5d69ac901c7c",
+    "checks/coding.py": "4e768993b895146c"
+  }
+}
