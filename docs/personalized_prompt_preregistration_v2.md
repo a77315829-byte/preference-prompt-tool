@@ -88,6 +88,10 @@ python -m experiments.personalized_prompt_comparison --cached-only --behavior --
 ## 변경 기록
 
 (없음 - pilot 뒤에도 코드·문구·기준을 바꾸지 않았다. pilot·holdout 결과의 `source_sha256` 이 같다.)
+- 2026-11-04 (결과 확인 후, 해석 메모만): 실행 검사가 여러 파일로 나눈 답의 실행용 `App.tsx` 껍데기 때문에 진입 파일을
+  못 골라 미확인으로 세던 결함을 찾아 고쳤다(32977ae). 저장된 출력을 고친 검사로 다시 채점한 탐색 결과는
+  `experiments/results/ppc2_holdout_behavior_rescored.*` 와 `docs/history/2026-11-03_personalized_prompt_improvement.md`
+  "정리와 실행 검사 재채점" 절에 있다. 결과 절의 확증 판정과 수치는 바꾸지 않는다.
 
 ## 결과 (2026-11-03)
 

@@ -118,6 +118,10 @@ python -m experiments.personalized_prompt_comparison --cached-only --behavior --
   호출이 실패해, 누락 처리 규칙대로 같은 명령을 한 번 다시 실행했다(48행 완료, 네 프로필 모두 개선 적용). holdout 은
   1차에서 Timeout 1행, 재실행으로 180행 완료. 1차 결과는 `experiments/results/ppc_pilot_attempt1.*`,
   `ppc_holdout_attempt1.*` 에 남긴다.
+- 2026-11-04 (결과 확인 후, 해석 메모만): 실행 검사가 여러 파일로 나눈 답의 실행용 `App.tsx` 껍데기 때문에 진입 파일을
+  못 골라 미확인으로 세던 결함을 찾아 고쳤다(32977ae). 저장된 출력을 고친 검사로 다시 채점한 탐색 결과는
+  `experiments/results/ppc_holdout_behavior_rescored.*` 와 `docs/history/2026-11-03_personalized_prompt_improvement.md`
+  "정리와 실행 검사 재채점" 절에 있다. 결과 절의 확증 판정과 수치는 바꾸지 않는다.
 
 ## 결과 (2026-11-03)
 
