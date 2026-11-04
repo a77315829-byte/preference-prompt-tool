@@ -19,7 +19,26 @@ async function check() {
     task === 'confirm_dialog' ? 'ConfirmDialog' :
     task === 'text_preview' ? 'TextPreview' :
     task === 'password_visibility' ? 'PasswordVisibility' :
-    task === 'faq_toggle' ? 'FaqToggle' : null;
+    task === 'faq_toggle' ? 'FaqToggle' :
+    task === 'cart_quantity' ? 'CartQuantity' :
+    task === 'tab_switch' ? 'TabSwitch' :
+    task === 'char_counter' ? 'CharCounter' :
+    task === 'star_rating' ? 'StarRating' :
+    task === 'like_toggle' ? 'LikeToggle' :
+    task === 'temperature_convert' ? 'TemperatureConvert' :
+    task === 'notify_switch' ? 'NotifySwitch' :
+    task === 'step_counter' ? 'StepCounter' :
+    task === 'todo_add' ? 'TodoAdd' :
+    task === 'color_choice' ? 'ColorChoice' :
+    task === 'word_count' ? 'WordCount' :
+    task === 'page_list' ? 'PageList' :
+    task === 'tip_calc' ? 'TipCalc' :
+    task === 'tag_input' ? 'TagInput' :
+    task === 'step_wizard' ? 'StepWizard' :
+    task === 'category_filter' ? 'CategoryFilter' :
+    task === 'price_sort' ? 'PriceSort' :
+    task === 'single_accordion' ? 'SingleAccordion' :
+    task === 'bounded_counter' ? 'BoundedCounter' : null;
   const exportedComponents = Object.entries(exports).filter(([name, value]) =>
     /^[A-Z]/.test(name) && typeof value === 'function');
   const Component = exports.default || (namedExport && exports[namedExport]) ||
@@ -104,6 +123,30 @@ async function check() {
     await click('삭제하기');
     await click('삭제 확인');
     checks.push(!has('정말 삭제할까요?') && has('삭제되었습니다'));
+  } else if (task === 'faq_multi') {
+    const buttons = [...container.querySelectorAll('button[aria-expanded]')];
+    const states = () => buttons.map((button) => button.getAttribute('aria-expanded'));
+    const toggle = async (index) => React.act(async () => {
+      buttons[index].dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+    });
+    const answersMatch = () => buttons.every((button) => {
+      const answer = document.getElementById(button.getAttribute('aria-controls'));
+      return button.getAttribute('aria-expanded') === 'true'
+        ? Boolean(answer && !answer.hidden && answer.textContent.trim())
+        : !answer || answer.hidden;
+    });
+    checks.push(buttons.length === 3 && states().every((state) => state === 'false') && answersMatch());
+    await toggle(0);
+    checks.push(JSON.stringify(states()) === '["true","false","false"]' && answersMatch());
+    await toggle(1);
+    checks.push(JSON.stringify(states()) === '["true","true","false"]' && answersMatch());
+    await toggle(0);
+    checks.push(JSON.stringify(states()) === '["false","true","false"]' && answersMatch());
+    await toggle(2);
+    checks.push(JSON.stringify(states()) === '["false","true","true"]' && answersMatch());
+    await toggle(1);
+    await toggle(2);
+    checks.push(states().every((state) => state === 'false') && answersMatch());
   } else if (task === 'faq_toggle') {
     const answer = '배송은 2~3일 걸립니다.';
     const button = () => [...container.querySelectorAll('button')].find((item) =>
@@ -117,6 +160,282 @@ async function check() {
     await click('답변 닫기');
     checks.push(!has(answer) && button()?.textContent.trim() === '답변 보기'
       && button()?.getAttribute('aria-expanded') === 'false');
+  } else if (task === 'cart_quantity') {
+    const displays = (quantity, total) => {
+      const content = container.textContent.replace(/\s+/g, ' ');
+      return content.includes('머그컵')
+        && content.includes(`수량 ${quantity}`)
+        && content.includes(`총 ${total.toLocaleString('ko-KR')}원`);
+    };
+    checks.push(displays(1, 5000));
+    await click('추가');
+    await click('추가');
+    checks.push(displays(3, 15000));
+    await click('빼기');
+    checks.push(displays(2, 10000));
+    await click('빼기');
+    await click('빼기');
+    checks.push(displays(1, 5000));
+  } else if (task === 'tab_switch') {
+    const notice = '이번 주 점검은 없습니다.';
+    const event = '신규 가입 시 쿠폰을 드립니다.';
+    const tab = (label) => [...container.querySelectorAll('[role="tab"]')].find((item) =>
+      item.textContent.trim() === label);
+    const shown = (el) => {
+      for (let node = el; node && node !== container; node = node.parentElement) {
+        if (node.hidden || window.getComputedStyle(node).display === 'none') return false;
+      }
+      return true;
+    };
+    const visible = (text) => [...container.querySelectorAll('*')].some((el) =>
+      el.children.length === 0 && el.textContent.includes(text) && shown(el));
+    const selected = (label) => tab(label)?.getAttribute('aria-selected') === 'true';
+    checks.push(Boolean(tab('공지') && tab('이벤트')) && selected('공지') && !selected('이벤트')
+      && visible(notice) && !visible(event));
+    await React.act(async () => tab('이벤트').dispatchEvent(new window.MouseEvent('click', { bubbles: true })));
+    checks.push(selected('이벤트') && !selected('공지') && visible(event) && !visible(notice));
+    await React.act(async () => tab('공지').dispatchEvent(new window.MouseEvent('click', { bubbles: true })));
+    checks.push(selected('공지') && !selected('이벤트') && visible(notice) && !visible(event));
+  } else if (task === 'char_counter') {
+    const input = container.querySelector('textarea');
+    if (!input) throw new Error('Missing textarea');
+    const submit = () => [...container.querySelectorAll('button')].find((item) => item.textContent.trim() === '제출');
+    const setValue = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+    const enter = async (value) => React.act(async () => {
+      setValue.call(input, value);
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+    const over = '20자를 넘었습니다';
+    checks.push(has('0/20자') && !has(over) && submit() && !submit().disabled);
+    await enter('가나다라마');
+    checks.push(has('5/20자') && !has(over) && !submit().disabled);
+    await enter('가'.repeat(21));
+    checks.push(has('21/20자') && has(over) && submit().disabled);
+    await enter('가'.repeat(20));
+    checks.push(has('20/20자') && !has(over) && !submit().disabled);
+  } else if (task === 'star_rating') {
+    const star = (n) => [...container.querySelectorAll('button')].find((item) =>
+      item.getAttribute('aria-label') === `별 ${n}개`);
+    const pressed = () => [1, 2, 3, 4, 5].map((n) => star(n)?.getAttribute('aria-pressed'));
+    checks.push([1, 2, 3, 4, 5].every((n) => star(n)) && has('평점 0점')
+      && pressed().every((value) => value === 'false'));
+    await click('별 3개');
+    checks.push(has('평점 3점') && JSON.stringify(pressed()) === '["true","true","true","false","false"]');
+    await click('별 1개');
+    checks.push(has('평점 1점') && !has('평점 3점')
+      && JSON.stringify(pressed()) === '["true","false","false","false","false"]');
+  } else if (task === 'like_toggle') {
+    const button = () => [...container.querySelectorAll('button')].find((item) =>
+      ['좋아요', '좋아요 취소'].includes(item.textContent.trim()));
+    const text = () => container.textContent.replace(/\s+/g, ' ');
+    checks.push(text().includes('좋아요 10') && button()?.textContent.trim() === '좋아요'
+      && button()?.getAttribute('aria-pressed') === 'false');
+    await click('좋아요');
+    checks.push(text().includes('좋아요 11') && !text().includes('좋아요 10')
+      && button()?.textContent.trim() === '좋아요 취소' && button()?.getAttribute('aria-pressed') === 'true');
+    await click('좋아요 취소');
+    checks.push(text().includes('좋아요 10') && !text().includes('좋아요 11')
+      && button()?.textContent.trim() === '좋아요' && button()?.getAttribute('aria-pressed') === 'false');
+  } else if (task === 'temperature_convert') {
+    const input = container.querySelector('input');
+    if (!input) throw new Error('Missing input');
+    const setValue = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    const enter = async (value) => React.act(async () => {
+      setValue.call(input, value);
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+    const prompt = '숫자를 입력하세요';
+    checks.push(has('화씨 32°F') && !has(prompt));
+    await enter('100');
+    checks.push(has('화씨 212°F') && !has(prompt));
+    await enter('37.5');
+    checks.push(has('화씨 99.5°F') && !has(prompt));
+    await enter('');
+    checks.push(has(prompt) && !/화씨\s*-?\d/.test(container.textContent));
+  } else if (task === 'notify_switch') {
+    const sw = () => container.querySelector('[role="switch"]');
+    const outside = (text) => [...container.querySelectorAll('*')].some((el) =>
+      !el.closest('button') && el.children.length === 0 && el.textContent.includes(text));
+    checks.push(sw()?.textContent.trim() === '알림' && sw()?.getAttribute('aria-checked') === 'false'
+      && outside('알림 꺼짐') && !has('알림 켜짐'));
+    await click('알림');
+    checks.push(sw().getAttribute('aria-checked') === 'true' && outside('알림 켜짐') && !has('알림 꺼짐'));
+    await click('알림');
+    checks.push(sw().getAttribute('aria-checked') === 'false' && outside('알림 꺼짐') && !has('알림 켜짐'));
+  } else if (task === 'step_counter') {
+    // 버튼 글자("5 더하기")와 이어 붙지 않도록 버튼이 아닌 요소의 글자만 본다.
+    const value = (n) => [...container.querySelectorAll('*')].some((el) => !el.closest('button')
+      && new RegExp(`(^|\\s)값\\s*${n}$`).test(el.textContent.replace(/\s+/g, ' ').trim()));
+    checks.push(value(0));
+    await click('5 더하기');
+    await click('5 더하기');
+    checks.push(value(10) && !value(0));
+    await click('초기화');
+    checks.push(value(0) && !value(10));
+  } else if (task === 'todo_add') {
+    const input = container.querySelector('input');
+    if (!input) throw new Error('Missing input');
+    const setValue = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    const enter = async (value) => React.act(async () => {
+      setValue.call(input, value);
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+    const items = () => [...container.querySelectorAll('li')].map((li) => li.textContent.trim());
+    checks.push(items().length === 0 && has('할 일 0개'));
+    await enter('  우유 사기 ');
+    await click('추가');
+    checks.push(JSON.stringify(items()) === '["우유 사기"]' && input.value === '' && has('할 일 1개'));
+    await enter('   ');
+    await click('추가');
+    checks.push(items().length === 1 && has('할 일 1개'));
+  } else if (task === 'color_choice') {
+    const names = ['빨강', '초록', '파랑'];
+    const btn = (name) => [...container.querySelectorAll('button')].find((b) => b.textContent.trim() === name);
+    const pressed = () => names.map((name) => btn(name)?.getAttribute('aria-pressed'));
+    checks.push(names.every(btn) && pressed().every((v) => v === 'false') && has('선택한 색: 없음'));
+    await click('초록');
+    checks.push(JSON.stringify(pressed()) === '["false","true","false"]' && has('선택한 색: 초록'));
+    await click('파랑');
+    checks.push(JSON.stringify(pressed()) === '["false","false","true"]' && has('선택한 색: 파랑')
+      && !has('선택한 색: 초록'));
+  } else if (task === 'word_count') {
+    const input = container.querySelector('textarea');
+    if (!input) throw new Error('Missing textarea');
+    const setValue = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+    const enter = async (value) => React.act(async () => {
+      setValue.call(input, value);
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+    checks.push(has('단어 0개'));
+    await enter('hello world');
+    checks.push(has('단어 2개'));
+    await enter('  one   two\nthree  ');
+    checks.push(has('단어 3개'));
+    await enter('');
+    checks.push(has('단어 0개'));
+  } else if (['page_list', 'tip_calc', 'tag_input', 'step_wizard', 'category_filter', 'price_sort',
+                'single_accordion', 'bounded_counter'].includes(task)) {
+    // v7 후보 과제 공통 도구. 버튼 글자와 이어 붙지 않도록 버튼 밖 요소의 글자를 따로 본다.
+    const norm = (el) => el.textContent.replace(/\s+/g, ' ').trim();
+    const outside = (text) => [...container.querySelectorAll('*')].some((el) =>
+      !el.closest('button') && norm(el) === text);
+    const btn = (label) => [...container.querySelectorAll('button')].find((b) =>
+      b.textContent.trim() === label || b.getAttribute('aria-label') === label);
+    const items = () => [...container.querySelectorAll('li')].map((li) => {
+      const copy = li.cloneNode(true);
+      copy.querySelectorAll('button').forEach((b) => b.remove());
+      return norm(copy);
+    });
+    const setText = async (input, value) => React.act(async () => {
+      const proto = input.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement : window.HTMLInputElement;
+      Object.getOwnPropertyDescriptor(proto.prototype, 'value').set.call(input, value);
+      input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    });
+    const byLabel = (text) => {
+      const label = [...container.querySelectorAll('label')].find((l) => norm(l).replace(/:$/, '') === text);
+      if (!label) return null;
+      return label.control || label.querySelector('input') ||
+        (label.htmlFor ? document.getElementById(label.htmlFor) : null);
+    };
+    if (task === 'page_list') {
+      checks.push(JSON.stringify(items()) === '["항목 1","항목 2","항목 3"]' && outside('1 / 3쪽')
+        && btn('이전')?.disabled === true && btn('다음')?.disabled === false);
+      await click('다음');
+      await click('다음');
+      checks.push(JSON.stringify(items()) === '["항목 7"]' && outside('3 / 3쪽') && btn('다음').disabled === true);
+      await click('이전');
+      checks.push(JSON.stringify(items()) === '["항목 4","항목 5","항목 6"]' && outside('2 / 3쪽')
+        && btn('이전').disabled === false && btn('다음').disabled === false);
+    } else if (task === 'tip_calc') {
+      const amount = byLabel('금액') || container.querySelector('input');
+      if (!amount) throw new Error('Missing amount input');
+      const pressed = () => ['10%', '15%', '20%'].map((l) => btn(l)?.getAttribute('aria-pressed'));
+      checks.push(outside('팁 1,000원') && outside('합계 11,000원')
+        && JSON.stringify(pressed()) === '["true","false","false"]');
+      await click('15%');
+      checks.push(outside('팁 1,500원') && outside('합계 11,500원')
+        && JSON.stringify(pressed()) === '["false","true","false"]');
+      await setText(amount, '25000');
+      await click('20%');
+      checks.push(outside('팁 5,000원') && outside('합계 30,000원'));
+      await setText(amount, '');
+      checks.push(outside('금액을 입력하세요') && !has('합계'));
+    } else if (task === 'tag_input') {
+      const input = byLabel('태그') || container.querySelector('input');
+      if (!input) throw new Error('Missing tag input');
+      const add = async (value) => { await setText(input, value); await click('추가'); };
+      await add('  리액트 ');
+      checks.push(JSON.stringify(items()) === '["리액트"]' && input.value === '');
+      await add('리액트');
+      await add('   ');
+      checks.push(JSON.stringify(items()) === '["리액트"]');
+      await add('타입');
+      await add('테스트');
+      checks.push(items().length === 3 && btn('추가').disabled === true && outside('태그는 3개까지입니다'));
+      await click('리액트 삭제');
+      checks.push(JSON.stringify(items()) === '["타입","테스트"]' && btn('추가').disabled === false
+        && !has('태그는 3개까지입니다'));
+    } else if (task === 'step_wizard') {
+      const title = () => [...container.querySelectorAll('h2')].map(norm);
+      checks.push(JSON.stringify(title()) === '["1단계: 약관"]' && btn('이전')?.disabled === true);
+      await click('다음');
+      await click('다음');
+      checks.push(JSON.stringify(title()) === '["3단계: 확인"]' && Boolean(btn('가입하기')) && !btn('다음'));
+      await click('이전');
+      checks.push(JSON.stringify(title()) === '["2단계: 정보 입력"]' && btn('이전').disabled === false);
+      await click('다음');
+      await click('가입하기');
+      checks.push(outside('가입 완료') && title().length === 0);
+    } else if (task === 'category_filter') {
+      const box = (text) => {
+        const found = byLabel(text);
+        if (!found || found.type !== 'checkbox') throw new Error(`Missing checkbox: ${text}`);
+        return found;
+      };
+      const toggle = async (text) => React.act(async () => box(text).click());
+      checks.push(JSON.stringify(items()) === '["사과","바나나","당근","오이"]' && outside('4개 표시')
+        && box('과일').checked && box('채소').checked);
+      await toggle('채소');
+      checks.push(JSON.stringify(items()) === '["사과","바나나"]' && outside('2개 표시'));
+      await toggle('과일');
+      checks.push(items().length === 0 && outside('표시할 항목이 없습니다'));
+      await toggle('채소');
+      checks.push(JSON.stringify(items()) === '["당근","오이"]' && outside('2개 표시'));
+    } else if (task === 'price_sort') {
+      checks.push(JSON.stringify(items()) === '["연필 500원","공책 2,000원","지우개 300원"]' && outside('정렬 없음'));
+      await click('가격순 정렬');
+      checks.push(JSON.stringify(items()) === '["지우개 300원","연필 500원","공책 2,000원"]' && outside('낮은 가격순'));
+      await click('가격순 정렬');
+      checks.push(JSON.stringify(items()) === '["공책 2,000원","연필 500원","지우개 300원"]' && outside('높은 가격순'));
+    } else if (task === 'single_accordion') {
+      const labels = ['배송', '교환', '환불'];
+      const answers = ['2~3일 걸립니다.', '7일 안에 가능합니다.', '결제 수단으로 돌려드립니다.'];
+      const shown = (el) => {
+        for (let node = el; node && node !== container; node = node.parentElement) {
+          if (node.hidden || window.getComputedStyle(node).display === 'none') return false;
+        }
+        return true;
+      };
+      const visible = (text) => [...container.querySelectorAll('*')].some((el) =>
+        el.children.length === 0 && el.textContent.includes(text) && shown(el));
+      const state = () => labels.map((l) => btn(l)?.getAttribute('aria-expanded'));
+      const open = (i) => JSON.stringify(state()) === JSON.stringify(labels.map((_, j) => String(j === i)))
+        && answers.every((a, j) => visible(a) === (j === i));
+      checks.push(open(-1));
+      await click('배송');
+      checks.push(open(0));
+      await click('교환');
+      checks.push(open(1));
+      await click('교환');
+      checks.push(open(-1));
+    } else if (task === 'bounded_counter') {
+      checks.push(outside('수량 0') && btn('빼기')?.disabled === true && btn('더하기')?.disabled === false
+        && !has('최대 수량입니다'));
+      for (let i = 0; i < 5; i += 1) await click('더하기');
+      checks.push(outside('수량 5') && btn('더하기').disabled === true && outside('최대 수량입니다'));
+      await click('빼기');
+      checks.push(outside('수량 4') && btn('더하기').disabled === false && !has('최대 수량입니다'));
+    }
   } else if (task === 'password_visibility') {
     const input = container.querySelector('input');
     if (!input) throw new Error('Missing password input');

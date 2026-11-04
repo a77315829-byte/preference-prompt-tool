@@ -61,3 +61,11 @@ def macsum_record() -> dict:
 @pytest.fixture(scope="session")
 def macsum_source(macsum_record) -> str:
     return " ".join(macsum_record["source"])
+
+
+@pytest.fixture(autouse=True)
+def _isolated_prompt_results(tmp_path_factory, monkeypatch):
+    """끝난 세션의 프롬프트 기록(service.complete_personalized_prompt)이 data/ 에 쌓이지 않게."""
+    import service
+
+    monkeypatch.setattr(service, "PROMPT_RESULTS_DIR", str(tmp_path_factory.mktemp("prompt_results")))

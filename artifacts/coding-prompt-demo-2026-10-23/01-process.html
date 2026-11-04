@@ -1,0 +1,45 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>코딩 스타일 선택 과정</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f3f5f9;color:#182237;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif}main{max-width:1440px;margin:auto;padding:36px 48px}header{display:flex;justify-content:space-between;align-items:center;font-size:15px;margin-bottom:34px}.brand{font-weight:800}.tag{padding:9px 14px;border-radius:20px;background:#e6ebf3;color:#596779;font-size:13px}.eyebrow{color:#3965e8;font-size:14px;font-weight:800;letter-spacing:1px}h1{font-size:36px;letter-spacing:-1.5px;margin:10px 0 12px}h2{font-size:21px;margin:0 0 15px}p{line-height:1.65;color:#5a687c;margin:8px 0}.lead{font-size:17px;margin-bottom:24px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.card{background:white;border:1px solid #dfe5ee;border-radius:22px;padding:26px;min-width:0}.selected{border:2px solid #5378f6}.label{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-weight:700}.pill{font-size:12px;background:#eaf0ff;color:#315edc;padding:7px 10px;border-radius:14px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;margin:0;background:#111b2d;color:#d7e4ff;padding:22px;border-radius:14px;max-height:440px;overflow:hidden}.request{padding:17px 20px;background:#e9eef8;border-radius:12px;margin-bottom:22px;font-size:15px;line-height:1.6}.steps{display:flex;gap:10px;margin:22px 0}.step{flex:1;border-radius:12px;padding:14px;background:#e7edfc;color:#3154ad;font-size:14px}.note{font-size:13px;color:#65748b;margin-top:22px}.status{background:#fff5e4;border:1px solid #f0d29d;padding:16px 20px;border-radius:12px;color:#805617;margin-top:22px;line-height:1.6}.prefs{display:flex;gap:12px;margin-top:20px}.pref{flex:1;padding:18px;border-radius:14px;background:#eaf0ff;font-weight:700;color:#3456a2}.empty{min-height:430px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:#f4f6fa;border-radius:14px;padding:30px}.empty strong{font-size:24px;color:#75839a}.files{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.file{font-size:13px;background:#edf1f7;padding:7px 10px;border-radius:7px}footer{display:flex;justify-content:space-between;border-top:1px solid #dce2ed;padding-top:16px;margin-top:24px;font-size:12px;color:#68778e}a{color:inherit}
+</style><main><header><span class="brand">Preference Prompt · 코딩 도움</span><span class="tag">2026.10.15 저장 기록 재현 · 실시간 앱 화면 아님</span></header><div class="eyebrow">01 · 선택 과정</div><h1>같은 기능, 다른 작성 방식 중에서 선택합니다.</h1><p class="lead">역할별 파일 분리를 선호하도록 설정한 자동 선택 시나리오의 실제 기록입니다.</p><div class="request">React와 TypeScript로 카운터 컴포넌트를 만들어 주세요. 처음 값은 0입니다. &#x27;증가&#x27; 버튼을 누르면 1씩 올라가고 &#x27;초기화&#x27; 버튼을 누르면 0으로 돌아갑니다. 현재 숫자를 화면에 보여 주세요. 외부 라이브러리는 사용하지 마세요.</div><div class="grid"><section class="card selected"><div class="label">A · 역할별 파일로 분리<span class="pill">이 시나리오의 선택</span></div><pre>### `Counter.tsx`
+
+```tsx
+import { useState } from &#x27;react&#x27;;
+import &#x27;./Counter.css&#x27;;
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;div className=&quot;counter&quot;&gt;
+      &lt;output className=&quot;counter__value&quot; aria-label=&quot;현재 숫자&quot;&gt;
+        {count}
+      &lt;/output&gt;
+
+      &lt;div className=&quot;counter__actions&quot;&gt;
+        &lt;button
+          className=&quot;counter__button&quot;
+          type=&quot;button&quot;
+          onClick={() =&gt; setCount((value) =&gt; value + 1)}
+        &gt;
+          증가</pre></section><section class="card"><div class="label">B · 간결하게 한 파일로 작성</div><pre>### `Counter.tsx`
+
+```tsx
+import { useState } from &#x27;react&#x27;;
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  const actions = (
+    &lt;div className=&quot;counter__actions&quot;&gt;
+      &lt;button
+        className=&quot;counter__button&quot;
+        type=&quot;button&quot;
+        onClick={() =&gt; setCount((value) =&gt; value + 1)}
+      &gt;
+        증가
+      &lt;/button&gt;
+      &lt;button
+        className=&quot;counter__button&quot;
+        type=&quot;button&quot;
+        onClick={() =&gt; setCount(0)}
+      &gt;</pre></section></div><div class="prefs"><div class="pref">① 역할별 파일로 분리</div><div class="pref">② 디자인 값을 모아서 관리</div><div class="pref">③ 타입을 꼼꼼하게 작성</div></div><p class="note">위 A/B는 코드 구성 축의 비교입니다. 아래 세 항목은 전체 선택 기록에서 확인한 최종 선호입니다. 긴 코드는 화면에 일부만 표시했습니다.</p><footer><span>자동 선택 시나리오 · 실제 사람의 만족도 평가 아님 · 모델 학습 아님</span><span>01 / 3</span></footer></main></html>

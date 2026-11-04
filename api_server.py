@@ -183,6 +183,7 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
         languages = _prompt_languages(domain, state.template_id)
         prompts = {lang: service.final_prompt(domain, estimator, template_id=state.template_id, language=lang)
                    for lang in languages}
+        prompts.update(state.personalized_prompts)
         default = languages[0]
         seed = prompts[default]
         payload["prompt_language"] = default
@@ -402,6 +403,10 @@ MAX_POLISH_PROMPT_CHARS = 4_000
 # 프롬프트 다듬기(가져온 프롬프트의 LLM 재작성, /api/polish) 하루 상한. 세션·최적화와 같은
 # 방침이고, 재시작하면 0 으로 돌아가므로 결제 쪽 월 상한을 대신하지 않는다.
 DAILY_POLISHES = _quota("polish", "PPT_POLISHES_PER_DAY", 60, "PPT_USER_POLISHES_PER_DAY", 20)
+DAILY_PROMPT_IMPROVEMENTS = _quota(
+    "prompt_improvement", "PPT_PROMPT_IMPROVEMENTS_PER_DAY", 60,
+    "PPT_USER_PROMPT_IMPROVEMENTS_PER_DAY", 20,
+)
 
 
 def _checklist_payload(items) -> list[dict[str, Any]]:
@@ -490,7 +495,8 @@ def quota_left() -> dict[str, int]:
     """지금 요청한 사람의 오늘 남은 횟수 (/api/auth/me 가 보여 준다)."""
     subject = _subject()
     quotas = {"session": LIVE_SESSIONS, "optimize": DAILY_OPTIMIZATIONS,
-              "polish": DAILY_POLISHES, "workspace": DAILY_WORKSPACE_CALLS, "aws": DAILY_AWS_QUERIES}
+              "polish": DAILY_POLISHES, "workspace": DAILY_WORKSPACE_CALLS, "aws": DAILY_AWS_QUERIES,
+              "prompt_improvement": DAILY_PROMPT_IMPROVEMENTS}
     return {kind: q.left(subject) for kind, q in quotas.items() if hasattr(q, "left")}
 
 
@@ -975,7 +981,24 @@ class ApiHandler(BaseHTTPRequestHandler):
                 replace(state, demo_mode=True, demo_reason="generation_failed"), pair_id, chosen
             )
         with SESSIONS_LOCK:
+            # 같은 쌍에 대한 중복 클릭이 동시에 들어오면 먼저 저장한 쪽만 이긴다. 늦은 쪽은
+            # 만료로 돌려보내 프롬프트 개선 호출이 두 번 나가지 않게 한다.
+            if SESSIONS.get(session_id) is not state:
+                raise service.StaleChoiceError("이 쌍에 대한 선택이 이미 처리됐습니다.")
             SESSIONS[session_id] = updated
+        if updated.done:
+            claimed = updated
+            domain, _ = service.current_estimate(updated)
+            updated = service.complete_personalized_prompt(
+                updated, _prompt_languages(domain, updated.template_id),
+                before_call=lambda: _take(DAILY_PROMPT_IMPROVEMENTS, "프롬프트 개선"),
+            )
+            with SESSIONS_LOCK:
+                # 개선하는 동안 "이전 선택 수정"이 들어왔으면 그 상태를 덮어쓰지 않는다.
+                if SESSIONS.get(session_id) is claimed:
+                    SESSIONS[session_id] = updated
+                else:
+                    updated = SESSIONS.get(session_id, updated)
         self._send(200, {"session": _state_payload(updated)})
 
     def _undo_choice(self, session_id: str) -> None:

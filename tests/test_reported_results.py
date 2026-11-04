@@ -129,3 +129,43 @@ def test_paired_comparison_beats_the_mean_argument() -> None:
     )
     assert len(by_doc) == 5
     assert wins == 4, f"D 가 이긴 문서 수가 {wins}개다. README 를 고칠 것."
+
+
+# --- 코딩 프롬프트 사전등록 3회 (README "코딩 프롬프트 검증") -------------------
+
+def _summary(name: str) -> dict:
+    import json
+    path = RESULTS / f"{name}.json"
+    if not path.exists():
+        pytest.skip(f"결과 파일이 없다: {name}")
+    return json.loads(path.read_text(encoding="utf-8"))["summary"]
+
+
+def _fmt(value: float, ci: list[float], sign: bool = True) -> str:
+    head = f"{value:+.4f}" if sign else f"{value:.4f}"
+    return f"{head.rstrip('0').rstrip('.')} [{', '.join(str(x) for x in ci)}]"
+
+
+@pytest.mark.parametrize("result, pair, metric, sign", [
+    ("ppc_holdout_behavior", "rule_based-none", "axis_pass", True),
+    ("ppc2_holdout_behavior", "rule_based-none", "axis_pass", True),
+    ("rc_holdout_behavior", "rule_based-none", "axis_pass", True),
+    ("ppc_holdout_behavior", "ai_improved-rule_based", "axis_pass", False),
+    ("ppc2_holdout_behavior", "ai_improved-rule_based", "axis_pass", True),
+    ("rc_holdout_behavior", "request_check-rule_based", "functional", False),
+    ("ppc2_holdout_behavior_rescored", "rule_based-none", "functional", False),
+    ("rc_holdout_behavior", "rule_based-none", "functional", False),
+    ("ppc_holdout_behavior_rescored", "rule_based-none", "functional", False),
+])
+def test_readme_coding_preregistration_numbers(result, pair, metric, sign) -> None:
+    """README 의 수치 문자열이 커밋된 결과 파일의 평균·구간과 같다 (음수는 부호를 그대로 쓴다)."""
+    paired = _summary(result)["paired"][pair]
+    value, ci = paired[f"{metric}_diff"], paired[f"{metric}_diff_ci95"]
+    readme = (RESULTS.parents[1] / "README.md").read_text(encoding="utf-8")
+    assert _fmt(value, ci, sign=sign and value > 0) in readme, (result, pair, metric)
+
+
+def test_readme_coding_verdicts_match_results() -> None:
+    assert _summary("ppc_holdout_behavior")["all_criteria_met"] is False
+    assert _summary("ppc2_holdout_behavior")["all_criteria_met"] is False
+    assert _summary("rc_holdout_behavior")["all_criteria_met"] is False

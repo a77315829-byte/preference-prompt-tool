@@ -60,6 +60,20 @@ def test_korean_source_leak() -> None:
     assert not service.source_leak("원문을 한국어로 2문장 이내로 요약하라. 핵심 사실과 수치를 유지하라.", src, ref)
 
 
+def _rescore(monkeypatch, scores):
+    """규칙을 되살린 프롬프트를 다시 재는 평가. 실제 모델을 부르지 않게 점수를 정해 둔다."""
+    from gepa.adapters.default_adapter.default_adapter import DefaultAdapter
+
+    seen = []
+
+    def fake_evaluate(self, batch, candidate, capture_traces=False):
+        seen.append(candidate["system_prompt"])
+        return SimpleNamespace(scores=list(scores))
+
+    monkeypatch.setattr(DefaultAdapter, "evaluate", fake_evaluate)
+    return seen
+
+
 def _finished_state(domain_path: str, source: str):
     state = service.start_session(source, "summarization", domain_path, model="m", demo_mode=True, total_rounds=2)
     for _ in range(2):
@@ -104,8 +118,10 @@ def test_best_leaky_candidate_is_skipped(monkeypatch) -> None:
         )
 
     monkeypatch.setattr(gepa, "optimize", fake_optimize)
+    _rescore(monkeypatch, [0.8, 0.8, 0.8])
     state = _finished_state("domains/summarization.yaml", SOURCE)
-    assert service.optimize(state) == clean
+    # 원문이 든 후보 대신 깨끗한 후보를 고른다 (지워진 규칙 줄은 뒤에 되살아난다 - 아래 보고 테스트).
+    assert service.optimize(state).startswith(clean.rstrip())
 
 
 def test_all_leaky_falls_back_to_seed(monkeypatch) -> None:
@@ -139,7 +155,52 @@ def test_report_explains_what_was_chosen(monkeypatch) -> None:
         )
 
     monkeypatch.setattr(gepa, "optimize", fake_optimize)
+    rescored = _rescore(monkeypatch, [0.7, 0.7, 0.7])
     state = _finished_state("domains/summarization.yaml", SOURCE)
     report: dict = {}
-    assert service.optimize(state, report=report) == clean
-    assert report == {"seed_score": 0.6, "final_score": 0.8, "eval_inputs": 3, "leaky_skipped": 1}
+    chosen = service.optimize(state, report=report)
+    # 최종 점수는 GEPA 가 잰 0.8 이 아니라 규칙을 되살린 프롬프트를 다시 잰 값이다.
+    assert rescored == [chosen]
+    # 고른 후보는 그대로 두고, 시드에 있던 규칙 줄 중 후보가 지운 것만 뒤에 되살린다.
+    assert chosen.startswith(clean.rstrip())
+    restored = chosen[len(clean.rstrip()):].strip().split("\n")
+    domain = service.load_domain_for("domains/summarization.yaml")
+    assert restored[0] == f"## {domain.final_prompt.rules_heading}"
+    assert restored[1:] == [f"- {r}" for r in domain.final_prompt.rules if f"- {r}" not in clean.split("\n")]
+    assert report == {"seed_score": 0.6, "final_score": pytest.approx(0.7), "eval_inputs": 3, "leaky_skipped": 1,
+                      "rules_restored": len(restored) - 1, "score_before_restore": 0.8}
+
+
+def test_restored_candidate_not_better_than_seed_keeps_seed(monkeypatch) -> None:
+    """규칙을 되살리자 점수가 시드 이하로 떨어지면 고쳐 쓴 프롬프트를 채택하지 않는다."""
+    import gepa
+
+    clean = CLEAN["제안1 (일반 지침)"]
+
+    def fake_optimize(**kwargs):
+        seed = kwargs["seed_candidate"]
+        return SimpleNamespace(candidates=[seed, {"system_prompt": clean}], val_aggregate_scores=[0.6, 0.8])
+
+    monkeypatch.setattr(gepa, "optimize", fake_optimize)
+    _rescore(monkeypatch, [0.6, 0.5, 0.6])
+    state = _finished_state("domains/summarization.yaml", SOURCE)
+    domain, estimator, _ = service._rebuild(state)
+    report: dict = {}
+    assert service.optimize(state, report=report) == service.final_prompt(domain, estimator)
+    assert report["final_score"] == 0.6 and report["rules_restored"] == 0
+    assert report["score_before_restore"] == 0.8
+
+
+def test_restore_protected_rules_only_adds_rules_the_candidate_dropped() -> None:
+    from engine.domain_loader import load_domain
+    from engine.estimator import Estimator
+    domain = load_domain("domains/coding.yaml")
+    seed = service.final_prompt(domain, Estimator(domain), language="en")
+    # 규칙을 그대로 둔 후보는 바뀌지 않는다.
+    assert service._restore_protected_rules(seed + "\nExtra line.", seed, domain, "en") == (seed + "\nExtra line.", 0)
+    # 통째로 다시 쓴 후보에는 영어판 규칙 줄만 원문 그대로 되살아난다.
+    rewritten, restored = service._restore_protected_rules("Write great React code.", seed, domain, "en")
+    spec = domain.final_prompt_translations["en"]
+    assert restored == len(spec.rules)
+    assert rewritten.split("\n")[2:] == [f"## {spec.rules_heading}", *(f"- {r}" for r in spec.rules)]
+    assert "- Implement all requested behavior." in rewritten

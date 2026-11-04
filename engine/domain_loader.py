@@ -77,6 +77,12 @@ class FinalPromptSpec:
     task: str | None = None
     instructions: dict[str, dict[str, str]] | None = None
     freeform_templates: dict[str, str] = field(default_factory=dict)
+    # 축 -> 값 -> 그 값의 지시문을 다시 쓸 때 빠지면 안 되는 낱말. 다시 쓴 지시문이 원래보다
+    # 약해지는 것(예: 강조 부사가 사라짐)을 코드로 잡는 최소한의 경계다. 없으면 검사하지 않는다.
+    required_terms: dict[str, dict[str, list[str]]] = field(default_factory=dict)
+    # 원래 지시문에 없던 이 표현이 다시 쓴 지시문에 생기면 약해진 것으로 본다 (예: "가능하면").
+    # 필수 낱말은 남기고 뜻만 누그러뜨리는 경우를 잡는다. 없으면 검사하지 않는다.
+    weakening_markers: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -224,6 +230,18 @@ def _validate_final(final: dict, at: str, axis_names: set[str]) -> None:
     unknown = set(final.get("axis_labels", {})) - axis_names
     if unknown:
         raise DomainError(f"{at}: axis_labels 에 없는 축이 있다: {sorted(unknown)}")
+    terms = final.get("required_terms", {})
+    if not isinstance(terms, dict) or not all(
+        isinstance(values, dict) and all(
+            isinstance(words, list) and words and all(isinstance(w, str) and w.strip() for w in words)
+            for words in values.values())
+        for values in terms.values()):
+        raise DomainError(f"{at}: 'required_terms' 는 축 -> 값 -> 비어 있지 않은 낱말 목록이어야 한다")
+    if set(terms) - axis_names:
+        raise DomainError(f"{at}: required_terms 에 없는 축이 있다: {sorted(set(terms) - axis_names)}")
+    markers = final.get("weakening_markers", [])
+    if not isinstance(markers, list) or not all(isinstance(m, str) and m.strip() for m in markers):
+        raise DomainError(f"{at}: 'weakening_markers' 는 비어 있지 않은 문자열 목록이어야 한다")
 
 
 def load_domain(path: str | Path) -> Domain:
@@ -300,4 +318,7 @@ def _final_prompt(raw: dict | None) -> FinalPromptSpec | None:
             if isinstance(raw.get("instructions"), dict) else None
         ),
         freeform_templates={axis: str(t).strip() for axis, t in (raw.get("freeform_templates") or {}).items()},
+        required_terms={axis: {value: [w.strip() for w in words] for value, words in values.items()}
+                        for axis, values in (raw.get("required_terms") or {}).items()},
+        weakening_markers=[m.strip() for m in raw.get("weakening_markers") or []],
     )

@@ -157,7 +157,9 @@ class TeamStore:
     @staticmethod
     def _members(conn, code: str) -> list[Member]:
         rows = conn.execute(
-            "SELECT name, user_id, history_json FROM team_members WHERE code = ? ORDER BY joined_at, rowid", (code,)
+            # 처음 참여한 순서. 다시 참여하면 joined_at(만료 판단용 활동 시각)은 갱신되지만 upsert 는 rowid 를
+            # 유지한다 - joined_at 으로 정렬하면 재참여가 다른 초에 들어올 때만 순서가 바뀌어 결과가 흔들렸다.
+            "SELECT name, user_id, history_json FROM team_members WHERE code = ? ORDER BY rowid", (code,)
         ).fetchall()
         return [Member(r["name"], [tuple(c) for c in json.loads(r["history_json"])], signed_in=r["user_id"] is not None)
                 for r in rows]
