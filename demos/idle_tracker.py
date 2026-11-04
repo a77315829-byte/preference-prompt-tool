@@ -1,17 +1,12 @@
-"""AWS 비용 분석 리포트(idle_tracker) 규칙 기반 데모 후보 생성기.
-
-API 호출 없이도(demo_mode=True) 사용자가 format(개조식 vs 표)과
-scope(핵심 요약 vs 전체 상세) 2개 축의 차이를 명확히 비교할 수 있도록
-4단 고정 레이아웃 기반의 리포트를 결정론적으로 생성한다.
-"""
+"""AWS 비용 현황 리포트(idle_tracker) 도메인의 결정적인 데모 생성기."""
 
 from __future__ import annotations
 
 import re
 from typing import Any
 
-# 확정된 $45.20 표준 데모 데이터 기준 4종 리포트 템플릿
-_STANDARD_REPORTS: dict[tuple[str, str], str] = {
+# 확정된 $45.20 표준 데모 데이터 기준 4종 리포트 (4단 고정 레이아웃)
+_REPORTS_4520: dict[tuple[str, str], str] = {
     ("bullet_list", "summary_brief"): """\
 # [AWS 비용 분석 리포트]
 > - **조회 기간:** 2026-10-01 ~ 2026-10-15 (진행 중인 달 / 추정치)
@@ -95,105 +90,28 @@ _STANDARD_REPORTS: dict[tuple[str, str], str] = {
 - 위 내역은 제공된 사용 유형(Usage Type) 및 리전 기준의 전체 팩트 데이터입니다. 특정 리소스의 활성 상태나 낭비 원인은 포함되어 있지 않으므로, 비용 절감 조치 전 AWS 콘솔에서 실제 트래픽 및 이용률을 추가 확인하시기 바랍니다.""",
 }
 
-_ITEM_LINE_RE = re.compile(
-    r"^-\s*(?P<service>[^(\n:]+?)\s*\((?P<resource>[^)]+)\)\s*:\s*(?P<cost>\$\d[\d,]*(?:\.\d+)?|₩\d[\d,]*)\s*(?:-\s*(?P<detail>.*))?$"
-)
+def _request_note(source_text: str) -> str:
+    note = re.sub(r"\s+", " ", source_text.strip()).replace("*/", "")
+    return note[:140] or "AWS 비용에서 유휴 리소스를 찾아 주세요."
 
-
-def _normalize_combo(combo: dict[str, str]) -> tuple[str, str]:
-    """신규 축(format, scope) 및 구버전 축(detail_level, focus) 입력을 모두 표준 키로 변환한다."""
-    fmt = combo.get("format")
-    scp = combo.get("scope")
-
-    if fmt not in ("bullet_list", "markdown_table"):
-        # 구버전 focus 축 호환: resource는 표, cost는 불릿으로 매핑
-        fmt = "markdown_table" if combo.get("focus") == "resource" else "bullet_list"
-
-    if scp not in ("summary_brief", "deep_dive"):
-        # 구버전 detail_level 축 호환
-        scp = "deep_dive" if combo.get("detail_level") == "detailed" else "summary_brief"
-
-    return fmt, scp
-
-
-def _render_custom_source(source: str, fmt: str, scp: str) -> str | None:
-    """원문이 $45.20 표준 데이터가 아닌 경우(예: api_server 기본 ₩16,800 데모 등),
-    원문의 금액과 리소스 ID만 인용하여 4단 레이아웃으로 동적 조립한다."""
-    if "$45.20" in source or not source.strip():
-        return None
-
-    period_match = re.search(r"조회\s*기간\s*:\s*([^\n]+)", source)
-    total_match = re.search(r"총\s*(?:예상|청구)\s*(?:비용|금액)\s*:\s*(\$\d[\d,]*(?:\.\d+)?|₩\d[\d,]*)", source)
-
-    items: list[dict[str, str]] = []
-    for line in source.splitlines():
-        m = _ITEM_LINE_RE.match(line.strip())
-        if m:
-            items.append(m.groupdict())
-
-    if not total_match and not items:
-        return None
-
-    period = period_match.group(1).strip() if period_match else "최근 30일 (가용 데이터 기준)"
-    total_cost = total_match.group(1).strip() if total_match else (items[0]["cost"] if items else "$0.00")
-    currency = "KRW" if "₩" in total_cost else "USD"
-
-    header = (
-        "# [AWS 비용 분석 리포트]\n"
-        f"> - **조회 기간:** {period}\n"
-        f"> - **계정 ID:** 1234-****-9012 | **통화:** {currency}\n\n"
-        "## 1. 총 청구 금액\n"
-        f"- **총 합계:** **{total_cost}**\n\n"
-    )
-    footer = (
-        "\n\n## 3. 데이터 확인 안내\n"
-        "- 본 리포트는 제공된 AWS 비용 조회 데이터에 포함된 금액과 리소스만 인용하여 작성되었습니다. "
-        "실제 유휴 상태 및 삭제 전 의존 관계는 AWS 콘솔에서 추가 확인하시기 바랍니다."
-    )
-
-    if scp == "summary_brief":
-        section_title = "## 2. 핵심 과금 내역 (요약)\n"
-        top_item = items[0] if items else {"service": "주요 서비스", "resource": "-", "cost": total_cost}
-        rest_count = max(0, len(items) - 1)
-        if fmt == "bullet_list":
-            body = (
-                f"- **{top_item['service']}:** {top_item['cost']} — 주요 항목\n"
-                f"- **기타 서비스 합계 ({rest_count}건):** 나머지 항목 통합 (총액 {total_cost} 내 포함)"
-            )
-        else:
-            body = (
-                "| 구분 | 서비스명 | 청구 금액 | 비고 |\n"
-                "| :---: | :--- | :---: | :--- |\n"
-                f"| 핵심 1 | **{top_item['service']}** | {top_item['cost']} | 주요 과금 항목 |\n"
-                f"| 기타 | **기타 서비스 합계 ({rest_count}건)** | 통합 | 소액 항목 통합 |\n"
-                f"| **합계** | **전체 비용** | **{total_cost}** | **100.0%** |"
-            )
+def _legacy_finding(combo: dict[str, str], service: str, resource: str, cost: str, action: str) -> str:
+    if combo.get("focus", "cost") == "resource":
+        lead = f"리소스 {resource} ({service})가 먼저 확인 대상입니다."
+        evidence = f"이 리소스에서 최근 비용 {cost}가 발생했습니다."
     else:
-        section_title = "## 2. 전체 과금 상세 내역 (Usage Type 기준)\n"
-        if fmt == "bullet_list":
-            bullets = [
-                f"- **{it['service']} ({it['resource']}):** {it['cost']} — {it.get('detail') or '상세 내역 확인'}"
-                for it in items
-            ] or [f"- **전체 항목:** {total_cost}"]
-            body = "\n".join(bullets)
-        else:
-            rows = [
-                "| 서비스명 | 리소스 / 사용 유형 | 청구 금액 | 상세 안내 |",
-                "| :--- | :--- | :---: | :--- |",
-            ]
-            for it in items:
-                rows.append(
-                    f"| **{it['service']}** | `{it['resource']}` | {it['cost']} | {it.get('detail') or '-'} |"
-                )
-            rows.append(f"| **합계** | **전체 {len(items)}개 항목** | **{total_cost}** | **100.0%** |")
-            body = "\n".join(rows)
+        lead = f"월간 예상 낭비 비용은 {cost}입니다."
+        evidence = f"원인은 {service} 리소스 {resource}의 사용 흔적이 없는 상태입니다."
 
-    return header + section_title + body + footer
-
+    if combo.get("detail_level", "summary") == "detailed":
+        return (
+            f"{lead}\n{evidence}\n"
+            f"해결 방법: {action}\n"
+            "확인 전에는 연결된 워크로드와 백업 정책을 점검하세요."
+        )
+    return f"{lead}\n해결 방법: {action}"
 
 def generate(*args: Any, **kwargs: Any) -> str:
     """엔진의 demo_generator가 호출하는 진입점.
-
     호출 시그니처가 (source, combo)이든 (domain, source, combo)이든 모두 지원한다.
     """
     source = ""
@@ -207,12 +125,40 @@ def generate(*args: Any, **kwargs: Any) -> str:
         source = str(kwargs.get("source", args[0] if args and isinstance(args[0], str) else ""))
         combo = dict(kwargs.get("combo", {}))
 
-    fmt, scp = _normalize_combo(combo)
-    custom = _render_custom_source(source, fmt, scp)
-    if custom is not None:
-        return custom
-    return _STANDARD_REPORTS[(fmt, scp)]
+    # 신규 2개 축(format, scope)이 지정된 경우 확정된 $45.20 4단 레이아웃 리포트를 반환한다.
+    if "format" in combo or "scope" in combo:
+        fmt = combo.get("format", "bullet_list")
+        if fmt not in ("bullet_list", "markdown_table"):
+            fmt = "bullet_list"
+        scp = combo.get("scope", "summary_brief")
+        if scp not in ("summary_brief", "deep_dive"):
+            scp = "summary_brief"
+        return _REPORTS_4520[(fmt, scp)]
 
+    # 구버전 축(detail_level, focus)으로 호출된 경우 기존 회귀 테스트 호환을 위해 유지한다.
+    note = _request_note(source)
+    findings = [
+        _legacy_finding(
+            combo,
+            "EC2 탄력적 IP",
+            "eipalloc-0a12bc34de56f7890",
+            "₩10,000",
+            "AWS 콘솔 > EC2 > 탄력적 IP 메뉴에서 연결되지 않은 IP를 릴리스하세요.",
+        ),
+        _legacy_finding(
+            combo,
+            "EBS 스냅샷",
+            "snap-0f1234567890abcd1",
+            "₩6,800",
+            "AWS 콘솔 > EC2 > 스냅샷에서 보존할 백업인지 확인한 뒤 오래된 스냅샷을 삭제하세요.",
+        ),
+    ]
+    return (
+        f"점검 요청: {note}\n\n"
+        "[AWS 비용 누수 후보]\n"
+        + "\n\n".join(findings)
+        + "\n\n다음 결제 주기 전에 조치 여부를 다시 확인하세요."
+    )
 
 # 엔진이 generate_demo 라는 함수명을 찾을 경우를 대비한 별칭
 generate_demo = generate
