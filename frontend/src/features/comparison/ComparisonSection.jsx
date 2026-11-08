@@ -17,9 +17,19 @@ const demoReasonText = {
   generation_failed: 'AI 생성이 실패해 무료 데모로 전환했습니다. 입력한 기능의 코드는 생성하지 않습니다.',
 };
 
-function codePreview(text) {
-  const firstBlock = text.match(/```[^\n]*\n([\s\S]*?)```/);
-  return firstBlock ? firstBlock[1].trim() : text;
+function codePreview(text, axisId) {
+  const blocks = [...text.matchAll(/```[^\n]*\n([\s\S]*?)```/g)];
+  if (!blocks.length) return text;
+
+  if (axisId === 'style_management') {
+    const styleBlock = blocks.find((block) => {
+      const heading = text.slice(0, block.index).trimEnd().split('\n').at(-1) || '';
+      return /style|theme|token/i.test(heading);
+    });
+    if (styleBlock) return styleBlock[1].trim();
+  }
+
+  return blocks[0][1].trim();
 }
 
 function getRemoteAxis(pair, demoMode = true) {
@@ -43,7 +53,7 @@ function getRemoteAxis(pair, demoMode = true) {
         ? '규칙 기반 데모 생성기가 만든 예시입니다.'
         : 'AI가 입력한 내용을 기준으로 직접 쓴 예시입니다.',
       code: candidate.text,
-      preview: codePreview(candidate.text),
+      preview: codePreview(candidate.text, axisId),
     })),
   };
 }
