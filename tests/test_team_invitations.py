@@ -6,6 +6,7 @@ import app_db
 import team
 from app_db import Database
 from auth import AuthService
+from tests.test_personal_prompts import request, signup
 from tests.test_team import _call, _finished_session, _history, db, server
 
 
@@ -83,3 +84,24 @@ def test_create_validates_name_domain_and_mismatched_comparisons(server):
         "sessionId": _finished_session(server, "a"), "name": "민수", "requireExisting": True,
     })[0] == 400
     assert _call(server, f"/teams/{code}")[1]["team"]["members"] == []
+
+
+def test_private_team_http_access_and_owner_invitation_controls(server):
+    alice, bob = signup(server, 'alice'), signup(server, 'bob')
+    status, data, _ = request(server, '/teams', {'name': '비공개 개발팀', 'domainKey': 'coding'}, alice)
+    assert status == 201
+    code = data['team']['code']
+    path = f'/teams/{code}'
+    assert request(server, path, cookie=alice)[1]['team']['name'] == '비공개 개발팀'
+    for cookie in (None, bob):
+        preview = request(server, path, cookie=cookie)[1]['team']
+        assert preview['requires_join'] and preview['name'] == '초대받은 팀'
+        assert not preview['members'] and not preview['prompt']
+        assert request(server, path + '/invitation', {'enabled': False}, cookie)[0] in (400, 401)
+    assert request(server, path + '/invitation', {'enabled': False}, alice)[1]['team']['invite_open'] is False
+    participation = {'sessionId': _finished_session(server, 'a'), 'requireExisting': True}
+    assert request(server, path + '/members', participation, bob)[0] == 400
+    assert request(server, path + '/invitation', {'enabled': True}, alice)[1]['team']['invite_open'] is True
+    assert request(server, path + '/members', participation, bob)[0] == 200
+    assert request(server, path, cookie=bob)[1]['team']['name'] == '비공개 개발팀'
+    assert request(server, path)[1]['team']['prompt'] == ''

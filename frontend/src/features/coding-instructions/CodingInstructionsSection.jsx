@@ -6,26 +6,33 @@ import CodingPreferenceChoices from './CodingPreferenceChoices';
 import CodingExampleComparison from './CodingExampleComparison';
 import CodingOptimizationPanel from './CodingOptimizationPanel';
 import CodingAnswerReview from './CodingAnswerReview';
+import CodingSignalSummary from './CodingSignalSummary';
+import { readDraft, useDraftCache } from '../../shared/draftCache';
 import './codingFlow.css';
 
 const emptyPreferences = () => Object.fromEntries(Object.keys(CODING_CHOICES).map(key => [key, null]));
 
-export default function CodingInstructionsSection({ user, signupOpen, onLogin, onOpenLibrary, onBack, onReactComparison, initialProfile }) {
-  const [profile, setProfile] = useState(() => structuredClone(initialProfile || { ...DEFAULT_CODING_PROFILE, language: '', preferences: emptyPreferences() }));
-  const [frameworkChosen, setFrameworkChosen] = useState(Boolean(initialProfile));
-  const [stage, setStage] = useState('environment');
-  const [mode, setMode] = useState('direct');
-  const [examples, setExamples] = useState(null);
-  const [draft, setDraft] = useState(null);
+export default function CodingInstructionsSection({ user, signupOpen, onLogin, onOpenLibrary, onBack, onReactComparison, initialProfile, onConsumeInitial }) {
+  const [restored] = useState(() => initialProfile ? null : readDraft('coding', user));
+  const [profile, setProfile] = useState(() => structuredClone(initialProfile || restored?.profile || { ...DEFAULT_CODING_PROFILE, language: '', preferences: emptyPreferences() }));
+  const [frameworkChosen, setFrameworkChosen] = useState(Boolean(initialProfile || restored?.frameworkChosen));
+  const [stage, setStage] = useState(restored?.stage || 'environment');
+  const [mode, setMode] = useState(restored?.mode || 'direct');
+  const [examples, setExamples] = useState(restored?.examples || null);
+  const [draft, setDraft] = useState(restored?.draft || null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
-  const [taskRequest, setTaskRequest] = useState('');
+  const [taskRequest, setTaskRequest] = useState(restored?.taskRequest || '');
+  const [comparisonProgress, setComparisonProgress] = useState(restored?.comparisonProgress || null);
   const [copiedWithTask, setCopiedWithTask] = useState(false);
   const request = useRef(0);
   const screenRef = useRef(null);
   const previousStage = useRef(stage);
-  const comparisonReturn = useRef({ stage: 'environment', mode: 'direct' });
+  const comparisonReturn = useRef(restored?.comparisonReturn || { stage: 'environment', mode: 'direct' });
+  useDraftCache('coding', user, { profile, frameworkChosen, stage, mode, examples, draft, taskRequest,
+    comparisonProgress, comparisonReturn: comparisonReturn.current });
+  useEffect(() => { if (initialProfile) onConsumeInitial?.(); }, [initialProfile, onConsumeInitial]);
   useEffect(() => () => { request.current += 1; }, []);
   useEffect(() => { setCopiedWithTask(false); }, [draft]);
   useEffect(() => {
@@ -47,7 +54,7 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
       delete next.comparison;
       return next;
     });
-    setFrameworkChosen(confirmed); setExamples(null); setDraft(null); setError(''); setCopied(false);
+    setFrameworkChosen(confirmed); setExamples(null); setComparisonProgress(null); setDraft(null); setError(''); setCopied(false);
   };
   const choosePreference = (key, value) => {
     request.current += 1;
@@ -65,18 +72,19 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
     delete lookup.comparison;
     try {
       const next = await loadCodingExamples(lookup);
-      if (token === request.current) { setExamples(next); setMode('comparison'); setStage('choose'); }
+      if (token === request.current) { setExamples(next); setComparisonProgress(null); setMode('comparison'); setStage('choose'); }
     } catch (e) { if (token === request.current) setError(e.message); }
     finally { if (token === request.current) setBusy(false); }
   };
   const cancelComparison = () => {
     setMode(comparisonReturn.current.mode); setStage(comparisonReturn.current.stage); setError('');
   };
-  const finishComparison = (choices, version, source) => {
+  const finishComparison = (choices, version, source, rounds, summary) => {
     const preferences = { ...profile.preferences };
-    for (const [key, value] of Object.entries(choices)) if (value !== null) preferences[key] = value;
+    for (const [key, value] of Object.entries(choices)) if (value !== null || version === 3) preferences[key] = value;
     request.current += 1;
-    setProfile({ ...profile, preferences, comparison: { version, choices, ...(version === 2 ? { example: source } : {}) } });
+    setProfile({ ...profile, preferences, comparison: { version, choices, ...(version >= 2 ? { example: source } : {}),
+      ...(version === 3 ? { rounds, summary } : {}) } });
     setStage('review'); setDraft(null); setCopied(false); setError('');
   };
   const generate = async () => {
@@ -102,9 +110,10 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
 
   return <section className="comparison-section coding-instructions-section coding-flow">
     <div className="comparison-inner">
+      <p className="ws-help">선택과 작성 내용은 이 탭에 임시 보관돼요. 메뉴를 옮겼다가 돌아와도 이어서 진행할 수 있어요. 로그아웃하면 지워집니다.</p>
       <button className="back-button" type="button" disabled={busy} onClick={onBack}>← 시작 화면으로</button>
       <header className="coding-flow-header"><div><span className="coding-flow-tag">MY CODING PREFERENCE</span>
-        <h2>고르는 순간, 내 방식으로.</h2><p>환경을 고르고, 더 편한 예시를 선택하면<br />내 선택을 담은 코딩 프롬프트가 만들어져요.</p></div>
+        <h2>비교하며 찾는, 내 코딩 방식.</h2><p>환경을 고르고, 코드 예시를 8~10회 비교해요.<br />반복해서 고른 방식과 미확정 항목을 확인한 뒤 내 지침을 만들어요.</p></div>
         <div className="coding-flow-note">내 선택 → 내 프롬프트 → 다음 작업</div>
       </header>
       <ol className="coding-stepper" aria-label="코딩 프롬프트 만들기 단계">
@@ -123,9 +132,10 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
               onClick={() => { if (mode !== 'comparison') compare(); }}><strong>{busy ? '코드 예시를 불러오는 중…' : '코드 예시로 고르기'}</strong><span>추천 · A/B 코드를 보고 선택</span></button>
             <button type="button" aria-label="설정만 빠르게 고르기" disabled={busy} aria-pressed={mode === 'direct'} onClick={direct}><strong>설정만 빠르게 고르기</strong><span>원하는 답변 방식을 이미 알고 있어요</span></button>
           </div>
-          <p className="coding-selection-method-hint">{!LANGUAGES.includes(profile.language) ? '직접 입력한 언어의 코드 예시는 아직 준비되지 않았어요. 아래 설정에서 내 방식을 골라 주세요.' : '코드 예시 비교는 네 항목을 마친 뒤 반영돼요. 비교를 취소하면 기존 선택을 유지합니다.'}</p>
+          <p className="coding-selection-method-hint">{!LANGUAGES.includes(profile.language) ? '직접 입력한 언어의 코드 예시는 아직 준비되지 않았어요. 아래 설정에서 내 방식을 골라 주세요.' : '기본 8회 비교하고, 미확정 항목은 최대 2회 더 확인해요. 네 항목을 직접 설정하는 빠른 방법도 선택할 수 있어요. 비교를 취소하면 기존 선택을 유지합니다.'}</p>
         </div>}
         {stage === 'choose' && mode === 'comparison' && examples && <CodingExampleComparison examples={examples} initialChoices={profile.comparison?.choices}
+          initialProgress={comparisonProgress} onProgress={setComparisonProgress}
           onFinish={finishComparison} onCancel={cancelComparison} />}
         {stage === 'choose' && mode === 'direct' && <>
           <div className="coding-screen-heading"><span className="coding-kicker">02 · 선호 선택</span><h3>어떤 답변이 더 편한가요?</h3><p>정답은 없어요. 네 가지 항목에서 내가 받고 싶은 방식을 하나씩 눌러 주세요.</p></div>
@@ -137,9 +147,10 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
           <div className="coding-screen-heading"><span className="coding-kicker">03 · 내 선택 확인</span><h3>이 선택으로 프롬프트를 만들까요?</h3>
             <p>{profile.comparison?.example?.label || `${profile.language} · ${profile.framework || '프레임워크 없이'} · ${profile.comparison ? '기본 문법 예시에서 선택' : '카드에서 직접 선택'}`}</p>
             <p>아래 카드는 내가 고른 답변 방식이에요. 이 선택을 AI에게 전달할 지시문으로 정리해 드릴게요.</p></div>
+          <CodingSignalSummary comparison={profile.comparison} resolved={allChosen} />
           {LANGUAGES.includes(profile.language) && <div className="coding-review-examples"><div><strong>설정 이름만으로 고르기 어려웠나요?</strong><p>코드 A/B를 보며 다시 고를 수 있어요. 비교를 취소하면 지금 선택을 유지해요.</p></div>
             <button type="button" className="coding-secondary-button" disabled={busy} onClick={compare}>{busy ? '코드 예시를 불러오는 중…' : '코드 예시를 보며 다시 고르기'}</button></div>}
-          {!allChosen && <p className="coding-selection-status" role="status">비교를 보류한 항목이 있어요. 아래 카드에서 남은 {4 - selectedCount}개를 직접 골라야 프롬프트를 만들 수 있어요.</p>}
+          {!allChosen && <p className="coding-selection-status" role="status">아직 확정하지 않은 항목이 있어요. 아래 카드에서 남은 {4 - selectedCount}개를 직접 골라야 프롬프트를 만들 수 있어요.</p>}
           <CodingPreferenceChoices profile={profile} onSelect={choosePreference} busy={busy} />
           <label className="coding-custom-field" htmlFor="coding-extra">함께 전할 추가 선호 <span>(선택)</span></label>
           <textarea id="coding-extra" className="task-input" rows={2} maxLength={1000} value={profile.extra} disabled={busy}
@@ -150,6 +161,7 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
         </>}
         {stage === 'result' && draft && <div className="coding-instructions-result">
           <div className="coding-result-banner"><h3>답변 방식 4가지 선택 완료</h3><p>{draft.profile.language} · {draft.profile.framework || '프레임워크 없이'} · 고른 방식을 AI에게 전달할 프롬프트로 정리했어요.</p></div>
+          <CodingSignalSummary comparison={draft.profile.comparison} resolved />
           <div className="coding-result-layout">
             <section className="coding-summary-panel" aria-labelledby="coding-summary-title">
               <span className="coding-kicker">내 선택 요약</span><h3 id="coding-summary-title">내가 고른 답변 방식</h3>
@@ -189,8 +201,10 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
         </div>}
       </div>
       {error && <p className="ws-error" role="alert">{error}</p>}
-      <details className="coding-legacy-entry"><summary>기존 React 비교 · 팀 기준 맞추기</summary><p>React의 화면 구성·스타일·타입을 비교하고 팀 기준을 맞추는 기존 흐름입니다.</p>
-        <button type="button" className="coding-secondary-button" disabled={busy} onClick={onReactComparison}>React 예시 비교로 취향 찾기</button></details>
+      <aside className="coding-legacy-entry"><h3>팀과 React 코드 기준을 맞추고 싶나요?</h3>
+        <p>위의 8~10회 비교는 내 답변 방식을 정하는 개인 지침입니다. 팀 비교는 React의 화면 구성·스타일·타입을 같은 항목으로 비교합니다. 항목이 달라 개인 지침을 자동으로 팀 기준에 합치지는 않아요.</p>
+        <button type="button" className="coding-secondary-button" disabled={busy} onClick={onReactComparison}>React 예시 비교로 취향 찾기</button>
+      </aside>
     </div>
   </section>;
 }

@@ -85,8 +85,10 @@ def test_live_failure_falls_back_to_demo_without_leaking(
     assert session["demo_mode"] is True
     assert session["demo_reason"] == "generation_failed"
     assert "sk-abc" not in body
-    # 원인은 서버 터미널에는 남아야 한다.
-    assert "sk-abc" in capsys.readouterr().out
+    # 오류 유형만 남기고 공급자 예외에 포함된 키 조각은 로그에서도 제외한다.
+    logged = capsys.readouterr().out
+    assert 'RuntimeError' in logged
+    assert "sk-abc" not in logged
 
 
 def test_live_failure_mid_session_keeps_choices(

@@ -63,6 +63,22 @@ async function fillWork(ui) {
   for (const [key, value] of Object.entries(initialBody)) await ui.fill(`#handoff-${key}`, Array.isArray(value) ? value.join('\n') : value);
 }
 
+test('상단 메뉴를 오가도 미저장 초안을 복구하고 로그아웃하면 지운다', async () => {
+  const api = handoffServer(); const ui = await mount('https://example.test/', 'coding', api.fetch);
+  try {
+    await openNew(ui); await fillWork(ui);
+    await ui.click('내 선호 보관함'); await ui.click('시작하기');
+    await ui.act(async () => document.querySelector('[aria-label="팀 업무 정리 선택"]').click());
+    await ui.act(async () => document.querySelector('.selection-button').click());
+    assert.equal(document.querySelector('#handoff-purpose').value, initialBody.purpose);
+    assert.equal(api.state.writes, 0);
+    window.confirm = () => true;
+    await ui.click('로그아웃');
+    assert.equal(document.querySelector('#handoff-purpose'), null);
+    assert.equal(Object.keys(window.sessionStorage).some(key => key.startsWith('ppt.draft.v1:1:')), false);
+  } finally { await ui.close(); }
+});
+
 test('목적·진행·자료·프롬프트 저장 → 특정 계정 공유·링크 전달 → 다음 사람 이어받기·수정·이전 기록', async () => {
   const api = handoffServer(); let ui = await mount('https://example.test/', 'coding', api.fetch);
   let link;

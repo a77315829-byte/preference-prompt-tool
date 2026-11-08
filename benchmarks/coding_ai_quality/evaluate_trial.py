@@ -78,7 +78,8 @@ def node_bin(name: str) -> Path:
 
 def run(command: list[str], *, cwd: Path) -> tuple[bool, str, str]:
     try:
-        result = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=30, check=False)
+        result = subprocess.run(command, cwd=cwd, capture_output=True, text=True,
+                                encoding='utf-8', errors='replace', timeout=30, check=False)
     except subprocess.TimeoutExpired:
         return False, "", "Timed out after 30 seconds"
     return result.returncode == 0, result.stdout, result.stderr

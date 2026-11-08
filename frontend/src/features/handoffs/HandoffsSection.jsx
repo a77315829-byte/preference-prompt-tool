@@ -2,17 +2,19 @@ import { useEffect, useRef, useState } from 'react';
 import AuthSection from '../../shared/auth/AuthSection';
 import HandoffFields from './HandoffFields';
 import HandoffAttachments from './HandoffAttachments';
+import { readDraft, useDraftCache } from '../../shared/draftCache';
 import './handoffFlow.css';
 import { HANDOFF_EVENTS, HANDOFF_STATUS, changeHandoff, continuationRequest, createHandoff, getHandoff,
   getHandoffHistory, getHandoffVersion, handoffBody, handoffForm, handoffLink, listHandoffs, parseHandoffLink, readHandoffFile } from './handoffApi';
 
-function HandoffsSection({ user, signupOpen, onLogin, onBack, initialId = '', initialDraft = null }) {
+function HandoffsSection({ user, signupOpen, onLogin, onBack, onNavigationRisk, onConsumeInitial, initialId = '', initialDraft = null }) {
+  const [restored] = useState(() => initialDraft ? null : readDraft('handoff', user));
   const [items, setItems] = useState(null);
-  const [item, setItem] = useState(null);
-  const [form, setForm] = useState(() => initialDraft ? handoffForm({ title: initialDraft.title, body: initialDraft }) : null);
+  const [item, setItem] = useState(restored?.item || null);
+  const [form, setForm] = useState(() => initialDraft ? handoffForm({ title: initialDraft.title, body: initialDraft }) : restored?.form || null);
   const [filter, setFilter] = useState('all');
   const [linkInput, setLinkInput] = useState('');
-  const [recipient, setRecipient] = useState('');
+  const [recipient, setRecipient] = useState(restored?.recipient || '');
   const [history, setHistory] = useState(null);
   const [snapshot, setSnapshot] = useState(null);
   const [busy, setBusy] = useState('');
@@ -25,6 +27,16 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, initialId = '', in
   const editor = useRef(null);
   const contentDirty = Boolean(form && (item ? JSON.stringify(form) !== JSON.stringify(handoffForm(item)) : Object.values(form).some((v) => v.trim())));
   const dirty = contentDirty || Boolean(file);
+  useDraftCache('handoff', user, { item, form, recipient });
+  useEffect(() => { if (initialDraft) onConsumeInitial?.(); }, [initialDraft, onConsumeInitial]);
+  useEffect(() => {
+    const message = file ? '아직 첨부하지 않은 파일은 다시 선택해야 합니다. 작성 내용은 임시 보관됩니다. 이동할까요?'
+      : busy ? '요청을 처리 중입니다. 화면을 옮긴 뒤 저장 결과를 다시 확인해야 합니다. 이동할까요?' : '';
+    onNavigationRisk?.(message);
+    const warn = event => { event.preventDefault(); event.returnValue = ''; };
+    if (file || busy) window.addEventListener('beforeunload', warn);
+    return () => { onNavigationRisk?.(''); window.removeEventListener('beforeunload', warn); };
+  }, [file, busy, onNavigationRisk]);
   const leaveOk = () => !dirty || window.confirm('아직 저장하지 않은 작업 내용이 사라집니다. 이동할까요?');
   const adopt = (next, preserveFile = false) => {
     setItem(next); setForm(handoffForm(next)); setRecipient(next.recipient || ''); setHistory(null); setSnapshot(null); setCopied(''); if (!preserveFile) setFile(null);
@@ -43,9 +55,19 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, initialId = '', in
     listHandoffs().then(async (next) => {
       if (token !== request.current) return;
       setItems(next);
-      if (initialId) {
-        try { const selected = await getHandoff(initialId); if (token === request.current) adopt(selected); }
-        catch (e) { if (token === request.current) setError(e.message); }
+      const target = initialId || restored?.item?.id;
+      if (target) {
+        try {
+          const selected = await getHandoff(target);
+          if (token === request.current) {
+            if (restored?.item?.id === target && restored.form) {
+              if (!selected.can_edit) { adopt(selected); setNotice('현재 권한에 맞춰 저장된 내용을 다시 불러왔어요.'); }
+              else setNotice(selected.revision !== restored.item.revision
+                ? '임시 초안을 복구했지만 서버에 더 최신 버전이 있어요. 초안을 복사해 두고 최신 항목을 다시 열어 내용을 합쳐 주세요.'
+                : '이 탭에 남겨 둔 초안을 복구했어요. 서버에 반영하려면 저장해 주세요.');
+            } else adopt(selected);
+          }
+        } catch (e) { if (token === request.current) { setItem(null); setForm(null); setRecipient(''); setError(e.message); } }
       }
     }).catch((e) => { if (token === request.current) { setItems([]); setError(e.message); } });
     return () => { request.current += 1; };
@@ -93,7 +115,10 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, initialId = '', in
 
   return <section className="comparison-section handoffs-section">
     <div className="comparison-inner">
-      <button className="back-button" type="button" disabled={Boolean(busy)} onClick={() => { if (leaveOk()) onBack(); }}>← 시작 화면으로</button>
+      <button className="back-button" type="button" disabled={Boolean(busy)} onClick={() => {
+        if (!file || window.confirm('첨부하지 않은 파일은 다시 선택해야 합니다. 작성 내용은 임시 보관됩니다. 이동할까요?')) onBack();
+      }}>← 시작 화면으로</button>
+      <p className="ws-help">작성 중인 내용은 이 탭에 하루 동안 임시 보관돼요. 다른 메뉴에서 돌아와도 이어 쓸 수 있어요. 로그아웃하면 지워지며 파일은 저장 후 첨부해 주세요.</p>
       <header className="handoff-heading"><div><p className="eyebrow">TEAM WORKSPACE</p><h2>하던 일의 다음을,<br />팀원과 이어가요.</h2>
         <p>어디까지 했고, 다음에는 무엇을 하면 될까요?<br />작업 맥락과 자료, AI 프롬프트를 한곳에 남겨 주세요.</p></div><span className="handoff-heading-note">내 작업 기록 → 팀원에게 전달 → 이어서 진행</span></header>
       <ol className="handoff-journey" aria-label="인수인계 사용 순서">

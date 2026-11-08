@@ -32,7 +32,7 @@ export async function previewCodingInstructions(profile) {
 }
 
 export async function loadCodingExamples(profile) {
-  const response = await fetch('/api/coding-instructions/examples', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ profile }) });
+  const response = await fetch('/api/coding-instructions/examples', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ profile, protocol: 'repeated-v1' }) });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.error || '코드 예시를 불러오지 못했어요. 다시 시도해 주세요.');
   return data.examples;

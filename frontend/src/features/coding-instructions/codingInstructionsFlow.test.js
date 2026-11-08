@@ -169,7 +169,7 @@ test('예시 선택 확인·이전 선택 수정과 보류 후 직접 선택, �
     assert.deepEqual(api.state.previews[0].comparison, expected);
     assert.equal(api.state.previews[0].preferences.comments, 'detailed');
     await ui.click('내 선호 보관함에 저장'); await ui.click('저장한 지침 열기');
-    assert.ok(document.querySelector('.saved-coding-profile').textContent.includes('직접 설정 · 비교 보류'));
+    assert.ok(document.querySelector('.saved-coding-profile').textContent.includes('직접 확인한 설정'));
     assert.ok(document.querySelector('.saved-coding-profile').textContent.includes('FastAPI · 주문 합계 API'));
   } finally { await ui.close(); }
 });
@@ -317,10 +317,10 @@ test('기존 React 비교와 선택 결과를 유지하며 새 환경 카드 화
   const api = codingServer(); const ui = await mount('https://example.test/', 'coding', api.fetch);
   try {
     await openCoding(ui);
-    await ui.act(async () => document.querySelector('.coding-legacy-entry summary').click());
+    assert.equal(document.querySelector('.coding-legacy-entry').tagName, 'ASIDE');
     await ui.click('React 예시 비교로 취향 찾기'); assert.ok(document.querySelector('#coding-task'));
     await ui.click('다른 언어·프레임워크로 지침 만들기'); assert.ok(document.querySelector('.coding-language-buttons'));
-    await ui.act(async () => document.querySelector('.coding-legacy-entry summary').click());
+    assert.match(document.querySelector('.coding-legacy-entry').textContent, /개인 지침을 자동으로 팀 기준에 합치지는/);
     await ui.click('React 예시 비교로 취향 찾기'); await ui.click('이 내용으로 시작');
     await ui.act(async () => document.querySelector('[aria-label^="예시 A 선택"]').click());
     assert.equal(ui.state.sessions, 1); assert.ok(document.body.textContent.includes('나만의 코딩 프롬프트가 완성됐어요'));

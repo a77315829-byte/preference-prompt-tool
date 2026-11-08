@@ -153,12 +153,15 @@ def test_signed_in_members_join_as_themselves_and_cannot_be_impersonated(db) -> 
     members = store.add("team-1", "coding", "아무 이름", history, user_id=alice.id, username="alice")
     assert [(m.name, m.signed_in) for m in members] == [("alice", True)]
     # 로그인하지 않은 사람이 그 아이디를 이름으로 쓰면 거부 (대소문자 무관).
-    with pytest.raises(team.TeamError, match="로그인한 팀원"):
+    with pytest.raises(team.TeamError, match="로그인"):
         store.add("team-1", "coding", "ALICE", history)
     # 다시 더하면 자기 기록만 바뀐다.
     store.add("team-1", "coding", "", history, user_id=alice.id, username="alice")
-    store.add("team-1", "coding", "민수", history)
-    assert [(m.name, m.signed_in) for m in store.get("team-1")[1]] == [("alice", True), ("민수", False)]
+    with pytest.raises(team.TeamError, match="로그인"):
+        store.add("team-1", "coding", "민수", history)
+    bob, _ = AuthService(db).signup('bob', 'bob-password-1')
+    store.add('team-1', 'coding', '', history, user_id=bob.id, username='bob')
+    assert [(m.name, m.signed_in) for m in store.get("team-1")[1]] == [("alice", True), ("bob", True)]
 
 
 def test_my_teams_lists_only_teams_i_joined_newest_first(db) -> None:
@@ -175,7 +178,8 @@ def test_my_teams_lists_only_teams_i_joined_newest_first(db) -> None:
     store.add("bobs-team", "coding", "", history, user_id=bob.id, username="bob")
     clock.now = clock.now.replace(day=3)
     # 다른 사람이 더하면 그 팀이 맨 위로 오고 인원이 는다.
-    store.add("old-team", "coding", "민수", history)
+    carol, _ = auth.signup('carol', 'carol-password-1')
+    store.add("old-team", "coding", "", history, user_id=carol.id, username='carol')
 
     mine = store.list_for_user(alice.id)
     assert [(t.code, t.domain_key, t.members) for t in mine] == [("old-team", "coding", 2), ("mail-team", "email", 1)]
@@ -188,9 +192,11 @@ def test_deleting_an_account_removes_their_team_entry(db) -> None:
     alice, _ = auth.signup("alice", "alice-password-1")
     store = team.TeamStore(db)
     store.add("team-1", "coding", "", _history("coding", {}), user_id=alice.id, username="alice")
-    store.add("team-1", "coding", "민수", _history("coding", {}))
+    bob, _ = auth.signup('bob', 'bob-password-1')
+    store.add("team-1", "coding", "", _history("coding", {}), user_id=bob.id, username='bob')
     auth.delete_account(alice, "alice-password-1")
-    assert [m.name for m in store.get("team-1")[1]] == ["민수"]
+    assert [m.name for m in store.get("team-1")[1]] == ["bob"]
+    assert store.access('team-1')['protected']
 
 
 @pytest.fixture
@@ -271,7 +277,7 @@ def test_api_team_uses_the_signed_in_name(server) -> None:
 
 def test_api_my_teams_needs_login_and_shows_joined_teams(server) -> None:
     status, data = _call(server, "/teams")
-    assert status == 401 and "팀 코드로는 로그인 없이" in data["error"]
+    assert status == 401 and "로그인" in data["error"]
 
     req = urllib.request.Request(server + "/auth/signup",
                                  json.dumps({"username": "alice", "password": "alice-password-1"}).encode(),
@@ -282,12 +288,12 @@ def test_api_my_teams_needs_login_and_shows_joined_teams(server) -> None:
                                  json.dumps({"sessionId": _finished_session(server, "a")}).encode(),
                                  {"Content-Type": "application/json", "Cookie": cookie})
     urllib.request.urlopen(req).close()
-    _call(server, "/teams/devteam/members", {"sessionId": _finished_session(server, "b"), "name": "민수"})
+    assert _call(server, "/teams/devteam/members", {"sessionId": _finished_session(server, "b"), "name": "민수"})[0] == 400
     _call(server, "/teams/other/members", {"sessionId": _finished_session(server, "b"), "name": "지은"})
 
     with urllib.request.urlopen(urllib.request.Request(server + "/teams", headers={"Cookie": cookie})) as resp:
         teams = json.loads(resp.read())["teams"]
-    assert [(t["code"], t["domain_key"], t["members"]) for t in teams] == [("devteam", "coding", 2)]
+    assert [(t["code"], t["domain_key"], t["members"]) for t in teams] == [("devteam", "coding", 1)]
     assert set(teams[0]) == {"code", "name", "domain_key", "members", "updated_at"}
 
 

@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { clearAccountDrafts, moveAnonymousDrafts } from '../shared/draftCache';
 import ComparisonSection from '../features/comparison/ComparisonSection';
 import ScrollStory from '../features/landing/ScrollStory';
 import PromptPolishSection from '../features/polish/PromptPolishSection';
@@ -35,6 +36,8 @@ function App() {
   const [preferenceId, setPreferenceId] = useState('');
   const [templateCategory, setTemplateCategory] = useState('전체');
   const [codingProfileDraft, setCodingProfileDraft] = useState(null);
+  const consumeCodingProfile = useCallback(() => setCodingProfileDraft(null), []);
+  const consumeHandoffDraft = useCallback(() => setHandoffDraft(null), []);
   const handleDraftChange = useCallback((draft) => {
     setComparisonDraft({ domainKey: activeFlow, ...draft });
   }, [activeFlow]);
@@ -46,6 +49,10 @@ function App() {
   const [returnFlow, setReturnFlow] = useState('category');
   const [authReason, setAuthReason] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [draftGeneration, setDraftGeneration] = useState(0);
+  const navigationRisk = useRef('');
+  const setNavigationRisk = useCallback(message => { navigationRisk.current = message; }, []);
+  const handleLogin = next => { if (!user) moveAnonymousDrafts(next); setUser(next); };
 
   useEffect(() => {
     fetchMe()
@@ -67,10 +74,20 @@ function App() {
     setActiveFlow('login');
   };
 
-  const handleLogout = async () => {
-    try { await logout(); } catch { /* 이미 끊긴 세션이어도 화면은 로그아웃 상태로 */ }
+  const clearAccountState = () => {
+    clearAccountDrafts(user);
+    try { window.localStorage.removeItem('ppt-recent-teams'); } catch { /* Storage may be disabled. */ }
+    setDraftGeneration(value => value + 1);
+    setComparisonDraft(null); setCodingProfileDraft(null); setHandoffDraft(null); setHandoffId('');
+    setTeamCodeDraft(''); setTeamNameDraft(''); setPreferenceId('');
     setUser(null);
-    if (activeFlow === 'account') setActiveFlow('category');
+    setActiveFlow('category');
+  };
+
+  const handleLogout = async () => {
+    if (!window.confirm('로그아웃하면 이 계정의 임시 초안은 이 탭에서 지워집니다. 로그아웃할까요?')) return;
+    try { await logout(); } catch { /* 이미 끊긴 세션이어도 화면은 로그아웃 상태로 */ }
+    clearAccountState();
   };
 
   const requestScene = (scene) => {
@@ -138,7 +155,11 @@ function App() {
 
   return (
     <main className={`site-shell ${activeFlow !== 'category' ? 'is-flow-open' : ''}`}>
-      <nav className="site-nav" aria-label="주요 메뉴">
+      <nav className="site-nav" aria-label="주요 메뉴" onClickCapture={event => {
+        if (event.target.closest('button') && navigationRisk.current && !window.confirm(navigationRisk.current)) {
+          event.preventDefault(); event.stopPropagation();
+        }
+      }}>
         <button className="brand-mark" type="button" onClick={() => requestScene(0)}>
           Preference Prompt<span aria-hidden="true">·</span>
         </button>
@@ -194,8 +215,9 @@ function App() {
         {activeFlow === 'coding-instructions' && (
           <motion.div className="flow-view" key="coding-instructions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <Suspense fallback={<p className="comparison-section" role="status">코딩 지침 설정을 여는 중…</p>}>
-              <CodingInstructionsSection user={user} signupOpen={signupOpen} onLogin={setUser} onOpenLibrary={openLibrary}
-                initialProfile={codingProfileDraft} onBack={handleComparisonBack} onReactComparison={() => compareForMyself('coding')} />
+              {user !== undefined && <CodingInstructionsSection key={draftGeneration} user={user} signupOpen={signupOpen} onLogin={handleLogin} onOpenLibrary={openLibrary}
+                initialProfile={codingProfileDraft} onConsumeInitial={consumeCodingProfile} onBack={handleComparisonBack} onReactComparison={() => compareForMyself('coding')} />
+              }
             </Suspense>
           </motion.div>
         )}
@@ -236,7 +258,8 @@ function App() {
         {activeFlow === 'handoffs' && (
           <motion.div className="flow-view" key="handoffs" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <Suspense fallback={<p className="comparison-section" role="status">작업 인수인계를 여는 중…</p>}>
-              <HandoffsSection user={user} signupOpen={signupOpen} onLogin={setUser} onBack={handleComparisonBack} initialId={handoffId} initialDraft={handoffDraft} />
+              {user !== undefined && <HandoffsSection key={draftGeneration} user={user} signupOpen={signupOpen} onLogin={handleLogin} onBack={handleComparisonBack}
+                onNavigationRisk={setNavigationRisk} onConsumeInitial={consumeHandoffDraft} initialId={handoffId} initialDraft={handoffDraft} />}
             </Suspense>
           </motion.div>
         )}
@@ -250,7 +273,7 @@ function App() {
         {activeFlow === 'account' && user && (
           <motion.div className="flow-view" key="account" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
             <AccountSection user={user} onBack={() => setActiveFlow(returnFlow)} onOpenTeams={openTeams} onOpenLibrary={() => openLibrary()}
-              onDeleted={() => { setUser(null); setActiveFlow('category'); }} />
+              onDeleted={clearAccountState} />
           </motion.div>
         )}
 
@@ -266,7 +289,7 @@ function App() {
           <motion.div className="flow-view" key="login" initial={{ opacity: 0, y: 34, scale: 0.99 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -24, scale: 0.99 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
             <AuthSection signupOpen={signupOpen} reason={authReason}
               onBack={() => setActiveFlow(returnFlow)}
-              onDone={(nextUser) => { setUser(nextUser); setActiveFlow(returnFlow); }} />
+              onDone={(nextUser) => { handleLogin(nextUser); setActiveFlow(returnFlow); }} />
           </motion.div>
         )}
 

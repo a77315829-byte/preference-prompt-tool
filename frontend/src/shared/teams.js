@@ -11,6 +11,9 @@ async function call(path, options = {}) {
 }
 
 export const fetchTeam = (code) => call(`/teams/${encodeURIComponent(code)}`).then((body) => body.team);
+export const setTeamInvitation = (code, enabled) => call(`/teams/${encodeURIComponent(code)}/invitation`, {
+  method: 'POST', body: JSON.stringify({ enabled }),
+}).then(body => body.team);
 export const joinTeam = (code, sessionId, name) => call(`/teams/${encodeURIComponent(code)}/members`, {
   method: 'POST',
   body: JSON.stringify({ sessionId, name, requireExisting: true }),

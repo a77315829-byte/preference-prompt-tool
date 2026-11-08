@@ -20,6 +20,7 @@ export default function CodingOptimizationPanel({ draft, user, signupOpen, onLog
   const frameworkLabel = kind === 'fastapi' ? 'FastAPI' : kind === 'spring_boot' ? 'Spring Boot' : `${draft.profile.language} · ${draft.profile.framework}`;
   const [availability, setAvailability] = useState(null);
   const [job, setJob] = useState(null);
+  const [recent, setRecent] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [loginOpen, setLoginOpen] = useState(false);
@@ -32,6 +33,7 @@ export default function CodingOptimizationPanel({ draft, user, signupOpen, onLog
   const active = useRef(true);
   const ownsBusy = useRef(false);
   const polling = useRef(null);
+  const startedHere = useRef(false);
   const result = job?.result;
   const supported = Boolean(kind);
 
@@ -41,8 +43,15 @@ export default function CodingOptimizationPanel({ draft, user, signupOpen, onLog
     if (supported) call().then(data => { if (active.current) setAvailability({ ...data, ...(data.environments?.[kind]
       || (kind === 'fastapi' ? data : { enabled: false, reason: `${frameworkLabel} GEPA를 지원하는 서버 설정을 확인해 주세요.` })) }); })
       .catch(() => { if (active.current) setAvailability({ enabled: false, reason: '서버의 GEPA 설정을 확인하지 못했어요. 프롬프트 복사와 저장은 계속 사용할 수 있어요.' }); });
+    if (user) call('/recent').then(data => {
+      if (!active.current) return;
+      const jobs = (data.jobs || []).filter(item => JSON.stringify(item.profile) === JSON.stringify(draft.profile)
+        || item.result?.original_prompt === draft.prompt);
+      setRecent(jobs);
+      if (jobs[0] && !startedHere.current) { updateBusy(jobs[0].status === 'running'); receive(jobs[0]); }
+    }).catch(() => { /* A server without recovery support can still start jobs. */ });
     return () => { active.current = false; clearTimeout(polling.current); if (ownsBusy.current) onBusy?.(false); };
-  }, []);
+  }, [user?.id]);
 
   const receive = next => {
     if (!active.current) return;
@@ -60,6 +69,7 @@ export default function CodingOptimizationPanel({ draft, user, signupOpen, onLog
   const start = async () => {
     if (!user) { setLoginOpen(true); return; }
     if (!availability?.enabled || busy || disabled) return;
+    startedHere.current = true;
     updateBusy(true); setError(''); setJob(null); setVerdict(''); setSaved(null); setCopied(false); setExample(0); setHumanReview({});
     try { receive((await call('', { profile: draft.profile, originalPrompt: draft.prompt })).job); }
     catch (e) { if (active.current) { setError(e.message); updateBusy(false); } }
@@ -77,6 +87,12 @@ export default function CodingOptimizationPanel({ draft, user, signupOpen, onLog
   if (!supported) return null;
 
   return <section className="fastapi-optimization" aria-labelledby="fastapi-gepa-title">
+    {recent.length > 0 && <details><summary>이 지침의 최근 개선 작업 · 7일 보관</summary>
+      {recent.map(entry => <button key={entry.id} type="button" className="coding-secondary-button" disabled={busy}
+        onClick={() => { setError(''); setVerdict(''); setSaved(null); setHumanReview({}); updateBusy(entry.status === 'running');
+          call(`/${entry.id}`).then(data => receive(data.job)).catch(e => { setError(e.message); updateBusy(false); }); }}>
+        {entry.created_at ? new Date(entry.created_at * 1000).toLocaleString('ko-KR') : '최근 작업'} · {entry.status === 'running' ? '진행 중' : entry.status === 'done' ? '결과 확인' : '중단·오류'}</button>)}
+    </details>}
     <div className="coding-screen-heading"><span className="coding-kicker">선택 사항 · {frameworkLabel} + GEPA</span>
       <h3 id="fastapi-gepa-title">실제 답변으로 확인하며 지침을 다듬어 볼까요?</h3>
       <p>GEPA가 준비된 개발 과제의 답변을 평가해 보충 안내를 제안해요. 지금 고른 개발 환경과 답변 방식은 그대로 둡니다.</p></div>
@@ -126,7 +142,7 @@ export default function CodingOptimizationPanel({ draft, user, signupOpen, onLog
         </form>}
         <button className="coding-text-button" type="button" onClick={async () => { try { await navigator.clipboard.writeText(result.improved_prompt); setCopied(true); } catch { setError('복사하지 못했어요. 후보 본문을 직접 선택해 복사해 주세요.'); } }}>{copied ? '개선 후보를 복사했어요' : '개선 후보 프롬프트 복사'}</button>
       </>}
-      <p className="ws-help">이번 AI 요청 {result.report.model_calls}회 · 결과는 서버 재시작 또는 약 2시간 뒤 사라질 수 있어요. 재사용하려면 보관함에 저장하세요.</p>
+      <p className="ws-help">이번 AI 요청 {result.report.model_calls}회 · 결과는 이 계정에 7일간 임시 보관돼요. 화면을 다시 열면 이어서 확인할 수 있어요. 계속 재사용하려면 보관함에 저장하세요.</p>
     </>}
     {error && <p className="ws-error" role="alert">{error}</p>}
     {loginOpen && !user && <AuthSection embedded signupOpen={signupOpen} onDone={onLogin} reason="선택과 원본 프롬프트는 유지됩니다. 로그인 후 개선 시작 버튼을 눌러 주세요." />}

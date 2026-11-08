@@ -171,14 +171,15 @@ function TeamsSection({ user, onBack, onLogin, onCompare, onOpenHandoffs, initia
             <p className="question-eyebrow">팀 준비 완료 · 다음은 내 선호 고르기</p>
             <h3>{result.name || result.code}</h3>
             <p>{categoryLabel(result.domain_key)} · 선호를 합친 팀원 {result.members.length}명</p>
-            <p className="ws-help">{result.members.length ? '기존 팀 기준을 확인하고 내 선호를 더할 수 있어요.' : '아직 모인 선호가 없어요. 첫 번째로 내 취향을 골라 주세요.'}</p>
+            <p className="ws-help">{result.requires_join ? '팀원 이름과 지침은 참여 후 공개됩니다. 로그인하고 비교를 마친 뒤 내 선호를 합쳐 주세요.' : result.members.length ? '기존 팀 기준을 확인하고 내 선호를 더할 수 있어요.' : '아직 모인 선호가 없어요. 첫 번째로 내 취향을 골라 주세요.'}</p>
             {canCompare(result.domain_key) && (
               <div className="prompt-actions">
-                <button className="prompt-copy-button" type="button" onClick={() => onCompare(result.domain_key, result.code, result.name || result.code)}>내 선호 고르기 시작</button>
+                <button className="prompt-copy-button" type="button" disabled={result.requires_join && !result.invite_open}
+                  onClick={() => result.requires_join && !user ? onLogin() : onCompare(result.domain_key, result.code, result.name || result.code)}>내 선호 고르기 시작</button>
               </div>
             )}
             <p className="ws-help">비교 후 ‘내 선호를 팀 기준에 합치기’를 눌러야 반영됩니다. 원문과 생성 결과는 팀에 공유하지 않습니다.</p>
-            <TeamInvitation key={result.code} team={result} />
+            <TeamInvitation key={result.code} team={result} onChange={setResult} />
             {result.members.length > 0 && (
               <details className="ws-raw"><summary>현재 모인 팀 기준 보기</summary>
                 <TeamResult key={result.code} teamResult={result} valueLabel={axisValueLabel} />
@@ -210,7 +211,7 @@ function TeamsSection({ user, onBack, onLogin, onCompare, onOpenHandoffs, initia
             </div>
           ))}
           {user && myTeams?.length > 0 && (
-            <p className="ws-help">30일 동안 아무도 더하지 않은 팀은 지워집니다.</p>
+            <p className="ws-help">계정으로 만든 팀은 참여가 뜸해도 자동 삭제하지 않습니다. 익명 체험 팀만 30일간 참여가 없으면 정리합니다.</p>
           )}
         </div>
 

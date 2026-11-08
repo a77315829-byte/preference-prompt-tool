@@ -30,6 +30,7 @@ import template_library
 from personal_prompts import PersonalPromptStore, PromptConflict, expected_revision
 from coding_instructions import build_coding_instructions
 from coding_examples import build_coding_examples
+from coding_elicitation import build_coding_elicitation
 from coding_optimization_jobs import CodingOptimizationJobs
 from fastapi_optimization import MAX_MODEL_CALLS as FASTAPI_GEPA_CALL_LIMIT, optimize_fastapi
 from coding_gepa import coding_draft, coding_optimization_kind, optimize_coding
@@ -123,7 +124,7 @@ OPTIMIZE_REPORTS: dict[str, dict] = {}
 TEAMS = team.TeamStore(DB)
 PERSONAL_PROMPTS = PersonalPromptStore(lambda: DB)
 HANDOFFS = HandoffStore(lambda: DB)
-CODING_OPTIMIZATIONS = CodingOptimizationJobs()
+CODING_OPTIMIZATIONS = CodingOptimizationJobs(lambda: DB)
 DAILY_PREFERENCE_RUNS = _quota("preference", "PPT_PREFERENCE_RUNS_PER_DAY", 60, "PPT_USER_PREFERENCE_RUNS_PER_DAY", 20)
 # 다른 출처에서 이 API 를 부르도록 허용할 주소 목록 (쉼표로 구분). 기본은
 # 비어 있다 - React 화면은 Vite 프록시(/api)로 같은 출처에서 부르므로 CORS
@@ -229,14 +230,18 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
     return payload
 
 
-def _team_payload(code: str) -> dict[str, Any]:
+def _team_payload(code: str, user_id: int | None = None) -> dict[str, Any]:
     """팀 결과: 팀원 이름, 축마다 갈린 정도, 합친 선호로 조립한 팀 프롬프트와
     내보내기. 팀원별 원문이나 생성 결과는 담지 않는다."""
     domain_key, members = TEAMS.get(code)
+    access = TEAMS.access(code, user_id)
+    if access['protected'] and not access['is_member']:
+        return {'code': code, 'name': '초대받은 팀', 'domain_key': domain_key, 'members': [], 'signedIn': [],
+                'agreements': [], 'prompt': '', 'prompts': {}, 'exports': [], 'requires_join': True, **access}
     domain = service.load_domain_for(_domain_path(domain_key))
     name = TEAMS.name_for(code)
     if not members:
-        return {"code": code, "name": name, "domain_key": domain_key, "members": [], "signedIn": [],
+        return {"code": code, "name": name, "domain_key": domain_key, "members": [], "signedIn": [], **access,
                 "agreements": [], "prompt": "", "prompts": {}, "exports": [], "exports_by_language": {}}
     estimator, agreements = team.summarize(domain, members)
     languages = _prompt_languages(domain, None)
@@ -244,6 +249,7 @@ def _team_payload(code: str) -> dict[str, Any]:
     prompt = prompts[languages[0]]
     labels = domain.final_prompt.axis_labels if domain.final_prompt else {}
     return {
+        **access,
         "code": code,
         "name": name,
         "domain_key": domain_key,
@@ -570,6 +576,24 @@ class ApiHandler(BaseHTTPRequestHandler):
         if length < 0:
             raise ValueError("Content-Length가 올바르지 않습니다.")
         if length > limit:
+            # A modest over-limit body may already be in flight. On Windows,
+            # closing with unread bytes can reset the connection before the JSON
+            # error arrives. Drain a bounded amount without parsing or retaining it.
+            if length <= max(limit * 2, 1_048_576):
+                previous_timeout = self.connection.gettimeout()
+                deadline = time.monotonic() + 1
+                remaining = length
+                try:
+                    while remaining and time.monotonic() < deadline:
+                        self.connection.settimeout(max(.001, deadline - time.monotonic()))
+                        chunk = self.rfile.read(min(remaining, 65536))
+                        if not chunk:
+                            break
+                        remaining -= len(chunk)
+                except OSError:
+                    pass
+                finally:
+                    self.connection.settimeout(previous_timeout)
             raise ValueError("요청 본문이 너무 큽니다.")
         raw = self.rfile.read(length)
         data = json.loads(raw.decode("utf-8") or "{}")
@@ -691,17 +715,18 @@ class ApiHandler(BaseHTTPRequestHandler):
             })
             return
         if path == "/api/teams":
-            # 내가 참여한 팀 목록. 팀 결과 자체는 아래 경로로 팀 코드만 있으면 누구나 본다.
+            # 계정 팀 결과는 참여자만 본다. 익명 팀은 공개 체험용이다.
             user = self._current_user()
             if user is None:
-                self._send(401, {"error": "로그인하면 내가 참여한 팀을 모아 볼 수 있습니다. 팀 코드로는 로그인 없이 볼 수 있습니다."})
+                self._send(401, {"error": "로그인하면 내가 참여한 팀을 모아 볼 수 있습니다. 계정 팀의 결과는 참여자에게만 공개됩니다."})
                 return
             self._send(200, {"teams": [asdict(t) for t in TEAMS.list_for_user(user.id)
                                        if t.domain_key != "idle_tracker"]})
             return
         if len(parts := path.split("/")) == 4 and parts[:3] == ["", "api", "teams"]:
             try:
-                self._send(200, {"team": _team_payload(parts[3])})
+                user = self._current_user()
+                self._send(200, {"team": _team_payload(parts[3], user.id if user else None)})
             except (team.TeamError, ValueError) as exc:
                 self._send(404, {"error": str(exc)})
             return
@@ -766,7 +791,8 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/coding-instructions/examples":
                 profile = build_coding_instructions(body.get("profile"))["profile"]
-                self._send(200, {"examples": build_coding_examples(profile)})
+                self._send(200, {"examples": (build_coding_elicitation(profile) if body.get('protocol') == 'repeated-v1'
+                                             else build_coding_examples(profile))})
                 return
             if path.startswith("/api/coding-instructions/optimizations"):
                 self._coding_optimizations(path, body)
@@ -779,7 +805,18 @@ class ApiHandler(BaseHTTPRequestHandler):
                 _domain_path(domain_key)
                 user = self._current_user()
                 code = TEAMS.create(str(body.get("name", "")), domain_key, user.id if user else None)
-                self._send(201, {"team": _team_payload(code)})
+                self._send(201, {"team": _team_payload(code, user.id if user else None)})
+                return
+            if path.startswith('/api/teams/') and path.endswith('/invitation'):
+                user = self._current_user()
+                if user is None:
+                    self._send(401, {'error': '팀을 만든 계정으로 로그인해 주세요.'})
+                    return
+                if type(body.get('enabled')) is not bool:
+                    raise ValueError('초대 상태를 확인해 주세요.')
+                code = path.split('/')[3]
+                TEAMS.set_invitation(code, user.id, body['enabled'])
+                self._send(200, {'team': _team_payload(code, user.id)})
                 return
             if path == "/api/polish/checklist":
                 self._send(200, _polish_checklist_only(body))
@@ -812,8 +849,8 @@ class ApiHandler(BaseHTTPRequestHandler):
         except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
             self._send(400, {"error": str(exc)})
         except Exception as exc:  # noqa: BLE001 - API 응답으로 안전하게 변환
-            # 원문은 서버 터미널에만. 공급자 오류 문구에는 키 일부가 들어 있다.
-            print(f"[error] {type(exc).__name__}: {exc}", flush=True)
+            # 공급자 오류 원문에는 키 일부가 들어 있을 수 있어 유형만 기록한다.
+            print(f"[error] {type(exc).__name__} (요청 본문·예외 원문 생략)", flush=True)
             self._send(500, {"error": service.describe_api_error(exc)})
 
     def _handoffs(self, path: str, body: dict | None = None) -> None:
@@ -897,11 +934,14 @@ class ApiHandler(BaseHTTPRequestHandler):
                 raise LookupError('찾을 수 없는 개선 경로입니다.')
             if len(parts) == 4 and body is None:
                 self._send(200, {**environments['fastapi'], 'environments': environments, 'call_limit': FASTAPI_GEPA_CALL_LIMIT,
-                    'retention_seconds': 7200})
+                    'retention_seconds': 7 * 86400})
                 return
             user = self._current_user()
             if user is None:
                 self._send(401, {'error': '로그인한 뒤 코딩 지침을 개선하고 새 항목으로 저장할 수 있어요.'})
+                return
+            if len(parts) == 5 and parts[4] == 'recent' and body is None:
+                self._send(200, {'jobs': CODING_OPTIMIZATIONS.list_for(user.id)})
                 return
             if len(parts) == 4 and body is not None:
                 draft = coding_draft(body.get('profile'))
@@ -986,6 +1026,7 @@ class ApiHandler(BaseHTTPRequestHandler):
                     code = body.get("teamCode")
                     if not isinstance(code, str) or not 3 <= len(code) <= 32:
                         raise ValueError("초대 링크에서 확인한 팀 코드를 넣어 주세요.")
+                    TEAMS.require_read(code, user.id)
                     domain_key, members = TEAMS.get(code)
                     if domain_key != item["domain_key"]:
                         raise ValueError("같은 종류의 지침끼리 비교할 수 있어요. 코딩·한국어 요약·영어 요약 분류를 확인해 주세요.")
@@ -1027,6 +1068,7 @@ class ApiHandler(BaseHTTPRequestHandler):
                         team_code = body.get("teamCode")
                         if not isinstance(team_code, str) or not 3 <= len(team_code) <= 32:
                             raise ValueError("팀을 먼저 확인해 주세요.")
+                        TEAMS.require_read(team_code, user.id)
                         domain_key, members = TEAMS.get(team_code)
                         if domain_key != item["domain_key"]:
                             raise ValueError("이 작업과 같은 분류의 팀 기준을 골라 주세요.")
@@ -1179,7 +1221,7 @@ class ApiHandler(BaseHTTPRequestHandler):
         TEAMS.add(code, state.domain_key, str(body.get("name", "")), state.history,
                   user_id=user.id if user else None, username=user.username if user else None,
                   require_existing=body.get("requireExisting") is True)
-        self._send(200, {"team": _team_payload(code)})
+        self._send(200, {"team": _team_payload(code, user.id if user else None)})
 
     def _start_optimize(self, session_id: str) -> None:
         """GEPA 최적화를 백그라운드로 시작하고 바로 돌려준다.
@@ -1228,7 +1270,7 @@ class ApiHandler(BaseHTTPRequestHandler):
                 print(f"[optimize] {state.domain_key} 완료 ({len(optimized)}자)", flush=True)
             except Exception as exc:  # noqa: BLE001 - 실패해도 시드 프롬프트는 남는다
                 state.optimize_status = "error"
-                print(f"[optimize] 실패: {type(exc).__name__}: {exc}", flush=True)
+                print(f"[optimize] 실패: {type(exc).__name__} (예외 원문 생략)", flush=True)
 
         threading.Thread(target=work, daemon=True).start()
         self._send(202, {"session": _state_payload(state)})
@@ -1241,7 +1283,7 @@ class ApiHandler(BaseHTTPRequestHandler):
 def _log_live_failure(exc: Exception) -> None:
     """실제 호출 실패는 서버 터미널에만 남긴다. 응답으로 돌려주면 공급자
     에러 문구(키 일부, 계정 정보)가 브라우저까지 간다."""
-    print(f"[live] 실제 생성 실패, 데모로 전환: {type(exc).__name__}: {exc}", flush=True)
+    print(f"[live] 실제 생성 실패, 데모로 전환: {type(exc).__name__} (예외 원문 생략)", flush=True)
 
 
 def main() -> None:

@@ -172,6 +172,26 @@ MIGRATIONS: list[str] = [
     );
     CREATE INDEX handoff_files_work ON handoff_files(handoff_id);
     """,
+    # 11: 계정별 개선 작업 복구. 완료 결과를 명시적 보관 전에도 7일간 유지한다.
+    """
+    CREATE TABLE coding_optimization_jobs (
+        id TEXT PRIMARY KEY,
+        owner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        expires_at REAL NOT NULL,
+        job_json TEXT NOT NULL
+    );
+    CREATE INDEX coding_jobs_owner ON coding_optimization_jobs(owner_id, expires_at);
+    """,
+    # 12: 팀 초대 유효 기간. 기존 초대에는 일주일의 전환 기간을 둔다.
+    """
+    ALTER TABLE teams ADD COLUMN invite_until REAL NOT NULL DEFAULT 0;
+    UPDATE teams SET invite_until = CAST(strftime('%s','now') AS REAL) + 604800;
+    """,
+    # 13: 만든 계정이 삭제돼도 비공개 팀이 익명 공개 팀으로 바뀌지 않게 한다.
+    """
+    ALTER TABLE teams ADD COLUMN protected INTEGER NOT NULL DEFAULT 0;
+    UPDATE teams SET protected = 1 WHERE created_by IS NOT NULL;
+    """,
 ]
 
 

@@ -21,7 +21,7 @@ const scenes = [
     number: '03',
     kicker: 'REUSE',
     title: '나만의 프롬프트를 다시 씁니다',
-    description: '찾은 기준을 다음 작업에 다시 쓰고, 팀원들의 선택과 모아 공통 지침을 만듭니다.',
+    description: '찾은 개인 기준을 다음 작업에 다시 씁니다. 같은 비교 항목을 사용하는 팀 모드에서는 팀원들의 선택도 모을 수 있어요.',
     visual: 'result',
   },
 ];
@@ -42,7 +42,7 @@ const coreCategories = [
     number: '02',
     label: 'CODE',
     title: '코딩 도움',
-    description: '언어와 프레임워크를 고르고, 더 편한 코드 예시를 선택해 내 방식의 프롬프트를 만듭니다.',
+    description: '코드 예시를 8~10회 비교해 반복되는 선택과 미확정 항목을 확인합니다. 네 가지 방식을 직접 고르는 빠른 설정도 있어요.',
     accent: 'purple', cta: '내 코딩 지침 만들기',
   },
   {

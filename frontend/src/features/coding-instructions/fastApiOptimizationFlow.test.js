@@ -17,22 +17,24 @@ function backend(profile = PROFILE, prompt = ORIGINAL) {
   const candidate = `${prompt}\n\nGEPA 보충 안내\n${GUIDANCE}`;
   const original = { id: 'original', title: `원래 ${profile.framework} 지침`, domain_key: 'coding', prompt, coding_profile: profile,
     coding_profile_matches: true, revision: 1, note: '', created_at: '2026-11-04', updated_at: '2026-11-04' };
-  const state = { records: [original], calls: [], enabled: true, environments: null, changed: true, report: REPORT, failStart: false, failSave: false, running: false, defer: null, polls: 0 };
+  const state = { records: [original], calls: [], enabled: true, environments: null, changed: true, report: REPORT, failStart: false, failSave: false, running: false, defer: null, polls: 0, hasJob: false };
   const response = (value, status = 200) => ({ ok: status < 400, status, json: async () => structuredClone(value) });
   const result = () => ({ profile, original_prompt: prompt, improved_prompt: state.changed ? candidate : prompt,
     guidance: state.changed ? GUIDANCE : '', changed: state.changed, report: { ...state.report,
       ...(!state.changed ? { validation_after: state.report.validation_before, holdout_after: state.report.holdout_before } : {}),
       ...(profile.language === 'Java' ? { limitation: 'Java 컴파일·Spring 서버 실행 검증은 아닙니다.' } : {}) } });
-  const job = () => ({ id: 'j1', status: state.running ? 'running' : 'done', stage: '별도 과제를 확인하는 중', model_calls: 7, result: state.running ? null : result() });
+  const job = () => ({ id: 'j1', profile, status: state.running ? 'running' : 'done', stage: '별도 과제를 확인하는 중', model_calls: 7, result: state.running ? null : result() });
   const fetch = async (path, options) => {
     const body = options.body ? JSON.parse(options.body) : {};
     state.calls.push({ path, body, method: options.method });
     if (path === '/api/auth/me') return response({ user: { id: 1, username: 'alice' } });
     if (path === '/api/coding-instructions/preview') return response({ draft: { profile: body.profile, prompt } });
     if (path === BASE && !options.method) return response({ enabled: state.enabled, environments: state.environments, call_limit: 32, reason: '실제 호출 설정을 준비해 주세요.' });
+    if (path === `${BASE}/recent`) return response({ jobs: state.hasJob ? [job()] : [] });
     if (path === BASE && options.method === 'POST') {
       if (state.failStart) return response({ error: '오늘 개선 횟수를 모두 썼어요.' }, 400);
       if (state.defer) await state.defer;
+      state.hasJob = true;
       return response({ job: job() }, 202);
     }
     if (path === `${BASE}/j1`) { state.polls += 1; return response({ job: job() }); }
@@ -96,7 +98,21 @@ test('GEPA 전후·별도 과제 비교 → 명시적 채택 → 새 항목 저�
     await ui.click('저장한 개선 후보 열기');
     assert.ok(document.querySelector('.saved-gepa-origin').textContent.includes('GEPA로 다듬어 새로 보관한 지침'));
     assert.equal(document.querySelector('[aria-label="GEPA 개선 전 원본 프롬프트"]').value, ORIGINAL);
+    assert.ok([...document.querySelectorAll('.saved-gepa-origin textarea')].some(input => input.value === '기존 코드 개선'));
     assert.equal(api.state.calls.filter(c => c.path === BASE && c.method).length, 1);
+  } finally { await ui.close(); }
+});
+
+test('메뉴 이동 후 진행 작업을 복구하며 새 유료 요청을 만들지 않는다', async () => {
+  const api = backend(); api.state.running = true;
+  const ui = await mount('https://example.test/', 'coding', api.fetch);
+  try {
+    await openResult(ui); await ui.click('실제 AI로 GEPA 개선 시작');
+    await ui.click('내 선호 보관함'); await ui.click('시작하기');
+    await ui.act(async () => document.querySelector('[aria-label="코딩 도움 선택"]').click());
+    await ui.act(async () => document.querySelector('.selection-button').click());
+    assert.match(document.querySelector('.fastapi-gepa-progress').textContent, /별도 과제를 확인/);
+    assert.equal(api.state.calls.filter(call => call.path === BASE && call.method === 'POST').length, 1);
   } finally { await ui.close(); }
 });
 

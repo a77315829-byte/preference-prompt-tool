@@ -204,6 +204,7 @@ test('빈 보관함 안내·직접 추가·저장 실패 보존·삭제 확인·
     assert.equal(api.state.deletes, 1);
     await ui.click('로그아웃');
     assert.equal(document.querySelector('#preference-prompt'), null);
+    await ui.click('내 선호 보관함');
     assert.ok(document.querySelector('.auth-embedded'));
   } finally { await ui.close(); }
 });

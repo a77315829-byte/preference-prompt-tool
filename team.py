@@ -96,8 +96,30 @@ class TeamStore:
             raise TeamError(f"한 사람이 만들 수 있는 팀은 {MAX_TEAMS_PER_USER}개까지입니다.")
         if conn.execute("SELECT COUNT(*) FROM teams").fetchone()[0] >= MAX_TEAMS:
             raise TeamError("지금은 새 팀을 만들 수 없습니다. 잠시 뒤 다시 시도해 주세요.")
-        conn.execute("INSERT INTO teams (code, domain_key, created_by, created_at, name) VALUES (?, ?, ?, ?, ?)",
-                     (code, domain_key, user_id, now_dt.isoformat(timespec="seconds"), name))
+        conn.execute("INSERT INTO teams (code, domain_key, created_by, created_at, name, invite_until, protected) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                     (code, domain_key, user_id, now_dt.isoformat(timespec="seconds"), name, now_dt.timestamp() + 7 * 86400, int(user_id is not None)))
+
+    def access(self, code, user_id=None):
+        with self.db.connect() as conn:
+            row = conn.execute('SELECT created_by, invite_until, protected FROM teams WHERE code = ?', (code,)).fetchone()
+            if row is None:
+                raise TeamError('초대한 팀을 찾을 수 없습니다.')
+            owner = user_id is not None and row['created_by'] == user_id
+            member = owner or (user_id is not None and conn.execute('SELECT 1 FROM team_members WHERE code = ? AND user_id = ?', (code, user_id)).fetchone() is not None)
+        return {'can_manage': owner, 'is_member': member, 'protected': bool(row['protected']),
+                'invite_open': self._clock().timestamp() < row['invite_until'], 'invite_until': row['invite_until']}
+
+    def require_read(self, code, user_id=None):
+        access = self.access(code, user_id)
+        if access['protected'] and not access['is_member']:
+            raise TeamError('팀 결과는 로그인한 참여자만 볼 수 있어요. 유효한 초대로 비교를 마친 뒤 선호를 합쳐 주세요.')
+
+    def set_invitation(self, code, user_id, enabled):
+        if not self.access(code, user_id)['can_manage']:
+            raise TeamError('초대 설정은 팀을 만든 계정만 바꿀 수 있어요.')
+        until = self._clock().timestamp() + 7 * 86400 if enabled else 0
+        with self.db.connect() as conn:
+            conn.execute('UPDATE teams SET invite_until = ? WHERE code = ? AND created_by = ?', (until, code, user_id))
 
     def create(self, name: str, domain_key: str, user_id: int | None = None) -> str:
         """빈 팀을 먼저 만든다. 팀 생성만으로 누구의 선호도 합치지 않는다."""
@@ -139,13 +161,18 @@ class TeamStore:
         now = now_dt.isoformat(timespec="seconds")
         with self.db.connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
-            team = conn.execute("SELECT domain_key FROM teams WHERE code = ?", (code,)).fetchone()
+            team = conn.execute("SELECT domain_key, created_by, invite_until, protected FROM teams WHERE code = ?", (code,)).fetchone()
             if team is None:
                 if require_existing:
                     raise TeamError("초대한 팀을 찾을 수 없습니다. 팀원에게 새 초대를 요청해 주세요.")
                 self._create_team(conn, code, domain_key, user_id, now_dt)
             elif team["domain_key"] != domain_key:
                 raise TeamError(f"이 팀 코드는 다른 카테고리({team['domain_key']})에 쓰이고 있습니다.")
+            if team is not None and team['protected']:
+                known = user_id is not None and (team['created_by'] == user_id or conn.execute(
+                    'SELECT 1 FROM team_members WHERE code = ? AND user_id = ?', (code, user_id)).fetchone())
+                if not known and (user_id is None or self._clock().timestamp() >= team['invite_until']):
+                    raise TeamError('로그인하고 유효한 초대를 사용해 주세요. 초대가 닫혔거나 만료되면 팀장에게 다시 요청하세요.')
             if user_id is None:
                 # 익명 이름이 로그인한 팀원의 아이디와 같으면 거부 (사칭 방지).
                 taken = conn.execute(
@@ -176,7 +203,7 @@ class TeamStore:
         cutoff = (now - timedelta(days=TEAM_IDLE_DAYS)).isoformat(timespec="seconds")
         conn.execute(
             """
-            DELETE FROM teams WHERE COALESCE(
+            DELETE FROM teams WHERE protected = 0 AND COALESCE(
                 (SELECT MAX(joined_at) FROM team_members m WHERE m.code = teams.code), teams.created_at
             ) < ?
             """,
