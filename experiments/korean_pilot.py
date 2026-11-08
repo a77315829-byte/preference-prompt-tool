@@ -64,6 +64,14 @@ def validate_protocol(raw: dict) -> dict:
         prompts[condition] = nonempty(prompts[condition], condition)
     if source_hash(prompts["direct"]) == source_hash(prompts["selected"]):
         raise ValueError("비교할 두 프롬프트가 동일합니다")
+    # React 결과 화면은 한국어 요약도 영어 프롬프트를 먼저 보여 준다(PPT_PROMPT_LANGUAGE 기본 en).
+    # 그대로 복사하면 "만드는 방법" 비교에 언어 차이가 섞인다 - 두 지침 모두 한국어여야 한다.
+    for condition in CONDITIONS:
+        hangul = len(re.findall(r"[가-힣]", prompts[condition]))
+        latin = len(re.findall(r"[A-Za-z]", prompts[condition]))
+        if hangul < latin:
+            raise ValueError(f"{condition} 지침이 한국어가 아닙니다. 결과 화면의 프롬프트 언어에서 "
+                             "'한국어'를 고른 뒤 복사하세요")
     # 앱은 최대 8회를 묻고, 물을 질문이 떨어지면 일찍 끝낸다(한국어 요약은
     # 보통 4~6회). 정확히 8을 요구하면 정상적으로 끝난 참여자가 전부 거부된다.
     # 실제로 마친 횟수를 적는다.

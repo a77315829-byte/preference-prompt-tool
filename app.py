@@ -84,6 +84,9 @@ MAX_TRIALS_PER_SESSION = 3
 # 비교 세션을 다시 시작해도 이 카운터는 초기화하지 않는다.
 MAX_OPTIMIZATIONS_PER_SESSION = 2
 MAX_OPTIMIZATIONS_PER_DAY = 30
+# 결과 화면의 AI 프롬프트 개선(요청 1회). GEPA 예산과 따로 둔다 - 같은 예산이면 1회짜리
+# 개선이 수십 회짜리 최적화 몫을 깎는다. 세션 상한은 service 가 센다.
+MAX_PROMPT_IMPROVEMENTS_PER_DAY = 60
 
 # 의견 입력 길이 상한. feedback.py 가 기록 시 한 번 더 자른다.
 MAX_COMMENT_CHARS = 300
@@ -259,6 +262,11 @@ def _daily_trial_budget() -> DailyBudget:
 @st.cache_resource
 def _daily_optimization_budget() -> DailyBudget:
     return DailyBudget(MAX_OPTIMIZATIONS_PER_DAY)
+
+
+@st.cache_resource
+def _daily_prompt_improvement_budget() -> DailyBudget:
+    return DailyBudget(MAX_PROMPT_IMPROVEMENTS_PER_DAY)
 
 
 def _domain_for(key: str) -> Domain:
@@ -1207,6 +1215,17 @@ elif st.session_state.stage == "compare":
 
 elif st.session_state.stage == "done":
     session = st.session_state.session
+    if not session.prompt_improvement:
+        def reserve_prompt_improvement():
+            # 캐시를 타면 불리지 않는다 - 실제 요청 직전에만 차감한다.
+            if not _daily_prompt_improvement_budget().consume():
+                raise RuntimeError("daily budget exhausted")
+
+        with st.spinner("선택 근거를 바탕으로 프롬프트를 정리하고 있습니다."):
+            session = service.complete_personalized_prompt(
+                session, ["ko"], before_call=reserve_prompt_improvement,
+            )
+        st.session_state.session = session
     domain_key = session.domain_key
     domain = _domain_for(domain_key)
     source = session.source_text
@@ -1238,7 +1257,7 @@ elif st.session_state.stage == "done":
     with st.expander("사람이 읽는 말로 보기"):
         _show_preferences(domain_key, preferred)
 
-    seed_prompt = service.final_prompt(domain, _rebuilt_estimator(session))
+    seed_prompt = session.personalized_prompts.get("ko") or service.final_prompt(domain, _rebuilt_estimator(session))
     prompt = st.session_state.get("optimized_prompt", seed_prompt)
     st.markdown(
         '<div class="ppt-label" style="margin-top:24px">시스템 프롬프트</div>',
@@ -1246,11 +1265,26 @@ elif st.session_state.stage == "done":
     )
     st.code(prompt, language=None)
     st.caption("코드 블록 오른쪽 위의 복사 아이콘으로 복사할 수 있습니다.")
+    improvement = session.prompt_improvement
+    st.caption(
+        f"프롬프트 개선 호출 {improvement.get('calls', 0)}회 · "
+        f"입력 토큰 {improvement.get('input_tokens', '미확인')} · "
+        f"출력 토큰 {improvement.get('output_tokens', '미확인')} · "
+        f"응답 {improvement.get('elapsed_seconds', 0)}초"
+    )
+    method = improvement.get("method", "rule_based")
+    st.caption("생성 방식: " + {"rule_based": "규칙 기반 조립", "ai_improved": "AI 다시 쓰기", "fallback": "개선 실패 · 기본 조립으로 복귀"}.get(method, method)
+               + f" (`{method}`)" + (" · 저장된 개선 결과 재사용" if improvement.get("cache_hit") else ""))
+    if method == "fallback":
+        st.warning("AI 개선을 적용하지 못했습니다 (호출 한도 초과)." if improvement.get("reason") == "limit_reached"
+                   else "AI 개선을 적용하지 못했습니다. 기본 조립 프롬프트를 그대로 표시합니다.")
+    if method == "ai_improved" and not improvement.get("changed"):
+        st.caption("AI 호출 후에도 기본 프롬프트와 차이가 없습니다.")
 
     if st.session_state.demo_mode:
         st.caption("무료 데모 결과이며, 추정된 선호를 조립해 프롬프트를 만들었습니다.")
     elif "optimized_prompt" not in st.session_state:
-        st.caption("현재는 선택 결과로 만든 기본 프롬프트입니다. 원하면 API로 한 번 더 최적화할 수 있습니다.")
+        st.caption("위 생성 방식의 프롬프트를 GEPA의 시작점으로 사용합니다. 다시 쓰기만으로 품질 개선이 입증된 것은 아닙니다.")
         # 최적화가 실패해도 위에서 이미 보여준 기본 프롬프트는 쓸 수 있는
         # 결과물이다. 예전에는 st.stop()으로 멈춰서 "처음부터 다시" 버튼까지
         # 사라졌는데, 실패를 알리되 결과물과 조작 수단은 남겨둔다.

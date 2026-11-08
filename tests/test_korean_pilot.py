@@ -237,3 +237,13 @@ def test_demo_never_uses_model_api_and_stays_test_only(tmp_path, monkeypatch):
     pilot.validate_packet(packet)
     result = pilot.analyze(private, packet, pilot.response_record(packet, answers(packet, "tie")))
     assert pilot.summarize([result])["participants"] == 0
+
+
+@pytest.mark.parametrize("condition", ["direct", "selected"])
+def test_english_prompt_is_rejected_so_language_does_not_confound_the_comparison(protocol, condition):
+    """React 결과 화면의 기본 언어(영어) 프롬프트를 그대로 복사한 경우를 막는다."""
+    raw = json.loads(json.dumps(protocol))
+    raw["prompts"][condition] = ("You summarize Korean documents. Write the summary in Korean, "
+                                 "keep the key facts and numbers, and do not add claims.")
+    with pytest.raises(ValueError, match="한국어"):
+        pilot.validate_protocol(raw)

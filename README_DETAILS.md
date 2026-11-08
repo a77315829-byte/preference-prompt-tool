@@ -732,9 +732,27 @@ gepa·pyyaml)만 둔다 - 배포 플랫폼이 이 파일을 읽으므로 실험�
 streamlit run app.py
 ```
 
-**React 화면 + API 서버** (master 에서 개발 중, 아직 배포 안 함). 창 두 개가 필요하다.
+**React 화면 + API 서버** (로컬 개발용). 터미널 두 개가 필요하다.
 
-```bash
+macOS에서 기존 의존성이 설치되어 있다면 다음과 같이 실행한다.
+
+```sh
+# 터미널 1: API 서버 (127.0.0.1:8000)
+PPT_LIVE=0 .venv/bin/python api_server.py
+```
+
+```sh
+# 터미널 2: 프론트
+npm run dev
+```
+
+Vite가 출력한 주소를 열고 화면에서도 **무료 데모**를 선택한다.
+`PPT_LIVE=0`은 실제 생성 강제를 해제할 뿐 모든 AI 기능의 과금을 차단하지는 않는다.
+발표용 무료 시연에서는 실제 생성·최적화·AI 다듬기를 실행하지 않는다.
+
+아래는 Windows CMD의 **실제 AI 생성** 실행 예시다. API 키와 호출 비용이 필요하다.
+
+```bat
 # 창 1: API 서버 (127.0.0.1:8000)
 set PPT_LIVE=1                        # 실제 모델로 후보 생성. 빼면 규칙 기반 데모
 .venv\Scripts\python api_server.py
@@ -749,6 +767,9 @@ npm run dev
 고정 예시로 넘어가지 않고 "서버 연결을 확인해 주세요"를 띄운다 - 데모도 서버가
 있어야 돈다.
 
+코딩 도움·UI/UX 발표 자료는 [교수님 공유 문서](docs/professor-update-2026-10-15.md)와
+[시연 순서·장애 대응 안내](docs/midterm-rehearsal-2026-10-15.md)를 참고한다.
+
 | 환경변수 | 기본값 | 뜻 |
 |---|---|---|
 | `PPT_LIVE` | 꺼짐 | `1` 이면 프론트가 보내는 `demoMode` 와 상관없이 실제 모델로 생성 |
@@ -761,6 +782,9 @@ npm run dev
 | `PPT_OPTIMIZATIONS_PER_DAY` | 30 | 하루 GEPA 최적화("선호 기준으로 최적화") 상한 (세션당 2회) |
 | `PPT_POLISHES_PER_DAY` | 60 | 하루 "프롬프트 다듬기" LLM 재작성 상한 (`PPT_LIVE=1` 일 때만 동작) |
 | `PPT_WORKSPACE_CALLS_PER_DAY` | 60 | 하루 "서비스용 프롬프트" AI 호출 상한 (요구사항 정리 + 시험 실행 + AI 추천. 입력 오류로 멈춘 시험은 차감 안 함) |
+| `PPT_PROMPT_IMPROVEMENT` | 꺼짐 | `1` 이면 실제 모드에서 선택을 마친 뒤 근거 있는 선호 줄만 AI 가 다시 쓴다. 사전등록 비교 두 번(각 holdout 60단위, 개선 모델 gpt-4o-mini · gpt-5.6-luna)에서 기본 조립본보다 낫다는 기준을 충족하지 못해 기본은 꺼 둔다 (`docs/personalized_prompt_preregistration.md`, `docs/personalized_prompt_preregistration_v2.md`) |
+| `PPT_PROMPT_IMPROVEMENT_MODEL` | 비어 있음 | 위 개선 단계만 다른 모델로 부른다. 비우면 세션의 후보 생성 모델 |
+| `PPT_PROMPT_IMPROVEMENTS_PER_DAY` · `PPT_USER_PROMPT_IMPROVEMENTS_PER_DAY` | 60 · 20 | 위 개선 요청의 하루 상한 (서버 전체 · 사람마다). 캐시를 타면 차감 안 함, 세션당 2회 |
 | `PPT_USER_SESSIONS_PER_DAY` · `PPT_USER_OPTIMIZATIONS_PER_DAY` · `PPT_USER_POLISHES_PER_DAY` · `PPT_USER_WORKSPACE_CALLS_PER_DAY` | 20 · 5 · 20 · 30 | 위 네 상한의 **사람마다 몫**. 위 값은 서버 전체 상한으로 그대로 남는다 |
 | `PPT_ANON_..._PER_DAY` (같은 네 가지) | 사람마다 몫과 같음 | 로그인하지 않은 방문자 **전체가 나눠 쓰는** 한 몫 |
 | `PPT_AWS_LIVE` | 꺼짐 | `1` 이면 AWS 비용 화면의 "실제 AWS 연결 시도"가 서버 자격 증명으로 Cost Explorer 를 조회한다. 꺼져 있으면 브라우저가 요청해도 데모 데이터를 준다 |
@@ -882,8 +906,10 @@ CLAUDE.md 보너스 9). 생성기가 실제 조회 데이터를 받지 못하던
 찾아 고쳤고, 실제 API로 4개 축조합 전부 정확성·근거없는주장 검사를
 통과했다.
 
-화면 캡처는 [`docs/screenshots/`](docs/screenshots)에 있다. `react-*.png` 는 2026-09-27
-실제 생성 모드(gpt-4o-mini)로 찍은 React 화면이고, 번호가 붙은 것은 Streamlit 화면이다
+화면 캡처는 [`docs/screenshots/`](docs/screenshots)에 있다. 서로 다른 작업 시점의 자료가 섞여
+있으므로 모든 이미지를 최신 UI나 현재 모델의 결과로 해석하지 않는다.
+최신 코딩 데모의 검수 범위는 [2026-10-15 UI 검수 기록](docs/history/2026-10-15_ui_final_qa.md)을 따른다.
+번호가 붙은 것은 기존 Streamlit 화면이다
 (카테고리 선택 · 원문 입력 · A/B 비교 · 결과 · 프롬프트 적용 비교 ·
 전문가 경로 입력 · 전문가 경로 결과).
 

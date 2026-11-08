@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from benchmarks.coding_ai_quality.evaluate_trial import evaluate, extract_files
+from benchmarks.coding_ai_quality.evaluate_trial import evaluate, extract_files, resolve_entry
 
 
 def test_extracts_an_unlabeled_single_file() -> None:
@@ -94,6 +94,19 @@ def test_rejects_ambiguous_renamed_component_entries() -> None:
         extract_files(answer, "ConfirmDialog.tsx")
 
 
+def test_host_app_file_that_imports_the_component_is_not_the_entry() -> None:
+    """역할별로 나눈 답의 App.tsx 가 컴포넌트를 import 해 렌더링만 하면 그 컴포넌트가 진입점이다."""
+    answer = ("### `LikeButton.tsx`\n```tsx\nexport default function LikeButton() { return <button />; }\n```\n"
+              "### `App.tsx`\n```tsx\nimport LikeButton from './LikeButton';\n"
+              "export default function App() { return <LikeButton />; }\n```")
+    files = extract_files(answer, "LikeToggle.tsx")
+    assert resolve_entry(files, "LikeToggle.tsx") == "LikeButton.tsx"
+    # App.tsx 가 다른 후보를 import 하지 않으면 여전히 모호하다.
+    standalone = answer.replace("import LikeButton from './LikeButton';\n", "")
+    with pytest.raises(ValueError, match="Missing entry"):
+        extract_files(standalone, "LikeToggle.tsx")
+
+
 @pytest.mark.parametrize("task,source", [
     ("confirm_dialog", """import { useState } from 'react';
 export default function ConfirmDialog() {
@@ -177,3 +190,26 @@ export default function FaqToggle() {
     assert result["a"]["behavior"] == result["b"]["behavior"] == "error"
     assert "Missing button: 답변 닫기" in result["a"]["runtime_output"]
     assert result["equivalent"] != "passed_on_covered_scenarios"
+
+
+def test_evaluator_does_not_claim_equivalence_when_hover_is_overridden(tmp_path, monkeypatch) -> None:
+    import benchmarks.coding_ai_quality.evaluate_trial as evaluator
+
+    answer_a = "```tsx\nexport const Button = () => <button>Go</button>;\n```"
+    answer_b = (
+        "```tsx\nexport const Button = () => <button className=\"action\" "
+        "style={{ background: '#fff' }}>Go</button>;\n```\n"
+        "```css\n.action:hover { background: #eee; }\n```"
+    )
+    trial = tmp_path / "trial.json"
+    trial.write_text(json.dumps({"results": [{"task": "cart_quantity", "model": "test-fixture",
+                                              "status": "generated", "a": answer_a, "b": answer_b}]}),
+                     encoding="utf-8")
+    monkeypatch.setattr(evaluator, "evaluate_candidate", lambda *args: {
+        "behavior": "passed", "checks": [True],
+    })
+
+    result = evaluate(trial)["results"][0]
+
+    assert result["visual_style_issues"]["b"] == [".action:hover의 background"]
+    assert result["equivalent"] == "not_established"

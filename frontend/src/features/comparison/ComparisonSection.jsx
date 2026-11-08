@@ -5,6 +5,7 @@ import { fetchHealth, fetchSession, startOptimization, startPreferenceSession, s
 import ExportPanel from '../../shared/components/ExportPanel';
 import TeamPanel from '../../shared/components/TeamPanel';
 import PromptLanguageSwitch from '../../shared/components/PromptLanguageSwitch';
+import { COPY_FAILED_NOTICE } from '../../shared/components/copyStatus';
 import { AXIS_LABELS as remoteAxisLabels } from '../../shared/domainLabels';
 
 const DEFAULT_TASK = '클릭 횟수를 보여주는 TypeScript/React 버튼 컴포넌트를 만들어 주세요.';
@@ -16,9 +17,19 @@ const demoReasonText = {
   generation_failed: 'AI 생성이 실패해 무료 데모로 전환했습니다. 입력한 기능의 코드는 생성하지 않습니다.',
 };
 
-function codePreview(text) {
-  const firstBlock = text.match(/```[^\n]*\n([\s\S]*?)```/);
-  return firstBlock ? firstBlock[1].trim() : text;
+function codePreview(text, axisId) {
+  const blocks = [...text.matchAll(/```[^\n]*\n([\s\S]*?)```/g)];
+  if (!blocks.length) return text;
+
+  if (axisId === 'style_management') {
+    const styleBlock = blocks.find((block) => {
+      const heading = text.slice(0, block.index).trimEnd().split('\n').at(-1) || '';
+      return /style|theme|token/i.test(heading);
+    });
+    if (styleBlock) return styleBlock[1].trim();
+  }
+
+  return blocks[0][1].trim();
 }
 
 function getRemoteAxis(pair, demoMode = true) {
@@ -42,7 +53,7 @@ function getRemoteAxis(pair, demoMode = true) {
         ? '규칙 기반 데모 생성기가 만든 예시입니다.'
         : 'AI가 입력한 내용을 기준으로 직접 쓴 예시입니다.',
       code: candidate.text,
-      preview: codePreview(candidate.text),
+      preview: codePreview(candidate.text, axisId),
     })),
   };
 }
@@ -62,6 +73,7 @@ function ComparisonSection({
   }[domainKey] || {};
   const [copied, setCopied] = useState(false);
   const [copiedWithTask, setCopiedWithTask] = useState(false);
+  const [copyError, setCopyError] = useState('');
   const [taskDescription, setTaskDescription] = useState(initialDraft?.taskDescription || domainCopy.task);
   const [remoteSession, setRemoteSession] = useState(initialDraft?.session || null);
   const [connection, setConnection] = useState(initialDraft?.session ? 'connected' : 'checking');
@@ -204,20 +216,24 @@ function ComparisonSection({
   };
 
   const handleCopy = async () => {
+    setCopyError('');
     try {
       await navigator.clipboard.writeText(prompt);
       setCopied(true);
     } catch {
       setCopied(false);
+      setCopyError(COPY_FAILED_NOTICE);
     }
   };
 
   const handleCopyWithTask = async () => {
+    setCopyError('');
     try {
       await navigator.clipboard.writeText(`${prompt}\n\n개발 요청:\n${remoteSession.source_text.trim()}`);
       setCopiedWithTask(true);
     } catch {
       setCopiedWithTask(false);
+      setCopyError(COPY_FAILED_NOTICE);
     }
   };
 
@@ -309,7 +325,7 @@ function ComparisonSection({
           </span>
           <span>
               {isComplete
-              ? '선택 완료'
+              ? `선택 완료 · ${remoteSession.answered}회`
               : `${remoteSession.answered} / ${remoteSession.total_rounds}`}
           </span>
         </div>}
@@ -387,6 +403,22 @@ function ComparisonSection({
               <p className="question-eyebrow">Your preference prompt</p>
               <h3>나만의 {isCoding ? '코딩' : domainKey === 'review' ? '리뷰' : domainKey === 'email' ? '이메일' : domainKey === 'macsum_eval_agent' ? '문서 품질' : '요약'} 프롬프트가 완성됐어요.</h3>
               <p>아래 내용을 복사해서 ChatGPT나 Claude에 바로 사용할 수 있습니다.</p>
+              <div className="coding-result-context" role="status">
+                <h4>프롬프트 생성 방식</h4>
+                <p>{remoteSession?.prompt_improvement?.method === 'ai_improved'
+                  ? '선택 근거를 바탕으로 AI가 문구를 다시 작성했습니다. 품질 향상을 보장하는 표시는 아닙니다.'
+                  : remoteSession?.prompt_improvement?.method === 'fallback'
+                    ? (remoteSession.prompt_improvement.reason === 'limit_reached'
+                      ? '프롬프트 개선 호출 한도에 걸려 기본 규칙 기반 프롬프트를 그대로 사용합니다. AI 개선 결과가 아닙니다.'
+                      : 'AI 개선을 적용하지 못해 기본 규칙 기반 프롬프트를 그대로 사용합니다. AI 개선 결과가 아닙니다.')
+                    : '규칙 기반으로 조립했습니다. AI 개선 결과가 아닙니다.'}
+                  {' '}<code>{remoteSession?.prompt_improvement?.method || 'rule_based'}</code></p>
+                {remoteSession?.prompt_improvement?.method === 'ai_improved' && remoteSession.prompt_improvement.changed === false && <p>기본 프롬프트와 문구 차이가 없습니다.</p>}
+                {remoteSession?.prompt_improvement && <p>
+                  개선 호출 {remoteSession.prompt_improvement.calls}회 · 입력 {remoteSession.prompt_improvement.input_tokens ?? '미확인'} / 출력 {remoteSession.prompt_improvement.output_tokens ?? '미확인'} 토큰 · {remoteSession.prompt_improvement.elapsed_seconds}초
+                  {remoteSession.prompt_improvement.cache_hit ? ' · 저장된 개선 결과 재사용' : ''}
+                </p>}
+              </div>
               {isCoding && (
                 <div className="coding-result-context">
                   <h4>이번에 만들 기능</h4>
@@ -448,6 +480,8 @@ function ComparisonSection({
                       {remoteSession.optimize_report.final_score.toFixed(2)}.
                       {remoteSession.optimize_report.leaky_skipped > 0
                         && ` 이번 입력 내용이 들어가 버린 후보 ${remoteSession.optimize_report.leaky_skipped}개는 제외했습니다.`}
+                      {remoteSession.optimize_report.rules_restored > 0
+                        && ` 최적화 후보에서 빠진 기본 규칙 ${remoteSession.optimize_report.rules_restored}줄은 원문 그대로 다시 붙였고, 최종 점수는 붙인 뒤 다시 잰 값입니다.`}
                     </>
                   )}
                 </p>
@@ -485,6 +519,7 @@ function ComparisonSection({
                   다시 선택하기
                 </button>
               </div>
+              {copyError && <p className="connection-note" role="alert">{copyError}</p>}
             </motion.div>
           )}
         </AnimatePresence>
