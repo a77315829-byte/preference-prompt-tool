@@ -220,6 +220,7 @@ node --test "frontend/src/**/*.test.js"      # 프론트 순수 함수 테스트
 | `domains/*.yaml`, `checks/`, `demos/` | 도메인별 축 정의, 검사 함수, API 없는 데모 생성 |
 | `optimize/`, `service.py` | GEPA 연동, Streamlit 없는 서비스 계층 |
 | `experiments/`, `models/` | 실험 스크립트와 결과(`experiments/results/`), 학습된 분류기 |
+| `benchmarks/coding_public/` | 유료 API 없는 RACE 정적 지표·Python 준비 예시 검사, EvalPlus 정답/오답 대조와 미실행 비용 계획. MBPP 실행 기본값은 NoExtreme이며 개인화 효과를 검증한 결과로 해석하지 않는다. |
 | `agents/` | 도메인 온보딩·전문가 프롬프트 에이전트 (기존 파이프라인과 분리, 규칙 10) |
 | `app.py`, `theme.py`, `pilot_review.py` | Streamlit 화면, 화면 CSS, 연구용 블라인드 평가 화면 |
 | `api_server.py`, `frontend/` | React 화면용 API 서버와 프론트 |
