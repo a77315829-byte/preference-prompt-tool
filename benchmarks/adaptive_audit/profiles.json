@@ -1,0 +1,786 @@
+[
+  {
+    "name": "prefix-1",
+    "profile": {
+      "language": "Python",
+      "framework": "FastAPI",
+      "preferences": {
+        "explanation": "brief",
+        "comments": "essential",
+        "structure": "compact",
+        "output": "complete"
+      },
+      "extra": "",
+      "comparison": {
+        "version": 4,
+        "choices": {
+          "explanation": "brief",
+          "comments": null,
+          "structure": null,
+          "output": null
+        },
+        "example": {
+          "id": "fastapi-orders-v1:adaptive-v1",
+          "kind": "framework",
+          "label": "Python · FastAPI · 주문 합계 API · 주문·대여 비교"
+        },
+        "rounds": [
+          {
+            "id": "order:explanation",
+            "value": "brief"
+          }
+        ],
+        "summary": {
+          "explanation": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "brief",
+            "status": "single"
+          },
+          "comments": {
+            "answered": 0,
+            "total": 0,
+            "consistent": false,
+            "value": null,
+            "status": "unresolved"
+          },
+          "structure": {
+            "answered": 0,
+            "total": 0,
+            "consistent": false,
+            "value": null,
+            "status": "unresolved"
+          },
+          "output": {
+            "answered": 0,
+            "total": 0,
+            "consistent": false,
+            "value": null,
+            "status": "unresolved"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "prefix-2",
+    "profile": {
+      "language": "Python",
+      "framework": "FastAPI",
+      "preferences": {
+        "explanation": "brief",
+        "comments": "essential",
+        "structure": "compact",
+        "output": "complete"
+      },
+      "extra": "",
+      "comparison": {
+        "version": 4,
+        "choices": {
+          "explanation": "brief",
+          "comments": "essential",
+          "structure": null,
+          "output": null
+        },
+        "example": {
+          "id": "fastapi-orders-v1:adaptive-v1",
+          "kind": "framework",
+          "label": "Python · FastAPI · 주문 합계 API · 주문·대여 비교"
+        },
+        "rounds": [
+          {
+            "id": "order:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "order:comments",
+            "value": "essential"
+          }
+        ],
+        "summary": {
+          "explanation": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "brief",
+            "status": "single"
+          },
+          "comments": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "essential",
+            "status": "single"
+          },
+          "structure": {
+            "answered": 0,
+            "total": 0,
+            "consistent": false,
+            "value": null,
+            "status": "unresolved"
+          },
+          "output": {
+            "answered": 0,
+            "total": 0,
+            "consistent": false,
+            "value": null,
+            "status": "unresolved"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "prefix-3",
+    "profile": {
+      "language": "Python",
+      "framework": "FastAPI",
+      "preferences": {
+        "explanation": "brief",
+        "comments": "essential",
+        "structure": "compact",
+        "output": "complete"
+      },
+      "extra": "",
+      "comparison": {
+        "version": 4,
+        "choices": {
+          "explanation": "brief",
+          "comments": "essential",
+          "structure": "compact",
+          "output": null
+        },
+        "example": {
+          "id": "fastapi-orders-v1:adaptive-v1",
+          "kind": "framework",
+          "label": "Python · FastAPI · 주문 합계 API · 주문·대여 비교"
+        },
+        "rounds": [
+          {
+            "id": "order:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "order:comments",
+            "value": "essential"
+          },
+          {
+            "id": "order:structure",
+            "value": "compact"
+          }
+        ],
+        "summary": {
+          "explanation": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "brief",
+            "status": "single"
+          },
+          "comments": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "essential",
+            "status": "single"
+          },
+          "structure": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "compact",
+            "status": "single"
+          },
+          "output": {
+            "answered": 0,
+            "total": 0,
+            "consistent": false,
+            "value": null,
+            "status": "unresolved"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "prefix-4",
+    "profile": {
+      "language": "Python",
+      "framework": "FastAPI",
+      "preferences": {
+        "explanation": "brief",
+        "comments": "essential",
+        "structure": "compact",
+        "output": "complete"
+      },
+      "extra": "",
+      "comparison": {
+        "version": 4,
+        "choices": {
+          "explanation": "brief",
+          "comments": "essential",
+          "structure": "compact",
+          "output": "complete"
+        },
+        "example": {
+          "id": "fastapi-orders-v1:adaptive-v1",
+          "kind": "framework",
+          "label": "Python · FastAPI · 주문 합계 API · 주문·대여 비교"
+        },
+        "rounds": [
+          {
+            "id": "order:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "order:comments",
+            "value": "essential"
+          },
+          {
+            "id": "order:structure",
+            "value": "compact"
+          },
+          {
+            "id": "order:output",
+            "value": "complete"
+          }
+        ],
+        "summary": {
+          "explanation": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "brief",
+            "status": "single"
+          },
+          "comments": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "essential",
+            "status": "single"
+          },
+          "structure": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "compact",
+            "status": "single"
+          },
+          "output": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "complete",
+            "status": "single"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "prefix-5",
+    "profile": {
+      "language": "Python",
+      "framework": "FastAPI",
+      "preferences": {
+        "explanation": "brief",
+        "comments": "essential",
+        "structure": "compact",
+        "output": "complete"
+      },
+      "extra": "",
+      "comparison": {
+        "version": 4,
+        "choices": {
+          "explanation": "brief",
+          "comments": "essential",
+          "structure": "compact",
+          "output": "complete"
+        },
+        "example": {
+          "id": "fastapi-orders-v1:adaptive-v1",
+          "kind": "framework",
+          "label": "Python · FastAPI · 주문 합계 API · 주문·대여 비교"
+        },
+        "rounds": [
+          {
+            "id": "order:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "order:comments",
+            "value": "essential"
+          },
+          {
+            "id": "order:structure",
+            "value": "compact"
+          },
+          {
+            "id": "order:output",
+            "value": "complete"
+          },
+          {
+            "id": "rental:explanation",
+            "value": "brief"
+          }
+        ],
+        "summary": {
+          "explanation": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "brief",
+            "status": "consistent"
+          },
+          "comments": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "essential",
+            "status": "single"
+          },
+          "structure": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "compact",
+            "status": "single"
+          },
+          "output": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "complete",
+            "status": "single"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "prefix-6",
+    "profile": {
+      "language": "Python",
+      "framework": "FastAPI",
+      "preferences": {
+        "explanation": "brief",
+        "comments": "essential",
+        "structure": "compact",
+        "output": "complete"
+      },
+      "extra": "",
+      "comparison": {
+        "version": 4,
+        "choices": {
+          "explanation": "brief",
+          "comments": "essential",
+          "structure": "compact",
+          "output": "complete"
+        },
+        "example": {
+          "id": "fastapi-orders-v1:adaptive-v1",
+          "kind": "framework",
+          "label": "Python · FastAPI · 주문 합계 API · 주문·대여 비교"
+        },
+        "rounds": [
+          {
+            "id": "order:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "order:comments",
+            "value": "essential"
+          },
+          {
+            "id": "order:structure",
+            "value": "compact"
+          },
+          {
+            "id": "order:output",
+            "value": "complete"
+          },
+          {
+            "id": "rental:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "rental:comments",
+            "value": "essential"
+          }
+        ],
+        "summary": {
+          "explanation": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "brief",
+            "status": "consistent"
+          },
+          "comments": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "essential",
+            "status": "consistent"
+          },
+          "structure": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "compact",
+            "status": "single"
+          },
+          "output": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "complete",
+            "status": "single"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "prefix-7",
+    "profile": {
+      "language": "Python",
+      "framework": "FastAPI",
+      "preferences": {
+        "explanation": "brief",
+        "comments": "essential",
+        "structure": "compact",
+        "output": "complete"
+      },
+      "extra": "",
+      "comparison": {
+        "version": 4,
+        "choices": {
+          "explanation": "brief",
+          "comments": "essential",
+          "structure": "compact",
+          "output": "complete"
+        },
+        "example": {
+          "id": "fastapi-orders-v1:adaptive-v1",
+          "kind": "framework",
+          "label": "Python · FastAPI · 주문 합계 API · 주문·대여 비교"
+        },
+        "rounds": [
+          {
+            "id": "order:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "order:comments",
+            "value": "essential"
+          },
+          {
+            "id": "order:structure",
+            "value": "compact"
+          },
+          {
+            "id": "order:output",
+            "value": "complete"
+          },
+          {
+            "id": "rental:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "rental:comments",
+            "value": "essential"
+          },
+          {
+            "id": "rental:structure",
+            "value": "compact"
+          }
+        ],
+        "summary": {
+          "explanation": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "brief",
+            "status": "consistent"
+          },
+          "comments": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "essential",
+            "status": "consistent"
+          },
+          "structure": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "compact",
+            "status": "consistent"
+          },
+          "output": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "complete",
+            "status": "single"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "prefix-8",
+    "profile": {
+      "language": "Python",
+      "framework": "FastAPI",
+      "preferences": {
+        "explanation": "brief",
+        "comments": "essential",
+        "structure": "compact",
+        "output": "complete"
+      },
+      "extra": "",
+      "comparison": {
+        "version": 4,
+        "choices": {
+          "explanation": "brief",
+          "comments": "essential",
+          "structure": "compact",
+          "output": "complete"
+        },
+        "example": {
+          "id": "fastapi-orders-v1:adaptive-v1",
+          "kind": "framework",
+          "label": "Python · FastAPI · 주문 합계 API · 주문·대여 비교"
+        },
+        "rounds": [
+          {
+            "id": "order:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "order:comments",
+            "value": "essential"
+          },
+          {
+            "id": "order:structure",
+            "value": "compact"
+          },
+          {
+            "id": "order:output",
+            "value": "complete"
+          },
+          {
+            "id": "rental:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "rental:comments",
+            "value": "essential"
+          },
+          {
+            "id": "rental:structure",
+            "value": "compact"
+          },
+          {
+            "id": "rental:output",
+            "value": "complete"
+          }
+        ],
+        "summary": {
+          "explanation": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "brief",
+            "status": "consistent"
+          },
+          "comments": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "essential",
+            "status": "consistent"
+          },
+          "structure": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "compact",
+            "status": "consistent"
+          },
+          "output": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "complete",
+            "status": "consistent"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "mixed-skipped",
+    "profile": {
+      "language": "Python",
+      "framework": "FastAPI",
+      "preferences": {
+        "explanation": "brief",
+        "comments": "essential",
+        "structure": "compact",
+        "output": "complete"
+      },
+      "extra": "",
+      "comparison": {
+        "version": 4,
+        "choices": {
+          "explanation": null,
+          "comments": null,
+          "structure": "compact",
+          "output": "complete"
+        },
+        "example": {
+          "id": "fastapi-orders-v1:adaptive-v1",
+          "kind": "framework",
+          "label": "Python · FastAPI · 주문 합계 API · 주문·대여 비교"
+        },
+        "rounds": [
+          {
+            "id": "order:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "order:comments",
+            "value": null
+          },
+          {
+            "id": "order:structure",
+            "value": "compact"
+          },
+          {
+            "id": "order:output",
+            "value": "complete"
+          },
+          {
+            "id": "rental:explanation",
+            "value": "steps"
+          },
+          {
+            "id": "rental:comments",
+            "value": null
+          },
+          {
+            "id": "rental:structure",
+            "value": "compact"
+          },
+          {
+            "id": "rental:output",
+            "value": "complete"
+          }
+        ],
+        "summary": {
+          "explanation": {
+            "answered": 2,
+            "total": 2,
+            "consistent": false,
+            "value": null,
+            "status": "mixed"
+          },
+          "comments": {
+            "answered": 0,
+            "total": 2,
+            "consistent": false,
+            "value": null,
+            "status": "unresolved"
+          },
+          "structure": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "compact",
+            "status": "consistent"
+          },
+          "output": {
+            "answered": 2,
+            "total": 2,
+            "consistent": true,
+            "value": "complete",
+            "status": "consistent"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "back-navigation-cancel",
+    "profile": {
+      "language": "Python",
+      "framework": "FastAPI",
+      "preferences": {
+        "explanation": "brief",
+        "comments": "detailed",
+        "structure": "compact",
+        "output": "complete"
+      },
+      "extra": "",
+      "comparison": {
+        "version": 4,
+        "choices": {
+          "explanation": "brief",
+          "comments": "detailed",
+          "structure": null,
+          "output": null
+        },
+        "example": {
+          "id": "fastapi-orders-v1:adaptive-v1",
+          "kind": "framework",
+          "label": "Python · FastAPI · 주문 합계 API · 주문·대여 비교"
+        },
+        "rounds": [
+          {
+            "id": "order:explanation",
+            "value": "brief"
+          },
+          {
+            "id": "order:comments",
+            "value": "detailed"
+          }
+        ],
+        "summary": {
+          "explanation": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "brief",
+            "status": "single"
+          },
+          "comments": {
+            "answered": 1,
+            "total": 1,
+            "consistent": false,
+            "value": "detailed",
+            "status": "single"
+          },
+          "structure": {
+            "answered": 0,
+            "total": 0,
+            "consistent": false,
+            "value": null,
+            "status": "unresolved"
+          },
+          "output": {
+            "answered": 0,
+            "total": 0,
+            "consistent": false,
+            "value": null,
+            "status": "unresolved"
+          }
+        }
+      }
+    }
+  }
+]

@@ -7,7 +7,7 @@ import api_server
 import service
 from coding_elicitation import AXES, build_adaptive_coding_elicitation, summarize_rounds
 from coding_instructions import build_coding_instructions
-from tests.test_coding_elicitation import profile
+from tests.test_coding_elicitation import completed, profile
 from tests.test_personal_prompts import request, signup
 from tests.test_team import db, server
 
@@ -128,3 +128,58 @@ def test_ties_and_budget_end_do_not_claim_a_preference_was_found():
         assert state.answered <= limit
         assert state.completion_reason in ('round_limit', 'no_more_pairs')
         assert all(axis.estimate is None for axis in state.axes)
+
+
+@pytest.mark.parametrize('version', [3, 4])
+@pytest.mark.parametrize('languages', [('Python', 'Ruby'), ('JavaScript', 'TypeScript')])
+def test_basic_example_history_cannot_be_relabelled_as_another_language(version, languages):
+    language, other = languages
+    raw = completed(profile(language)) if version == 3 else adaptive_profile(4)
+    if version == 4:
+        raw.update(language=language, framework='')
+        raw['comparison']['example'] = build_adaptive_coding_elicitation(raw)['source']
+    raw['language'] = other
+    with pytest.raises(ValueError, match='환경'):
+        build_coding_instructions(raw)
+
+
+def test_new_v4_identity_also_binds_framework_for_basic_examples():
+    raw = adaptive_profile(4)
+    raw.update(language='JavaScript', framework='React')
+    raw['comparison']['example'] = build_adaptive_coding_elicitation(raw)['source']
+    raw['framework'] = 'Next.js'
+    with pytest.raises(ValueError, match='환경'):
+        build_coding_instructions(raw)
+
+
+def test_original_v4_records_remain_readable_without_upgrading_missing_provenance():
+    raw = adaptive_profile(4)
+    raw.update(language='Python', framework='')
+    source = build_adaptive_coding_elicitation(raw)['source']
+    source['id'] = source['id'].split(':env:')[0]
+    raw['comparison']['example'] = source
+    first = build_coding_instructions(raw)
+    assert first['profile']['comparison']['example'] == source
+    assert build_coding_instructions(first['profile']) == first
+    raw['language'] = 'Ruby'
+    with pytest.raises(ValueError, match='환경'):
+        build_coding_instructions(raw)
+
+
+@pytest.mark.parametrize('bad_source', [None, [], 'invalid', 42, {}])
+def test_malformed_legacy_source_is_a_validation_error(bad_source):
+    raw = completed(profile())
+    raw['comparison']['example'] = bad_source
+    with pytest.raises(ValueError):
+        build_coding_instructions(raw)
+
+
+def test_http_rejects_cross_language_records_and_null_legacy_source(server):
+    raw = adaptive_profile(4)
+    raw['framework'] = ''
+    raw['comparison']['example'] = build_adaptive_coding_elicitation(raw)['source']
+    raw['language'] = 'Ruby'
+    assert request(server, '/coding-instructions/preview', {'profile': raw})[0] == 400
+    legacy = completed(profile())
+    legacy['comparison']['example'] = None
+    assert request(server, '/coding-instructions/preview', {'profile': legacy})[0] == 400

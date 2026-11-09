@@ -1,0 +1,325 @@
+{
+  "runs": [
+    {
+      "arm": "arm_a",
+      "agent_work_seconds": 206.731,
+      "evaluation_seconds": 17.551,
+      "exit_code": 0,
+      "cases": [
+        {
+          "name": "R1 initial parent task is visible",
+          "passed": true
+        },
+        {
+          "name": "R2 late parent task fills untouched empty draft",
+          "passed": true
+        },
+        {
+          "name": "R3 untouched draft tracks parent replacement and clearing without writes",
+          "passed": true
+        },
+        {
+          "name": "R4 direct edit survives parent changes",
+          "passed": true
+        },
+        {
+          "name": "R5 deliberately cleared text stays empty",
+          "passed": true
+        },
+        {
+          "name": "R6 editing back to original still counts as manual edit",
+          "passed": true
+        },
+        {
+          "name": "R7 parent updates preserve all other draft fields",
+          "passed": true
+        },
+        {
+          "name": "R8 submitted record remains frozen; new comparison uses latest task and resets edit ownership",
+          "passed": true
+        },
+        {
+          "name": "R9 opening saved record preserves it; cancel keeps it, confirmed new comparison uses current parent",
+          "passed": true
+        }
+      ],
+      "passed": 9,
+      "total": 9,
+      "component_sha256": "cf3e2de8f10d78a38804a75b688dfd64b31cea1bf15a9062aaa17b8164c673b1",
+      "started": {
+        "startedAt": "2026-11-09T08:39:31.6805452Z"
+      },
+      "finished": {
+        "finishedAt": "2026-11-09T08:42:58.4115169Z",
+        "modifiedFiles": [
+          "frontend/src/features/coding-instructions/CodingTrialPanel.jsx",
+          "frontend/src/features/coding-instructions/codingTrialTask.test.js"
+        ],
+        "checks": [
+          {
+            "result": "Reviewed existing component, test harness, existing workflow test, and both changed files before execution",
+            "name": "Code review"
+          },
+          {
+            "result": "passed",
+            "name": "node --check src/features/coding-instructions/codingTrialTask.test.js"
+          },
+          {
+            "result": "passed; in-memory output only",
+            "name": "esbuild.transformSync JSX syntax check"
+          },
+          {
+            "tests": 3,
+            "result": "passed",
+            "name": "node --test src/features/coding-instructions/codingTrialTask.test.js src/features/coding-instructions/codingWorkflow.test.js",
+            "failures": 0
+          }
+        ]
+      },
+      "condition": "general",
+      "changed_files": [
+        "frontend/src/features/coding-instructions/CodingTrialPanel.jsx"
+      ],
+      "self_authored_tests": [
+        "frontend/src/features/coding-instructions/codingTrialTask.test.js"
+      ],
+      "added_lines": 13,
+      "removed_lines": 3
+    },
+    {
+      "arm": "arm_b",
+      "agent_work_seconds": 175.225,
+      "evaluation_seconds": 17.684,
+      "exit_code": 0,
+      "cases": [
+        {
+          "name": "R1 initial parent task is visible",
+          "passed": true
+        },
+        {
+          "name": "R2 late parent task fills untouched empty draft",
+          "passed": true
+        },
+        {
+          "name": "R3 untouched draft tracks parent replacement and clearing without writes",
+          "passed": true
+        },
+        {
+          "name": "R4 direct edit survives parent changes",
+          "passed": true
+        },
+        {
+          "name": "R5 deliberately cleared text stays empty",
+          "passed": true
+        },
+        {
+          "name": "R6 editing back to original still counts as manual edit",
+          "passed": true
+        },
+        {
+          "name": "R7 parent updates preserve all other draft fields",
+          "passed": true
+        },
+        {
+          "name": "R8 submitted record remains frozen; new comparison uses latest task and resets edit ownership",
+          "passed": true
+        },
+        {
+          "name": "R9 opening saved record preserves it; cancel keeps it, confirmed new comparison uses current parent",
+          "passed": true
+        }
+      ],
+      "passed": 9,
+      "total": 9,
+      "component_sha256": "e3a5b456219e5f72270463938f7cff8ec1ea4aa808380e017ee2de8a1f4476b2",
+      "started": {
+        "started_at": "2026-11-09T08:39:39.3910708Z"
+      },
+      "finished": {
+        "finished_at": "2026-11-09T08:42:34.6164846Z",
+        "summary": "Track explicit task edits; synchronize only unedited drafts; reset task and edit state after confirmed new comparison without changing other form fields or saved trial records.",
+        "checks": [
+          {
+            "result": "PASS - reviewed existing component, test harness, workflow tests, and generated changes before execution",
+            "name": "Code review"
+          },
+          {
+            "name": "node --check src/features/coding-instructions/codingTrialSync.test.js",
+            "result": "PASS",
+            "exit_code": 0
+          },
+          {
+            "name": "esbuild transform CodingTrialPanel.jsx (write: false)",
+            "result": "PASS - JSX syntax",
+            "exit_code": 0
+          },
+          {
+            "passed": 5,
+            "name": "node --test src/features/coding-instructions/codingWorkflow.test.js src/features/coding-instructions/codingTrialSync.test.js",
+            "exit_code": 0,
+            "result": "PASS",
+            "failed": 0
+          }
+        ],
+        "modified_files": [
+          "frontend/src/features/coding-instructions/CodingTrialPanel.jsx",
+          "frontend/src/features/coding-instructions/codingTrialSync.test.js"
+        ]
+      },
+      "condition": "direct_settings",
+      "changed_files": [
+        "frontend/src/features/coding-instructions/CodingTrialPanel.jsx"
+      ],
+      "self_authored_tests": [
+        "frontend/src/features/coding-instructions/codingTrialSync.test.js"
+      ],
+      "added_lines": 14,
+      "removed_lines": 2
+    },
+    {
+      "arm": "arm_c",
+      "agent_work_seconds": 180.302,
+      "evaluation_seconds": 17.338,
+      "exit_code": 0,
+      "cases": [
+        {
+          "name": "R1 initial parent task is visible",
+          "passed": true
+        },
+        {
+          "name": "R2 late parent task fills untouched empty draft",
+          "passed": true
+        },
+        {
+          "name": "R3 untouched draft tracks parent replacement and clearing without writes",
+          "passed": true
+        },
+        {
+          "name": "R4 direct edit survives parent changes",
+          "passed": true
+        },
+        {
+          "name": "R5 deliberately cleared text stays empty",
+          "passed": true
+        },
+        {
+          "name": "R6 editing back to original still counts as manual edit",
+          "passed": true
+        },
+        {
+          "name": "R7 parent updates preserve all other draft fields",
+          "passed": true
+        },
+        {
+          "name": "R8 submitted record remains frozen; new comparison uses latest task and resets edit ownership",
+          "passed": true
+        },
+        {
+          "name": "R9 opening saved record preserves it; cancel keeps it, confirmed new comparison uses current parent",
+          "passed": true
+        }
+      ],
+      "passed": 9,
+      "total": 9,
+      "component_sha256": "5fea5a116d24a7b27d396e2c44ac7d721721c4d950886b94a50bee9deb30e29d",
+      "started": {
+        "started_at": "2026-11-09T08:39:44.7951396Z"
+      },
+      "finished": {
+        "checks": [
+          {
+            "name": "TypeScript parser JSX/JS syntax check",
+            "result": "passed",
+            "files": 2
+          },
+          {
+            "name": "node --test src/features/coding-instructions/CodingTrialPanel.sync.test.js",
+            "tests": 1,
+            "result": "passed",
+            "failures": 0
+          },
+          {
+            "name": "node --test src/features/coding-instructions/codingWorkflow.test.js",
+            "tests": 2,
+            "result": "passed",
+            "failures": 0
+          }
+        ],
+        "finished_at": "2026-11-09T08:42:45.0969166Z",
+        "summary": "Untouched task follows the latest parent prop, explicit edits remain local, and confirmed new comparisons reset the task override without changing fixed records.",
+        "modified_files": [
+          "frontend/src/features/coding-instructions/CodingTrialPanel.jsx",
+          "frontend/src/features/coding-instructions/CodingTrialPanel.sync.test.js"
+        ]
+      },
+      "condition": "four_example_choices",
+      "changed_files": [
+        "frontend/src/features/coding-instructions/CodingTrialPanel.jsx"
+      ],
+      "self_authored_tests": [
+        "frontend/src/features/coding-instructions/CodingTrialPanel.sync.test.js"
+      ],
+      "added_lines": 7,
+      "removed_lines": 4
+    }
+  ],
+  "baseline": {
+    "arm": "baseline",
+    "agent_work_seconds": null,
+    "evaluation_seconds": 4.379,
+    "exit_code": 1,
+    "cases": [
+      {
+        "name": "R1 initial parent task is visible",
+        "passed": true
+      },
+      {
+        "name": "R2 late parent task fills untouched empty draft",
+        "passed": false
+      },
+      {
+        "name": "R3 untouched draft tracks parent replacement and clearing without writes",
+        "passed": false
+      },
+      {
+        "name": "R4 direct edit survives parent changes",
+        "passed": true
+      },
+      {
+        "name": "R5 deliberately cleared text stays empty",
+        "passed": true
+      },
+      {
+        "name": "R6 editing back to original still counts as manual edit",
+        "passed": true
+      },
+      {
+        "name": "R7 parent updates preserve all other draft fields",
+        "passed": true
+      },
+      {
+        "name": "R8 submitted record remains frozen; new comparison uses latest task and resets edit ownership",
+        "passed": false
+      },
+      {
+        "name": "R9 opening saved record preserves it; cancel keeps it, confirmed new comparison uses current parent",
+        "passed": false
+      }
+    ],
+    "passed": 5,
+    "total": 9,
+    "component_sha256": "0a3b26e27bf3fa51da27ed3596c4dc9196cf42073065d3c29fcf42d5cc613d69",
+    "started": null,
+    "finished": null
+  },
+  "paid_api_requests": 0,
+  "human_edit_seconds": null,
+  "human_preference": null,
+  "limitations": [
+    "One previously used real JSX bug, one run per condition; not a new task sample.",
+    "Experimenter-fixed identical preferences, not a human elicitation study or independent human checklist.",
+    "Direct and example conditions differ in provenance wording, not their four preference rules.",
+    "Agent time excludes initial human preference setup and is not human editing time.",
+    "Same host and instruction-based separation, not an OS sandbox between arms."
+  ]
+}

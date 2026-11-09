@@ -1,6 +1,9 @@
 """Bounded repeated comparisons of prepared examples; not a calibrated preference model."""
 from __future__ import annotations
 
+import hashlib
+import json
+
 from coding_examples import build_coding_examples
 
 AXES = ('explanation', 'comments', 'structure', 'output')
@@ -47,8 +50,11 @@ def build_coding_elicitation(profile):
 def build_adaptive_coding_elicitation(profile):
     """A bounded, optional comparison path; earlier records keep their original protocol."""
     bank = build_coding_elicitation(profile)
+    environment = json.dumps([profile['language'], profile['framework']], ensure_ascii=False, separators=(',', ':'))
+    source_id = bank['source']['id'].replace(':repeated-v1', ':adaptive-v1')
+    source_id += ':env:' + hashlib.sha256(environment.encode('utf-8')).hexdigest()[:16]
     return {**bank, 'version': 4, 'followups': [], 'max_rounds': 8,
-            'source': {**bank['source'], 'id': bank['source']['id'].replace(':repeated-v1', ':adaptive-v1'),
+            'source': {**bank['source'], 'id': source_id,
                        'label': bank['source']['label'].replace('주문·대여·인쇄 비교', '주문·대여 비교')},
             'notice': build_coding_examples(profile)['notice'] +
                 ' 비교는 최대 8회이며, 원하는 시점에 마치고 선택을 확인할 수 있습니다. 한 번 고른 항목과 반복해서 같은 쪽을 고른 항목을 구분합니다. 횟수는 취향의 정확도나 코드 품질을 보장하지 않습니다.'}
@@ -90,7 +96,9 @@ def validate_elicitation(comparison, profile):
         normalized.append({'id': row['id'], 'value': value})
     base_summary = summarize_rounds(normalized[:8], bank)
     required = 8 + min(2, sum(not item['consistent'] for item in base_summary.values()))
-    if len(rows) != required or comparison.get('example', {}).get('id') != bank['source']['id']:
+    recorded = comparison.get('example')
+    if (len(rows) != required or not isinstance(recorded, dict)
+            or any(recorded.get(key) != bank['source'][key] for key in ('id', 'kind', 'label'))):
         raise ValueError('남은 비교를 마치거나 개발 환경을 다시 확인해 주세요.')
     summary = summarize_rounds(normalized, bank)
     for axis in AXES:
@@ -106,8 +114,18 @@ def _validate_adaptive_elicitation(comparison, profile):
     if not isinstance(rows, list) or not 1 <= len(rows) <= bank['max_rounds']:
         raise ValueError('비교 기록은 1~8회까지 남길 수 있습니다. 비교 없이 고르려면 직접 설정을 사용해 주세요.')
     recorded = comparison.get('example')
-    if not isinstance(recorded, dict) or recorded.get('id') != bank['source']['id']:
+    if not isinstance(recorded, dict):
         raise ValueError('비교한 개발 환경을 다시 확인해 주세요.')
+    source = bank['source']
+    if recorded.get('id') != source['id']:
+        # Early v4 saved IDs omitted environment. Preserve their original identity
+        # only when the recorded canonical label/kind confirms the example language.
+        # A basic-example legacy record cannot certify its old framework; do not
+        # upgrade it to the new environment-bound ID or invent missing evidence.
+        legacy = {**source, 'id': source['id'].split(':env:')[0]}
+        if any(recorded.get(key) != legacy[key] for key in ('id', 'kind', 'label')):
+            raise ValueError('비교한 개발 환경을 다시 확인해 주세요.')
+        source = legacy
     normalized = []
     for row, pair in zip(rows, bank['pairs']):
         if not isinstance(row, dict) or row.get('id') != pair['id']:
@@ -124,4 +142,4 @@ def _validate_adaptive_elicitation(comparison, profile):
     stop_reason = ('consistent' if all(item['consistent'] for item in summary.values()) else
                    'limit' if len(rows) == bank['max_rounds'] else 'user')
     return {'version': 4, 'choices': dict(comparison['choices']), 'rounds': normalized,
-            'example': bank['source'], 'summary': summary, 'stop_reason': stop_reason}
+            'example': source, 'summary': summary, 'stop_reason': stop_reason}
