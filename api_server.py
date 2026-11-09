@@ -33,7 +33,7 @@ from coding_team_guides import CodingTeamGuides, DOMAIN as CODING_TEAM_DOMAIN, f
 from coding_work_trials import CodingWorkTrials
 from coding_work_exports import export_preview
 from coding_examples import build_coding_examples
-from coding_elicitation import build_coding_elicitation
+from coding_elicitation import build_coding_elicitation, build_adaptive_coding_elicitation
 from coding_optimization_jobs import CodingOptimizationJobs
 from fastapi_optimization import MAX_MODEL_CALLS as FASTAPI_GEPA_CALL_LIMIT, optimize_fastapi
 from coding_gepa import coding_draft, coding_optimization_kind, optimize_coding
@@ -804,7 +804,8 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/coding-instructions/examples":
                 profile = build_coding_instructions(body.get("profile"))["profile"]
-                self._send(200, {"examples": (build_coding_elicitation(profile) if body.get('protocol') == 'repeated-v1'
+                self._send(200, {"examples": (build_adaptive_coding_elicitation(profile) if body.get('protocol') == 'adaptive-v1' else
+                                            build_coding_elicitation(profile) if body.get('protocol') == 'repeated-v1'
                                              else build_coding_examples(profile))})
                 return
             if path.startswith("/api/coding-instructions/optimizations"):

@@ -34,7 +34,7 @@ const coreCategories = [
     number: '01',
     label: 'DOCUMENT',
     title: '문서 요약',
-    description: '회의록·기술 문서·기사를 내가 좋아하는 길이와 표현으로 요약합니다. 영어·한국어.',
+    description: '영어·한국어 문서의 요약 길이와 표현을 비교합니다. 최대 8회 안에서 선택에 따라 자동으로 마쳐요.',
     accent: 'blue',
   },
   {
@@ -42,7 +42,7 @@ const coreCategories = [
     number: '02',
     label: 'CODE',
     title: '코딩 도움',
-    description: '코드 예시를 8~10회 비교해 반복되는 선택과 미확정 항목을 확인합니다. 네 가지 방식을 직접 고르는 빠른 설정도 있어요.',
+    description: '원하는 답변 방식을 직접 고르거나 코드 예시로 확인합니다. 예시 비교는 최대 8회이며 원하는 시점에 마칠 수 있어요.',
     accent: 'purple', cta: '내 코딩 지침 만들기',
   },
   {

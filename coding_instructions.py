@@ -47,7 +47,7 @@ def build_coding_instructions(raw: dict) -> dict:
     comparison = raw.get("comparison")
     if comparison is not None:
         if (not isinstance(comparison, dict) or type(comparison.get("version")) is not int
-                or comparison["version"] not in (1, 2, 3) or language not in SNIPPETS
+                or comparison["version"] not in (1, 2, 3, 4) or language not in SNIPPETS
                 or not isinstance(comparison.get("choices"), dict)
                 or set(comparison["choices"]) != set(PREFERENCES)):
             raise ValueError("예시 비교 기록을 확인한 뒤 지침을 다시 만들어 주세요.")
@@ -56,7 +56,7 @@ def build_coding_instructions(raw: dict) -> dict:
             if pick is not None and (not isinstance(pick, str) or pick not in options or pick != choices[key]):
                 raise ValueError("비교에서 고른 방식과 현재 설정이 다릅니다. 다시 비교하거나 직접 설정해 주세요.")
         profile["comparison"] = {"version": comparison["version"], "choices": dict(comparison["choices"])}
-        if comparison['version'] == 3:
+        if comparison['version'] in (3, 4):
             profile['comparison'] = validate_elicitation(comparison, profile)
         if comparison["version"] == 2:
             source = framework_example_source(language, framework)
@@ -74,7 +74,13 @@ def build_coding_instructions(raw: dict) -> dict:
         preference_heading = (f"## 비교와 직접 확인으로 정한 내 작성 선호\n"
                               f"준비된 예시 {count}회에서 반복 선택을 확인했다. 일관되지 않거나 보류한 항목은 사용자가 직접 정했다. "
                               "이는 제한된 예시의 선호이며 기능 정확도나 다른 과제에서의 만족도가 검증된 것은 아니다.\n")
-    if comparison is not None and comparison["version"] in (2, 3):
+    if comparison is not None and comparison['version'] == 4:
+        count = len(profile['comparison']['rounds'])
+        preference_heading = ("## 비교와 직접 확인으로 정한 내 작성 선호\n"
+                              f"준비된 예시 {count}회에서 선택한 내용을 사용자가 확인했다. 한 번 고른 항목은 반복 일치가 확인된 것이 아니며, "
+                              "비교하지 않았거나 보류·엇갈림으로 남은 항목은 사용자가 직접 정했다. "
+                              "기능 정확도나 다른 과제에서의 만족도가 검증된 것은 아니다.\n")
+    if comparison is not None and comparison["version"] in (2, 3, 4):
         preference_heading += f"비교 예시: {profile['comparison']['example']['label']}\n"
     environment = f"개발 언어: {language}\n프레임워크·라이브러리: {framework or '별도 지정 없음 - 임의로 추가하지 말고 필요하면 먼저 확인하라.'}"
     preferences = "\n".join(f"- {opts[choices[key]]}" for key, opts in PREFERENCES.items())

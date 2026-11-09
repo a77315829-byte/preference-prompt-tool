@@ -50,12 +50,12 @@ export default function CodingEnvironmentPicker({ profile, frameworkChosen, busy
       </fieldset>
     </div>
     <div className="coding-next-bar"><div><small>내가 고른 개발 환경</small><strong>{profile.language || '언어 선택 전'}<span aria-hidden="true"> / </span>{frameworkChosen ? profile.framework || '프레임워크 없이' : '도구 선택 전'}</strong></div>
-      <button type="button" className="coding-primary-button" disabled={busy || !ready} onClick={onReuse || (LANGUAGES.includes(profile.language) ? onCompare : onDirect)}>
-        {busy ? '예시를 불러오는 중…' : onReuse ? '저장한 선택으로 계속하기' : !profile.language || LANGUAGES.includes(profile.language) ? '코드 예시 비교 시작하기 →' : '설정 카드로 선택하기 →'}</button>
+      <button type="button" className="coding-primary-button" disabled={busy || !ready} onClick={onReuse || onDirect}>
+        {busy ? '예시를 불러오는 중…' : onReuse ? '저장한 선택으로 계속하기' : profile.language && !LANGUAGES.includes(profile.language) ? '설정 카드로 선택하기 →' : '설정 카드로 직접 고를게요'}</button>
     </div>
     <div className="coding-environment-alternatives">
-      <button type="button" className="coding-text-button" disabled={busy || !ready} onClick={onDirect}>설정 카드로 직접 고를게요</button>
-      {onReuse && <button type="button" className="coding-text-button" disabled={busy || !ready || !LANGUAGES.includes(profile.language)} onClick={onCompare}>코드 예시부터 다시 비교할게요</button>}
+      {onReuse && <button type="button" className="coding-text-button" disabled={busy || !ready} onClick={onDirect}>설정 카드로 직접 고를게요</button>}
+      <button type="button" className="coding-secondary-button" disabled={busy || !ready || !LANGUAGES.includes(profile.language)} onClick={onCompare}>{onReuse ? '코드 예시부터 다시 비교할게요' : '코드 예시 비교 시작하기 →'}</button>
     </div>
   </div>;
 }

@@ -82,10 +82,10 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
   };
   const finishComparison = (choices, version, source, rounds, summary) => {
     const preferences = { ...profile.preferences };
-    for (const [key, value] of Object.entries(choices)) if (value !== null || version === 3) preferences[key] = value;
+    for (const [key, value] of Object.entries(choices)) if (value !== null || version >= 3) preferences[key] = value;
     request.current += 1;
     setProfile({ ...profile, preferences, comparison: { version, choices, ...(version >= 2 ? { example: source } : {}),
-      ...(version === 3 ? { rounds, summary } : {}) } });
+      ...(version >= 3 ? { rounds, summary } : {}) } });
     setStage('review'); setDraft(null); setCopied(false); setError('');
   };
   const generate = async () => {
@@ -114,7 +114,7 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
       <p className="ws-help">선택과 작성 내용은 이 탭에 임시 보관돼요. 메뉴를 옮겼다가 돌아와도 이어서 진행할 수 있어요. 로그아웃하면 지워집니다.</p>
       <button className="back-button" type="button" disabled={busy} onClick={onBack}>← 시작 화면으로</button>
       <header className="coding-flow-header"><div><span className="coding-flow-tag">MY CODING PREFERENCE</span>
-        <h2>비교하며 찾는, 내 코딩 방식.</h2><p>환경을 고르고, 코드 예시를 8~10회 비교해요.<br />반복해서 고른 방식과 미확정 항목을 확인한 뒤 내 지침을 만들어요.</p></div>
+        <h2>내가 고르는, 내 코딩 방식.</h2><p>원하는 답변 방식을 직접 고르거나, 코드 예시로 확인해요.<br />비교 횟수를 채울 필요 없이 내 선택을 확인하고 지침을 만들어요.</p></div>
         <div className="coding-flow-note">내 선택 → 내 프롬프트 → 다음 작업</div>
       </header>
       <ol className="coding-stepper" aria-label="코딩 프롬프트 만들기 단계">
@@ -127,13 +127,13 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
         {stage === 'environment' && <CodingEnvironmentPicker profile={profile} frameworkChosen={frameworkChosen} busy={busy} onChange={changeEnvironment}
           onCompare={compare} onDirect={direct} onReuse={allChosen ? () => setStage('review') : null} />}
         {stage === 'choose' && <div className="coding-selection-method">
-          <div><span className="coding-kicker">선호를 고르는 방법</span><p>코드 두 개를 비교하면 어떤 답변이 편한지 더 쉽게 알 수 있어요.</p></div>
+          <div><span className="coding-kicker">선호를 고르는 방법</span><p>원하는 방식을 알고 있다면 직접 고르고, 이름만으로 판단하기 어렵다면 예시를 확인해 보세요.</p></div>
           <div role="group" aria-label="선호 선택 방법" className="coding-selection-method-buttons">
             <button type="button" aria-label="코드 예시로 고르기" disabled={busy || !LANGUAGES.includes(profile.language)} aria-pressed={mode === 'comparison'}
-              onClick={() => { if (mode !== 'comparison') compare(); }}><strong>{busy ? '코드 예시를 불러오는 중…' : '코드 예시로 고르기'}</strong><span>추천 · A/B 코드를 보고 선택</span></button>
+              onClick={() => { if (mode !== 'comparison') compare(); }}><strong>{busy ? '코드 예시를 불러오는 중…' : '코드 예시로 고르기'}</strong><span>A/B 코드를 보고 선택</span></button>
             <button type="button" aria-label="설정만 빠르게 고르기" disabled={busy} aria-pressed={mode === 'direct'} onClick={direct}><strong>설정만 빠르게 고르기</strong><span>원하는 답변 방식을 이미 알고 있어요</span></button>
           </div>
-          <p className="coding-selection-method-hint">{!LANGUAGES.includes(profile.language) ? '직접 입력한 언어의 코드 예시는 아직 준비되지 않았어요. 아래 설정에서 내 방식을 골라 주세요.' : '기본 8회 비교하고, 미확정 항목은 최대 2회 더 확인해요. 네 항목을 직접 설정하는 빠른 방법도 선택할 수 있어요. 비교를 취소하면 기존 선택을 유지합니다.'}</p>
+          <p className="coding-selection-method-hint">{!LANGUAGES.includes(profile.language) ? '직접 입력한 언어의 코드 예시는 아직 준비되지 않았어요. 아래 설정에서 내 방식을 골라 주세요.' : '새 비교는 최대 8회이며 원할 때 마칠 수 있어요. 한 번 고른 항목과 반복 일치한 항목을 구분하고, 미확정 항목은 직접 확인합니다. 비교를 취소하면 기존 선택을 유지합니다.'}</p>
         </div>}
         {stage === 'choose' && mode === 'comparison' && examples && <CodingExampleComparison examples={examples} initialChoices={profile.comparison?.choices}
           initialProgress={comparisonProgress} onProgress={setComparisonProgress}

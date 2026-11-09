@@ -4,7 +4,7 @@ import { comparisonSequence, comparisonSummary } from './repeatedComparison';
 
 export default function CodingExampleComparison({ examples, initialChoices, initialProgress, onProgress, onFinish, onCancel }) {
   const [step, setStep] = useState(initialProgress?.step || 0);
-  const [choices, setChoices] = useState(() => initialProgress?.choices || (examples.version === 3 ? {} : { ...initialChoices }));
+  const [choices, setChoices] = useState(() => initialProgress?.choices || (examples.version >= 3 ? {} : { ...initialChoices }));
   const heading = useRef(null);
   const container = useRef(null);
   const sequence = comparisonSequence(examples, choices);
@@ -19,15 +19,29 @@ export default function CodingExampleComparison({ examples, initialChoices, init
     if (step > 0) container.current?.scrollIntoView({ block: 'start',
       behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ? 'auto' : 'smooth' });
   }, [step]);
-  const choose = value => setChoices(current => ({ ...current, [key(pair)]: value }));
+  const choose = value => setChoices(current => {
+    if (current[key(pair)] === value) return current;
+    // Editing an earlier answer invalidates later evidence in the new protocol.
+    const retained = examples.version === 4
+      ? Object.fromEntries(sequence.slice(0, index).filter(item => Object.hasOwn(current, key(item))).map(item => [key(item), current[key(item)]]))
+      : current;
+    return { ...retained, [key(pair)]: value };
+  });
+  const finish = () => {
+    const completed = [];
+    for (const item of sequence) {
+      if (!Object.hasOwn(choices, key(item))) break;
+      completed.push({ id: item.id, value: choices[item.id] });
+    }
+    if (!completed.length) return;
+    const summary = comparisonSummary(sequence, Object.fromEntries(completed.map(row => [row.id, row.value])), { allowSingle: examples.version === 4 });
+    onFinish(Object.fromEntries(Object.entries(summary).map(([axis, value]) => [axis, value.value])), examples.version, examples.source, completed, summary);
+  };
   const next = () => {
     if (!answered) return;
     if (index + 1 === sequence.length) {
-      if (examples.version === 3) {
-        const summary = comparisonSummary(sequence, choices);
-        onFinish(Object.fromEntries(Object.entries(summary).map(([axis, value]) => [axis, value.value])), 3, examples.source,
-          sequence.map(item => ({ id: item.id, value: choices[item.id] })), summary);
-      } else if (sequence.every(item => Object.hasOwn(choices, key(item)))) onFinish({ ...choices }, examples.version, examples.source);
+      if (examples.version >= 3) finish();
+      else if (sequence.every(item => Object.hasOwn(choices, key(item)))) onFinish({ ...choices }, examples.version, examples.source);
     } else setStep(index + 1);
   };
   const selectedLabel = pair.options.find(option => option.value === selected)?.label;
@@ -39,6 +53,7 @@ export default function CodingExampleComparison({ examples, initialChoices, init
         <span aria-hidden="true">{Object.hasOwn(choices, key(item)) ? '✓' : at + 1}</span>{item.label}</button>)}
     </div>
     {examples.version === 3 && <p className="coding-selection-method-hint" role="status">{index + 1}번째 / {sequence.length}회{sequence.length === 8 ? ' · 선택이 엇갈리면 최대 2회 추가' : ' · 미확정 항목 추가 확인'} — {pair.context}</p>}
+    {examples.version === 4 && <p className="coding-selection-method-hint" role="status">{index + 1}번째 비교 · 최대 {examples.max_rounds}회 · 원할 때 마칠 수 있어요 — {pair.context}</p>}
     <div className="coding-screen-heading"><h3 ref={heading} tabIndex={-1}>{pair.question}</h3><p>더 편한 쪽을 고르면 아래에 내 선택이 표시돼요. 선택한 뒤 다음 항목으로 넘어가세요.</p></div>
     <aside className="coding-example-scope" role="note"><strong>{examples.source?.kind === 'framework' ? `${examples.framework} 전용 코드 예시` : `${examples.language} 기본 문법 코드 예시`}</strong><p>{examples.notice}</p></aside>
     <details className="coding-example-context"><summary>비교하는 과제와 개발 환경 보기</summary>
@@ -57,11 +72,15 @@ export default function CodingExampleComparison({ examples, initialChoices, init
       </article>)}
     </div>
     <div className={`coding-picked-answer ${answered ? 'has-choice' : ''}`} role="status"><span>이번 항목의 내 선택</span>
-      <strong>{!answered ? '아직 선택하지 않았어요' : selected === null ? '예시는 보류 · 설정 카드에서 직접 고를게요' : selectedLabel}</strong></div>
+      <strong>{!answered ? '아직 선택하지 않았어요' : selected === null ? '예시는 보류 · 확인 화면에서 선택을 정할게요' : selectedLabel}</strong></div>
     <div className="coding-comparison-actions"><div>
       <button type="button" className="coding-text-button" aria-pressed={selected === null} onClick={() => choose(null)}>예시는 보류할게요</button>
       <button type="button" className="coding-text-button" disabled={step === 0} onClick={() => setStep(step - 1)}>이전 항목</button>
     </div><button type="button" className="coding-primary-button" disabled={!answered} onClick={next}>{index + 1 === sequence.length ? '4가지 선택 확인하기 →' : '이 선택으로 다음 →'}</button></div>
+    {examples.version === 4 && <div className="coding-comparison-actions">
+      <p>횟수를 채울 필요는 없어요. 지금까지 고른 내용을 확인하고, 남은 항목은 직접 정할 수 있어요.</p>
+      <button type="button" className="coding-secondary-button" disabled={!Object.hasOwn(choices, key(sequence[0]))} onClick={finish}>여기까지 비교하고 선택 확인하기</button>
+    </div>}
     <button type="button" className="coding-text-button coding-cancel-comparison" onClick={onCancel}>비교 취소</button>
   </section>;
 }

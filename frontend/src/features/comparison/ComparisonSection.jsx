@@ -302,7 +302,7 @@ function ComparisonSection({
             </button>
           </div>}
           {!isRemote && (domainKey === 'summarization' || domainKey === 'summarization_ko') && (
-            <p className="comparison-source-hint">요약 길이를 비교하려면 여러 문장으로 된 원문을 입력해 주세요. 짧은 원문은 두 예시가 같아질 수 있습니다.</p>
+            <p className="comparison-source-hint">최대 8회 안에서 비교하며, 선택에 따라 더 물을 항목이 없으면 자동으로 마쳐요. 횟수를 모두 채울 필요는 없어요. 요약 길이를 비교하려면 여러 문장으로 된 원문을 입력해 주세요. 짧은 원문은 두 예시가 같아질 수 있습니다.</p>
           )}
           {isRemote && <p className="comparison-task-summary" title={taskDescription}>입력한 내용 · {taskDescription}</p>}
           {isRemote && isCoding && remoteSession.demo_mode && !isComplete && (
@@ -331,8 +331,8 @@ function ComparisonSection({
           </span>
           <span>
               {isComplete
-              ? '선택 완료'
-              : `${remoteSession.answered} / ${remoteSession.total_rounds}`}
+              ? `${remoteSession.answered}회 비교로 마침`
+              : `${remoteSession.answered}회 완료 · 최대 ${remoteSession.round_limit || remoteSession.total_rounds}회`}
           </span>
         </div>}
 
@@ -409,6 +409,15 @@ function ComparisonSection({
               <p className="question-eyebrow">Your preference prompt</p>
               <h3>나만의 {isCoding ? '코딩' : domainKey === 'review' ? '리뷰' : domainKey === 'email' ? '이메일' : domainKey === 'macsum_eval_agent' ? '문서 품질' : '요약'} 프롬프트가 완성됐어요.</h3>
               <p>아래 내용을 복사해서 ChatGPT나 Claude에 바로 사용할 수 있습니다.</p>
+              <p className="connection-note" role="status">
+                {remoteSession.completion_reason === 'selection_resolved'
+                  ? `현재 선택에서 더 구분할 항목이 없어 ${remoteSession.answered}회에서 자동으로 마쳤어요. 이 결과는 이번 예시에서의 추정이며, 필요하면 이전 선택을 수정할 수 있어요.`
+                  : remoteSession.completion_reason === 'no_more_pairs'
+                    ? `더 비교할 조합이 없어 ${remoteSession.answered}회에서 마쳤어요. 선호가 정해지지 않은 항목은 미정으로 남깁니다.`
+                    : remoteSession.completion_reason === 'round_limit'
+                      ? `이번 비교 상한인 ${remoteSession.answered}회에 도달해 마쳤어요. 횟수를 채웠다는 뜻이며 모든 선호가 확정됐다는 뜻은 아니에요.`
+                      : `${remoteSession.answered}회에서 고른 내용을 반영했어요.`}
+              </p>
               {teamCode && (
                 <TeamPanel sessionId={remoteSession.session_id} initialCode={teamCode} teamName={teamName} domainKey={domainKey}
                   onOpenTeam={onOpenTeam} valueLabel={(axis, value) => remoteAxisLabels[axis]?.options?.[value] || value} />

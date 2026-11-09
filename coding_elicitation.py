@@ -44,20 +44,33 @@ def build_coding_elicitation(profile):
             'notice': base['notice'] + ' 기본 8회, 미확정 항목은 최대 2회 더 비교합니다. 반복 선택의 일관성만 확인하며, 취향의 정확도나 코드 품질을 보장하지 않습니다.'}
 
 
-def summarize_rounds(rounds, bank):
+def build_adaptive_coding_elicitation(profile):
+    """A bounded, optional comparison path; earlier records keep their original protocol."""
+    bank = build_coding_elicitation(profile)
+    return {**bank, 'version': 4, 'followups': [], 'max_rounds': 8,
+            'source': {**bank['source'], 'id': bank['source']['id'].replace(':repeated-v1', ':adaptive-v1'),
+                       'label': bank['source']['label'].replace('주문·대여·인쇄 비교', '주문·대여 비교')},
+            'notice': build_coding_examples(profile)['notice'] +
+                ' 비교는 최대 8회이며, 원하는 시점에 마치고 선택을 확인할 수 있습니다. 한 번 고른 항목과 반복해서 같은 쪽을 고른 항목을 구분합니다. 횟수는 취향의 정확도나 코드 품질을 보장하지 않습니다.'}
+
+
+def summarize_rounds(rounds, bank, *, allow_single=False):
     by_id = {item['id']: item for item in bank['pairs'] + bank['followups']}
     summary = {}
     for axis in AXES:
         rows = [row for row in rounds if by_id[row['id']]['axis'] == axis]
         values = [row['value'] for row in rows if row['value'] is not None]
         consistent = len(values) >= 2 and len(set(values)) == 1
+        single = allow_single and len(values) == 1
         summary[axis] = {'answered': len(values), 'total': len(rows), 'consistent': consistent,
-                         'value': values[0] if consistent else None,
-                         'status': 'consistent' if consistent else 'mixed' if len(set(values)) > 1 else 'unresolved'}
+                         'value': values[0] if consistent or single else None,
+                         'status': 'consistent' if consistent else 'mixed' if len(set(values)) > 1 else 'single' if single else 'unresolved'}
     return summary
 
 
 def validate_elicitation(comparison, profile):
+    if comparison['version'] == 4:
+        return _validate_adaptive_elicitation(comparison, profile)
     bank = build_coding_elicitation(profile)
     rows = comparison.get('rounds')
     if not isinstance(rows, list) or not 8 <= len(rows) <= 10:
@@ -85,3 +98,30 @@ def validate_elicitation(comparison, profile):
             raise ValueError('미확정 항목은 확인 화면에서 직접 골라 주세요.')
     return {'version': 3, 'choices': dict(comparison['choices']), 'rounds': normalized,
             'example': bank['source'], 'summary': summary}
+
+
+def _validate_adaptive_elicitation(comparison, profile):
+    bank = build_adaptive_coding_elicitation(profile)
+    rows = comparison.get('rounds')
+    if not isinstance(rows, list) or not 1 <= len(rows) <= bank['max_rounds']:
+        raise ValueError('비교 기록은 1~8회까지 남길 수 있습니다. 비교 없이 고르려면 직접 설정을 사용해 주세요.')
+    recorded = comparison.get('example')
+    if not isinstance(recorded, dict) or recorded.get('id') != bank['source']['id']:
+        raise ValueError('비교한 개발 환경을 다시 확인해 주세요.')
+    normalized = []
+    for row, pair in zip(rows, bank['pairs']):
+        if not isinstance(row, dict) or row.get('id') != pair['id']:
+            raise ValueError('비교 순서나 예시가 현재 개발 환경과 다릅니다. 다시 비교해 주세요.')
+        value = row.get('value')
+        if 'value' not in row or (value is not None and (not isinstance(value, str)
+                or value not in [option['value'] for option in pair['options']])):
+            raise ValueError('비교에서 고른 값을 확인해 주세요.')
+        normalized.append({'id': pair['id'], 'value': value})
+    summary = summarize_rounds(normalized, bank, allow_single=True)
+    for axis in AXES:
+        if comparison['choices'][axis] is not None and comparison['choices'][axis] != summary[axis]['value']:
+            raise ValueError('미확정 항목은 확인 화면에서 직접 골라 주세요.')
+    stop_reason = ('consistent' if all(item['consistent'] for item in summary.values()) else
+                   'limit' if len(rows) == bank['max_rounds'] else 'user')
+    return {'version': 4, 'choices': dict(comparison['choices']), 'rounds': normalized,
+            'example': bank['source'], 'summary': summary, 'stop_reason': stop_reason}
