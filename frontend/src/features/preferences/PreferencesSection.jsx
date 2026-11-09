@@ -12,6 +12,7 @@ import SavedRemixComparison from './SavedRemixComparison';
 import { selectionMatches } from './comparisonText';
 import PreferenceLineage, { PreviousPreference } from './PreferenceLineage.jsx';
 import SavedCodingProfile, { codingEnvironmentLabel } from '../coding-instructions/SavedCodingProfile';
+import CodingWorkflowPanel from '../coding-instructions/CodingWorkflowPanel';
 
 const formOf = (item) => ({ title: item.title, domainKey: item.domain_key, prompt: item.prompt, note: item.note || '' });
 
@@ -268,6 +269,9 @@ function PreferencesSection({ user, signupOpen, onLogin, onBack, onStartComparis
                 <textarea className="task-input" aria-label="AI 실행 결과 내용" readOnly rows={10} value={output.output} onFocus={(e) => e.target.select()} />
                 <button className="prompt-reset-button" type="button" onClick={() => copy('output', output.output)}>{copied === 'output' ? '결과를 복사했어요' : '결과 복사'}</button>
               </div>}
+              {item.coding_profile_matches && <CodingWorkflowPanel key={`${item.id}-${item.revision}`}
+                draft={{ profile: item.coding_profile, prompt: item.prompt }} preference={item} user={user}
+                signupOpen={signupOpen} onLogin={onLogin} onOpenLibrary={id => open(id)} task={task} />}
             </>}
           </div>}
         </>}

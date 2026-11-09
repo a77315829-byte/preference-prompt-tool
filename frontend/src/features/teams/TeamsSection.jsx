@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import TeamResult from '../../shared/components/TeamResult';
 import TeamInvitation from '../../shared/components/TeamInvitation';
+import CodingTeamPanel from '../coding-instructions/CodingTeamPanel';
+import '../coding-instructions/codingWorkflow.css';
 import { CATEGORY_LABEL, axisValueLabel, categoryLabel } from '../../shared/domainLabels';
 import {
   createTeam, fetchMyTeams, fetchTeam, formatUtc, groupByCategory, parseTeamInvite, readRecentTeams, rememberTeam,
@@ -109,9 +111,15 @@ function TeamsSection({ user, onBack, onLogin, onCompare, onOpenHandoffs, initia
             코드 작성 방식이나 회의록 분량처럼, 팀원마다 원하는 AI 결과가 다를 수 있어요.
             각자의 선택을 모아 공통 지침을 만들고, 의견이 갈린 항목은 함께 확인하세요.
           </p>
-          <details className="ws-raw"><summary>팀 기준은 어떻게 정해지나요?</summary>
+          <details className="ws-raw"><summary>기존 예시 비교의 팀 기준은 어떻게 정해지나요?</summary>
             <p className="ws-help">팀원별 선호를 한 사람당 한 표로 모아 항목별 기준을 만듭니다. 가장 많이 고른 값을 기본으로 삼고, 의견이 갈리거나 동률·미정인 항목을 표시합니다. 각자가 마지막에 ‘합치기’를 눌러야 반영됩니다. 실제 업무 기준으로 채택할지는 팀에서 검토해 결정하세요.</p>
           </details>
+        </div>
+
+        <div className="ws-step">
+          <h3>새 코딩 지침의 네 가지 기준으로 연결하기</h3>
+          <p className="ws-help">설명·주석·구성·출력 선호를 만든 뒤 팀을 생성하세요. 팀장이 정한 기본값·필수 규칙과 개인 선택을 비교하고, 다른 항목은 이번 작업에 따를 쪽을 직접 고릅니다. 자동 투표 집계와는 별도입니다.</p>
+          <button className="prompt-copy-button" type="button" onClick={() => onCompare('coding_profile', '')}>코딩 지침으로 팀 만들기</button>
         </div>
 
         {onOpenHandoffs && <div className="ws-step">
@@ -143,7 +151,7 @@ function TeamsSection({ user, onBack, onLogin, onCompare, onOpenHandoffs, initia
               onChange={(e) => setTeamName(e.target.value)} />
             <label className="task-input-label" htmlFor="new-team-domain">이번에 함께 맞출 기준</label>
             <select id="new-team-domain" className="ws-input" value={domainKey} onChange={(e) => setDomainKey(e.target.value)}>
-              <option value="coding">코드 작성 방식</option>
+              <option value="coding">기존 React 예시의 코드 작성 방식</option>
               <option value="summarization_ko">한국어 문서 요약 방식</option>
               <option value="summarization">영어 문서 요약 방식</option>
             </select>
@@ -166,7 +174,11 @@ function TeamsSection({ user, onBack, onLogin, onCompare, onOpenHandoffs, initia
         )}
 
         {error && <p className="ws-error" role="alert">{error}</p>}
-        {result && (
+        {result?.domain_key === 'coding_profile' && <div ref={resultRef} className="coding-workflow">
+          <CodingTeamPanel key={result.code} user={user} onLogin={onLogin} initialCode={result.code}
+            onStart={(code, profile) => onCompare('coding_profile', code, '', profile)} />
+        </div>}
+        {result && result.domain_key !== 'coding_profile' && (
           <div className="ws-step team-start" ref={resultRef}>
             <p className="question-eyebrow">팀 준비 완료 · 다음은 내 선호 고르기</p>
             <h3>{result.name || result.code}</h3>

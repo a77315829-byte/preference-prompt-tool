@@ -192,6 +192,23 @@ MIGRATIONS: list[str] = [
     ALTER TABLE teams ADD COLUMN protected INTEGER NOT NULL DEFAULT 0;
     UPDATE teams SET protected = 1 WHERE created_by IS NOT NULL;
     """,
+    # 14: 새 코딩 팀 기준과 계정별 실제 작업 비교. 기존 선택 기록은 변환하지 않는다.
+    """
+    CREATE TABLE coding_team_guides (
+        code TEXT PRIMARY KEY REFERENCES teams(code) ON DELETE CASCADE,
+        revision INTEGER NOT NULL DEFAULT 1,
+        profile_json TEXT NOT NULL,
+        rules_json TEXT NOT NULL
+    );
+    CREATE TABLE coding_work_trials (
+        id TEXT PRIMARY KEY,
+        owner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        revision INTEGER NOT NULL DEFAULT 1,
+        record_json TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    CREATE INDEX coding_trials_owner ON coding_work_trials(owner_id, updated_at);
+    """,
 ]
 
 

@@ -80,6 +80,7 @@ class PersonalPromptStore:
         coding = json.loads(item.pop("coding_profile_json") or "null")
         item["coding_profile"] = coding["profile"] if coding else None
         item["coding_optimization"] = coding.get("optimization") if coding else None
+        item["coding_team_context"] = coding.get("team_context") if coding else None
         item["coding_profile_matches"] = (item["domain_key"] == "coding" and coding["prompt_sha256"] == hashlib.sha256(item["prompt"].encode()).hexdigest()) if coding else None
         raw = item.pop("provenance_json")
         provenance = json.loads(raw) if raw else None
@@ -88,14 +89,22 @@ class PersonalPromptStore:
                                       provenance["prompt_sha256"] == hashlib.sha256(item["prompt"].encode()).hexdigest()) if provenance else None
         return item
 
-    def create(self, owner_id: int, body: dict, *, provenance: dict | None = None, optimization: dict | None = None) -> dict:
+    def create(self, owner_id: int, body: dict, *, provenance: dict | None = None, optimization: dict | None = None,
+               team_context: dict | None = None) -> dict:
         title, domain, prompt, note = _fields(body)
         coding_json = None
+        if team_context is not None and body.get("codingProfile") is None:
+            raise ValueError("팀 조합 지침의 개발 환경 기록이 필요합니다.")
         if optimization is not None and body.get("codingProfile") is None:
             raise ValueError("개선한 지침의 개발 환경 기록이 필요합니다.")
         if body.get("codingProfile") is not None:
             draft = build_coding_instructions(body["codingProfile"])
             expected = draft["prompt"]
+            if team_context is not None:
+                from coding_team_guides import render_team_prompt
+                if optimization is not None or team_context.get("method") != "explicit_team_defaults":
+                    raise ValueError("팀 조합 출처를 확인해 주세요.")
+                expected = render_team_prompt(draft["profile"], team_context["rules"])
             if optimization is not None:
                 from coding_gepa import compose_prompt, coding_draft
                 coding_draft(draft['profile'])
@@ -106,6 +115,7 @@ class PersonalPromptStore:
             if domain != "coding" or prompt != expected or provenance is not None:
                 raise ValueError("개발 환경 설정과 지침이 다릅니다. 지침을 다시 만든 뒤 저장해 주세요.")
             coding_json = json.dumps({"profile": draft["profile"], "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(),
+                                      **({"team_context": team_context} if team_context is not None else {}),
                                       **({"optimization": optimization} if optimization is not None else {})}, ensure_ascii=False)
         prompt_id = uuid.uuid4().hex
         now = datetime.now(timezone.utc).isoformat(timespec="microseconds")

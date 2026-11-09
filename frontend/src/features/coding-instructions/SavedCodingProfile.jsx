@@ -13,9 +13,19 @@ function SavedCodingProfile({ item, editingPrompt, disabled, onCreate }) {
   const profile = item.coding_profile;
   if (!profile) return null;
   const optimization = item.coding_optimization;
+  const teamContext = item.coding_team_context;
   return <div className="saved-coding-profile">
     <h4>저장 당시 개발 환경과 내 설정</h4>
-    <p><strong>{codingEnvironmentLabel(item)}</strong> · {profile.comparison ? '예시 비교에서 고른 선호' : '직접 고른 선호'}</p>
+    <p><strong>{codingEnvironmentLabel(item)}</strong> · {teamContext ? '개인·팀 기준을 조합한 작업용' : profile.comparison ? '예시 비교에서 고른 선호' : '직접 고른 선호'}</p>
+    {teamContext && <details><summary>당시 팀 기준과 항목별 선택 출처</summary>
+      <p>{teamContext.name} · {teamContext.revision}판 · 팀장이 정한 기본값과 직접 조합</p>
+      <ul>{Object.entries(CODING_CHOICES).map(([key, field]) => <li key={key}>
+        {field.label}: 개인 {field.options[teamContext.source_profile.preferences[key]]} / 팀 {field.options[teamContext.team_profile.preferences[key]]}
+        {' → '}{teamContext.choices[key] === 'team' ? '팀 기준 채택' : teamContext.choices[key] === 'personal' ? '개인 기준 채택' : '같은 기준'}
+      </li>)}</ul>
+      <p>함께 보관한 필수 규칙: {teamContext.rules.join(' · ') || '없음'}</p>
+      <p className="ws-help">저장 당시 기록입니다. 이후 팀 변경은 이 지침에 자동 반영하지 않습니다.</p>
+    </details>}
     {profile.comparison && <p className="ws-help">비교에 사용한 예시: {profile.comparison.example?.label || '언어 기본 문법 · 프레임워크 전용 비교 아님'}</p>}
     <CodingSignalSummary comparison={profile.comparison} resolved />
     {optimization && <div className="saved-gepa-origin"><h4>GEPA로 다듬어 새로 보관한 지침</h4>
@@ -42,6 +52,7 @@ function SavedCodingProfile({ item, editingPrompt, disabled, onCreate }) {
       </details></div>}
     <p className="ws-help">{editingPrompt || !item.coding_profile_matches
       ? '본문·종류가 저장 당시 설정과 다릅니다. 아래는 처음 저장한 설정이며 현재 지침에서 새로 추정한 값은 아닙니다.'
+      : teamContext ? '아래는 개인·팀 기준을 조합한 결과입니다. 원래 개인 선호와 팀 기본값은 위 출처에서 따로 확인할 수 있습니다.'
       : optimization ? '아래는 GEPA 개선에서도 고정한 선택입니다. 개선 효과나 만족도가 검증되었다는 뜻은 아니며, 평가 기록과 직접 비교해 사용하세요.'
       : profile.comparison ? '코드 예시 비교와 직접 확인을 거쳐 고른 설정입니다. 비교 이력과 최종 설정은 구분해 표시합니다.'
         : '예시 비교로 추정한 결과가 아니라, 지침을 만들 때 직접 고른 설정입니다.'}</p>
@@ -51,7 +62,8 @@ function SavedCodingProfile({ item, editingPrompt, disabled, onCreate }) {
     {profile.extra && <p className="ws-help coding-extra-snapshot">추가 선호: {profile.extra}</p>}
     {onCreate && <button className="prompt-reset-button" type="button" disabled={disabled} onClick={() => onCreate(profile)}>{optimization ? '저장한 선택으로 새 초안 만들기' : '이 설정으로 새 지침 만들기'}</button>}
     {optimization && <p className="ws-help">새 초안 만들기는 GEPA 보충 안내를 제외하고 선택 설정으로 다시 만듭니다. 저장한 개선본 그대로 쓰려면 ‘새 작업에 사용’을 선택하세요.</p>}
-    <p className="ws-help">현재는 개인용 지침으로 재사용합니다. React 예시 비교의 팀 기준과 자동으로 합치지는 않습니다.</p>
+    {teamContext && <p className="ws-help">새 지침 만들기는 네 설정으로 새 초안을 만듭니다. 팀 필수 규칙까지 그대로 쓰려면 ‘새 작업에 사용’을 선택하세요.</p>}
+    <p className="ws-help">‘새 작업에 사용’에서 네 항목의 팀 기준 연결·도구 내보내기·실제 작업 비교를 열 수 있어요. 기존 React 예시 비교 기록은 별도로 유지합니다.</p>
   </div>;
 }
 

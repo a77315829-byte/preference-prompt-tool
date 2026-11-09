@@ -7,12 +7,13 @@ import CodingExampleComparison from './CodingExampleComparison';
 import CodingOptimizationPanel from './CodingOptimizationPanel';
 import CodingAnswerReview from './CodingAnswerReview';
 import CodingSignalSummary from './CodingSignalSummary';
+import CodingWorkflowPanel from './CodingWorkflowPanel';
 import { readDraft, useDraftCache } from '../../shared/draftCache';
 import './codingFlow.css';
 
 const emptyPreferences = () => Object.fromEntries(Object.keys(CODING_CHOICES).map(key => [key, null]));
 
-export default function CodingInstructionsSection({ user, signupOpen, onLogin, onOpenLibrary, onBack, onReactComparison, initialProfile, onConsumeInitial }) {
+export default function CodingInstructionsSection({ user, signupOpen, onLogin, onOpenLibrary, onBack, onReactComparison, initialProfile, onConsumeInitial, initialTeamCode = '' }) {
   const [restored] = useState(() => initialProfile ? null : readDraft('coding', user));
   const [profile, setProfile] = useState(() => structuredClone(initialProfile || restored?.profile || { ...DEFAULT_CODING_PROFILE, language: '', preferences: emptyPreferences() }));
   const [frameworkChosen, setFrameworkChosen] = useState(Boolean(initialProfile || restored?.frameworkChosen));
@@ -192,6 +193,8 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
             <div className="coding-result-actions"><button type="button" className="coding-primary-button" disabled={busy || !taskRequest.trim()} onClick={() => copy(true)}>{copiedWithTask ? '답변 방식과 이번 작업을 함께 복사했어요' : '내 답변 방식 + 이번 작업 복사'}</button></div>
             <p id="coding-task-copy-note">이번 작업을 적으면 함께 복사할 수 있어요. 답변 방식만 쓰려면 위의 ‘프롬프트 복사’를 눌러 주세요. AI는 붙여넣은 대화창에서 실행되며, 이번 작업 내용은 보관함에 저장되지 않아요.</p>
           </section>
+          <CodingWorkflowPanel key={`workflow-${JSON.stringify([draft.profile, draft.prompt, user?.id])}`} draft={draft}
+            user={user} signupOpen={signupOpen} onLogin={onLogin} onOpenLibrary={onOpenLibrary} initialTeamCode={initialTeamCode} task={taskRequest} />
           <CodingAnswerReview key={JSON.stringify([draft.profile, draft.prompt])} draft={draft} disabled={busy} />
           <CodingOptimizationPanel key={JSON.stringify([draft.profile, draft.prompt, user?.id])} draft={draft} user={user} signupOpen={signupOpen}
             onLogin={onLogin} onOpenLibrary={onOpenLibrary} onBusy={setBusy} disabled={busy} />
@@ -202,7 +205,7 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
       </div>
       {error && <p className="ws-error" role="alert">{error}</p>}
       <aside className="coding-legacy-entry"><h3>팀과 React 코드 기준을 맞추고 싶나요?</h3>
-        <p>위의 8~10회 비교는 내 답변 방식을 정하는 개인 지침입니다. 팀 비교는 React의 화면 구성·스타일·타입을 같은 항목으로 비교합니다. 항목이 달라 개인 지침을 자동으로 팀 기준에 합치지는 않아요.</p>
+        <p>새 지침의 설명·주석·구성·출력은 결과 화면에서 팀 기준과 연결할 수 있어요. 아래 기존 React 비교는 화면 구성·스타일·타입을 비교하는 별도 기록입니다.</p>
         <button type="button" className="coding-secondary-button" disabled={busy} onClick={onReactComparison}>React 예시 비교로 취향 찾기</button>
       </aside>
     </div>

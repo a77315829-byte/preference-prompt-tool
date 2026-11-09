@@ -36,6 +36,7 @@ function App() {
   const [preferenceId, setPreferenceId] = useState('');
   const [templateCategory, setTemplateCategory] = useState('전체');
   const [codingProfileDraft, setCodingProfileDraft] = useState(null);
+  const [codingWorkTeamCode, setCodingWorkTeamCode] = useState('');
   const consumeCodingProfile = useCallback(() => setCodingProfileDraft(null), []);
   const consumeHandoffDraft = useCallback(() => setHandoffDraft(null), []);
   const handleDraftChange = useCallback((draft) => {
@@ -79,7 +80,7 @@ function App() {
     try { window.localStorage.removeItem('ppt-recent-teams'); } catch { /* Storage may be disabled. */ }
     setDraftGeneration(value => value + 1);
     setComparisonDraft(null); setCodingProfileDraft(null); setHandoffDraft(null); setHandoffId('');
-    setTeamCodeDraft(''); setTeamNameDraft(''); setPreferenceId('');
+    setTeamCodeDraft(''); setTeamNameDraft(''); setPreferenceId(''); setCodingWorkTeamCode('');
     setUser(null);
     setActiveFlow('category');
   };
@@ -131,7 +132,8 @@ function App() {
   const openTemplates = (category = '전체') => { setTemplateCategory(category); setMenuOpen(false); setActiveFlow('templates'); };
   const openLibrary = (id = '') => { setPreferenceId(id); setMenuOpen(false); setActiveFlow('preferences'); };
   const openHandoffs = (draft = null) => { setHandoffId(''); setHandoffDraft(draft); setMenuOpen(false); setActiveFlow('handoffs'); };
-  const openCodingInstructions = (profile = null) => {
+  const openCodingInstructions = (profile = null, teamCode = '') => {
+    setCodingWorkTeamCode(teamCode);
     setCodingProfileDraft(profile); setTemplate(null); setComparisonDraft(null); setTeamCodeDraft(''); setTeamNameDraft('');
     setActiveFlow('coding-instructions');
   };
@@ -145,7 +147,12 @@ function App() {
     openTeams();
   };
 
-  const compareForTeam = (domainKey, code, name = '') => {
+  const compareForTeam = (domainKey, code, name = '', teamProfile = null) => {
+    if (domainKey === 'coding_profile') {
+      openCodingInstructions(teamProfile ? { ...teamProfile, extra: '', preferences:
+        Object.fromEntries(Object.keys(teamProfile.preferences).map(key => [key, null])) } : null, code);
+      return;
+    }
     setTemplate(null);
     setComparisonDraft(null);
     setTeamCodeDraft(code);
@@ -216,7 +223,7 @@ function App() {
           <motion.div className="flow-view" key="coding-instructions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <Suspense fallback={<p className="comparison-section" role="status">코딩 지침 설정을 여는 중…</p>}>
               {user !== undefined && <CodingInstructionsSection key={draftGeneration} user={user} signupOpen={signupOpen} onLogin={handleLogin} onOpenLibrary={openLibrary}
-                initialProfile={codingProfileDraft} onConsumeInitial={consumeCodingProfile} onBack={handleComparisonBack} onReactComparison={() => compareForMyself('coding')} />
+                initialProfile={codingProfileDraft} initialTeamCode={codingWorkTeamCode} onConsumeInitial={consumeCodingProfile} onBack={handleComparisonBack} onReactComparison={() => compareForMyself('coding')} />
               }
             </Suspense>
           </motion.div>

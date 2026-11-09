@@ -18,7 +18,7 @@ function TeamInvitation({ team, onChange }) {
   return (
     <div className="team-invitation">
       <h3>팀원 초대하기</h3>
-      <p className="ws-help">{team.protected ? '팀 결과는 로그인한 참여자만 볼 수 있어요. 초대받은 사람은 비교를 마치고 선호를 합친 뒤 참여자가 됩니다. 초대는 7일간 열리며 팀장이 닫을 수 있어요.' : '익명으로 만든 공개 체험 팀입니다. 링크로 팀 기준을 볼 수 있으니 민감한 팀 이름이나 정보를 넣지 마세요. 계정으로 팀을 만들면 참여자만 결과를 볼 수 있어요.'}</p>
+      <p className="ws-help">{team.domain_key === 'coding_profile' ? '팀 지침은 로그인하고 초대로 참여한 사람만 볼 수 있어요. 개인 선호는 자동 공유되지 않습니다. 초대는 7일간 열리며 팀장이 닫을 수 있어요.' : team.protected ? '팀 결과는 로그인한 참여자만 볼 수 있어요. 초대받은 사람은 비교를 마치고 선호를 합친 뒤 참여자가 됩니다. 초대는 7일간 열리며 팀장이 닫을 수 있어요.' : '익명으로 만든 공개 체험 팀입니다. 링크로 팀 기준을 볼 수 있으니 민감한 팀 이름이나 정보를 넣지 마세요. 계정으로 팀을 만들면 참여자만 결과를 볼 수 있어요.'}</p>
       {team.protected && <p className="ws-help" role="status">{current.invite_open ? `초대 열림 · ${new Date(current.invite_until * 1000).toLocaleString('ko-KR')}까지` : '초대 닫힘 · 새 참여를 받지 않아요. 기존 참여자는 계속 볼 수 있어요.'}</p>}
       <label className="task-input-label" htmlFor={`invite-${team.code}`}>초대 링크</label>
       <input id={`invite-${team.code}`} className="ws-input" readOnly value={link} onFocus={(e) => e.target.select()} />

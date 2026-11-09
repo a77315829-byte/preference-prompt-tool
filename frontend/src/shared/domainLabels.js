@@ -2,6 +2,7 @@
 
 export const CATEGORY_LABEL = {
   coding: '코딩 도움',
+  coding_profile: '코딩 작성 선호 · 설명·주석·구성·출력',
   review: '고객 리뷰 작성',
   email: '이메일 초안',
   summarization: '문서 요약 (영어)',

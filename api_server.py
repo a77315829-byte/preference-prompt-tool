@@ -29,6 +29,9 @@ import team
 import template_library
 from personal_prompts import PersonalPromptStore, PromptConflict, expected_revision
 from coding_instructions import build_coding_instructions
+from coding_team_guides import CodingTeamGuides, DOMAIN as CODING_TEAM_DOMAIN, fingerprint
+from coding_work_trials import CodingWorkTrials
+from coding_work_exports import export_preview
 from coding_examples import build_coding_examples
 from coding_elicitation import build_coding_elicitation
 from coding_optimization_jobs import CodingOptimizationJobs
@@ -125,6 +128,8 @@ TEAMS = team.TeamStore(DB)
 PERSONAL_PROMPTS = PersonalPromptStore(lambda: DB)
 HANDOFFS = HandoffStore(lambda: DB)
 CODING_OPTIMIZATIONS = CodingOptimizationJobs(lambda: DB)
+CODING_GUIDES = CodingTeamGuides(lambda: DB)
+CODING_TRIALS = CodingWorkTrials(lambda: DB)
 DAILY_PREFERENCE_RUNS = _quota("preference", "PPT_PREFERENCE_RUNS_PER_DAY", 60, "PPT_USER_PREFERENCE_RUNS_PER_DAY", 20)
 # 다른 출처에서 이 API 를 부르도록 허용할 주소 목록 (쉼표로 구분). 기본은
 # 비어 있다 - React 화면은 Vite 프록시(/api)로 같은 출처에서 부르므로 CORS
@@ -238,6 +243,8 @@ def _team_payload(code: str, user_id: int | None = None) -> dict[str, Any]:
     if access['protected'] and not access['is_member']:
         return {'code': code, 'name': '초대받은 팀', 'domain_key': domain_key, 'members': [], 'signedIn': [],
                 'agreements': [], 'prompt': '', 'prompts': {}, 'exports': [], 'requires_join': True, **access}
+    if domain_key == CODING_TEAM_DOMAIN:
+        return CODING_GUIDES.get(code, user_id)
     domain = service.load_domain_for(_domain_path(domain_key))
     name = TEAMS.name_for(code)
     if not members:
@@ -714,6 +721,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 "quota": quota_left(),
             })
             return
+        if path.startswith("/api/coding-work/"):
+            self._coding_workflow(path)
+            return
         if path == "/api/teams":
             # 계정 팀 결과는 참여자만 본다. 익명 팀은 공개 체험용이다.
             user = self._current_user()
@@ -775,6 +785,9 @@ class ApiHandler(BaseHTTPRequestHandler):
             body = self._read_json(MAX_UPLOAD_JSON if uploading else 256_000)
             if path.startswith("/api/auth/"):
                 self._auth_route(path, body)
+                return
+            if path.startswith("/api/coding-work/"):
+                self._coding_workflow(path, body)
                 return
             if path == "/api/preferences" or path.startswith("/api/preferences/"):
                 self._personal_prompts(path, body)
@@ -972,6 +985,83 @@ class ApiHandler(BaseHTTPRequestHandler):
             self._send(400, {'error': str(exc)})
         except Exception as exc:
             self._send(500, {'error': service.describe_api_error(exc)})
+
+    def _coding_workflow(self, path: str, body: dict | None = None) -> None:
+        """Model-free coding guides, export previews and private work measurements."""
+        user = self._current_user()
+        parts = path.removeprefix("/api/coding-work/").split("/")
+        try:
+            if body is not None and parts == ["exports"]:
+                self._send(200, {"export": export_preview(body)})
+                return
+            if user is None:
+                self._send(401, {"error": "팀 기준과 작업 비교를 보관하려면 로그인해 주세요."})
+                return
+
+            def resolved():
+                if body.get("preferenceId"):
+                    item = PERSONAL_PROMPTS.get(user.id, body["preferenceId"])
+                    if expected_revision(body.get("preferenceRevision")) != item["revision"]:
+                        raise PromptConflict("저장한 지침이 바뀌었습니다. 다시 열어 주세요.")
+                    if not item.get("coding_profile_matches"):
+                        raise ValueError("수정한 지침은 현재 설정과 다릅니다. 설정으로 새 지침을 만들어 주세요.")
+                    if body.get("teamSelection"):
+                        return CODING_GUIDES.resolve(user.id, item["coding_profile"], body["teamSelection"])
+                    draft = {"profile": item["coding_profile"], "prompt": item["prompt"],
+                             "team_context": item.get("coding_team_context")}
+                    return {**draft, "snapshot": fingerprint(draft)}
+                return CODING_GUIDES.resolve(user.id, body.get("profile"), body.get("teamSelection"))
+
+            if body is None:
+                if parts == ["trials"]:
+                    self._send(200, {"trials": CODING_TRIALS.list(user.id)})
+                    return
+                if len(parts) == 2 and parts[0] == "trials":
+                    self._send(200, {"trial": CODING_TRIALS.get(user.id, parts[1])})
+                    return
+                if len(parts) == 2 and parts[0] == "teams":
+                    self._send(200, {"team": CODING_GUIDES.get(parts[1], user.id)})
+                    return
+            elif parts == ["teams"]:
+                team_result = CODING_GUIDES.create(user, body.get("name"), body.get("profile"), body.get("rules", []))
+                self._send(201, {"team": team_result})
+                return
+            elif len(parts) == 3 and parts[0] == "teams":
+                if parts[2] == "join":
+                    result = CODING_GUIDES.join(user, parts[1])
+                elif parts[2] == "update":
+                    result = CODING_GUIDES.update(user.id, parts[1], body.get("revision"), body.get("profile"), body.get("rules", []))
+                else:
+                    raise ValueError("지원하지 않는 팀 작업입니다.")
+                self._send(200, {"team": result})
+                return
+            elif parts in (["resolve"], ["save"], ["trials"]):
+                draft = resolved()
+                if parts == ["resolve"]:
+                    self._send(200, {"draft": draft})
+                else:
+                    if body.get("snapshot") != draft["snapshot"]:
+                        raise PromptConflict("선택한 지침이 바뀌었습니다. 미리 보기를 다시 확인해 주세요.")
+                    if parts == ["save"]:
+                        saved = PERSONAL_PROMPTS.create(user.id, {"title": body.get("title"), "domainKey": "coding",
+                            "prompt": draft["prompt"], "codingProfile": draft["profile"], "note": body.get("note", "")},
+                            team_context=draft["team_context"])
+                        self._send(201, {"preference": saved})
+                    else:
+                        self._send(201, {"trial": CODING_TRIALS.create(user.id, body, draft)})
+                return
+            elif len(parts) == 3 and parts[0] == "trials" and parts[2] in ("timer", "result", "preference", "delete"):
+                self._send(200, {"trial": CODING_TRIALS.change(user.id, parts[1], body, parts[2])})
+                return
+            self._send(404, {"error": "찾을 수 없는 코딩 작업 경로입니다."})
+        except PromptConflict as exc:
+            self._send(409, {"error": str(exc)})
+        except LookupError as exc:
+            self._send(404, {"error": str(exc)})
+        except PermissionError as exc:
+            self._send(403, {"error": str(exc)})
+        except (ValueError, TypeError) as exc:
+            self._send(400, {"error": str(exc)})
 
     def _personal_prompts(self, path: str, body: dict | None = None) -> None:
         user = self._current_user()
