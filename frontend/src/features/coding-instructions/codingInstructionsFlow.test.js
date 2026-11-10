@@ -313,10 +313,18 @@ test('과거 기본 문법 비교 저장본은 그대로 재사용하고 결과�
   } finally { await ui.close(); }
 });
 
-test('기존 React 비교와 선택 결과를 유지하며 새 환경 카드 화면과 오간다', async () => {
+test('코딩 도움의 두 기능에서 각각 시작하고 기존 React 비교와 새 환경 설정을 오간다', async () => {
   const api = codingServer(); const ui = await mount('https://example.test/', 'coding', api.fetch);
   try {
+    assert.equal(document.querySelector('.coding-mode-actions'), null);
+    await ui.act(async () => document.querySelector('[aria-label="코딩 도움 선택"]').click());
+    assert.ok(document.querySelector('[aria-label="AI 답변 방식 설정"]'));
+    await press(ui, 'React 코드 스타일 비교');
+    assert.ok(document.querySelector('#coding-task'));
+    assert.equal(document.querySelector('.coding-language-buttons'), null);
+    await ui.click('← 카테고리 다시 선택');
     await openCoding(ui);
+    assert.equal(document.querySelector('.coding-flow-header h2').textContent, 'AI 답변 방식 설정');
     assert.equal(document.querySelector('.coding-legacy-entry').tagName, 'ASIDE');
     await ui.click('React 예시 비교로 취향 찾기'); assert.ok(document.querySelector('#coding-task'));
     await ui.click('다른 언어·프레임워크로 지침 만들기'); assert.ok(document.querySelector('.coding-language-buttons'));

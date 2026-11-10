@@ -42,8 +42,9 @@ const coreCategories = [
     number: '02',
     label: 'CODE',
     title: '코딩 도움',
-    description: '원하는 답변 방식을 직접 고르거나 코드 예시로 확인합니다. 예시 비교는 최대 8회이며 원하는 시점에 마칠 수 있어요.',
-    accent: 'purple', cta: '내 코딩 지침 만들기',
+    description: 'AI 답변 방식과 React 코드 스타일 중 설정할 내용을 고르세요. 만든 지침은 다음 작업에도 쓸 수 있어요.',
+    accent: 'purple', cta: 'AI 답변 방식 설정', actionDescription: '설명·주석·구성·출력',
+    secondaryCta: 'React 코드 스타일 비교', secondaryDescription: '구성·스타일 관리·타입 작성',
   },
   {
     id: 'teamWork', number: '03', label: 'TEAM WORK', title: '팀 업무 정리',
@@ -158,7 +159,7 @@ function NarrativeScene({ scene, direction, reducedMotion }) {
   );
 }
 
-function IntroScene({ selectedCategory, onSelectCategory, onContinue, onOpenTeams, onOpenLibrary, direction, reducedMotion }) {
+function IntroScene({ selectedCategory, onSelectCategory, onContinue, onReactComparison, onOpenTeams, onOpenLibrary, direction, reducedMotion }) {
   const [showLab, setShowLab] = useState(labIds.has(selectedCategory));
   const options = showLab ? [...coreCategories, ...labCategories] : coreCategories;
   const toggleLab = () => {
@@ -197,7 +198,7 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, onOpenTeam
         </div>
 
         <CategoryDeck options={options} selectedCategory={selectedCategory}
-          onSelect={onSelectCategory} onContinue={onContinue} />
+          onSelect={onSelectCategory} onContinue={onContinue} onSecondaryContinue={onReactComparison} />
         <div className="category-lab-toggle">
           <button type="button" onClick={toggleLab} aria-expanded={showLab}>
             {showLab ? '핵심 카테고리만 보기' : `실험실 카테고리 보기 (${labCategories.length})`}
@@ -209,7 +210,7 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, onOpenTeam
   );
 }
 
-function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequest, onOpenTeams, onOpenLibrary }) {
+function ScrollStory({ selectedCategory, onSelectCategory, onContinue, onReactComparison, sceneRequest, onOpenTeams, onOpenLibrary }) {
   const [activeScene, setActiveScene] = useState(0);
   const [direction, setDirection] = useState(1);
   const touchStartY = useRef(null);
@@ -300,6 +301,7 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequ
               selectedCategory={selectedCategory}
               onSelectCategory={onSelectCategory}
               onContinue={onContinue}
+              onReactComparison={onReactComparison}
               onOpenTeams={onOpenTeams}
               onOpenLibrary={onOpenLibrary}
               direction={direction}

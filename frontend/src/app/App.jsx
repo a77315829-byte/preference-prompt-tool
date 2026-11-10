@@ -212,6 +212,7 @@ function App() {
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
               onContinue={handleCategoryContinue}
+              onReactComparison={() => compareForMyself('coding')}
               sceneRequest={sceneRequest}
               onOpenTeams={openTeams}
               onOpenLibrary={() => openLibrary()}

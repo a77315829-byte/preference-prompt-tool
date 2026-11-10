@@ -114,7 +114,7 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
       <p className="ws-help">선택과 작성 내용은 이 탭에 임시 보관돼요. 메뉴를 옮겼다가 돌아와도 이어서 진행할 수 있어요. 로그아웃하면 지워집니다.</p>
       <button className="back-button" type="button" disabled={busy} onClick={onBack}>← 시작 화면으로</button>
       <header className="coding-flow-header"><div><span className="coding-flow-tag">MY CODING PREFERENCE</span>
-        <h2>내가 고르는, 내 코딩 방식.</h2><p>원하는 답변 방식을 직접 고르거나, 코드 예시로 확인해요.<br />비교 횟수를 채울 필요 없이 내 선택을 확인하고 지침을 만들어요.</p></div>
+        <h2>AI 답변 방식 설정</h2><p>설명·주석·코드 구성·출력 방식을 직접 고르거나, 코드 예시로 확인해요.<br />비교 횟수를 채울 필요 없이 내 선택을 확인하고 지침을 만들어요.</p></div>
         <div className="coding-flow-note">내 선택 → 내 프롬프트 → 다음 작업</div>
       </header>
       <ol className="coding-stepper" aria-label="코딩 프롬프트 만들기 단계">

@@ -130,6 +130,21 @@
 .category-selection strong { font-size: 14px; }
 .category-deck .selection-button { width: auto; min-height: 44px; padding: 12px 20px; font-size: 13px; white-space: nowrap; }
 
+.narrative-category-stage .category-selection.has-two-actions { flex-direction: column; align-items: stretch; gap: 8px; }
+.category-selection.has-two-actions > p { flex-direction: row; align-items: center; gap: 10px; }
+.coding-mode-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.category-deck .coding-mode-button {
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+  gap: 5px; width: 100%; min-width: 0; min-height: 70px; padding: 10px 12px;
+  border: 1px solid #d9d0ff; border-radius: 12px;
+  color: #352d59; background: #efeaff; font: inherit; font-size: 13px;
+  text-align: left; white-space: normal; cursor: pointer;
+}
+.category-deck .coding-mode-button.is-react { color: #245d49; border-color: #bfe8d6; background: #e3f6ee; }
+.category-deck .coding-mode-button span { margin: 0; font-weight: 750; }
+.category-deck .coding-mode-button small { font-size: 10px; line-height: 1.4; }
+.category-deck .coding-mode-button:hover { filter: brightness(1.04); }
+
 @media (max-width: 760px) {
   .narrative-intro-scene { padding: 80px 16px 16px; gap: 12px; }
   .narrative-intro-copy h1 { font-size: clamp(25px, min(7vw, 5dvh), 36px); }

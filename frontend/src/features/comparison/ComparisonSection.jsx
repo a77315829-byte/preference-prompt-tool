@@ -66,7 +66,7 @@ function ComparisonSection({
   const isCoding = domainKey === 'coding';
   const hasPastelTheme = isCoding || domainKey === 'summarization' || domainKey === 'summarization_ko';
   const domainCopy = {
-    coding: { eyebrow: 'Coding preference', title: '마음에 드는 쪽을 고르세요.', task: DEFAULT_TASK, label: '만들고 싶은 기능' },
+    coding: { eyebrow: 'React 코드 스타일 비교', title: '마음에 드는 쪽을 고르세요.', task: DEFAULT_TASK, label: '만들고 싶은 기능' },
     review: { eyebrow: 'Review preference', title: '어떤 리뷰가 더 마음에 드나요?', task: 'A ramen restaurant visit: rich broth, long wait, friendly staff.', label: '리뷰로 만들 메모' },
     email: { eyebrow: 'Email preference', title: '어떤 이메일이 더 편한가요?', task: 'Ask the vendor to confirm the Q4 delivery date and share the updated invoice.', label: '이메일로 만들 요청' },
     summarization: { eyebrow: 'Document preference', title: '어떤 요약이 더 편한가요?', task: 'The product team moved the release to Friday after reviewing the final accessibility checklist. Three issues remain unresolved before launch. Dana will review the design changes on Thursday. The team will publish a revised plan after that review. The support team will prepare customer notices. The next status update is scheduled for Friday afternoon.', label: '요약할 원문' },
