@@ -64,6 +64,7 @@ function ComparisonSection({
   user, signupOpen = true, onLogin, onOpenLibrary, onCreateCoding,
 }) {
   const isCoding = domainKey === 'coding';
+  const hasPastelTheme = isCoding || domainKey === 'summarization' || domainKey === 'summarization_ko';
   const domainCopy = {
     coding: { eyebrow: 'Coding preference', title: '마음에 드는 쪽을 고르세요.', task: DEFAULT_TASK, label: '만들고 싶은 기능' },
     review: { eyebrow: 'Review preference', title: '어떤 리뷰가 더 마음에 드나요?', task: 'A ramen restaurant visit: rich broth, long wait, friendly staff.', label: '리뷰로 만들 메모' },
@@ -235,7 +236,7 @@ function ComparisonSection({
   };
 
   return (
-    <section className={`comparison-section preference-comparison ${isCoding ? 'is-coding' : ''} ${isRemote ? `has-session ${isComplete ? 'is-complete' : 'is-choosing'}` : 'is-setup'}`} id="comparison-section">
+    <section className={`comparison-section preference-comparison ${hasPastelTheme ? 'has-pastel-theme' : ''} ${isCoding ? 'is-coding' : ''} ${isRemote ? `has-session ${isComplete ? 'is-complete' : 'is-choosing'}` : 'is-setup'}`} id="comparison-section">
       <div className="comparison-inner">
         <button className="back-button" type="button" onClick={onBack}>
           {teamCode ? '← 팀 안내로 돌아가기' : '← 카테고리 다시 선택'}
