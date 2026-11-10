@@ -204,8 +204,8 @@ export default function CodingInstructionsSection({ user, signupOpen, onLogin, o
         </div>}
       </div>
       {error && <p className="ws-error" role="alert">{error}</p>}
-      <aside className="coding-legacy-entry"><h3>팀과 React 코드 기준을 맞추고 싶나요?</h3>
-        <p>새 지침의 설명·주석·구성·출력은 결과 화면에서 팀 기준과 연결할 수 있어요. 아래 기존 React 비교는 화면 구성·스타일·타입을 비교하는 별도 기록입니다.</p>
+      <aside className="coding-legacy-entry"><h3>React 화면 코드의 스타일을 비교하고 싶나요?</h3>
+        <p>아래에서는 TypeScript/React의 코드 구성·스타일 관리·타입 작성을 비교해요. 위의 설명·주석·구성·출력 네 가지 답변 방식과는 별도의 선택 기록입니다. 두 경로 모두 결과를 저장해 다음 작업에 쓸 수 있어요.</p>
         <button type="button" className="coding-secondary-button" disabled={busy} onClick={onReactComparison}>React 예시 비교로 취향 찾기</button>
       </aside>
     </div>

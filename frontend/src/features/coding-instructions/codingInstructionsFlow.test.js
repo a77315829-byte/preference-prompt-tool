@@ -320,7 +320,7 @@ test('기존 React 비교와 선택 결과를 유지하며 새 환경 카드 화
     assert.equal(document.querySelector('.coding-legacy-entry').tagName, 'ASIDE');
     await ui.click('React 예시 비교로 취향 찾기'); assert.ok(document.querySelector('#coding-task'));
     await ui.click('다른 언어·프레임워크로 지침 만들기'); assert.ok(document.querySelector('.coding-language-buttons'));
-    assert.match(document.querySelector('.coding-legacy-entry').textContent, /기존 React 비교는.*별도 기록/);
+    assert.match(document.querySelector('.coding-legacy-entry').textContent, /TypeScript\/React의 코드 구성·스타일 관리·타입 작성.*네 가지 답변 방식과는 별도의 선택 기록/);
     await ui.click('React 예시 비교로 취향 찾기'); await ui.click('이 내용으로 시작');
     await ui.act(async () => document.querySelector('[aria-label^="예시 A 선택"]').click());
     assert.equal(ui.state.sessions, 1); assert.ok(document.body.textContent.includes('나만의 코딩 프롬프트가 완성됐어요'));

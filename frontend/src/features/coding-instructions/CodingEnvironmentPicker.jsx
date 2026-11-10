@@ -15,7 +15,7 @@ export default function CodingEnvironmentPicker({ profile, frameworkChosen, busy
   };
   return <div className="coding-environment-screen">
     <div className="coding-screen-heading"><span className="coding-kicker">01 · 개발 환경</span>
-      <h3>어떤 환경에서 개발하나요?</h3><p>지금 쓰는 언어와 도구를 눌러 주세요. 다음에는 코드 두 개를 보고 내 방식을 고릅니다.</p></div>
+      <h3>어떤 환경에서 개발하나요?</h3><p>지금 쓰는 언어와 도구를 눌러 주세요. 다음에는 원하는 답변 방식을 직접 고르고, 필요하면 코드 예시로 확인할 수 있어요.</p></div>
     <div className="coding-environment-grid">
       <fieldset className="coding-choice-surface tone-lavender" disabled={busy}>
         <legend>사용할 언어</legend><p>하나를 골라 주세요.</p>
