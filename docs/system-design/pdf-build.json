@@ -1,6 +1,6 @@
 {
-  "pdf": "Revealed_Analysis_Design_v1.0.pdf",
-  "pages": 97,
+  "pdf": "Revealed_Analysis_Design_v1.1.pdf",
+  "pages": 151,
   "chapters": [
     "chapters/00-system-overview.md",
     "chapters/01-analysis.md",
@@ -14,6 +14,6 @@
     "chapters/09-verification.md",
     "chapters/10-appendices.md"
   ],
-  "diagram_count": 21,
-  "sha256": "c97097e4175f5fa12a51a6d4596b0fdf0ad7f6cb5c63e30e0c02506d2fde3fd4"
+  "diagram_count": 77,
+  "sha256": "c298ff5320db63393fc70f1db7f22cd53b536fcf676bf9e4cddd76ea5bb9b942"
 }

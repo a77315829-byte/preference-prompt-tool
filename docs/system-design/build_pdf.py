@@ -14,13 +14,14 @@ from reportlab.platypus import BaseDocTemplate, PageTemplate, Frame, Paragraph, 
 from reportlab.platypus.tableofcontents import TableOfContents
 
 HERE=Path(__file__).resolve().parent
-DEST=HERE/'Revealed_Analysis_Design_v1.0.pdf'
+DEST=HERE/'Revealed_Analysis_Design_v1.1.pdf'
 BASE='https://github.com/a77315829-byte/preference-prompt-tool/blob/codex/system-design-2026-11-12/docs/system-design/'
 pdfmetrics.registerFont(TTFont('Malgun','C:/Windows/Fonts/malgun.ttf'))
 pdfmetrics.registerFont(TTFont('MalgunBold','C:/Windows/Fonts/malgunbd.ttf'))
 pdfmetrics.registerFontFamily('Malgun',normal='Malgun',bold='MalgunBold',italic='Malgun',boldItalic='MalgunBold')
 INK=colors.HexColor('#20314c');MUTED=colors.HexColor('#556579');ACCENT=colors.HexColor('#5864a6')
-BODY=ParagraphStyle('Body',fontName='Malgun',fontSize=9.7,leading=15.5,textColor=INK,spaceAfter=9,wordWrap='CJK',splitLongWords=True)
+BODY=ParagraphStyle('Body',fontName='Malgun',fontSize=9.7,leading=15.5,textColor=INK,spaceAfter=9,wordWrap='CJK',splitLongWords=True,allowWidows=0,allowOrphans=0)
+RULES=ParagraphStyle('Rules',parent=BODY,fontSize=9.2,leading=14,spaceAfter=6)
 H1=ParagraphStyle('Chapter',parent=BODY,fontName='MalgunBold',fontSize=20,leading=28,spaceAfter=18,keepWithNext=True)
 H2=ParagraphStyle('Section',parent=BODY,fontName='MalgunBold',fontSize=12.5,leading=20,spaceBefore=14,spaceAfter=8,keepWithNext=True)
 UC=ParagraphStyle('Section',parent=H2,spaceBefore=10)
@@ -45,7 +46,7 @@ def inline(source, parent=HERE):
 def footer(c,doc):
     c.saveState();c.setStrokeColor(colors.HexColor('#d4dbe5'))
     c.line(46,43,A4[0]-46,43);c.setFillColor(MUTED);c.setFont('Malgun',8)
-    c.drawString(46,28,'Revealed  |  전체 분석·설계서 v1.0  |  2026-11-12')
+    c.drawString(46,28,'Revealed  |  전체 분석·설계서 v1.1  |  2026-11-13')
     c.drawRightString(A4[0]-46,28,str(doc.page));c.restoreState()
 
 class Report(BaseDocTemplate):
@@ -85,10 +86,13 @@ def table(lines,parent):
     return t
 
 def append_chapter(story,path):
-    lines=path.read_text(encoding='utf-8').splitlines();i=0
+    lines=path.read_text(encoding='utf-8').splitlines();i=0;detail_rules=False
     while i<len(lines):
         line=lines[i].strip()
         if not line:i+=1;continue
+        if line.startswith('#'):detail_rules=line=='### 입력·상태·업무 규칙 상세'
+        if line=='<!-- pagebreak -->':
+            story.append(PageBreak());i+=1;continue
         if line.startswith('# '):
             story.extend([PageBreak(),Paragraph(inline(line[2:],path.parent),H1)]);i+=1;continue
         if line.startswith('## '):
@@ -120,9 +124,9 @@ def append_chapter(story,path):
         if line.startswith('- '):
             story.append(Paragraph('• '+inline(line[2:],path.parent),BODY));i+=1;continue
         para=[line];i+=1
-        while i<len(lines) and lines[i].strip() and not lines[i].startswith(('#','|','![','- ')):
+        while i<len(lines) and lines[i].strip() and not lines[i].startswith(('#','|','![','- ','<!--')):
             para.append(lines[i].strip());i+=1
-        story.append(Paragraph(inline(' '.join(para),path.parent),BODY))
+        story.append(Paragraph(inline(' '.join(para),path.parent),RULES if detail_rules else BODY))
 
 def build():
     doc=Report(str(DEST),pagesize=A4,leftMargin=46,rightMargin=46,topMargin=48,bottomMargin=57,title='Revealed 전체 분석·설계서',author='Revealed',allowSplitting=True)
@@ -130,9 +134,9 @@ def build():
     doc.addPageTemplates(PageTemplate(id='report',frames=frame,onPage=footer))
     story=[Spacer(1,60),Paragraph('Revealed',ParagraphStyle('Brand',parent=TITLE,textColor=ACCENT,fontSize=38)),
            Paragraph('전체 분석·설계서',TITLE),Paragraph('조건 선택 · 지침 재사용 · 결과 검증',H2),Spacer(1,30),
-           Paragraph('AI/SW융합프로젝트<br/>윤정우 · 고차원<br/>기준일 2026년 11월 12일 · v1.0',BODY),Spacer(1,30),
+           Paragraph('AI/SW융합프로젝트<br/>윤정우 · 고차원<br/>문서 수정일 2026년 11월 13일 · v1.1',BODY),Spacer(1,30),
            Paragraph('문제·요구사항에서 유즈케이스, 화면, 처리 흐름, 구성요소, API, 데이터, 운영, 검증까지 이어지는 전체 시스템 명세입니다. 주간보고 내용은 마지막 부록에 두었습니다.',BODY),
-           Paragraph('24개 유즈케이스 · 18개 논리 화면 · 90개 GET/POST API<br/>16개 테이블 · 21개 그림 · 독립 보조 에이전트 검증',BODY),
+           Paragraph('상위 24개·하위 79개 유즈케이스 · 기능별 명세·처리 흐름<br/>18개 논리 화면 · 90개 GET/POST API · 16개 테이블<br/>WBS 5단계·16개 작업과 연결 · 기존 검증 결과와 한계 수록',BODY),
            Paragraph('구현한 기능, 검사로 확인한 결과, 보완할 부분과 사람의 미측정 효과를 구분합니다. 문서 공개는 앱 배포를 의미하지 않습니다.',CAP),
            PageBreak(),Paragraph('목차',H1)]
     toc=TableOfContents();toc.levelStyles=[ParagraphStyle('TOC',parent=BODY,fontSize=11,leading=22,spaceBefore=9)]
@@ -144,8 +148,8 @@ def build():
     from pypdf import PdfReader
     pages=len(PdfReader(DEST).pages)
     result={'pdf':DEST.name,'pages':pages,'chapters':[p.relative_to(HERE).as_posix() for p in chapters],
-            'diagram_count':len(list((HERE/'diagrams').glob('*.png'))),'sha256':hashlib.sha256(DEST.read_bytes()).hexdigest()}
-    (HERE/'pdf-build.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            'diagram_count':len(set(re.findall(r'!\[[^]]*\]\(([^)]+)\)', '\n'.join(p.read_text(encoding='utf-8') for p in chapters)))),'sha256':hashlib.sha256(DEST.read_bytes()).hexdigest()}
+    (HERE/'pdf-build.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(result,ensure_ascii=False))
 
 if __name__=='__main__':build()

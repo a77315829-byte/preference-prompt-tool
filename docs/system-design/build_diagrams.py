@@ -93,23 +93,8 @@ def end(slug):
 
 
 def usecases():
-    s=begin('01-usecases','전체 유즈케이스','액터의 참여 관계와 로그인 사전조건을 구분한다.')
-    c.setStrokeColor(LINE);c.rect(153,H-90-454,505,454,stroke=1,fill=0)
-    text(405,116,'Revealed 서비스',16,True,True)
-    actor(63,158,'방문자');actor(63,424,'회원');actor(750,222,'외부 모델\n서비스')
-    line((63,412),(63,263),triangle=True)
-    text(75,343,'일반화',11)
-    for y,label in [(137,'UC-S 요약 조건 확인'),(204,'UC-C AI 답변 방식 설정'),(271,'UC-R React 스타일 비교')]:
-        ellipse(205,y,255,47,label);line((85,191),(205,y+23))
-    for y,label in [(353,'UC-P 지침 보관·재사용'),(416,'UC-T 팀 기준·조합'),(479,'UC-H 작업 인수인계')]:
-        ellipse(205,y,255,47,label);line((85,457),(205,y+23))
-    ellipse(478,353,160,55,'UC-G 선택적 개선')
-    for a,b in zip([(85,457),(130,457),(130,561),(674,561),(674,380)],[(130,457),(130,561),(674,561),(674,380),(638,380)]):line(a,b)
-    line((730,255),(638,380))
-    line((730,255),(460,294));line((730,255),(460,160))
-    text(617,197,'실제 후보 생성',11,False,True)
-    text(545,450,'저장·공유·개선은\n로그인과 권한 필요\n복사 후 외부 AI 사용은\n서비스 밖의 사용자 작업',12,False,True)
-    end(s)
+    from build_usecase_details import overview
+    overview()
 
 
 def architecture():
@@ -117,7 +102,7 @@ def architecture():
     box(230,90,360,65,'React / Vite','시작 · 비교 · 보관함 · 팀 · 인수인계')
     line((410,155),(410,194),arrow=True);text(430,179,'JSON / 세션 쿠키',12)
     box(230,194,360,65,'ApiHandler / http.server','hosting_server: API + 정적 빌드 제공')
-    for x,title,body in [(25,'조건 조립·확인','summary_contracts\ncoding_instructions'),(220,'비교 서비스','service / engine\ndomains / checks'),(415,'개선 작업','CodingOptimizationJobs\nGEPA / 환경별 평가'),(610,'인증·저장소','Auth / Prompt / Team\nHandoff / Workspace')]:
+    for x,title,body in [(25,'조건 조립·확인','summary_contracts_v2\ncoding_instructions'),(220,'비교 서비스','service / engine\ndomains / checks'),(415,'개선 작업','CodingOptimizationJobs\nGEPA / 환경별 평가'),(610,'인증·저장소','Auth / Prompt / Team\nHandoff / Workspace')]:
         box(x,320,180,112,title,body);line((410,259),(x+90,320),arrow=True)
     box(25,490,180,60,'모델 호출 없음','검증된 조건 → 지침',TEAL)
     box(277,490,206,60,'외부 모델 API','실제 생성·개선 시 호출',TEAL)
@@ -148,7 +133,7 @@ def classes():
 def sequence():
     s=begin('04-summary-sequence','요약 조건 확인 시퀀스','명시한 충돌을 해결하기 전에는 새 작업용 지침을 반환하지 않는다.')
     xs=[90,280,495,715]
-    for x,title in zip(xs,['사용자','요약 조건 화면','ApiHandler','summary_contracts']):
+    for x,title in zip(xs,['사용자','요약 조건 화면','ApiHandler','summary_contracts_v2']):
         box(x-80,95,160,48,title);line((x,143),(x,550),dashed=True)
     events=[(0,1,173,'원문·보존 문장·조건 선택'),(1,2,213,'POST /api/summary-contract'),(2,3,253,'입력·원문·문장 수 확인'),(3,2,293,'needs_resolution'),(2,1,333,'충돌 정보 / prompts={}'),(0,1,380,'해결 방식 선택'),(1,2,420,'같은 요청 + resolution'),(2,3,460,'검증 후 적용 조건 조립'),(3,2,500,'ready / 지침·작업용 요청'),(2,1,540,'원래 조건·적용 조건·지침')]
     for a,b,y,label in events:

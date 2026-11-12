@@ -10,7 +10,7 @@
 | HTTP | `api_server.ApiHandler` | HTTP / JSON·첨부 바이너리 | 경로 분기, 쿠키 인증, 입력 크기, 오류 상태, 사용량 차감. 학습 모델을 직접 구현하지 않는다. |
 | 비교 서비스 | `service.py` | 원문·도메인·선택 이력 / `SessionState` | 엔진 재구성, 후보 확보, 종료 판단, 최종 지침·개선 연결. 계정 저장소가 아니다. |
 | 도메인 독립 엔진 | `engine/` | `Domain`, 조합·비교 / 추정치·쌍·문구 | 축과 값의 일반 연산. 요약·코딩이라는 도메인 이름으로 분기하지 않는다. |
-| 별도 제품 기능 | `summary_contracts.py`, `coding_instructions.py`, `coding_elicitation.py` | 명시 조건 / 검증한 지침·선택 기록 | 새 조건 확인·직접 설정 경로. 기존 엔진의 추정 결과와 섞지 않는다. |
+| 별도 제품 기능 | `summary_contracts_v2.py`, `summary_input_policy.py`, `coding_instructions.py`, `coding_elicitation.py` | 명시 조건 / 검증한 지침·선택 기록 | 현행 조건 확인·직접 설정 경로. 과거 summary_contracts.py와 실험 결과는 보존한다. |
 | 영속 저장 | `Database`, 각 Store | 로그인 사용자 ID·명령 / 소유권 있는 자료 | 트랜잭션, revision, 이력, 상한. 쿠키 자체는 HTTP 계층에서 읽는다. |
 | 외부 생성 | `engine.generator`, GEPA 관련 모듈 | 지침·작업 / 캐시된 모델 답변 | 서버가 고른 모델만 사용. 실제 호출 활성화·사용량 조건을 따른다. |
 | 연구 검증 | `benchmarks/` | 고정 과제·첫 응답 / 검사·판정 | 제품 서버와 분리한 실험. 연구 실행 결과를 운영의 자동 기능으로 표현하지 않는다. |
@@ -87,11 +87,11 @@
 |---|---|---|
 | 프로필 검증 | length, extractiveness, 선택 topic | 허용 값과 길이를 검증한 original_profile |
 | 원문 검증 | 1~12,000자, 선택 문장 최대 8개 | available_sentences, required_sentences |
-| 충돌 판정 | fully 발췌이며 선택 문장 수가 분량 상한 초과 | conflict와 needs_resolution; prompts와 task_requests는 빈 객체 |
-| 해결 선택 | expand / rephrase / keep_limits | 선택한 조건만 바꾼 effective_profile·안내 |
+| 충돌 판정 | fully 발췌이며 선택 문장 상한 초과 또는 원문 문장 하한 부족 | 종류별 conflict와 needs_resolution; 지침과 작업 요청은 비움 |
+| 해결 선택 | 상한: expand / rephrase / keep_limits; 하한: 가능한 shorten / rephrase | available_resolutions로 허용값 제한, 선택한 조건만 바꾼 effective_profile |
 | 지침 조립 | 해결 조건·언어 | 원문 없는 prompts와 원문을 포함한 task_requests |
 
-기본 resolution은 preserve다. 충돌이 없는 요청에 임의 resolution을 보내면 400으로 거절한다. expand는 선택 문장 수에 맞춰 normal 또는 long으로 분량만 늘린다. rephrase는 길이를 유지하며 extractiveness를 normal로 바꾼다. keep_limits는 기존 길이·발췌를 유지하고 고른 내용 일부 생략을 허용한다. 이 상태를 전체 보존으로 표현하지 않는다.
+현행 함수는 summary_contracts_v2.py에 있다. 과거 모듈의 프로필·문장 검증을 재사용하되 v2 결과를 조립한다. 기본 resolution은 preserve다. 충돌에 맞지 않는 해결값은 400이다. expand/shorten은 원문과 선택 문장을 담을 수 있는 분량 단계로 조정하며 사용 가능한 원문 문장이 0개면 shorten을 제공하지 않는다. rephrase는 길이를 유지하며 extractiveness를 normal로 바꾼다. keep_limits는 기존 길이·발췌를 유지하고 일부 생략을 허용하므로 전체 보존으로 표현하지 않는다.
 
 이 모듈의 ready는 규칙상 작업 요청을 만들 수 있다는 뜻이다. 생성될 요약이 옳다는 품질 판정이 아니다. 문장 속 대명사·인용에 필요한 맥락이나 의미상 압축 가능성은 별도 확인 대상이다.
 
