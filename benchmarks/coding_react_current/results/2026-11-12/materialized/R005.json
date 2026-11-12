@@ -1,0 +1,17 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useEffect, useState } from 'react';\n\nexport type Item = { id: string; label: string };\nexport type Props = { items: Item[]; pageSize: number };\n\nexport function Component({ items, pageSize }: Props) {\n  const [page, setPage] = useState(1);\n  const total = Math.max(1, Math.ceil(items.length / pageSize));\nconst current = Math.min(page, total);\n\nuseEffect(() => {\n  setPage(previous => Math.min(previous, total));\n}, [total]);\n  const visible = items.slice((current - 1) * pageSize, current * pageSize);\n  return <section aria-label=\"Review queue\">\n    <ul aria-label=\"Queue items\">{visible.map(item => <li key={item.id}>{item.label}</li>)}</ul>\n    {items.length === 0 && <p role=\"status\">No items</p>}\n    <output aria-label=\"Page\">{current} / {total}</output>\n    <button type=\"button\" disabled={current === 1} onClick={() => setPage(current - 1)}>Previous</button>\n    <button type=\"button\" disabled={current === total} onClick={() => setPage(current + 1)}>Next</button>\n  </section>;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_span",
+      "block": 0,
+      "reason": "답변 첫 문장: \"Component.tsx에서 `const current = page;`와 비어 있는 `useEffect`를 다음 코드로 교체하세요. 나머지 코드는 그대로 둡니다.\" 지목한 연속 두 선언 전체를 교체한다.",
+      "anchor": "  const current = page;\n  useEffect(() => {}, [total]);\n",
+      "answer_start": 99,
+      "answer_end": 220
+    }
+  ]
+}

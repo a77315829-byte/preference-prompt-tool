@@ -1,0 +1,7 @@
+{
+  "dotenv_disabled": true,
+  "model_credentials_removed": true,
+  "model_live_flags_disabled": true,
+  "database": "C:\\Users\\Laptop_PC\\preference-prompt-tool\\tmp\\integration-20261112\\regression-import.db",
+  "non_loopback_denials": []
+}

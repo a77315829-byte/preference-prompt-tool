@@ -17,9 +17,7 @@ A/B 비교 데모로 쓸 만하다.
 
 from __future__ import annotations
 
-import re
-
-_SENT_SPLIT_RE = re.compile(r"(?<=[.!?。])\s+")
+from checks.summarization_grounded_v3 import split_sentences
 
 # 축 값별 목표 문장 수. domains/summarization_ko.yaml 의 length 임계값과
 # 맞춘다 (short: 2 이하, normal: 3~4, long: 5 이상).
@@ -38,10 +36,7 @@ _COPULA_ENDINGS = ("이라고 밝혔다", "라고 밝혔다", "이라고 말했�
 
 
 def _sentences(text: str) -> list[str]:
-    normalized = re.sub(r"\s+", " ", text.strip())
-    if not normalized:
-        return []
-    return [part.strip() for part in _SENT_SPLIT_RE.split(normalized) if part.strip()]
+    return split_sentences(text)
 
 
 def _strip_final_punctuation(sentence: str) -> str:

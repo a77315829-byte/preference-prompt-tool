@@ -1,0 +1,77 @@
+{
+  "scope": "Deterministic software contracts only; not human preference accuracy, convenience, satisfaction, or live AI output.",
+  "expected_head": "def4d7cf3bb32d40770e70e91205a6ee7a708eb2",
+  "source_sha256": {
+    "coding_instructions.py": "1fcd6f0e5e604ab538b28106f2f86b4b6d27848a384017145c98c36dfe2c1aa0",
+    "coding_elicitation.py": "71b4a4044e55e8380ac98643de1a5b0880e7eb34b201a66b774f3a119770bff0",
+    "coding_examples.py": "9800c0a246f3f7a62603af75c3d6df46edee06de12295f36bf935a0c8774e7b6",
+    "coding_framework_examples.py": "8211a2656ae5c4e5c239374f837cdb921a24c5145a9ba152de0431d6a678da99",
+    "personal_prompts.py": "d0d77426d3901162a2f23ca3fdca20b7adbdaea5dcbe6c118db5d5147311d140",
+    "coding_work_exports.py": "24d4e1c968e76080270d5443325fd1d9173f3cc7af5c811a062b9714eb7611d4",
+    "exporters.py": "7e736ed403be3e69c553d9f6d222ef89ccbfa19d48cc844deaba9fc12d8ed1f1"
+  },
+  "counts": {
+    "route_equivalence": {
+      "passed": 240,
+      "failed": 0
+    },
+    "save_reopen_task_separation": {
+      "passed": 240,
+      "failed": 0
+    },
+    "one_axis_change_new_save": {
+      "passed": 960,
+      "failed": 0
+    },
+    "exports_preserve_original": {
+      "passed": 1200,
+      "failed": 0
+    },
+    "source_stability": {
+      "passed": 160,
+      "failed": 0
+    },
+    "cross_environment_source_rejected": {
+      "passed": 20,
+      "failed": 0
+    }
+  },
+  "failures": [],
+  "environments": [
+    [
+      "Python",
+      "FastAPI",
+      "framework"
+    ],
+    [
+      "JavaScript",
+      "React",
+      "language"
+    ],
+    [
+      "TypeScript",
+      "React",
+      "language"
+    ],
+    [
+      "Python",
+      "Flask",
+      "language"
+    ],
+    [
+      "Java",
+      "Spring Boot",
+      "framework"
+    ]
+  ],
+  "db": "C:\\Users\\Laptop_PC\\preference-prompt-tool\\tmp\\preference-reuse-audit-20261110\\run-20261110T041235176118Z\\audit.db",
+  "source_sha256_after": {
+    "coding_instructions.py": "1fcd6f0e5e604ab538b28106f2f86b4b6d27848a384017145c98c36dfe2c1aa0",
+    "coding_elicitation.py": "71b4a4044e55e8380ac98643de1a5b0880e7eb34b201a66b774f3a119770bff0",
+    "coding_examples.py": "9800c0a246f3f7a62603af75c3d6df46edee06de12295f36bf935a0c8774e7b6",
+    "coding_framework_examples.py": "8211a2656ae5c4e5c239374f837cdb921a24c5145a9ba152de0431d6a678da99",
+    "personal_prompts.py": "d0d77426d3901162a2f23ca3fdca20b7adbdaea5dcbe6c118db5d5147311d140",
+    "coding_work_exports.py": "24d4e1c968e76080270d5443325fd1d9173f3cc7af5c811a062b9714eb7611d4",
+    "exporters.py": "7e736ed403be3e69c553d9f6d222ef89ccbfa19d48cc844deaba9fc12d8ed1f1"
+  }
+}

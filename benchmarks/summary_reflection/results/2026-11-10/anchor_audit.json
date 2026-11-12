@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "audit_utc": "2026-11-10T06:43:42Z",
+  "stage": "Independent source-only final-anchor review before final freeze",
+  "reviewer": "reflection_protocol_audit",
+  "scope": "Reviewed all 18 final articles and all 54 proposed anchors for centrality, atomicity, source support, attribution, uncertainty, incidental bundles and overlap. This is an AI-assisted annotation audit, not a human gold standard or output evaluation.",
+  "inputs_reviewed": [
+    {
+      "path": "benchmarks/summary_reflection/results/2026-11-10/final/cases.json",
+      "sha256": "1d0f43651843f49f6cff9e526bce043c87e77d8f57ad4febd098958e104f11c4"
+    },
+    {
+      "path": "benchmarks/summary_reflection/results/2026-11-10/final/facts.json",
+      "sha256": "81d5120d84d253074e72df13e3731b9883362964ccdfdce006570cfc7f3cf3d6"
+    },
+    {
+      "path": "benchmarks/summary_reflection/results/2026-11-10/annotation_limits.json",
+      "sha256": "031a9d0a8f11a66b47bb25d6e8a878d4ba9579b300db87ade0b7921f0ab1e39f"
+    }
+  ],
+  "context_disclosure": "This reviewer previously audited CLAUDE.md, the experiment runner and rubric, the prior evaluator implementation, and service/coding optimization code. It did not read candidate/proposal content, generation prompts, generated summaries, selection reviews, or output results. For this anchor task it read only the three listed annotation inputs. The annotation-limits file contains a selection-case limitation; selection source cases were not independently audited in this task.",
+  "must_fix_errors": [],
+  "overall_finding": "No definite source-support error, opinion promoted to established fact, or incidental-detail bundle requiring a fact edit was found. The selected anchors are defensible central propositions. Two interpretation limitations should accompany their use.",
+  "issues": [
+    {
+      "case_id": "T14",
+      "fact_ids": ["F1", "F2"],
+      "severity": "interpretation_limit",
+      "category": "partially_overlapping_uncertainty",
+      "finding": "F1 reports an investigation of a possible threat; F2 separately emphasizes uncertainty about a real plot versus an aspiration. Both are supported and can be distinguished, but F2 elaborates uncertainty already embedded in F1. They are correlated propositions rather than independent evidence units.",
+      "recommendation": "Retain the source-grounded anchors if using the declared fixed-anchor design, and disclose their partial overlap. Do not interpret the 54 anchor judgments as 54 independent factual trials. This audit does not introduce a new lexical requirement for paraphrases or change the rubric."
+    },
+    {
+      "case_id": "T08",
+      "fact_ids": ["F1", "F2", "F3"],
+      "severity": "feasibility_ambiguity",
+      "category": "short_fully_extractive_tradeoff",
+      "finding": "A two-sentence extraction can combine the sentence about the final runway appearance and Facebook emotions with the sentence about continuing other fashion work. However, the Facebook sentence explicitly reports support and emotions, while F2 specifically requires public praise. The direct praise appears in separate quoted sentences. Whether the two-sentence version preserves F2 therefore depends on a reasonable-entailment judgment; complete three-anchor feasibility is not assured.",
+      "recommendation": "Record this as a borderline format/content tradeoff alongside the existing feasibility limitations. Do not promise that all three anchors can unambiguously be preserved in every one- or two-sentence full extraction. No fact edit is required by this audit."
+    }
+  ],
+  "case_reviews": [
+    {"case_id": "T01", "fact_ids": ["F1", "F2", "F3"], "finding": "Recovery, detention and injury are distinct central outcomes; no broader seizure motive is asserted."},
+    {"case_id": "T02", "fact_ids": ["F1", "F2", "F3"], "finding": "The final victory, 17-match streak and first opening-three-Masters achievement are distinct supported claims, despite shared evidence for two anchors."},
+    {"case_id": "T03", "fact_ids": ["F1", "F2", "F3"], "finding": "The sentence, admitted accounting misconduct and subsequent acquisition are supported; omitted fine and auction mechanics are appropriately incidental."},
+    {"case_id": "T04", "fact_ids": ["F1", "F2", "F3"], "finding": "The photographic project, shared leave entitlement and attributed limited equal uptake are supported; the historical policy statement is confined to the source's period."},
+    {"case_id": "T05", "fact_ids": ["F1", "F2", "F3"], "finding": "The shared lower bound avoids conflicting precise release counts; composition and unknown motive are separate supported propositions."},
+    {"case_id": "T06", "fact_ids": ["F1", "F2", "F3"], "finding": "The charge remains a charge, alleged conduct is attributed to police, and unspecified treatment is not assigned a diagnosis or cause."},
+    {"case_id": "T07", "fact_ids": ["F1", "F2", "F3"], "finding": "The revised probable chronology, its witness-based rationale and the unresolved exact dates are supported. These related propositions are not independent factual trials."},
+    {"case_id": "T08", "fact_ids": ["F1", "F2", "F3"], "finding": "Runway retirement, Brady's Facebook praise and continuing other fashion work are supported; see the short fully-extractive feasibility ambiguity."},
+    {"case_id": "T09", "fact_ids": ["F1", "F2", "F3"], "finding": "Main evidence collection does not become completion of all analysis; the casualty count and attributed deliberate-causation account are supported."},
+    {"case_id": "T10", "fact_ids": ["F1", "F2", "F3"], "finding": "The candidacy and immigration-bill retreat are supported; limited Latino appeal is correctly framed as the article's argument."},
+    {"case_id": "T11", "fact_ids": ["F1", "F2", "F3"], "finding": "The last-known-male subspecies scope, unsuccessful conception and exploratory assisted reproduction are preserved without claiming a successful rescue."},
+    {"case_id": "T12", "fact_ids": ["F1", "F2", "F3"], "finding": "The encounter, ongoing normalization and pending designation decision are supported. Meeting and shaking hands describe one central encounter, not an incidental bundle."},
+    {"case_id": "T13", "fact_ids": ["F1", "F2", "F3"], "finding": "The family-attributed death, failed evacuation and temporally limited State Department position are supported. The uncertain first-U.S.-citizen claim is correctly excluded."},
+    {"case_id": "T14", "fact_ids": ["F1", "F2", "F3"], "finding": "The investigation, real-versus-aspirational uncertainty and precautionary security response are supported; see the partial uncertainty overlap."},
+    {"case_id": "T15", "fact_ids": ["F1", "F2", "F3"], "finding": "The victory, Rosberg's complaint and Hamilton's denial are distinct supported claims. The complaint is not converted to proven intent."},
+    {"case_id": "T16", "fact_ids": ["F1", "F2", "F3"], "finding": "Domestic and worldwide figures remain projections with distinct scopes; Walker's final-film context is supported. No unrelated date typo is made an anchor."},
+    {"case_id": "T17", "fact_ids": ["F1", "F2", "F3"], "finding": "Suspected pesticide causation, the sons' critical status and preliminary chemical detection are distinct and supported. Detection is not equated with proved causation or liability."},
+    {"case_id": "T18", "fact_ids": ["F1", "F2", "F3"], "finding": "The organization's death confirmation is attributed; the core-organization assessment and the Yemen-affiliate qualification remain the article's claims."}
+  ],
+  "limitations": [
+    "Centrality is judgmental: three selected propositions cannot exhaust each article or define a denominator for all retained content.",
+    "Shared sentences may support different propositions; this is not necessarily double counting, but anchor outcomes within an article are correlated.",
+    "The audit checks fidelity to supplied historical articles, not present-day truth or external verification.",
+    "Opinion attribution, uncertainty and format feasibility still require careful output review; this audit provides no output judgments.",
+    "No candidate instructions, generated summaries, external information or paid model APIs informed these findings. Facts were not modified."
+  ]
+}

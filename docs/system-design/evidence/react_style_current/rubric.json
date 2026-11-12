@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "axes": ["code_structure", "style_management", "type_detail"],
+  "basis": "The actual English final instructions of domains/coding.yaml. Match the selected target, not generic quality. Functional and compiler results are separate and hidden from reviewers.",
+  "code_structure": {
+    "compact": "The small feature keeps component, state logic and styles in one supplied source file. Count actual required files including CSS, not markdown fences. Necessary local helpers do not violate compact. A single file with omitted dependencies does not pass merely because only one file is shown.",
+    "separated": "Component, state logic and styles are separated across files by meaningful responsibility. A pure state/logic helper or style module is sufficient when other work is trivial; require a real connected boundary, not two arbitrary files, empty modules or a needless type-only file. All needed filenames and complete contents must be present. Do not require unnecessary subcomponents. English says component/state/styles while Korean says style OR state; this study uses English and does not invent a fixed three-file quota. If meaningful nontrivial state responsibility remains in the UI and only styles are split, record that ambiguity and explain your verdict rather than silently treating any two files as sufficient."
+  },
+  "style_management": {
+    "direct": "Concrete required design values are written directly where component or style rules use them. A CSSProperties object containing padding/color/background is a direct style rule, not automatically a theme. Separate ordinary CSS/style files remain direct. Semantic design tokens referenced from rules do not match direct.",
+    "theme": "The required colors/spacing are centralized as theme/design-token values and referenced by the relevant styling rules/component. A variable named theme alone does not prove this. A style object with literal CSS property values used directly is not necessarily a token layer. Same-file tokens are valid under compact; separate token files are not mandatory. CSS custom properties with references are valid. Inspect data flow and consistent use of the requested values."
+  },
+  "type_detail": {
+    "inferred": "Uses inference for clearly inferable local scalar values and simple return values; public Props boundaries may be annotated. The identical common task contract explicitly allows necessary annotations for non-inferable empty/null/union state or CSS literal widening to preserve strict functional compatibility despite the English preference's 'only public boundaries' wording. Does not needlessly repeat primitive state generics or simple local return annotations. Do not confuse successful strict typechecking with this preference.",
+    "explicit": "Explicitly annotates props, meaningful function parameters and return values, state and principal data structures. Inspect the component and declared helpers/event handlers and state declarations; contextual typing alone is not evidence of an explicit annotation. Do not demand redundant annotations on every intermediate expression. If only concise inline callbacks rely on contextual typing while primary functions/state are annotated, record the interpretation in ambiguities rather than inventing a numerical threshold."
+  },
+  "supporting_observations": "Separately record missing stated design values, incomplete file delivery, or common output-language/order concerns. The three-axis score is not a certification of every possible instruction. For source-fact counts, use only as evidence, not numerical semantic quality cutoffs except the actual compact one-file request.",
+  "review_policy": "Read only CLAUDE.md, rubric and blind packet. Each dimension gets bool match, exact answer_quotes and concrete reason. For absent obligation an empty quote list is allowed with explanation. Record uncertainty in ambiguities; preserve two independent first judgments. Do not count runtime bugs twice as style unless independently relevant. Never infer humans' preferences or satisfaction from AI judgments.",
+  "execution_claims": "Generators may not execute code. Record any unqualified claim that tests/build/typechecks were run or passed separately with exact quote+reason. Proposed checks/conditional expectations are not execution claims.",
+  "review_schema": {
+    "output_id": "S001",
+    "dimensions": {
+      "code_structure": {"match": true, "answer_quotes": ["exact excerpt"], "reason": "reason"},
+      "style_management": {"match": true, "answer_quotes": ["exact excerpt"], "reason": "reason"},
+      "type_detail": {"match": true, "answer_quotes": ["exact excerpt"], "reason": "reason"}
+    },
+    "other_observations": [],
+    "unsupported_execution_claims": [],
+    "ambiguities": []
+  }
+}

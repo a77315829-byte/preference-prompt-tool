@@ -1,0 +1,36 @@
+Independent audit of commit 4078021, adaptive selection flow
+Production code read only; no production diff after audit.
+No confirmed functional defect found in the independently exercised scenarios.
+
+Commands and results:
+1. .venv/Scripts/python.exe -B tmp/adaptive-audit-20261109-a/fixture.py
+   PASS: generated the actual Python/FastAPI adaptive example bank.
+2. node tmp/adaptive-audit-20261109-a/flow-audit.mjs
+   PASS: actual App + appHarness for all 1-through-8 comparison prefixes.
+   PASS: mixed explanation, skipped comments, consistent structure/output remain distinct.
+   PASS: menu navigation restores the seventh comparison after six answers.
+   PASS: changing answer two truncates six answers to two.
+   PASS: cancel preserves previous committed profile and generated prompt.
+   PASS: explicit compare re-entry starts with no selected response.
+3. .venv/Scripts/python.exe -B tmp/adaptive-audit-20261109-a/fixture.py validate
+   PASS: real backend accepts all 10 UI-produced profiles, exactly matches their
+   evidence summaries, and round-trips each generated profile identically.
+4. .venv/Scripts/python.exe -B tmp/adaptive-audit-20261109-a/summary-audit.py
+   PASS: exhaustive a/b/tie choice trees for summarization and summarization_ko.
+   450 completed paths, 1350 last-answer replacements after undo, including
+   96 replacements which correctly reopen comparisons for additional questions.
+   Completion reason, no dangling pair, round ceiling restoration, previous pair
+   identity, clearing prompt/completion state and same-choice replay were checked.
+   Socket connections and .env access were blocked by a Python audit hook.
+
+Reviewed implementation locations:
+frontend/src/features/coding-instructions/CodingExampleComparison.jsx:22,30
+frontend/src/features/coding-instructions/CodingInstructionsSection.jsx:80,83
+service.py:436,445,471,475
+
+Scope limitations:
+JSDOM exercises actual React state/render flow with HTTP mocked. Backend examples,
+profile validation and summary service/selector/estimator are real. This is not a
+full browser visual/accessibility audit, deployed-server test or paid-model test.
+No new dependencies, .env/key reads, paid APIs, remote network, git mutations,
+production changes or sibling-agent artifact inspection were performed.

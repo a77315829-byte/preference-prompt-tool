@@ -1,0 +1,62 @@
+{
+  "by_reviewer": {
+    "a": {
+      "current": {
+        "outputs": 6,
+        "length_pass": 6,
+        "wording_pass": 6,
+        "joint_pass": 6,
+        "facts_preserved": 16,
+        "facts_total": 18,
+        "factual_issue_outputs": 0
+      },
+      "candidate": {
+        "outputs": 6,
+        "length_pass": 6,
+        "wording_pass": 6,
+        "joint_pass": 6,
+        "facts_preserved": 15,
+        "facts_total": 18,
+        "factual_issue_outputs": 0
+      }
+    },
+    "b": {
+      "current": {
+        "outputs": 6,
+        "length_pass": 6,
+        "wording_pass": 6,
+        "joint_pass": 6,
+        "facts_preserved": 16,
+        "facts_total": 18,
+        "factual_issue_outputs": 0
+      },
+      "candidate": {
+        "outputs": 6,
+        "length_pass": 6,
+        "wording_pass": 6,
+        "joint_pass": 6,
+        "facts_preserved": 15,
+        "facts_total": 18,
+        "factual_issue_outputs": 0
+      }
+    }
+  },
+  "paired_document_coverage": {
+    "a": {
+      "current": {
+        "wins": 0,
+        "ties": 5,
+        "losses": 1
+      }
+    },
+    "b": {
+      "current": {
+        "wins": 0,
+        "ties": 5,
+        "losses": 1
+      }
+    }
+  },
+  "disagreements": [],
+  "all_factual_flag_ids": []
+}

@@ -2,10 +2,10 @@
 
 Streamlit 을 import 하지 않는다 (`service.py`, `exporters.py` 와 같은 층).
 
-프롬프트를 모아 두는 공간은 이미 많다. 여기 템플릿의 차이는 "내 방식으로
-바꾸기"가 붙는다는 것 하나다 - 템플릿의 도메인으로 비교를 돌리고, 결과는
-템플릿 본문 + 추정한 선호 절이다 (`engine.generator.build_template_prompt`).
-그래서 각 템플릿은 비교를 돌릴 도메인을 반드시 갖는다.
+선택 비교를 지원하는 템플릿은 본문 + 추정한 선호 절로 조립한다
+(`engine.generator.build_template_prompt`). 업무 양식 초안은
+personalizable=False로 두고 확인·복사·요청문 점검만 제공한다.
+domain은 관련 분야를 가리키며, 그 도메인의 선택 비교 지원을 보장하지 않는다.
 """
 
 from __future__ import annotations
@@ -35,6 +35,8 @@ class Template:
     author: str
     license: str
     prompt: str
+    personalizable: bool = True
+    source_url: str = ""
 
 
 def load_library(path: Path = LIBRARY_PATH) -> list[Template]:
@@ -55,7 +57,11 @@ def load_library(path: Path = LIBRARY_PATH) -> list[Template]:
         seen.add(item["id"])
         if not (ROOT / "domains" / f"{item['domain']}.yaml").exists():
             raise TemplateError(f"{where}: 도메인 '{item['domain']}' 이 domains/ 에 없다")
-        templates.append(Template(**{key: item[key].strip() for key in _REQUIRED}))
+        personalizable = item.get("personalizable", True)
+        source_url = item.get("source_url", "")
+        if type(personalizable) is not bool or not isinstance(source_url, str) or (source_url and not source_url.startswith("https://")):
+            raise TemplateError(f"{where}: 개인화 여부·출처 주소가 올바르지 않다")
+        templates.append(Template(**{key: item[key].strip() for key in _REQUIRED}, personalizable=personalizable, source_url=source_url))
     return templates
 
 

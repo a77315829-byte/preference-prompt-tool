@@ -1,0 +1,62 @@
+{
+  "evaluatorVersion": "coding-react-current-v1",
+  "taskId": "undo_removal",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": false,
+    "checks": [
+      {
+        "name": "initial_order_and_undo_disabled_without_callback",
+        "passed": true
+      },
+      {
+        "name": "remove_targets_id_and_reports_remaining_order",
+        "passed": true
+      },
+      {
+        "name": "undo_middle_restores_original_position",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'Agenda.pdf',\n+   'Diagram.png',\n    'Budget.csv',\n-   'Diagram.png'\n  ]\n"
+      },
+      {
+        "name": "undo_first_restores_front",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n-   'Agenda.pdf',\n    'Budget.csv',\n    'Diagram.png',\n+   'Agenda.pdf'\n  ]\n"
+      },
+      {
+        "name": "undo_last_preserves_end_position",
+        "passed": true
+      },
+      {
+        "name": "consecutive_removals_keep_only_latest_undo",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'Diagram.png',\n    'Budget.csv',\n-   'Diagram.png'\n  ]\n"
+      },
+      {
+        "name": "undo_cannot_restore_twice_or_duplicate_item",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'Agenda.pdf',\n+   'Diagram.png',\n    'Budget.csv',\n-   'Diagram.png'\n  ]\n"
+      },
+      {
+        "name": "removing_only_attachment_shows_empty_then_undo_clears_it",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0
+}

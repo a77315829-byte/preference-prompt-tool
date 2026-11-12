@@ -1,0 +1,23 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\nimport './styles.css';\n\nexport type Props = {\n  initialValue: string;\n  onChange: (value: string) => void;\n};\n\nexport function Component({ initialValue, onChange }: Props) {\n  const [value, setValue] = useState(initialValue);\n  const [visible, setVisible] = useState(false);\n\n  return (\n    <div className=\"password-field\" data-testid=\"panel\">\n      <label>\n        Password\n        <input\n          type={visible ? 'text' : 'password'}\n          value={value}\n          onChange={(event) => {\n            const nextValue = event.currentTarget.value;\n            setValue(nextValue);\n            onChange(nextValue);\n          }}\n        />\n      </label>\n      <button\n        type=\"button\"\n        aria-pressed={visible}\n        onClick={() => setVisible((current) => !current)}\n      >\n        Toggle visibility\n      </button>\n    </div>\n  );\n}\n",
+    "styles.css": ".password-field {\n  display: grid;\n  gap: 8px;\n  padding: 16px;\n  background-color: #f2f6fc;\n  color: #1d3150;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 904
+    },
+    {
+      "path": "styles.css",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 927,
+      "end": 1040
+    }
+  ]
+}

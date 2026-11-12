@@ -1,0 +1,74 @@
+{
+  "id": "coverage_reflection_v1",
+  "training_analysis": [
+    {
+      "failure_pattern": "Form-compliant short verbatim summaries can select a narrow part of the source while leaving the central actor-event relationship, broader development, or consequential outcome implicit or absent.",
+      "evidence_ids": [
+        "summary_agent_pilot:S07:O03:F1-F3",
+        "summary_agent_pilot:S07:O11:F1-F3",
+        "summary_agent_revision:N07:R09:F1-F3",
+        "summary_agent_revision:N07:R12:F1-F3",
+        "summary_agent_revision:N07:R23:F1-F3"
+      ],
+      "remedy": "Compare several complete-sentence pairs across the source, then select a coherent pair with complementary central information; perform a replacement check instead of merely adding content.",
+      "risks": "The current prompt already requests central coverage, and the repeated failures come from very few documents. Not every frozen proposition can necessarily fit into two unchanged sentences. An apparently informative pair can introduce ambiguous pronouns or attribution."
+    },
+    {
+      "failure_pattern": "A summary can preserve an activity or setting but omit its responsible actor or the preceding development that explains the current outcome.",
+      "evidence_ids": [
+        "summary_agent_revision:N01:R11:F2",
+        "summary_agent_revision:N01:R24:F2",
+        "summary_agent_revision:N03:R15:F2",
+        "summary_agent_revision:N03:R04:F2",
+        "summary_agent_pilot:S01:O04:F2-F3",
+        "summary_agent_pilot:S01:O14:F2-F3"
+      ],
+      "remedy": "Check that central actor-event links are explicit and prioritize the main development and outcome over peripheral detail.",
+      "risks": "The revised prompt already repaired both observed revision-arm differences. These observations justify a selection heuristic, not a claim that this supplement will improve current outputs."
+    },
+    {
+      "failure_pattern": "Coverage can lose important uncertainty or outcome limitations while all retained statements remain source-supported; an unsupported status qualifier was also flagged in one general-arm output.",
+      "evidence_ids": [
+        "summary_agent_pilot:S02:O21:F2",
+        "summary_agent_pilot:S08:O22:F2",
+        "summary_agent_pilot:S04:O20:issues",
+        "summary_agent_revision:N07:R09:F3"
+      ],
+      "remedy": "Evaluate attribution and qualifications together with the event, preserve attempts versus outcomes, and forbid inferred responsibility, success, or connecting facts.",
+      "risks": "No factual issue was flagged in the observed revision outputs. This is a safeguard against regression, not evidence of an existing widespread factuality defect. Excessive qualification can consume the limited sentence budget."
+    },
+    {
+      "failure_pattern": "A selected sentence may retain a peripheral or derived quantity while omitting a decisive scale, time window, or purpose from a different part of the source.",
+      "evidence_ids": [
+        "summary_agent_pilot:S07:O03:F2-F3",
+        "summary_agent_pilot:S07:O11:F2-F3",
+        "summary_agent_revision:N07:R09:F2"
+      ],
+      "remedy": "Make consequence, purpose, and scale candidates for the complementary sentence; retain units, periods, and estimate qualifiers for quantities selected.",
+      "risks": "This must not become a demand to include every number. Source-specific anchor details cannot be presumed central in other documents, and paraphrasing or calculating a missing quantity is unavailable under verbatim rules."
+    },
+    {
+      "failure_pattern": "Binary anchor failures sometimes reflect one omitted component rather than loss of the entire event, and the current prompt already has a high observed coverage ceiling.",
+      "evidence_ids": [
+        "summary_agent_pilot:adjudication:coverage_warning",
+        "summary_agent_pilot:O17:F3:reviewer_disagreement",
+        "summary_agent_revision:adjudication:N07:F1",
+        "summary_agent_revision:scores:revised:24/27",
+        "summary_agent_revision:scores:manual:24/27",
+        "summary_agent_revision:scores:previous:22/27"
+      ],
+      "remedy": "Keep the supplement generic, bounded, and compatible with existing constraints. Target sentence selection rather than exhaustive anchor reproduction, then assess on unseen sources with coverage and form reported separately.",
+      "risks": "The remaining revised-arm misses are concentrated in one short verbatim case. Small observed differences, bundled anchors, and shared-runtime reviewers cannot establish general superiority or human benefit."
+    }
+  ],
+  "supplement": "Apply the existing length, wording, focus, and summary-only requirements unchanged. Before selecting wording, silently identify the central event and actor, its main outcome or purpose, and the attribution, uncertainty, or quantity needed to understand their significance.\n\nTreat the sentence budget as a selection problem: compare a few plausible summaries using information from across the source, rather than committing to the first suitable sentences. Prefer complementary information over two descriptions of the same narrow subevent. A vivid example, mechanism, reaction, or background fact should not displace the main development or its consequential result. Preserve an explicit actor-event link; do not make the reader infer participation, responsibility, or success from juxtaposition.\n\nFor a two-sentence fully verbatim summary, compare alternative complete-sentence pairs before choosing. Favor a coherent pair that states the core event and adds the most important distinct outcome, purpose, scale, or qualification. Check pronouns and attribution together. Copy selected sentences exactly under the existing permitted exceptions; never splice, edit, or add connecting text.\n\nFinally, consider replacing the least informative sentence if a central omission can be repaired without breaking the constraints. Preserve decisive quantities with their units, periods, and estimate qualifiers when selected. Do not pack in every detail, exceed the requested count, invent missing links, or claim exhaustive coverage. Output only the summary.",
+  "rationale": "The current grounded prompt already lists facts to preserve and requires a final source check; grounded_v2 changes checks, not these instructions. This supplement adds an operational selection step: compare alternative summaries or sentence pairs globally, choose complementary information, and consider replacing the least informative sentence. It does not change the base prompt, generator, sentence-count rules, permitted verbatim exceptions, requested focus, or summary-only output. It is one offline reflection candidate derived from observed failures, not execution of the repository's GEPA optimizer.",
+  "limitations": [
+    "Analysis used only the observed 2026-11-10 summary_agent_pilot and summary_agent_revision artifacts, the current grounded YAML files, and engine/generator.py. No new summary_reflection selection/final sources or artifacts and no data/macsum files were inspected.",
+    "No model API or network was called. No performance improvement has been demonstrated by creating this candidate.",
+    "The two observed studies use different source sets and partly different anchor design; their aggregate counts do not constitute a longitudinal improvement estimate.",
+    "Frozen anchors are limited AI-authored propositions, sometimes bundled. Their preservation is not the percentage of all source meaning retained, and independent reviewer contexts can share model bias.",
+    "Short fully verbatim constraints can make full coverage infeasible. The proposed comparison may trade one omission for another or degrade coherence, so form, source fidelity, and independently reviewed content must remain separate outcomes.",
+    "The observed revised arm already preserves 24 of 27 anchors, matching manual prompting, with the other three misses concentrated in one case. There is limited observed headroom and no basis for claims of statistical superiority, preference inference, usability, or population-level gains."
+  ]
+}

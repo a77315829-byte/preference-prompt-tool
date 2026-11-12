@@ -1,0 +1,71 @@
+{
+  "by_reviewer": {
+    "a": {
+      "current": {
+        "outputs": 9,
+        "length_pass": 9,
+        "wording_pass": 9,
+        "joint_pass": 9,
+        "facts_preserved": 22,
+        "facts_total": 27,
+        "factual_issue_outputs": 1
+      },
+      "exploratory": {
+        "outputs": 9,
+        "length_pass": 9,
+        "wording_pass": 9,
+        "joint_pass": 9,
+        "facts_preserved": 20,
+        "facts_total": 27,
+        "factual_issue_outputs": 0
+      },
+      "gepa": {
+        "outputs": 9,
+        "length_pass": 9,
+        "wording_pass": 9,
+        "joint_pass": 9,
+        "facts_preserved": 22,
+        "facts_total": 27,
+        "factual_issue_outputs": 1,
+        "copied_from": "current"
+      }
+    },
+    "b": {
+      "current": {
+        "outputs": 9,
+        "length_pass": 9,
+        "wording_pass": 9,
+        "joint_pass": 9,
+        "facts_preserved": 22,
+        "facts_total": 27,
+        "factual_issue_outputs": 1
+      },
+      "exploratory": {
+        "outputs": 9,
+        "length_pass": 9,
+        "wording_pass": 9,
+        "joint_pass": 9,
+        "facts_preserved": 20,
+        "facts_total": 27,
+        "factual_issue_outputs": 0
+      },
+      "gepa": {
+        "outputs": 9,
+        "length_pass": 9,
+        "wording_pass": 9,
+        "joint_pass": 9,
+        "facts_preserved": 22,
+        "facts_total": 27,
+        "factual_issue_outputs": 1,
+        "copied_from": "current"
+      }
+    }
+  },
+  "aliases": {
+    "gepa": "current"
+  },
+  "disagreements": [],
+  "factual_flags": [
+    "E006"
+  ]
+}

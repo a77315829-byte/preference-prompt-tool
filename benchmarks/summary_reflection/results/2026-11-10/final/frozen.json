@@ -1,0 +1,22 @@
+{
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\cases.json": "1d0f43651843f49f6cff9e526bce043c87e77d8f57ad4febd098958e104f11c4",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\facts.json": "81d5120d84d253074e72df13e3731b9883362964ccdfdce006570cfc7f3cf3d6",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\protocol.json": "bd47511d5233c566d16b5407bf824e7b3fdc4ef644fb7698b3b1c298b9fa4708",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\inputs\\manual.json": "38322fe5e136c64bacdba484e9f120b63f77ade01a01d5ecfc55ddb9d7d6004c",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\inputs\\current.json": "390f091f63e0a0a17955ba6a7a13abb324d8d919c34dd0ef7a3e375fa3e596c1",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\inputs\\candidate.json": "b24d0f4ce26d5bf5b41d529a04dd091bdc44ac8be0f73cd0922bcc79160e3981",
+  "benchmarks\\summary_reflection\\candidate.json": "326f4e591ffeec21803047cf8372edac025b7383dc21c1bcdcb18c8a619b8257",
+  "benchmarks\\summary_reflection\\rubric.json": "76509c9b4553fead70916edb6278628358079df6c90084e846e122f86ca71645",
+  "benchmarks\\summary_reflection\\run.py": "d1a566c367e6fb5e75b83532dea8e00da44543712e617038ce482005256e611b",
+  "benchmarks\\summary_agent_pilot\\evaluate.py": "c48c8b865dbf07382e19087c4b00cf46f125cb9ded23d8be80b0fcb14f13c3a4",
+  "engine\\generator.py": "6e6d3d96792b1ff7f603c65e5287a591823340cbee65dbce523e73c57f0f9f62",
+  "engine\\domain_loader.py": "740cc89326c123201b59360ff47d5689a2b996046c6535964a383c35be97aa25",
+  "checks\\summarization.py": "2da4a1b92bcad670547aa3b8bf6f7e883c181c225999d0849c25afe23485f82b",
+  "domains\\summarization.yaml": "06cf0b59279f0f12c1985f2b4d55536001ba293b5c3e54ff2ffa510691470671",
+  "domains\\summarization_grounded.yaml": "a869034640d01b6f1fe7bc83595ca6620bf28bb0faedee1e19d3f4e40220f4a5",
+  "domains\\summarization_grounded_v2.yaml": "8542ce273576b3f9cfe75067b7cc702a52e57eb1271591948183ce9b959f3c03",
+  "checks\\summarization_grounded.py": "91d143b1e078fbbae2b296286a5d534f3a53e9dbca80edea1c14ef60e8a2f557",
+  "checks\\summarization_grounded_v2.py": "05dec42e6e84edfdc2dce75f28891890d5b9c41fd5f15e4736a811c78bd58505",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\selection\\decision.json": "45fbd4c5e2137942b44e8ff710814077399e938a1e0c37fdec4ecc3c2154e48a",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\selection\\review_seal.json": "12d06a255b2702270f2b319e1240f35ebb8d9905016c18ccb103c94e340ad52a"
+}

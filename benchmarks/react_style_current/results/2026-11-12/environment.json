@@ -1,0 +1,17 @@
+{
+  "versions": {
+    "typescript": "5.9.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "jsdom": "20.0.3",
+    "@types/react": "19.2.18"
+  },
+  "source_sha256": {
+    "domains/coding.yaml": "8bda3ae9b07029f86e586da50664060b588b5aa272d55afe3af0053f78aba734",
+    "engine/generator.py": "6e6d3d96792b1ff7f603c65e5287a591823340cbee65dbce523e73c57f0f9f62",
+    "engine/estimator.py": "d350822e600a8cbae48c5d944c3b9d9742e7b97723c9c1920aa834ac360a236a",
+    "service.py": "d5950e4f26e984dc3f2f12d714364397e605c279faf1cf3027a361ca9b52c053"
+  },
+  "product_prompt_identity": true,
+  "paid_model_api_calls": 0
+}

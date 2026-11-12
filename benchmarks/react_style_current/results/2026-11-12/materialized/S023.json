@@ -1,0 +1,31 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useRangePair } from './useRangePair';\nimport './styles.css';\n\nexport type Range = { start: number; end: number };\nexport type Props = {\n  min: number;\n  max: number;\n  onApply: (range: Range) => void;\n};\n\nexport function Component({ min, max, onApply }: Props) {\n  const model = useRangePair(min, max, onApply);\n\n  return (\n    <form\n      aria-label=\"Range pair\"\n      data-testid=\"panel\"\n      className=\"range-panel\"\n      onSubmit={model.submit}\n    >\n      <label>\n        Start\n        <select\n          value={model.start}\n          aria-invalid={model.error.startInvalid}\n          onChange={(event) => model.setStart(event.currentTarget.value)}\n        >\n          <option value=\"\">Choose</option>\n          {model.options.map((value) => (\n            <option key={value} value={String(value)}>{value}</option>\n          ))}\n        </select>\n      </label>\n      <label>\n        End\n        <select\n          value={model.end}\n          aria-invalid={model.error.endInvalid}\n          onChange={(event) => model.setEnd(event.currentTarget.value)}\n        >\n          <option value=\"\">Choose</option>\n          {model.options.map((value) => (\n            <option key={value} value={String(value)}>{value}</option>\n          ))}\n        </select>\n      </label>\n      <button type=\"submit\">Apply</button>\n      {model.error.message && <p role=\"alert\">{model.error.message}</p>}\n    </form>\n  );\n}\n",
+    "useRangePair.ts": "import { useState, type FormEvent } from 'react';\nimport type { Range } from './Component';\n\nexport function useRangePair(\n  min: number,\n  max: number,\n  onApply: (range: Range) => void,\n) {\n  const [start, setStart] = useState('');\n  const [end, setEnd] = useState('');\n  const [error, setError] = useState({\n    message: '',\n    startInvalid: false,\n    endInvalid: false,\n  });\n  const options = Array.from({ length: max - min + 1 }, (_, index) => min + index);\n\n  function submit(event: FormEvent<HTMLFormElement>) {\n    event.preventDefault();\n    if (start === '' || end === '') {\n      setError({\n        message: 'Choose both values',\n        startInvalid: start === '',\n        endInvalid: end === '',\n      });\n      return;\n    }\n\n    const range = { start: Number(start), end: Number(end) };\n    if (range.start > range.end) {\n      setError({\n        message: 'Range order',\n        startInvalid: false,\n        endInvalid: true,\n      });\n      return;\n    }\n\n    setError({ message: '', startInvalid: false, endInvalid: false });\n    onApply(range);\n  }\n\n  return { start, end, setStart, setEnd, error, options, submit };\n}\n",
+    "styles.css": ".range-panel {\n  --range-background: #f2f6fc;\n  --range-text: #1d3150;\n  --range-padding: 16px;\n  --range-gap: 8px;\n  --range-font-family: system-ui, sans-serif;\n  --range-font-size: 14px;\n}\n\n.range-panel {\n  display: flex;\n  flex-direction: column;\n  background-color: var(--range-background);\n  color: var(--range-text);\n  padding: var(--range-padding);\n  gap: var(--range-gap);\n  font-family: var(--range-font-family);\n  font-size: var(--range-font-size);\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 22,
+      "end": 1436
+    },
+    {
+      "path": "useRangePair.ts",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: useRangePair.ts",
+      "start": 1464,
+      "end": 2604
+    },
+    {
+      "path": "styles.css",
+      "block": 2,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 2628,
+      "end": 3089
+    }
+  ]
+}

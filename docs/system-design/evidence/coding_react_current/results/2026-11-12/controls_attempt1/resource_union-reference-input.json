@@ -1,0 +1,5 @@
+{
+  "files": {
+    "Component.tsx": "export type Resource =\n  | { status: 'idle' }\n  | { status: 'loading' }\n  | { status: 'error'; message: string }\n  | { status: 'ready'; title: string; members: string[] };\nexport type Props = { resource: Resource; onRetry: () => void };\n\nexport function Component({ resource, onRetry }: Props) {\n  if (resource.status === 'idle') return <p role=\"status\">Choose a project</p>;\n  if (resource.status === 'loading') return <p role=\"status\">Loading project</p>;\n  if (resource.status === 'error') return <section aria-label=\"Project error\">\n    <p role=\"alert\">{resource.message}</p><button type=\"button\" onClick={() => onRetry()}>Retry</button>\n  </section>;\n  return <section aria-label=\"Project details\">\n    <h2>{resource.title}</h2>\n    {resource.members.length > 0 ? <ul aria-label=\"Members\">{resource.members.map((member, index) => <li key={`${member}-${index}`}>{member}</li>)}</ul> : <p role=\"status\">No members</p>}\n  </section>;\n}\n"
+  }
+}

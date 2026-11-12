@@ -1,0 +1,259 @@
+[
+  {
+    "id": "C01",
+    "profile": {
+      "length": "normal",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "original_profile": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "resolution": "expand",
+    "required_sentences": [
+      "Kathmandu, Nepal (CNN)On Day Six of Nepal's tragedy, life triumphed as rescuers pulled an 15-year-old from the rubble of a multistory residential building in one of Kathmandu's hard-hit neighborhoods.",
+      "Also Thursday, a U.S. special operations forces team rescued 30 people, including three Americans, by helicopter from an area of Nepal called Bamboo Village, according to the U.S. ambassador to Nepal.",
+      "They are looking for survivors from the magnitude-7.8 earthquake that struck Saturday, killing at least 6,134 people and wounding almost 14,000, according to Nepali authorities."
+    ],
+    "conflict": {
+      "required_sentences": 3,
+      "max_sentences": 2,
+      "message": "고른 서로 다른 원문 3문장을 그대로 모두 남기면 최대 2문장 조건을 지킬 수 없습니다."
+    },
+    "notices": [
+      "문장 구분 규칙으로 확인한 결과입니다. 중요도·사실성·의미상 압축 가능 여부를 자동 검증한 것은 아닙니다.",
+      "고른 문장에 대명사·인용이 있으면 추가 맥락이 필요할 수 있습니다. 문장 수가 맞아도 내용 보존을 보장하지 않습니다.",
+      "고른 문장을 모두 담을 수 있도록 분량만 늘렸습니다. 맥락에 따라 추가 확인이 필요합니다.",
+      "원문과 고른 문장은 이번 작업용 복사에만 포함됩니다. 다른 원문에는 조건을 다시 확인해 주세요."
+    ]
+  },
+  {
+    "id": "C02",
+    "profile": {
+      "length": "normal",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "original_profile": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "resolution": "expand",
+    "required_sentences": [
+      "Rome (CNN)Muslims who were among migrants trying to get from Libya to Italy in a boat this week threw 12 fellow passengers overboard -- killing them -- because the 12 were Christians, Italian police said Thursday.",
+      "Italian authorities have arrested 15 people on suspicion of murdering the Christians at sea, police in Palermo, Sicily, said.",
+      "Since 2000, according to the International Organization for Migration, almost 22,000 people have died fleeing across the Mediterranean."
+    ],
+    "conflict": {
+      "required_sentences": 3,
+      "max_sentences": 2,
+      "message": "고른 서로 다른 원문 3문장을 그대로 모두 남기면 최대 2문장 조건을 지킬 수 없습니다."
+    },
+    "notices": [
+      "문장 구분 규칙으로 확인한 결과입니다. 중요도·사실성·의미상 압축 가능 여부를 자동 검증한 것은 아닙니다.",
+      "고른 문장에 대명사·인용이 있으면 추가 맥락이 필요할 수 있습니다. 문장 수가 맞아도 내용 보존을 보장하지 않습니다.",
+      "고른 문장을 모두 담을 수 있도록 분량만 늘렸습니다. 맥락에 따라 추가 확인이 필요합니다.",
+      "원문과 고른 문장은 이번 작업용 복사에만 포함됩니다. 다른 원문에는 조건을 다시 확인해 주세요."
+    ]
+  },
+  {
+    "id": "C03",
+    "profile": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "original_profile": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "resolution": "rephrase",
+    "required_sentences": [
+      "Then, on the night of April 23-24, 1915, the authorities in Constantinople, the empire's capital, rounded up about 250 Armenian intellectuals and community leaders.",
+      "Estimates range from 300,000 to 2 million deaths between 1914 and 1923, with not all of the victims in the Ottoman Empire.",
+      "While Turkey vehemently continues to reject the word \"genocide,\" his remarks went further than those of any previous Turkish leader in acknowledging the suffering of Armenians."
+    ],
+    "conflict": {
+      "required_sentences": 3,
+      "max_sentences": 2,
+      "message": "고른 서로 다른 원문 3문장을 그대로 모두 남기면 최대 2문장 조건을 지킬 수 없습니다."
+    },
+    "notices": [
+      "문장 구분 규칙으로 확인한 결과입니다. 중요도·사실성·의미상 압축 가능 여부를 자동 검증한 것은 아닙니다.",
+      "고른 문장에 대명사·인용이 있으면 추가 맥락이 필요할 수 있습니다. 문장 수가 맞아도 내용 보존을 보장하지 않습니다.",
+      "길이는 유지하고 재서술을 허용했습니다. 모든 정보가 들어갈 수 있는지는 요약 결과에서 확인해야 합니다.",
+      "원문과 고른 문장은 이번 작업용 복사에만 포함됩니다. 다른 원문에는 조건을 다시 확인해 주세요."
+    ]
+  },
+  {
+    "id": "C04",
+    "profile": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "original_profile": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "resolution": "rephrase",
+    "required_sentences": [
+      "It's not going to be enough to slake the thirst of the elusive Mars bunny, but scientists say new research seems to support the theory that what looks like a bone-dry red planet during the day could be dotted with tiny puddles of salty water at night.",
+      "Researchers aren't saying they've seen direct evidence of brine hiding out in the Martian night.",
+      "The researchers say the temperatures they measured are too low and water too scarce \"to support terrestrial organisms\" (sorry, bunny fans)."
+    ],
+    "conflict": {
+      "required_sentences": 3,
+      "max_sentences": 2,
+      "message": "고른 서로 다른 원문 3문장을 그대로 모두 남기면 최대 2문장 조건을 지킬 수 없습니다."
+    },
+    "notices": [
+      "문장 구분 규칙으로 확인한 결과입니다. 중요도·사실성·의미상 압축 가능 여부를 자동 검증한 것은 아닙니다.",
+      "고른 문장에 대명사·인용이 있으면 추가 맥락이 필요할 수 있습니다. 문장 수가 맞아도 내용 보존을 보장하지 않습니다.",
+      "길이는 유지하고 재서술을 허용했습니다. 모든 정보가 들어갈 수 있는지는 요약 결과에서 확인해야 합니다.",
+      "원문과 고른 문장은 이번 작업용 복사에만 포함됩니다. 다른 원문에는 조건을 다시 확인해 주세요."
+    ]
+  },
+  {
+    "id": "C05",
+    "profile": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "original_profile": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "resolution": "keep_limits",
+    "required_sentences": [
+      "Shanghai, China (CNN)When China's biggest auto show opens in Shanghai this week, the only models on display will be the ones with four wheels.",
+      "Intense competition for China's drivers means that car manufacturers are increasingly developing vehicles that cater to Chinese preferences.",
+      "In 2014, growth in sales halved to 7% and according to the China Association of Automobile Manufacturers, the slowdown continued in the first three months of this year when sales rose just 3.9%."
+    ],
+    "conflict": {
+      "required_sentences": 3,
+      "max_sentences": 2,
+      "message": "고른 서로 다른 원문 3문장을 그대로 모두 남기면 최대 2문장 조건을 지킬 수 없습니다."
+    },
+    "notices": [
+      "문장 구분 규칙으로 확인한 결과입니다. 중요도·사실성·의미상 압축 가능 여부를 자동 검증한 것은 아닙니다.",
+      "고른 문장에 대명사·인용이 있으면 추가 맥락이 필요할 수 있습니다. 문장 수가 맞아도 내용 보존을 보장하지 않습니다.",
+      "분량·발췌 조건을 유지하며 고른 정보 중 일부 생략을 허용했습니다. 전체 보존으로 표시하지 않습니다.",
+      "원문과 고른 문장은 이번 작업용 복사에만 포함됩니다. 다른 원문에는 조건을 다시 확인해 주세요."
+    ]
+  },
+  {
+    "id": "C06",
+    "profile": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "original_profile": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "resolution": "keep_limits",
+    "required_sentences": [
+      "A popular Chinese television host known for impromptu satire is now the subject of controversy after being caught on camera cursing the late Chairman Mao Zedong.",
+      "Bi later apologized.",
+      "CCTV said it would investigate."
+    ],
+    "conflict": {
+      "required_sentences": 3,
+      "max_sentences": 2,
+      "message": "고른 서로 다른 원문 3문장을 그대로 모두 남기면 최대 2문장 조건을 지킬 수 없습니다."
+    },
+    "notices": [
+      "문장 구분 규칙으로 확인한 결과입니다. 중요도·사실성·의미상 압축 가능 여부를 자동 검증한 것은 아닙니다.",
+      "고른 문장에 대명사·인용이 있으면 추가 맥락이 필요할 수 있습니다. 문장 수가 맞아도 내용 보존을 보장하지 않습니다.",
+      "분량·발췌 조건을 유지하며 고른 정보 중 일부 생략을 허용했습니다. 전체 보존으로 표시하지 않습니다.",
+      "원문과 고른 문장은 이번 작업용 복사에만 포함됩니다. 다른 원문에는 조건을 다시 확인해 주세요."
+    ]
+  },
+  {
+    "id": "C07",
+    "profile": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "original_profile": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "resolution": "preserve",
+    "required_sentences": [
+      "Actress Linda Thompson, Bruce Jenner's second wife, says she can \"breathe a little easier\" knowing her ex-husband has found the strength to publicly declare he is transgender.",
+      "Thompson said Jenner told her in 1985 that, despite it all, \"he identified as a woman\" and hoped to move forward with the process of becoming a woman.\"",
+      "They separated after going to therapy for about six months and Jenner began taking female hormones and removing his hair through electrolysis."
+    ],
+    "conflict": null,
+    "notices": [
+      "문장 구분 규칙으로 확인한 결과입니다. 중요도·사실성·의미상 압축 가능 여부를 자동 검증한 것은 아닙니다.",
+      "고른 문장에 대명사·인용이 있으면 추가 맥락이 필요할 수 있습니다. 문장 수가 맞아도 내용 보존을 보장하지 않습니다.",
+      "재서술의 의미상 압축 가능 여부는 이 규칙으로 판별할 수 없습니다. 필요하면 분량을 조정해 주세요.",
+      "원문과 고른 문장은 이번 작업용 복사에만 포함됩니다. 다른 원문에는 조건을 다시 확인해 주세요."
+    ]
+  },
+  {
+    "id": "C08",
+    "profile": {
+      "length": "normal",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "original_profile": {
+      "length": "normal",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "resolution": "preserve",
+    "required_sentences": [
+      "ABC is filming a proof of concept for a revival of \"The Muppets,\" The Hollywood Reporter has learned.",
+      "\"The Big Bang Theory\" co-creator Bill Prady is co-writing the script for a pilot presentation that sources say could be unspooled at May's upfront presentation to Madison Avenue advertisers.",
+      "Sources tell THR that the project, if all goes well, could go straight to series."
+    ],
+    "conflict": null,
+    "notices": [
+      "문장 구분 규칙으로 확인한 결과입니다. 중요도·사실성·의미상 압축 가능 여부를 자동 검증한 것은 아닙니다.",
+      "고른 문장에 대명사·인용이 있으면 추가 맥락이 필요할 수 있습니다. 문장 수가 맞아도 내용 보존을 보장하지 않습니다.",
+      "재서술의 의미상 압축 가능 여부는 이 규칙으로 판별할 수 없습니다. 필요하면 분량을 조정해 주세요.",
+      "원문과 고른 문장은 이번 작업용 복사에만 포함됩니다. 다른 원문에는 조건을 다시 확인해 주세요."
+    ]
+  },
+  {
+    "id": "C09",
+    "profile": {
+      "length": "long",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "original_profile": {
+      "length": "long",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "resolution": "preserve",
+    "required_sentences": [
+      "A NASA astrophysicist has named an asteroid after the teenage education activist from Pakistan, who was gravely wounded by a Pakistani Taliban gunman for promoting the right of girls' to go to school.",
+      "\"My postdoctoral fellow Dr. Carrie Nugent brought to my attention the fact that although many asteroids have been named, very few have been named to honor the contributions of women (and particularly women of color),\" Mainzer wrote in a note to Malala.",
+      "\"We desperately need the brainpower of all smart people to solve some of humanity's most difficult problems, and we can't afford to reject half the population's,\" Mainzer wrote."
+    ],
+    "conflict": null,
+    "notices": [
+      "문장 구분 규칙으로 확인한 결과입니다. 중요도·사실성·의미상 압축 가능 여부를 자동 검증한 것은 아닙니다.",
+      "고른 문장에 대명사·인용이 있으면 추가 맥락이 필요할 수 있습니다. 문장 수가 맞아도 내용 보존을 보장하지 않습니다.",
+      "원문과 고른 문장은 이번 작업용 복사에만 포함됩니다. 다른 원문에는 조건을 다시 확인해 주세요."
+    ]
+  }
+]

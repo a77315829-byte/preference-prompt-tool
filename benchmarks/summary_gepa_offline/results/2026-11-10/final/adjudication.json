@@ -1,0 +1,51 @@
+{
+  "scope": "Root source/evidence audit after both original blind reviews; no score, candidate, prompt, output, rubric or anchor changes.",
+  "reviewer_disagreements": [],
+  "factual_flags": [
+    {
+      "output_id": "E006",
+      "case_id": "H01",
+      "arm": "current",
+      "both_reviewers_flagged": true,
+      "summary_quote": "Several children have expressed support, including Kendall and Kylie",
+      "source_evidence": [
+        "Many of his kids appear supportive of his transition and his two youngest, daughter Kendall and Kylie, released the following statement to ABC about their father: \"We love our dad very much as he is an amazing father."
+      ],
+      "root_assessment": "The source distinguishes many children appearing supportive from an explicit statement supplied by two named children. Definite expressed support by several children strengthens the evidential claim. Preserve the original source-fidelity flag. This is not proof that the asserted support was false in the outside world."
+    }
+  ],
+  "coverage_interpretation": "Both reviewers scored current22/27 and exploratory20/27. Anchors are selected AI-authored propositions with qualifications, not exhaustive human gold truth. Some losses are omitted qualifications or context, not invented content. Two independent contexts can still share model bias.",
+  "feasibility_limit": "H05 short/fully has a pre-output documented maximum of at most2/3 anchors within two unchanged source sentences. Keep all27 anchors visible; do not silently adjust the denominator or classify every omission as a prompt defect.",
+  "automatic_sentence_discrepancies": [
+    {
+      "ids": [
+        "E005",
+        "E006"
+      ],
+      "cause": "The channel name E! was split at its internal exclamation mark. Both are long summaries and still pass the automatic and reviewed length condition."
+    },
+    {
+      "ids": [
+        "E010"
+      ],
+      "cause": "Rep. Kathleen Rice was split as a sentence boundary. Both counts remain long."
+    },
+    {
+      "ids": [
+        "E015"
+      ],
+      "cause": "Gov. Faustino Dry III was split as a sentence boundary: auto3 versus reviewed2. This incorrectly fails the exploratory short/high summary. Both reviewers count two complete grammatical sentences."
+    }
+  ],
+  "automatic_final_joint_conditions": {
+    "current": "9/9",
+    "exploratory": "8/9, including one identified abbreviation false negative"
+  },
+  "reviewed_final_joint_conditions": {
+    "current": "9/9",
+    "exploratory": "9/9"
+  },
+  "handling": "All frozen automatic scores and first reviews remain unchanged. Final primary table uses the declared independent semantic condition reviews; automatic disagreement is separately reported. No automatic checker fix or favorable reranking in this run.",
+  "adoption": "Keep current product instructions and optional GEPA. The actual optimizer selected the original. The exploratory candidate has fewer preserved anchors but fewer flagged unsupported certainty claims in this small sample; neither observation establishes general superiority.",
+  "new_holdout_use": "These21 sources are now observed; subsequent prompt improvements must not report them as fresh independent final evaluation."
+}

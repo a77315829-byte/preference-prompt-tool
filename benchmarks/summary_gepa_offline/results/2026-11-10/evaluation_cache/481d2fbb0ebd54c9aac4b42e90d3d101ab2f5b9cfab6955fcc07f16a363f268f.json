@@ -1,0 +1,69 @@
+{
+  "cache_key": "481d2fbb0ebd54c9aac4b42e90d3d101ab2f5b9cfab6955fcc07f16a363f268f",
+  "case": {
+    "record_index": 228,
+    "dataset_split": "train",
+    "source": "(CNN)Here you go, galaxy.\nThe Force is back.\nAt an emotional event in Anaheim, California, director J.J. Abrams and the \"Star Wars: Episode VII -- The Force Awakens\" cast showed off for the audience and then capped the presentation with the trailer for the new film.\nThe audience gasped, cheered and applauded.\nThe cast was appreciative of the welcome.\n\"You're more than fans.\nYou're family,\" Mark Hamill told the crowd.\nCarrie Fisher was also there, though without her trademark Princess Leia hair buns.\nThey're \"retired,\" she said.\nAirline unveils 'Star Wars' 787 Dreamliner painted like R2-D2 .\nAlso introduced: \"Star Wars\" emoji, some new Stormtroopers and the BB8, the soccer-ball-like droid that rolled around the stage, to the delight of the audience.\nIt wasn't CGI, either, as much of the movie, Abrams said, was filmed on actual sets.\nTwitter erupted with near-instantaneous reaction, most of it enthusiastic.\nCNNMoney: 'Star Wars' teaser sends Twitter into lightspeed .\nThe new \"Star Wars\" is due out December 18.\nCNN's Henry Hanks was in the audience.\nHere are his five top takeaways from the event: .\n1.\nHan flies again .\nThe trailer ended in a big way, with Han Solo and Chewbacca having apparently arrived after a flight on the Millennium Falcon.\nThe reaction in the room of fans was nothing short of rapturous upon seeing Harrison Ford back in character as Han.\nA few burst into tears at the end of the the 110-second teaser.\n2.\nThat's not Tatooine .\nAbrams revealed that their shooting location was not meant to represent the Skywalker ancestral home of Tatooine, as many believed.\nInstead, it's a planet called Jakku, where much of the early action of the movie takes place.\nDaisy Ridley's Rey meets up with a stromtrooper, Finn (John Boyega) and that's where the adventure begins.\n3.\nHints of Luke and Leia .\nOscar Isaac dropped a major hint that his pilot character of Poe is sent on a mission by \"a princess,\" and we're fairly certain which one he meant.\nLeia and Luke aren't seen in the trailer, but we hear Luke's unmistakable voice as he passes along a lightsaber, presumably to other Skywalker family members.\nCarrie Fisher also teased her new wardrobe, and promised no metal bikini.\n4.\nThere's less CGI than in the prequels .\nAbrams said he was proud that \"you can watch the movie and see what it is\" before the effects wizards at Industrial Light and Magic did their work.\nAnd yes, the new droid BB-8 (who was a fan favorite at the panel) is not CGI.\n5.\nThe ruins of the Empire are all around .\nA crashed Star Destroyer can be seen at the opening of the trailer, as well as a look at Vader's charred helmet.\nChills.\nCreating the sounds of 'Star Wars' CNN's Henry Hanks contributed to this story.",
+    "source_sha256": "a442660bb499fac2a236eb984cf9b883a94cc94926143c14737eccf01c84602a",
+    "source_words": 475,
+    "id": "G05",
+    "profile": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "base_prompt": "You summarize English text according to the requested conditions while staying grounded in the source.\n\nSummarize the source text below in English according to these instructions.\n\n## Conditions for this summary\nThese are the conditions for this summary.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words while preserving meaning, quantities and attribution; retain source expressions where helpful.\n\n## Preserve source facts and central information\n- Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition.\n- Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus.\n- Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately.\n- Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first.\n- For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text.\n- If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage.\n- Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check.\n\n## Output format\nOutput only the summary, in English. No preamble, title, checklist, explanation, or closing."
+  },
+  "supplement": "Use only information stated in the supplied text, including in brief descriptive modifiers and appositives. Familiarity with a subject does not license adding a category, property, setting or explanation. Remove any unsupported embellishment rather than relying on outside knowledge.\n\nWhen the source presents a dispute, prioritize the main event, the participants' attributed positions and the source-supported basis of the disagreement over secondary chronology or procedural details. A criticism of a position does not by itself communicate who holds that position. Select complementary content rather than several passages serving the same role.\n\nFor exact extraction, preserve the context needed to identify a quotation's speaker and the referents of dependent sentences. Choose a feasible set of complete source sentences within the existing budget; if necessary, prefer a clearer self-contained alternative. Do not rewrite, combine or add attribution to extracted sentences.",
+  "summary": "At an Anaheim event, J.J. Abrams and the cast unveiled the trailer for \"Star Wars: Episode VII -- The Force Awakens,\" due December 18, to cheering fans. The trailer brought back Han Solo and Chewbacca, while Abrams identified Jakku as an early setting and highlighted actual sets and a BB-8 droid that was not CGI.",
+  "score": 1.0,
+  "feedback": "{\"preserved_facts\": [{\"id\": \"F1\", \"preserved\": true, \"summary_evidence\": [\"At an Anaheim event, J.J. Abrams and the cast unveiled the trailer for \\\"Star Wars: Episode VII -- The Force Awakens,\\\"\"], \"reason\": \"The event location, presenters, film and trailer presentation are all conveyed.\"}, {\"id\": \"F2\", \"preserved\": true, \"summary_evidence\": [\"At an Anaheim event, J.J. Abrams and the cast unveiled the trailer for \\\"Star Wars: Episode VII -- The Force Awakens,\\\" due December 18, to cheering fans.\"], \"reason\": \"The film's December 18 release is expressed as an upcoming scheduled event through 'due'.\"}, {\"id\": \"F3\", \"preserved\": true, \"summary_evidence\": [\"The trailer brought back Han Solo and Chewbacca\"], \"reason\": \"Both returning characters are explicitly identified as appearing in the trailer.\"}], \"factual_issues\": [], \"reviewed_wording\": \"Both sentences reformulate and combine the source material: 'unveiled the trailer' replaces the presentation description, and 'identified Jakku as an early setting' compresses the separate planet and early-action sentences. Film and character names are appropriately retained.\", \"automatic\": {\"length\": {\"score\": 1.0, \"feedback\": \"문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다.\"}, \"extractiveness\": {\"score\": 1.0, \"feedback\": \"표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 43%.\"}}, \"score_rule\": \"coverage only when all condition checks pass and no factual issue is flagged\"}",
+  "review": {
+    "output_id": "Q481d2fbb0ebd54c9",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences reformulate and combine the source material: 'unveiled the trailer' replaces the presentation description, and 'identified Jakku as an early setting' compresses the separate planet and early-action sentences. Film and character names are appropriately retained.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "At an Anaheim event, J.J. Abrams and the cast unveiled the trailer for \"Star Wars: Episode VII -- The Force Awakens,\""
+        ],
+        "reason": "The event location, presenters, film and trailer presentation are all conveyed."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "At an Anaheim event, J.J. Abrams and the cast unveiled the trailer for \"Star Wars: Episode VII -- The Force Awakens,\" due December 18, to cheering fans."
+        ],
+        "reason": "The film's December 18 release is expressed as an upcoming scheduled event through 'due'."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The trailer brought back Han Solo and Chewbacca"
+        ],
+        "reason": "Both returning characters are explicitly identified as appearing in the trailer."
+      }
+    ],
+    "issues": []
+  },
+  "automatic": {
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 43%."
+    }
+  },
+  "objective_scores": {
+    "coverage": 1.0,
+    "conditions": 1.0,
+    "no_factual_flags": 1.0
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "scope": "React/JSDOM + replaced fetch + actual Python functions via stdin/stdout. No HTTP or human usability study.",
+  "python": "C:\\Users\\Laptop_PC\\preference-prompt-tool\\.venv\\Scripts\\python.exe",
+  "scenarios": [
+    {
+      "language": "Python",
+      "framework": "FastAPI",
+      "rounds": 4,
+      "checkpoints": [
+        "UI selections reached real builder with correct final values",
+        "Replacing the task changes combined copy; instruction-only copy excludes both tasks",
+        "Actual save payload and SQLite snapshot exclude transient tasks",
+        "Library reuse and replacement copy keep persisted original unchanged",
+        "One-axis change has direct attribution; independent new item preserves old entry"
+      ],
+      "requestCount": 22,
+      "status": "passed"
+    },
+    {
+      "language": "JavaScript",
+      "framework": "React",
+      "rounds": 0,
+      "checkpoints": [
+        "UI selections reached real builder with correct final values",
+        "Replacing the task changes combined copy; instruction-only copy excludes both tasks",
+        "Actual save payload and SQLite snapshot exclude transient tasks",
+        "Library reuse and replacement copy keep persisted original unchanged",
+        "One-axis change has direct attribution; independent new item preserves old entry"
+      ],
+      "requestCount": 21,
+      "status": "passed"
+    },
+    {
+      "language": "TypeScript",
+      "framework": "React",
+      "rounds": 8,
+      "checkpoints": [
+        "UI selections reached real builder with correct final values",
+        "Replacing the task changes combined copy; instruction-only copy excludes both tasks",
+        "Actual save payload and SQLite snapshot exclude transient tasks",
+        "Library reuse and replacement copy keep persisted original unchanged",
+        "One-axis change has direct attribution; independent new item preserves old entry"
+      ],
+      "requestCount": 22,
+      "status": "passed"
+    }
+  ],
+  "failures": [],
+  "sourceSha256Before": {
+    "frontend/src/features/coding-instructions/CodingInstructionsSection.jsx": "83ad6fff3a9933e088fbbdac1538fa1e4569c65a005eea2e13ab624a0933b7c2",
+    "frontend/src/features/coding-instructions/CodingEnvironmentPicker.jsx": "806c6f719114bf9558ff0b8048336cfcacb8a30e6ef15bba267182180155dde1",
+    "frontend/src/features/preferences/PreferencesSection.jsx": "b38c58cf5da6a249c0aa27f8d119fc81298edeba992475cfd0c0f96a07ddacf5",
+    "frontend/src/features/preferences/SavePreferencePanel.jsx": "ed7671fd1a81879023c20683742ca9ce584d71f41e1bf52513f914793bda45b5"
+  },
+  "pythonRuntime": {
+    "executable": "C:\\Users\\Laptop_PC\\preference-prompt-tool\\.venv\\Scripts\\python.exe",
+    "version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]"
+  },
+  "sourceSha256After": {
+    "frontend/src/features/coding-instructions/CodingInstructionsSection.jsx": "83ad6fff3a9933e088fbbdac1538fa1e4569c65a005eea2e13ab624a0933b7c2",
+    "frontend/src/features/coding-instructions/CodingEnvironmentPicker.jsx": "806c6f719114bf9558ff0b8048336cfcacb8a30e6ef15bba267182180155dde1",
+    "frontend/src/features/preferences/PreferencesSection.jsx": "b38c58cf5da6a249c0aa27f8d119fc81298edeba992475cfd0c0f96a07ddacf5",
+    "frontend/src/features/preferences/SavePreferencePanel.jsx": "ed7671fd1a81879023c20683742ca9ce584d71f41e1bf52513f914793bda45b5"
+  },
+  "sourceChangedDuringRun": false
+}

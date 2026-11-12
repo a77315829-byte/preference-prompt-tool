@@ -1,0 +1,185 @@
+{
+  "coordinator": "/root",
+  "model_override_requested": false,
+  "runtime_model_identifier": null,
+  "temperature": null,
+  "seed": null,
+  "model_settings_note": "All new agents inherited parent model and reasoning effort. Backend model identity/decoding settings/token counts were not exposed by this tool; no exact-model or deterministic-generation claim.",
+  "dispatch_record": "Exact dispatch messages remain in this Codex conversation. This file records role assignments/paths and restrictions, not a byte-for-byte copy of those messages.",
+  "jobs": [
+    {
+      "agent": "/root/reflection_dev_generate_a",
+      "role": "generator",
+      "fork_turns": "none",
+      "stage": "selection",
+      "arm": "current",
+      "input": "selection/inputs/current.json",
+      "output": "selection/outputs/current.json",
+      "batch_size": 6,
+      "exclusions": [
+        "other arms",
+        "facts",
+        "rubric",
+        "prior output feedback",
+        "training/selection results"
+      ]
+    },
+    {
+      "agent": "/root/reflection_dev_generate_b",
+      "role": "generator",
+      "fork_turns": "none",
+      "stage": "selection",
+      "arm": "candidate",
+      "input": "selection/inputs/candidate.json",
+      "output": "selection/outputs/candidate.json",
+      "batch_size": 6,
+      "exclusions": [
+        "other arms",
+        "facts",
+        "rubric",
+        "prior output feedback",
+        "training/selection results"
+      ]
+    },
+    {
+      "agent": "/root/reflection_dev_review_a",
+      "role": "blinded reviewer",
+      "fork_turns": "none",
+      "stage": "selection",
+      "input": "selection/blind_packet.json + rubric.json",
+      "output": "selection/review_a.json",
+      "batch_size": 12,
+      "exclusions": [
+        "mapping",
+        "generation prompts",
+        "other reviews",
+        "automatic metrics",
+        "prior results"
+      ]
+    },
+    {
+      "agent": "/root/reflection_dev_review_b",
+      "role": "blinded reviewer",
+      "fork_turns": "none",
+      "stage": "selection",
+      "input": "selection/blind_packet.json + rubric.json",
+      "output": "selection/review_b.json",
+      "batch_size": 12,
+      "exclusions": [
+        "mapping",
+        "generation prompts",
+        "other reviews",
+        "automatic metrics",
+        "prior results"
+      ]
+    },
+    {
+      "agent": "/root/reflection_final_generate_a",
+      "role": "generator",
+      "fork_turns": "none",
+      "stage": "final",
+      "arm": "manual",
+      "input": "final/inputs/manual.json",
+      "output": "final/outputs/manual.json",
+      "batch_size": 18,
+      "exclusions": [
+        "other arms",
+        "facts",
+        "rubric",
+        "prior output feedback",
+        "training/selection results"
+      ]
+    },
+    {
+      "agent": "/root/reflection_final_generate_b",
+      "role": "generator",
+      "fork_turns": "none",
+      "stage": "final",
+      "arm": "current",
+      "input": "final/inputs/current.json",
+      "output": "final/outputs/current.json",
+      "batch_size": 18,
+      "exclusions": [
+        "other arms",
+        "facts",
+        "rubric",
+        "prior output feedback",
+        "training/selection results"
+      ]
+    },
+    {
+      "agent": "/root/reflection_final_generate_c",
+      "role": "generator",
+      "fork_turns": "none",
+      "stage": "final",
+      "arm": "candidate",
+      "input": "final/inputs/candidate.json",
+      "output": "final/outputs/candidate.json",
+      "batch_size": 18,
+      "exclusions": [
+        "other arms",
+        "facts",
+        "rubric",
+        "prior output feedback",
+        "training/selection results"
+      ]
+    },
+    {
+      "agent": "/root/reflection_final_review_a",
+      "role": "blinded reviewer",
+      "fork_turns": "none",
+      "stage": "final",
+      "input": "final/blind_packet.json + rubric.json",
+      "output": "final/review_a.json",
+      "batch_size": 54,
+      "exclusions": [
+        "mapping",
+        "generation prompts",
+        "other reviews",
+        "automatic metrics",
+        "prior results"
+      ]
+    },
+    {
+      "agent": "/root/reflection_final_review_b",
+      "role": "blinded reviewer",
+      "fork_turns": "none",
+      "stage": "final",
+      "input": "final/blind_packet.json + rubric.json",
+      "output": "final/review_b.json",
+      "batch_size": 54,
+      "exclusions": [
+        "mapping",
+        "generation prompts",
+        "other reviews",
+        "automatic metrics",
+        "prior results"
+      ]
+    }
+  ],
+  "other_agents": [
+    {
+      "agent": "/root/reflection_proposer",
+      "role": "one proposal from observed training artifacts only",
+      "fork_turns": "none"
+    },
+    {
+      "agent": "/root/reflection_facts",
+      "role": "source-only anchors before outputs, no candidate",
+      "fork_turns": "none"
+    },
+    {
+      "agent": "/root/reflection_protocol_audit",
+      "role": "protocol audit then source-only anchor audit then post-generation integrity audit; not an output reviewer",
+      "fork_turns": "none, subsequent tasks reused its audit context"
+    }
+  ],
+  "execution_policy": "No external model API, network or external knowledge for generators/reviewers. No output retry based on a score; JSON/evidence validation permitted. Root used web only for primary GEPA documentation.",
+  "generated_summaries": 66,
+  "planned_blinded_reviews": 132,
+  "candidate_proposals": 1,
+  "actual_gepa_runs": 0,
+  "external_paid_model_api_calls": 0,
+  "cost_note": "No separately invoked paid model API. Codex usage is consumed and was not metered here; not a claim that the subscription or compute is free.",
+  "timing_note": "No per-request runtime comparison was instrumented. File timestamps in generation_audit.json are artifacts, not model latency or human time."
+}

@@ -1,0 +1,69 @@
+{
+  "cache_key": "4ec6326a1adacb4664d745d95717ddad38334f463ca09da07ca8794cced5a70a",
+  "case": {
+    "record_index": 105,
+    "dataset_split": "train",
+    "source": "(CNN)Three Orthodox rabbis accused of planning and participating in the torture of Jewish men who refused to divorce their wives were convicted Tuesday of conspiring to commit kidnapping.\nRabbis Mendel Epstein, 69; Jay Goldstein, 60; and Binyamin Stimler, 39, were found guilty on one count of conspiracy to commit kidnapping in New Jersey federal court.\nGoldstein and Stimler were also convicted on charges of attempted kidnapping.\nThe rabbis were part of a ring accused of accepting tens of thousands of dollars to orchestrate the kidnappings of Jewish husbands to persuade them through torture involving electric cattle prods and screwdrivers to grant \"gets,\" a document that Jewish law requires a husband to present to his wife in order to be issued a divorce, court papers said.\nThe men were arrested in October 2013 following an FBI sting operation that ended with Goldstein, Stimler and six other men with ski masks, surgical blades and a 30-foot nylon rope in a warehouse in Middlesex County, New Jersey.\nLawyers for each of the rabbis told CNN they plan on appealing the convictions.\n\"Rabbi Epstein still firmly believes that he was protecting women's rights and was protecting the agunahs and the families,\" said Robert Stahl, the lawyer for Epstein.\nWithout a \"get,\" a woman is considered an \"agunah,\" a chained woman bound to a man no matter how over the marriage might actually be.\nAn Orthodox Jewish woman who does not receive a get runs the risk of being shunned in her community and labeled an adulteress if she moves on.\nAny future children she has are considered bastards permitted to marry only other bastards.\n\"I don't think this was a traditional kidnapping,\" said Aidan O'Connor, the lawyer for Goldstein.\nGoldstein is a sofer, a Jewish scribe who transcribes the Torah and writes other religious documents, including divorce papers, his attorney said.\nNathan Lewin, the attorney for Stimler, called the verdict \"shocking\" and said his client was only present at the warehouse as a witness for the ceremonial signing of the document.\n\"There's no evidence that Rabbi Stimler knew what was going to be going on,\" Lewin said.\n\"Of course we're going to take all the steps to correct this injustice.\"\nEpstein's son, David Epstein, was acquitted on Tuesday of kidnapping charges.\nThe jury returned not guilty verdicts on the attempted kidnapping charges against Mendel Epstein, and on more severe kidnapping charges against the three rabbis.\nNine other individuals previously pled guilty in the case to conspiracy charges, according to a press release from the U.S. Attorney's office in New Jersey.\nHenry Mazurek, the lawyer for David Epstein, said his client was grateful for the jury's decision but called his client's acquittals \"bittersweet\" next to his father's conviction.\n\"He really believes that (his father) was a champion of someone who was voiceless in his religion,\" Mazurek said.\nSentencing is set for July 15.\nThe men face up to life in prison.",
+    "source_sha256": "8433a5e312d045408cbbf9d7ab87ffcf17126dd261ff6141fc5307b34d558e66",
+    "source_words": 486,
+    "id": "G03",
+    "profile": {
+      "length": "normal",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "base_prompt": "You summarize English text according to the requested conditions while staying grounded in the source.\n\nSummarize the source text below in English according to these instructions.\n\n## Conditions for this summary\nThese are the conditions for this summary.\n- Length: Write three to four sentences.\n- Use of source wording: Reuse the source's words and phrases as much as possible. There is no upper limit on the amount reused.\n\n## Preserve source facts and central information\n- Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition.\n- Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus.\n- Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately.\n- Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first.\n- For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text.\n- If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage.\n- Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check.\n\n## Output format\nOutput only the summary, in English. No preamble, title, checklist, explanation, or closing."
+  },
+  "supplement": "Read through the whole source before selecting material; the opening event can supply context while later passages carry the article's distinctive focus. Give sentence space to distinct central developments or perspectives, rather than repeated setup, vivid scene-setting, or several details about the same event. A prominent response or conclusion can be central even when it contains no numerical result. For strict extraction, consider candidate sentence combinations as a whole: prefer those that jointly retain the main event and another central aspect with clear referents and intact attribution. Do not automatically copy an opening sentence merely to introduce a name. Keep context necessary to understand selected sentences; when that context would consume the available budget, choose a clearer combination. When rewriting is permitted, combine compatible source clauses only when their subjects, status, and attribution remain clear. Use additional permitted space to preserve substantive distinctions, not repetition. Apply all base constraints throughout; do not lengthen a short extractive summary or alter copied sentences to force in every point.",
+  "summary": "Rabbis Mendel Epstein, 69; Jay Goldstein, 60; and Binyamin Stimler, 39, were convicted Tuesday of conspiring to commit kidnapping in New Jersey federal court, and Goldstein and Stimler were also convicted on charges of attempted kidnapping. The rabbis were part of a ring accused of accepting tens of thousands of dollars to orchestrate the kidnappings of Jewish husbands to persuade them through torture involving electric cattle prods and screwdrivers to grant \"gets,\" a document that Jewish law requires a husband to present to his wife in order to be issued a divorce, court papers said. Epstein's son, David Epstein, was acquitted of kidnapping charges, and the jury returned not guilty verdicts on the attempted kidnapping charges against Mendel Epstein and on more severe kidnapping charges against the three rabbis. Lawyers for each of the rabbis told CNN they plan on appealing the convictions; sentencing is set for July 15, and the men face up to life in prison.",
+  "score": 1.0,
+  "feedback": "{\"preserved_facts\": [{\"id\": \"F1\", \"preserved\": true, \"summary_evidence\": [\"Rabbis Mendel Epstein, 69; Jay Goldstein, 60; and Binyamin Stimler, 39, were convicted Tuesday of conspiring to commit kidnapping in New Jersey federal court\"], \"reason\": \"The summary identifies all three rabbis by name and preserves their convictions for conspiracy to commit kidnapping. Naming the three defendants unambiguously identifies the group described in the proposition.\"}, {\"id\": \"F2\", \"preserved\": true, \"summary_evidence\": [\"The rabbis were part of a ring accused of accepting tens of thousands of dollars to orchestrate the kidnappings of Jewish husbands to persuade them through torture involving electric cattle prods and screwdrivers to grant \\\"gets,\\\" a document that Jewish law requires a husband to present to his wife in order to be issued a divorce, court papers said.\"], \"reason\": \"The summary preserves the alleged scheme's coercive purpose, the religious divorce documents and the essential accusation and court-paper attribution.\"}, {\"id\": \"F3\", \"preserved\": true, \"summary_evidence\": [\"Lawyers for each of the rabbis told CNN they plan on appealing the convictions\"], \"reason\": \"The summary attributes planned appeals to lawyers for each rabbi and does not present the appeals as completed.\"}], \"factual_issues\": [], \"reviewed_wording\": \"Most clauses retain distinctive source wording, including the complete sentence beginning 'The rabbis were part of a ring accused of accepting tens of thousands of dollars' and the clause 'Lawyers for each of the rabbis told CNN they plan on appealing the convictions'. Combining source sentences does not prevent substantial reuse.\", \"automatic\": {\"length\": {\"score\": 1.0, \"feedback\": \"문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다.\"}, \"extractiveness\": {\"score\": 1.0, \"feedback\": \"표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 95%.\"}}, \"score_rule\": \"coverage only when all condition checks pass and no factual issue is flagged\"}",
+  "review": {
+    "output_id": "Q4ec6326a1adacb46",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Most clauses retain distinctive source wording, including the complete sentence beginning 'The rabbis were part of a ring accused of accepting tens of thousands of dollars' and the clause 'Lawyers for each of the rabbis told CNN they plan on appealing the convictions'. Combining source sentences does not prevent substantial reuse.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Rabbis Mendel Epstein, 69; Jay Goldstein, 60; and Binyamin Stimler, 39, were convicted Tuesday of conspiring to commit kidnapping in New Jersey federal court"
+        ],
+        "reason": "The summary identifies all three rabbis by name and preserves their convictions for conspiracy to commit kidnapping. Naming the three defendants unambiguously identifies the group described in the proposition."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "The rabbis were part of a ring accused of accepting tens of thousands of dollars to orchestrate the kidnappings of Jewish husbands to persuade them through torture involving electric cattle prods and screwdrivers to grant \"gets,\" a document that Jewish law requires a husband to present to his wife in order to be issued a divorce, court papers said."
+        ],
+        "reason": "The summary preserves the alleged scheme's coercive purpose, the religious divorce documents and the essential accusation and court-paper attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Lawyers for each of the rabbis told CNN they plan on appealing the convictions"
+        ],
+        "reason": "The summary attributes planned appeals to lawyers for each rabbi and does not present the appeals as completed."
+      }
+    ],
+    "issues": []
+  },
+  "automatic": {
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 95%."
+    }
+  },
+  "objective_scores": {
+    "coverage": 1.0,
+    "conditions": 1.0,
+    "no_factual_flags": 1.0
+  }
+}

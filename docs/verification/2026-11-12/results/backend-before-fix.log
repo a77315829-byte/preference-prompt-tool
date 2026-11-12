@@ -1,0 +1,131 @@
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 15%]
+........................................................................ [ 21%]
+........................................................................ [ 26%]
+.....................................F.................................. [ 31%]
+........................................................................ [ 37%]
+...............................................................F........ [ 42%]
+.....................................F.................................. [ 47%]
+........................................................s............... [ 53%]
+........................................................................ [ 58%]
+........................................................................ [ 63%]
+........................................................................ [ 68%]
+........................................................................ [ 74%]
+........................................................................ [ 79%]
+................................................F....................... [ 84%]
+........................................................................ [ 90%]
+........................................................................ [ 95%]
+..............................................................           [100%]
+================================== FAILURES ===================================
+______________ test_every_shipped_domain_loads[summary_contract] ______________
+
+path = WindowsPath('domains/summary_contract.yaml')
+
+    @pytest.mark.parametrize("path", DOMAINS, ids=lambda p: p.stem)
+    def test_every_shipped_domain_loads(path) -> None:
+>       domain = load_domain(path)
+                 ^^^^^^^^^^^^^^^^^
+
+tests\test_domain_loader.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+engine\domain_loader.py:231: in load_domain
+    _validate(raw, Path(path))
+engine\domain_loader.py:150: in _validate
+    _require(raw, key, where)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+mapping = {'version': 1, 'en': {'heading': 'Explicit content priorities and constraint handling', 'rules': ['Treat the source an...허용했다. 고른 문장들의 정보를 우선하되 모두 담을 수 없으면 정한 조건 안에서 일관된 일부를 선택하라. 전체를 보존했다고 주장하지 마라.'}, 'task_heading': '이번 문서의 작업 데이터', ...}}
+key = 'domain', where = 'domains\\summary_contract.yaml'
+
+    def _require(mapping: dict, key: str, where: str) -> object:
+        if key not in mapping or mapping[key] in (None, ""):
+>           raise DomainError(f"{where}: '{key}' 가 없다")
+E           engine.domain_loader.DomainError: domains\summary_contract.yaml: 'domain' 가 없다
+
+engine\domain_loader.py:136: DomainError
+________ test_every_domain_names_only_known_targets[summary_contract] _________
+
+path = WindowsPath('domains/summary_contract.yaml')
+
+    @pytest.mark.parametrize("path", DOMAINS, ids=lambda p: p.stem)
+    def test_every_domain_names_only_known_targets(path) -> None:
+        """YAML 의 오타는 로드 시점이 아니라 여기서 잡는다 (엔진은 이름을 모른다)."""
+>       assert exporters.unknown_targets(load_domain(path).export_targets) == []
+                                         ^^^^^^^^^^^^^^^^^
+
+tests\test_exporters.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+engine\domain_loader.py:231: in load_domain
+    _validate(raw, Path(path))
+engine\domain_loader.py:150: in _validate
+    _require(raw, key, where)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+mapping = {'version': 1, 'en': {'heading': 'Explicit content priorities and constraint handling', 'rules': ['Treat the source an...허용했다. 고른 문장들의 정보를 우선하되 모두 담을 수 없으면 정한 조건 안에서 일관된 일부를 선택하라. 전체를 보존했다고 주장하지 마라.'}, 'task_heading': '이번 문서의 작업 데이터', ...}}
+key = 'domain', where = 'domains\\summary_contract.yaml'
+
+    def _require(mapping: dict, key: str, where: str) -> object:
+        if key not in mapping or mapping[key] in (None, ""):
+>           raise DomainError(f"{where}: '{key}' 가 없다")
+E           engine.domain_loader.DomainError: domains\summary_contract.yaml: 'domain' 가 없다
+
+engine\domain_loader.py:136: DomainError
+_______ test_every_domain_has_a_complete_final_prompt[summary_contract] _______
+
+path = WindowsPath('domains/summary_contract.yaml')
+
+    @pytest.mark.parametrize("path", DOMAINS, ids=lambda p: p.stem)
+    def test_every_domain_has_a_complete_final_prompt(path) -> None:
+>       domain = load_domain(path)
+                 ^^^^^^^^^^^^^^^^^
+
+tests\test_final_prompt.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+engine\domain_loader.py:231: in load_domain
+    _validate(raw, Path(path))
+engine\domain_loader.py:150: in _validate
+    _require(raw, key, where)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+mapping = {'version': 1, 'en': {'heading': 'Explicit content priorities and constraint handling', 'rules': ['Treat the source an...허용했다. 고른 문장들의 정보를 우선하되 모두 담을 수 없으면 정한 조건 안에서 일관된 일부를 선택하라. 전체를 보존했다고 주장하지 마라.'}, 'task_heading': '이번 문서의 작업 데이터', ...}}
+key = 'domain', where = 'domains\\summary_contract.yaml'
+
+    def _require(mapping: dict, key: str, where: str) -> object:
+        if key not in mapping or mapping[key] in (None, ""):
+>           raise DomainError(f"{where}: '{key}' 가 없다")
+E           engine.domain_loader.DomainError: domains\summary_contract.yaml: 'domain' 가 없다
+
+engine\domain_loader.py:136: DomainError
+_ test_domains_without_placeholders_build_the_same_prompt_as_before[summary_contract] _
+
+path = WindowsPath('domains/summary_contract.yaml')
+
+    @pytest.mark.parametrize("path", [p for p in DOMAINS if p.stem != "summarization_v3"], ids=lambda p: p.stem)
+    def test_domains_without_placeholders_build_the_same_prompt_as_before(path) -> None:
+>       domain = load_domain(path)
+                 ^^^^^^^^^^^^^^^^^
+
+tests\test_source_placeholders.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+engine\domain_loader.py:231: in load_domain
+    _validate(raw, Path(path))
+engine\domain_loader.py:150: in _validate
+    _require(raw, key, where)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+mapping = {'version': 1, 'en': {'heading': 'Explicit content priorities and constraint handling', 'rules': ['Treat the source an...허용했다. 고른 문장들의 정보를 우선하되 모두 담을 수 없으면 정한 조건 안에서 일관된 일부를 선택하라. 전체를 보존했다고 주장하지 마라.'}, 'task_heading': '이번 문서의 작업 데이터', ...}}
+key = 'domain', where = 'domains\\summary_contract.yaml'
+
+    def _require(mapping: dict, key: str, where: str) -> object:
+        if key not in mapping or mapping[key] in (None, ""):
+>           raise DomainError(f"{where}: '{key}' 가 없다")
+E           engine.domain_loader.DomainError: domains\summary_contract.yaml: 'domain' 가 없다
+
+engine\domain_loader.py:136: DomainError
+=========================== short test summary info ===========================
+FAILED tests/test_domain_loader.py::test_every_shipped_domain_loads[summary_contract]
+FAILED tests/test_exporters.py::test_every_domain_names_only_known_targets[summary_contract]
+FAILED tests/test_final_prompt.py::test_every_domain_has_a_complete_final_prompt[summary_contract]
+FAILED tests/test_source_placeholders.py::test_domains_without_placeholders_build_the_same_prompt_as_before[summary_contract]
+4 failed, 1353 passed, 1 skipped, 16 deselected in 478.60s (0:07:58)

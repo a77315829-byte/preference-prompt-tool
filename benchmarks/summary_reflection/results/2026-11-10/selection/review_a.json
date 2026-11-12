@@ -1,0 +1,326 @@
+[
+  {
+    "output_id": "B001",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "Distinctive source language is substantially reused: the opening sentence, the firearm quotation, the charge sentence and the bond sentence are copied, while the warrant and custody sentences are joined with their original wording largely intact.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Ebony Dickens of East Point, Georgia, posted her Facebook rant under the name Tiffany Milan, police said.", "The post called for shooting white police officers"],
+        "reason": "The adjacent sentences link Dickens to the Facebook post through police attribution and state its threat against white police officers."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["Dickens, 33, appeared in court Wednesday on a charge of disseminating information related to terrorist acts."],
+        "reason": "The charge is stated accurately as a charge, without asserting a conviction."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["A judge set a $10,000 bond for her and banned her from social media."],
+        "reason": "The judge's social-media ban is explicit, with Dickens as the clear antecedent."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B002",
+    "sentence_count": 7,
+    "wording_pass": true,
+    "wording_reason": "Most clauses are reformulated or recombined: 'having first helped people involved in another accident,' 'his loss would affect everyone' and 'Meredith's ability to manage independently' recast the source. Retained names, rankings and short terms such as 'mainstay' do not make the summary predominantly copied sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Patrick Dempsey's character, Dr. Derek Shepherd, died after a car crash in Thursday night's \"Grey's Anatomy,\""],
+        "reason": "The death is clearly assigned to the fictional character on the named series, not to Dempsey."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["Patrick Dempsey's character, Dr. Derek Shepherd, died after a car crash"],
+        "reason": "The crash preceding Shepherd's death is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["The series will continue, with Pompeo contracted through season 12"],
+        "reason": "The series' continuation after the described death is explicit; the contract is supporting detail."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B003",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "The summary substantially preserves source phrases including 'rations license plates as it looks for a solution to its gridlocked roads and polluted skies,' 'automatically qualifies for a license plate' and 'hassles of buying and owning a car have become too much.' Several source clauses are combined with only small edits.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Shanghai, like many large Chinese cities, rations license plates"],
+        "reason": "Shanghai's restriction of license-plate supply is stated directly."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["Another option would be to buy a hybrid vehicle that automatically qualifies for a license plate"],
+        "reason": "The automatic plate qualification associated with a hybrid purchase is retained."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The summary states ownership hassles and declining status-symbol appeal, but does not state that some affluent city residents consequently forgo cars. Survey attitudes do not establish that behavioral response; no incidental survey detail is required for this fact."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B004",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete original source sentences. The first only drops the permitted leading '(CNN)' label; the second retains its original words and punctuation.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Andrew Getty, one of the heirs to billions of oil money, appears to have died of natural causes, a Los Angeles Police Department spokesman said."],
+        "reason": "The tentative natural-cause assessment and police attribution are both retained; the cause is not presented as confirmed."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The absence of a criminal investigation is omitted. A tentative natural-cause assessment does not by itself establish investigative status."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["Aguilar said, adding that an autopsy will be conducted."],
+        "reason": "The planned autopsy is stated as a future examination of Getty, not a completed one."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B005",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete source sentences with their original wording and punctuation, including the campus-attack sentence, the suspected-mastermind sentence, Mohamud's nationality and the government's recruitment concern.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Only a few kilometers away, 147 people -- mostly students -- were brutally massacred when Al-Shabaab militants invaded the campus in Garissa, a town in northeastern Kenya."],
+        "reason": "The Garissa campus attack, Al-Shabaab involvement and 147 deaths are stated using the frozen evidence's own campus wording for the university event."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["the man suspected by Kenyan authorities of being the \"mastermind\" behind the atrocity -- Mohamed Mohamud", "What worries authorities here is exactly that -- Mohamud was Kenyan."],
+        "reason": "The named suspected planner is explicitly identified as Kenyan, while his alleged role remains a suspicion attributed to Kenyan authorities."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["The Kenyan government is concerned that Al-Shabaab is recruiting disaffected youth from inside the country."],
+        "reason": "Domestic youth recruitment is preserved as the government's stated concern."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B006",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Each sentence is copied as a complete source sentence without word or punctuation changes: the campus attack, suspected mastermind, Interior Ministry statement and recruitment concern.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Only a few kilometers away, 147 people -- mostly students -- were brutally massacred when Al-Shabaab militants invaded the campus in Garissa, a town in northeastern Kenya.", "the attack on the university"],
+        "reason": "The campus attack, perpetrators, death toll and university setting are conveyed, with the later reference clearly identifying the same attack."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Mohamud is identified as the suspected planner, but the explicit nationality statement concerns a gunman. 'Also Kenyan' suggests an omitted comparison without unambiguously identifying Mohamud as that comparison. The essential link between suspected planner and Kenyan nationality is therefore not securely conveyed; this is ambiguous coverage rather than a false nationality claim."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["The Kenyan government is concerned that Al-Shabaab is recruiting disaffected youth from inside the country."],
+        "reason": "The government attribution, concern and recruitment of youth within Kenya are explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B007",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The summary recasts multiple source sentences into two new sentences, using 'remained missing nearly a week after arriving at JFK' and 'investigating and searching with airport ground handlers and hired specialists.' Names and necessary incident terms remain, but most clauses have new structure and wording.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Jennifer Stewart's 2-year-old cat Felix remained missing nearly a week after arriving at JFK on an April 1 Etihad Airways flight from Abu Dhabi"],
+        "reason": "The pet's identity, disappearance after the Etihad journey and Kennedy Airport context are conveyed. JFK is an unambiguous abbreviation of the airport named in the source."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["cat Felix remained missing nearly a week"],
+        "reason": "Felix's unresolved missing status at reporting time is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["Etihad is investigating and searching with airport ground handlers and hired specialists"],
+        "reason": "The airline's active participation in the search is explicit; specific methods are supporting details."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B008",
+    "sentence_count": 10,
+    "wording_pass": true,
+    "wording_reason": "Substantial distinctive source wording is retained, including the complete opening, post-removal, firearm, charge, bond and release sentences. The police quotation and warrant/custody clauses also closely reuse source language.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Ebony Dickens of East Point, Georgia, posted her Facebook rant under the name Tiffany Milan, police said.", "East Point police Lt. Cliff Chandler told WSB that she was talking about killing 15 people within a day or so", "East Point police said the posts threatened white officers specifically"],
+        "reason": "Police attribution, Dickens's Facebook authorship and lethal threats against white officers are linked across these sentences. The exact shooting method is not repeated, but the core police-attributed lethal threat is retained; the officer's uncertainty about her seriousness is also retained in the summary."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["Dickens, 33, appeared in court Wednesday on a charge of disseminating information related to terrorist acts."],
+        "reason": "The specified charge is explicit and is not converted into a conviction."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["A judge set a $10,000 bond for her and banned her from social media."],
+        "reason": "The judicial social-media ban is explicit, with Dickens as the clear antecedent."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B009",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Most clauses preserve distinctive source language, including 'rations license plates,' 'gridlocked roads and polluted skies,' 'automatically qualifies for a license plate,' 'American-style garages' and 'hassles of buying and owning a car have become too much.' The edits mainly combine source clauses.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Shanghai, like many large Chinese cities, rations license plates"],
+        "reason": "The restriction of license-plate supply in Shanghai is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["Another option would be to buy a hybrid vehicle that automatically qualifies for a license plate"],
+        "reason": "Buying a hybrid is presented as an alternative with automatic plate qualification."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Ownership hassles and declining appeal as a status symbol are stated, but some affluent city residents' resulting decision to forgo cars is omitted. The survey attitude is not equivalent to that behavioral consequence."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B010",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The source is reorganized and paraphrased into two sentences, including 'remained missing nearly a week after an April 1 Etihad Airways flight' and 'helping search for him with airport ground handlers and hired specialists.' Necessary names and short incident descriptions are retained, but complete source sentences are not copied.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Jennifer Stewart's 2-year-old cat, Felix, remained missing nearly a week after an April 1 Etihad Airways flight from Abu Dhabi to New York, where the airline said he disappeared on Kennedy Airport grounds."],
+        "reason": "The pet, Etihad journey and disappearance at Kennedy Airport are explicit, including the airline attribution for the location."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["cat, Felix, remained missing nearly a week"],
+        "reason": "The summary explicitly retains the unresolved outcome."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["Etihad is investigating, helping search for him with airport ground handlers and hired specialists"],
+        "reason": "Etihad's participation in the ongoing search is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B011",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete original source sentences. The first only drops the permitted leading '(CNN)' label; the second retains its original words and punctuation.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Andrew Getty, one of the heirs to billions of oil money, appears to have died of natural causes, a Los Angeles Police Department spokesman said."],
+        "reason": "The tentative natural-cause assessment and police attribution are both retained; the cause is not presented as confirmed."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The absence of a criminal investigation is omitted. A tentative natural-cause assessment does not by itself establish investigative status."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["Aguilar said, adding that an autopsy will be conducted."],
+        "reason": "The planned autopsy is stated as a future examination of Getty, not a completed one."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B012",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "The summary mostly rewrites the source: 'his absence would be widely felt,' 'Dempsey's departure came with a year still remaining' and 'Meredith's independence' recast the original clauses. Retained names, rankings and terms such as 'development agreement' do not amount to predominantly copied sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Patrick Dempsey's character, Dr. Derek Shepherd, died in Thursday night's episode of \"Grey's Anatomy\""],
+        "reason": "Shepherd's fictional death on the named show is stated clearly and distinguished from the actor."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["Patrick Dempsey's character, Dr. Derek Shepherd, died in Thursday night's episode of \"Grey's Anatomy\" after a car crash"],
+        "reason": "The crash preceding the character's death is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["The series will continue, with its 11th season ending in May and Ellen Pompeo, who plays Derek's wife Meredith, contracted through season 12."],
+        "reason": "The show's continuation after the character's death is explicit."
+      }
+    ],
+    "issues": []
+  }
+]

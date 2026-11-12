@@ -1,0 +1,74 @@
+{
+  "E001": {
+    "arm": "current",
+    "case_id": "H02"
+  },
+  "E002": {
+    "arm": "current",
+    "case_id": "H06"
+  },
+  "E003": {
+    "arm": "exploratory",
+    "case_id": "H07"
+  },
+  "E004": {
+    "arm": "current",
+    "case_id": "H05"
+  },
+  "E005": {
+    "arm": "exploratory",
+    "case_id": "H01"
+  },
+  "E006": {
+    "arm": "current",
+    "case_id": "H01"
+  },
+  "E007": {
+    "arm": "exploratory",
+    "case_id": "H09"
+  },
+  "E008": {
+    "arm": "exploratory",
+    "case_id": "H03"
+  },
+  "E009": {
+    "arm": "current",
+    "case_id": "H08"
+  },
+  "E010": {
+    "arm": "exploratory",
+    "case_id": "H04"
+  },
+  "E011": {
+    "arm": "current",
+    "case_id": "H04"
+  },
+  "E012": {
+    "arm": "current",
+    "case_id": "H03"
+  },
+  "E013": {
+    "arm": "exploratory",
+    "case_id": "H05"
+  },
+  "E014": {
+    "arm": "exploratory",
+    "case_id": "H06"
+  },
+  "E015": {
+    "arm": "exploratory",
+    "case_id": "H02"
+  },
+  "E016": {
+    "arm": "current",
+    "case_id": "H07"
+  },
+  "E017": {
+    "arm": "current",
+    "case_id": "H09"
+  },
+  "E018": {
+    "arm": "exploratory",
+    "case_id": "H08"
+  }
+}

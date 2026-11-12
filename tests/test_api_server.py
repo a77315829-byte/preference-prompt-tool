@@ -85,8 +85,10 @@ def test_live_failure_falls_back_to_demo_without_leaking(
     assert session["demo_mode"] is True
     assert session["demo_reason"] == "generation_failed"
     assert "sk-abc" not in body
-    # 원인은 서버 터미널에는 남아야 한다.
-    assert "sk-abc" in capsys.readouterr().out
+    # 오류 유형만 남기고 공급자 예외에 포함된 키 조각은 로그에서도 제외한다.
+    logged = capsys.readouterr().out
+    assert 'RuntimeError' in logged
+    assert "sk-abc" not in logged
 
 
 def test_live_failure_mid_session_keeps_choices(
@@ -129,6 +131,35 @@ def _get(base: str, path: str) -> tuple[int, dict]:
             return resp.status, json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as err:
         return err.code, json.loads(err.read().decode("utf-8"))
+
+
+@pytest.mark.parametrize("live", [False, True])
+def test_removed_aws_routes_and_domain_are_unavailable(server, monkeypatch, live) -> None:
+    """예전 클라이언트가 직접 요청해도 제외한 AWS 기능을 실행할 수 없다."""
+    monkeypatch.setattr(api_server, "LIVE", live)
+    monkeypatch.setattr(api_server, "_live_key_available", lambda _: pytest.fail("제외된 도메인은 생성 준비 전에 거부해야 한다"))
+    assert _post(server, "/aws/costs", {"demoMode": False})[0] == 404
+    status, body = _post(server, "/sessions", {
+        "domainKey": "idle_tracker", "sourceText": "legacy cost report",
+    })
+    assert status == 400
+    assert "지원하지 않는 도메인" in body
+
+
+def test_removed_aws_templates_and_team_history_are_not_listed(server, monkeypatch) -> None:
+    from types import SimpleNamespace
+
+    _, body = _get(server, "/templates")
+    assert all(t["domain"] != "idle_tracker" for t in body["templates"])
+    monkeypatch.setattr(api_server.ApiHandler, "_current_user", lambda _: SimpleNamespace(id=1))
+    monkeypatch.setattr(api_server.TEAMS, "list_for_user", lambda _: [
+        api_server.team.TeamSummary("legacy", "idle_tracker", 1, "2026-11-03"),
+        api_server.team.TeamSummary("coding-team", "coding", 1, "2026-11-03"),
+    ])
+    _, body = _get(server, "/teams")
+    assert [t["code"] for t in body["teams"]] == ["coding-team"]
+    monkeypatch.setattr(api_server.TEAMS, "get", lambda _: ("idle_tracker", []))
+    assert _get(server, "/teams/legacy")[0] == 404
 
 
 def _finished_session(base: str, live: bool) -> str:

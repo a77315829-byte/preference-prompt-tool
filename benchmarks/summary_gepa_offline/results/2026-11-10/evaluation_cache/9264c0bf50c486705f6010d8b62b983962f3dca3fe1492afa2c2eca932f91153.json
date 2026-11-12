@@ -1,0 +1,69 @@
+{
+  "cache_key": "9264c0bf50c486705f6010d8b62b983962f3dca3fe1492afa2c2eca932f91153",
+  "case": {
+    "record_index": 15,
+    "dataset_split": "val",
+    "source": "(CNN)WikiLeaks founder Julian Assange has agreed to be interviewed by Swedish prosecutors in London, his lawyer in Sweden told CNN.\nAssange has been holed up in the Ecuadorian Embassy in London since June 2012 to avoid extradition to Sweden, where prosecutors want to question him about 2010 allegations that he raped one woman and sexually molested another.\nAccording to the lawyer, Thomas Olsson, Swedish prosecutors will now have to reach out to British and Ecuadorian authorities to request permission to conduct the interview at the embassy.\nThe prosecutors previously balked at coming to Britain to question Assange.\nHowever, some of the alleged crimes will be subject to a statute of limitations in August 2015, according to a statement from Marianne Ny, the director of public prosecutions.\nNy explained the logic behind the Swedish authorities' change of approach in her statement.\n\"My view has always been that to perform an interview with him at the Ecuadorian embassy in London would lower the quality of the interview, and that he would need to be present in Sweden in any case should there be a trial in the future,\" Ny said.\n\"This assessment remains unchanged.\nNow that time is of the essence, I have viewed it therefore necessary to accept such deficiencies to the investigation and likewise take the risk that the interview does not move the case forward, particularly as there are no other measures on offer without Assange being present in Sweden.\"\nThe Australian national has not been charged and denies the claims.\nAssange has said he fears Sweden would extradite him to the United States, where he could face the death penalty if he is charged and convicted of publishing government secrets through WikiLeaks.\nEcuador granted Assange political asylum in 2012.\nCNN's Per Nyberg contributed to this report.",
+    "source_sha256": "6988727e89aca434181e8c3f9b96cc5616588e90c4e15c9c22d4a564fe5fd4a1",
+    "source_words": 298,
+    "id": "V06",
+    "profile": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "base_prompt": "You summarize English text according to the requested conditions while staying grounded in the source.\n\nSummarize the source text below in English according to these instructions.\n\n## Conditions for this summary\nThese are the conditions for this summary.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words while preserving meaning, quantities and attribution; retain source expressions where helpful.\n\n## Preserve source facts and central information\n- Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition.\n- Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus.\n- Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately.\n- Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first.\n- For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text.\n- If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage.\n- Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check.\n\n## Output format\nOutput only the summary, in English. No preamble, title, checklist, explanation, or closing."
+  },
+  "supplement": "Use only information stated in the supplied text, including in brief descriptive modifiers and appositives. Familiarity with a subject does not license adding a category, property, setting or explanation. Remove any unsupported embellishment rather than relying on outside knowledge.\n\nWhen the source presents a dispute, prioritize the main event, the participants' attributed positions and the source-supported basis of the disagreement over secondary chronology or procedural details. A criticism of a position does not by itself communicate who holds that position. Select complementary content rather than several passages serving the same role.\n\nFor exact extraction, preserve the context needed to identify a quotation's speaker and the referents of dependent sentences. Choose a feasible set of complete source sentences within the existing budget; if necessary, prefer a clearer self-contained alternative. Do not rewrite, combine or add attribution to extracted sentences.",
+  "summary": "Julian Assange, who denies the 2010 rape and molestation allegations and has not been charged, has agreed to questioning by Swedish prosecutors in London, his lawyer said. Prosecutors changed their position as some alleged crimes approach the August 2015 statute-of-limitations deadline, but must still seek British and Ecuadorian permission to interview him at the Ecuadorian Embassy, where he has stayed since June 2012 to avoid extradition to Sweden.",
+  "score": 1.0,
+  "feedback": "{\"preserved_facts\": [{\"id\": \"F1\", \"preserved\": true, \"summary_evidence\": [\"Julian Assange, who denies the 2010 rape and molestation allegations and has not been charged, has agreed to questioning by Swedish prosecutors in London, his lawyer said.\"], \"reason\": \"His agreement to London questioning remains attributed to his lawyer, without asserting that questioning has occurred.\"}, {\"id\": \"F2\", \"preserved\": true, \"summary_evidence\": [\"Julian Assange, who denies the 2010 rape and molestation allegations and has not been charged, has agreed to questioning by Swedish prosecutors in London, his lawyer said.\"], \"reason\": \"The sexual allegations are identified as the context of Swedish questioning and remain allegations, explicitly denied and uncharged.\"}, {\"id\": \"F3\", \"preserved\": true, \"summary_evidence\": [\"Prosecutors changed their position as some alleged crimes approach the August 2015 statute-of-limitations deadline\"], \"reason\": \"The August 2015 deadline is preserved and correctly applies only to some alleged offenses.\"}], \"factual_issues\": [], \"reviewed_wording\": \"The source is reorganized and paraphrased into two sentences, using agreed to questioning, changed their position, approach the deadline and must still seek permission instead of the original sentence structures.\", \"automatic\": {\"length\": {\"score\": 1.0, \"feedback\": \"문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다.\"}, \"extractiveness\": {\"score\": 1.0, \"feedback\": \"표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 46%.\"}}, \"score_rule\": \"coverage only when all condition checks pass and no factual issue is flagged\"}",
+  "review": {
+    "output_id": "Q9264c0bf50c48670",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The source is reorganized and paraphrased into two sentences, using agreed to questioning, changed their position, approach the deadline and must still seek permission instead of the original sentence structures.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Julian Assange, who denies the 2010 rape and molestation allegations and has not been charged, has agreed to questioning by Swedish prosecutors in London, his lawyer said."
+        ],
+        "reason": "His agreement to London questioning remains attributed to his lawyer, without asserting that questioning has occurred."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Julian Assange, who denies the 2010 rape and molestation allegations and has not been charged, has agreed to questioning by Swedish prosecutors in London, his lawyer said."
+        ],
+        "reason": "The sexual allegations are identified as the context of Swedish questioning and remain allegations, explicitly denied and uncharged."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Prosecutors changed their position as some alleged crimes approach the August 2015 statute-of-limitations deadline"
+        ],
+        "reason": "The August 2015 deadline is preserved and correctly applies only to some alleged offenses."
+      }
+    ],
+    "issues": []
+  },
+  "automatic": {
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 46%."
+    }
+  },
+  "objective_scores": {
+    "coverage": 1.0,
+    "conditions": 1.0,
+    "no_factual_flags": 1.0
+  }
+}

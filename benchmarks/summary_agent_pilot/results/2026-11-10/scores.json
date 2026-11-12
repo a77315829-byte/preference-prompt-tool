@@ -1,0 +1,72 @@
+{
+  "outputs": 27,
+  "reviewer_agreement": {
+    "sentence_count": 27,
+    "wording": 27,
+    "facts": 80,
+    "any_issue": 27
+  },
+  "disagreement_ids": [
+    "O17"
+  ],
+  "by_reviewer": {
+    "a": {
+      "general": {
+        "outputs": 9,
+        "length_pass": 2,
+        "wording_pass": 4,
+        "both_conditions_pass": 0,
+        "facts_preserved": 21,
+        "facts_total": 27,
+        "outputs_with_factual_issue": 1
+      },
+      "manual": {
+        "outputs": 9,
+        "length_pass": 9,
+        "wording_pass": 8,
+        "both_conditions_pass": 8,
+        "facts_preserved": 21,
+        "facts_total": 27,
+        "outputs_with_factual_issue": 0
+      },
+      "assembled": {
+        "outputs": 9,
+        "length_pass": 9,
+        "wording_pass": 8,
+        "both_conditions_pass": 8,
+        "facts_preserved": 21,
+        "facts_total": 27,
+        "outputs_with_factual_issue": 0
+      }
+    },
+    "b": {
+      "general": {
+        "outputs": 9,
+        "length_pass": 2,
+        "wording_pass": 4,
+        "both_conditions_pass": 0,
+        "facts_preserved": 21,
+        "facts_total": 27,
+        "outputs_with_factual_issue": 1
+      },
+      "manual": {
+        "outputs": 9,
+        "length_pass": 9,
+        "wording_pass": 8,
+        "both_conditions_pass": 8,
+        "facts_preserved": 22,
+        "facts_total": 27,
+        "outputs_with_factual_issue": 0
+      },
+      "assembled": {
+        "outputs": 9,
+        "length_pass": 9,
+        "wording_pass": 8,
+        "both_conditions_pass": 8,
+        "facts_preserved": 21,
+        "facts_total": 27,
+        "outputs_with_factual_issue": 0
+      }
+    }
+  }
+}

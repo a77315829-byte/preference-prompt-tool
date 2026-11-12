@@ -1,0 +1,161 @@
+{
+  "arms": {
+    "current": {
+      "mean_max_reference_lcs_f1": 0.16925756739741413,
+      "mean_words": 137.55555555555554,
+      "records": [
+        {
+          "id": "H01",
+          "max_reference_lcs_f1": 0.2331288343558282,
+          "words": 220
+        },
+        {
+          "id": "H02",
+          "max_reference_lcs_f1": 0.13636363636363635,
+          "words": 72
+        },
+        {
+          "id": "H03",
+          "max_reference_lcs_f1": 0.15584415584415584,
+          "words": 61
+        },
+        {
+          "id": "H04",
+          "max_reference_lcs_f1": 0.18952618453865336,
+          "words": 283
+        },
+        {
+          "id": "H05",
+          "max_reference_lcs_f1": 0.13861386138613863,
+          "words": 57
+        },
+        {
+          "id": "H06",
+          "max_reference_lcs_f1": 0.2634146341463415,
+          "words": 119
+        },
+        {
+          "id": "H07",
+          "max_reference_lcs_f1": 0.109375,
+          "words": 82
+        },
+        {
+          "id": "H08",
+          "max_reference_lcs_f1": 0.16988416988416988,
+          "words": 202
+        },
+        {
+          "id": "H09",
+          "max_reference_lcs_f1": 0.12716763005780346,
+          "words": 142
+        }
+      ]
+    },
+    "exploratory": {
+      "mean_max_reference_lcs_f1": 0.16201888807157552,
+      "mean_words": 136.44444444444446,
+      "records": [
+        {
+          "id": "H01",
+          "max_reference_lcs_f1": 0.17721518987341772,
+          "words": 208
+        },
+        {
+          "id": "H02",
+          "max_reference_lcs_f1": 0.09900990099009901,
+          "words": 85
+        },
+        {
+          "id": "H03",
+          "max_reference_lcs_f1": 0.15217391304347827,
+          "words": 76
+        },
+        {
+          "id": "H04",
+          "max_reference_lcs_f1": 0.21052631578947367,
+          "words": 300
+        },
+        {
+          "id": "H05",
+          "max_reference_lcs_f1": 0.13861386138613863,
+          "words": 57
+        },
+        {
+          "id": "H06",
+          "max_reference_lcs_f1": 0.23469387755102042,
+          "words": 110
+        },
+        {
+          "id": "H07",
+          "max_reference_lcs_f1": 0.109375,
+          "words": 82
+        },
+        {
+          "id": "H08",
+          "max_reference_lcs_f1": 0.1927710843373494,
+          "words": 188
+        },
+        {
+          "id": "H09",
+          "max_reference_lcs_f1": 0.1437908496732026,
+          "words": 122
+        }
+      ]
+    },
+    "gepa": {
+      "mean_max_reference_lcs_f1": 0.16925756739741413,
+      "mean_words": 137.55555555555554,
+      "records": [
+        {
+          "id": "H01",
+          "max_reference_lcs_f1": 0.2331288343558282,
+          "words": 220
+        },
+        {
+          "id": "H02",
+          "max_reference_lcs_f1": 0.13636363636363635,
+          "words": 72
+        },
+        {
+          "id": "H03",
+          "max_reference_lcs_f1": 0.15584415584415584,
+          "words": 61
+        },
+        {
+          "id": "H04",
+          "max_reference_lcs_f1": 0.18952618453865336,
+          "words": 283
+        },
+        {
+          "id": "H05",
+          "max_reference_lcs_f1": 0.13861386138613863,
+          "words": 57
+        },
+        {
+          "id": "H06",
+          "max_reference_lcs_f1": 0.2634146341463415,
+          "words": 119
+        },
+        {
+          "id": "H07",
+          "max_reference_lcs_f1": 0.109375,
+          "words": 82
+        },
+        {
+          "id": "H08",
+          "max_reference_lcs_f1": 0.16988416988416988,
+          "words": 202
+        },
+        {
+          "id": "H09",
+          "max_reference_lcs_f1": 0.12716763005780346,
+          "words": 142
+        }
+      ],
+      "copied_from": "current"
+    }
+  },
+  "method": "Maximum lowercase word-token LCS F1 over preselected human references; no stemming. Not an official ROUGE implementation or factuality metric.",
+  "selection_use": "Never supplied to GEPA or generators/reviewers. Post-hoc diagnostic only; no candidate selection on this score.",
+  "limitations": "Lexical/style overlap can penalize faithful alternatives and reward copied wording. Human references can omit details or contain errors."
+}

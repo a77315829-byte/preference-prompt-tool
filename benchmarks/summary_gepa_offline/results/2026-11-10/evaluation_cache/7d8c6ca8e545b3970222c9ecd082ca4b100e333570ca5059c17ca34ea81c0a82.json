@@ -1,0 +1,69 @@
+{
+  "cache_key": "7d8c6ca8e545b3970222c9ecd082ca4b100e333570ca5059c17ca34ea81c0a82",
+  "case": {
+    "record_index": 26,
+    "dataset_split": "val",
+    "source": "(CNN)A top al Qaeda in the Arabian Peninsula leader -- who a few years ago was in a U.S. detention facility -- was among five killed in an airstrike in Yemen, the terror group said, showing the organization is vulnerable even as Yemen appears close to civil war.\nIbrahim al-Rubaish died Monday night in what AQAP's media wing, Al-Malahem Media, called a \"crusader airstrike.\"\nThe Al-Malahem Media obituary characterized al-Rubaish as a religious scholar and combat commander.\nA Yemeni Defense Ministry official and two Yemeni national security officials not authorized to speak on record confirmed that al-Rubaish had been killed, but could not specify how he died.\nAl-Rubaish was once held by the U.S. government at its detention facility in Guantanamo Bay, Cuba.\nIn fact, he was among a number of detainees who sued the administration of then-President George W. Bush to challenge the legality of their confinement in Gitmo.\nHe was eventually released as part of Saudi Arabia's program for rehabilitating jihadist terrorists, a program that U.S. Sen. Jeff Sessions, R-Alabama, characterized as \"a failure.\"\nIn December 2009, Sessions listed al-Rubaish among those on the virtual \" 'Who's Who' of al Qaeda terrorists on the Arabian peninsula ... who have either graduated or escaped from the program en route to terrorist acts.\"\nThe United States has been active in Yemen, working closely with governments there to go after AQAP leaders like al-Rubaish.\nWhile it was not immediately clear how he died, drone strikes have killed many other members of the terrorist group.\nYemen, however, has been in disarray since Houthi rebels began asserting themselves last year.\nThe Shiite minority group even managed to take over the capital of Sanaa and, in January, force out Yemeni President Abdu Rabu Mansour Hadi -- who had been a close U.S. ally in its anti-terror fight.\nHadi still claims he is Yemen's legitimate leader, and he is working with a Saudi-led military coalition to target Houthis and supporters of former President Ali Abdullah Saleh.\nMeanwhile, Yemen has been awash in violence and chaos -- which in some ways has been good for groups such as AQAP.\nA prison break earlier this month freed 270 prisoners, including some senior AQAP figures, according to a senior Defense Ministry official, and the United States pulled the last of its special operations forces out of Yemen last month, which some say makes things easier for AQAP.\nCNN's Anas Hamdan and Merieme Arif contributed to this report.",
+    "source_sha256": "30c614bcb09c7e393f86a7284d0f337d70505a7a9240f6c55e5d47027d789f8b",
+    "source_words": 409,
+    "id": "V03",
+    "profile": {
+      "length": "long",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "base_prompt": "You summarize English text according to the requested conditions while staying grounded in the source.\n\nSummarize the source text below in English according to these instructions.\n\n## Conditions for this summary\nThese are the conditions for this summary.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Mostly rephrase in your own words while preserving meaning, quantities and attribution; retain source expressions where helpful.\n\n## Preserve source facts and central information\n- Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition.\n- Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus.\n- Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately.\n- Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first.\n- For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text.\n- If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage.\n- Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check.\n\n## Output format\nOutput only the summary, in English. No preamble, title, checklist, explanation, or closing."
+  },
+  "supplement": "Use only information stated in the supplied text, including in brief descriptive modifiers and appositives. Familiarity with a subject does not license adding a category, property, setting or explanation. Remove any unsupported embellishment rather than relying on outside knowledge.\n\nWhen the source presents a dispute, prioritize the main event, the participants' attributed positions and the source-supported basis of the disagreement over secondary chronology or procedural details. A criticism of a position does not by itself communicate who holds that position. Select complementary content rather than several passages serving the same role.\n\nFor exact extraction, preserve the context needed to identify a quotation's speaker and the referents of dependent sentences. Choose a feasible set of complete source sentences within the existing budget; if necessary, prefer a clearer self-contained alternative. Do not rewrite, combine or add attribution to extracted sentences.",
+  "summary": "Al Qaeda in the Arabian Peninsula said its senior leader Ibrahim al-Rubaish was one of five people killed in an airstrike in Yemen. The group's media arm, Al-Malahem Media, said he died Monday night and described him as both a religious scholar and a combat commander. Three Yemeni defense and national security officials confirmed his death but could not establish its cause. Al-Rubaish had been detained at Guantanamo Bay, where he joined other prisoners in challenging their detention, and was later freed through Saudi Arabia's rehabilitation program for jihadist terrorists. Senator Jeff Sessions criticized that program as a failure and cited al-Rubaish in December 2009 among participants who subsequently engaged in terrorist acts. Yemen's turmoil has intensified since Houthi rebels seized Sanaa and forced President Abdu Rabu Mansour Hadi from power in January. Hadi continues to claim the presidency and is cooperating with a Saudi-led coalition against the Houthis and forces backing former President Ali Abdullah Saleh. The instability has also benefited AQAP: a senior Defense Ministry official said a prison escape earlier this month freed 270 inmates, including senior members of the group. The United States withdrew its remaining special operations personnel from Yemen last month, a move some say has made conditions easier for AQAP.",
+  "score": 1.0,
+  "feedback": "{\"preserved_facts\": [{\"id\": \"F1\", \"preserved\": true, \"summary_evidence\": [\"Al Qaeda in the Arabian Peninsula said its senior leader Ibrahim al-Rubaish was one of five people killed in an airstrike in Yemen.\"], \"reason\": \"The airstrike death in Yemen is explicitly reported as the group's account.\"}, {\"id\": \"F2\", \"preserved\": true, \"summary_evidence\": [\"Three Yemeni defense and national security officials confirmed his death but could not establish its cause.\"], \"reason\": \"Both the officials' confirmation of death and their inability to confirm its cause are preserved.\"}, {\"id\": \"F3\", \"preserved\": true, \"summary_evidence\": [\"Al-Rubaish had been detained at Guantanamo Bay\"], \"reason\": \"His previous detention at the named Guantanamo Bay facility conveys the identifying detention background; the facility reference is unambiguous in this account.\"}], \"factual_issues\": [], \"reviewed_wording\": \"Most clauses are reformulated, for example one of five people killed, media arm, could not establish its cause, and withdrew its remaining special operations personnel. Names, figures and necessary technical terms are retained.\", \"automatic\": {\"length\": {\"score\": 1.0, \"feedback\": \"문장 구분 휴리스틱 v2 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다.\"}, \"extractiveness\": {\"score\": 1.0, \"feedback\": \"표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 36%.\"}}, \"score_rule\": \"coverage only when all condition checks pass and no factual issue is flagged\"}",
+  "review": {
+    "output_id": "Q7d8c6ca8e545b397",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "Most clauses are reformulated, for example one of five people killed, media arm, could not establish its cause, and withdrew its remaining special operations personnel. Names, figures and necessary technical terms are retained.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Al Qaeda in the Arabian Peninsula said its senior leader Ibrahim al-Rubaish was one of five people killed in an airstrike in Yemen."
+        ],
+        "reason": "The airstrike death in Yemen is explicitly reported as the group's account."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Three Yemeni defense and national security officials confirmed his death but could not establish its cause."
+        ],
+        "reason": "Both the officials' confirmation of death and their inability to confirm its cause are preserved."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Al-Rubaish had been detained at Guantanamo Bay"
+        ],
+        "reason": "His previous detention at the named Guantanamo Bay facility conveys the identifying detention background; the facility reference is unambiguous in this account."
+      }
+    ],
+    "issues": []
+  },
+  "automatic": {
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 36%."
+    }
+  },
+  "objective_scores": {
+    "coverage": 1.0,
+    "conditions": 1.0,
+    "no_factual_flags": 1.0
+  }
+}

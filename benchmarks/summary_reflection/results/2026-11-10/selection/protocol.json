@@ -1,0 +1,23 @@
+{
+  "stage": "selection",
+  "frozen_utc": "2026-11-10T06:37:06.903462+00:00",
+  "arms": [
+    "current",
+    "candidate"
+  ],
+  "documents": 6,
+  "external_paid_api_calls": 0,
+  "reflection": "One fresh agent proposes one generic supplement from only the 18 already observed documents. No revision after selection or final results. This is not an execution of GEPA.",
+  "selection_rule": "Candidate eligible only if EACH blind reviewer records at least 2 additional preserved facts /18 over current, no fewer joint condition passes, and zero factual-issue outputs. Otherwise retain current. Final candidate is still compared as a research arm even if ineligible; no forced winner.",
+  "final_adoption_rule": "Research evidence for adoption requires selection eligibility AND each reviewer at least 2 extra preserved facts /54 vs BOTH manual and current, no fewer joint condition passes vs either, and zero factual flags. Still not sufficient for mandatory per-request GEPA.",
+  "generation": "Fresh context per arm, same inherited model/settings, first response cached, no paid APIs. Each agent sees only its input, not anchors/evaluation/other outputs. Operational same batch size within stage.",
+  "review": "Two fresh independent blinded agents with same runtime model, source and frozen three facts; no arms/prompts/automatic scores. All issue flags and disagreements audited. Same-model agreement is not human gold truth.",
+  "limits": [
+    "Small English MACSum-news sample",
+    "AI-selected anchors, three per document",
+    "Only one stochastic sample per condition",
+    "No human preference/time/adoption measurement",
+    "Not unseen in pretraining",
+    "No real GEPA latency or usage measurement"
+  ]
+}

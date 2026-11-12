@@ -1,0 +1,39 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useRangePair } from './useRangePair';\nimport { panelStyle } from './styles';\n\nexport type Range = { start: number; end: number };\nexport type Props = { min: number; max: number; onApply: (range: Range) => void };\n\nexport function Component({ min, max, onApply }: Props) {\n  const { start, end, setStart, setEnd, errors, submit } = useRangePair(onApply);\n  const options = Array.from({ length: max - min + 1 }, (_, index) => min + index);\n\n  return (\n    <form aria-label=\"Range pair\" data-testid=\"panel\" style={panelStyle} onSubmit={submit}>\n      <label>\n        Start\n        <select value={start} onChange={event => setStart(event.currentTarget.value)} aria-invalid={errors.start || undefined}>\n          <option value=\"\">Choose</option>\n          {options.map(value => <option key={value} value={String(value)}>{value}</option>)}\n        </select>\n      </label>\n      <label>\n        End\n        <select value={end} onChange={event => setEnd(event.currentTarget.value)} aria-invalid={errors.end || undefined}>\n          <option value=\"\">Choose</option>\n          {options.map(value => <option key={value} value={String(value)}>{value}</option>)}\n        </select>\n      </label>\n      {errors.message && <p role=\"alert\">{errors.message}</p>}\n      <button type=\"submit\">Apply</button>\n    </form>\n  );\n}\n",
+    "useRangePair.ts": "import { useState, type FormEvent } from 'react';\nimport type { Props } from './Component';\n\nexport function useRangePair(onApply: Props['onApply']) {\n  const [start, setStart] = useState('');\n  const [end, setEnd] = useState('');\n  const [errors, setErrors] = useState({ message: '', start: false, end: false });\n\n  function submit(event: FormEvent<HTMLFormElement>) {\n    event.preventDefault();\n    if (start === '' || end === '') {\n      setErrors({ message: 'Choose both values', start: start === '', end: end === '' });\n      return;\n    }\n    const range = { start: Number(start), end: Number(end) };\n    if (range.start > range.end) {\n      setErrors({ message: 'Range order', start: false, end: true });\n      return;\n    }\n    setErrors({ message: '', start: false, end: false });\n    onApply(range);\n  }\n\n  return { start, end, setStart, setEnd, errors, submit };\n}\n",
+    "theme.ts": "export const theme = {\n  colors: { panel: '#f2f6fc', text: '#1d3150' },\n  spacing: { panel: 16, gap: 8 },\n};\n",
+    "styles.ts": "import type { CSSProperties } from 'react';\nimport { theme } from './theme';\n\nexport const panelStyle = {\n  backgroundColor: theme.colors.panel,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n  display: 'grid',\n  gap: theme.spacing.gap,\n} satisfies CSSProperties;\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 1339
+    },
+    {
+      "path": "useRangePair.ts",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: useRangePair.ts",
+      "start": 1366,
+      "end": 2243
+    },
+    {
+      "path": "theme.ts",
+      "block": 2,
+      "reason": "Standalone filename before the complete fenced block: theme.ts",
+      "start": 2263,
+      "end": 2372
+    },
+    {
+      "path": "styles.ts",
+      "block": 3,
+      "reason": "Standalone filename before the complete fenced block: styles.ts",
+      "start": 2393,
+      "end": 2670
+    }
+  ]
+}

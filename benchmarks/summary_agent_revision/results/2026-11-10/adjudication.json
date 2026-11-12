@@ -1,0 +1,14 @@
+{
+  "adjudicator": "Root Codex agent; source-based review, not human labels",
+  "reviewer_disagreements": [],
+  "factual_flags_union": [],
+  "observed_paired_change": {"manual":24,"previous":22,"revised":24,"denominator":27},
+  "interpretation": "Two more frozen propositions preserved by revised than previous on these nine new documents. Revised equals manual in observed counts, not statistical equivalence or superiority.",
+  "case_checks": [
+    {"case_id":"N01","fact_id":"F2","decision":"Revised and manual include government's temporary housing provision; previous retains shelter but omits provider. Root checked summary and frozen source evidence."},
+    {"case_id":"N03","fact_id":"F2","decision":"Revised and manual include the joint military recapture; previous omits it. Root checked summary and source evidence."},
+    {"case_id":"N07","fact_ids":["F1","F2","F3"],"decision":"All three arms produce identical two-sentence extracts. They mention an attempted nuclear-operator theft and similarity of code but omit the broad attribution, 48,000-computer impact and no-critical-data-stolen limitation. F1 bundles multiple attack targets; partial discussion is not counted as full preservation. This does not mean the summary has no valid content."}
+  ],
+  "claim_limits": ["No human preference or usability outcomes", "No significance/equivalence test", "Same-runtime reviewers can share biases", "No factual flag is not proof of error-free text", "Different corpus and revised atomic anchors prevent comparison with previous pilot's 21/27 as a longitudinal gain"],
+  "gepa": "Not executed. Existing optimizer uses form metrics without content gate and overlapping train/validation examples. Needs separate train/dev/test and source-grounded content feedback before an improvement claim."
+}

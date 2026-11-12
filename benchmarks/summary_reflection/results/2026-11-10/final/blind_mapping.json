@@ -1,0 +1,218 @@
+{
+  "B001": {
+    "arm": "manual",
+    "case_id": "T09"
+  },
+  "B002": {
+    "arm": "current",
+    "case_id": "T02"
+  },
+  "B003": {
+    "arm": "manual",
+    "case_id": "T12"
+  },
+  "B004": {
+    "arm": "current",
+    "case_id": "T12"
+  },
+  "B005": {
+    "arm": "candidate",
+    "case_id": "T02"
+  },
+  "B006": {
+    "arm": "manual",
+    "case_id": "T05"
+  },
+  "B007": {
+    "arm": "manual",
+    "case_id": "T18"
+  },
+  "B008": {
+    "arm": "manual",
+    "case_id": "T10"
+  },
+  "B009": {
+    "arm": "manual",
+    "case_id": "T11"
+  },
+  "B010": {
+    "arm": "current",
+    "case_id": "T07"
+  },
+  "B011": {
+    "arm": "manual",
+    "case_id": "T03"
+  },
+  "B012": {
+    "arm": "current",
+    "case_id": "T14"
+  },
+  "B013": {
+    "arm": "candidate",
+    "case_id": "T15"
+  },
+  "B014": {
+    "arm": "candidate",
+    "case_id": "T14"
+  },
+  "B015": {
+    "arm": "current",
+    "case_id": "T18"
+  },
+  "B016": {
+    "arm": "candidate",
+    "case_id": "T12"
+  },
+  "B017": {
+    "arm": "current",
+    "case_id": "T13"
+  },
+  "B018": {
+    "arm": "manual",
+    "case_id": "T06"
+  },
+  "B019": {
+    "arm": "manual",
+    "case_id": "T07"
+  },
+  "B020": {
+    "arm": "current",
+    "case_id": "T11"
+  },
+  "B021": {
+    "arm": "manual",
+    "case_id": "T04"
+  },
+  "B022": {
+    "arm": "candidate",
+    "case_id": "T11"
+  },
+  "B023": {
+    "arm": "manual",
+    "case_id": "T15"
+  },
+  "B024": {
+    "arm": "candidate",
+    "case_id": "T07"
+  },
+  "B025": {
+    "arm": "candidate",
+    "case_id": "T17"
+  },
+  "B026": {
+    "arm": "current",
+    "case_id": "T01"
+  },
+  "B027": {
+    "arm": "manual",
+    "case_id": "T08"
+  },
+  "B028": {
+    "arm": "manual",
+    "case_id": "T02"
+  },
+  "B029": {
+    "arm": "candidate",
+    "case_id": "T03"
+  },
+  "B030": {
+    "arm": "current",
+    "case_id": "T17"
+  },
+  "B031": {
+    "arm": "current",
+    "case_id": "T09"
+  },
+  "B032": {
+    "arm": "manual",
+    "case_id": "T17"
+  },
+  "B033": {
+    "arm": "current",
+    "case_id": "T05"
+  },
+  "B034": {
+    "arm": "current",
+    "case_id": "T10"
+  },
+  "B035": {
+    "arm": "candidate",
+    "case_id": "T16"
+  },
+  "B036": {
+    "arm": "manual",
+    "case_id": "T16"
+  },
+  "B037": {
+    "arm": "candidate",
+    "case_id": "T04"
+  },
+  "B038": {
+    "arm": "current",
+    "case_id": "T06"
+  },
+  "B039": {
+    "arm": "candidate",
+    "case_id": "T10"
+  },
+  "B040": {
+    "arm": "candidate",
+    "case_id": "T08"
+  },
+  "B041": {
+    "arm": "current",
+    "case_id": "T16"
+  },
+  "B042": {
+    "arm": "candidate",
+    "case_id": "T09"
+  },
+  "B043": {
+    "arm": "manual",
+    "case_id": "T13"
+  },
+  "B044": {
+    "arm": "candidate",
+    "case_id": "T13"
+  },
+  "B045": {
+    "arm": "manual",
+    "case_id": "T01"
+  },
+  "B046": {
+    "arm": "candidate",
+    "case_id": "T01"
+  },
+  "B047": {
+    "arm": "current",
+    "case_id": "T03"
+  },
+  "B048": {
+    "arm": "candidate",
+    "case_id": "T06"
+  },
+  "B049": {
+    "arm": "current",
+    "case_id": "T15"
+  },
+  "B050": {
+    "arm": "current",
+    "case_id": "T04"
+  },
+  "B051": {
+    "arm": "current",
+    "case_id": "T08"
+  },
+  "B052": {
+    "arm": "candidate",
+    "case_id": "T05"
+  },
+  "B053": {
+    "arm": "candidate",
+    "case_id": "T18"
+  },
+  "B054": {
+    "arm": "manual",
+    "case_id": "T14"
+  }
+}

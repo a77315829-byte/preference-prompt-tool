@@ -1,0 +1,65 @@
+{
+  "cache_key": "9a9967be33adaa01bbcfd6aada133ade6ff0d9ce27a74994ed3829a577734b23",
+  "case": {
+    "record_index": 74,
+    "dataset_split": "val",
+    "source": "(CNN)Madonna has a thing for making out with fellow performers on stage.\nFirst it was Britney and Christina, and now rapper Drake has been on the receiving end of a little lip action from Madge.\nWhile the blondes had fun with it, Drake appeared less than enthused after Madonna's prolonged smooch onstage at the Coachella music festival in California on Sunday.\nIn an update Monday from \"champagnepapi\" himself on Instagram, the rapper clarified his reaction: \"Don't misinterpret my shock!!\nI got to make out with the queen Madonna and I feel 100 about that forever.\nThank you @Madonna.\"\nAfter the kiss, though, he seemed dazed.\n\"Oh, s***.\nWhat the f*** just happened?\"\nhe asked moments later from the stage.\nIt all went down after Drake performed  \"Madonna,\" a song named for the megastar off his new mixtape \"If You're Reading This It's Too Late,\" according to Billboard.\nHe welcomed Madonna onstage as a special guest to perform a few songs.\nWhile wrapping up \"Human Nature,\" the Material Girl, 56, planted one on the seated Drake, 28, who began to flail his arms after a while in an apparent attempt to escape.\nHis sour face after the encounter led many to speculate that he didn't enjoy the kiss.\nOf course, Drake and Madonna's little makeout sesh got the web talking and meme-ing: .\n\"So @Drake proves that kissing @Madonna is about as ghastly as I always imagined it would be,\" wrote former CNN personality Piers Morgan.\n\"Grandma: give Nana some suga .\nDrake: no no noooooo!!!\"\nwrote another Tweeter.",
+    "source_sha256": "7997f44b26506acc8b8f9e729134e57f9afcebfe8fd3e5f3d0871169aa5b09e8",
+    "source_words": 258,
+    "id": "V01",
+    "profile": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "base_prompt": "You summarize English text according to the requested conditions while staying grounded in the source.\n\nSummarize the source text below in English according to these instructions.\n\n## Conditions for this summary\nThese are the conditions for this summary.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Select complete sentences verbatim from the source. Do not change words or punctuation or write new sentences. Only whitespace normalization and omission of a leading document publisher tag (CNN) or (The Hollywood Reporter), case-insensitively, are allowed. Do not remove attribution inside a sentence.\n\n## Preserve source facts and central information\n- Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition.\n- Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus.\n- Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately.\n- Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first.\n- For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text.\n- If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage.\n- Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check.\n\n## Output format\nOutput only the summary, in English. No preamble, title, checklist, explanation, or closing."
+  },
+  "supplement": "Use only information stated in the supplied text, including in brief descriptive modifiers and appositives. Familiarity with a subject does not license adding a category, property, setting or explanation. Remove any unsupported embellishment rather than relying on outside knowledge.\n\nWhen the source presents a dispute, prioritize the main event, the participants' attributed positions and the source-supported basis of the disagreement over secondary chronology or procedural details. A criticism of a position does not by itself communicate who holds that position. Select complementary content rather than several passages serving the same role.\n\nFor exact extraction, preserve the context needed to identify a quotation's speaker and the referents of dependent sentences. Choose a feasible set of complete source sentences within the existing budget; if necessary, prefer a clearer self-contained alternative. Do not rewrite, combine or add attribution to extracted sentences.",
+  "summary": "While wrapping up \"Human Nature,\" the Material Girl, 56, planted one on the seated Drake, 28, who began to flail his arms after a while in an apparent attempt to escape. His sour face after the encounter led many to speculate that he didn't enjoy the kiss.",
+  "score": 0.3333333333333333,
+  "feedback": "{\"preserved_facts\": [{\"id\": \"F1\", \"preserved\": false, \"summary_evidence\": [], \"reason\": \"The kiss involving Drake is described, but the summary never locates it at Coachella, which is part of the core event in this proposition.\"}, {\"id\": \"F2\", \"preserved\": true, \"summary_evidence\": [\"His sour face after the encounter led many to speculate that he didn't enjoy the kiss.\"], \"reason\": \"The visible expression and resulting public speculation are conveyed, with dislike remaining speculation.\"}, {\"id\": \"F3\", \"preserved\": false, \"summary_evidence\": [], \"reason\": \"The later Instagram clarification and Drake's positive assessment are omitted.\"}], \"factual_issues\": [], \"reviewed_wording\": \"Both sentences are complete, unchanged source sentences: the Human Nature kiss description and the sentence beginning His sour face.\", \"automatic\": {\"length\": {\"score\": 1.0, \"feedback\": \"문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다.\"}, \"extractiveness\": {\"score\": 1.0, \"feedback\": \"완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다.\"}}, \"score_rule\": \"coverage only when all condition checks pass and no factual issue is flagged\"}",
+  "review": {
+    "output_id": "Q9a9967be33adaa01",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete, unchanged source sentences: the Human Nature kiss description and the sentence beginning His sour face.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The kiss involving Drake is described, but the summary never locates it at Coachella, which is part of the core event in this proposition."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "His sour face after the encounter led many to speculate that he didn't enjoy the kiss."
+        ],
+        "reason": "The visible expression and resulting public speculation are conveyed, with dislike remaining speculation."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The later Instagram clarification and Drake's positive assessment are omitted."
+      }
+    ],
+    "issues": []
+  },
+  "automatic": {
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+    }
+  },
+  "objective_scores": {
+    "coverage": 0.3333333333333333,
+    "conditions": 1.0,
+    "no_factual_flags": 1.0
+  }
+}

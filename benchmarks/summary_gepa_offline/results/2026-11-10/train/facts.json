@@ -1,0 +1,50 @@
+[
+  {
+    "id": "G01",
+    "facts": [
+      {"id": "F1", "proposition": "Arizona investigators released video of a brawl in a Walmart parking lot.", "evidence": ["Arizona investigators have released dramatic video of a Walmart parking lot brawl"], "rationale": "The release of the video is the report's central news event; the adjective dramatic and the family's background are not required."},
+      {"id": "F2", "proposition": "Enoch Gaver was killed in the fight.", "evidence": ["Enoch Gaver, 21, was killed in the fight in the town of Cottonwood"], "rationale": "The fatality is a central outcome. Age and town are incidental to this proposition."},
+      {"id": "F3", "proposition": "Police Sergeant Jeremy Daniels was shot in the leg during the fight.", "evidence": ["Police Sergeant Jeremy Daniels was hit in the leg by a bullet fired during the melee."], "rationale": "The officer's gunshot injury is a separate central outcome. The source does not identify the shooter in this sentence."}
+    ]
+  },
+  {
+    "id": "G02",
+    "facts": [
+      {"id": "F1", "proposition": "Amnesty International called for an independent investigation of police killings of 20 suspected red sandalwood smugglers in India.", "evidence": ["An international human rights group is calling for an independent investigation of the killings by police of 20 suspected red sandalwood smugglers in southeastern India.", "said Abhirr Vp, of Amnesty International India."], "rationale": "The investigation demand is the main event. The number killed and suspected status define the incident under scrutiny."},
+      {"id": "F2", "proposition": "Police claimed that they acted in self-defense.", "evidence": ["Amnesty International said the police were claiming self-defense, alleging the suspects attacked them with stone and axes."], "rationale": "This records the police's stated justification as a claim, not an established finding. The alleged weapons are not required."},
+      {"id": "F3", "proposition": "Amnesty International said most of the suspected smugglers were shot in the back.", "evidence": ["\"However, no police official was injured,\" the  Amnesty statement said.\n\"Most of the suspected smugglers were shot in the back.\""], "rationale": "This is a central basis for challenging the official account. Attribution to Amnesty and the qualifier most are essential; the separate claim about police injuries is not part of this fact."}
+    ]
+  },
+  {
+    "id": "G03",
+    "facts": [
+      {"id": "F1", "proposition": "Three Orthodox rabbis were convicted of conspiracy to commit kidnapping.", "evidence": ["Three Orthodox rabbis accused of planning and participating in the torture of Jewish men who refused to divorce their wives were convicted Tuesday of conspiring to commit kidnapping."], "rationale": "The convictions are the central outcome. The accusation embedded in the source sentence is assessed separately in F2."},
+      {"id": "F2", "proposition": "The rabbis' alleged kidnapping scheme aimed to force Jewish husbands through torture to grant religious divorces.", "evidence": ["The rabbis were part of a ring accused of accepting tens of thousands of dollars to orchestrate the kidnappings of Jewish husbands to persuade them through torture involving electric cattle prods and screwdrivers to grant \"gets,\" a document that Jewish law requires a husband to present to his wife in order to be issued a divorce, court papers said."], "rationale": "The coercive purpose identifies the alleged scheme. Allegation or court-paper attribution is essential; payment amounts, instruments and religious background are not separate requirements."},
+      {"id": "F3", "proposition": "Lawyers for all three rabbis said they planned to appeal the convictions.", "evidence": ["Lawyers for each of the rabbis told CNN they plan on appealing the convictions."], "rationale": "The planned appeals are the report's central response to the verdict. This is a plan, not a completed appeal."}
+    ]
+  },
+  {
+    "id": "G04",
+    "facts": [
+      {"id": "F1", "proposition": "A helicopter relief mission delivered supplies to earthquake-hit Melamchi in Nepal.", "evidence": ["The mission, a joint effort between Indian air crew and a Nepalese army medical team, is only the third operation of its kind to reach the village since Saturday's massive 7.8-magnitude quake", "The aircraft is stuffed to capacity with tents, medicines and packages of tinned tuna, instant noodles and rice", "Local official Upendra Tamang is there to greet the helicopter as it touches down on a field in front of the village medical clinic, and waiting soldiers swing into action to unload the delivery.", "The situation in Melamchi and the surrounding villages is \"dire,\" he tells CNN through a translator."], "rationale": "The observed aid delivery is the report's central event. The exact cargo, crew composition and flight count are incidental."},
+      {"id": "F2", "proposition": "Local official Upendra Tamang said the food supplies delivered were insufficient for local people's needs.", "evidence": ["Local official Upendra Tamang is there to greet the helicopter", "He has serious concerns about food supplies in the region, saying the piled boxes of rice and noodles aren't nearly enough to meet the needs of local people."], "rationale": "The insufficiency of available food is a central assessment of the relief effort, attributed to the local official."},
+      {"id": "F3", "proposition": "According to Tamang, about 500 of the most seriously injured people had already been sent to Kathmandu for treatment.", "evidence": ["In the days since the quake, injured people from the region have been told to find their way to Melamchi so they can be picked up by the relief flights, he says.\nThey've sent about 500 of the most seriously injured people for treatment in Kathmandu already -- the majority by road -- but many more are stuck in a local clinic waiting for help."], "rationale": "Medical evacuation is the other main activity described. Approximate scale and completed treatment transfers matter; travel mode and those still waiting are not bundled into this proposition."}
+    ]
+  },
+  {
+    "id": "G05",
+    "facts": [
+      {"id": "F1", "proposition": "J.J. Abrams and the cast presented a trailer for Star Wars: The Force Awakens at an event in Anaheim.", "evidence": ["At an emotional event in Anaheim, California, director J.J. Abrams and the \"Star Wars: Episode VII -- The Force Awakens\" cast showed off for the audience and then capped the presentation with the trailer for the new film."], "rationale": "The trailer presentation is the main news event. Emotional atmosphere is not required."},
+      {"id": "F2", "proposition": "The Force Awakens was scheduled for release on December 18.", "evidence": ["The new \"Star Wars\" is due out December 18."], "rationale": "The scheduled release date is central forward-looking information, not a claim that release had already occurred."},
+      {"id": "F3", "proposition": "The trailer showed Han Solo and Chewbacca returning.", "evidence": ["The trailer ended in a big way, with Han Solo and Chewbacca having apparently arrived after a flight on the Millennium Falcon.", "The reaction in the room of fans was nothing short of rapturous upon seeing Harrison Ford back in character as Han."], "rationale": "The returning characters are the highlighted trailer reveal. An inferred preceding flight and fan reactions are not required."}
+    ]
+  },
+  {
+    "id": "G06",
+    "facts": [
+      {"id": "F1", "proposition": "Aaron Hernandez was sentenced to life in prison for murdering Odin Lloyd.", "evidence": ["She was tired after more than two years of pain, punctuated Wednesday when her son's killer, Aaron Hernandez, was convicted of first degree murder and sentenced to life in prison.", "Odin Lloyd was her first born, her only son."], "rationale": "The life sentence provides the occasion for the family's courtroom statements. This is one sentencing outcome; conviction degree and timing are not additional requirements."},
+      {"id": "F2", "proposition": "Lloyd's family remembered him as devoted to his family.", "evidence": ["His mother, sister, uncle and cousin described him as a champion of family, a gifted athlete and a hard worker with a sense of humor."], "rationale": "Family devotion is the central theme of the relatives' remembrance. The phrase champion of family is figurative; athletic ability, work ethic and humor are separate details not required here."},
+      {"id": "F3", "proposition": "Lloyd's mother Ursula Ward said she forgave those involved in her son's murder.", "evidence": ["Ursula Ward kept repeating her son's name -- Odin.", "\"I forgive the hands of the people that had a hand in my son's murder,\" she said."], "rationale": "Her explicit forgiveness is the report's concluding central statement. The separate hope that others also forgive is not required."}
+    ]
+  }
+]

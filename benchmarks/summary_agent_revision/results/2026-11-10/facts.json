@@ -1,0 +1,273 @@
+[
+  {
+    "id": "N01",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Qassim's family fled the bombing in Yemen by boat to Djibouti.",
+        "evidence": [
+          "Qassim and her family fled Birim at first light, piling in with three other families.",
+          "Twenty-five of them squeezed into one boat setting sail through the Bab al-Mandab Strait to Djibouti.",
+          "I ask her how many days it was after the Saudi aerial bombardment began that they left."
+        ],
+        "rationale": "The family's escape from the conflict is the central event; the exact passenger count and route name are not required."
+      },
+      {
+        "id": "F2",
+        "proposition": "Djibouti's government is providing temporary shelter for the refugees.",
+        "evidence": [
+          "It took them five hours to cross into the north of Djibouti, where the government is providing the refugees with temporary shelter in this unfinished orphanage here in Obock."
+        ],
+        "rationale": "Temporary refuge is the immediate outcome of the escape."
+      },
+      {
+        "id": "F3",
+        "proposition": "The U.N. expects thousands more refugees to arrive.",
+        "evidence": [
+          "And the U.N. says thousands more refugees are expected."
+        ],
+        "rationale": "The attributed forecast connects one family's journey to the wider displacement without treating a prediction as an established count."
+      }
+    ]
+  },
+  {
+    "id": "N02",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Five young men were arrested in a counterterrorism operation in Melbourne.",
+        "evidence": [
+          "(CNN)Five young men were arrested Saturday in Melbourne, Australia, in what police called a major counterterrorism operation."
+        ],
+        "rationale": "The arrests are the central reported event; the weekday and individual ages are incidental."
+      },
+      {
+        "id": "F2",
+        "proposition": "Authorities believed the suspects planned to attack police during an Anzac Day ceremony.",
+        "evidence": [
+          "The suspects planned to attack during a major national commemoration in a week, Prime Minister Tony Abbott said Saturday.",
+          "\"The act that we believe was in preparation involved attacks against police officers,\" he said.",
+          "Police said the suspects were targeting a ceremony on Anzac Day (Australia and New Zealand Army Corps Day), which is April 25 and this year is the centennial of the Gallipoli Campaign in World War I."
+        ],
+        "rationale": "The alleged attack's target explains the operation; attribution preserves that this was an official allegation."
+      },
+      {
+        "id": "F3",
+        "proposition": "One suspect was charged with conspiring to commit a terrorist act.",
+        "evidence": [
+          "Sevdet Besim, 18, has been charged with conspiring to commit a terrorist act, and was denied bail Saturday."
+        ],
+        "rationale": "The charge is a central procedural outcome, distinct from assuming guilt or that every arrested person was charged."
+      }
+    ]
+  },
+  {
+    "id": "N03",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Local officials and a resident reported the discovery of hundreds of corpses in Damasak, Nigeria.",
+        "evidence": [
+          "Kano, Nigeria (CNN)Hundreds of decomposed corpses were discovered buried in shallow graves in the streets of the northeastern Nigerian town of Damasak this past weekend, according to local officials and a resident."
+        ],
+        "rationale": "The large-scale discovery is the lead event; Damasak is the discovery site, while Kano is the dateline."
+      },
+      {
+        "id": "F2",
+        "proposition": "A joint military operation had recently recaptured Damasak from Boko Haram.",
+        "evidence": [
+          "The town had recently been freed from the Boko Haram terror group in a joint Nigerian-Chadian military operation."
+        ],
+        "rationale": "The recapture supplies the essential context for the subsequent discovery."
+      },
+      {
+        "id": "F3",
+        "proposition": "A senator-elect for the region said Boko Haram had murdered the victims when it seized the town.",
+        "evidence": [
+          "The victims included men, women and children murdered by Boko Haram when they seized the area in November, said Abubakar Kyari, a senator-elect for the region."
+        ],
+        "rationale": "The attributed account of responsibility is central; it should not become an independently verified causal finding."
+      }
+    ]
+  },
+  {
+    "id": "N04",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "ISIS claimed responsibility for a suicide car bombing near the U.S. Consulate in Irbil.",
+        "evidence": [
+          "(CNN)ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group."
+        ],
+        "rationale": "The bombing and the group's claim are the central event; the claim must remain attributed rather than asserted as proven responsibility."
+      },
+      {
+        "id": "F2",
+        "proposition": "Police reported that at least four people were killed.",
+        "evidence": [
+          "At least four people were killed and 18 injured, police said."
+        ],
+        "rationale": "The death toll conveys the immediate human outcome; police attribution matters because another official gives different casualty figures."
+      },
+      {
+        "id": "F3",
+        "proposition": "The State Department said all U.S. Consulate personnel were safe.",
+        "evidence": [
+          "All U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said."
+        ],
+        "rationale": "Personnel safety is a central outcome given the consulate's proximity to the attack."
+      }
+    ]
+  },
+  {
+    "id": "N05",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Actor James Best died at age 88.",
+        "evidence": [
+          "(CNN)James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness.",
+          "He was 88."
+        ],
+        "rationale": "The death and age identify the central obituary event without requiring the precise date or hospice location."
+      },
+      {
+        "id": "F2",
+        "proposition": "Best was best known for playing Sheriff Rosco on The Dukes of Hazzard.",
+        "evidence": [
+          "(CNN)James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness."
+        ],
+        "rationale": "His defining role explains why his death is news; the character's full name and comic mannerisms are not required."
+      },
+      {
+        "id": "F3",
+        "proposition": "A longtime friend said Best died from complications of pneumonia.",
+        "evidence": [
+          "Best died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague."
+        ],
+        "rationale": "The attributed cause is a central circumstance of the death."
+      }
+    ]
+  },
+  {
+    "id": "N06",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Santana recorded officer Slager fatally shooting Walter Scott as Scott fled unarmed.",
+        "evidence": [
+          "(CNN)Feidin Santana, the man who recorded a South Carolina police officer fatally shooting a fleeing, unarmed man, told CNN on Thursday night he was told by another cop to stop using his phone to capture the incident.",
+          "Santana recalled the moments when he recorded a roughly three-minute video of North Charleston Police officer Michael Slager shooting Walter Scott as Scott was running away Saturday."
+        ],
+        "rationale": "The recorded shooting is the central event; the exact number of shots and participants' full names are unnecessary for this anchor."
+      },
+      {
+        "id": "F2",
+        "proposition": "The recording led to a murder charge against Slager.",
+        "evidence": [
+          "That evidence led to the officer's firing and arrest on a murder charge.",
+          "The cell phone video, which Santana revealed this week, reignited national outcries surrounding police treatment of African-Americans and led to a murder charge against Slager, who is white."
+        ],
+        "rationale": "The charge is the central legal consequence of the video; it is not a conviction."
+      },
+      {
+        "id": "F3",
+        "proposition": "Santana said another officer told him to stop filming the incident.",
+        "evidence": [
+          "(CNN)Feidin Santana, the man who recorded a South Carolina police officer fatally shooting a fleeing, unarmed man, told CNN on Thursday night he was told by another cop to stop using his phone to capture the incident."
+        ],
+        "rationale": "The witness's attributed account is the article's lead development and should not be presented as independently verified."
+      }
+    ]
+  },
+  {
+    "id": "N07",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "South Korean investigators attributed cyberattacks on the country's banks, media outlets and nuclear operator to North Korea.",
+        "evidence": [
+          "Seoul, South Korea (CNN)On March 20, 2013, a cyberattack brought chaos to several banks and media outlets in South Korea.\nThen more ominously on December 23 last year, computers at the country's nuclear operator were breached.\nAgain cybercrime was suspected.\nThe source of these attacks?\nNorth Korea.\nAnd South Korean investigators say they have proof -- the actual malicious codes used in the attacks.",
+          "Pyongyang has dismissed the claims it launched these attacks, calling them a \"plot and fabrication that can never win over the truth.\""
+        ],
+        "rationale": "The investigators' attribution is the central report; keeping it attributed avoids resolving the accusation that North Korea disputes."
+      },
+      {
+        "id": "F2",
+        "proposition": "The Dark Seoul attack disabled an estimated 48,000 computers at major South Korean banks and broadcasters.",
+        "evidence": [
+          "The 2013 attack, known as \"Dark Seoul,\" paralyzed an estimated 48,000 computers at a number of major banks and broadcasters, disrupting network systems and wiping their hard disks clean."
+        ],
+        "rationale": "The scale of disruption is a central concrete outcome of the earlier attack; the count remains an estimate."
+      },
+      {
+        "id": "F3",
+        "proposition": "Investigators said no critical data was stolen in the nuclear-operator attack.",
+        "evidence": [
+          "The latest high-profile digital incursion, in December, attempted to steal data from South Korea's nuclear operator, including plant blueprints and personnel information.",
+          "Though investigators said no critical data was stolen, the attack raised serious concerns about the safety and security of the 23 nuclear power plants it runs."
+        ],
+        "rationale": "This attributed limitation is essential to avoid implying that the attempted theft succeeded or that power plants themselves were compromised."
+      }
+    ]
+  },
+  {
+    "id": "N08",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Koch Industries announced it would remove the convictions checkbox from job applications.",
+        "evidence": [
+          "Koch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions -- is a big step forward in the movement to break down barriers to employment for job-seekers with records."
+        ],
+        "rationale": "The company's policy change is the concrete event motivating the opinion piece."
+      },
+      {
+        "id": "F2",
+        "proposition": "Ban-the-box policies postpone background checks until later in hiring rather than prohibit them.",
+        "evidence": [
+          "\"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process."
+        ],
+        "rationale": "The timing distinction defines the reform and prevents a misleading interpretation of what the policy does."
+      },
+      {
+        "id": "F3",
+        "proposition": "The author urges the Obama administration to adopt fair-chance hiring for people with criminal records.",
+        "evidence": [
+          "The administration should ensure that the federal government does not continue to erect unfair and unnecessary barriers to employment of people with records.",
+          "Now it's time for President Obama to lead the way and embrace fair-chance hiring of people with records."
+        ],
+        "rationale": "The federal call to action is the article's main purpose; author attribution distinguishes advocacy from an enacted policy."
+      }
+    ]
+  },
+  {
+    "id": "N09",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "As many as 1,600 migrants had died in the Mediterranean in the preceding ten days.",
+        "evidence": [
+          "The migrant crisis that has suddenly drawn hundreds of journalists to Sicily has been brewing for years, but in the past 10 days, with as many as 1,600 deaths in the Mediterranean, suddenly minds are focused -- for now."
+        ],
+        "rationale": "The recent death toll explains the crisis's urgency; the upper-bound wording is essential."
+      },
+      {
+        "id": "F2",
+        "proposition": "An EU official said as many as one million migrants could arrive in Europe that year.",
+        "evidence": [
+          "Aware of the tragedy underway, however, Italians are alarmed at the prospect that this year alone as many as a million migrants could arrive in Europe, according to one European Union official."
+        ],
+        "rationale": "The attributed possible inflow is central to the pressure on Italy; it is neither a confirmed arrival count nor a forecast of more than one million."
+      },
+      {
+        "id": "F3",
+        "proposition": "Catania's mayor said Catania and Sicily could not absorb the growing number of migrants.",
+        "evidence": [
+          "The city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers."
+        ],
+        "rationale": "The mayor's assessment captures the central local-capacity concern without turning it into an independently established limit for all of Italy."
+      }
+    ]
+  }
+]

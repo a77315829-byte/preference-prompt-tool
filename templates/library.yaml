@@ -93,45 +93,242 @@ templates:
       - 정상 동작, 경계값, 실패 경우를 각각 하나 이상 다뤄라.
       - 구현 세부가 아니라 사용자가 보는 동작을 검사하라.
       - 프로젝트에 이미 있는 테스트 도구를 쓰고, 없으면 무엇을 가정했는지 밝혀라.
-  - id: monthly-cost
-    domain: idle_tracker
-    category: AWS 비용 보고
-    title: 월간 비용 보고
-    description: 이번 달 AWS 비용을 서비스별로 정리해 팀에 공유합니다.
-    author: 팀 작성 예시 (검토 필요)
-    license: 팀 작성
+  - id: action-items
+    domain: summarization_ko
+    category: 팀 업무
+    title: 회의에서 할 일 뽑기
+    description: 결정·할 일·담당자·기한을 구분하고 미정인 부분을 남깁니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    source_url: https://www.atlassian.com/software/confluence/templates/weekly-meeting-notes
     prompt: |
-      당신은 작은 개발팀의 AWS 비용을 정리하는 도우미다.
-
-      아래 조회 결과로 이번 달 비용 보고를 한국어로 작성하라.
-      - 조회 기간과 총액을 먼저 적어라.
-      - 금액·통화·기간은 조회 결과와 똑같이 옮기고, 없는 값은 지어내지 마라.
-      - 절감 가능성은 데이터로 계산할 수 있을 때만 적고, 추정이면 추정이라고 밝혀라.
-  - id: cost-spike
-    domain: idle_tracker
-    category: AWS 비용 보고
-    title: 비용 증가 원인 설명
-    description: 지난달보다 늘어난 비용이 어느 서비스에서 왔는지 설명합니다.
-    author: 팀 작성 예시 (검토 필요)
-    license: 팀 작성
+      제공한 회의 기록을 작은 개발팀의 실행 목록으로 정리하라.
+      입력: [회의 기록]
+      출력: 결정 사항 / 할 일 표(작업, 담당자, 기한, 근거 문장) / 보류·확인할 질문.
+      담당자와 기한이 없으면 '미정'으로 남겨라. 논의와 확정된 결정을 구분하고 없는 약속을 만들지 마라.
+  - id: weekly-update
+    domain: summarization_ko
+    category: 팀 업무
+    title: 주간 진행 공유
+    description: 작업 메모로 완료·진행·막힌 점·도움 요청을 정리합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
     prompt: |
-      당신은 AWS 비용 변화를 설명하는 도우미다.
-
-      아래 조회 결과를 보고 비용이 늘어난 부분을 한국어로 설명하라.
-      - 늘어난 서비스와 금액을 조회 결과 그대로 적어라.
-      - 원인은 데이터로 확인되는 것만 적고, 나머지는 확인할 항목으로 남겨라.
-      - 삭제·중지처럼 되돌리기 어려운 조치는 먼저 확인할 것을 함께 적어라.
-  - id: cost-summary-share
-    domain: idle_tracker
-    category: AWS 비용 보고
-    title: 팀 공유용 비용 요약
-    description: 비개발 팀원도 읽을 수 있게 비용 현황을 짧게 정리합니다.
-    author: 팀 작성 예시 (검토 필요)
-    license: 팀 작성
+      제공한 작업 메모를 팀에 공유할 주간 보고 초안으로 바꿔라.
+      입력: [이번 주 작업, 상태, 다음 계획]
+      출력: 완료 / 진행 중 / 막힌 점과 필요한 도움 / 다음 할 일.
+      완료의 근거가 없는 작업을 완료로 쓰지 마라. 일정·성과 수치를 만들지 말고 추정과 확정을 구분하라.
+  - id: standup-brief
+    domain: summarization_ko
+    category: 팀 업무
+    title: 짧은 데일리 공유
+    description: 어제·오늘·막힌 점을 짧게 전달할 문장으로 바꿉니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
     prompt: |
-      당신은 AWS 비용 현황을 팀 전체에 공유할 글로 바꾸는 도우미다.
-
-      아래 조회 결과를 비개발 팀원도 이해할 수 있게 한국어로 정리하라.
-      - 전문 용어는 처음 나올 때 한 줄로 풀어 써라.
-      - 금액·기간은 조회 결과와 똑같이 옮겨라.
-      - 팀이 결정해야 할 사항이 있으면 마지막에 따로 적어라.
+      입력 메모를 짧은 데일리 스탠드업 공유문으로 정리하라.
+      입력: [작업 메모]
+      출력: 지난 작업 / 오늘 할 일 / 막힌 점·도움 요청, 각각 세 줄 이내.
+      메모에 없는 진행률·기한·약속은 추가하지 마라. 누군가의 확인이 필요하면 질문으로 남겨라.
+  - id: handoff-summary
+    domain: summarization_ko
+    category: 팀 업무
+    title: 다음 담당자 인수인계
+    description: 현재 상태·시작 위치·남은 일·확인할 내용을 정리합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    prompt: |
+      제공한 프로젝트 메모를 다음 담당자가 읽을 인수인계 초안으로 정리하라.
+      입력: [목적, 현재 상태, 관련 파일·링크, 남은 일]
+      출력: 목적 / 확인된 현재 상태 / 먼저 볼 자료 / 다음 행동 / 위험과 확인 질문.
+      파일·명령·연락처·권한을 지어내지 마라. 실행·검증되지 않은 내용은 확인 필요로 표시하라.
+  - id: decision-log
+    domain: summarization_ko
+    category: 팀 업무
+    title: 결정과 이유 기록
+    description: 대안·선택 이유·결정자·미해결 질문을 남깁니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    source_url: https://www.atlassian.com/software/confluence/templates/decision
+    prompt: |
+      논의 메모를 의사결정 기록 초안으로 정리하라.
+      입력: [논의 메모와 확인된 결정]
+      출력: 문제 / 검토한 대안 / 선택과 근거 / 결정자·상태 / 다시 검토할 조건.
+      합의되지 않은 제안을 확정으로 쓰지 마라. 결정자나 검토 날짜가 없으면 미정이라고 적어라.
+  - id: retrospective-notes
+    domain: summarization_ko
+    category: 팀 업무
+    title: 회고에서 개선 행동 찾기
+    description: 관찰과 해석을 나누고 검증할 개선 행동을 정리합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    prompt: |
+      회고 메모에서 다음 작업에 시도할 개선 행동을 정리하라.
+      입력: [잘된 점, 어려웠던 점, 관련 관찰]
+      출력: 사실로 확인한 관찰 / 원인 가설 / 시도할 행동 / 확인 방법 / 담당·기한 미정 목록.
+      개인을 탓하거나 감정을 사실로 단정하지 마라. 효과는 예측으로 표시하고 실제 개선으로 주장하지 마라.
+  - id: incident-brief
+    domain: summarization_ko
+    category: 팀 업무
+    title: 장애 기록 초안
+    description: 영향·시간 순서·조치·원인 가설·후속 일을 구분합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    source_url: https://sre.google/sre-book/postmortem-culture/
+    prompt: |
+      제공한 장애 메모를 비난 없는 사후 기록 초안으로 정리하라.
+      입력: [로그 발췌, 확인된 영향, 시각, 조치]
+      출력: 확인된 영향 / 시간 순서 / 대응 / 확인된 원인과 가설 / 후속 행동과 확인 방법.
+      원인을 추측으로 확정하지 마라. 입력의 시각·영향 범위를 보존하고 민감한 식별 정보는 초안에서 가려라.
+  - id: release-brief
+    domain: summarization_ko
+    category: 팀 업무
+    title: 릴리스 공유 초안
+    description: 변경 사항과 사용자·운영자가 확인할 일을 요약합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    prompt: |
+      제공한 변경 목록을 릴리스 공유 초안으로 정리하라.
+      입력: [변경 내역, 검증 결과, 알려진 제약]
+      출력: 추가·수정 / 영향을 받는 대상 / 적용 전후 확인 / 알려진 문제 / 미확인 사항.
+      실제 배포·테스트가 확인되지 않으면 완료로 쓰지 마라. 없는 호환성 보장이나 되돌리기 명령을 만들지 마라.
+  - id: requirements-digest
+    domain: summarization_ko
+    category: 문서 요약
+    title: 요구사항과 미정 질문
+    description: 문서에서 기능·제약·완료 조건·질문을 구분합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    prompt: |
+      입력 문서에서 개발에 필요한 요구사항을 추출하라.
+      입력: [기획 문서 또는 요청 메모]
+      출력: 목적 / 명시된 기능 / 제약 / 확인 가능한 완료 조건 / 결정이 필요한 질문.
+      원문 근거를 짧게 붙이고 사용자 요청과 제안을 구분하라. 누락된 정책이나 우선순위를 대신 결정하지 마라.
+  - id: api-doc-digest
+    domain: summarization_ko
+    category: 문서 요약
+    title: API 문서에서 연결할 내용 찾기
+    description: 입출력·인증·오류·제약과 확인할 부분을 뽑습니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    prompt: |
+      제공한 API 문서에서 연결 작업에 필요한 사실을 정리하라.
+      입력: [API 문서 발췌]
+      출력: 목적 / 경로·메서드 / 입력·출력 / 인증·오류 / 호출 제약 / 확인할 질문.
+      문서의 이름·형식·수치를 그대로 보존하라. 없는 엔드포인트나 라이브러리 사용법을 만들지 마라.
+  - id: technical-options
+    domain: summarization_ko
+    category: 문서 요약
+    title: 기술 대안 비교 메모
+    description: 제공된 근거로 대안·장단점·확인 비용을 비교합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    prompt: |
+      제공한 자료만으로 기술 대안 비교표를 작성하라.
+      입력: [대안, 요구사항, 근거 자료]
+      출력: 기준별 비교 / 근거가 있는 장단점 / 모르는 부분 / 작게 확인할 실험.
+      최신 가격·성능·호환성을 추측하지 마라. 자료에 없는 점수는 미확인으로 남기고 최종 선택은 제안으로 표시하라.
+  - id: mentor-brief
+    domain: summarization_ko
+    category: 문서 요약
+    title: 멘토 미팅 준비
+    description: 팀 소개·주제·역할·일정·질문을 정리합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    prompt: |
+      제공한 프로젝트 메모를 첫 멘토 미팅 안내 초안으로 정리하라.
+      입력: [팀원, 주제, 현재 기능, 역할, 일정 메모]
+      출력: 팀·주제 소개 / 해결할 문제 / 현재 구현 / 역할과 일정 / 멘토에게 물을 질문.
+      계획과 완료를 구분하라. 정하지 않은 R&R·WBS·날짜를 만들어 넣지 말고 미정이라고 표시하라.
+  - id: pr-description
+    domain: coding
+    category: 코딩 도움
+    title: PR 설명 정리
+    description: 변경 목적·동작 차이·검증·남은 위험을 정리합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    source_url: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/creating-a-pull-request-template-for-your-repository
+    prompt: |
+      제공한 변경 요약과 diff로 PR 설명 초안을 작성하라.
+      입력: [변경 이유, diff 또는 요약, 실행한 검사]
+      출력: 문제와 변경 후 동작 / 주요 변경 / 실제 검증 / 남은 위험.
+      실행하지 않은 테스트를 통과로 쓰지 마라. 코드에서 확인한 내용과 작성자의 설명을 구분하고 없는 이슈 번호를 넣지 마라.
+  - id: review-checklist
+    domain: coding
+    category: 코딩 도움
+    title: 코드 리뷰 확인 목록
+    description: 변경 목적을 기준으로 살펴볼 위험과 검증 질문을 정리합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    prompt: |
+      제공한 코드와 변경 목적을 검토해 확인 목록을 작성하라.
+      입력: [코드 또는 diff, 변경 목적, 실행 환경]
+      출력: 확인한 문제(위치·발생 조건·영향) / 추가 확인 질문 / 필요한 테스트.
+      근거 없는 취향 지적을 오류로 적지 마라. 코드가 실행됐다고 주장하지 말고 가설과 확인된 문제를 구분하라.
+  - id: bug-report
+    domain: coding
+    category: 코딩 도움
+    title: 재현 가능한 버그 보고
+    description: 관찰·재현 단계·기대 동작·빠진 정보를 구분합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    source_url: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+    prompt: |
+      제공한 오류 관찰을 재현 가능한 버그 보고 초안으로 정리하라.
+      입력: [환경, 재현 과정, 기대 동작, 실제 동작, 오류 메시지]
+      출력: 요약 / 재현 단계 / 기대와 실제 / 환경 / 근거 / 빠진 정보.
+      원인과 재현 성공을 지어내지 마라. 비밀 값은 가리고 누락된 정보는 질문으로 남겨라.
+  - id: refactor-plan
+    domain: coding
+    category: 코딩 도움
+    title: 작은 리팩터링 계획
+    description: 유지할 동작·변경 범위·단계별 확인을 정합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    prompt: |
+      제공한 코드의 동작을 유지하면서 작게 리팩터링할 계획을 제안하라.
+      입력: [코드, 불편한 점, 변경 제약]
+      출력: 유지할 동작 / 근거가 있는 문제 / 작은 변경 단계 / 단계별 확인 / 남은 위험.
+      요청하지 않은 라이브러리·구조 변경을 전제로 삼지 마라. 실행 전에는 호환성이나 테스트 통과를 단정하지 마라.
+  - id: test-case-plan
+    domain: coding
+    category: 코딩 도움
+    title: 기능 테스트 시나리오
+    description: 정상·경계·실패 시나리오와 기대 결과를 정리합니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    prompt: |
+      명시된 요구사항에서 기능 테스트 시나리오를 작성하라.
+      입력: [기능 요구사항, 알려진 제약, 환경]
+      출력: 시나리오별 사전 조건 / 입력·조작 / 기대 결과 / 우선순위 근거.
+      정상·경계·실패를 포함하고 요구사항에 없는 정책은 확인 질문으로 남겨라. 실제 실행 결과처럼 쓰지 마라.
+  - id: api-contract-review
+    domain: coding
+    category: 코딩 도움
+    title: 프론트·백엔드 약속 확인
+    description: 요청·응답 예시에서 서로 맞춰야 할 차이를 찾습니다.
+    author: 서비스 초안 (검토 필요)
+    license: 직접 작성
+    personalizable: false
+    prompt: |
+      제공한 프론트 요청과 백엔드 응답 명세를 대조하라.
+      입력: [요청 예시, 응답 예시, 필드 규칙]
+      출력: 일치하는 약속 / 필드·타입·빈 값·오류 처리의 차이 / 영향 / 합의할 질문.
+      실제 서버를 호출했다고 주장하지 마라. 자료만으로 판단할 수 없는 동작은 미확인으로 남겨라.

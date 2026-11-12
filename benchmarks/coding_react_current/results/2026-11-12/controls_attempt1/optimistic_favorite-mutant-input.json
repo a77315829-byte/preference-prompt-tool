@@ -1,0 +1,5 @@
+{
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\n\nexport type Props = { initialValue: boolean; save: (next: boolean) => Promise<void> };\n\nexport function Component({ initialValue, save }: Props) {\n  const [favorite, setFavorite] = useState(initialValue);\n  const [pending, setPending] = useState(false);\n  const [error, setError] = useState('');\n  async function toggle() {\n    if (pending) return;\n    const previous = favorite;\n    const next = !previous;\n    setFavorite(next);\n    setPending(true);\n    setError('');\n    try {\n      await save(next);\n    } catch {\n      setFavorite(next);\n      setError('Save failed');\n    } finally {\n      setPending(false);\n    }\n  }\n  return <section aria-label=\"Favorite setting\">\n    <button type=\"button\" aria-pressed={favorite} disabled={pending} onClick={toggle}>Favorite</button>\n    {pending && <p role=\"status\">Saving</p>}\n    {error && <p role=\"alert\">{error}</p>}\n  </section>;\n}\n"
+  }
+}

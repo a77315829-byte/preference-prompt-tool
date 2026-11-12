@@ -1,0 +1,1450 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-12",
+  "scope": "Static route contract inventory; local working tree. No endpoint was called. OPTIONS preflight excluded from endpoint count.",
+  "endpoint_count": 90,
+  "source_commit": "43024129a480c1fecb1c8013af5717b7003e3e34",
+  "source_note": "Includes local pre-existing changes. Source line is route/handler anchor, not an immutable remote URL.",
+  "endpoints": [
+    {
+      "id": "API-001",
+      "method": "GET",
+      "path": "/api/health",
+      "purpose": "서비스 모드",
+      "auth": "공개",
+      "input": "없음",
+      "output": "ok,demoAvailable,live,liveConfigured",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 707,
+        "handler": "do_GET"
+      }
+    },
+    {
+      "id": "API-002",
+      "method": "GET",
+      "path": "/api/templates",
+      "purpose": "템플릿 목록",
+      "auth": "공개",
+      "input": "없음",
+      "output": "templates[]",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 749,
+        "handler": "do_GET"
+      }
+    },
+    {
+      "id": "API-003",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "purpose": "현재 계정·남은 횟수",
+      "auth": "쿠키 선택",
+      "input": "없음",
+      "output": "user,signupOpen,ownedShared,quota",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 713,
+        "handler": "do_GET"
+      }
+    },
+    {
+      "id": "API-004",
+      "method": "POST",
+      "path": "/api/auth/signup",
+      "purpose": "가입",
+      "auth": "공개·가입허용",
+      "input": "username,password",
+      "output": "user + Set-Cookie",
+      "side_effects": "계정·세션 생성",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 656,
+        "handler": "_auth_route"
+      }
+    },
+    {
+      "id": "API-005",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "purpose": "로그인",
+      "auth": "공개",
+      "input": "username,password",
+      "output": "user + Set-Cookie",
+      "side_effects": "세션 생성·실패 집계",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 669,
+        "handler": "_auth_route"
+      }
+    },
+    {
+      "id": "API-006",
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "purpose": "로그아웃",
+      "auth": "쿠키 선택",
+      "input": "{}",
+      "output": "user:null + 쿠키만료",
+      "side_effects": "해당 세션 삭제",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 678,
+        "handler": "_auth_route"
+      }
+    },
+    {
+      "id": "API-007",
+      "method": "POST",
+      "path": "/api/auth/password",
+      "purpose": "비밀번호 변경",
+      "auth": "로그인·현재 비밀번호",
+      "input": "current,new",
+      "output": "user + 새쿠키",
+      "side_effects": "비밀번호·세션 변경",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 682,
+        "handler": "_auth_route"
+      }
+    },
+    {
+      "id": "API-008",
+      "method": "POST",
+      "path": "/api/auth/delete",
+      "purpose": "계정 삭제",
+      "auth": "로그인·비밀번호 재확인",
+      "input": "password",
+      "output": "user:null + 쿠키만료",
+      "side_effects": "계정 및 FK 정책에 따른 자료 삭제/참조 해제",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 682,
+        "handler": "_auth_route"
+      }
+    },
+    {
+      "id": "API-009",
+      "method": "POST",
+      "path": "/api/sessions",
+      "purpose": "비교 시작",
+      "auth": "공개",
+      "input": "domainKey,sourceText,totalRounds?,templateId?",
+      "output": "session",
+      "side_effects": "메모리 세션·조건부 사용량·캐시",
+      "model_api": "conditional",
+      "source": {
+        "file": "api_server.py",
+        "line": 819,
+        "handler": "_start_session"
+      }
+    },
+    {
+      "id": "API-010",
+      "method": "GET",
+      "path": "/api/sessions/{id}",
+      "purpose": "비교/개선 상태",
+      "auth": "세션 ID; 계정소유검사 없음",
+      "input": "경로 id",
+      "output": "session",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 763,
+        "handler": "do_GET"
+      }
+    },
+    {
+      "id": "API-011",
+      "method": "POST",
+      "path": "/api/sessions/{id}/choices",
+      "purpose": "현재 쌍 선택",
+      "auth": "세션 ID",
+      "input": "pairId,chosen",
+      "output": "session",
+      "side_effects": "선택 이력·다음 후보",
+      "model_api": "conditional",
+      "source": {
+        "file": "api_server.py",
+        "line": 861,
+        "handler": "_submit_choice"
+      }
+    },
+    {
+      "id": "API-012",
+      "method": "POST",
+      "path": "/api/sessions/{id}/undo",
+      "purpose": "이전 선택 수정",
+      "auth": "세션 ID",
+      "input": "{}",
+      "output": "session",
+      "side_effects": "이력 및 개선 보고 복원/정리",
+      "model_api": "cache_reuse",
+      "source": {
+        "file": "api_server.py",
+        "line": 858,
+        "handler": "_undo_choice"
+      }
+    },
+    {
+      "id": "API-013",
+      "method": "POST",
+      "path": "/api/sessions/{id}/optimize",
+      "purpose": "기존 비교 GEPA",
+      "auth": "끝난 실제 비교 세션",
+      "input": "{}",
+      "output": "202 session",
+      "side_effects": "백그라운드 개선·사용량",
+      "model_api": "conditional",
+      "source": {
+        "file": "api_server.py",
+        "line": 855,
+        "handler": "_start_optimize"
+      }
+    },
+    {
+      "id": "API-014",
+      "method": "POST",
+      "path": "/api/summary-contract",
+      "purpose": "요약 조건 확인",
+      "auth": "공개",
+      "input": "domainKey,profile,sourceText,requiredSentences?,resolution?",
+      "output": "status,profiles,conflict,prompts,task_requests,notices",
+      "side_effects": "저장 없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 786,
+        "handler": "prepare_summary_contract"
+      }
+    },
+    {
+      "id": "API-015",
+      "method": "POST",
+      "path": "/api/coding-instructions/preview",
+      "purpose": "네 항목 지침 조립",
+      "auth": "공개",
+      "input": "profile",
+      "output": "draft:{profile,prompt}",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 803,
+        "handler": "build_coding_instructions"
+      }
+    },
+    {
+      "id": "API-016",
+      "method": "POST",
+      "path": "/api/coding-instructions/examples",
+      "purpose": "준비 예시",
+      "auth": "공개",
+      "input": "profile,protocol?",
+      "output": "examples",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 810,
+        "handler": "build_adaptive_coding_elicitation"
+      }
+    },
+    {
+      "id": "API-017",
+      "method": "POST",
+      "path": "/api/coding-instructions/review",
+      "purpose": "답변 확인 도움",
+      "auth": "공개",
+      "input": "profile,answer,isPatch?",
+      "output": "inspection",
+      "side_effects": "저장·생성 코드 실행 없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 806,
+        "handler": "inspect_answer"
+      }
+    },
+    {
+      "id": "API-018",
+      "method": "GET",
+      "path": "/api/coding-instructions/optimizations",
+      "purpose": "개선 가능 환경",
+      "auth": "공개",
+      "input": "없음",
+      "output": "enabled,reason,environments,call_limit,retention_seconds",
+      "side_effects": "설치된 검사 도구 확인",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 949,
+        "handler": "_coding_optimizations"
+      }
+    },
+    {
+      "id": "API-019",
+      "method": "POST",
+      "path": "/api/coding-instructions/optimizations",
+      "purpose": "코딩 GEPA 시작",
+      "auth": "로그인",
+      "input": "profile,originalPrompt",
+      "output": "202 job",
+      "side_effects": "작업 저장·스레드·사용량",
+      "model_api": "conditional",
+      "source": {
+        "file": "api_server.py",
+        "line": 960,
+        "handler": "_coding_optimizations"
+      }
+    },
+    {
+      "id": "API-020",
+      "method": "GET",
+      "path": "/api/coding-instructions/optimizations/recent",
+      "purpose": "최근 개선 작업",
+      "auth": "로그인 소유자",
+      "input": "없음",
+      "output": "jobs",
+      "side_effects": "중단 작업 복구 가능",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 957,
+        "handler": "_coding_optimizations"
+      }
+    },
+    {
+      "id": "API-021",
+      "method": "GET",
+      "path": "/api/coding-instructions/optimizations/{jobId}",
+      "purpose": "개선 조회",
+      "auth": "로그인 소유자",
+      "input": "jobId",
+      "output": "job",
+      "side_effects": "중단 작업 복구 가능",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 975,
+        "handler": "_coding_optimizations"
+      }
+    },
+    {
+      "id": "API-022",
+      "method": "POST",
+      "path": "/api/coding-instructions/optimizations/{jobId}/save",
+      "purpose": "개선 후보 채택",
+      "auth": "로그인 소유자",
+      "input": "title,humanReview?",
+      "output": "201 preference",
+      "side_effects": "서버 결과로 새 개인 지침",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 978,
+        "handler": "_coding_optimizations"
+      }
+    },
+    {
+      "id": "API-023",
+      "method": "GET",
+      "path": "/api/teams",
+      "purpose": "내 팀 목록",
+      "auth": "로그인",
+      "input": "없음",
+      "output": "teams",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 727,
+        "handler": "do_GET"
+      }
+    },
+    {
+      "id": "API-024",
+      "method": "GET",
+      "path": "/api/teams/{code}",
+      "purpose": "팀 조회·초대 안내",
+      "auth": "계정 팀은 참여 범위; 익명 체험 공개",
+      "input": "code",
+      "output": "team",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 736,
+        "handler": "_team_payload"
+      }
+    },
+    {
+      "id": "API-025",
+      "method": "POST",
+      "path": "/api/teams",
+      "purpose": "기존 비교 팀 생성",
+      "auth": "쿠키 선택",
+      "input": "name,domainKey?",
+      "output": "201 team",
+      "side_effects": "계정 또는 익명 팀 생성",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 822,
+        "handler": "do_POST"
+      }
+    },
+    {
+      "id": "API-026",
+      "method": "POST",
+      "path": "/api/teams/{code}/invitation",
+      "purpose": "초대 닫기·재개",
+      "auth": "로그인 팀장",
+      "input": "enabled:boolean",
+      "output": "team",
+      "side_effects": "초대 만료시각 갱신",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 829,
+        "handler": "do_POST"
+      }
+    },
+    {
+      "id": "API-027",
+      "method": "POST",
+      "path": "/api/teams/{code}/members",
+      "purpose": "완료 비교를 팀에 추가",
+      "auth": "계정 팀 로그인·열린 초대; 익명 체험 별도",
+      "input": "sessionId,name?,requireExisting?",
+      "output": "team",
+      "side_effects": "선택 이력 추가/갱신",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 852,
+        "handler": "_join_team"
+      }
+    },
+    {
+      "id": "API-028",
+      "method": "GET",
+      "path": "/api/preferences",
+      "purpose": "개인 지침 목록",
+      "auth": "로그인 소유자",
+      "input": "없음",
+      "output": "preferences",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1079,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-029",
+      "method": "POST",
+      "path": "/api/preferences",
+      "purpose": "개인 지침 저장",
+      "auth": "로그인",
+      "input": "title,domainKey,prompt,note?,codingProfile?",
+      "output": "201 preference",
+      "side_effects": "새 지침 생성",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1083,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-030",
+      "method": "GET",
+      "path": "/api/preferences/{id}",
+      "purpose": "개인 지침 상세",
+      "auth": "로그인 소유자",
+      "input": "id",
+      "output": "preference",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1086,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-031",
+      "method": "POST",
+      "path": "/api/preferences/{id}/update",
+      "purpose": "개인 지침 수정",
+      "auth": "로그인 소유자",
+      "input": "revision,title,domainKey,prompt,note?",
+      "output": "preference",
+      "side_effects": "revision 증가; 출처 불일치 표시 가능",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1091,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-032",
+      "method": "POST",
+      "path": "/api/preferences/{id}/delete",
+      "purpose": "개인 지침 삭제",
+      "auth": "로그인 소유자",
+      "input": "revision",
+      "output": "ok:true",
+      "side_effects": "해당 저장 항목 삭제",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1094,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-033",
+      "method": "POST",
+      "path": "/api/preferences/{id}/remix-preview",
+      "purpose": "저장 출처 재조합",
+      "auth": "로그인 소유자",
+      "input": "revision,choices",
+      "output": "draft",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1098,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-034",
+      "method": "POST",
+      "path": "/api/preferences/{id}/remix-save",
+      "purpose": "저장 출처 재조합",
+      "auth": "로그인 소유자",
+      "input": "revision,choices,draftSnapshot,title,note?",
+      "output": "201 preference",
+      "side_effects": "새 항목 저장; 원본 유지",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1098,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-035",
+      "method": "POST",
+      "path": "/api/preferences/{id}/restore-preview",
+      "purpose": "선택 항목 되돌림",
+      "auth": "로그인 소유자",
+      "input": "revision,restoreAxes",
+      "output": "draft",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1098,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-036",
+      "method": "POST",
+      "path": "/api/preferences/{id}/restore-save",
+      "purpose": "선택 항목 되돌림",
+      "auth": "로그인 소유자",
+      "input": "revision,restoreAxes,draftSnapshot,title,note?",
+      "output": "201 preference",
+      "side_effects": "새 항목 저장; 원본 유지",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1098,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-037",
+      "method": "POST",
+      "path": "/api/preferences/{id}/compare-team",
+      "purpose": "기존 팀과 비교",
+      "auth": "로그인 소유자·팀 읽기 권한",
+      "input": "revision,teamCode,language?",
+      "output": "comparison",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1119,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-038",
+      "method": "POST",
+      "path": "/api/preferences/{id}/compose-task",
+      "purpose": "개인/팀 작업용 조합",
+      "auth": "로그인 소유자·팀 읽기 권한",
+      "input": "revision,teamCode,language?,teamSnapshot,choices",
+      "output": "draft",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1135,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-039",
+      "method": "POST",
+      "path": "/api/preferences/{id}/save-task",
+      "purpose": "작업용 조합 저장",
+      "auth": "로그인 소유자·팀 읽기 권한",
+      "input": "revision,teamCode,language?,teamSnapshot,choices,taskSnapshot,title,note?",
+      "output": "201 preference",
+      "side_effects": "출처 포함 새 항목",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1140,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-040",
+      "method": "POST",
+      "path": "/api/preferences/{id}/run",
+      "purpose": "저장 지침으로 새 작업",
+      "auth": "로그인 소유자·선택시 팀 권한",
+      "input": "revision,task,basis?,teamCode?,teamSnapshot?,teamLanguage?,choices?,taskSnapshot?",
+      "output": "output,model,revision,preference_id,basis,team_code,team_snapshot,task_snapshot",
+      "side_effects": "사용량·생성 캐시; 지침 수정 없음",
+      "model_api": "conditional",
+      "source": {
+        "file": "api_server.py",
+        "line": 1153,
+        "handler": "_personal_prompts"
+      }
+    },
+    {
+      "id": "API-041",
+      "method": "POST",
+      "path": "/api/coding-work/exports",
+      "purpose": "내보내기 미리 보기",
+      "auth": "공개",
+      "input": "prompt,title?,target?,existing?",
+      "output": "export",
+      "side_effects": "서버 파일 덮어쓰기 없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1000,
+        "handler": "export_preview"
+      }
+    },
+    {
+      "id": "API-042",
+      "method": "POST",
+      "path": "/api/coding-work/resolve",
+      "purpose": "새 코딩 팀과 조합",
+      "auth": "로그인",
+      "input": "profile 또는 preferenceId+preferenceRevision,teamSelection?",
+      "output": "draft",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1046,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-043",
+      "method": "POST",
+      "path": "/api/coding-work/save",
+      "purpose": "새 코딩 조합 저장",
+      "auth": "로그인 소유자",
+      "input": "resolve 입력,snapshot,title,note?",
+      "output": "201 preference",
+      "side_effects": "출처 포함 새 항목",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1054,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-044",
+      "method": "POST",
+      "path": "/api/coding-work/teams",
+      "purpose": "네 항목 팀 생성",
+      "auth": "로그인",
+      "input": "name,profile,rules?",
+      "output": "201 team",
+      "side_effects": "coding_profile 팀 생성",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1033,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-045",
+      "method": "GET",
+      "path": "/api/coding-work/teams/{code}",
+      "purpose": "네 항목 팀 조회",
+      "auth": "로그인 참여자",
+      "input": "code",
+      "output": "team",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1029,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-046",
+      "method": "POST",
+      "path": "/api/coding-work/teams/{code}/join",
+      "purpose": "네 항목 팀 참여",
+      "auth": "로그인·열린 초대 또는 기존 참여",
+      "input": "{}",
+      "output": "team",
+      "side_effects": "팀원 추가",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1038,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-047",
+      "method": "POST",
+      "path": "/api/coding-work/teams/{code}/update",
+      "purpose": "네 항목 팀 수정",
+      "auth": "로그인 팀장",
+      "input": "revision,profile,rules?",
+      "output": "team",
+      "side_effects": "revision 증가; 환경 고정",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1041,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-048",
+      "method": "POST",
+      "path": "/api/coding-work/trials",
+      "purpose": "실제 작업 비교 생성",
+      "auth": "로그인",
+      "input": "resolve 입력,snapshot,title,task,model,tool,context",
+      "output": "201 trial",
+      "side_effects": "두 조건 지침·작업 기록",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1059,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-049",
+      "method": "GET",
+      "path": "/api/coding-work/trials",
+      "purpose": "작업 비교 목록",
+      "auth": "로그인 소유자",
+      "input": "없음",
+      "output": "trials",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1023,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-050",
+      "method": "GET",
+      "path": "/api/coding-work/trials/{id}",
+      "purpose": "작업 비교 상세",
+      "auth": "로그인 소유자",
+      "input": "id",
+      "output": "trial",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1026,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-051",
+      "method": "POST",
+      "path": "/api/coding-work/trials/{id}/timer",
+      "purpose": "작업 비교 timer",
+      "auth": "로그인 소유자",
+      "input": "revision,operation,arm?,phase?",
+      "output": "trial",
+      "side_effects": "서버 시간 start/pause",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1061,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-052",
+      "method": "POST",
+      "path": "/api/coding-work/trials/{id}/result",
+      "purpose": "작업 비교 result",
+      "auth": "로그인 소유자",
+      "input": "revision,arm,outcome,evidence?,answer?,passed_tests?,total_tests?",
+      "output": "trial",
+      "side_effects": "사용자 검사 근거 기록",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1061,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-053",
+      "method": "POST",
+      "path": "/api/coding-work/trials/{id}/preference",
+      "purpose": "작업 비교 preference",
+      "auth": "로그인 소유자",
+      "input": "revision,preference,reason?",
+      "output": "trial",
+      "side_effects": "사용자 선호 기록",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1061,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-054",
+      "method": "POST",
+      "path": "/api/coding-work/trials/{id}/delete",
+      "purpose": "작업 비교 delete",
+      "auth": "로그인 소유자",
+      "input": "revision",
+      "output": "trial:null",
+      "side_effects": "중지 상태 기록 삭제",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 1061,
+        "handler": "_coding_workflow"
+      }
+    },
+    {
+      "id": "API-055",
+      "method": "GET",
+      "path": "/api/handoffs",
+      "purpose": "인수인계 목록",
+      "auth": "로그인 작성자/현재 수신자",
+      "input": "없음",
+      "output": "handoffs",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 882,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-056",
+      "method": "POST",
+      "path": "/api/handoffs",
+      "purpose": "개인 인수인계 생성",
+      "auth": "로그인",
+      "input": "title,purpose,progress,remaining,prompt?,references?",
+      "output": "201 handoff",
+      "side_effects": "draft+revision1+이력",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 886,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-057",
+      "method": "GET",
+      "path": "/api/handoffs/{id}",
+      "purpose": "인수인계 상세",
+      "auth": "로그인 작성자/현재 수신자",
+      "input": "id",
+      "output": "handoff",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 888,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-058",
+      "method": "GET",
+      "path": "/api/handoffs/{id}/history",
+      "purpose": "인수인계 이력",
+      "auth": "로그인 작성자/현재 수신자",
+      "input": "id",
+      "output": "history",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 905,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-059",
+      "method": "GET",
+      "path": "/api/handoffs/{id}/history/{revision}",
+      "purpose": "인수인계 과거 버전",
+      "auth": "로그인 + 공유 시작 이후 버전",
+      "input": "id,revision",
+      "output": "snapshot",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 909,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-060",
+      "method": "GET",
+      "path": "/api/handoffs/{id}/files/{fileId}",
+      "purpose": "첨부 열기·다운로드",
+      "auth": "로그인 + 요청 버전 첨부권한",
+      "input": "revision 필수 query,view=1 선택",
+      "output": "바이너리 + 보안 헤더",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 891,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-061",
+      "method": "POST",
+      "path": "/api/handoffs/{id}/update",
+      "purpose": "인수인계 update",
+      "auth": "로그인·현재 편집 담당자",
+      "input": "revision,title,purpose,progress,remaining,prompt?,references?",
+      "output": "handoff",
+      "side_effects": "본문 갱신; revision·이력 증가",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 911,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-062",
+      "method": "POST",
+      "path": "/api/handoffs/{id}/share",
+      "purpose": "인수인계 share",
+      "auth": "로그인·이어받기 전 작성자",
+      "input": "revision,username",
+      "output": "handoff",
+      "side_effects": "수신자·공유시작 변경; revision·이력 증가",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 911,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-063",
+      "method": "POST",
+      "path": "/api/handoffs/{id}/claim",
+      "purpose": "인수인계 claim",
+      "auth": "로그인·shared의 지정 수신자",
+      "input": "revision",
+      "output": "handoff",
+      "side_effects": "active; revision·이력 증가",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 911,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-064",
+      "method": "POST",
+      "path": "/api/handoffs/{id}/complete",
+      "purpose": "인수인계 complete",
+      "auth": "로그인·active의 지정 수신자",
+      "input": "revision",
+      "output": "handoff",
+      "side_effects": "done; revision·이력 증가",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 911,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-065",
+      "method": "POST",
+      "path": "/api/handoffs/{id}/reopen",
+      "purpose": "인수인계 reopen",
+      "auth": "로그인·done의 지정 수신자",
+      "input": "revision",
+      "output": "handoff",
+      "side_effects": "active; revision·이력 증가",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 911,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-066",
+      "method": "POST",
+      "path": "/api/handoffs/{id}/attach",
+      "purpose": "인수인계 attach",
+      "auth": "로그인·현재 편집 담당자",
+      "input": "revision,name,data(Base64)",
+      "output": "handoff",
+      "side_effects": "파일 BLOB·첨부 목록 추가; revision·이력 증가",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 911,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-067",
+      "method": "POST",
+      "path": "/api/handoffs/{id}/detach",
+      "purpose": "인수인계 detach",
+      "auth": "로그인·현재 편집 담당자",
+      "input": "revision,fileId",
+      "output": "handoff",
+      "side_effects": "현재 첨부 목록에서 제외; revision·이력 증가",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 911,
+        "handler": "_handoffs"
+      }
+    },
+    {
+      "id": "API-068",
+      "method": "POST",
+      "path": "/api/polish/checklist",
+      "purpose": "요청문 구조 점검",
+      "auth": "공개",
+      "input": "prompt",
+      "output": "checklist",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 840,
+        "handler": "_polish_checklist_only"
+      }
+    },
+    {
+      "id": "API-069",
+      "method": "POST",
+      "path": "/api/polish",
+      "purpose": "요청문 AI 재작성",
+      "auth": "공개·실제 생성 모드",
+      "input": "prompt",
+      "output": "checklist,suggestions,revisedPrompt",
+      "side_effects": "사용량·모델 호출",
+      "model_api": "conditional",
+      "source": {
+        "file": "api_server.py",
+        "line": 843,
+        "handler": "_polish_prompt"
+      }
+    },
+    {
+      "id": "API-070",
+      "method": "GET",
+      "path": "/api/workspace/sample",
+      "purpose": "미리 만든 샘플",
+      "auth": "공개",
+      "input": "없음",
+      "output": "project,status,input,live,notes",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 743,
+        "handler": "_workspace_sample"
+      }
+    },
+    {
+      "id": "API-071",
+      "method": "POST",
+      "path": "/api/workspace/structure",
+      "purpose": "업무 설명 구조화",
+      "auth": "공개",
+      "input": "description,title?,exampleOutput?",
+      "output": "project,status,notes,cached",
+      "side_effects": "프로젝트 반환; 명시 저장 경로와 별도",
+      "model_api": "conditional",
+      "source": {
+        "file": "api_server.py",
+        "line": 551,
+        "handler": "_workspace_structure"
+      }
+    },
+    {
+      "id": "API-072",
+      "method": "POST",
+      "path": "/api/workspace/status",
+      "purpose": "프로젝트 검증·상태",
+      "auth": "공개",
+      "input": "project",
+      "output": "project,status",
+      "side_effects": "프로젝트 반환; 명시 저장 경로와 별도",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 550,
+        "handler": "_ws_project"
+      }
+    },
+    {
+      "id": "API-073",
+      "method": "POST",
+      "path": "/api/workspace/resolve",
+      "purpose": "미해결 질문 해결",
+      "auth": "공개",
+      "input": "project,questionId,answer,target",
+      "output": "project,status",
+      "side_effects": "프로젝트 반환; 명시 저장 경로와 별도",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 549,
+        "handler": "_workspace_resolve"
+      }
+    },
+    {
+      "id": "API-074",
+      "method": "POST",
+      "path": "/api/workspace/confirm",
+      "purpose": "요구사항 확인",
+      "auth": "공개",
+      "input": "project",
+      "output": "project,status",
+      "side_effects": "프로젝트 반환; 명시 저장 경로와 별도",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 552,
+        "handler": "ws_builder.confirm"
+      }
+    },
+    {
+      "id": "API-075",
+      "method": "POST",
+      "path": "/api/workspace/build",
+      "purpose": "지침 조립",
+      "auth": "공개",
+      "input": "project",
+      "output": "project,status",
+      "side_effects": "프로젝트 반환; 명시 저장 경로와 별도",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 553,
+        "handler": "ws_builder.build"
+      }
+    },
+    {
+      "id": "API-076",
+      "method": "POST",
+      "path": "/api/workspace/run",
+      "purpose": "시험 실행",
+      "auth": "공개",
+      "input": "project,input",
+      "output": "run",
+      "side_effects": "프로젝트 반환; 명시 저장 경로와 별도",
+      "model_api": "conditional",
+      "source": {
+        "file": "api_server.py",
+        "line": 554,
+        "handler": "_workspace_run"
+      }
+    },
+    {
+      "id": "API-077",
+      "method": "POST",
+      "path": "/api/workspace/suggest",
+      "purpose": "개선 추천",
+      "auth": "공개",
+      "input": "project",
+      "output": "suggestions,notes,cached,artifact_revision",
+      "side_effects": "프로젝트 반환; 명시 저장 경로와 별도",
+      "model_api": "conditional",
+      "source": {
+        "file": "api_server.py",
+        "line": 546,
+        "handler": "_workspace_suggest"
+      }
+    },
+    {
+      "id": "API-078",
+      "method": "POST",
+      "path": "/api/workspace/apply-suggestions",
+      "purpose": "고른 제안의 후보",
+      "auth": "공개",
+      "input": "project,suggestions,allowRuleChanges?",
+      "output": "system_prompt,touches_rules",
+      "side_effects": "프로젝트 반환; 명시 저장 경로와 별도",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 547,
+        "handler": "_workspace_apply_suggestions"
+      }
+    },
+    {
+      "id": "API-079",
+      "method": "POST",
+      "path": "/api/workspace/trial-suggestions",
+      "purpose": "같은 입력으로 제안 시험",
+      "auth": "공개",
+      "input": "project,suggestions,input",
+      "output": "baseline,results",
+      "side_effects": "프로젝트 반환; 명시 저장 경로와 별도",
+      "model_api": "conditional",
+      "source": {
+        "file": "api_server.py",
+        "line": 548,
+        "handler": "_workspace_trial_suggestions"
+      }
+    },
+    {
+      "id": "API-080",
+      "method": "POST",
+      "path": "/api/workspace/export",
+      "purpose": "ZIP 내보내기",
+      "auth": "공개",
+      "input": "project,input?,includeData?",
+      "output": "filename,zipBase64",
+      "side_effects": "프로젝트 반환; 명시 저장 경로와 별도",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 555,
+        "handler": "_workspace_export"
+      }
+    },
+    {
+      "id": "API-081",
+      "method": "GET",
+      "path": "/api/workspace/projects",
+      "purpose": "저장 프로젝트 목록",
+      "auth": "로그인 권한 범위",
+      "input": "없음",
+      "output": "projects",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 455,
+        "handler": "_workspace_store_get"
+      }
+    },
+    {
+      "id": "API-082",
+      "method": "GET",
+      "path": "/api/workspace/projects/{id}",
+      "purpose": "저장 프로젝트 열기",
+      "auth": "로그인 owner/editor/viewer",
+      "input": "id",
+      "output": "id,role,owner,project,versions,draft,members?",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 459,
+        "handler": "_workspace_store_get"
+      }
+    },
+    {
+      "id": "API-083",
+      "method": "GET",
+      "path": "/api/workspace/projects/{id}/versions/{n}",
+      "purpose": "저장 버전 열기",
+      "auth": "로그인 읽기 권한",
+      "input": "id,n",
+      "output": "project",
+      "side_effects": "없음",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 461,
+        "handler": "_workspace_store_get"
+      }
+    },
+    {
+      "id": "API-084",
+      "method": "POST",
+      "path": "/api/workspace/projects",
+      "purpose": "프로젝트 버전 저장",
+      "auth": "로그인; viewer는 자기 사본",
+      "input": "project,label?",
+      "output": "version,copied,id,role,owner,project,versions,draft,members?",
+      "side_effects": "새 프로젝트/버전; 자기 draft 제거",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 466,
+        "handler": "_workspace_store_post"
+      }
+    },
+    {
+      "id": "API-085",
+      "method": "POST",
+      "path": "/api/workspace/projects/{id}/share",
+      "purpose": "공유",
+      "auth": "로그인·owner",
+      "input": "username,role",
+      "output": "members",
+      "side_effects": "접근권한 추가/변경",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 471,
+        "handler": "_workspace_store_post"
+      }
+    },
+    {
+      "id": "API-086",
+      "method": "POST",
+      "path": "/api/workspace/projects/{id}/unshare",
+      "purpose": "공유 회수",
+      "auth": "로그인·owner",
+      "input": "username",
+      "output": "members",
+      "side_effects": "접근권한 회수",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 474,
+        "handler": "_workspace_store_post"
+      }
+    },
+    {
+      "id": "API-087",
+      "method": "POST",
+      "path": "/api/workspace/projects/{id}/draft",
+      "purpose": "개인 작업 중 사본",
+      "auth": "로그인·owner/editor",
+      "input": "project",
+      "output": "saved_at",
+      "side_effects": "개인 draft 갱신; 버전 아님",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 476,
+        "handler": "_workspace_store_post"
+      }
+    },
+    {
+      "id": "API-088",
+      "method": "POST",
+      "path": "/api/workspace/projects/{id}/discard-draft",
+      "purpose": "작업 중 사본 폐기",
+      "auth": "로그인·개인 draft 접근",
+      "input": "{}",
+      "output": "discarded",
+      "side_effects": "개인 draft 제거",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 481,
+        "handler": "_workspace_store_post"
+      }
+    },
+    {
+      "id": "API-089",
+      "method": "POST",
+      "path": "/api/workspace/projects/{id}/restore",
+      "purpose": "과거 버전 복원",
+      "auth": "로그인·owner/editor",
+      "input": "version",
+      "output": "새 저장 버전 및 overview",
+      "side_effects": "과거 사본을 새 버전으로 추가",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 484,
+        "handler": "_workspace_store_post"
+      }
+    },
+    {
+      "id": "API-090",
+      "method": "POST",
+      "path": "/api/workspace/projects/{id}/delete",
+      "purpose": "프로젝트 삭제",
+      "auth": "로그인·owner",
+      "input": "{}",
+      "output": "deleted",
+      "side_effects": "프로젝트·연결 자료 삭제",
+      "model_api": "none",
+      "source": {
+        "file": "api_server.py",
+        "line": 490,
+        "handler": "_workspace_store_post"
+      }
+    }
+  ]
+}

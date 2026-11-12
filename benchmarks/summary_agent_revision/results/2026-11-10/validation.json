@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "new_sources": 9,
+  "previous_source_overlap": 0,
+  "outputs": 27,
+  "independent_review_rows": 54,
+  "quoted_evidence_validated": true,
+  "score_recalculation_matches": true,
+  "legacy_pilot_integrity": "passed",
+  "tests": {
+    "non_http": 87,
+    "localhost_http": 21,
+    "total": 108,
+    "initial_http_failure": "Windows sandbox blocked localhost (WinError 10013); identical HTTP suite passed with localhost permission"
+  },
+  "paid_external_api_calls": 0,
+  "codex_usage": "consumed, not metered here",
+  "generators": [
+    "summary_revision_gen_a",
+    "summary_revision_gen_b",
+    "summary_revision_gen_c"
+  ],
+  "reviewers": [
+    "summary_revision_review_a",
+    "summary_revision_review_b"
+  ],
+  "generation_and_review_parent_history": "none; same inherited runtime model/settings, no model override",
+  "model_backend_revision": "not exposed/recorded",
+  "checker_revision": "Separate v2 bugfix, identical prompts, zero pass changes on frozen outputs; no regeneration",
+  "hashes": {
+    "protocol.json": "36d9bb556bccc623adeafdc3ba54bd2494eb91cb44730d63dc83647035515da5",
+    "frozen.json": "ac8da87c726da1826b247c875c65a43597220674572d565723d90aa9abdd4656",
+    "generation_seal.json": "4d85f06bdc10d367e58cff3981e9366228a06e4810b67e35158fbfe0cef01c1e",
+    "review_a.json": "11a45d0a6cc3ce2d1de1750eb845ea9bb431ffe0c127845a00c5a37c7ddf26ef",
+    "review_b.json": "2045f74f23e1dd08850f628890ceee951fcb903eb772920aabc95c326fb92eca",
+    "scores.json": "b71a84e6dee4f9205246197c66b2c353508d635a5f549944c277fdf6db1def62",
+    "adjudication.json": "6f9f4073b4e150fc2b09f5ae917f783bd25ecf700bb99db0fb839bb6b1349c0b",
+    "checker_v2_audit.json": "f023d50dcfdb71d1a73dcfeef4b0b73463258f0adcbd4f9c5d9c25e04fe7ca9f",
+    "runtime_check.json": "9ca0dcb3562d7b7e49e951e53ec06777293c9cbcd24f4cae9d4cdc556e6e2eb2"
+  },
+  "production_hashes": {
+    "api_server.py": "4f75e872345c30ab2c75628f80190da15d2cbfc7d058d899399f2adc74c37d33",
+    "app.py": "afb5cefd10af2c60ba577c785c571b138fddbfe2e0ca5b60842a0d1399d44f2c",
+    "checks/summarization_grounded_v2.py": "05dec42e6e84edfdc2dce75f28891890d5b9c41fd5f15e4736a811c78bd58505",
+    "domains/summarization_grounded_v2.yaml": "8542ce273576b3f9cfe75067b7cc702a52e57eb1271591948183ce9b959f3c03",
+    "domains/summarization_ko_grounded_v2.yaml": "225bfb9933d544e77bb295044a246153cb8dae0aac184ee31f6fcb4a96e2109d"
+  }
+}

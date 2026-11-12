@@ -1,0 +1,348 @@
+{
+  "S001": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "useTextExpansion.ts",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: useTextExpansion.ts"
+      },
+      {
+        "path": "styles.css",
+        "block": 2,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S002": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "useFolderBrowser.ts",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: useFolderBrowser.ts"
+      },
+      {
+        "path": "styles.css",
+        "block": 2,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S003": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      }
+    ]
+  },
+  "S004": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      }
+    ]
+  },
+  "S005": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "styles.css",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S006": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "useRangePair.ts",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: useRangePair.ts"
+      },
+      {
+        "path": "theme.ts",
+        "block": 2,
+        "reason": "Standalone filename before the complete fenced block: theme.ts"
+      },
+      {
+        "path": "styles.ts",
+        "block": 3,
+        "reason": "Standalone filename before the complete fenced block: styles.ts"
+      }
+    ]
+  },
+  "S007": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "styles.css",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S008": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      }
+    ]
+  },
+  "S009": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      }
+    ]
+  },
+  "S010": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "useFolderBrowser.ts",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: useFolderBrowser.ts"
+      },
+      {
+        "path": "theme.ts",
+        "block": 2,
+        "reason": "Standalone filename before the complete fenced block: theme.ts"
+      },
+      {
+        "path": "styles.ts",
+        "block": 3,
+        "reason": "Standalone filename before the complete fenced block: styles.ts"
+      }
+    ]
+  },
+  "S011": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "usePasswordVisibility.ts",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: usePasswordVisibility.ts"
+      },
+      {
+        "path": "styles.css",
+        "block": 2,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S012": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "styles.css",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S013": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "styles.css",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S014": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      }
+    ]
+  },
+  "S015": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      }
+    ]
+  },
+  "S016": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "styles.css",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S017": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "styles.css",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S018": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "styles.css",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S019": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "styles.css",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S020": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      }
+    ]
+  },
+  "S021": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      }
+    ]
+  },
+  "S022": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "useTextExpander.ts",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: useTextExpander.ts"
+      },
+      {
+        "path": "styles.css",
+        "block": 2,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S023": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "useRangePair.ts",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: useRangePair.ts"
+      },
+      {
+        "path": "styles.css",
+        "block": 2,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  },
+  "S024": {
+    "files": [
+      {
+        "path": "Component.tsx",
+        "block": 0,
+        "reason": "Standalone filename before the complete fenced block: Component.tsx"
+      },
+      {
+        "path": "usePasswordVisibility.ts",
+        "block": 1,
+        "reason": "Standalone filename before the complete fenced block: usePasswordVisibility.ts"
+      },
+      {
+        "path": "styles.css",
+        "block": 2,
+        "reason": "Standalone filename before the complete fenced block: styles.css"
+      }
+    ]
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "technical": {
+    "general": {
+      "answers": 8,
+      "delivery_ready": 8,
+      "compiler_pass": 8,
+      "clean_type_pass": 8,
+      "type_completed": 8,
+      "runtime_pass": 8,
+      "runtime_completed": 8,
+      "type_runtime_joint": 8,
+      "runtime_checks_passed": 56,
+      "runtime_checks_total": 56,
+      "unresolved_or_errors": []
+    },
+    "manual": {
+      "answers": 8,
+      "delivery_ready": 8,
+      "compiler_pass": 8,
+      "clean_type_pass": 8,
+      "type_completed": 8,
+      "runtime_pass": 8,
+      "runtime_completed": 8,
+      "type_runtime_joint": 8,
+      "runtime_checks_passed": 56,
+      "runtime_checks_total": 56,
+      "unresolved_or_errors": []
+    },
+    "product": {
+      "answers": 8,
+      "delivery_ready": 8,
+      "compiler_pass": 8,
+      "clean_type_pass": 8,
+      "type_completed": 8,
+      "runtime_pass": 8,
+      "runtime_completed": 8,
+      "type_runtime_joint": 8,
+      "runtime_checks_passed": 56,
+      "runtime_checks_total": 56,
+      "unresolved_or_errors": []
+    }
+  },
+  "style_by_reviewer": {
+    "a": {
+      "general": {
+        "answers": 8,
+        "dimensions": {
+          "code_structure": 2,
+          "style_management": 4,
+          "type_detail": 4
+        },
+        "all_three": 1,
+        "type_runtime_all_three_joint": 1
+      },
+      "manual": {
+        "answers": 8,
+        "dimensions": {
+          "code_structure": 8,
+          "style_management": 8,
+          "type_detail": 8
+        },
+        "all_three": 8,
+        "type_runtime_all_three_joint": 8
+      },
+      "product": {
+        "answers": 8,
+        "dimensions": {
+          "code_structure": 8,
+          "style_management": 8,
+          "type_detail": 8
+        },
+        "all_three": 8,
+        "type_runtime_all_three_joint": 8
+      }
+    },
+    "b": {
+      "general": {
+        "answers": 8,
+        "dimensions": {
+          "code_structure": 1,
+          "style_management": 4,
+          "type_detail": 4
+        },
+        "all_three": 1,
+        "type_runtime_all_three_joint": 1
+      },
+      "manual": {
+        "answers": 8,
+        "dimensions": {
+          "code_structure": 8,
+          "style_management": 8,
+          "type_detail": 8
+        },
+        "all_three": 8,
+        "type_runtime_all_three_joint": 8
+      },
+      "product": {
+        "answers": 8,
+        "dimensions": {
+          "code_structure": 8,
+          "style_management": 8,
+          "type_detail": 8
+        },
+        "all_three": 8,
+        "type_runtime_all_three_joint": 8
+      }
+    }
+  },
+  "disagreements": [
+    {
+      "output_id": "S007",
+      "dimensions": [
+        "code_structure"
+      ]
+    }
+  ],
+  "ambiguity_flags": [
+    "S006",
+    "S007",
+    "S011",
+    "S012",
+    "S013",
+    "S016",
+    "S023",
+    "S024"
+  ],
+  "execution_claim_flags": [],
+  "limits": "Eight paired tasks, each assigned one unique style combination. Not eight independent replications per combination. General target match is not obedience to unsupplied instructions. AI review is not human preference evidence. No statistical superiority or equivalence proof."
+}

@@ -1,0 +1,55 @@
+{
+  "results": [
+    {
+      "name": "01 demo health and oversized source preserved before session creation",
+      "pass": true
+    },
+    {
+      "name": "02 real summary comparison completes within eight choices",
+      "pass": true
+    },
+    {
+      "name": "03 too few sentences blocks output; explicit shortening preserves extraction",
+      "pass": true
+    },
+    {
+      "name": "04 source edits invalidate output and three-passages conflict offers only applicable choices",
+      "pass": true
+    },
+    {
+      "name": "05 no complete sentences offers no impossible shortening; focus boundary is consistent",
+      "pass": true
+    },
+    {
+      "name": "06 mobile contract choices fit viewport and preserve source",
+      "pass": true
+    },
+    {
+      "name": "07 AI answer settings and React style comparison remain separate and usable",
+      "pass": true
+    },
+    {
+      "name": "08 no browser runtime errors or optimization/model requests",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "blocked_external": [],
+  "requests": [
+    "/api/sessions",
+    "/api/sessions/560fc8ef0ce5/choices",
+    "/api/sessions/560fc8ef0ce5/choices",
+    "/api/sessions/560fc8ef0ce5/choices",
+    "/api/sessions/560fc8ef0ce5/choices",
+    "/api/sessions/560fc8ef0ce5/choices",
+    "/api/summary-contract",
+    "/api/summary-contract",
+    "/api/summary-contract",
+    "/api/summary-contract",
+    "/api/summary-contract",
+    "/api/summary-contract",
+    "/api/summary-contract",
+    "/api/summary-contract",
+    "/api/sessions"
+  ]
+}

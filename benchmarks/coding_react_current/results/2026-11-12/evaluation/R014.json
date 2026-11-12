@@ -1,0 +1,59 @@
+{
+  "evaluatorVersion": "coding-react-current-v1",
+  "taskId": "optimistic_favorite",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_boolean_rendered_without_save",
+        "passed": true
+      },
+      {
+        "name": "click_optimistically_updates_before_settlement",
+        "passed": true
+      },
+      {
+        "name": "pending_clicks_cannot_duplicate_save",
+        "passed": true
+      },
+      {
+        "name": "success_commits_value_and_reenables_button",
+        "passed": true
+      },
+      {
+        "name": "rejection_rolls_back_false_initial_value",
+        "passed": true
+      },
+      {
+        "name": "rejection_rolls_back_true_initial_value",
+        "passed": true
+      },
+      {
+        "name": "retry_clears_error_and_uses_restored_value",
+        "passed": true
+      },
+      {
+        "name": "second_successful_operation_saves_opposite_value",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

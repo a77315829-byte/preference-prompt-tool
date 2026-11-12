@@ -1,0 +1,373 @@
+{
+  "pass": true,
+  "results": [
+    {
+      "name": "01 offline health and two independent browser signups",
+      "pass": true,
+      "ms": 3368
+    },
+    {
+      "name": "02 private source preference preserved separately",
+      "pass": true,
+      "ms": 51
+    },
+    {
+      "name": "03 owner creates handoff through UI",
+      "pass": true,
+      "ms": 685
+    },
+    {
+      "name": "04 draft denied to recipient, third account and anonymous",
+      "pass": true,
+      "ms": 1131
+    },
+    {
+      "name": "05 attach then remove private draft file through UI",
+      "pass": true,
+      "ms": 1258
+    },
+    {
+      "name": "06 attach shared UTF-8 file and share to second account through UI",
+      "pass": true,
+      "ms": 2987
+    },
+    {
+      "name": "07 recipient downloads exact bytes and opens safe preview in real tab",
+      "pass": true,
+      "ms": 861
+    },
+    {
+      "name": "08 private history/files, unauthorized files and pre-claim editing denied",
+      "pass": true,
+      "ms": 158
+    },
+    {
+      "name": "09 recipient replacement revokes body, history and file access",
+      "pass": true,
+      "ms": 279
+    },
+    {
+      "name": "10 denied reopen clears revoked content in already-open browser",
+      "pass": true,
+      "ms": 456
+    },
+    {
+      "name": "11 reshare restores current access without old private history",
+      "pass": true,
+      "ms": 1241
+    },
+    {
+      "name": "12 concurrent owner tabs preserve rejected draft and current server version",
+      "pass": true,
+      "ms": 2097
+    },
+    {
+      "name": "13 recipient claims and edits; author becomes read-only",
+      "pass": true,
+      "ms": 3408
+    },
+    {
+      "name": "14 detached file denied in current version but retained in authorized history",
+      "pass": true,
+      "ms": 142
+    },
+    {
+      "name": "15 completion/reopening and history through recipient UI",
+      "pass": true,
+      "ms": 3493
+    },
+    {
+      "name": "16 logout clears draft and API access; relogin restores saved version",
+      "pass": true,
+      "ms": 2385
+    },
+    {
+      "name": "17 no uncaught browser errors and source preference unchanged",
+      "pass": true,
+      "ms": 13
+    },
+    {
+      "name": "18 team privacy, invitation control and membership over real HTTP",
+      "pass": true,
+      "ms": 532
+    }
+  ],
+  "requests": [
+    {
+      "endpoint": "/api/health",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/auth/signup",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/preferences",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "endpoint": "/api/preferences/9b6e5dd090b24f5b83715327168c7e79",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/history",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/history/2",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/files/f2d45b6f921241a5a73dd7b4b83c0d09?revision=2",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/files/f2d45b6f921241a5a73dd7b4b83c0d09?revision=5",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/files/db3213cddc1648c7ac240e6a4dd7ef73?revision=5",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/files/db3213cddc1648c7ac240e6a4dd7ef73?revision=5",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/update",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/update",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/history",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/files/db3213cddc1648c7ac240e6a4dd7ef73?revision=5",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/history/5",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/history/6",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/files/db3213cddc1648c7ac240e6a4dd7ef73?revision=7",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/update",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/files/db3213cddc1648c7ac240e6a4dd7ef73?revision=11",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/files/db3213cddc1648c7ac240e6a4dd7ef73?revision=7",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/preferences/9b6e5dd090b24f5b83715327168c7e79",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4/update",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "endpoint": "/api/handoffs/60d6ec9eb833476ea26b05128f0fd3b4",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "endpoint": "/api/preferences/9b6e5dd090b24f5b83715327168c7e79",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/coding-work/teams",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "endpoint": "/api/coding-work/teams/team-T4VqBnGMfh8RLG0r",
+      "method": "GET",
+      "status": 403
+    },
+    {
+      "endpoint": "/api/teams/team-T4VqBnGMfh8RLG0r",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/coding-work/teams/team-T4VqBnGMfh8RLG0r",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "endpoint": "/api/teams/team-T4VqBnGMfh8RLG0r/invitation",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/coding-work/teams/team-T4VqBnGMfh8RLG0r/join",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "endpoint": "/api/teams/team-T4VqBnGMfh8RLG0r/invitation",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/coding-work/teams/team-T4VqBnGMfh8RLG0r/join",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/teams/team-T4VqBnGMfh8RLG0r/invitation",
+      "method": "POST",
+      "status": 400
+    },
+    {
+      "endpoint": "/api/teams/team-T4VqBnGMfh8RLG0r/invitation",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/coding-work/teams/team-T4VqBnGMfh8RLG0r/join",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "endpoint": "/api/coding-work/teams/team-T4VqBnGMfh8RLG0r",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/coding-work/resolve",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/coding-work/save",
+      "method": "POST",
+      "status": 409
+    },
+    {
+      "endpoint": "/api/coding-work/save",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "endpoint": "/api/preferences/b8dd2a40cf7b4017a3d238df5bc81e8b",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/coding-work/teams/team-T4VqBnGMfh8RLG0r/update",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/coding-work/teams/team-T4VqBnGMfh8RLG0r/update",
+      "method": "POST",
+      "status": 409
+    },
+    {
+      "endpoint": "/api/preferences/b8dd2a40cf7b4017a3d238df5bc81e8b",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/coding-work/teams/team-T4VqBnGMfh8RLG0r",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/preferences/9b6e5dd090b24f5b83715327168c7e79",
+      "method": "GET",
+      "status": 200
+    }
+  ],
+  "pageErrors": [],
+  "blockedExternal": [],
+  "browser": "151.0.7922.34",
+  "contexts": "two active browser accounts plus replacement account and anonymous control",
+  "paidModelApiCalls": 0,
+  "completedAt": "2026-11-12T11:17:45.976Z"
+}

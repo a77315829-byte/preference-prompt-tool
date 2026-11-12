@@ -1,0 +1,8 @@
+{
+  "phase": "pre-generation evaluator control validation",
+  "status": "aborted",
+  "control": "accordion_keyboard-mutant",
+  "reason": "Child evaluator exceeded 60 seconds. Initial control orchestrator propagated TimeoutExpired and aborted aggregation; later queued controls may not have run. Existing inputs/results are retained.",
+  "candidate_outputs_exist": false,
+  "fix_process": "Review DOM identity assertion error formatting and retain concise boolean identity checks with identical acceptance meaning. Make orchestrator cache timeout as an evaluation error instead of abandoning the remaining controls. A separate attempt2 will validate the corrected harness before freeze."
+}

@@ -1,0 +1,8 @@
+{
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\outputs\\manual.json": "e47bdf56151a3ff7e3cef65c25f7bba5c939106cee3ccb60a4a92be185a20508",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\outputs\\current.json": "ca84b85893e4119abf6ec5ab19ada863e9deb04f5a7ba9c650ee482780c7a4f2",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\outputs\\candidate.json": "5ab3925d038cc46c2147dbef6fbb1b8720dec171a27de6b56a534824f96df4b3",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\blind_packet.json": "c989539a384ad3ae44c243906c744ed75550381004512a5136c612e6b1fc6415",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\blind_mapping.json": "8023ea9dbc9856c0f8d18b91d1beee0a0d7b6a9b52e2c34f6d575b0eca8feda3",
+  "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\automatic.json": "2ede62cf1211befc31de456f63c49c091d7f029086447e3ca5dab0196056c14e"
+}

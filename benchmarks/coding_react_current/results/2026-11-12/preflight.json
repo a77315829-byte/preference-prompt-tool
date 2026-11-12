@@ -1,0 +1,25 @@
+{
+  "frozen_ready_utc": "2026-11-12T08:18:03.105002+00:00",
+  "product_prompt_identity": true,
+  "profile_task_balance": {
+    "P1": {
+      "bug": 2,
+      "feature": 2
+    },
+    "P2": {
+      "feature": 2,
+      "bug": 2
+    }
+  },
+  "materialization_tests_passed": 12,
+  "evaluator_full_tests_passed": 14,
+  "final_scoped_evaluator_regressions_passed": 4,
+  "test_counts_overlap": true,
+  "reference_tasks_passed": 8,
+  "typed_behavior_mutants_detected": 8,
+  "behavior_assertions_per_arm": 69,
+  "first_control_attempt": "Preserved pre-generation timeout on DOM mismatch formatting; concise identity assertions preserve criteria; attempt2 completes all controls.",
+  "independent_design_audit": "Read-only task, compiler, callback, VM realm, prompt parity, literal application and rubric review; fixes completed before candidates.",
+  "candidate_generation_started": false,
+  "paid_model_api_calls": 0
+}

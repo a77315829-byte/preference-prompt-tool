@@ -1,0 +1,23 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useEffect, useId, useState } from 'react';\nimport './styles.css';\n\nexport type Props = {\n  text: string;\n  maxChars: number;\n};\n\nexport function Component({ text, maxChars }: Props) {\n  const [expanded, setExpanded] = useState(false);\n  const outputId = useId();\n  const isLong = text.length > maxChars;\n\n  useEffect(() => {\n    setExpanded(false);\n  }, [text, maxChars]);\n\n  const preview = isLong && !expanded\n    ? text.slice(0, maxChars) + '…'\n    : text;\n\n  return (\n    <div className=\"text-expander\" data-testid=\"panel\">\n      <output id={outputId} aria-label=\"Preview\">{preview}</output>\n      {isLong && (\n        <button\n          type=\"button\"\n          aria-expanded={expanded}\n          aria-controls={outputId}\n          onClick={() => setExpanded((current) => !current)}\n        >\n          {expanded ? 'Show less' : 'Show more'}\n        </button>\n      )}\n    </div>\n  );\n}\n",
+    "styles.css": ".text-expander {\n  display: grid;\n  gap: 8px;\n  padding: 16px;\n  background-color: #f2f6fc;\n  color: #1d3150;\n}\n\n.text-expander output {\n  white-space: pre-wrap;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 920
+    },
+    {
+      "path": "styles.css",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 943,
+      "end": 1107
+    }
+  ]
+}

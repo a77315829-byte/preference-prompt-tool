@@ -1,0 +1,20 @@
+{
+  "scope": "AI-assisted blinded semantic review, not human preference or gold factuality labels",
+  "sentence_count": "Count grammatical sentences, respecting abbreviations (U.S., Dr., initials), decimals and quotation punctuation. Do not count a period inside an abbreviation as a sentence boundary. Record the count, even if the app's simple tokenizer differs.",
+  "wording": {
+    "normal": "Pass when the summary mostly reformulates clauses in new wording. Retaining names, numbers, technical expressions and short necessary quotations is allowed. Fail when most of the summary consists of copied or minimally edited source sentences. Explain using concrete text; do not use the hidden bigram threshold.",
+    "high": "Pass when the summary substantially reuses the source's distinctive words and phrases, including copied sentences. Fail if it mainly replaces them with new phrasings. The natural-language instruction does not specify an upper bound on overlap. Explain using concrete examples.",
+    "fully": "Pass only if all summary sentences are complete verbatim source sentences; whitespace changes are allowed. Changing words, punctuation or removing a source prefix fails this strict literal requirement. You may identify a sentence within a multi-sentence source unit. State any ambiguity."
+  },
+  "key_fact_coverage": "For each of the three frozen propositions, mark preserved only when the summary conveys the proposition and its essential qualification/attribution. Accurate paraphrases count. Partial coverage is false, with a reason describing what is missing. An omitted fact is a coverage loss, not automatically a hallucination. Cite exact summary substrings for preserved facts.",
+  "factual_issues": "Audit the entire summary, not just key facts. Flag invented or contradicted claims, incorrect quantities/names/timing, reversed causation, and allegations/plans presented as settled facts. Do not flag mere omissions, harmless synonym changes, or plausible entailments. For each flagged issue give an exact summary quote and source evidence (empty evidence allowed only for an unsupported claim absent from the source). Reference summaries are not authoritative if the source contradicts them.",
+  "review_schema": {
+    "output_id": "O01",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Concrete explanation with examples",
+    "facts": [{"id": "F1", "preserved": true, "summary_evidence": ["Exact substring"], "reason": "Why the proposition is conveyed"}],
+    "issues": [{"summary_quote": "Exact substring", "reason": "Why this is unsupported or misleading", "source_evidence": ["Exact source substring"]}]
+  },
+  "review_policy": "Exactly 27 reviews, each with F1/F2/F3 and an issues array (empty if none). Do not access arm identities, generation prompts, automatic measurements or the other review. Keep uncertain interpretations explicit in reasons. Do not change summaries or rubrics."
+}

@@ -1,0 +1,7 @@
+{
+  "exact_old_overlap": 0,
+  "max_word5gram_jaccard_with_prior": 0.18216682646212848,
+  "max_word5gram_jaccard_within_new": 0.0,
+  "not_model_pretraining_exclusion": true,
+  "selection_changed": false
+}

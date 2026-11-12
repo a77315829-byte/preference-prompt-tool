@@ -1,0 +1,840 @@
+[
+  {
+    "id": "S01",
+    "record_index": 24,
+    "metadata": {
+      "dataset": "cnndm",
+      "split": "test",
+      "file_id": 931
+    },
+    "source": "(CNN)In the end, it played out like a movie.\nA tense, heartbreaking story, and then a surprise twist at the end.\nAs eight of Mary Jane Veloso's fellow death row inmates -- mostly foreigners, like her -- were put to death by firing squad early Wednesday in a wooded grove on the Indonesian island of Nusa Kambangan, the Filipina maid and mother of two was spared, at least for now.\nHer family was returning from what they thought was their final visit to the prison on so-called \"execution island\" when a Philippine TV crew flagged their bus down to tell them of the decision to postpone her execution.\nHer ecstatic mother, Celia Veloso, told CNN: \"We are so happy, so happy.\nI thought I had lost my daughter already but God is so good.\nThank you to everyone who helped us.\"\nSupporters were \"overjoyed\" with the news.\n\"This is all because of the efforts of the Filipino people and the international community who have been with Mary Jane, her family and the Filipino people all throughout,\" a supporter said upon hearing of the eleventh-hour reprieve.\nVeloso was arrested in 2010 after a flight from Malaysia to Indonesia when $500,000 worth of heroin was discovered in the lining of her luggage.\nSupporters, including the Filipino advocacy group Migrante, and her lawyers claim the young mother was the victim of human trafficking.\nThey say she was offered work in Malaysia, but when she arrived she was told the job had been filled and wasn't aware the bag she'd been given for the return journey to Indonesia was filled with drugs.\nThe Philippine Embassy in Indonesia's capital, Jakarta, said Wednesday that it welcomed the reprieve and appreciated that the Indonesian government appeared to be reconsidering the case.\n\"While Mary Jane was convicted for a drug-related offense in 2010, the Philippines believes that due to her personal circumstances, she herself is a victim of heartless drug syndicates,\" embassy political secretary Jed Llona said.\n\"The alleged recruiters of Mary Jane are currently being investigated in the Philippines, and the embassy hopes that through this ongoing case, those truly responsible for drug trafficking in the region are brought to justice.\"\nQuestions about her detention and trial, including the competency of her translator, have also been raised.\nVeloso had been given the customary 72 hours' notice of execution, and her family had traveled to Nusa Kambangan to say their final goodbyes.\nHowever, developments in her home country appear to have changed  -- or at least delayed -- her fate.\nCNN Philippines reported that Veloso's alleged recruiter, Maria Kristina Sergio, and her partner Julius Lacanilao surrendered to authorities in the Philippines Tuesday.\nSergio faces charges of illegal recruitment, human trafficking, and fraud, but maintains her innocence.\nSergio said that she had received anonymous death threats by phone, and further threatening messages from Veloso's family on social media.\nVeloso's lawyer, Edre Olalia, confirmed that developments in the case had prompted the stay.\n\"As far as Mary Jane is concerned, her life has been spared for the moment and the reason is that the legal proceedings in the Philippines must be respected first in view of the fact that the illegal recruiter is now in custody,\" he told CNN Philippines.\nIndonesian President Joko Widodo told reporters Wednesday that the decision was the result of the Indonesian government's desire to cooperate with the ongoing case in the Philippines.\n\"There was a letter from the Philippine government saying that there is a legal process related to human trafficking there.\nSo we need to respect this legal process.\"\nHe stressed, however, that the execution was delayed, rather than canceled.\nVeloso's case has touched the public in her native Philippines, with the highest levels of government and celebrity calling for mercy.\nPresident Benigno Aquino met his Indonesian counterpart on the sidelines at the ASEAN summit in Kuala Lumpur last weekend and pressed for him to commute Veloso's sentence.\nFilipino boxing superstar Manny Pacquiao, who is primed to fight longtime foe Floyd Mayweather Saturday, made a televised appeal to President Widodo, also asking for mercy for Veloso.\n\"I am begging and knocking on your kind heart that Your Excellency will grant executive clemency to her,\" he said.\nVeloso's sons, Mark Daniel and Mark Darren, ages 6 and 12, issued a heartbreaking plea, aimed at Widodo's son, asking him to intervene.\n\"Please tell your father not to execute her,\" they asked.\nOrdinary people are also fighting for their compatriot, including Filipino domestic workers in Hong Kong, who protested at the Indonesian Consulate in Hong Kong Tuesday.\nPhilippine Embassy officials said Veloso would be returned to Yogyakarta prison in Central Java later on Wednesday.\nLawyers fighting to delay her execution previously said they'd given up their bid after her second legal review was rejected on Monday.",
+    "source_units": [
+      "(CNN)In the end, it played out like a movie.",
+      "A tense, heartbreaking story, and then a surprise twist at the end.",
+      "As eight of Mary Jane Veloso's fellow death row inmates -- mostly foreigners, like her -- were put to death by firing squad early Wednesday in a wooded grove on the Indonesian island of Nusa Kambangan, the Filipina maid and mother of two was spared, at least for now.",
+      "Her family was returning from what they thought was their final visit to the prison on so-called \"execution island\" when a Philippine TV crew flagged their bus down to tell them of the decision to postpone her execution.",
+      "Her ecstatic mother, Celia Veloso, told CNN: \"We are so happy, so happy.",
+      "I thought I had lost my daughter already but God is so good.",
+      "Thank you to everyone who helped us.\"",
+      "Supporters were \"overjoyed\" with the news.",
+      "\"This is all because of the efforts of the Filipino people and the international community who have been with Mary Jane, her family and the Filipino people all throughout,\" a supporter said upon hearing of the eleventh-hour reprieve.",
+      "Veloso was arrested in 2010 after a flight from Malaysia to Indonesia when $500,000 worth of heroin was discovered in the lining of her luggage.",
+      "Supporters, including the Filipino advocacy group Migrante, and her lawyers claim the young mother was the victim of human trafficking.",
+      "They say she was offered work in Malaysia, but when she arrived she was told the job had been filled and wasn't aware the bag she'd been given for the return journey to Indonesia was filled with drugs.",
+      "The Philippine Embassy in Indonesia's capital, Jakarta, said Wednesday that it welcomed the reprieve and appreciated that the Indonesian government appeared to be reconsidering the case.",
+      "\"While Mary Jane was convicted for a drug-related offense in 2010, the Philippines believes that due to her personal circumstances, she herself is a victim of heartless drug syndicates,\" embassy political secretary Jed Llona said.",
+      "\"The alleged recruiters of Mary Jane are currently being investigated in the Philippines, and the embassy hopes that through this ongoing case, those truly responsible for drug trafficking in the region are brought to justice.\"",
+      "Questions about her detention and trial, including the competency of her translator, have also been raised.",
+      "Veloso had been given the customary 72 hours' notice of execution, and her family had traveled to Nusa Kambangan to say their final goodbyes.",
+      "However, developments in her home country appear to have changed  -- or at least delayed -- her fate.",
+      "CNN Philippines reported that Veloso's alleged recruiter, Maria Kristina Sergio, and her partner Julius Lacanilao surrendered to authorities in the Philippines Tuesday.",
+      "Sergio faces charges of illegal recruitment, human trafficking, and fraud, but maintains her innocence.",
+      "Sergio said that she had received anonymous death threats by phone, and further threatening messages from Veloso's family on social media.",
+      "Veloso's lawyer, Edre Olalia, confirmed that developments in the case had prompted the stay.",
+      "\"As far as Mary Jane is concerned, her life has been spared for the moment and the reason is that the legal proceedings in the Philippines must be respected first in view of the fact that the illegal recruiter is now in custody,\" he told CNN Philippines.",
+      "Indonesian President Joko Widodo told reporters Wednesday that the decision was the result of the Indonesian government's desire to cooperate with the ongoing case in the Philippines.",
+      "\"There was a letter from the Philippine government saying that there is a legal process related to human trafficking there.",
+      "So we need to respect this legal process.\"",
+      "He stressed, however, that the execution was delayed, rather than canceled.",
+      "Veloso's case has touched the public in her native Philippines, with the highest levels of government and celebrity calling for mercy.",
+      "President Benigno Aquino met his Indonesian counterpart on the sidelines at the ASEAN summit in Kuala Lumpur last weekend and pressed for him to commute Veloso's sentence.",
+      "Filipino boxing superstar Manny Pacquiao, who is primed to fight longtime foe Floyd Mayweather Saturday, made a televised appeal to President Widodo, also asking for mercy for Veloso.",
+      "\"I am begging and knocking on your kind heart that Your Excellency will grant executive clemency to her,\" he said.",
+      "Veloso's sons, Mark Daniel and Mark Darren, ages 6 and 12, issued a heartbreaking plea, aimed at Widodo's son, asking him to intervene.",
+      "\"Please tell your father not to execute her,\" they asked.",
+      "Ordinary people are also fighting for their compatriot, including Filipino domestic workers in Hong Kong, who protested at the Indonesian Consulate in Hong Kong Tuesday.",
+      "Philippine Embassy officials said Veloso would be returned to Yogyakarta prison in Central Java later on Wednesday.",
+      "Lawyers fighting to delay her execution previously said they'd given up their bid after her second legal review was rejected on Monday."
+    ],
+    "source_sha256": "0bc001a23501f2067838f3d9dd777a99118d812b1e70f0a30755bbfd8e36c05a",
+    "source_words": 799,
+    "profile": {
+      "length": "normal",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "references": [
+      {
+        "control_attribute": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Mary Jane Veloso was scheduled for execution along with eight others on Wednesday but a decision was taken to delay Veloso's execution because of Indonesia's desire to cooperate with the Philippine government's legal procedure in relation to human trafficking.",
+        "title": "Veloso's Execution is Delayed",
+        "relevant_turns": [
+          [
+            0,
+            35
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Mary Jane Veloso, a Filipina mother of two was arrested in Indonesia after a flight from Malaysia when $500,000 worth of Heroin was found in Veloso's bag. According to supporters, Veloso was a victim of human trafficking having supposedly gone to Malaysia to resume a new job but was informed on arrival that the position was already filled by someone else and was given a bag containing drugs, unknown to Veloso on the return trip which led to the arrest in 2010.",
+        "title": "Circumstances Surrounding Veloso's Arrest",
+        "relevant_turns": [
+          [
+            0,
+            35
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Mary Jane Veloso's mother, Celia Veloso, and other supporters were filled with joy when they received the news of the postponement of Veloso's execution. Mary Jane Veloso has been said to be a victim of human trafficking leading to Veloso's arrest and death sentence. Pleas from family, supporters, and the Philippine community both in Philipines and Indonesia in addition to investigations and charging of the supposed recruiters have paid off, delaying the execution. The Indonesian President said the delay was Indonesia's way of cooperating with the Philippine government's legal procedure in dealing with human trafficking, especially with the alleged illegal recruiters, Maria Kristina and Julius Lacanilao in custody after they surrendered to the Philippine authorities on Tuesday.",
+        "title": "Indonesia's Cooperation with the Philippines in Veloso's Case",
+        "relevant_turns": [
+          [
+            0,
+            35
+          ]
+        ]
+      }
+    ],
+    "prompts": {
+      "general": "Summarize the following source in English. Output only the summary.",
+      "manual": "Summarize the following source in English. Use three to four sentences. Use only complete sentences copied verbatim from the source; do not write new sentences. Do not invent facts, guesses, or opinions. Preserve numbers, dates, names, and attribution accurately. Distinguish confirmed information from allegations, plans, and uncertainty. Output only the summary, without a title, preamble, explanation, or closing.",
+      "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Build the summary from sentences extracted verbatim from the source. Do not write new sentences.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+    }
+  },
+  {
+    "id": "S02",
+    "record_index": 27,
+    "metadata": {
+      "dataset": "cnndm",
+      "split": "test",
+      "file_id": 64
+    },
+    "source": "(CNN)Comedian Chris Rock made light of racial disparities in police treatment of whites and blacks with a tongue-in-cheek guide to not being beaten by the police.\nHe encapsulated the frustration and grief caused by a New York grand jury's decision not to indict a white police officer in the death of a black man with a simple tweet: \"This one was on film.\"\nNow, he's stirring things up again with a series of tweets documenting three traffic stops in seven weeks.\n\"Stopped by the cops again wish me luck,\" he posted early Tuesday, along with a photo showing him behind the wheel of a car with what looks like blue police lights in the background.\nHe posted similar photos in February.\nMany African-Americans have long bemoaned the phenomenon of being pulled over for no apparent reason, calling it \"driving while black.\"\nBlacks are about 30% more likely to be pulled over by police than whites, according to figures reported by the Bureau of Justice Statistics in 2013.\nAnd in amid increased conversation over race and policing after the high-profile deaths last year of Eric Garner in New York and Michael Brown in Ferguson, Missouri, the issue is even more sensitive.\nRock hasn't commented on the tweets and didn't say how the police stop turned out.\nHe got lots of support on Twitter.\n\"My heart legit dropped, no kidding,\" one Twitter fan posted.\nMany praised him for documenting the stops.\nSome accused him of race-baiting.\nBut one bit of advice in particular lit up social media.\nActor Isaiah Washington urged Rock to \"#Adapt\" to avoid racial profiling.\n\"I sold my $90,000.00 Mercedes G500 and bought 3 Prius's, because I got tired of being pulled over by Police,\" Washington tweeted.\nSome saw that as a sell-out, saying Rock shouldn't have to take steps others might not have to as a way to avoid being pulled over.\n\"Let me guess..you also make sure your pants are pulled up as well?.\"\nTwitter user YeshaCallahan posted.\nAppearing on CNN, Washington defended the tweet, saying he wanted to \"excite a conversation.\"\nYears ago, Rock filmed a sketch for his \"Chris Rock\" show on HBO in which he detailed ways to avoid being beaten by police as a black man.\nBesides obeying the law, he suggested bringing a white friend along for the ride.\nHe did just that last year in a segment of \"Comedians in Cars Getting Coffee\" with Jerry Seinfeld.\nThe two chat as Seinfeld drives an orange Lamborghini.\nAnd what happened?\nThey get pulled over after Seinfeld goes a bit heavy on the gas.\n\"Here's the crazy thing,\" Rock tells Seinfeld as the police officer stops the duo.\n\"If you weren't here, I'd be scared.\"",
+    "source_units": [
+      "(CNN)Comedian Chris Rock made light of racial disparities in police treatment of whites and blacks with a tongue-in-cheek guide to not being beaten by the police.",
+      "He encapsulated the frustration and grief caused by a New York grand jury's decision not to indict a white police officer in the death of a black man with a simple tweet: \"This one was on film.\"",
+      "Now, he's stirring things up again with a series of tweets documenting three traffic stops in seven weeks.",
+      "\"Stopped by the cops again wish me luck,\" he posted early Tuesday, along with a photo showing him behind the wheel of a car with what looks like blue police lights in the background.",
+      "He posted similar photos in February.",
+      "Many African-Americans have long bemoaned the phenomenon of being pulled over for no apparent reason, calling it \"driving while black.\"",
+      "Blacks are about 30% more likely to be pulled over by police than whites, according to figures reported by the Bureau of Justice Statistics in 2013.",
+      "And in amid increased conversation over race and policing after the high-profile deaths last year of Eric Garner in New York and Michael Brown in Ferguson, Missouri, the issue is even more sensitive.",
+      "Rock hasn't commented on the tweets and didn't say how the police stop turned out.",
+      "He got lots of support on Twitter.",
+      "\"My heart legit dropped, no kidding,\" one Twitter fan posted.",
+      "Many praised him for documenting the stops.",
+      "Some accused him of race-baiting.",
+      "But one bit of advice in particular lit up social media.",
+      "Actor Isaiah Washington urged Rock to \"#Adapt\" to avoid racial profiling.",
+      "\"I sold my $90,000.00 Mercedes G500 and bought 3 Prius's, because I got tired of being pulled over by Police,\" Washington tweeted.",
+      "Some saw that as a sell-out, saying Rock shouldn't have to take steps others might not have to as a way to avoid being pulled over.",
+      "\"Let me guess..you also make sure your pants are pulled up as well?.\"",
+      "Twitter user YeshaCallahan posted.",
+      "Appearing on CNN, Washington defended the tweet, saying he wanted to \"excite a conversation.\"",
+      "Years ago, Rock filmed a sketch for his \"Chris Rock\" show on HBO in which he detailed ways to avoid being beaten by police as a black man.",
+      "Besides obeying the law, he suggested bringing a white friend along for the ride.",
+      "He did just that last year in a segment of \"Comedians in Cars Getting Coffee\" with Jerry Seinfeld.",
+      "The two chat as Seinfeld drives an orange Lamborghini.",
+      "And what happened?",
+      "They get pulled over after Seinfeld goes a bit heavy on the gas.",
+      "\"Here's the crazy thing,\" Rock tells Seinfeld as the police officer stops the duo.",
+      "\"If you weren't here, I'd be scared.\""
+    ],
+    "source_sha256": "5f2d7b4cdd547c2f5321d4ce3a81d8462c25e7f4edbc6a711743a9f580e70df8",
+    "source_words": 451,
+    "profile": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "references": [
+      {
+        "control_attribute": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Chris Rock posts selfies showing that he was stopped by the cops. This is after being pulled over three times in the last seven weeks.",
+        "title": "Traffic Stop Selfies",
+        "relevant_turns": [
+          [
+            0,
+            27
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Chris Rock posts selfies showing him behind the wheel of a car with what looks like blue police lights in the background saying, \"stopped by the cops again wish me luck.\". This is after being pulled over three times in the last seven weeks. He posted similar photos in February.",
+        "title": "Traffic Stop Selfies",
+        "relevant_turns": [
+          [
+            0,
+            27
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Chris Rock posts selfies showing him behind the wheel of a car with what looks like blue police lights in the background saying, \"stopped by the cops again wish me luck.\". This is after being pulled over three times in the last seven weeks. He posted similar photos in February. This phenomenon of being pulled over for no apparent reason has long existed and is now termed \"driving while black\" by many African-Americans.",
+        "title": "Traffic Stop Selfies",
+        "relevant_turns": [
+          [
+            0,
+            27
+          ]
+        ]
+      }
+    ],
+    "prompts": {
+      "general": "Summarize the following source in English. Output only the summary.",
+      "manual": "Summarize the following source in English. Use no more than two sentences. Mostly paraphrase in your own words, retaining original wording only where helpful. Do not invent facts, guesses, or opinions. Preserve numbers, dates, names, and attribution accurately. Distinguish confirmed information from allegations, plans, and uncertainty. Output only the summary, without a title, preamble, explanation, or closing.",
+      "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+    }
+  },
+  {
+    "id": "S03",
+    "record_index": 16,
+    "metadata": {
+      "dataset": "cnndm",
+      "split": "test",
+      "file_id": 100
+    },
+    "source": "(The Hollywood Reporter)\"Grace of Monaco,\" starring Nicole Kidman as star-turned-princess Grace Kelly, is heading straight to Lifetime.\nThe critically-panned film, which opened last year's Cannes Film Festival, will premiere on Lifetime on Memorial Day, May 25.\nAfter the movie performed poorly in its international engagements, The Weinstein Co., which first purchased U.S. distribution rights at the 2013 Berlin Film Festival, decided to sell it directly to Lifetime rather than book it into U.S. theaters, a source confirmed to The Hollywood Reporter.\nTHR: Grace of Monaco' Cannes review .\nThe film, which was directed by Olivier Dahan and focuses on a period in the early '60s when Monaco was involved in a stand-off over taxes with France and Grace was contemplating a return to Hollywood, was originally scheduled for release in late 2013.\nGiven the names involved, some handicappers had put it on their list of potential Oscar contenders.\nBut when TWC pulled it out of awards contention and shifted its release to March 14, 2014, Dahan lashed out at TWC's Harvey Weinstein, over the movie's final cut, which the director was in the process of completing.\n\"There are two versions of the film for now, mine and his,\" Dahan complained, continuing, \"They want a commercial film smelling of daisies, taking out anything that exceeds that which is too abrupt, anything that makes it cinematic and breathe with life.\"\nThat planned March release was then scrubbed, when Cannes expressed interest in debuting the director's version of the movie in May.\nEven before it screened, though, Grace's children blasted the picture as \"needlessly glamorized and historically inaccurate\" and boycotting the Cannes red carpet.\nTHR: The Weinstein Co. nearing deal to keep 'Grace of Monaco' Weinstein didn't attend the movie's premiere either -- explaining that he had been visiting Syrian refugee camps in Jordan as part of a long-scheduled U.N.-sponsored trip.\nBut TWC did strike a new distribution deal for the film in Cannes, agreeing to show Dahan's cut in the U.S., but acquiring rights for just $3 million upfront, a $2 million discount from its earlier contract.\nBut TWC then did not slot \"Grace of Monaco\" into its fall, 2015 release schedule.\nTim Roth costars as Kelly's husband Prince Rainier III, Frank Langella as Kelly's priest and confidante, Parker Posey as Grace's aid, and Paz Vega (\"Spanglish,\" \"Sex and Lucia\") as opera singer Maria Callas.\nSee the original story at The Hollywood Reporter.\n©2015 The Hollywood Reporter.\nAll rights reserved.",
+    "source_units": [
+      "(The Hollywood Reporter)\"Grace of Monaco,\" starring Nicole Kidman as star-turned-princess Grace Kelly, is heading straight to Lifetime.",
+      "The critically-panned film, which opened last year's Cannes Film Festival, will premiere on Lifetime on Memorial Day, May 25.",
+      "After the movie performed poorly in its international engagements, The Weinstein Co., which first purchased U.S. distribution rights at the 2013 Berlin Film Festival, decided to sell it directly to Lifetime rather than book it into U.S. theaters, a source confirmed to The Hollywood Reporter.",
+      "THR: Grace of Monaco' Cannes review .",
+      "The film, which was directed by Olivier Dahan and focuses on a period in the early '60s when Monaco was involved in a stand-off over taxes with France and Grace was contemplating a return to Hollywood, was originally scheduled for release in late 2013.",
+      "Given the names involved, some handicappers had put it on their list of potential Oscar contenders.",
+      "But when TWC pulled it out of awards contention and shifted its release to March 14, 2014, Dahan lashed out at TWC's Harvey Weinstein, over the movie's final cut, which the director was in the process of completing.",
+      "\"There are two versions of the film for now, mine and his,\" Dahan complained, continuing, \"They want a commercial film smelling of daisies, taking out anything that exceeds that which is too abrupt, anything that makes it cinematic and breathe with life.\"",
+      "That planned March release was then scrubbed, when Cannes expressed interest in debuting the director's version of the movie in May.",
+      "Even before it screened, though, Grace's children blasted the picture as \"needlessly glamorized and historically inaccurate\" and boycotting the Cannes red carpet.",
+      "THR: The Weinstein Co. nearing deal to keep 'Grace of Monaco' Weinstein didn't attend the movie's premiere either -- explaining that he had been visiting Syrian refugee camps in Jordan as part of a long-scheduled U.N.-sponsored trip.",
+      "But TWC did strike a new distribution deal for the film in Cannes, agreeing to show Dahan's cut in the U.S., but acquiring rights for just $3 million upfront, a $2 million discount from its earlier contract.",
+      "But TWC then did not slot \"Grace of Monaco\" into its fall, 2015 release schedule.",
+      "Tim Roth costars as Kelly's husband Prince Rainier III, Frank Langella as Kelly's priest and confidante, Parker Posey as Grace's aid, and Paz Vega (\"Spanglish,\" \"Sex and Lucia\") as opera singer Maria Callas.",
+      "See the original story at The Hollywood Reporter.",
+      "©2015 The Hollywood Reporter.",
+      "All rights reserved."
+    ],
+    "source_sha256": "7bf4e54b8d2e58597ba760e122df22b0b29ddf258747398f15a7cadc3e0dfbd1",
+    "source_words": 408,
+    "profile": {
+      "length": "long",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "references": [
+      {
+        "control_attribute": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "The movie, Grace of Monaco, which opened at last year's Cannes Film Festival will premiere on Memorial Day. The movie was originally scheduled for release in 2013.",
+        "title": "Grace of Monaco Premiere",
+        "relevant_turns": [
+          [
+            0,
+            16
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Grace of Monaco film starring Nicole Kidman will premiere on Lifetime on Memorial Day, although Grace of Monaco film was originally scheduled for late 2013, After, the movie performed poorly in its international engagements. This movie opened last year's Cannes Film Festival.",
+        "title": "Grace of Monaco Premiere",
+        "relevant_turns": [
+          [
+            0,
+            16
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "The movie Grace of Monaco, starring Nicole Kidman and directed by Olivier Dahan was sold directly to Lifetime rather than book it into U.S. theaters and the date of the premiere will be May 25, on Memorial Day. This movie was originally scheduled for release in late 2013, but the movie performed poorly in its international engagements.",
+        "title": "Grace of Monaco Premiere",
+        "relevant_turns": [
+          [
+            0,
+            16
+          ]
+        ]
+      }
+    ],
+    "prompts": {
+      "general": "Summarize the following source in English. Output only the summary.",
+      "manual": "Summarize the following source in English. Use at least five sentences and include detail. Use only complete sentences copied verbatim from the source; do not write new sentences. Do not invent facts, guesses, or opinions. Preserve numbers, dates, names, and attribution accurately. Distinguish confirmed information from allegations, plans, and uncertainty. Output only the summary, without a title, preamble, explanation, or closing.",
+      "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Build the summary from sentences extracted verbatim from the source. Do not write new sentences.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+    }
+  },
+  {
+    "id": "S04",
+    "record_index": 42,
+    "metadata": {
+      "dataset": "cnndm",
+      "split": "test",
+      "file_id": 103
+    },
+    "source": "(CNN)Buzz has surrounded HBO's new documentary \"Going Clear: Scientology and the Prison of Belief,\" but Scientologist John Travolta is not a fan.\nTravolta told the Tampa Bay Times that he has not seen the documentary, \"and I don't really care to.\"\n\"I've been so happy with my (Scientology) experience in the last 40 years that I really don't have anything to say that would shed light on (a documentary) so decidedly negative,\" Travolta said.\nThe actor, one of the Church of Scientology's most high-profile members along with stars like Tom Cruise and Kirstie Alley, is premiering his new film, \"The Forger,\" in Clearwater, Florida.\nThe HBO documentary is based on the book \"Going Clear: Scientology, Hollywood, and the Prison of Belief\" by Lawrence Wright and is critical of the organization, which has close ties to the showbiz industry.\nTravolta said he believed the doc was a result of \"people who were disgruntled with their experiences\" with the Church of Scientology, which he touted as a positive experience for him.\n\"I haven't experienced anything that the hearsay has (claimed), so why would I communicate something that wasn't true for me?\"\nTravolta asked.\n\"It wouldn't make sense, nor would it for Tom (Cruise), I imagine.\"\nHe called Scientology \"brilliant\" and credited the church with helping him to survive the death of his teen son, Jett, after a seizure while the family was on vacation in the Bahamas in 2009.\n\"Oh, my God, I wouldn't have made it,\" said Travolta, whose wife, Kelly Preston, is also a member.\n\"Honestly.\"",
+    "source_units": [
+      "(CNN)Buzz has surrounded HBO's new documentary \"Going Clear: Scientology and the Prison of Belief,\" but Scientologist John Travolta is not a fan.",
+      "Travolta told the Tampa Bay Times that he has not seen the documentary, \"and I don't really care to.\"",
+      "\"I've been so happy with my (Scientology) experience in the last 40 years that I really don't have anything to say that would shed light on (a documentary) so decidedly negative,\" Travolta said.",
+      "The actor, one of the Church of Scientology's most high-profile members along with stars like Tom Cruise and Kirstie Alley, is premiering his new film, \"The Forger,\" in Clearwater, Florida.",
+      "The HBO documentary is based on the book \"Going Clear: Scientology, Hollywood, and the Prison of Belief\" by Lawrence Wright and is critical of the organization, which has close ties to the showbiz industry.",
+      "Travolta said he believed the doc was a result of \"people who were disgruntled with their experiences\" with the Church of Scientology, which he touted as a positive experience for him.",
+      "\"I haven't experienced anything that the hearsay has (claimed), so why would I communicate something that wasn't true for me?\"",
+      "Travolta asked.",
+      "\"It wouldn't make sense, nor would it for Tom (Cruise), I imagine.\"",
+      "He called Scientology \"brilliant\" and credited the church with helping him to survive the death of his teen son, Jett, after a seizure while the family was on vacation in the Bahamas in 2009.",
+      "\"Oh, my God, I wouldn't have made it,\" said Travolta, whose wife, Kelly Preston, is also a member.",
+      "\"Honestly.\""
+    ],
+    "source_sha256": "888425ff7d237eb1dae16481c3f235720ac6436290d34b27f8132a8f04f539c1",
+    "source_words": 256,
+    "profile": {
+      "length": "long",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "references": [
+      {
+        "control_attribute": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Travolta's not planning on seeing the new documentary, and he named Scientology brilliant.",
+        "title": "Travolta's Experience with Scientology",
+        "relevant_turns": [
+          [
+            0,
+            11
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "The Church of Scientology helped Travolta to survive the death of his son, the actor has not seen the documentary and didn't care to.",
+        "title": "Travolta's Experience with Scientology",
+        "relevant_turns": [
+          [
+            0,
+            11
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Travolta, one of the Church of Scientology's most high-profile members, credited the church with helping him to survive the death of his teen son in 2009. Travolta called Scientology \"brilliant\" and has not seen HBO's documentary.",
+        "title": "Travolta's Experience with Scientology",
+        "relevant_turns": [
+          [
+            0,
+            11
+          ]
+        ]
+      }
+    ],
+    "prompts": {
+      "general": "Summarize the following source in English. Output only the summary.",
+      "manual": "Summarize the following source in English. Use at least five sentences and include detail. Mostly paraphrase in your own words, retaining original wording only where helpful. Do not invent facts, guesses, or opinions. Preserve numbers, dates, names, and attribution accurately. Distinguish confirmed information from allegations, plans, and uncertainty. Output only the summary, without a title, preamble, explanation, or closing.",
+      "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+    }
+  },
+  {
+    "id": "S05",
+    "record_index": 88,
+    "metadata": {
+      "dataset": "cnndm",
+      "split": "test",
+      "file_id": 257
+    },
+    "source": "(CNN)A natural gas line explosion at a law enforcement shooting range in Fresno, California, injured 11 people, including some inmates who were on a work detail there.\nOthers being treated include a county road worker and two sheriff's deputies, Fresno County Sheriff Margaret Mims said.\nThe exact cause of Friday's blast is under investigation, Mims said, but it happened at the spot where a county worker was operating a front loader.\nThe explosion sparked a fire that roared like a jet engine, Mims said.\nThe operator of the front loader was injured but able to walk to an ambulance, the sheriff said.\nThe most serious injuries were suffered by a group of inmates who were assigned to maintenance and cleaning work at the sheriff's firing range.\nThere were 10 inmates near the blast site who were also injured, officials said.\nThree other inmates at the site were not hurt.\nEarlier, the sheriff's office included them in the injury count.\nAfter the blast, Mims said, two sheriff's deputies who were at the firing range ran toward the fire to move the injured.\nCNN affiliate KFSN posted a video of the scene that shows a tall ball of fire rising from near a highway.\nOne inmate was airlifted to the hospital, the sheriff said.\nThat inmate and the county worker were undergoing emergency surgery, she said.\nThe others suffered mostly burns.\nThe pair of deputies who provided aid also went for treatment for ringing ears and sunburn-like conditions, she said.\nFirefighters put out the blaze, revealing a crater at the blast site and a blackened front loader, Mims said.",
+    "source_units": [
+      "(CNN)A natural gas line explosion at a law enforcement shooting range in Fresno, California, injured 11 people, including some inmates who were on a work detail there.",
+      "Others being treated include a county road worker and two sheriff's deputies, Fresno County Sheriff Margaret Mims said.",
+      "The exact cause of Friday's blast is under investigation, Mims said, but it happened at the spot where a county worker was operating a front loader.",
+      "The explosion sparked a fire that roared like a jet engine, Mims said.",
+      "The operator of the front loader was injured but able to walk to an ambulance, the sheriff said.",
+      "The most serious injuries were suffered by a group of inmates who were assigned to maintenance and cleaning work at the sheriff's firing range.",
+      "There were 10 inmates near the blast site who were also injured, officials said.",
+      "Three other inmates at the site were not hurt.",
+      "Earlier, the sheriff's office included them in the injury count.",
+      "After the blast, Mims said, two sheriff's deputies who were at the firing range ran toward the fire to move the injured.",
+      "CNN affiliate KFSN posted a video of the scene that shows a tall ball of fire rising from near a highway.",
+      "One inmate was airlifted to the hospital, the sheriff said.",
+      "That inmate and the county worker were undergoing emergency surgery, she said.",
+      "The others suffered mostly burns.",
+      "The pair of deputies who provided aid also went for treatment for ringing ears and sunburn-like conditions, she said.",
+      "Firefighters put out the blaze, revealing a crater at the blast site and a blackened front loader, Mims said."
+    ],
+    "source_sha256": "db61c8a4b26d85cf26f580264426ab41e2dfd887c739795f8ea85e06c09e0620",
+    "source_words": 267,
+    "profile": {
+      "length": "normal",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "references": [
+      {
+        "control_attribute": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Employees and inmates were injured when a natural gas line exploded at a sheriff’s gun range in California.",
+        "title": "Gas Line Explosion in Fresno, California",
+        "relevant_turns": [
+          [
+            0,
+            15
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "The explosion sent fireballs into the sky and sparked several smaller fires. The explosion occurred as the public works employee was operating a front-end loader on a road behind the gun range targets.",
+        "title": "Gas Line Explosion in Fresno, California",
+        "relevant_turns": [
+          [
+            0,
+            15
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "The front-end loader operator suffered injuries but was able to walk to an ambulance. 10 inmates on a work detail suffered very serious injuries and were also taken to area hospitals for treatment while One inmate in critical condition was flown to the hospital by helicopter following the gas line explosion near the Fresno County sheriff’s shooting range.",
+        "title": "Injuries Update of California Gas Pipeline Explosion",
+        "relevant_turns": [
+          [
+            0,
+            15
+          ]
+        ]
+      }
+    ],
+    "prompts": {
+      "general": "Summarize the following source in English. Output only the summary.",
+      "manual": "Summarize the following source in English. Use three to four sentences. Mostly paraphrase in your own words, retaining original wording only where helpful. Do not invent facts, guesses, or opinions. Preserve numbers, dates, names, and attribution accurately. Distinguish confirmed information from allegations, plans, and uncertainty. Output only the summary, without a title, preamble, explanation, or closing.",
+      "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Mostly rephrase in your own words; quote the source wording only where it helps.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+    }
+  },
+  {
+    "id": "S06",
+    "record_index": 18,
+    "metadata": {
+      "dataset": "cnndm",
+      "split": "test",
+      "file_id": 231
+    },
+    "source": "(CNN)Lady Antebellum singer Hillary Scott's tour bus caught fire on a Texas freeway Thursday morning, but everyone on board was safely evacuated.\nMichael Barnett captured dramatic video of the fire, on Interstate 30 just northeast of Dallas, and uploaded it to CNN iReport.\nSmoke and flames poured from the rear of the bus as traffic slowed to a crawl and Barnett slowly approached in his vehicle.\nAs he drew closer to the bus, Barnett decided to stop filming because he didn't know what to expect.\n\"It was shocking,\" he said.\n\"I didn't know what I was about to see.\nI didn't know if anyone was hurt.\"\nBarnett said he didn't realize at the time that the bus belonged to the country band.\nHillary Scott, co-lead singer for the band, posted a photo of the charred bus on Instagram and noted that she, her husband, the tour manager and the driver were all evacuated safely.\n\"Thanking God for our safety and the safety of all of those who helped put this fire out and keep us safe,\" she wrote.\nThe tour manager told CNN affiliate KTVT that the bus stopped after a rear tire blew out.\nIt burst into flames after everyone had gotten off.\nScott also posted an Instagram photo and message saying that the fire destroyed everything in the bus's back lounge except her Bible.\nThe band's two other members, Charles Kelley and Dave Haywood, were not traveling on the bus, KTVT reported.\nLady Antebellum is set to perform at the 50th Academy of Country Music Awards on Sunday in Arlington, Texas.",
+    "source_units": [
+      "(CNN)Lady Antebellum singer Hillary Scott's tour bus caught fire on a Texas freeway Thursday morning, but everyone on board was safely evacuated.",
+      "Michael Barnett captured dramatic video of the fire, on Interstate 30 just northeast of Dallas, and uploaded it to CNN iReport.",
+      "Smoke and flames poured from the rear of the bus as traffic slowed to a crawl and Barnett slowly approached in his vehicle.",
+      "As he drew closer to the bus, Barnett decided to stop filming because he didn't know what to expect.",
+      "\"It was shocking,\" he said.",
+      "\"I didn't know what I was about to see.",
+      "I didn't know if anyone was hurt.\"",
+      "Barnett said he didn't realize at the time that the bus belonged to the country band.",
+      "Hillary Scott, co-lead singer for the band, posted a photo of the charred bus on Instagram and noted that she, her husband, the tour manager and the driver were all evacuated safely.",
+      "\"Thanking God for our safety and the safety of all of those who helped put this fire out and keep us safe,\" she wrote.",
+      "The tour manager told CNN affiliate KTVT that the bus stopped after a rear tire blew out.",
+      "It burst into flames after everyone had gotten off.",
+      "Scott also posted an Instagram photo and message saying that the fire destroyed everything in the bus's back lounge except her Bible.",
+      "The band's two other members, Charles Kelley and Dave Haywood, were not traveling on the bus, KTVT reported.",
+      "Lady Antebellum is set to perform at the 50th Academy of Country Music Awards on Sunday in Arlington, Texas."
+    ],
+    "source_sha256": "7487aadb622d8e34c7216d74d8bf015e1898042092ba4c7d5fc38d44e93fe10e",
+    "source_words": 263,
+    "profile": {
+      "length": "short",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "references": [
+      {
+        "control_attribute": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "The tour bus of Lady Antebellum country band caught fire on a Texas highway.",
+        "title": "Lady Antebellum's Tour Bus Caught Fire",
+        "relevant_turns": [
+          [
+            0,
+            14
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "On Instagram, country singer Hillary Scott posted a photo of the burnt Lady Antebellum tour bus. The vehicle caught fire Thursday morning, while on a Texas highway.",
+        "title": "Lady Antebellum's Tour Bus Caught Fire",
+        "relevant_turns": [
+          [
+            0,
+            14
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Hillary Scott shared a photo on Instagram of Lady Antebellum's destroyed tour bus after catching fire on Interstate 30 just northeast of Dallas. Along with the photo, Scott noted that she and all others who were on board were safe.",
+        "title": "Lady Antebellum's Tour Bus Caught Fire",
+        "relevant_turns": [
+          [
+            0,
+            14
+          ]
+        ]
+      }
+    ],
+    "prompts": {
+      "general": "Summarize the following source in English. Output only the summary.",
+      "manual": "Summarize the following source in English. Use no more than two sentences. Reuse the original words and phrases as much as possible. Do not invent facts, guesses, or opinions. Preserve numbers, dates, names, and attribution accurately. Distinguish confirmed information from allegations, plans, and uncertainty. Output only the summary, without a title, preamble, explanation, or closing.",
+      "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+    }
+  },
+  {
+    "id": "S07",
+    "record_index": 53,
+    "metadata": {
+      "dataset": "cnndm",
+      "split": "test",
+      "file_id": 229
+    },
+    "source": "(CNN)Gwyneth Paltrow, the actress turned lifestyle guru, is known for promoting detoxes and health cleanses on her site, Goop.com.\nBut she's now bringing awareness to the difficulties of life on food stamps.\nIn a tweet Friday, Paltrow showcased an array of leafy greens, dried beans and rice, purchased for the amount a person living on food stamps is allotted each week, she explained.\nThe amount of Supplemental Nutrition Assistance Program benefits a person can get is based on the U.S. Department of Agriculture's Thrifty Food Plan.\nThe plan estimates how much it costs to buy food, according to the United States Department of Agriculture.\nIn this case, Paltrow will be spending just under $30 for groceries.\nHer participation is part of the #FoodBankNYCChallenge.\nCelebrity chef Mario Batali, a close friend of the star's, nominated Paltrow and musicians Sting and Deborah Harry for the challenge through a video.\nThe challenge urges participants to use only $29 for all the food a person eats for seven days.\n\"For one week, walk in someone else's shoes,\" Batali is quoted saying on the Food Bank for New York City's website.\n\"By truly understanding what our friends and neighbors are going through, we will be better equipped to find solutions.\"\nThe #FoodBankNYCChallenge is an attempt to live on a food stamp budget for one week, which translates to $1.38 per meal, according to the site.\nThe effort is in response to recent cuts to food stamps.\n\"Congress cut food stamps twice since 2013, and soup kitchens and food pantries saw an immediate increase in visitors,\" the site explains.\nOrganizers hope the challenge will raise public awareness of the struggles for families to afford food while on food stamps.",
+    "source_units": [
+      "(CNN)Gwyneth Paltrow, the actress turned lifestyle guru, is known for promoting detoxes and health cleanses on her site, Goop.com.",
+      "But she's now bringing awareness to the difficulties of life on food stamps.",
+      "In a tweet Friday, Paltrow showcased an array of leafy greens, dried beans and rice, purchased for the amount a person living on food stamps is allotted each week, she explained.",
+      "The amount of Supplemental Nutrition Assistance Program benefits a person can get is based on the U.S. Department of Agriculture's Thrifty Food Plan.",
+      "The plan estimates how much it costs to buy food, according to the United States Department of Agriculture.",
+      "In this case, Paltrow will be spending just under $30 for groceries.",
+      "Her participation is part of the #FoodBankNYCChallenge.",
+      "Celebrity chef Mario Batali, a close friend of the star's, nominated Paltrow and musicians Sting and Deborah Harry for the challenge through a video.",
+      "The challenge urges participants to use only $29 for all the food a person eats for seven days.",
+      "\"For one week, walk in someone else's shoes,\" Batali is quoted saying on the Food Bank for New York City's website.",
+      "\"By truly understanding what our friends and neighbors are going through, we will be better equipped to find solutions.\"",
+      "The #FoodBankNYCChallenge is an attempt to live on a food stamp budget for one week, which translates to $1.38 per meal, according to the site.",
+      "The effort is in response to recent cuts to food stamps.",
+      "\"Congress cut food stamps twice since 2013, and soup kitchens and food pantries saw an immediate increase in visitors,\" the site explains.",
+      "Organizers hope the challenge will raise public awareness of the struggles for families to afford food while on food stamps."
+    ],
+    "source_sha256": "841a789041f46a0b7a2d960059293c8c50a57f987b55589dce3f91f22462d5db",
+    "source_words": 283,
+    "profile": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "references": [
+      {
+        "control_attribute": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Paltrow is nominated in #FoodBankNYCChallenge to create awareness of what people are going through living on food stamps.",
+        "title": "How to Create Awareness on Food Poverty",
+        "relevant_turns": [
+          [
+            0,
+            14
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "#FoodBankNYCChallenge that involves living under $30 a week is a campaign to create awareness and understanding what our going through living on a food stamp budget. Mario Batali nominated Paltrow for the challenge.",
+        "title": "How to Create Awareness on Food Poverty",
+        "relevant_turns": [
+          [
+            0,
+            14
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "The government has cut on food stamps twice since 2013. The #FoodBankNYCChallenge helps to create awareness on food poverty. #FoodBankNYCChallenge involves living under $29 a week or $1.38 a meal. Gwyneth Paltrow, wears the shoes of friends and neighbors to show what they go through.",
+        "title": "How to Create Awareness on Food Poverty",
+        "relevant_turns": [
+          [
+            0,
+            14
+          ]
+        ]
+      }
+    ],
+    "prompts": {
+      "general": "Summarize the following source in English. Output only the summary.",
+      "manual": "Summarize the following source in English. Use no more than two sentences. Use only complete sentences copied verbatim from the source; do not write new sentences. Do not invent facts, guesses, or opinions. Preserve numbers, dates, names, and attribution accurately. Distinguish confirmed information from allegations, plans, and uncertainty. Output only the summary, without a title, preamble, explanation, or closing.",
+      "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Keep it very short: two sentences or fewer.\n- Use of source wording: Build the summary from sentences extracted verbatim from the source. Do not write new sentences.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+    }
+  },
+  {
+    "id": "S08",
+    "record_index": 7,
+    "metadata": {
+      "dataset": "cnndm",
+      "split": "test",
+      "file_id": 783
+    },
+    "source": "(CNN)The underwater search area for missing Malaysia Airlines Flight 370 looks set to double in size.\nTeams are scouring the depths of a remote part of the southern Indian Ocean for the remains of the passenger jet that disappeared more than a year ago with 239 people on board.\nSo far, they've covered about 60% of the priority search zone without reporting any trace of the airliner.\nFamilies of passengers and crew members still have no answers about what happened to their loved ones.\nIf the searchers haven't found anything by the time they've covered the entire 60,000-square-kilometer priority zone, the search will stretch into a new equally vast area, government officials from Malaysia, Australia and China announced Thursday.\n\"Ministers remain committed to bring closure and some peace to the families and loved ones of those on board Malaysia Airlines Flight MH370,\" the three countries said in a joint statement.\nThe search of the current priority zone is expected to be completed in May.\nCovering the new zone could take as long as a year.\nAt that point, \"all high probability search areas would have been covered,\" the governments said Thursday.\nThe size of the doubled search area, the equivalent of more than 46,000 square miles, would be bigger than the U.S. state of Pennsylvania.\nFlight 370 vanished after taking off from Kuala Lumpur, Malaysia, on March 8, 2014, bound for Beijing.\nOfficials are still trying to figure out why it veered dramatically off course over the sea between Malaysia and Vietnam and where exactly it ended up.\nAn international team of experts used satellite data to calculate that the plane eventually went down in the southern Indian Ocean, far off the coast of Western Australia.\nThe people on board the  Boeing 777 came from various nations, but the majority were Chinese.\nCNN's Elizabeth Joseph contributed to this report.",
+    "source_units": [
+      "(CNN)The underwater search area for missing Malaysia Airlines Flight 370 looks set to double in size.",
+      "Teams are scouring the depths of a remote part of the southern Indian Ocean for the remains of the passenger jet that disappeared more than a year ago with 239 people on board.",
+      "So far, they've covered about 60% of the priority search zone without reporting any trace of the airliner.",
+      "Families of passengers and crew members still have no answers about what happened to their loved ones.",
+      "If the searchers haven't found anything by the time they've covered the entire 60,000-square-kilometer priority zone, the search will stretch into a new equally vast area, government officials from Malaysia, Australia and China announced Thursday.",
+      "\"Ministers remain committed to bring closure and some peace to the families and loved ones of those on board Malaysia Airlines Flight MH370,\" the three countries said in a joint statement.",
+      "The search of the current priority zone is expected to be completed in May.",
+      "Covering the new zone could take as long as a year.",
+      "At that point, \"all high probability search areas would have been covered,\" the governments said Thursday.",
+      "The size of the doubled search area, the equivalent of more than 46,000 square miles, would be bigger than the U.S. state of Pennsylvania.",
+      "Flight 370 vanished after taking off from Kuala Lumpur, Malaysia, on March 8, 2014, bound for Beijing.",
+      "Officials are still trying to figure out why it veered dramatically off course over the sea between Malaysia and Vietnam and where exactly it ended up.",
+      "An international team of experts used satellite data to calculate that the plane eventually went down in the southern Indian Ocean, far off the coast of Western Australia.",
+      "The people on board the  Boeing 777 came from various nations, but the majority were Chinese.",
+      "CNN's Elizabeth Joseph contributed to this report."
+    ],
+    "source_sha256": "deeaee78023ae567990f7473e0284331aec87b6f726e7147cbd494ebc8c0627c",
+    "source_words": 309,
+    "profile": {
+      "length": "normal",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "references": [
+      {
+        "control_attribute": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Malaysia Airlines Flight search area to double, if nothing is found in the priority zone by May.",
+        "title": "Ongoing Search for Malaysia Flight 370",
+        "relevant_turns": [
+          [
+            0,
+            14
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "The priority zone in the search for Flight 370 is expected to end in May. Officials from Malaysia, Australia and China announced doubling the search area, which could take up to a year.",
+        "title": "Ongoing Search for Malaysia Flight 370",
+        "relevant_turns": [
+          [
+            0,
+            14
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Officials from Malaysia, Australia and China will double the search area for vanished Malaysia Airlines Flight 370. The 60 thousand-square-mile areas has reached 60% and is expected to be concluded by May. The doubled extension of the search could take up to another year.",
+        "title": "Ongoing Search for Malaysia Flight 370",
+        "relevant_turns": [
+          [
+            0,
+            14
+          ]
+        ]
+      }
+    ],
+    "prompts": {
+      "general": "Summarize the following source in English. Output only the summary.",
+      "manual": "Summarize the following source in English. Use three to four sentences. Reuse the original words and phrases as much as possible. Do not invent facts, guesses, or opinions. Preserve numbers, dates, names, and attribution accurately. Distinguish confirmed information from allegations, plans, and uncertainty. Output only the summary, without a title, preamble, explanation, or closing.",
+      "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write about three to four sentences.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+    }
+  },
+  {
+    "id": "S09",
+    "record_index": 50,
+    "metadata": {
+      "dataset": "cnndm",
+      "split": "test",
+      "file_id": 657
+    },
+    "source": "(CNN)The man who beat serial killer Jeffrey Dahmer to death inside a Wisconsin prison says he did it because of Dahmer's creepy sense of humor -- which included turning prison food into fake limbs covered with ketchup to resemble blood, the New York Post reports.\nChristopher Scarver, who was sentenced to two life terms in prison for killing Dahmer and another man at Columbia Correctional Institution in 1994, said the confessed cannibal would leave the fake limbs around the prison where others would find them.\n\"He crossed the line with some people -- prisoners, prison staff,\" the newspaper quoted Scarver as saying.\n\"Some people who are in prison are repentant -- but he was not one of them.\"\nIn a separate story, the Post quotes Dahmer's former prison minister as saying the convict would make jokes about this cannibalistic past.\n\"If he saw a guard that was nervous and standing near enough to hear him, he would say, 'I bite,'\" the newspaper quoted the pastor, Roy Ratcliff, as saying.\n\"Usually the guard would jump away and that would make Jeff laugh.\"\n\"He sort of played with his persona to exaggerate it and make people more fearful,\" Ratcliff said.\n\"This was just his way — a morbid humor to deal with his hopeless situation.\"\nScarver was convicted of killing Dahmer on November 28, 1994.\nHe told the Post that he killed Dahmer and another inmate, Jesse Anderson, after an altercation while they were together unsupervised on a work detail.\nScarver said he kept a newspaper article detailing Dahmer's crimes, which included killing 17 men and boys between 1978 and 1991, having sex with corpses, keeping some of the body parts and eating others.\nJust before he killed Dahmer, Scarver said, he confronted him with the clipping.\n\"I asked him if he did those things 'cause I was fiercely disgusted.\nHe was shocked.\nYes, he was,\" the Post quoted Scarver as saying.\nScarver said he hit Dahmer twice in the head with a metal bar from a weight room.\nHe then killed Anderson, who was working in a different room.",
+    "source_units": [
+      "(CNN)The man who beat serial killer Jeffrey Dahmer to death inside a Wisconsin prison says he did it because of Dahmer's creepy sense of humor -- which included turning prison food into fake limbs covered with ketchup to resemble blood, the New York Post reports.",
+      "Christopher Scarver, who was sentenced to two life terms in prison for killing Dahmer and another man at Columbia Correctional Institution in 1994, said the confessed cannibal would leave the fake limbs around the prison where others would find them.",
+      "\"He crossed the line with some people -- prisoners, prison staff,\" the newspaper quoted Scarver as saying.",
+      "\"Some people who are in prison are repentant -- but he was not one of them.\"",
+      "In a separate story, the Post quotes Dahmer's former prison minister as saying the convict would make jokes about this cannibalistic past.",
+      "\"If he saw a guard that was nervous and standing near enough to hear him, he would say, 'I bite,'\" the newspaper quoted the pastor, Roy Ratcliff, as saying.",
+      "\"Usually the guard would jump away and that would make Jeff laugh.\"",
+      "\"He sort of played with his persona to exaggerate it and make people more fearful,\" Ratcliff said.",
+      "\"This was just his way — a morbid humor to deal with his hopeless situation.\"",
+      "Scarver was convicted of killing Dahmer on November 28, 1994.",
+      "He told the Post that he killed Dahmer and another inmate, Jesse Anderson, after an altercation while they were together unsupervised on a work detail.",
+      "Scarver said he kept a newspaper article detailing Dahmer's crimes, which included killing 17 men and boys between 1978 and 1991, having sex with corpses, keeping some of the body parts and eating others.",
+      "Just before he killed Dahmer, Scarver said, he confronted him with the clipping.",
+      "\"I asked him if he did those things 'cause I was fiercely disgusted.",
+      "He was shocked.",
+      "Yes, he was,\" the Post quoted Scarver as saying.",
+      "Scarver said he hit Dahmer twice in the head with a metal bar from a weight room.",
+      "He then killed Anderson, who was working in a different room."
+    ],
+    "source_sha256": "1dbb118f6d61328d46f565732cc691c8b04b5013c5c875d1de27176c2c40cbe8",
+    "source_words": 348,
+    "profile": {
+      "length": "long",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "references": [
+      {
+        "control_attribute": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Jeffrey Dahmer was killed by inmate Christopher Scarver for the sadistic jokes and for not showing any regrets.",
+        "title": "Jeffrey Dahmer's Death",
+        "relevant_turns": [
+          [
+            0,
+            17
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "At Columbia Correctional Institution in 1994, Christopher Scarver decided to take the life of Jeffrey Dahmer, a serial killer, and a cannibal. Apparently, Jeffrey was proud of the crimes committed which made Scarver feel disgusted.",
+        "title": "Jeffrey Dahmer's Death",
+        "relevant_turns": [
+          [
+            0,
+            17
+          ]
+        ]
+      },
+      {
+        "control_attribute": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        },
+        "summary": "Jeffrey Dahmer killed more than 10 men and boys, had sex with their corpses, and kept some body parts to eat them later. Jeffrey used to make some sadistic jokes to prison guards and apparently, did not show any regrets about the crimes committed. Being upset by those acts, Scarver murdered Jeffrey.",
+        "title": "Jeffrey Dahmer's Death",
+        "relevant_turns": [
+          [
+            0,
+            17
+          ]
+        ]
+      }
+    ],
+    "prompts": {
+      "general": "Summarize the following source in English. Output only the summary.",
+      "manual": "Summarize the following source in English. Use at least five sentences and include detail. Reuse the original words and phrases as much as possible. Do not invent facts, guesses, or opinions. Preserve numbers, dates, names, and attribution accurately. Distinguish confirmed information from allegations, plans, and uncertainty. Output only the summary, without a title, preamble, explanation, or closing.",
+      "assembled": "You are a summarization assistant who summarizes English text to match this user's preferences.\n\nSummarize the source text below according to these instructions. Always write the summary in English, the same language as the source.\n\n## This user's preferences\nThe preferences below were inferred from summaries the user picked while comparing several options.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible.\n\n## Always\n- Follow the preferences above (length, use of source wording) first; apply the rules below within them.\n- Do not add facts, guesses, or opinions that are not in the source.\n- Do not misstate numbers, dates, or proper nouns.\n- Keep confirmed facts separate from things that are under review or uncertain.\n\n## Output format\nOutput only the summary, in English. No preamble, title, explanation, or closing."
+    }
+  }
+]

@@ -58,10 +58,3 @@ export function fetchSession(sessionId) {
 
 export const startCodingSession =(sourceText) => startPreferenceSession('coding', sourceText, 8);
 export const submitCodingChoice = submitPreferenceChoice;
-
-export function fetchAwsCostReport({ demoMode = true, lookbackDays = 30 } = {}) {
-  return request('/aws/costs', {
-    method: 'POST',
-    body: JSON.stringify({ demoMode, lookbackDays }),
-  });
-}

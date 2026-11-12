@@ -1,0 +1,19 @@
+{
+  "gepa_version": "0.1.4",
+  "python_version": "3.12.10",
+  "tests_passed": 20,
+  "tests_scope": "11driver tests (including3 actualGEPA searches with deterministic toy responses and blockednetwork),9sampling/finalselection/reference diagnostic tests.",
+  "pre_run_reviews": [
+    "Root inspected driver and all tests beforeexecution.",
+    "Independent actual_gepa_audit verified installed optimizer callpath and repairedcachecollision/invalidcandidateadmission/factualdisagreementchecks."
+  ],
+  "test_code_hashes": {
+    "test_driver.py": "38dbd8bee29f60159a03aa4dc3d4aa0aeec2938c5c118e746dabd787126675a2",
+    "test_run.py": "920a7be5094bbfcaeec4181f63107684fb2ae882fca1ad5976e3efe23c7a01c3"
+  },
+  "paid_model_api_test_calls": 0,
+  "synthetic_test_notice": "Toy responses validate plumbing and selection. They are NOT performance evidence for real documents.",
+  "new_dependencies_installed": false,
+  "source_hashes": "Exact installedGEPA source files are part of frozen.json, alongside prompt/evaluation code.",
+  "model_identity": "Codex agents inherit parent runtime; exactbackend/decoding/usage meter notexposed."
+}

@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "scope": "AI-assisted blinded semantic review, not human gold labels. Same criteria for every anonymous output in the assigned packet.",
+  "sentence_count": "Count grammatical sentences respecting abbreviations (U.S., Dr., Co., initials), decimals and quotation punctuation. Do not treat abbreviation periods as sentence ends. Record actual count; short=1-2, normal=3-4, long=5 or more.",
+  "wording": {
+    "normal": "Pass when clauses are mostly reformulated in new wording. Retaining names, numbers, technical terms and short useful quotes is allowed. Fail when most text consists of copied/minimally edited sentences. Give examples, not a hidden overlap threshold.",
+    "high": "Pass when the output substantially reuses distinctive source words and phrases, including complete copied sentences. Fail when it mainly replaces them with new phrasing. No upper limit on reuse; 100% copying is allowed for this condition.",
+    "fully": "All summary sentences must be complete original source sentences. Whitespace normalization and removal of only a leading publisher label (CNN) or (The Hollywood Reporter) are allowed. No other word/punctuation edits, fragments, or invented links. A complete sentence may occur inside a multi-sentence source unit. Ignore a publisher label at the start of the full source/summary, not a parenthetical inside a sentence. Removing the allowed initial source label is permitted; adding a new label or replacing it with another publisher is not permitted."
+  },
+  "key_fact_coverage": "Assess each frozen atomic central proposition. Mark preserved if its core claim and essential attribution/condition/uncertainty are conveyed; accurate paraphrases and unambiguous contextual reference count. Do not demand incidental details from the evidence that are not in the proposition. Partial central claim or missing essential qualifier is false, with a reason. Omission is coverage loss, not automatically a hallucination. Quote exact summary evidence for every preserved fact. If an anchor bundles separable details, explicitly record the ambiguity rather than silently adding stricter requirements.",
+  "factual_issues": "Audit the entire summary against the source. Flag invented/contradicted claims, wrong quantities/names/timing, causal reversals, unsupported status qualifiers, or allegations/plans asserted as established facts. Don't flag mere omissions, harmless synonyms, or reasonable entailments. Exact summary_quote, reason and exact source_evidence required; empty source_evidence only if the claim is absent from the source. Do not use external knowledge.",
+  "review_schema": {
+    "output_id": "R01",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Concrete text-based explanation",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Exact substring"
+        ],
+        "reason": "Core proposition is conveyed"
+      }
+    ],
+    "issues": [
+      {
+        "summary_quote": "Exact substring",
+        "reason": "Why unsupported or distorted",
+        "source_evidence": [
+          "Exact substring"
+        ]
+      }
+    ]
+  },
+  "review_policy": "Exactly one review per assigned packet entry, each with F1/F2/F3 and an issues array (empty if none). No condition names, prompts, automatic scores, other reviews or generation messages. Preserve uncertainty in reasons. Do not change summaries/anchors/rubric. All factual issue flags will be source-reviewed, not just disagreements in the number of flagged outputs."
+}

@@ -1,0 +1,1601 @@
+[
+  {
+    "output_id": "B001",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The source is rephrased through \"relieved\" and the reconstructed disclosure/transition clause, then combines separation and treatment into a semicolon sentence. Retained names, chronology and medical terms do not make it mostly copied sentences.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Actress Linda Thompson, Bruce Jenner's second wife, says she feels relieved that her former husband has found the courage to publicly disclose being transgender."
+        ],
+        "reason": "Thompson's reported relief at Jenner's public transgender disclosure conveys her supportive response."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "She says Jenner told her in 1985 about identifying as a woman and wanting to transition; the couple separated after roughly six months of therapy, and Jenner began taking female hormones and undergoing electrolysis for hair removal."
+        ],
+        "reason": "Retains Thompson's account of the 1985 disclosure of identifying as a woman. The marital account makes the recipient contextual where not repeated explicitly."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "She says Jenner told her in 1985 about identifying as a woman and wanting to transition; the couple separated after roughly six months of therapy, and Jenner began taking female hormones and undergoing electrolysis for hair removal."
+        ],
+        "reason": "Retains the couple's separation after approximately six months of therapy."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Actress Linda Thompson, Bruce Jenner's second wife, says she feels relieved that her former husband has found the courage to publicly disclose being transgender."
+        ],
+        "reason": "Preserves Thompson's identity/relationship and reported relief at her former spouse's public disclosure."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "She says Jenner told her in 1985 about identifying as a woman and wanting to transition; the couple separated after roughly six months of therapy, and Jenner began taking female hormones and undergoing electrolysis for hair removal."
+        ],
+        "reason": "Preserves Thompson's account, 1985 timing, female identity and wish to transition."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "She says Jenner told her in 1985 about identifying as a woman and wanting to transition; the couple separated after roughly six months of therapy, and Jenner began taking female hormones and undergoing electrolysis for hair removal."
+        ],
+        "reason": "Preserves the separation after about six months of therapy and the beginning of female hormones and electrolysis; hair removal is explicit or unambiguously represented by electrolysis in this context."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B002",
+    "sentence_count": 3,
+    "wording_pass": true,
+    "wording_reason": "All three sentences are unchanged complete source sentences; the original Rome (CNN) prefix and punctuation are retained.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Rome (CNN)Muslims who were among migrants trying to get from Libya to Italy in a boat this week threw 12 fellow passengers overboard -- killing them -- because the 12 were Christians, Italian police said Thursday."
+        ],
+        "reason": "Retains the police-attributed allegation that fellow migrants threw 12 Christian passengers overboard and killed them."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Italian authorities have arrested 15 people on suspicion of murdering the Christians at sea, police in Palermo, Sicily, said."
+        ],
+        "reason": "Retains 15 arrests for suspected murder at sea rather than treating guilt as proved."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Since 2000, according to the International Organization for Migration, almost 22,000 people have died fleeing across the Mediterranean."
+        ],
+        "reason": "Retains the IOM attribution, almost 22,000 deaths, Mediterranean route and since-2000 interval."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Rome (CNN)Muslims who were among migrants trying to get from Libya to Italy in a boat this week threw 12 fellow passengers overboard -- killing them -- because the 12 were Christians, Italian police said Thursday."
+        ],
+        "reason": "Copies the entire selected account, including police attribution, alleged religious motive, 12 deaths and voyage context."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Italian authorities have arrested 15 people on suspicion of murdering the Christians at sea, police in Palermo, Sicily, said."
+        ],
+        "reason": "Copies the entire selected arrest sentence with the suspicion qualifier and police attribution."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "Since 2000, according to the International Organization for Migration, almost 22,000 people have died fleeing across the Mediterranean."
+        ],
+        "reason": "Copies the entire selected cumulative mortality sentence with its attribution, quantity and interval."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B003",
+    "sentence_count": 3,
+    "wording_pass": true,
+    "wording_reason": "All three sentences are copied from the source, including distinctive phrases such as \"filming a proof of concept\" and \"could go straight to series\". Full copying is allowed for high extractiveness.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "ABC is filming a proof of concept for a revival of \"The Muppets,\" The Hollywood Reporter has learned."
+        ],
+        "reason": "Retains ABC's filming of the Muppets proof of concept and The Hollywood Reporter attribution."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"The Big Bang Theory\" co-creator Bill Prady is co-writing the script for a pilot presentation that sources say could be unspooled at May's upfront presentation to Madison Avenue advertisers."
+        ],
+        "reason": "Retains Bill Prady's co-writing role on the pilot-presentation script."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sources tell THR that the project, if all goes well, could go straight to series."
+        ],
+        "reason": "Retains both source attribution and the conditional possibility of going straight to series if all goes well."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "ABC is filming a proof of concept for a revival of \"The Muppets,\" The Hollywood Reporter has learned."
+        ],
+        "reason": "Copies the selected proof-of-concept sentence with reporting attribution."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"The Big Bang Theory\" co-creator Bill Prady is co-writing the script for a pilot presentation that sources say could be unspooled at May's upfront presentation to Madison Avenue advertisers."
+        ],
+        "reason": "Copies the selected Prady sentence, including the source-qualified possibility of a May advertiser presentation."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sources tell THR that the project, if all goes well, could go straight to series."
+        ],
+        "reason": "Copies the selected conditional straight-to-series statement; it does not turn a possibility into an order."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B004",
+    "sentence_count": 3,
+    "wording_pass": true,
+    "wording_reason": "All three sentences are copied from the source, including distinctive phrases such as \"filming a proof of concept\" and \"could go straight to series\". Full copying is allowed for high extractiveness.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "ABC is filming a proof of concept for a revival of \"The Muppets,\" The Hollywood Reporter has learned."
+        ],
+        "reason": "Retains ABC's filming of the Muppets proof of concept and The Hollywood Reporter attribution."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"The Big Bang Theory\" co-creator Bill Prady is co-writing the script for a pilot presentation that sources say could be unspooled at May's upfront presentation to Madison Avenue advertisers."
+        ],
+        "reason": "Retains Bill Prady's co-writing role on the pilot-presentation script."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sources tell THR that the project, if all goes well, could go straight to series."
+        ],
+        "reason": "Retains both source attribution and the conditional possibility of going straight to series if all goes well."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "ABC is filming a proof of concept for a revival of \"The Muppets,\" The Hollywood Reporter has learned."
+        ],
+        "reason": "Copies the selected proof-of-concept sentence with reporting attribution."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"The Big Bang Theory\" co-creator Bill Prady is co-writing the script for a pilot presentation that sources say could be unspooled at May's upfront presentation to Madison Avenue advertisers."
+        ],
+        "reason": "Copies the selected Prady sentence, including the source-qualified possibility of a May advertiser presentation."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sources tell THR that the project, if all goes well, could go straight to series."
+        ],
+        "reason": "Copies the selected conditional straight-to-series statement; it does not turn a possibility into an order."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B005",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The clauses are reformulated: \"detained\" replaces \"rounded up\", the death-estimate material is integrated into the first sentence, and the Turkey/Erdogan contrast is rewritten. Names, dates and figures are appropriately retained.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Ottoman authorities detained about 250 Armenian intellectuals and community leaders in Constantinople on the night of April 23-24, 1915; estimates of Armenian deaths during 1914-1923 range from 300,000 to 2 million and include victims outside the Ottoman Empire."
+        ],
+        "reason": "Retains the Ottoman roundup, about 250 intellectuals and community leaders, Constantinople and the night of April 23-24, 1915."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Ottoman authorities detained about 250 Armenian intellectuals and community leaders in Constantinople on the night of April 23-24, 1915; estimates of Armenian deaths during 1914-1923 range from 300,000 to 2 million and include victims outside the Ottoman Empire."
+        ],
+        "reason": "Retains an estimated, disputed range of 300,000 to 2 million deaths for 1914-1923."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Turkey still rejects describing the killings as genocide, although Recep Tayyip Erdogan's condolences acknowledged Armenian suffering more fully than any previous Turkish leader's remarks."
+        ],
+        "reason": "Retains Turkey's continuing rejection of the genocide designation in the article's timeframe."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Ottoman authorities detained about 250 Armenian intellectuals and community leaders in Constantinople on the night of April 23-24, 1915; estimates of Armenian deaths during 1914-1923 range from 300,000 to 2 million and include victims outside the Ottoman Empire."
+        ],
+        "reason": "Preserves the central action, responsible authorities, approximate number, affected group, location and date."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Ottoman authorities detained about 250 Armenian intellectuals and community leaders in Constantinople on the night of April 23-24, 1915; estimates of Armenian deaths during 1914-1923 range from 300,000 to 2 million and include victims outside the Ottoman Empire."
+        ],
+        "reason": "Preserves the estimated range and interval, including that some victims were outside the Ottoman Empire."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "Turkey still rejects describing the killings as genocide, although Recep Tayyip Erdogan's condolences acknowledged Armenian suffering more fully than any previous Turkish leader's remarks."
+        ],
+        "reason": "Preserves both Turkey's continuing rejection and Erdogan's unusually extensive acknowledgment of Armenian suffering. The contrast is retained."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B006",
+    "sentence_count": 3,
+    "wording_pass": true,
+    "wording_reason": "All three sentences are copied from the source, including distinctive phrases such as \"filming a proof of concept\" and \"could go straight to series\". Full copying is allowed for high extractiveness.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "ABC is filming a proof of concept for a revival of \"The Muppets,\" The Hollywood Reporter has learned."
+        ],
+        "reason": "Retains ABC's filming of the Muppets proof of concept and The Hollywood Reporter attribution."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"The Big Bang Theory\" co-creator Bill Prady is co-writing the script for a pilot presentation that sources say could be unspooled at May's upfront presentation to Madison Avenue advertisers."
+        ],
+        "reason": "Retains Bill Prady's co-writing role on the pilot-presentation script."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sources tell THR that the project, if all goes well, could go straight to series."
+        ],
+        "reason": "Retains both source attribution and the conditional possibility of going straight to series if all goes well."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "ABC is filming a proof of concept for a revival of \"The Muppets,\" The Hollywood Reporter has learned."
+        ],
+        "reason": "Copies the selected proof-of-concept sentence with reporting attribution."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"The Big Bang Theory\" co-creator Bill Prady is co-writing the script for a pilot presentation that sources say could be unspooled at May's upfront presentation to Madison Avenue advertisers."
+        ],
+        "reason": "Copies the selected Prady sentence, including the source-qualified possibility of a May advertiser presentation."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sources tell THR that the project, if all goes well, could go straight to series."
+        ],
+        "reason": "Copies the selected conditional straight-to-series statement; it does not turn a possibility into an order."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B007",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete unchanged source sentences, including the original Kathmandu publisher prefix. The U.S. abbreviations do not create sentence boundaries.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Kathmandu, Nepal (CNN)On Day Six of Nepal's tragedy, life triumphed as rescuers pulled an 15-year-old from the rubble of a multistory residential building in one of Kathmandu's hard-hit neighborhoods."
+        ],
+        "reason": "Retains the live rescue of a 15-year-old from the Kathmandu residential building on Day Six."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Also Thursday, a U.S. special operations forces team rescued 30 people, including three Americans, by helicopter from an area of Nepal called Bamboo Village, according to the U.S. ambassador to Nepal."
+        ],
+        "reason": "Retains the U.S. ambassador's attribution, U.S. special operations rescuers, 30 people, helicopter and Bamboo Village."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "They are looking for survivors from the magnitude-7.8 earthquake that struck Saturday, killing at least 6,134 people and wounding almost 14,000, according to Nepali authorities."
+        ],
+        "reason": "Retains the Nepali authorities' attribution and the lower bound of at least 6,134 earthquake deaths."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Kathmandu, Nepal (CNN)On Day Six of Nepal's tragedy, life triumphed as rescuers pulled an 15-year-old from the rubble of a multistory residential building in one of Kathmandu's hard-hit neighborhoods."
+        ],
+        "reason": "Copies the complete selected rescue sentence, including age, location and Day Six."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Also Thursday, a U.S. special operations forces team rescued 30 people, including three Americans, by helicopter from an area of Nepal called Bamboo Village, according to the U.S. ambassador to Nepal."
+        ],
+        "reason": "Copies the selected helicopter rescue sentence, including 30 people, three Americans and attribution."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "They are looking for survivors from the magnitude-7.8 earthquake that struck Saturday, killing at least 6,134 people and wounding almost 14,000, according to Nepali authorities."
+        ],
+        "reason": "Copies the selected earthquake sentence, retaining magnitude, Saturday, both casualty quantities and attribution; the preceding sentence supplies the rescuers antecedent."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B008",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "Every summary sentence is a complete unchanged source sentence. The first sentence removes only the permitted leading (CNN) label. Dr. is an abbreviation within one quoted sentence, and quoted sentences retain their source punctuation.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Malala Yousafzai's stellar career has included a Nobel Peace Prize.",
+          "A NASA astrophysicist has named an asteroid after the teenage education activist from Pakistan, who was gravely wounded by a Pakistani Taliban gunman for promoting the right of girls' to go to school."
+        ],
+        "reason": "Names Malala and retains the NASA astrophysicist's asteroid naming in honor of the Pakistani education activist."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"My postdoctoral fellow Dr. Carrie Nugent brought to my attention the fact that although many asteroids have been named, very few have been named to honor the contributions of women (and particularly women of color),\" Mainzer wrote in a note to Malala."
+        ],
+        "reason": "Retains Mainzer's statement about very few asteroid names honoring women, especially women of color, and Nugent's role in bringing it to her attention."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "\"We desperately need the brainpower of all smart people to solve some of humanity's most difficult problems, and we can't afford to reject half the population's,\" Mainzer wrote."
+        ],
+        "reason": "Retains Mainzer's argument for all smart people's brainpower and against excluding half the population when addressing difficult human problems."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "A NASA astrophysicist has named an asteroid after the teenage education activist from Pakistan, who was gravely wounded by a Pakistani Taliban gunman for promoting the right of girls' to go to school."
+        ],
+        "reason": "Copies the full selected naming sentence, including the activist's Pakistani background and the attack related to girls' education; Malala is identified in the preceding sentence."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"My postdoctoral fellow Dr. Carrie Nugent brought to my attention the fact that although many asteroids have been named, very few have been named to honor the contributions of women (and particularly women of color),\" Mainzer wrote in a note to Malala."
+        ],
+        "reason": "Copies the full selected statement, retaining Nugent, Mainzer, women's underrepresentation and the particular emphasis on women of color."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "\"We desperately need the brainpower of all smart people to solve some of humanity's most difficult problems, and we can't afford to reject half the population's,\" Mainzer wrote."
+        ],
+        "reason": "Copies the full selected argument and its attribution to Mainzer."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B009",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete unchanged source sentences, including their original punctuation and any retained Shanghai publisher prefix.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Shanghai, China (CNN)When China's biggest auto show opens in Shanghai this week, the only models on display will be the ones with four wheels."
+        ],
+        "reason": "The future statement that only four-wheeled models will appear conveys the planned exclusion of human promotional models."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Omits manufacturers' increasing adaptation to Chinese preferences in response to competition. The allowed subset policy permits the omission, but coverage is absent."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "In 2014, growth in sales halved to 7% and according to the China Association of Automobile Manufacturers, the slowdown continued in the first three months of this year when sales rose just 3.9%."
+        ],
+        "reason": "Retains the industry association's attribution and 3.9% growth in the first three months of this year, contextually the year following 2014."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Shanghai, China (CNN)When China's biggest auto show opens in Shanghai this week, the only models on display will be the ones with four wheels."
+        ],
+        "reason": "Copies the complete selected announcement about the Shanghai show's models."
+      },
+      {
+        "id": "P2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The selected competition-and-preferences passage is absent. This is permitted omission, not a factual error."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "In 2014, growth in sales halved to 7% and according to the China Association of Automobile Manufacturers, the slowdown continued in the first three months of this year when sales rose just 3.9%."
+        ],
+        "reason": "Copies the selected slowdown sentence, retaining 2014's halving to 7%, the first-quarter 3.9% figure and attribution."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B010",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The clauses are reformulated: \"detained\" replaces \"rounded up\", the death-estimate material is integrated into the first sentence, and the Turkey/Erdogan contrast is rewritten. Names, dates and figures are appropriately retained.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Ottoman authorities in Constantinople detained about 250 Armenian intellectuals and community leaders on the night of April 23-24, 1915; estimates of Armenian deaths between 1914 and 1923 range from 300,000 to 2 million, including victims outside the Ottoman Empire."
+        ],
+        "reason": "Retains the Ottoman roundup, about 250 intellectuals and community leaders, Constantinople and the night of April 23-24, 1915."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Ottoman authorities in Constantinople detained about 250 Armenian intellectuals and community leaders on the night of April 23-24, 1915; estimates of Armenian deaths between 1914 and 1923 range from 300,000 to 2 million, including victims outside the Ottoman Empire."
+        ],
+        "reason": "Retains an estimated, disputed range of 300,000 to 2 million deaths for 1914-1923."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Although Turkey still firmly rejects the term \"genocide,\" Recep Tayyip Erdogan's condolences on the eve of the killings' 99th anniversary acknowledged Armenian suffering more extensively than any previous Turkish leader had."
+        ],
+        "reason": "Retains Turkey's continuing rejection of the genocide designation in the article's timeframe."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Ottoman authorities in Constantinople detained about 250 Armenian intellectuals and community leaders on the night of April 23-24, 1915; estimates of Armenian deaths between 1914 and 1923 range from 300,000 to 2 million, including victims outside the Ottoman Empire."
+        ],
+        "reason": "Preserves the central action, responsible authorities, approximate number, affected group, location and date."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Ottoman authorities in Constantinople detained about 250 Armenian intellectuals and community leaders on the night of April 23-24, 1915; estimates of Armenian deaths between 1914 and 1923 range from 300,000 to 2 million, including victims outside the Ottoman Empire."
+        ],
+        "reason": "Preserves the estimated range and interval, including that some victims were outside the Ottoman Empire."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "Although Turkey still firmly rejects the term \"genocide,\" Recep Tayyip Erdogan's condolences on the eve of the killings' 99th anniversary acknowledged Armenian suffering more extensively than any previous Turkish leader had."
+        ],
+        "reason": "Preserves both Turkey's continuing rejection and Erdogan's unusually extensive acknowledgment of Armenian suffering. The contrast is retained."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B011",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The study is described in a newly constructed measurement-based clause, and the limitation uses \"too limited to sustain\" rather than copying the source sentence. Scientific names and the essential temperature/water concepts are retained.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of temperature and humidity measurements by the Curiosity rover in Gale Crater supports the possibility that seemingly dry Mars develops tiny pools of salty water at night, but they have not observed direct evidence of this brine."
+        ],
+        "reason": "Preserves scientists' qualified support for possible small salty pools on Mars at night, without turning the possibility into a confirmed observation."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of temperature and humidity measurements by the Curiosity rover in Gale Crater supports the possibility that seemingly dry Mars develops tiny pools of salty water at night, but they have not observed direct evidence of this brine."
+        ],
+        "reason": "Preserves the absence of direct observation/evidence of the nighttime brine within the attributed research account."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The researchers also say the measured temperatures are too cold and the available water too limited to sustain organisms from Earth."
+        ],
+        "reason": "Preserves the researchers' conclusion that cold temperatures and insufficient water cannot support terrestrial organisms."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of temperature and humidity measurements by the Curiosity rover in Gale Crater supports the possibility that seemingly dry Mars develops tiny pools of salty water at night, but they have not observed direct evidence of this brine."
+        ],
+        "reason": "Preserves the central qualified nighttime salty-water claim; the source's bunny joke is incidental."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of temperature and humidity measurements by the Curiosity rover in Gale Crater supports the possibility that seemingly dry Mars develops tiny pools of salty water at night, but they have not observed direct evidence of this brine."
+        ],
+        "reason": "Explicitly retains the direct-evidence limitation."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "The researchers also say the measured temperatures are too cold and the available water too limited to sustain organisms from Earth."
+        ],
+        "reason": "Preserves both environmental limitations and their consequence for terrestrial organisms, with researcher attribution."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B012",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "Every summary sentence is a complete unchanged source sentence. The first sentence removes only the permitted leading (CNN) label. Dr. is an abbreviation within one quoted sentence, and quoted sentences retain their source punctuation.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Malala Yousafzai's stellar career has included a Nobel Peace Prize.",
+          "A NASA astrophysicist has named an asteroid after the teenage education activist from Pakistan, who was gravely wounded by a Pakistani Taliban gunman for promoting the right of girls' to go to school."
+        ],
+        "reason": "Names Malala and retains the NASA astrophysicist's asteroid naming in honor of the Pakistani education activist."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"My postdoctoral fellow Dr. Carrie Nugent brought to my attention the fact that although many asteroids have been named, very few have been named to honor the contributions of women (and particularly women of color),\" Mainzer wrote in a note to Malala."
+        ],
+        "reason": "Retains Mainzer's statement about very few asteroid names honoring women, especially women of color, and Nugent's role in bringing it to her attention."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "\"We desperately need the brainpower of all smart people to solve some of humanity's most difficult problems, and we can't afford to reject half the population's,\" Mainzer wrote."
+        ],
+        "reason": "Retains Mainzer's argument for all smart people's brainpower and against excluding half the population when addressing difficult human problems."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "A NASA astrophysicist has named an asteroid after the teenage education activist from Pakistan, who was gravely wounded by a Pakistani Taliban gunman for promoting the right of girls' to go to school."
+        ],
+        "reason": "Copies the full selected naming sentence, including the activist's Pakistani background and the attack related to girls' education; Malala is identified in the preceding sentence."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"My postdoctoral fellow Dr. Carrie Nugent brought to my attention the fact that although many asteroids have been named, very few have been named to honor the contributions of women (and particularly women of color),\" Mainzer wrote in a note to Malala."
+        ],
+        "reason": "Copies the full selected statement, retaining Nugent, Mainzer, women's underrepresentation and the particular emphasis on women of color."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "\"We desperately need the brainpower of all smart people to solve some of humanity's most difficult problems, and we can't afford to reject half the population's,\" Mainzer wrote."
+        ],
+        "reason": "Copies the full selected argument and its attribution to Mainzer."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B013",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The clauses are reformulated: \"detained\" replaces \"rounded up\", the death-estimate material is integrated into the first sentence, and the Turkey/Erdogan contrast is rewritten. Names, dates and figures are appropriately retained.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "A century after Ottoman authorities detained about 250 Armenian intellectuals and community leaders in Constantinople on the night of April 23–24, 1915, the Armenian death toll for 1914–1923 remains disputed, with estimates of 300,000 to 2 million including victims outside the Ottoman Empire."
+        ],
+        "reason": "Retains the Ottoman roundup, about 250 intellectuals and community leaders, Constantinople and the night of April 23-24, 1915."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "A century after Ottoman authorities detained about 250 Armenian intellectuals and community leaders in Constantinople on the night of April 23–24, 1915, the Armenian death toll for 1914–1923 remains disputed, with estimates of 300,000 to 2 million including victims outside the Ottoman Empire."
+        ],
+        "reason": "Retains an estimated, disputed range of 300,000 to 2 million deaths for 1914-1923."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Turkey still rejects describing the killings as genocide, although Recep Tayyip Erdogan's condolences in 2014, when he was prime minister, acknowledged Armenian suffering more fully than any earlier Turkish leader had."
+        ],
+        "reason": "Retains Turkey's continuing rejection of the genocide designation in the article's timeframe."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "A century after Ottoman authorities detained about 250 Armenian intellectuals and community leaders in Constantinople on the night of April 23–24, 1915, the Armenian death toll for 1914–1923 remains disputed, with estimates of 300,000 to 2 million including victims outside the Ottoman Empire."
+        ],
+        "reason": "Preserves the central action, responsible authorities, approximate number, affected group, location and date."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "A century after Ottoman authorities detained about 250 Armenian intellectuals and community leaders in Constantinople on the night of April 23–24, 1915, the Armenian death toll for 1914–1923 remains disputed, with estimates of 300,000 to 2 million including victims outside the Ottoman Empire."
+        ],
+        "reason": "Preserves the estimated range and interval, including that some victims were outside the Ottoman Empire."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "Turkey still rejects describing the killings as genocide, although Recep Tayyip Erdogan's condolences in 2014, when he was prime minister, acknowledged Armenian suffering more fully than any earlier Turkish leader had."
+        ],
+        "reason": "Preserves both Turkey's continuing rejection and Erdogan's unusually extensive acknowledgment of Armenian suffering. The contrast is retained."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B014",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The study is described in a newly constructed measurement-based clause, and the limitation uses \"too limited to sustain\" rather than copying the source sentence. Scientific names and the essential temperature/water concepts are retained.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of Curiosity rover measurements supports the possibility that tiny pools of salty water form on Mars at night, but they have not directly observed such brines."
+        ],
+        "reason": "Preserves scientists' qualified support for possible small salty pools on Mars at night, without turning the possibility into a confirmed observation."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of Curiosity rover measurements supports the possibility that tiny pools of salty water form on Mars at night, but they have not directly observed such brines."
+        ],
+        "reason": "Preserves the absence of direct observation/evidence of the nighttime brine within the attributed research account."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The researchers say the measured temperatures are too cold and the available water too limited to sustain organisms from Earth."
+        ],
+        "reason": "Preserves the researchers' conclusion that cold temperatures and insufficient water cannot support terrestrial organisms."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of Curiosity rover measurements supports the possibility that tiny pools of salty water form on Mars at night, but they have not directly observed such brines."
+        ],
+        "reason": "Preserves the central qualified nighttime salty-water claim; the source's bunny joke is incidental."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of Curiosity rover measurements supports the possibility that tiny pools of salty water form on Mars at night, but they have not directly observed such brines."
+        ],
+        "reason": "Explicitly retains the direct-evidence limitation."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "The researchers say the measured temperatures are too cold and the available water too limited to sustain organisms from Earth."
+        ],
+        "reason": "Preserves both environmental limitations and their consequence for terrestrial organisms, with researcher attribution."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B015",
+    "sentence_count": 3,
+    "wording_pass": true,
+    "wording_reason": "All three sentences are unchanged complete source sentences; the original Rome (CNN) prefix and punctuation are retained.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Rome (CNN)Muslims who were among migrants trying to get from Libya to Italy in a boat this week threw 12 fellow passengers overboard -- killing them -- because the 12 were Christians, Italian police said Thursday."
+        ],
+        "reason": "Retains the police-attributed allegation that fellow migrants threw 12 Christian passengers overboard and killed them."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Italian authorities have arrested 15 people on suspicion of murdering the Christians at sea, police in Palermo, Sicily, said."
+        ],
+        "reason": "Retains 15 arrests for suspected murder at sea rather than treating guilt as proved."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Since 2000, according to the International Organization for Migration, almost 22,000 people have died fleeing across the Mediterranean."
+        ],
+        "reason": "Retains the IOM attribution, almost 22,000 deaths, Mediterranean route and since-2000 interval."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Rome (CNN)Muslims who were among migrants trying to get from Libya to Italy in a boat this week threw 12 fellow passengers overboard -- killing them -- because the 12 were Christians, Italian police said Thursday."
+        ],
+        "reason": "Copies the entire selected account, including police attribution, alleged religious motive, 12 deaths and voyage context."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Italian authorities have arrested 15 people on suspicion of murdering the Christians at sea, police in Palermo, Sicily, said."
+        ],
+        "reason": "Copies the entire selected arrest sentence with the suspicion qualifier and police attribution."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "Since 2000, according to the International Organization for Migration, almost 22,000 people have died fleeing across the Mediterranean."
+        ],
+        "reason": "Copies the entire selected cumulative mortality sentence with its attribution, quantity and interval."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B016",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "Every summary sentence is a complete unchanged source sentence. The first sentence removes only the permitted leading (CNN) label. Dr. is an abbreviation within one quoted sentence, and quoted sentences retain their source punctuation.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Malala Yousafzai's stellar career has included a Nobel Peace Prize.",
+          "A NASA astrophysicist has named an asteroid after the teenage education activist from Pakistan, who was gravely wounded by a Pakistani Taliban gunman for promoting the right of girls' to go to school."
+        ],
+        "reason": "Names Malala and retains the NASA astrophysicist's asteroid naming in honor of the Pakistani education activist."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"My postdoctoral fellow Dr. Carrie Nugent brought to my attention the fact that although many asteroids have been named, very few have been named to honor the contributions of women (and particularly women of color),\" Mainzer wrote in a note to Malala."
+        ],
+        "reason": "Retains Mainzer's statement about very few asteroid names honoring women, especially women of color, and Nugent's role in bringing it to her attention."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "\"We desperately need the brainpower of all smart people to solve some of humanity's most difficult problems, and we can't afford to reject half the population's,\" Mainzer wrote."
+        ],
+        "reason": "Retains Mainzer's argument for all smart people's brainpower and against excluding half the population when addressing difficult human problems."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "A NASA astrophysicist has named an asteroid after the teenage education activist from Pakistan, who was gravely wounded by a Pakistani Taliban gunman for promoting the right of girls' to go to school."
+        ],
+        "reason": "Copies the full selected naming sentence, including the activist's Pakistani background and the attack related to girls' education; Malala is identified in the preceding sentence."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"My postdoctoral fellow Dr. Carrie Nugent brought to my attention the fact that although many asteroids have been named, very few have been named to honor the contributions of women (and particularly women of color),\" Mainzer wrote in a note to Malala."
+        ],
+        "reason": "Copies the full selected statement, retaining Nugent, Mainzer, women's underrepresentation and the particular emphasis on women of color."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "\"We desperately need the brainpower of all smart people to solve some of humanity's most difficult problems, and we can't afford to reject half the population's,\" Mainzer wrote."
+        ],
+        "reason": "Copies the full selected argument and its attribution to Mainzer."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B017",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The source is rephrased through \"relieved\" and the reconstructed disclosure/transition clause, then combines separation and treatment into a semicolon sentence. Retained names, chronology and medical terms do not make it mostly copied sentences.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Actress Linda Thompson, Jenner's second wife, says she is relieved that her former spouse has publicly come out as transgender."
+        ],
+        "reason": "Thompson's reported relief at Jenner's public transgender disclosure conveys her supportive response."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "According to Thompson, Jenner disclosed identifying as a woman and wanting to transition in 1985; the couple separated after about six months of therapy, and Jenner began female hormone treatment and electrolysis."
+        ],
+        "reason": "Retains Thompson's account of the 1985 disclosure of identifying as a woman. The marital account makes the recipient contextual where not repeated explicitly."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "According to Thompson, Jenner disclosed identifying as a woman and wanting to transition in 1985; the couple separated after about six months of therapy, and Jenner began female hormone treatment and electrolysis."
+        ],
+        "reason": "Retains the couple's separation after approximately six months of therapy."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Actress Linda Thompson, Jenner's second wife, says she is relieved that her former spouse has publicly come out as transgender."
+        ],
+        "reason": "Preserves Thompson's identity/relationship and reported relief at her former spouse's public disclosure."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "According to Thompson, Jenner disclosed identifying as a woman and wanting to transition in 1985; the couple separated after about six months of therapy, and Jenner began female hormone treatment and electrolysis."
+        ],
+        "reason": "Preserves Thompson's account, 1985 timing, female identity and wish to transition."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "According to Thompson, Jenner disclosed identifying as a woman and wanting to transition in 1985; the couple separated after about six months of therapy, and Jenner began female hormone treatment and electrolysis."
+        ],
+        "reason": "Preserves the separation after about six months of therapy and the beginning of female hormones and electrolysis; hair removal is explicit or unambiguously represented by electrolysis in this context."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B018",
+    "sentence_count": 3,
+    "wording_pass": true,
+    "wording_reason": "All three sentences are unchanged complete source sentences; the original Rome (CNN) prefix and punctuation are retained.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Rome (CNN)Muslims who were among migrants trying to get from Libya to Italy in a boat this week threw 12 fellow passengers overboard -- killing them -- because the 12 were Christians, Italian police said Thursday."
+        ],
+        "reason": "Retains the police-attributed allegation that fellow migrants threw 12 Christian passengers overboard and killed them."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Italian authorities have arrested 15 people on suspicion of murdering the Christians at sea, police in Palermo, Sicily, said."
+        ],
+        "reason": "Retains 15 arrests for suspected murder at sea rather than treating guilt as proved."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Since 2000, according to the International Organization for Migration, almost 22,000 people have died fleeing across the Mediterranean."
+        ],
+        "reason": "Retains the IOM attribution, almost 22,000 deaths, Mediterranean route and since-2000 interval."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Rome (CNN)Muslims who were among migrants trying to get from Libya to Italy in a boat this week threw 12 fellow passengers overboard -- killing them -- because the 12 were Christians, Italian police said Thursday."
+        ],
+        "reason": "Copies the entire selected account, including police attribution, alleged religious motive, 12 deaths and voyage context."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Italian authorities have arrested 15 people on suspicion of murdering the Christians at sea, police in Palermo, Sicily, said."
+        ],
+        "reason": "Copies the entire selected arrest sentence with the suspicion qualifier and police attribution."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "Since 2000, according to the International Organization for Migration, almost 22,000 people have died fleeing across the Mediterranean."
+        ],
+        "reason": "Copies the entire selected cumulative mortality sentence with its attribution, quantity and interval."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B019",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete unchanged source sentences, including the original Kathmandu publisher prefix. The U.S. abbreviations do not create sentence boundaries.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Kathmandu, Nepal (CNN)On Day Six of Nepal's tragedy, life triumphed as rescuers pulled an 15-year-old from the rubble of a multistory residential building in one of Kathmandu's hard-hit neighborhoods."
+        ],
+        "reason": "Retains the live rescue of a 15-year-old from the Kathmandu residential building on Day Six."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Also Thursday, a U.S. special operations forces team rescued 30 people, including three Americans, by helicopter from an area of Nepal called Bamboo Village, according to the U.S. ambassador to Nepal."
+        ],
+        "reason": "Retains the U.S. ambassador's attribution, U.S. special operations rescuers, 30 people, helicopter and Bamboo Village."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "They are looking for survivors from the magnitude-7.8 earthquake that struck Saturday, killing at least 6,134 people and wounding almost 14,000, according to Nepali authorities."
+        ],
+        "reason": "Retains the Nepali authorities' attribution and the lower bound of at least 6,134 earthquake deaths."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Kathmandu, Nepal (CNN)On Day Six of Nepal's tragedy, life triumphed as rescuers pulled an 15-year-old from the rubble of a multistory residential building in one of Kathmandu's hard-hit neighborhoods."
+        ],
+        "reason": "Copies the complete selected rescue sentence, including age, location and Day Six."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Also Thursday, a U.S. special operations forces team rescued 30 people, including three Americans, by helicopter from an area of Nepal called Bamboo Village, according to the U.S. ambassador to Nepal."
+        ],
+        "reason": "Copies the selected helicopter rescue sentence, including 30 people, three Americans and attribution."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "They are looking for survivors from the magnitude-7.8 earthquake that struck Saturday, killing at least 6,134 people and wounding almost 14,000, according to Nepali authorities."
+        ],
+        "reason": "Copies the selected earthquake sentence, retaining magnitude, Saturday, both casualty quantities and attribution; the preceding sentence supplies the rescuers antecedent."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B020",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete unchanged source sentences, including their original punctuation and any retained Shanghai publisher prefix.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Omits the planned exclusion of promotional human models. The allowed subset policy permits the omission, but coverage is absent."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Intense competition for China's drivers means that car manufacturers are increasingly developing vehicles that cater to Chinese preferences."
+        ],
+        "reason": "Retains increasing adaptation of vehicles to Chinese preferences and its cause in intense competition."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "In 2014, growth in sales halved to 7% and according to the China Association of Automobile Manufacturers, the slowdown continued in the first three months of this year when sales rose just 3.9%."
+        ],
+        "reason": "Retains the industry association's attribution and 3.9% growth in the first three months of this year, contextually the year following 2014."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The selected auto-show/model exclusion passage is absent. This is permitted omission, not a factual error."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Intense competition for China's drivers means that car manufacturers are increasingly developing vehicles that cater to Chinese preferences."
+        ],
+        "reason": "Copies the complete selected competition-and-preferences sentence."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "In 2014, growth in sales halved to 7% and according to the China Association of Automobile Manufacturers, the slowdown continued in the first three months of this year when sales rose just 3.9%."
+        ],
+        "reason": "Copies the selected slowdown sentence, retaining 2014's halving to 7%, the first-quarter 3.9% figure and attribution."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B021",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete unchanged source sentences, including the original Kathmandu publisher prefix. The U.S. abbreviations do not create sentence boundaries.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Kathmandu, Nepal (CNN)On Day Six of Nepal's tragedy, life triumphed as rescuers pulled an 15-year-old from the rubble of a multistory residential building in one of Kathmandu's hard-hit neighborhoods."
+        ],
+        "reason": "Retains the live rescue of a 15-year-old from the Kathmandu residential building on Day Six."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Also Thursday, a U.S. special operations forces team rescued 30 people, including three Americans, by helicopter from an area of Nepal called Bamboo Village, according to the U.S. ambassador to Nepal."
+        ],
+        "reason": "Retains the U.S. ambassador's attribution, U.S. special operations rescuers, 30 people, helicopter and Bamboo Village."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "They are looking for survivors from the magnitude-7.8 earthquake that struck Saturday, killing at least 6,134 people and wounding almost 14,000, according to Nepali authorities."
+        ],
+        "reason": "Retains the Nepali authorities' attribution and the lower bound of at least 6,134 earthquake deaths."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Kathmandu, Nepal (CNN)On Day Six of Nepal's tragedy, life triumphed as rescuers pulled an 15-year-old from the rubble of a multistory residential building in one of Kathmandu's hard-hit neighborhoods."
+        ],
+        "reason": "Copies the complete selected rescue sentence, including age, location and Day Six."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Also Thursday, a U.S. special operations forces team rescued 30 people, including three Americans, by helicopter from an area of Nepal called Bamboo Village, according to the U.S. ambassador to Nepal."
+        ],
+        "reason": "Copies the selected helicopter rescue sentence, including 30 people, three Americans and attribution."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "They are looking for survivors from the magnitude-7.8 earthquake that struck Saturday, killing at least 6,134 people and wounding almost 14,000, according to Nepali authorities."
+        ],
+        "reason": "Copies the selected earthquake sentence, retaining magnitude, Saturday, both casualty quantities and attribution; the preceding sentence supplies the rescuers antecedent."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B022",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete unchanged source sentences. Removing only the leading (CNN) label from the first source sentence is expressly allowed.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "A popular Chinese television host known for impromptu satire is now the subject of controversy after being caught on camera cursing the late Chairman Mao Zedong."
+        ],
+        "reason": "Preserves the Chinese television host's recorded insult of Mao. The name Bi Fujian is not explicit; the described host is an unambiguous contextual reference to the source's subject, so the core incident is preserved."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Bi's apology is omitted. The allowed subset policy permits this omission, but it remains coverage loss."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "CCTV said it would investigate."
+        ],
+        "reason": "Retains CCTV's announced intention to investigate, without presenting the investigation as completed."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "A popular Chinese television host known for impromptu satire is now the subject of controversy after being caught on camera cursing the late Chairman Mao Zedong."
+        ],
+        "reason": "Copies the complete selected controversy/recorded-insult sentence."
+      },
+      {
+        "id": "P2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The selected apology sentence and its central information are absent. This is permitted omission, not a factual error."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "CCTV said it would investigate."
+        ],
+        "reason": "Copies the complete selected statement of CCTV's planned investigation."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B023",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete unchanged source sentences, including their original punctuation and any retained Shanghai publisher prefix.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Shanghai, China (CNN)When China's biggest auto show opens in Shanghai this week, the only models on display will be the ones with four wheels."
+        ],
+        "reason": "The future statement that only four-wheeled models will appear conveys the planned exclusion of human promotional models."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Omits manufacturers' increasing adaptation to Chinese preferences in response to competition. The allowed subset policy permits the omission, but coverage is absent."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "In 2014, growth in sales halved to 7% and according to the China Association of Automobile Manufacturers, the slowdown continued in the first three months of this year when sales rose just 3.9%."
+        ],
+        "reason": "Retains the industry association's attribution and 3.9% growth in the first three months of this year, contextually the year following 2014."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Shanghai, China (CNN)When China's biggest auto show opens in Shanghai this week, the only models on display will be the ones with four wheels."
+        ],
+        "reason": "Copies the complete selected announcement about the Shanghai show's models."
+      },
+      {
+        "id": "P2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The selected competition-and-preferences passage is absent. This is permitted omission, not a factual error."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "In 2014, growth in sales halved to 7% and according to the China Association of Automobile Manufacturers, the slowdown continued in the first three months of this year when sales rose just 3.9%."
+        ],
+        "reason": "Copies the selected slowdown sentence, retaining 2014's halving to 7%, the first-quarter 3.9% figure and attribution."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B024",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete unchanged source sentences. Removing only the leading (CNN) label from the first source sentence is expressly allowed.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "A popular Chinese television host known for impromptu satire is now the subject of controversy after being caught on camera cursing the late Chairman Mao Zedong."
+        ],
+        "reason": "Preserves the Chinese television host's recorded insult of Mao. The name Bi Fujian is not explicit; the described host is an unambiguous contextual reference to the source's subject, so the core incident is preserved."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Bi's apology is omitted. The allowed subset policy permits this omission, but it remains coverage loss."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "CCTV said it would investigate."
+        ],
+        "reason": "Retains CCTV's announced intention to investigate, without presenting the investigation as completed."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "A popular Chinese television host known for impromptu satire is now the subject of controversy after being caught on camera cursing the late Chairman Mao Zedong."
+        ],
+        "reason": "Copies the complete selected controversy/recorded-insult sentence."
+      },
+      {
+        "id": "P2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The selected apology sentence and its central information are absent. This is permitted omission, not a factual error."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "CCTV said it would investigate."
+        ],
+        "reason": "Copies the complete selected statement of CCTV's planned investigation."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B025",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete unchanged source sentences. Removing only the leading (CNN) label from the first source sentence is expressly allowed.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "A popular Chinese television host known for impromptu satire is now the subject of controversy after being caught on camera cursing the late Chairman Mao Zedong."
+        ],
+        "reason": "Preserves the Chinese television host's recorded insult of Mao. The name Bi Fujian is not explicit; the described host is an unambiguous contextual reference to the source's subject, so the core incident is preserved."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Bi's apology is omitted. The allowed subset policy permits this omission, but it remains coverage loss."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "CCTV said it would investigate."
+        ],
+        "reason": "Retains CCTV's announced intention to investigate, without presenting the investigation as completed."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "A popular Chinese television host known for impromptu satire is now the subject of controversy after being caught on camera cursing the late Chairman Mao Zedong."
+        ],
+        "reason": "Copies the complete selected controversy/recorded-insult sentence."
+      },
+      {
+        "id": "P2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The selected apology sentence and its central information are absent. This is permitted omission, not a factual error."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "CCTV said it would investigate."
+        ],
+        "reason": "Copies the complete selected statement of CCTV's planned investigation."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B026",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The source is rephrased through \"relieved\" and the reconstructed disclosure/transition clause, then combines separation and treatment into a semicolon sentence. Retained names, chronology and medical terms do not make it mostly copied sentences.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Actress Linda Thompson, Bruce Jenner's second wife, says she feels relieved that her former spouse has publicly come out as transgender."
+        ],
+        "reason": "Thompson's reported relief at Jenner's public transgender disclosure conveys her supportive response."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "According to Thompson, Jenner told her in 1985 of identifying as a woman and wanting to transition; the couple separated after roughly six months of therapy, and Jenner began taking female hormones and undergoing electrolysis to remove hair."
+        ],
+        "reason": "Retains Thompson's account of the 1985 disclosure of identifying as a woman. The marital account makes the recipient contextual where not repeated explicitly."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "According to Thompson, Jenner told her in 1985 of identifying as a woman and wanting to transition; the couple separated after roughly six months of therapy, and Jenner began taking female hormones and undergoing electrolysis to remove hair."
+        ],
+        "reason": "Retains the couple's separation after approximately six months of therapy."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Actress Linda Thompson, Bruce Jenner's second wife, says she feels relieved that her former spouse has publicly come out as transgender."
+        ],
+        "reason": "Preserves Thompson's identity/relationship and reported relief at her former spouse's public disclosure."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "According to Thompson, Jenner told her in 1985 of identifying as a woman and wanting to transition; the couple separated after roughly six months of therapy, and Jenner began taking female hormones and undergoing electrolysis to remove hair."
+        ],
+        "reason": "Preserves Thompson's account, 1985 timing, female identity and wish to transition."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "According to Thompson, Jenner told her in 1985 of identifying as a woman and wanting to transition; the couple separated after roughly six months of therapy, and Jenner began taking female hormones and undergoing electrolysis to remove hair."
+        ],
+        "reason": "Preserves the separation after about six months of therapy and the beginning of female hormones and electrolysis; hair removal is explicit or unambiguously represented by electrolysis in this context."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B027",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The study is described in a newly constructed measurement-based clause, and the limitation uses \"too limited to sustain\" rather than copying the source sentence. Scientific names and the essential temperature/water concepts are retained.",
+    "response_kind": "summary",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of Curiosity rover temperature and humidity measurements in Gale Crater supports the possibility of small salty pools forming on Mars at night, although they have no direct evidence of such brine."
+        ],
+        "reason": "Preserves scientists' qualified support for possible small salty pools on Mars at night, without turning the possibility into a confirmed observation."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of Curiosity rover temperature and humidity measurements in Gale Crater supports the possibility of small salty pools forming on Mars at night, although they have no direct evidence of such brine."
+        ],
+        "reason": "Preserves the absence of direct observation/evidence of the nighttime brine within the attributed research account."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Researchers say temperatures are too low and water too limited to sustain terrestrial organisms."
+        ],
+        "reason": "Preserves the researchers' conclusion that cold temperatures and insufficient water cannot support terrestrial organisms."
+      }
+    ],
+    "priorities": [
+      {
+        "id": "P1",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of Curiosity rover temperature and humidity measurements in Gale Crater supports the possibility of small salty pools forming on Mars at night, although they have no direct evidence of such brine."
+        ],
+        "reason": "Preserves the central qualified nighttime salty-water claim; the source's bunny joke is incidental."
+      },
+      {
+        "id": "P2",
+        "preserved": true,
+        "summary_evidence": [
+          "Scientists say a year of Curiosity rover temperature and humidity measurements in Gale Crater supports the possibility of small salty pools forming on Mars at night, although they have no direct evidence of such brine."
+        ],
+        "reason": "Explicitly retains the direct-evidence limitation."
+      },
+      {
+        "id": "P3",
+        "preserved": true,
+        "summary_evidence": [
+          "Researchers say temperatures are too low and water too limited to sustain terrestrial organisms."
+        ],
+        "reason": "Preserves both environmental limitations and their consequence for terrestrial organisms, with researcher attribution."
+      }
+    ],
+    "issues": []
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "url": "http://127.0.0.1:8000/",
+  "live": false,
+  "checks": [
+    {
+      "domain": "summarization",
+      "demo": true,
+      "choices": 5,
+      "grounded_rules_present": true,
+      "prompt_sha256": "93d0ca18e6adbbd49390e4b7bb85e3331a4c2c08d1ed4a097d76a59be8d27c92"
+    },
+    {
+      "domain": "summarization_ko",
+      "demo": true,
+      "choices": 5,
+      "grounded_rules_present": true,
+      "prompt_sha256": "45474f964303efccde9c73bef52ed5ad566a0bc53976fa5c50c2d9301e56388c"
+    }
+  ]
+}

@@ -12,13 +12,12 @@ import json
 import os
 import threading
 import time
-from datetime import date, timedelta
 from dataclasses import asdict, replace
 from http.cookies import CookieError, SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, quote, urlparse
 
 from dotenv import load_dotenv
 
@@ -28,6 +27,24 @@ from agents.prompt_polish import polish as polish_prompt
 import service
 import team
 import template_library
+from personal_prompts import PersonalPromptStore, PromptConflict, expected_revision
+from coding_instructions import build_coding_instructions
+from coding_team_guides import CodingTeamGuides, DOMAIN as CODING_TEAM_DOMAIN, fingerprint
+from coding_work_trials import CodingWorkTrials
+from coding_work_exports import export_preview
+from coding_examples import build_coding_examples
+from coding_elicitation import build_coding_elicitation, build_adaptive_coding_elicitation
+from coding_optimization_jobs import CodingOptimizationJobs
+from fastapi_optimization import MAX_MODEL_CALLS as FASTAPI_GEPA_CALL_LIMIT, optimize_fastapi
+from coding_gepa import coding_draft, coding_optimization_kind, optimize_coding
+from coding_answer_review import inspect_answer
+from coding_environments import ENVIRONMENTS
+from web_coding_evaluation import available as web_gepa_available
+from handoffs import HandoffStore, HandoffConflict
+from handoff_files import MAX_UPLOAD_JSON
+from preference_comparison import compare_preferences, compose_task_prompt, team_basis
+from saved_preference_remix import remix_saved_prompt
+from saved_preference_restore import restore_saved_prompt
 from app_db import Database
 from auth import AuthError, AuthService, TooManyAttempts, User
 from budget import DailyBudget  # noqa: F401 - 테스트가 상한 자리에 끼워 넣는다
@@ -70,6 +87,10 @@ SUGGEST_MODEL = os.environ.get("PPT_SUGGEST_MODEL") or service.REFLECTION_MODEL
 # 만든다. 프론트는 아직 demoMode: true 를 고정으로 보내므로, 백엔드만으로
 # 실제 생성을 켜고 끌 수 있게 하려는 스위치다. 기본은 꺼짐.
 LIVE = os.environ.get("PPT_LIVE") == "1"
+FASTAPI_GEPA_LIVE = os.environ.get("PPT_FASTAPI_GEPA_LIVE", "1" if LIVE else "0") == "1"
+SPRING_BOOT_GEPA_LIVE = os.environ.get("PPT_SPRING_BOOT_GEPA_LIVE", "1" if LIVE else "0") == "1"
+WEB_GEPA_LIVE = os.environ.get("PPT_WEB_GEPA_LIVE", "1" if LIVE else "0") == "1"
+PYTHON_WEB_GEPA_LIVE = os.environ.get("PPT_PYTHON_WEB_GEPA_LIVE", "1" if LIVE else "0") == "1"
 
 
 def _live_key_available(model: str | None = None) -> bool:
@@ -102,13 +123,14 @@ DAILY_OPTIMIZATIONS = _quota("optimize", "PPT_OPTIMIZATIONS_PER_DAY", 30, "PPT_U
 OPTIMIZE_RUNS: dict[str, int] = {}
 # 최적화 근거(전후 점수 등). 화면에서 "무슨 기준으로 다듬었는지" 보여 준다.
 OPTIMIZE_REPORTS: dict[str, dict] = {}
-# AWS Cost Explorer 실제 조회 (/api/aws/costs 의 demoMode: false). 서버 주인의 AWS 계정
-# 비용을 읽으므로 브라우저 요청만으로 켜지지 않는다 - 서버가 PPT_AWS_LIVE=1 로 켜고,
-# 로그인한 사람만, 하루 상한 안에서 쓴다. 조회 한 번에 Cost Explorer 요청 요금이 붙는다.
-AWS_LIVE = os.environ.get("PPT_AWS_LIVE") == "1"
-DAILY_AWS_QUERIES = _quota("aws", "PPT_AWS_QUERIES_PER_DAY", 20, "PPT_USER_AWS_QUERIES_PER_DAY", 5)
 # 팀 모드 (team.py). DB 에 남는다. 로그인한 사람은 자기 아이디로만 참여한다.
 TEAMS = team.TeamStore(DB)
+PERSONAL_PROMPTS = PersonalPromptStore(lambda: DB)
+HANDOFFS = HandoffStore(lambda: DB)
+CODING_OPTIMIZATIONS = CodingOptimizationJobs(lambda: DB)
+CODING_GUIDES = CodingTeamGuides(lambda: DB)
+CODING_TRIALS = CodingWorkTrials(lambda: DB)
+DAILY_PREFERENCE_RUNS = _quota("preference", "PPT_PREFERENCE_RUNS_PER_DAY", 60, "PPT_USER_PREFERENCE_RUNS_PER_DAY", 20)
 # 다른 출처에서 이 API 를 부르도록 허용할 주소 목록 (쉼표로 구분). 기본은
 # 비어 있다 - React 화면은 Vite 프록시(/api)로 같은 출처에서 부르므로 CORS
 # 헤더가 필요 없다. 예전처럼 "*" 를 주면 PPT_LIVE=1 로 켜 둔 동안 사용자가
@@ -213,18 +235,30 @@ def _state_payload(state: service.SessionState) -> dict[str, Any]:
     return payload
 
 
-def _team_payload(code: str) -> dict[str, Any]:
+def _team_payload(code: str, user_id: int | None = None) -> dict[str, Any]:
     """팀 결과: 팀원 이름, 축마다 갈린 정도, 합친 선호로 조립한 팀 프롬프트와
     내보내기. 팀원별 원문이나 생성 결과는 담지 않는다."""
     domain_key, members = TEAMS.get(code)
+    access = TEAMS.access(code, user_id)
+    if access['protected'] and not access['is_member']:
+        return {'code': code, 'name': '초대받은 팀', 'domain_key': domain_key, 'members': [], 'signedIn': [],
+                'agreements': [], 'prompt': '', 'prompts': {}, 'exports': [], 'requires_join': True, **access}
+    if domain_key == CODING_TEAM_DOMAIN:
+        return CODING_GUIDES.get(code, user_id)
     domain = service.load_domain_for(_domain_path(domain_key))
+    name = TEAMS.name_for(code)
+    if not members:
+        return {"code": code, "name": name, "domain_key": domain_key, "members": [], "signedIn": [], **access,
+                "agreements": [], "prompt": "", "prompts": {}, "exports": [], "exports_by_language": {}}
     estimator, agreements = team.summarize(domain, members)
     languages = _prompt_languages(domain, None)
     prompts = {lang: service.final_prompt(domain, estimator, team=True, language=lang) for lang in languages}
     prompt = prompts[languages[0]]
     labels = domain.final_prompt.axis_labels if domain.final_prompt else {}
     return {
+        **access,
         "code": code,
+        "name": name,
         "domain_key": domain_key,
         "members": [m.name for m in members],
         # 로그인한 계정으로 참여한 사람 (화면이 이름 옆에 표시한다).
@@ -249,11 +283,10 @@ def _team_payload(code: str) -> dict[str, Any]:
 def _domain_path(domain_key: str) -> str:
     allowed = {
         "coding": ROOT / "domains" / "coding.yaml",
-        "idle_tracker": ROOT / "domains" / "idle_tracker.yaml",
         "review": ROOT / "domains" / "review.yaml",
         "email": ROOT / "domains" / "email.yaml",
-        "summarization": ROOT / "domains" / "summarization.yaml",
-        "summarization_ko": ROOT / "domains" / "summarization_ko.yaml",
+        "summarization": ROOT / "domains" / "summarization_grounded_v3.yaml",
+        "summarization_ko": ROOT / "domains" / "summarization_ko_grounded_v3.yaml",
         "summarization_hybrid": ROOT / "domains" / "summarization_hybrid.yaml",
         "macsum_eval_agent": ROOT / "domains" / "macsum_eval_agent.yaml",
     }
@@ -261,138 +294,6 @@ def _domain_path(domain_key: str) -> str:
     if path is None:
         raise ValueError(f"지원하지 않는 도메인입니다: {domain_key}")
     return str(path)
-
-
-def _report_source_text(report: dict[str, Any]) -> str:
-    """findings 를 생성기가 실제로 인용할 수 있는 형태로 적는다.
-
-    이전 sourceText는 "찾았으니 확인하세요" 정도의 안내문 한 줄이었다 -
-    그 문장만 생성기에 들어가면 실제 금액·리소스ID를 하나도 못 받은
-    채로 "요약"을 만드는 셈이라, 출력에 나오는 구체적인 숫자는 전부
-    모델이 지어낸 것일 수밖에 없다(사용자에게 보여주는 카드에는 진짜
-    데이터가 있는데, 그걸 요약하는 모델만 못 보고 있었다). 개인화(상세도
-    ·강조점)와 정확성(금액·리소스ID가 실제와 일치)을 따로 검증하려면
-    검증 대상 자체가 먼저 정확해야 한다."""
-    period = report.get("period", {})
-    lines = [
-        f"조회 기간: {period.get('start', '?')} ~ {period.get('end', '?')}",
-        f"총 예상 비용: {report.get('totalCost', '?')}",
-    ]
-    for finding in report.get("findings", []):
-        lines.append(
-            f"- {finding.get('service', '?')} ({finding.get('resourceId', '?')}): "
-            f"{finding.get('cost', '?')} - {finding.get('reason', '')} "
-            f"해결: {finding.get('resolution', '')}"
-        )
-    return "\n".join(lines)
-
-
-def _demo_aws_cost_report(lookback_days: int = 30) -> dict[str, Any]:
-    """API 키 없이도 항상 같은 화면을 보여주는 AWS 비용 점검 결과."""
-    end = date.today()
-    start = end - timedelta(days=lookback_days)
-    report: dict[str, Any] = {
-        "mode": "demo",
-        "period": {"start": start.isoformat(), "end": end.isoformat()},
-        "totalCost": "₩16,800",
-        "currency": "KRW",
-        "findings": [
-            {
-                "id": "eip",
-                "service": "EC2 탄력적 IP",
-                "resourceId": "eipalloc-0a12bc34de56f7890",
-                "cost": "₩10,000",
-                "severity": "high",
-                "reason": "연결되지 않은 탄력적 IP가 계속 과금되고 있습니다.",
-                "resolution": "AWS 콘솔 > EC2 > 탄력적 IP 메뉴에서 릴리스하세요.",
-            },
-            {
-                "id": "snapshot",
-                "service": "EBS 스냅샷",
-                "resourceId": "snap-0f1234567890abcd1",
-                "cost": "₩6,800",
-                "severity": "medium",
-                "reason": "오래된 스냅샷이 남아 있어 저장 비용이 발생합니다.",
-                "resolution": "AWS 콘솔 > EC2 > 스냅샷에서 필요 없는 항목을 확인 후 삭제하세요.",
-            },
-        ],
-    }
-    report["sourceText"] = _report_source_text(report)
-    return report
-
-
-def _aws_live_blocked() -> str | None:
-    """실제 조회를 막을 이유. 막지 않으면 하루 횟수를 한 번 차감하고 None.
-
-    이 경로는 서버 주인의 AWS 계정 비용을 읽어 요청한 사람에게 돌려준다. 예전에는
-    브라우저가 보낸 demoMode 하나로 켜져서, 화면을 연 누구나 서버 자격 증명으로
-    Cost Explorer 를 부를 수 있었다 (조회 한 번에 요청당 요금도 붙는다)."""
-    if not AWS_LIVE:
-        return "이 서버는 AWS 실제 조회가 꺼져 있어 데모 데이터를 표시합니다 (PPT_AWS_LIVE=1 로 켤 수 있습니다)."
-    if _subject() == ANON:
-        return "AWS 실제 조회는 로그인한 사람만 쓸 수 있어 데모 데이터를 표시합니다."
-    try:
-        _take(DAILY_AWS_QUERIES, "AWS 실제 조회")
-    except ValueError as exc:
-        return f"{exc} 데모 데이터를 표시합니다."
-    return None
-
-
-def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
-    """Cost Explorer를 선택적으로 조회하고, 실패하면 안전한 데모 결과를 반환한다."""
-    try:
-        lookback_days = min(max(int(body.get("lookbackDays", 30)), 7), 90)
-    except (TypeError, ValueError):
-        raise ValueError("lookbackDays는 7~90 사이의 숫자여야 합니다.")
-    if bool(body.get("demoMode", True)):
-        return _demo_aws_cost_report(lookback_days)
-    blocked = _aws_live_blocked()
-    if blocked is not None:
-        report = _demo_aws_cost_report(lookback_days)
-        report["liveError"] = blocked
-        return report
-
-    try:
-        import boto3  # type: ignore
-
-        end = date.today()
-        start = end - timedelta(days=lookback_days)
-        client = boto3.client("ce", region_name=os.environ.get("AWS_REGION", "us-east-1"))
-        response = client.get_cost_and_usage(
-            TimePeriod={"Start": start.isoformat(), "End": end.isoformat()},
-            Granularity="MONTHLY",
-            Metrics=["UnblendedCost"],
-            GroupBy=[{"Type": "DIMENSION", "Key": "SERVICE"}],
-        )
-        groups: list[dict[str, Any]] = []
-        total = 0.0
-        for result in response.get("ResultsByTime", []):
-            for group in result.get("Groups", []):
-                amount = float(group.get("Metrics", {}).get("UnblendedCost", {}).get("Amount", 0) or 0)
-                total += amount
-                if amount > 0:
-                    groups.append({"service": group.get("Keys", ["알 수 없는 서비스"])[0], "amount": amount})
-        groups.sort(key=lambda item: item["amount"], reverse=True)
-        findings = [
-            {
-                "id": f"service-{index}",
-                "service": item["service"],
-                "resourceId": "서비스 단위 비용",
-                "cost": f"${item['amount']:.2f}",
-                "severity": "high" if index == 0 else "medium",
-                "reason": "최근 사용량이 높은 서비스입니다.",
-                "resolution": "AWS Cost Explorer에서 세부 리소스와 사용량을 확인하세요.",
-            }
-            for index, item in enumerate(groups[:4])
-        ]
-        report = _demo_aws_cost_report(lookback_days)
-        report.update({"mode": "aws", "currency": "USD", "totalCost": f"${total:.2f}", "findings": findings})
-        report["sourceText"] = _report_source_text(report)
-        return report
-    except Exception:  # noqa: BLE001 - 자격 증명/SDK/권한 오류를 비밀 없이 처리
-        report = _demo_aws_cost_report(lookback_days)
-        report["liveError"] = "AWS Cost Explorer를 사용할 수 없어 데모 데이터를 표시합니다."
-        return report
 
 
 # 프롬프트 자체는 비교 세션의 sourceText(과제 원문, 12,000자 한도)보다
@@ -490,7 +391,7 @@ def quota_left() -> dict[str, int]:
     """지금 요청한 사람의 오늘 남은 횟수 (/api/auth/me 가 보여 준다)."""
     subject = _subject()
     quotas = {"session": LIVE_SESSIONS, "optimize": DAILY_OPTIMIZATIONS,
-              "polish": DAILY_POLISHES, "workspace": DAILY_WORKSPACE_CALLS, "aws": DAILY_AWS_QUERIES}
+              "polish": DAILY_POLISHES, "workspace": DAILY_WORKSPACE_CALLS, "preference": DAILY_PREFERENCE_RUNS}
     return {kind: q.left(subject) for kind, q in quotas.items() if hasattr(q, "left")}
 
 
@@ -516,7 +417,7 @@ def _workspace_sample() -> dict[str, Any]:
     project["requirements"] = ws_sample.sample_requirements()
     project["check_set"] = ws_sample.NAME
     return {**_ws_payload(project), "input": ws_sample.SAMPLE_INPUT, "live": LIVE,
-            "notes": ["샘플 요구사항은 미리 정리해 둔 것입니다 (AI 호출 없음). 실제 AWS 데이터가 아닙니다."]}
+            "notes": ["샘플 요구사항은 미리 정리해 둔 것입니다 (AI 호출 없음). 실제 계정 데이터가 아닙니다."]}
 
 
 def _workspace_structure(body: dict[str, Any]) -> dict[str, Any]:
@@ -676,12 +577,30 @@ class ApiHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(encoded)
 
-    def _read_json(self) -> dict[str, Any]:
+    def _read_json(self, limit: int = 256_000) -> dict[str, Any]:
         length = int(self.headers.get("Content-Length", "0"))
         # 음수면 rfile.read(-1) 이 연결이 끊길 때까지 기다린다.
         if length < 0:
             raise ValueError("Content-Length가 올바르지 않습니다.")
-        if length > 256_000:
+        if length > limit:
+            # A modest over-limit body may already be in flight. On Windows,
+            # closing with unread bytes can reset the connection before the JSON
+            # error arrives. Drain a bounded amount without parsing or retaining it.
+            if length <= max(limit * 2, 1_048_576):
+                previous_timeout = self.connection.gettimeout()
+                deadline = time.monotonic() + 1
+                remaining = length
+                try:
+                    while remaining and time.monotonic() < deadline:
+                        self.connection.settimeout(max(.001, deadline - time.monotonic()))
+                        chunk = self.rfile.read(min(remaining, 65536))
+                        if not chunk:
+                            break
+                        remaining -= len(chunk)
+                except OSError:
+                    pass
+                finally:
+                    self.connection.settimeout(previous_timeout)
             raise ValueError("요청 본문이 너무 큽니다.")
         raw = self.rfile.read(length)
         data = json.loads(raw.decode("utf-8") or "{}")
@@ -802,18 +721,23 @@ class ApiHandler(BaseHTTPRequestHandler):
                 "quota": quota_left(),
             })
             return
+        if path.startswith("/api/coding-work/"):
+            self._coding_workflow(path)
+            return
         if path == "/api/teams":
-            # 내가 참여한 팀 목록. 팀 결과 자체는 아래 경로로 팀 코드만 있으면 누구나 본다.
+            # 계정 팀 결과는 참여자만 본다. 익명 팀은 공개 체험용이다.
             user = self._current_user()
             if user is None:
-                self._send(401, {"error": "로그인하면 내가 참여한 팀을 모아 볼 수 있습니다. 팀 코드로는 로그인 없이 볼 수 있습니다."})
+                self._send(401, {"error": "로그인하면 내가 참여한 팀을 모아 볼 수 있습니다. 계정 팀의 결과는 참여자에게만 공개됩니다."})
                 return
-            self._send(200, {"teams": [asdict(t) for t in TEAMS.list_for_user(user.id)]})
+            self._send(200, {"teams": [asdict(t) for t in TEAMS.list_for_user(user.id)
+                                       if t.domain_key != "idle_tracker"]})
             return
         if len(parts := path.split("/")) == 4 and parts[:3] == ["", "api", "teams"]:
             try:
-                self._send(200, {"team": _team_payload(parts[3])})
-            except team.TeamError as exc:
+                user = self._current_user()
+                self._send(200, {"team": _team_payload(parts[3], user.id if user else None)})
+            except (team.TeamError, ValueError) as exc:
                 self._send(404, {"error": str(exc)})
             return
         if path == "/api/workspace/sample":
@@ -824,6 +748,15 @@ class ApiHandler(BaseHTTPRequestHandler):
             return
         if path == "/api/templates":
             self._send(200, {"templates": [asdict(t) for t in template_library.library()]})
+            return
+        if path == "/api/preferences" or path.startswith("/api/preferences/"):
+            self._personal_prompts(path)
+            return
+        if path == "/api/handoffs" or path.startswith("/api/handoffs/"):
+            self._handoffs(path)
+            return
+        if path.startswith("/api/coding-instructions/optimizations"):
+            self._coding_optimizations(path)
             return
         # 최적화 진행률을 폴링하는 경로. /api/sessions/<id>
         parts = path.split("/")
@@ -844,15 +777,65 @@ class ApiHandler(BaseHTTPRequestHandler):
             self._send(403, {"error": "다른 사이트에서 보낸 요청은 받지 않습니다."})
             return
         try:
-            body = self._read_json()
+            parts = path.split("/")
+            uploading = len(parts) == 5 and parts[:3] == ["", "api", "handoffs"] and parts[4] == "attach"
+            if uploading and self._current_user() is None:
+                self._send(401, {"error": "파일을 첨부하려면 로그인해 주세요."})
+                return
+            body = self._read_json(MAX_UPLOAD_JSON if uploading else 256_000)
+            if path == "/api/summary-contract":
+                from summary_contracts_v2 import prepare_summary_contract
+
+                self._send(200, prepare_summary_contract(body))
+                return
             if path.startswith("/api/auth/"):
                 self._auth_route(path, body)
+                return
+            if path.startswith("/api/coding-work/"):
+                self._coding_workflow(path, body)
+                return
+            if path == "/api/preferences" or path.startswith("/api/preferences/"):
+                self._personal_prompts(path, body)
+                return
+            if path == "/api/handoffs" or path.startswith("/api/handoffs/"):
+                self._handoffs(path, body)
+                return
+            if path == "/api/coding-instructions/preview":
+                self._send(200, {"draft": build_coding_instructions(body.get("profile"))})
+                return
+            if path == "/api/coding-instructions/review":
+                profile = build_coding_instructions(body.get("profile"))["profile"]
+                self._send(200, {"inspection": inspect_answer(profile, body.get("answer"), body.get("isPatch"))})
+                return
+            if path == "/api/coding-instructions/examples":
+                profile = build_coding_instructions(body.get("profile"))["profile"]
+                self._send(200, {"examples": (build_adaptive_coding_elicitation(profile) if body.get('protocol') == 'adaptive-v1' else
+                                            build_coding_elicitation(profile) if body.get('protocol') == 'repeated-v1'
+                                             else build_coding_examples(profile))})
+                return
+            if path.startswith("/api/coding-instructions/optimizations"):
+                self._coding_optimizations(path, body)
                 return
             if path == "/api/sessions":
                 self._start_session(body)
                 return
-            if path == "/api/aws/costs":
-                self._send(200, {"report": _aws_cost_report(body)})
+            if path == "/api/teams":
+                domain_key = str(body.get("domainKey", "coding"))
+                _domain_path(domain_key)
+                user = self._current_user()
+                code = TEAMS.create(str(body.get("name", "")), domain_key, user.id if user else None)
+                self._send(201, {"team": _team_payload(code, user.id if user else None)})
+                return
+            if path.startswith('/api/teams/') and path.endswith('/invitation'):
+                user = self._current_user()
+                if user is None:
+                    self._send(401, {'error': '팀을 만든 계정으로 로그인해 주세요.'})
+                    return
+                if type(body.get('enabled')) is not bool:
+                    raise ValueError('초대 상태를 확인해 주세요.')
+                code = path.split('/')[3]
+                TEAMS.set_invitation(code, user.id, body['enabled'])
+                self._send(200, {'team': _team_payload(code, user.id)})
                 return
             if path == "/api/polish/checklist":
                 self._send(200, _polish_checklist_only(body))
@@ -885,9 +868,336 @@ class ApiHandler(BaseHTTPRequestHandler):
         except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
             self._send(400, {"error": str(exc)})
         except Exception as exc:  # noqa: BLE001 - API 응답으로 안전하게 변환
-            # 원문은 서버 터미널에만. 공급자 오류 문구에는 키 일부가 들어 있다.
-            print(f"[error] {type(exc).__name__}: {exc}", flush=True)
+            # 공급자 오류 원문에는 키 일부가 들어 있을 수 있어 유형만 기록한다.
+            print(f"[error] {type(exc).__name__} (요청 본문·예외 원문 생략)", flush=True)
             self._send(500, {"error": service.describe_api_error(exc)})
+
+    def _handoffs(self, path: str, body: dict | None = None) -> None:
+        user = self._current_user()
+        if user is None:
+            self._send(401, {"error": "로그인하면 내 작업과 나에게 공유된 인수인계를 볼 수 있습니다."})
+            return
+        parts = path.split("/")
+        try:
+            if len(parts) == 3:
+                if body is None:
+                    self._send(200, {"handoffs": HANDOFFS.list_for(user.id)})
+                else:
+                    self._send(201, {"handoff": HANDOFFS.create(user.id, body)})
+                return
+            if len(parts) == 4 and body is None:
+                self._send(200, {"handoff": HANDOFFS.get(user.id, parts[3])})
+                return
+            if len(parts) == 6 and parts[4] == "files" and body is None:
+                query = parse_qs(urlparse(self.path).query)
+                file = HANDOFFS.file(user.id, parts[3], parts[5], int(query.get("revision", ["0"])[0]))
+                inline = query.get("view") == ["1"] and file["content_type"] != "application/octet-stream"
+                self.send_response(200)
+                self.send_header("Content-Type", file["content_type"] if inline else "application/octet-stream")
+                disposition = "inline" if inline else "attachment"
+                self.send_header("Content-Disposition", f"{disposition}; filename=\"attachment\"; filename*=UTF-8''{quote(file['name'], safe='')}")
+                self.send_header("Content-Length", str(file["size"]))
+                self.send_header("Cache-Control", "no-store")
+                self.send_header("X-Content-Type-Options", "nosniff")
+                self.send_header("Content-Security-Policy", "sandbox; default-src 'none'; base-uri 'none'; form-action 'none'")
+                self.send_header("Cross-Origin-Resource-Policy", "same-origin")
+                self.end_headers()
+                self.wfile.write(file["data"])
+                return
+            if len(parts) in (5, 6) and parts[4] == "history" and body is None:
+                if len(parts) == 5:
+                    self._send(200, {"history": HANDOFFS.history(user.id, parts[3])})
+                else:
+                    self._send(200, {"snapshot": HANDOFFS.history(user.id, parts[3], int(parts[5]))})
+                return
+            if len(parts) == 5 and body is not None and parts[4] in ("update", "share", "claim", "complete", "reopen", "attach", "detach"):
+                self._send(200, {"handoff": HANDOFFS.change(user.id, parts[3], parts[4], body)})
+                return
+            self._send(404, {"error": "찾을 수 없는 경로입니다."})
+        except HandoffConflict as exc:
+            self._send(409, {"error": str(exc)})
+        except LookupError as exc:
+            self._send(404, {"error": str(exc)})
+        except PermissionError as exc:
+            self._send(403, {"error": str(exc)})
+        except ValueError as exc:
+            self._send(400, {"error": str(exc)})
+
+    def _coding_optimizations(self, path: str, body: dict | None = None) -> None:
+        parts = path.split('/')
+        model_ready = _live_key_available(CODING_MODEL) and _live_key_available(service.REFLECTION_MODEL)
+        environments = {key: {'enabled': flag and model_ready, 'reason': '' if flag and model_ready else
+            f'현재 서버는 {label} GEPA 실제 AI 호출이 꺼져 있거나 모델 설정이 준비되지 않았어요.'}
+            for key, flag, label in [('fastapi', FASTAPI_GEPA_LIVE, 'FastAPI'), ('spring_boot', SPRING_BOOT_GEPA_LIVE, 'Spring Boot')]}
+        tooling = web_gepa_available()
+        for key, (language, framework, mode) in ENVIRONMENTS.items():
+            if mode in ('flask','django'):
+                enabled = PYTHON_WEB_GEPA_LIVE and model_ready
+                environments[key] = {'enabled':enabled,
+                    'evaluation_scope': ('Flask GET 경로·request.args·정수 입력·JSON 400 응답·반환 계산식을 코드 구조에서 확인합니다.' if mode == 'flask' else
+                        'Django URL 설정·GET 전용 함수형 뷰·정수 입력·JsonResponse의 400 응답·반환 계산식을 코드 구조에서 확인합니다.')
+                        + ' 실제 서버·DB·설정·보안 검사는 하지 않습니다.',
+                    'reason': '' if enabled else f'현재 서버는 {framework} GEPA 실제 호출이 꺼져 있거나 모델 설정이 준비되지 않았어요.'}
+            if mode in ('react', 'express', 'vue', 'nextjs', 'nestjs'):
+                environments[key] = {'enabled': WEB_GEPA_LIVE and model_ready and tooling,
+                    'evaluation_scope': ('NestJS의 컨트롤러·GET/Query·모듈 등록·서비스 주입·BadRequestException과 계산값을 제한된 코드 구조에서 확인합니다. 실제 Nest 빌드·DI 컨테이너·HTTP·파이프·DB·보안 검사는 하지 않습니다.' if mode == 'nestjs' else
+                        'Next.js App Router의 route.ts/js 파일 위치·export GET·쿼리 입력·JSON 400 응답·반환 계산식을 제한된 코드 구조에서 확인합니다. 실제 Next.js 빌드·서버·화면·캐싱·타입·보안 검사는 하지 않습니다.' if mode == 'nextjs' else
+                        'Vue 3 script setup·숫자 props·v-if 오류 표시·계산값을 제한된 코드·템플릿 구조에서 확인합니다. 실제 Vue 컴파일·브라우저 렌더링·반응성·타입 검사는 하지 않습니다.' if mode == 'vue' else
+                        'React props·오류 표시·계산값을 코드 구조에서 확인합니다. 실제 브라우저 화면·타입 검사는 하지 않습니다.' if mode == 'react' else
+                        'Express GET 경로·쿼리 입력·400 오류 응답·반환 계산식을 코드 구조에서 확인합니다. 실제 서버를 실행하지 않습니다.'),
+                    'reason': '' if WEB_GEPA_LIVE and model_ready and tooling else
+                    ('이 환경의 정적 검사에는 Node.js와 기존 프론트 의존성(npm ci --prefix frontend)이 필요해요.' if not tooling else
+                     f'현재 서버는 {language}/{framework} GEPA 실제 호출이 꺼져 있거나 모델 설정이 준비되지 않았어요.')}
+        try:
+            if parts[:4] != ['', 'api', 'coding-instructions', 'optimizations']:
+                raise LookupError('찾을 수 없는 개선 경로입니다.')
+            if len(parts) == 4 and body is None:
+                self._send(200, {**environments['fastapi'], 'environments': environments, 'call_limit': FASTAPI_GEPA_CALL_LIMIT,
+                    'retention_seconds': 7 * 86400})
+                return
+            user = self._current_user()
+            if user is None:
+                self._send(401, {'error': '로그인한 뒤 코딩 지침을 개선하고 새 항목으로 저장할 수 있어요.'})
+                return
+            if len(parts) == 5 and parts[4] == 'recent' and body is None:
+                self._send(200, {'jobs': CODING_OPTIMIZATIONS.list_for(user.id)})
+                return
+            if len(parts) == 4 and body is not None:
+                draft = coding_draft(body.get('profile'))
+                kind = coding_optimization_kind(draft['profile'])
+                if draft['prompt'] != body.get('originalPrompt'):
+                    raise ValueError('선택과 현재 프롬프트가 달라요. 지침을 다시 만든 뒤 개선해 주세요.')
+                if not environments[kind]['enabled']:
+                    raise ValueError(environments[kind]['reason'])
+                run = optimize_fastapi if kind == 'fastapi' else optimize_coding
+                job = CODING_OPTIMIZATIONS.start(user.id, draft['profile'],
+                    run=lambda profile, progress: run(profile, task_model=CODING_MODEL,
+                        reflection_model=service.REFLECTION_MODEL, progress=progress),
+                    consume=lambda: _take(DAILY_OPTIMIZATIONS, '최적화'), describe_error=service.describe_api_error)
+                self._send(202, {'job': job})
+                return
+            if len(parts) == 5 and body is None:
+                self._send(200, {'job': CODING_OPTIMIZATIONS.get(user.id, parts[4])})
+                return
+            if len(parts) == 6 and parts[5] == 'save' and body is not None:
+                # Only the server-held result is saved. Ignore client prompt/report/owner fields.
+                item = CODING_OPTIMIZATIONS.save(user.id, parts[4], body.get('title'), PERSONAL_PROMPTS, body.get('humanReview'))
+                self._send(201, {'preference': item})
+                return
+            raise LookupError('찾을 수 없는 개선 경로입니다.')
+        except LookupError as exc:
+            self._send(404, {'error': str(exc)})
+        except (ValueError, TypeError, KeyError) as exc:
+            self._send(400, {'error': str(exc)})
+        except Exception as exc:
+            self._send(500, {'error': service.describe_api_error(exc)})
+
+    def _coding_workflow(self, path: str, body: dict | None = None) -> None:
+        """Model-free coding guides, export previews and private work measurements."""
+        user = self._current_user()
+        parts = path.removeprefix("/api/coding-work/").split("/")
+        try:
+            if body is not None and parts == ["exports"]:
+                self._send(200, {"export": export_preview(body)})
+                return
+            if user is None:
+                self._send(401, {"error": "팀 기준과 작업 비교를 보관하려면 로그인해 주세요."})
+                return
+
+            def resolved():
+                if body.get("preferenceId"):
+                    item = PERSONAL_PROMPTS.get(user.id, body["preferenceId"])
+                    if expected_revision(body.get("preferenceRevision")) != item["revision"]:
+                        raise PromptConflict("저장한 지침이 바뀌었습니다. 다시 열어 주세요.")
+                    if not item.get("coding_profile_matches"):
+                        raise ValueError("수정한 지침은 현재 설정과 다릅니다. 설정으로 새 지침을 만들어 주세요.")
+                    if body.get("teamSelection"):
+                        return CODING_GUIDES.resolve(user.id, item["coding_profile"], body["teamSelection"])
+                    draft = {"profile": item["coding_profile"], "prompt": item["prompt"],
+                             "team_context": item.get("coding_team_context")}
+                    return {**draft, "snapshot": fingerprint(draft)}
+                return CODING_GUIDES.resolve(user.id, body.get("profile"), body.get("teamSelection"))
+
+            if body is None:
+                if parts == ["trials"]:
+                    self._send(200, {"trials": CODING_TRIALS.list(user.id)})
+                    return
+                if len(parts) == 2 and parts[0] == "trials":
+                    self._send(200, {"trial": CODING_TRIALS.get(user.id, parts[1])})
+                    return
+                if len(parts) == 2 and parts[0] == "teams":
+                    self._send(200, {"team": CODING_GUIDES.get(parts[1], user.id)})
+                    return
+            elif parts == ["teams"]:
+                team_result = CODING_GUIDES.create(user, body.get("name"), body.get("profile"), body.get("rules", []))
+                self._send(201, {"team": team_result})
+                return
+            elif len(parts) == 3 and parts[0] == "teams":
+                if parts[2] == "join":
+                    result = CODING_GUIDES.join(user, parts[1])
+                elif parts[2] == "update":
+                    result = CODING_GUIDES.update(user.id, parts[1], body.get("revision"), body.get("profile"), body.get("rules", []))
+                else:
+                    raise ValueError("지원하지 않는 팀 작업입니다.")
+                self._send(200, {"team": result})
+                return
+            elif parts in (["resolve"], ["save"], ["trials"]):
+                draft = resolved()
+                if parts == ["resolve"]:
+                    self._send(200, {"draft": draft})
+                else:
+                    if body.get("snapshot") != draft["snapshot"]:
+                        raise PromptConflict("선택한 지침이 바뀌었습니다. 미리 보기를 다시 확인해 주세요.")
+                    if parts == ["save"]:
+                        saved = PERSONAL_PROMPTS.create(user.id, {"title": body.get("title"), "domainKey": "coding",
+                            "prompt": draft["prompt"], "codingProfile": draft["profile"], "note": body.get("note", "")},
+                            team_context=draft["team_context"])
+                        self._send(201, {"preference": saved})
+                    else:
+                        self._send(201, {"trial": CODING_TRIALS.create(user.id, body, draft)})
+                return
+            elif len(parts) == 3 and parts[0] == "trials" and parts[2] in ("timer", "result", "preference", "delete"):
+                self._send(200, {"trial": CODING_TRIALS.change(user.id, parts[1], body, parts[2])})
+                return
+            self._send(404, {"error": "찾을 수 없는 코딩 작업 경로입니다."})
+        except PromptConflict as exc:
+            self._send(409, {"error": str(exc)})
+        except LookupError as exc:
+            self._send(404, {"error": str(exc)})
+        except PermissionError as exc:
+            self._send(403, {"error": str(exc)})
+        except (ValueError, TypeError) as exc:
+            self._send(400, {"error": str(exc)})
+
+    def _personal_prompts(self, path: str, body: dict | None = None) -> None:
+        user = self._current_user()
+        if user is None:
+            self._send(401, {"error": "로그인하면 내 선호 보관함에 저장하고 다시 열 수 있습니다."})
+            return
+        parts = path.split("/")
+        try:
+            if len(parts) == 3:
+                if body is None:
+                    self._send(200, {"preferences": PERSONAL_PROMPTS.list_for(user.id)})
+                else:
+                    self._send(201, {"preference": PERSONAL_PROMPTS.create(user.id, body)})
+                return
+            if len(parts) == 4 and body is None:
+                self._send(200, {"preference": PERSONAL_PROMPTS.get(user.id, parts[3])})
+                return
+            if len(parts) == 5 and body is not None:
+                prompt_id, action = parts[3:]
+                if action == "update":
+                    self._send(200, {"preference": PERSONAL_PROMPTS.update(user.id, prompt_id, body)})
+                    return
+                if action == "delete":
+                    PERSONAL_PROMPTS.delete(user.id, prompt_id, body.get("revision"))
+                    self._send(200, {"ok": True})
+                    return
+                if action in ("remix-preview", "remix-save", "restore-preview", "restore-save"):
+                    item = PERSONAL_PROMPTS.get(user.id, prompt_id)
+                    if item["revision"] != expected_revision(body.get("revision")):
+                        raise PromptConflict("저장한 지침이 바뀌었습니다. 다시 열고 선택을 확인해 주세요.")
+                    domain = service.load_domain_for(_domain_path(item["domain_key"]))
+                    draft = (restore_saved_prompt(item, domain, body.get("restoreAxes")) if action.startswith("restore-")
+                             else remix_saved_prompt(item, domain, body.get("choices")))
+                    if action.endswith("-preview"):
+                        self._send(200, {"draft": draft})
+                        return
+                    if draft["snapshot"] != body.get("draftSnapshot"):
+                        raise PromptConflict("선택이 바뀌었습니다. 새 조합 미리 보기를 다시 확인해 주세요.")
+                    title = body.get("title")
+                    if isinstance(title, str) and title.strip() == item["title"]:
+                        raise ValueError("기존 작업용과 구분할 수 있게 다른 이름을 붙여 주세요.")
+                    saved = PERSONAL_PROMPTS.create(user.id, {"title": title, "note": body.get("note", ""),
+                        "domainKey": item["domain_key"], "prompt": draft["prompt"]}, provenance=draft["provenance"])
+                    self._send(201, {"preference": saved})
+                    return
+                if action in ("compare-team", "compose-task", "save-task"):
+                    item = PERSONAL_PROMPTS.get(user.id, prompt_id)
+                    if item.get("coding_profile"):
+                        raise ValueError("직접 설정한 개발 지침은 개인용으로 재사용합니다. 현재 팀 비교는 React 예시 비교 지침만 지원합니다.")
+                    if item["revision"] != expected_revision(body.get("revision")):
+                        raise PromptConflict("저장된 지침이 바뀌었습니다. 다시 열어 확인한 뒤 비교해 주세요.")
+                    code = body.get("teamCode")
+                    if not isinstance(code, str) or not 3 <= len(code) <= 32:
+                        raise ValueError("초대 링크에서 확인한 팀 코드를 넣어 주세요.")
+                    TEAMS.require_read(code, user.id)
+                    domain_key, members = TEAMS.get(code)
+                    if domain_key != item["domain_key"]:
+                        raise ValueError("같은 종류의 지침끼리 비교할 수 있어요. 코딩·한국어 요약·영어 요약 분류를 확인해 주세요.")
+                    domain = service.load_domain_for(_domain_path(domain_key))
+                    comparison = compare_preferences(item, domain, code, TEAMS.name_for(code), members, body.get("language") or None)
+                    if action in ("compose-task", "save-task"):
+                        if comparison["team_snapshot"] != body.get("teamSnapshot"):
+                            raise PromptConflict("팀 기준이 바뀌었습니다. 팀 기준을 새로 확인한 뒤 다시 골라 주세요.")
+                        draft = compose_task_prompt(item, domain, comparison, body.get("choices"))
+                        if action == "save-task":
+                            if draft["snapshot"] != body.get("taskSnapshot"):
+                                raise PromptConflict("이번 작업의 선택이 바뀌었습니다. 작업용 지침을 다시 만든 뒤 저장해 주세요.")
+                            saved = PERSONAL_PROMPTS.create(user.id, {"title": body.get("title"), "note": body.get("note", ""),
+                                                                     "domainKey": item["domain_key"], "prompt": draft["prompt"]},
+                                                            provenance=draft["provenance"])
+                            self._send(201, {"preference": saved})
+                            return
+                        self._send(200, {"draft": draft})
+                        return
+                    self._send(200, {"comparison": comparison})
+                    return
+                if action == "run":
+                    item = PERSONAL_PROMPTS.get(user.id, prompt_id)
+                    if item["revision"] != expected_revision(body.get("revision")):
+                        raise PromptConflict("저장된 지침이 바뀌었습니다. 다시 열어 확인한 뒤 실행해 주세요.")
+                    task = body.get("task")
+                    if not isinstance(task, str) or not task.strip() or len(task) > 12_000:
+                        raise ValueError("새 작업 내용은 1~12,000자로 적어 주세요.")
+                    basis = body.get("basis", "personal")
+                    prompt = item["prompt"]
+                    team_code = None
+                    team_snapshot = None
+                    task_snapshot = None
+                    if basis not in ("personal", "team", "custom"):
+                        raise ValueError("개인용·팀용 또는 이번 작업용 지침을 선택해 주세요.")
+                    if basis in ("team", "custom"):
+                        if item.get("coding_profile"):
+                            raise ValueError("직접 설정한 개발 지침에는 React 팀 기준을 적용할 수 없습니다. 개인용으로 실행해 주세요.")
+                        team_code = body.get("teamCode")
+                        if not isinstance(team_code, str) or not 3 <= len(team_code) <= 32:
+                            raise ValueError("팀을 먼저 확인해 주세요.")
+                        TEAMS.require_read(team_code, user.id)
+                        domain_key, members = TEAMS.get(team_code)
+                        if domain_key != item["domain_key"]:
+                            raise ValueError("이 작업과 같은 분류의 팀 기준을 골라 주세요.")
+                        domain = service.load_domain_for(_domain_path(domain_key))
+                        current = team_basis(domain, team_code, members, body.get("teamLanguage"))
+                        if current["snapshot"] != body.get("teamSnapshot"):
+                            raise PromptConflict("팀 기준이 바뀌었습니다. 팀 기준을 새로 확인한 뒤 다시 실행해 주세요.")
+                        prompt, team_snapshot = current["prompt"], current["snapshot"]
+                        if basis == "custom":
+                            comparison = compare_preferences(item, domain, team_code, TEAMS.name_for(team_code), members, body.get("teamLanguage"))
+                            draft = compose_task_prompt(item, domain, comparison, body.get("choices"))
+                            if draft["snapshot"] != body.get("taskSnapshot"):
+                                raise PromptConflict("이번 작업의 선택이 바뀌었습니다. 작업용 지침을 다시 만들어 주세요.")
+                            prompt, task_snapshot = draft["prompt"], draft["snapshot"]
+                    model = CODING_MODEL if item["domain_key"] == "coding" else DEFAULT_MODEL
+                    if not LIVE or not _live_key_available(model):
+                        raise ValueError("AI 실행은 실제 생성 모드에서만 사용할 수 있습니다. 준비한 요청문을 복사해 다른 AI에서 사용할 수 있어요.")
+                    _take(DAILY_PREFERENCE_RUNS, "보관한 지침으로 실행")
+                    try:
+                        output = service.generator.generate_with_prompt(prompt, task.strip(), model=model)
+                    except Exception as exc:
+                        self._send(502, {"error": service.describe_api_error(exc)})
+                        return
+                    self._send(200, {"output": output, "model": model, "revision": item["revision"], "preference_id": item["id"],
+                                     "basis": basis, "team_code": team_code, "team_snapshot": team_snapshot, "task_snapshot": task_snapshot})
+                    return
+            self._send(404, {"error": "찾을 수 없는 경로입니다."})
+        except PromptConflict as exc:
+            self._send(409, {"error": str(exc)})
+        except LookupError:
+            self._send(404, {"error": "보관한 프롬프트를 찾을 수 없습니다."})
+        except ValueError as exc:
+            self._send(400, {"error": str(exc)})
 
     def _workspace_store(self, handle, path: str) -> None:
         """저장소 경로 공통 처리. 로그인이 없으면 401, 없는(또는 남의) 프로젝트·버전은
@@ -910,9 +1220,13 @@ class ApiHandler(BaseHTTPRequestHandler):
             self._send(400, {"error": str(exc)})
 
     def _start_session(self, body: dict[str, Any]) -> None:
+        from summary_input_policy import SUMMARY_DOMAINS, validate_summary_source
+
         domain_key = str(body.get("domainKey", "coding"))
+        domain_path = _domain_path(domain_key)
         session_model = CODING_MODEL if domain_key == "coding" else DEFAULT_MODEL
-        source_text = str(body.get("sourceText", "")).strip()
+        source_text = (validate_summary_source(body.get("sourceText")) if domain_key in SUMMARY_DOMAINS
+                       else str(body.get("sourceText", "")).strip()[:12_000])
         if not source_text:
             raise ValueError("sourceText가 필요합니다.")
         demo_mode = True
@@ -926,9 +1240,9 @@ class ApiHandler(BaseHTTPRequestHandler):
                 demo_reason = "daily_limit"
                 print("[session] 오늘 실제 생성 상한에 도달해 데모로 진행한다", flush=True)
         args = dict(
-            source_text=source_text[:12_000],
+            source_text=source_text,
             domain_key=domain_key,
-            domain_path=_domain_path(domain_key),
+            domain_path=domain_path,
             # 모델은 서버가 정한다 (요청 본문의 model 은 무시). 브라우저가
             # 고르게 두면 누구든 비싼 모델 이름으로 서버 키를 쓸 수 있다.
             model=session_model,
@@ -1004,8 +1318,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         # 로그인했으면 이름 칸은 무시하고 아이디로 참여한다.
         user = self._current_user()
         TEAMS.add(code, state.domain_key, str(body.get("name", "")), state.history,
-                  user_id=user.id if user else None, username=user.username if user else None)
-        self._send(200, {"team": _team_payload(code)})
+                  user_id=user.id if user else None, username=user.username if user else None,
+                  require_existing=body.get("requireExisting") is True)
+        self._send(200, {"team": _team_payload(code, user.id if user else None)})
 
     def _start_optimize(self, session_id: str) -> None:
         """GEPA 최적화를 백그라운드로 시작하고 바로 돌려준다.
@@ -1054,7 +1369,7 @@ class ApiHandler(BaseHTTPRequestHandler):
                 print(f"[optimize] {state.domain_key} 완료 ({len(optimized)}자)", flush=True)
             except Exception as exc:  # noqa: BLE001 - 실패해도 시드 프롬프트는 남는다
                 state.optimize_status = "error"
-                print(f"[optimize] 실패: {type(exc).__name__}: {exc}", flush=True)
+                print(f"[optimize] 실패: {type(exc).__name__} (예외 원문 생략)", flush=True)
 
         threading.Thread(target=work, daemon=True).start()
         self._send(202, {"session": _state_payload(state)})
@@ -1067,7 +1382,7 @@ class ApiHandler(BaseHTTPRequestHandler):
 def _log_live_failure(exc: Exception) -> None:
     """실제 호출 실패는 서버 터미널에만 남긴다. 응답으로 돌려주면 공급자
     에러 문구(키 일부, 계정 정보)가 브라우저까지 간다."""
-    print(f"[live] 실제 생성 실패, 데모로 전환: {type(exc).__name__}: {exc}", flush=True)
+    print(f"[live] 실제 생성 실패, 데모로 전환: {type(exc).__name__} (예외 원문 생략)", flush=True)
 
 
 def main() -> None:

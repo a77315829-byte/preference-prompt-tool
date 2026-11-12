@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "optimization_model_jobs": [
+    {
+      "request": "0001_generate",
+      "agent": "/root/gepa_job_01_generate",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0002_review",
+      "agent": "/root/gepa_job_02_review",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0003_generate",
+      "agent": "/root/gepa_job_03_generate",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0004_review",
+      "agent": "/root/gepa_job_04_review",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0005_reflection",
+      "agent": "/root/gepa_job_05_reflection",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0006_generate",
+      "agent": "/root/gepa_job_06_generate",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0007_review",
+      "agent": "/root/gepa_job_07_review",
+      "fork_turns": "none",
+      "dispatch_correction": "Clarified benchmark-relative request path before any review; no score feedback."
+    },
+    {
+      "request": "0008_generate",
+      "agent": "/root/gepa_job_08_generate",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0009_review",
+      "agent": "/root/gepa_job_09_review",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0010_generate",
+      "agent": "/root/gepa_job_10_generate",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0011_review",
+      "agent": "/root/gepa_job_11_review",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0012_reflection",
+      "agent": "/root/gepa_job_12_reflection",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0013_generate",
+      "agent": "/root/gepa_job_13_generate",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0014_review",
+      "agent": "/root/gepa_job_14_review",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0015_generate",
+      "agent": "/root/gepa_job_15_generate",
+      "fork_turns": "none"
+    },
+    {
+      "request": "0016_review",
+      "agent": "/root/gepa_job_16_review",
+      "fork_turns": "none"
+    }
+  ],
+  "final_generation": [
+    {
+      "arm": "current",
+      "agent": "/root/gepa_final_generate_current",
+      "fork_turns": "none"
+    },
+    {
+      "arm": "exploratory",
+      "agent": "/root/gepa_final_generate_candidate",
+      "fork_turns": "none"
+    }
+  ],
+  "final_reviews": [
+    {
+      "reviewer": "a",
+      "agent": "/root/gepa_final_review_a",
+      "fork_turns": "none"
+    },
+    {
+      "reviewer": "b",
+      "agent": "/root/gepa_final_review_b",
+      "fork_turns": "none"
+    }
+  ],
+  "final_review_context": "Fresh reviewer contexts first read only CLAUDE, frozen rubric and source-only final/source_packet.json while the last search iteration finished. The later follow-up supplied anonymous summaries only. No arm mapping, prompts, GEPA scores, references or other reviews were supplied.",
+  "supporting_agents": {
+    "source_anchors": "/root/gepa_source_facts",
+    "driver_implementation": "/root/actual_gepa_driver",
+    "integrity_and_source_audit": "/root/actual_gepa_audit"
+  },
+  "execution": "One actual bounded GEPA optimization; the three actual-engine toy tests in implementation_checks.json are separate synthetic plumbing tests, not document performance runs.",
+  "model_identity": {
+    "override": false,
+    "backend": null,
+    "decoding_settings": null,
+    "usage_meter": null,
+    "notice": "Workers inherited the parent runtime. Exact served model, sampling configuration and Codex quota usage are not exposed; not a controlled multi-model comparison."
+  },
+  "external_paid_model_api_calls": 0,
+  "codex_usage_consumed": true,
+  "search_counts": {
+    "generated_summaries": 30,
+    "semantic_output_reviews": 30,
+    "reflection_proposals": 2,
+    "queue_requests": 16
+  },
+  "final_counts": {
+    "distinct_prompt_arms": 2,
+    "generated_summaries": 18,
+    "completed_semantic_output_reviews": 36,
+    "gepa_alias": "current"
+  },
+  "first_response_policy": "No quality-driven regeneration. One answer per source/profile/full prompt. The current and GEPA-selected prompt are identical and share one final answer; they are not independent samples.",
+  "operational_notes": [
+    "Queue0007 received an absolute path clarification before any review; no score feedback or regrading.",
+    "Final output save attempts initially failed because final/outputs did not exist. It was created, and both workers saved their unchanged first answers. This was an I/O retry, not a content regeneration.",
+    "Source-only anchor audit simplified three incidental timing details before any outputs and before frozen.json; source audit records remain available.",
+    "Gov. automatic sentence-count false negative discovered after baseline; frozen scores and checker left unchanged, separately diagnosed."
+  ],
+  "timing_limit": "Queue waits include human-style orchestration and scheduling. They are not model inference time, service latency, human editing time or user benefit.",
+  "independence_limit": "Separate agent contexts reduce conversation carryover. Same runtime model family can still share systematic generation/evaluation biases.",
+  "billing_limit": "No paid API was connected or explicitly invoked. This is not an independently measured Codex token or billing report."
+}

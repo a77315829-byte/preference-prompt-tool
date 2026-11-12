@@ -1,0 +1,55 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "unit_converter",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_celsius_zero_converts_to_fahrenheit",
+        "passed": true
+      },
+      {
+        "name": "decimal_sign_and_whitespace_preserve_raw_input",
+        "passed": true
+      },
+      {
+        "name": "fahrenheit_and_select_change_use_current_raw_value",
+        "passed": true
+      },
+      {
+        "name": "invalid_formats_disable_swap_then_recover",
+        "passed": true
+      },
+      {
+        "name": "swap_moves_calculated_value_and_reverses_unit_twice",
+        "passed": true
+      },
+      {
+        "name": "rerender_does_not_reset_local_temperature_or_unit",
+        "passed": true
+      },
+      {
+        "name": "overflow_input_and_result_are_invalid",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

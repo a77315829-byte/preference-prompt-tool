@@ -1,0 +1,53 @@
+--- a/frontend/src/features/coding-instructions/CodingTrialPanel.jsx
++++ b/frontend/src/features/coding-instructions/CodingTrialPanel.jsx
+@@ -50,6 +50,7 @@
+   const [trials, setTrials] = useState([]);
+   const [trial, setTrial] = useState(null);
+   const [form, setForm] = useState({ title: '', task, model: '', tool: '', context: '' });
++  const [taskEdited, setTaskEdited] = useState(false);
+   const [reason, setReason] = useState('');
+   const [busy, setBusy] = useState(false);
+   const [error, setError] = useState('');
+@@ -58,6 +59,10 @@
+   const request = useRef(0);
+   const adopt = next => { setTrial(next); setTick(0); setReceived(performance.now()); };
+   const refresh = () => codingWork('trials').then(data => setTrials(data.trials));
++  useEffect(() => {
++    if (trial || taskEdited) return;
++    setForm(current => current.task === task ? current : { ...current, task });
++  }, [task, trial, taskEdited]);
+   useEffect(() => { if (user) refresh().catch(e => setError(e.message)); }, [user?.id]);
+   useEffect(() => () => { request.current += 1; }, []);
+   useEffect(() => { onActiveChange?.(Boolean(trial?.active)); return () => onActiveChange?.(false); }, [trial?.active, onActiveChange]);
+@@ -87,6 +92,13 @@
+     if (trial && !window.confirm('화면에서 입력 중인 미저장 결과는 사라집니다. 다른 기록을 열까요?')) return;
+     perform(async () => { const next = (await codingWork(`trials/${id}`)).trial; setReason(next.preference_reason); return next; });
+   };
++  const prepareNew = () => {
++    if (!window.confirm('미저장 입력을 닫고 새 비교를 준비할까요?')) return;
++    setForm(current => ({ ...current, task }));
++    setTaskEdited(false);
++    setReason('');
++    adopt(null);
++  };
+   if (!user) return <p>로그인하면 작업 비교를 내 계정에 보관하고 다시 이어갈 수 있어요.</p>;
+   return <div className="coding-work-card">
+     <h4>실제 작업에서 비교하기</h4>
+@@ -103,7 +115,7 @@
+     {!trial && <form onSubmit={create}>
+       {[["title", "작업 이름", 100], ["tool", "사용할 도구", 100], ["model", "모델·추론 설정", 200]].map(([key, label, maximum]) => <label key={key}>{label}
+         <input required maxLength={maximum} value={form[key]} onChange={e => setForm(current => ({ ...current, [key]: e.target.value }))} /></label>)}
+-      <label>두 조건에 사용할 실제 작업<textarea required rows={3} maxLength={10000} value={form.task} onChange={e => setForm(current => ({ ...current, task: e.target.value }))} placeholder="예: 이슈 번호와 재현 방법을 적고, 기존 화면의 오류를 수정하도록 요청하세요." /></label>
++      <label>두 조건에 사용할 실제 작업<textarea required rows={3} maxLength={10000} value={form.task} onChange={e => { setTaskEdited(true); setForm(current => ({ ...current, task: e.target.value })); }} placeholder="예: 이슈 번호와 재현 방법을 적고, 기존 화면의 오류를 수정하도록 요청하세요." /></label>
+       <label>저장소·기준 커밋·완료 조건<textarea required rows={3} maxLength={3000} value={form.context} onChange={e => setForm(current => ({ ...current, context: e.target.value }))} placeholder="저장소/기준 커밋, 제공 파일, 기존 AI 지침 적용 여부, React·TypeScript 버전, 타입/테스트/빌드 명령, 화면 완료 조건을 적어 주세요." /></label>
+       <p className="ws-help">시작하면 작업 요청·지침·맥락을 이 계정에 저장합니다. 팀원에게 자동 공유하지 않으며 API 키·비밀값은 입력하지 마세요.</p>
+       <button type="submit" className="coding-primary-button" disabled={busy || !selected?.snapshot}>두 조건을 고정하고 비교 시작</button>
+@@ -131,7 +143,7 @@
+       <div className="prompt-actions">
+         <button type="button" className="coding-secondary-button" disabled={busy} onClick={() => open(trial.id)}>서버 기록 새로 읽기</button>
+         <button type="button" className="coding-secondary-button" onClick={() => downloadText(`coding-trial-${trial.id}.json`, JSON.stringify(trial, null, 2), 'application/json')}>현재 저장 기록 내려받기</button>
+-        <button type="button" className="coding-secondary-button" disabled={busy || Boolean(trial.active)} onClick={() => { if (window.confirm('미저장 입력을 닫고 새 비교를 준비할까요?')) adopt(null); }}>새 작업 비교</button>
++        <button type="button" className="coding-secondary-button" disabled={busy || Boolean(trial.active)} onClick={prepareNew}>새 작업 비교</button>
+         <button type="button" className="coding-text-button" disabled={busy || Boolean(trial.active)} onClick={() => { if (window.confirm('이 작업 비교 기록을 삭제할까요?')) act('delete', {}); }}>기록 삭제</button>
+       </div>
+     </>}

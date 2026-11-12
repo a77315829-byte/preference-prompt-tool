@@ -65,7 +65,8 @@
 .preference-comparison.is-setup .task-input-row { max-width: none; }
 .preference-comparison.is-setup .task-input { min-height: 6.5rem; resize: none; }
 .preference-comparison.is-setup .task-start-button { min-width: 8.5rem; }
-.preference-comparison .comparison-source-hint { margin-top: 0.35rem; color: #697588; font-size: 0.75rem; }
+.preference-comparison .comparison-source-hint,
+.preference-comparison .comparison-source-policy { margin-top: 0.35rem; color: #697588; font-size: 0.75rem; }
 .preference-comparison .comparison-identical-note { margin: 0 0 0.55rem; color: #875515; font-size: 0.76rem; line-height: 1.4; }
 .coding-demo-guide { margin: 0.65rem 0 0.8rem; color: #667085; font-size: 0.78rem; line-height: 1.5; }
 .coding-demo-guide p { margin: 0.35rem 0; }
@@ -234,4 +235,238 @@
   .preference-comparison.is-coding.is-choosing .comparison-options { grid-template-rows: repeat(2, 9.5rem); }
   .preference-comparison.is-coding.is-choosing .comparison-option-wrap { min-height: 9.5rem; }
   .preference-comparison.is-coding.is-choosing .comparison-option pre { min-height: 3rem; }
+}
+
+/* ── 코딩·문서 요약 공통 파스텔 테마 ───────────────────────────────────────────────
+   코딩·영어 요약·한국어 요약(.has-pastel-theme: 내용 입력 → A/B 고르기 → 결과)에 적용한다. 색·배경·테두리·
+   그림자·모서리만 바꾸고 크기와 배치는 위의 규칙을 그대로 따른다 - 모바일 배치를 깨지 않게.
+   A 는 라일락, B 는 민트로 두 후보를 구분한다. 글자는 진한 남보라(--cp-ink)로 대비를 지킨다. */
+.preference-comparison.has-pastel-theme {
+  --cp-ink: #2f2d4a;
+  --cp-muted: #6e6b8a;
+  --cp-line: #e7e3f7;
+  --cp-surface: #fdfcff;
+  --cp-lilac: #efeaff;
+  --cp-lilac-line: #d9d0ff;
+  --cp-lilac-ink: #5f4fc4;
+  --cp-mint: #e3f6ee;
+  --cp-mint-line: #bfe8d6;
+  --cp-mint-ink: #2b7559;
+  --cp-peach: #fff1e6;
+  --cp-peach-ink: #94501f;
+  --cp-sky: #e8f1ff;
+  --cp-sky-ink: #35609f;
+  --cp-pink: #ffeaf2;
+  --cp-pink-ink: #9c3f66;
+  --cp-code: #faf8ff;
+  --cp-code-ink: #3b3858;
+  color: var(--cp-ink);
+  background:
+    radial-gradient(48rem 26rem at 0% 0%, #efe9ff 0%, transparent 62%),
+    radial-gradient(42rem 26rem at 100% 8%, #e2f6ee 0%, transparent 58%),
+    radial-gradient(40rem 24rem at 55% 100%, #ffeef4 0%, transparent 62%),
+    #fbfaff;
+}
+
+/* 머리말 */
+.preference-comparison.has-pastel-theme .back-button { color: var(--cp-muted); }
+.preference-comparison.has-pastel-theme .back-button:hover { color: var(--cp-lilac-ink); }
+.preference-comparison.has-pastel-theme .comparison-heading .eyebrow {
+  display: inline-block;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  color: var(--cp-lilac-ink);
+  background: var(--cp-lilac);
+  font-weight: 800;
+}
+.preference-comparison.has-pastel-theme .comparison-heading h2,
+.preference-comparison.has-pastel-theme .comparison-question h3,
+.preference-comparison.has-pastel-theme .prompt-result h3 { color: var(--cp-ink); }
+.preference-comparison.has-pastel-theme .comparison-heading > p,
+.preference-comparison.has-pastel-theme .comparison-heading .comparison-task-summary,
+.preference-comparison.has-pastel-theme .connection-note,
+.preference-comparison.has-pastel-theme .coding-demo-guide,
+.preference-comparison.has-pastel-theme .prompt-result > p:not(.question-eyebrow) { color: var(--cp-muted); }
+.preference-comparison.has-pastel-theme .comparison-heading .coding-demo-warning {
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.35rem 0.7rem;
+  border-radius: 0.7rem;
+  color: var(--cp-peach-ink);
+  background: var(--cp-peach);
+}
+
+/* 내용 입력 단계 */
+.preference-comparison.has-pastel-theme.is-setup .comparison-heading {
+  border-color: var(--cp-line);
+  background: #ffffffd9;
+  box-shadow: 0 1.4rem 3.2rem #6f5fd014;
+}
+.preference-comparison.has-pastel-theme .task-input-label { color: var(--cp-ink); }
+.preference-comparison.has-pastel-theme .coding-demo-guide {
+  padding: 0.55rem 0.8rem;
+  border-radius: 0.9rem;
+  background: var(--cp-sky);
+}
+.preference-comparison.has-pastel-theme .task-input {
+  border-color: var(--cp-lilac-line);
+  color: var(--cp-ink);
+  background: var(--cp-surface);
+}
+.preference-comparison.has-pastel-theme .task-input:focus {
+  border-color: var(--cp-lilac-ink);
+  box-shadow: 0 0 0 3px #7a6ad826;
+}
+.preference-comparison.has-pastel-theme .task-start-button,
+.preference-comparison.has-pastel-theme .prompt-copy-button {
+  color: var(--cp-ink);
+  background: linear-gradient(135deg, #d6cdff 0%, #c4ecdc 100%);
+  box-shadow: 0 0.5rem 1.2rem #7a6ad81f;
+}
+.preference-comparison.has-pastel-theme .task-start-button:hover:not(:disabled),
+.preference-comparison.has-pastel-theme .prompt-copy-button:hover:not(:disabled) { box-shadow: 0 0.7rem 1.6rem #7a6ad833; }
+
+/* 진행 막대 */
+.preference-comparison.has-pastel-theme .comparison-progress { color: var(--cp-muted); }
+.preference-comparison.has-pastel-theme .comparison-progress-bar { background: #ebe7fa; }
+.preference-comparison.has-pastel-theme .comparison-progress-bar > span { background: linear-gradient(90deg, #b3a6f5 0%, #93dcc2 100%); }
+
+/* 질문과 두 후보 */
+.preference-comparison.has-pastel-theme .question-eyebrow { color: var(--cp-lilac-ink); }
+.preference-comparison.has-pastel-theme.has-session .comparison-option {
+  border-color: var(--cp-line);
+  color: var(--cp-ink);
+  box-shadow: 0 0.8rem 2rem #6f5fd00d;
+}
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(1) .comparison-option {
+  border-color: var(--cp-lilac-line);
+  background: linear-gradient(180deg, #f5f1ff 0%, #ffffff 42%);
+}
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(2) .comparison-option {
+  border-color: var(--cp-mint-line);
+  background: linear-gradient(180deg, #ecf9f3 0%, #ffffff 42%);
+}
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(1) .comparison-option:hover,
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(1) .comparison-option:focus-visible {
+  border-color: #a99bf2;
+  box-shadow: 0 1rem 2.4rem #7a6ad82e;
+}
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(2) .comparison-option:hover,
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(2) .comparison-option:focus-visible {
+  border-color: #86d3b6;
+  box-shadow: 0 1rem 2.4rem #3f9d7a2b;
+}
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(1) .option-index,
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(1) .option-arrow { color: var(--cp-lilac-ink); }
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(2) .option-index,
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(2) .option-arrow { color: var(--cp-mint-ink); }
+.preference-comparison.has-pastel-theme .option-copy span { color: var(--cp-muted); }
+
+/* 예시와 프롬프트는 밝은 종이 위에 둔다 */
+.preference-comparison.has-pastel-theme .comparison-option pre,
+.preference-comparison.has-pastel-theme .prompt-box {
+  border: 1px solid var(--cp-line);
+  color: var(--cp-code-ink);
+  background: var(--cp-code);
+}
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(1) .comparison-option pre { border-left: 3px solid #c9bdfb; }
+.preference-comparison.has-pastel-theme .comparison-option-wrap:nth-child(2) .comparison-option pre { border-left: 3px solid #a6e0c9; }
+
+.preference-comparison.has-pastel-theme .comparison-preview-button {
+  border-color: var(--cp-lilac-line);
+  color: var(--cp-lilac-ink);
+  background: #ffffffcc;
+}
+.preference-comparison.has-pastel-theme .comparison-preview-button:hover,
+.preference-comparison.has-pastel-theme .comparison-preview-button:focus-visible { background: var(--cp-lilac); outline-color: #a99bf2; }
+.preference-comparison.has-pastel-theme .comparison-identical-note { color: var(--cp-peach-ink); }
+
+/* 보조 버튼 (비슷해요 · 이전 선택 수정 · 결과 화면의 다른 버튼) */
+.preference-comparison.has-pastel-theme .prompt-reset-button {
+  border-color: var(--cp-lilac-line);
+  color: var(--cp-ink);
+  background: #ffffffcc;
+}
+.preference-comparison.has-pastel-theme .prompt-reset-button:hover:not(:disabled) { background: var(--cp-lilac); }
+
+/* 결과 화면 */
+.preference-comparison.has-pastel-theme .prompt-result .coding-result-context {
+  border-color: var(--cp-line);
+  border-radius: 1.1rem;
+}
+.preference-comparison.has-pastel-theme .prompt-result .coding-result-context:nth-of-type(1) { background: linear-gradient(135deg, var(--cp-sky) 0%, #ffffff 70%); }
+.preference-comparison.has-pastel-theme .prompt-result .coding-result-context:nth-of-type(2) { background: linear-gradient(135deg, var(--cp-mint) 0%, #ffffff 70%); }
+.preference-comparison.has-pastel-theme .coding-result-context h4 { color: var(--cp-ink); }
+.preference-comparison.has-pastel-theme .coding-result-context code {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  color: var(--cp-sky-ink);
+  background: #ffffffb3;
+  font-size: 0.76rem;
+}
+.preference-comparison.has-pastel-theme .coding-result-context li:nth-child(3n + 1) { color: var(--cp-lilac-ink); background: var(--cp-lilac); }
+.preference-comparison.has-pastel-theme .coding-result-context li:nth-child(3n + 2) { color: var(--cp-mint-ink); background: #d9f2e7; }
+.preference-comparison.has-pastel-theme .coding-result-context li:nth-child(3n) { color: var(--cp-pink-ink); background: var(--cp-pink); }
+
+.preference-comparison.has-pastel-theme .prompt-language-switch {
+  border-color: var(--cp-lilac-line);
+  background: #ffffffcc;
+}
+.preference-comparison.has-pastel-theme .prompt-language-switch button { color: var(--cp-muted); }
+.preference-comparison.has-pastel-theme .prompt-language-switch button.is-active { color: var(--cp-ink); background: #ddd5ff; }
+
+.preference-comparison.has-pastel-theme .export-item {
+  border-color: var(--cp-line);
+  background: #ffffffb3;
+}
+.preference-comparison.has-pastel-theme .team-panel { border-top-color: var(--cp-line); }
+.preference-comparison.has-pastel-theme .team-form input {
+  border-color: var(--cp-lilac-line);
+  background: var(--cp-surface);
+}
+
+/* 전체 보기 창은 body 에 붙으므로 파스텔 비교 화면이 열려 있을 때만 같은 톤을 입힌다 */
+body:has(.preference-comparison.has-pastel-theme) .comparison-preview-backdrop { background: #2f2d4a8c; }
+body:has(.preference-comparison.has-pastel-theme) .comparison-preview-dialog {
+  border: 1px solid #e7e3f7;
+  background: #fdfcff;
+  box-shadow: 0 1.5rem 4.5rem #2f2d4a40;
+}
+body:has(.preference-comparison.has-pastel-theme) .comparison-preview-header span { color: #5f4fc4; }
+body:has(.preference-comparison.has-pastel-theme) .comparison-preview-header h3 { color: #2f2d4a; }
+body:has(.preference-comparison.has-pastel-theme) .comparison-preview-header button { color: #2f2d4a; background: #efeaff; }
+body:has(.preference-comparison.has-pastel-theme) .comparison-preview-dialog pre {
+  border: 1px solid #e7e3f7;
+  color: #3b3858;
+  background: #faf8ff;
+}
+body:has(.preference-comparison.has-pastel-theme) .comparison-preview-switch { color: #5f4fc4; }
+body:has(.preference-comparison.has-pastel-theme) .comparison-preview-select {
+  color: #2f2d4a;
+  background: linear-gradient(135deg, #d6cdff 0%, #c4ecdc 100%);
+}
+
+/* 요약 언어와 원문 안내도 공통 테마를 따른다. 선택 여부는 aria-pressed로 유지한다. */
+.preference-comparison.has-pastel-theme .language-switch button {
+  border-color: var(--cp-lilac-line);
+  color: var(--cp-ink);
+  background: var(--cp-surface);
+}
+.preference-comparison.has-pastel-theme .language-switch button[aria-pressed="true"] {
+  border-color: var(--cp-lilac-line);
+  color: var(--cp-lilac-ink);
+  background: var(--cp-lilac);
+  font-weight: 700;
+}
+.preference-comparison.has-pastel-theme .language-switch button:hover:not(:disabled) { background: var(--cp-lilac); }
+.preference-comparison.has-pastel-theme .language-switch button:focus-visible {
+  outline: 2px solid var(--cp-lilac-ink);
+  outline-offset: 2px;
+}
+.preference-comparison.has-pastel-theme .comparison-heading .comparison-source-hint {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.75rem;
+  color: var(--cp-sky-ink);
+  background: var(--cp-sky);
 }

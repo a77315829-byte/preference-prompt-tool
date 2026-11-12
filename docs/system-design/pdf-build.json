@@ -1,0 +1,19 @@
+{
+  "pdf": "Revealed_Analysis_Design_v1.0.pdf",
+  "pages": 97,
+  "chapters": [
+    "chapters/00-system-overview.md",
+    "chapters/01-analysis.md",
+    "chapters/02-usecases.md",
+    "chapters/03-ui-design.md",
+    "chapters/04-processing-design.md",
+    "chapters/05-components.md",
+    "chapters/06-api-spec.md",
+    "chapters/07-data-design.md",
+    "chapters/08-operations-quality.md",
+    "chapters/09-verification.md",
+    "chapters/10-appendices.md"
+  ],
+  "diagram_count": 21,
+  "sha256": "c97097e4175f5fa12a51a6d4596b0fdf0ad7f6cb5c63e30e0c02506d2fde3fd4"
+}

@@ -1,0 +1,43 @@
+{
+  "scope": "Root reviewed all four coverage disagreements and the source passages, all factual-issue flags (none), and the paired differences. Original reviews and eligibility remain unchanged.",
+  "issues": [
+    {
+      "output_ids": [
+        "B008",
+        "B034",
+        "B039"
+      ],
+      "case_id": "T10",
+      "fact_id": "F2",
+      "finding": "Both reviewers agree limited Latino appeal is conveyed. They disagree whether the despite-Hispanic-background contrast is essential. The proposition combines a core assessment and its contrast, so retain the reviewer range; do not silently redefine the anchor after seeing outputs. This same ambiguity affects all three arms equally.",
+      "resolution": "Unresolved rubric/anchor interpretation; no numerical correction."
+    },
+    {
+      "output_ids": [
+        "B007"
+      ],
+      "case_id": "T18",
+      "fact_id": "F2",
+      "finding": "The summary uses the source metaphor on life support. Reviewer A requires the specific near-absence of capacity to attack the West; B accepts the metaphor in the wider context. The metaphor does not explicitly entail the geographic capability claim, so the stricter reading is defensible, but retain both original scores rather than deciding the benchmark winner by retrospective interpretation.",
+      "resolution": "Retain both reviewer judgments; no numerical correction."
+    }
+  ],
+  "paired_findings": {
+    "candidate_vs_current": "Both reviewers: one document gains one anchor (T11, explicit assisted reproduction); 17 ties, no losses. Other T11 core fact (no conceptions despite mating) remains omitted by all three conditions.",
+    "candidate_vs_manual": "A: 2 wins /16 ties; B:1 win /17 ties; no losses. These are per-document anchor counts, not statistically established general improvements.",
+    "development_direction": "Selection candidate lost one anchor relative to current (15 vs16 /18). Final candidate gains one vs current. This single small experiment does not establish consistent improvement."
+  },
+  "agreement": {
+    "sentence_count": 54,
+    "wording": 54,
+    "fact_decisions_agree": 158,
+    "fact_decisions_total": 162
+  },
+  "factual_flags": {
+    "outputs": 54,
+    "flagged_by_either_reviewer": 0,
+    "interpretation": "No reviewer-detected unsupported/contradicted claims; not proof of factual perfection."
+  },
+  "decision": "No product default replacement and no mandatory GEPA. Frozen selection gate fails; final gain is also below the +2 gate vs current. No post-test prompt edits or regenerated responses.",
+  "method_limit": "One inherited-model draw per document/arm and two same-runtime AI reviewers; no human gold labels, preference or usability evidence."
+}

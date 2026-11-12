@@ -1,0 +1,77 @@
+{
+  "verified_commit": "c7848083c4c0931fb7c3f649e3f4087685e31a11",
+  "evidence_date": "2026-11-12",
+  "runs": {
+    "push": {
+      "url": "https://github.com/a77315829-byte/preference-prompt-tool/actions/runs/43210641135",
+      "conclusion": "success"
+    },
+    "pr": {
+      "url": "https://github.com/a77315829-byte/preference-prompt-tool/actions/runs/43210647977",
+      "conclusion": "success"
+    },
+    "container": {
+      "url": "https://github.com/a77315829-byte/preference-prompt-tool/actions/runs/43210641521",
+      "conclusion": "success"
+    }
+  },
+  "ci": {
+    "push": {
+      "backend_passed": 1353,
+      "backend_skipped": 3,
+      "api_deselected": 16,
+      "frontend_passed": 123,
+      "failed": 0,
+      "backend_seconds": 165.8,
+      "original_log_sha256": "b74cf27391ed8a1388268f6be1610da67f4ad90b28140b807129895d330b096e"
+    },
+    "pr": {
+      "backend_passed": 1353,
+      "backend_skipped": 3,
+      "api_deselected": 16,
+      "frontend_passed": 123,
+      "failed": 0,
+      "backend_seconds": 208.07,
+      "original_log_sha256": "fe7c5e2de8c2d032b4946267f28d95b3a4f37c09593696f6b180883da8dde2fc"
+    }
+  },
+  "local_full": {
+    "passed": 1355,
+    "skipped": 1,
+    "api_deselected": 16
+  },
+  "focused_rerun": {
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 6.55,
+    "test_names": [
+      "tests/test_checks_vs_labels.py::test_recompute_matches_saved",
+      "tests/test_coding_public.py::test_full_cached_audit_is_offline_and_preserves_unknown_outcomes",
+      "tests/test_persona.py::test_personas_come_from_real_macsum_attributes"
+    ]
+  },
+  "ci_skip_reasons": {
+    "MACSum_files_not_committed": 2,
+    "RACE_EvalPlus_cache_not_committed": 1
+  },
+  "windows_symlink_check_passed_in_ci": true,
+  "verified_source_hashes_unchanged": 342,
+  "paid_model_api_calls": 0,
+  "focused_network_attempts": 0,
+  "limitations": [
+    "The three reruns overlap with the previous local full run; do not add test counts.",
+    "Container smoke tests are not public deployment or human usability validation.",
+    "The RACE/EvalPlus cached audit checks assets and preparation, not new generated-code execution."
+  ],
+  "artifact_sha256": {
+    "collected.json": "b42ba294c94b402ea64763c566acacd9d0e48bbdf84bc5fad3b7d488b3ec5663",
+    "comparison.json": "506bb5414489a2559d88d20e9e04b3b86c9543979a16375278ca8913d1c1b5aa",
+    "focused-guard.json": "93e6c927027724267b4557bb1ad392aef8089cf299376331694d4891754bdc23",
+    "focused.log": "0a6006665d1000d150a3236fbed6dffb7b7f58392c64f0cf34ae534e2000701b",
+    "focused.xml": "8151c65971d2fef1afdaad58d983d24a7cad5684cd1571ab6aa87b5b5fd5ba5f",
+    "pr-test-excerpt.log": "b1d00ee90ad072b43cf9f5dec389e2ee73ee71b4091d388b0a785f16c551f775",
+    "push-test-excerpt.log": "dbec1c67c5fdc438c99a8ba5f14b378feb93443e59cbfab9a3853a7138c230c3",
+    "runs.json": "a3bcd3fb689f12ff1f5e3fb4385f200028bafdca3382970de450062abf90fa67"
+  }
+}

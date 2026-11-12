@@ -1,0 +1,23 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\nimport './styles.css';\n\nexport type Props = {\n  initialName: string;\n  onSubmit: (name: string) => void;\n};\n\nexport function Component({ initialName, onSubmit }: Props) {\n  const [name, setName] = useState(initialName);\n  const [reviewing, setReviewing] = useState(false);\n  const [hasError, setHasError] = useState(false);\n\n  return (\n    <form\n      aria-label=\"Name wizard\"\n      className=\"name-wizard\"\n      data-testid=\"panel\"\n      onSubmit={(event) => {\n        event.preventDefault();\n        if (reviewing) {\n          onSubmit(name);\n          return;\n        }\n\n        const trimmedName = name.trim();\n        if (!trimmedName) {\n          setHasError(true);\n          return;\n        }\n        setName(trimmedName);\n        setHasError(false);\n        setReviewing(true);\n      }}\n    >\n      {reviewing ? (\n        <>\n          <output aria-label=\"Review name\">{name}</output>\n          <button type=\"button\" onClick={() => setReviewing(false)}>\n            Back\n          </button>\n          <button type=\"submit\">Submit</button>\n        </>\n      ) : (\n        <>\n          <label>\n            Name\n            <input\n              type=\"text\"\n              value={name}\n              aria-invalid={hasError}\n              onChange={(event) => setName(event.currentTarget.value)}\n            />\n          </label>\n          {hasError && <p role=\"alert\">Name required</p>}\n          <button type=\"submit\">Next</button>\n        </>\n      )}\n    </form>\n  );\n}\n",
+    "styles.css": ".name-wizard {\n  display: grid;\n  gap: 8px;\n  padding: 16px;\n  background-color: #f2f6fc;\n  color: #1d3150;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 1530
+    },
+    {
+      "path": "styles.css",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 1553,
+      "end": 1663
+    }
+  ]
+}

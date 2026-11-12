@@ -1,10 +1,8 @@
 """'합성 비용 데이터 보고' 샘플 (계획서 8절).
 
-**실제 AWS 계정·요금·유휴 리소스 탐지 결과가 아니다.** 서비스 이름도 일부러
-Compute / Storage 처럼 일반 이름을 쓴다. AWS 기능은 팀원 담당이라 boto3,
-domains/idle_tracker.yaml, checks/idle_tracker.py 를 쓰지도 고치지도 않는다.
-AWS 담당자는 이 모듈의 입력 계약(SAMPLE_INPUT 모양)과 check_input /
-check_output 을 보고 자기 데이터를 연결할지 정한다.
+실제 계정이나 요금 조회 없이 만든 예제다. 서비스 이름도
+Compute / Storage 처럼 일반 이름을 쓴다. 외부 계정에는 연결하지 않으며,
+프롬프트의 입력 계약과 출력 검사 흐름을 보여 주는 용도로만 사용한다.
 
 금액은 문자열로 주고받고 Decimal 로 비교한다 - float 로 더하면 37.50 이
 37.499999 가 되는 경우가 있다.

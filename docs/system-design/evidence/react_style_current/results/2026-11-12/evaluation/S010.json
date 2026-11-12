@@ -1,0 +1,55 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "breadcrumb_browser",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_root_lists_only_direct_children",
+        "passed": true
+      },
+      {
+        "name": "enter_uses_ids_and_shows_direct_children",
+        "passed": true
+      },
+      {
+        "name": "nested_enter_and_back_move_one_level",
+        "passed": true
+      },
+      {
+        "name": "leaf_empty_state_then_back_recovers_siblings",
+        "passed": true
+      },
+      {
+        "name": "same_id_new_objects_keep_path_and_update_names",
+        "passed": true
+      },
+      {
+        "name": "empty_root_keeps_disabled_back_without_navigation",
+        "passed": true
+      },
+      {
+        "name": "folder_names_are_plain_text_not_external_paths",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

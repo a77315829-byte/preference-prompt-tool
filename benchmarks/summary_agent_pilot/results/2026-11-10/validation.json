@@ -1,0 +1,26 @@
+{
+  "status": "passed",
+  "outputs": 27,
+  "review_rows": 54,
+  "fact_ratings": 162,
+  "frozen_anchors": 27,
+  "all_quote_membership_checks": true,
+  "all_flagged_outputs_adjudicated": [
+    "O20"
+  ],
+  "score_recalculation_matches": true,
+  "duplicate_output_rating_consistency": true,
+  "tests": {
+    "passed": 24,
+    "command": ".venv/Scripts/python.exe -X utf8 -m pytest tests/test_final_prompt.py benchmarks/summary_agent_pilot/test_evaluate.py -q --basetemp=<new workspace temp directory>",
+    "initial_environment_failure": "4 tmp_path setup errors in sandbox temp; rerun on new workspace temp passed all 24"
+  },
+  "artifact_sha256": {
+    "review_a.json": "f1e25f89bce8d44f1f521dc55c4cd1fa9de3ffad5b985673e2f53d992818e70b",
+    "review_b.json": "ee82ea998ac0554c647f3dd709a604c077631990a30a21e32685a073f254037a",
+    "scores.json": "5f826d37a3a27d38a5b6db00c19a2572063d36c5a3dbfd992bf975bcc4a49508",
+    "adjudication.json": "1f2ac5912e22b940ed88b5646a0b70843c84a3a031084f557e71f49a193ee10c",
+    "execution.json": "93bf20b6a31e19e39b6e608042fdec46afb8df23b7712f6d407b902b0dbceb79",
+    "generation_seal.json": "33c116edd370274de042aa9e3c369dc3e872740b250b635db1f0e130fc34adc0"
+  }
+}

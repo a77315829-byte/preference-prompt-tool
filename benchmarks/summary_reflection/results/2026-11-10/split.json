@@ -1,0 +1,33 @@
+{
+  "seed": 20261113,
+  "dataset_sha256": "f1b08ef9c17d1fac94d395b5881fd038c1229f3d937b6052acce989070b9dbe9",
+  "training_sources": 18,
+  "training_source_sha256": [
+    "0bc001a23501f2067838f3d9dd777a99118d812b1e70f0a30755bbfd8e36c05a",
+    "1dbb118f6d61328d46f565732cc691c8b04b5013c5c875d1de27176c2c40cbe8",
+    "22d3ef93a7347812725f95dfc650773c82cbef275bd00fde3be99af267e13f6d",
+    "293c30a4f8bdf8ff4ce7fa022ac2b83cb04254a648d08435a9f136659b0db451",
+    "31aa149c47ee13d78150cc1883aab9427e9def5ca801a336b17ef135b1dde005",
+    "5f2d7b4cdd547c2f5321d4ce3a81d8462c25e7f4edbc6a711743a9f580e70df8",
+    "7487aadb622d8e34c7216d74d8bf015e1898042092ba4c7d5fc38d44e93fe10e",
+    "7b0c98b90fb4a91fa94c69070528215f5a00cb2c3cad605dedce5ef56f704a3d",
+    "7bf4e54b8d2e58597ba760e122df22b0b29ddf258747398f15a7cadc3e0dfbd1",
+    "7db5d478b702a49473668ddcc6d00aa6ac600b7bb28e32888b8bab102f330511",
+    "841a789041f46a0b7a2d960059293c8c50a57f987b55589dce3f91f22462d5db",
+    "860babc3281c6df343b38bab21ba25f99910d4209e1a285fa6dc32bee6639462",
+    "888425ff7d237eb1dae16481c3f235720ac6436290d34b27f8132a8f04f539c1",
+    "8909046042d649935c1bb4a0b27b355d804694826bb1eec4fd18ba67b21290a6",
+    "cdb5d7137490980a3695b24a492f9ccada23f4aa83851fb5c3ca489cbd702aff",
+    "db61c8a4b26d85cf26f580264426ab41e2dfd887c739795f8ea85e06c09e0620",
+    "deeaee78023ae567990f7473e0284331aec87b6f726e7147cbd494ebc8c0627c",
+    "f47fb2d9f9da4852564818d1d4dba9d1e50d4fddebe951448bc79921efe03a3d"
+  ],
+  "eligible_new_sources": 34,
+  "selection_sources": 6,
+  "final_sources": 18,
+  "prior_artifact_hashes": {
+    "benchmarks\\summary_agent_pilot\\results\\2026-11-10\\cases.json": "98f4b95d05988c8e1aafb1c7cff6683242ceb737172ea869453cd9cee1373690",
+    "benchmarks\\summary_agent_revision\\results\\2026-11-10\\cases.json": "1332ff3a02d780432aae74b66eaaf6af183f6222b71bdc8e34182302765b6d10"
+  },
+  "policy": "Observed prior 18 sources are development/training only. New 6 selection + 18 final, disjoint exact hashes; not a claim of model-pretraining exclusion."
+}

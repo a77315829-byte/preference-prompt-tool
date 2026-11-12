@@ -1,0 +1,200 @@
+{
+  "request_sha256": "39f0b8760bc30e3bd2b74d3771dd286b30ee82fb25944f014a1609fccb0a3cf7",
+  "rows": [
+    {
+      "output_id": "Q9a9967be33adaa01",
+      "sentence_count": 2,
+      "wording_pass": true,
+      "wording_reason": "Both sentences are complete, unchanged source sentences: the Human Nature kiss description and the sentence beginning His sour face.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": false,
+          "summary_evidence": [],
+          "reason": "The kiss involving Drake is described, but the summary never locates it at Coachella, which is part of the core event in this proposition."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "His sour face after the encounter led many to speculate that he didn't enjoy the kiss."
+          ],
+          "reason": "The visible expression and resulting public speculation are conveyed, with dislike remaining speculation."
+        },
+        {
+          "id": "F3",
+          "preserved": false,
+          "summary_evidence": [],
+          "reason": "The later Instagram clarification and Drake's positive assessment are omitted."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Q2212e5766ad11920",
+      "sentence_count": 9,
+      "wording_pass": true,
+      "wording_reason": "The text extensively retains distinctive source language, including the complete sentences about the stomping ground of the elite and spending over $900 million, plus the quoted end-use assessment.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "Mayfair, Kensington and Chelsea have long been the stomping ground of the elite -- and are now welcoming a new wave of African investors.",
+            "These investors are having a considerable impact on London's property market"
+          ],
+          "reason": "A new wave of African investors entering London's elite property market is explicit."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "Nigerians are splashing out the most cash -- typically spending between $22 and $37 million on securing a property, according to luxury property agents Beauchamp Estates. Their research shows that over the past three years Africans have spent over $900 million on luxury residential property in London."
+          ],
+          "reason": "The research is unambiguously attributed to Beauchamp Estates, and the greater-than amount, three-year period and London luxury residential scope are retained."
+        },
+        {
+          "id": "F3",
+          "preserved": false,
+          "summary_evidence": [],
+          "reason": "The summary includes schooling as one motive for many African buyers, but omits Nkontchou's attributed statement about West African clients; it does not preserve the stated speaker and scope of this proposition."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Q7d8c6ca8e545b397",
+      "sentence_count": 9,
+      "wording_pass": true,
+      "wording_reason": "Most clauses are reformulated, for example one of five people killed, media arm, could not establish its cause, and withdrew its remaining special operations personnel. Names, figures and necessary technical terms are retained.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "Al Qaeda in the Arabian Peninsula said its senior leader Ibrahim al-Rubaish was one of five people killed in an airstrike in Yemen."
+          ],
+          "reason": "The airstrike death in Yemen is explicitly reported as the group's account."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "Three Yemeni defense and national security officials confirmed his death but could not establish its cause."
+          ],
+          "reason": "Both the officials' confirmation of death and their inability to confirm its cause are preserved."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": [
+            "Al-Rubaish had been detained at Guantanamo Bay"
+          ],
+          "reason": "His previous detention at the named Guantanamo Bay facility conveys the identifying detention background; the facility reference is unambiguous in this account."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Q0f854c041995f8ea",
+      "sentence_count": 4,
+      "wording_pass": true,
+      "wording_reason": "All four sentences are complete source sentences. Changes are limited to permitted whitespace normalization, and the initial London (CNN) text is retained.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "London (CNN)A Polish Prince has challenged populist British politician Nigel Farage to a duel in London's Hyde Park over his immigration policy.",
+            "In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain.",
+            "said he did not intend to cross swords with the prince."
+          ],
+          "reason": "The challenge and Hyde Park location are explicit; the following sentences identify the prince as Zylinski and establish that the proposed duel involved swords."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain."
+          ],
+          "reason": "His objection to discrimination against Polish people in Britain remains explicitly attributed to him."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": [
+            "Farage -- who is on the campaign trail ahead of Britain's general elections on May 7 -- said he did not intend to cross swords with the prince."
+          ],
+          "reason": "Farage's stated intention to decline the physical duel is explicit."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Qd8510314b446fb7f",
+      "sentence_count": 4,
+      "wording_pass": true,
+      "wording_reason": "The summary substantially reuses distinctive source phrases such as passed a bill raising the minimum legal age, whose-signature legal-status wording, nearly a quarter-million fewer premature deaths, and the complete sentence describing fines.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "Hawaii's legislature on Friday passed a bill raising the minimum legal age to buy tobacco or e-cigarettes from 18 to 21"
+          ],
+          "reason": "Legislative passage and the proposed change from 18 to 21 are both explicit and are not presented as an already enacted law."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "Gov. David Ige's signature would make it law as of January 1, 2016, but it was not clear Monday whether he would sign, and a spokeswoman said he would need some time to review the bill."
+          ],
+          "reason": "The governor's pending decision and the uncertainty about signing are explicit."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": [
+            "An Institute of Medicine report estimated that setting the minimum age at 21 nationwide would result in nearly a quarter-million fewer premature deaths and 50,000 fewer deaths from lung cancer among people born between 2000 and 2019."
+          ],
+          "reason": "The attributed estimate retains the nationwide age-21 condition, approximate 250,000 scale and specified birth cohort."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Q9264c0bf50c48670",
+      "sentence_count": 2,
+      "wording_pass": true,
+      "wording_reason": "The source is reorganized and paraphrased into two sentences, using agreed to questioning, changed their position, approach the deadline and must still seek permission instead of the original sentence structures.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "Julian Assange, who denies the 2010 rape and molestation allegations and has not been charged, has agreed to questioning by Swedish prosecutors in London, his lawyer said."
+          ],
+          "reason": "His agreement to London questioning remains attributed to his lawyer, without asserting that questioning has occurred."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "Julian Assange, who denies the 2010 rape and molestation allegations and has not been charged, has agreed to questioning by Swedish prosecutors in London, his lawyer said."
+          ],
+          "reason": "The sexual allegations are identified as the context of Swedish questioning and remain allegations, explicitly denied and uncharged."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": [
+            "Prosecutors changed their position as some alleged crimes approach the August 2015 statute-of-limitations deadline"
+          ],
+          "reason": "The August 2015 deadline is preserved and correctly applies only to some alleged offenses."
+        }
+      ],
+      "issues": []
+    }
+  ]
+}

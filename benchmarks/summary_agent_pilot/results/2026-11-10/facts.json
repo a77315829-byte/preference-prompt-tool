@@ -1,0 +1,280 @@
+[
+  {
+    "id": "S01",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Mary Jane Veloso's scheduled execution in Indonesia was postponed, not canceled.",
+        "evidence": [
+          "Her family was returning from what they thought was their final visit to the prison on so-called \"execution island\" when a Philippine TV crew flagged their bus down to tell them of the decision to postpone her execution.",
+          "He stressed, however, that the execution was delayed, rather than canceled."
+        ],
+        "rationale": "The reprieve is the central event; its temporary status is essential to avoid implying that Veloso was cleared or permanently spared."
+      },
+      {
+        "id": "F2",
+        "proposition": "Indonesia delayed the execution to respect an ongoing human-trafficking legal process in the Philippines.",
+        "evidence": [
+          "Indonesian President Joko Widodo told reporters Wednesday that the decision was the result of the Indonesian government's desire to cooperate with the ongoing case in the Philippines.",
+          "\"There was a letter from the Philippine government saying that there is a legal process related to human trafficking there.\nSo we need to respect this legal process.\""
+        ],
+        "rationale": "This supplies the stated official reason for the reprieve without assigning it solely to public appeals."
+      },
+      {
+        "id": "F3",
+        "proposition": "Veloso's supporters and lawyers claim she was a human-trafficking victim who did not know her luggage contained drugs.",
+        "evidence": [
+          "Supporters, including the Filipino advocacy group Migrante, and her lawyers claim the young mother was the victim of human trafficking.",
+          "They say she was offered work in Malaysia, but when she arrived she was told the job had been filled and wasn't aware the bag she'd been given for the return journey to Indonesia was filled with drugs."
+        ],
+        "rationale": "The allegation explains the relevance of the trafficking proceedings, while attribution preserves the distinction between a defense claim and an established finding."
+      }
+    ]
+  },
+  {
+    "id": "S02",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Chris Rock posted tweets documenting three police traffic stops in seven weeks.",
+        "evidence": [
+          "Now, he's stirring things up again with a series of tweets documenting three traffic stops in seven weeks.",
+          "\"Stopped by the cops again wish me luck,\" he posted early Tuesday, along with a photo showing him behind the wheel of a car with what looks like blue police lights in the background."
+        ],
+        "rationale": "The repeated stops and Rock's public documentation are the central reported event."
+      },
+      {
+        "id": "F2",
+        "proposition": "Rock did not disclose how the police stop turned out.",
+        "evidence": [
+          "Rock hasn't commented on the tweets and didn't say how the police stop turned out."
+        ],
+        "rationale": "This limits what is known about the stop and prevents a general summary from inventing its outcome."
+      },
+      {
+        "id": "F3",
+        "proposition": "Isaiah Washington's advice that Rock adapt to avoid racial profiling drew criticism on social media.",
+        "evidence": [
+          "Actor Isaiah Washington urged Rock to \"#Adapt\" to avoid racial profiling.",
+          "Some saw that as a sell-out, saying Rock shouldn't have to take steps others might not have to as a way to avoid being pulled over."
+        ],
+        "rationale": "The controversy over Washington's response captures a major consequence of Rock's posts without declaring that the particular stops were proven racial profiling."
+      }
+    ]
+  },
+  {
+    "id": "S03",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Grace of Monaco, starring Nicole Kidman, will premiere on Lifetime on May 25.",
+        "evidence": [
+          "\"Grace of Monaco,\" starring Nicole Kidman as star-turned-princess Grace Kelly, is heading straight to Lifetime.",
+          "The critically-panned film, which opened last year's Cannes Film Festival, will premiere on Lifetime on Memorial Day, May 25."
+        ],
+        "rationale": "The announced television premiere is the central release news."
+      },
+      {
+        "id": "F2",
+        "proposition": "The Weinstein Co. chose to bypass U.S. theaters after the film performed poorly internationally.",
+        "evidence": [
+          "After the movie performed poorly in its international engagements, The Weinstein Co., which first purchased U.S. distribution rights at the 2013 Berlin Film Festival, decided to sell it directly to Lifetime rather than book it into U.S. theaters, a source confirmed to The Hollywood Reporter."
+        ],
+        "rationale": "The distribution decision and its reported context explain why a prominent feature is going directly to television."
+      },
+      {
+        "id": "F3",
+        "proposition": "The film's release had repeatedly been postponed from its original late-2013 schedule.",
+        "evidence": [
+          "The film, which was directed by Olivier Dahan and focuses on a period in the early '60s when Monaco was involved in a stand-off over taxes with France and Grace was contemplating a return to Hollywood, was originally scheduled for release in late 2013.",
+          "But when TWC pulled it out of awards contention and shifted its release to March 14, 2014, Dahan lashed out at TWC's Harvey Weinstein, over the movie's final cut, which the director was in the process of completing.",
+          "That planned March release was then scrubbed, when Cannes expressed interest in debuting the director's version of the movie in May."
+        ],
+        "rationale": "The delayed release history supplies central context without incorrectly attributing the initial delay to later international performance."
+      }
+    ]
+  },
+  {
+    "id": "S04",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "John Travolta said he had not seen Going Clear and did not want to watch it.",
+        "evidence": [
+          "(CNN)Buzz has surrounded HBO's new documentary \"Going Clear: Scientology and the Prison of Belief,\" but Scientologist John Travolta is not a fan.",
+          "Travolta told the Tampa Bay Times that he has not seen the documentary, \"and I don't really care to.\""
+        ],
+        "rationale": "His stated refusal to watch the documentary is the news event and qualifies any characterization of his response as a review."
+      },
+      {
+        "id": "F2",
+        "proposition": "Travolta defended Scientology on the basis of his positive experience over 40 years.",
+        "evidence": [
+          "\"I've been so happy with my (Scientology) experience in the last 40 years that I really don't have anything to say that would shed light on (a documentary) so decidedly negative,\" Travolta said."
+        ],
+        "rationale": "This captures the basis of Travolta's position as his personal experience rather than proof that the documentary's claims are false."
+      },
+      {
+        "id": "F3",
+        "proposition": "Travolta credited Scientology with helping him cope with the death of his son Jett.",
+        "evidence": [
+          "He called Scientology \"brilliant\" and credited the church with helping him to survive the death of his teen son, Jett, after a seizure while the family was on vacation in the Bahamas in 2009."
+        ],
+        "rationale": "His account of bereavement support is the central concrete example supporting his defense; the claimed benefit remains attributed to him."
+      }
+    ]
+  },
+  {
+    "id": "S05",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "A natural-gas-line explosion at a Fresno, California, law-enforcement shooting range injured inmates and a county worker.",
+        "evidence": [
+          "(CNN)A natural gas line explosion at a law enforcement shooting range in Fresno, California, injured 11 people, including some inmates who were on a work detail there.",
+          "Others being treated include a county road worker and two sheriff's deputies, Fresno County Sheriff Margaret Mims said."
+        ],
+        "rationale": "This is the central incident and affected population. An exact total is omitted because the lead's count and later descriptions of injured inmates, a worker, and treated deputies do not resolve cleanly."
+      },
+      {
+        "id": "F2",
+        "proposition": "The exact cause of the explosion remained under investigation.",
+        "evidence": [
+          "The exact cause of Friday's blast is under investigation, Mims said, but it happened at the spot where a county worker was operating a front loader."
+        ],
+        "rationale": "The unknown cause is an essential qualification: the presence of a front loader does not establish that it caused the explosion."
+      },
+      {
+        "id": "F3",
+        "proposition": "One inmate and the county worker were undergoing emergency surgery after the explosion.",
+        "evidence": [
+          "One inmate was airlifted to the hospital, the sheriff said.",
+          "That inmate and the county worker were undergoing emergency surgery, she said."
+        ],
+        "rationale": "Emergency surgery is a concrete major consequence and avoids overstating the severity of every inmate's injuries."
+      }
+    ]
+  },
+  {
+    "id": "S06",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Lady Antebellum singer Hillary Scott's tour bus caught fire on a Texas freeway on Thursday morning.",
+        "evidence": [
+          "(CNN)Lady Antebellum singer Hillary Scott's tour bus caught fire on a Texas freeway Thursday morning, but everyone on board was safely evacuated."
+        ],
+        "rationale": "This identifies the central event, the bus's association with Scott, and its location."
+      },
+      {
+        "id": "F2",
+        "proposition": "Everyone aboard the bus got off safely before it burst into flames.",
+        "evidence": [
+          "Hillary Scott, co-lead singer for the band, posted a photo of the charred bus on Instagram and noted that she, her husband, the tour manager and the driver were all evacuated safely.",
+          "It burst into flames after everyone had gotten off."
+        ],
+        "rationale": "The occupants' safety is the central consequence and the sequence prevents an invented rescue from an already burning bus."
+      },
+      {
+        "id": "F3",
+        "proposition": "The tour manager said the bus stopped after a rear tire blew out.",
+        "evidence": [
+          "The tour manager told CNN affiliate KTVT that the bus stopped after a rear tire blew out."
+        ],
+        "rationale": "This supplies the reported immediate sequence while avoiding an unsupported claim that the tire failure definitively caused the fire."
+      }
+    ]
+  },
+  {
+    "id": "S07",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Gwyneth Paltrow is taking part in the FoodBankNYCChallenge.",
+        "evidence": [
+          "But she's now bringing awareness to the difficulties of life on food stamps.",
+          "Her participation is part of the #FoodBankNYCChallenge.",
+          "Celebrity chef Mario Batali, a close friend of the star's, nominated Paltrow and musicians Sting and Deborah Harry for the challenge through a video."
+        ],
+        "rationale": "Paltrow's participation is the central event, rather than merely the nomination or an assertion that she has already completed the challenge."
+      },
+      {
+        "id": "F2",
+        "proposition": "The challenge asks participants to spend only $29 on all food for seven days.",
+        "evidence": [
+          "The challenge urges participants to use only $29 for all the food a person eats for seven days."
+        ],
+        "rationale": "The budget and duration define the activity and distinguish it from a general fundraising or dietary campaign."
+      },
+      {
+        "id": "F3",
+        "proposition": "Organizers intend the challenge to raise awareness of families' difficulty affording food on food stamps.",
+        "evidence": [
+          "Organizers hope the challenge will raise public awareness of the struggles for families to afford food while on food stamps."
+        ],
+        "rationale": "The intended public benefit explains the campaign while preserving the difference between a goal and a measured outcome."
+      }
+    ]
+  },
+  {
+    "id": "S08",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Malaysia, Australia and China announced that the search for Flight 370 would expand by another 60,000 square kilometers if the entire current priority zone yielded nothing.",
+        "evidence": [
+          "If the searchers haven't found anything by the time they've covered the entire 60,000-square-kilometer priority zone, the search will stretch into a new equally vast area, government officials from Malaysia, Australia and China announced Thursday."
+        ],
+        "rationale": "The conditional expansion is the main announcement; both the condition and square-kilometer unit prevent misleading claims about an unconditional or larger expansion."
+      },
+      {
+        "id": "F2",
+        "proposition": "Searchers had covered about 60% of the priority zone without reporting any trace of Flight 370.",
+        "evidence": [
+          "So far, they've covered about 60% of the priority search zone without reporting any trace of the airliner."
+        ],
+        "rationale": "The current lack of a reported trace explains why an extension is being planned and preserves the search's unresolved status."
+      },
+      {
+        "id": "F3",
+        "proposition": "Searching the additional zone could take up to a year.",
+        "evidence": [
+          "Covering the new zone could take as long as a year."
+        ],
+        "rationale": "The possible additional duration is the central operational consequence, expressed as an estimate rather than a guaranteed completion date."
+      }
+    ]
+  },
+  {
+    "id": "S09",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Christopher Scarver received two life terms for killing Jeffrey Dahmer and another inmate at Columbia Correctional Institution in 1994.",
+        "evidence": [
+          "Christopher Scarver, who was sentenced to two life terms in prison for killing Dahmer and another man at Columbia Correctional Institution in 1994, said the confessed cannibal would leave the fake limbs around the prison where others would find them.",
+          "He told the Post that he killed Dahmer and another inmate, Jesse Anderson, after an altercation while they were together unsupervised on a work detail."
+        ],
+        "rationale": "The established killings and resulting sentence provide the essential context for Scarver's later account."
+      },
+      {
+        "id": "F2",
+        "proposition": "Scarver told the New York Post that he killed Dahmer because of Dahmer's morbid humor.",
+        "evidence": [
+          "(CNN)The man who beat serial killer Jeffrey Dahmer to death inside a Wisconsin prison says he did it because of Dahmer's creepy sense of humor -- which included turning prison food into fake limbs covered with ketchup to resemble blood, the New York Post reports."
+        ],
+        "rationale": "Scarver's claimed motive is the article's main new information; explicit attribution avoids treating his account as independently established."
+      },
+      {
+        "id": "F3",
+        "proposition": "Scarver said he struck Dahmer in the head with a metal bar after confronting him about his crimes.",
+        "evidence": [
+          "Just before he killed Dahmer, Scarver said, he confronted him with the clipping.",
+          "\"I asked him if he did those things 'cause I was fiercely disgusted.",
+          "Scarver said he hit Dahmer twice in the head with a metal bar from a weight room."
+        ],
+        "rationale": "This is the central account of the attack, with its evidentiary status preserved as Scarver's report."
+      }
+    ]
+  }
+]

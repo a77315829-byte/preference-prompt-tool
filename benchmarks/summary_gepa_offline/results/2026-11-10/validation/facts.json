@@ -1,0 +1,50 @@
+[
+  {
+    "id": "V01",
+    "facts": [
+      {"id": "F1", "proposition": "Madonna kissed Drake onstage at the Coachella music festival.", "evidence": ["Drake appeared less than enthused after Madonna's prolonged smooch onstage at the Coachella music festival in California on Sunday."], "rationale": "The onstage kiss is the central event. Its duration, date and state are incidental."},
+      {"id": "F2", "proposition": "Drake's visible reaction led people to speculate that he had disliked the kiss.", "evidence": ["His sour face after the encounter led many to speculate that he didn't enjoy the kiss."], "rationale": "The public interpretation of his reaction is central to the story. Dislike must remain speculation or appearance, not an established feeling."},
+      {"id": "F3", "proposition": "Drake subsequently clarified on Instagram that he felt positively about kissing Madonna.", "evidence": ["In an update Monday from \"champagnepapi\" himself on Instagram, the rapper clarified his reaction: \"Don't misinterpret my shock!!\nI got to make out with the queen Madonna and I feel 100 about that forever.\nThank you @Madonna.\""], "rationale": "His own clarification is the central update correcting the interpretation of his expression. The exact username and day are not required."}
+    ]
+  },
+  {
+    "id": "V02",
+    "facts": [
+      {"id": "F1", "proposition": "London's luxury property market was attracting a new wave of African investors.", "evidence": ["Mayfair, Kensington and Chelsea have long been the stomping ground of the elite -- and are now welcoming a new wave of African investors.", "These investors are having a considerable impact on London's property market"], "rationale": "The arrival of African investors is the report's main market trend. Particular neighborhoods and countries are incidental."},
+      {"id": "F2", "proposition": "Beauchamp Estates research found that Africans had spent over $900 million on luxury residential property in London over three years.", "evidence": ["according to luxury property agents Beauchamp Estates.\nTheir research shows that over the past three years Africans have spent over $900 million on luxury residential property in London."], "rationale": "The spending estimate establishes the scale of the trend. Attribution, greater-than qualification and three-year period are essential."},
+      {"id": "F3", "proposition": "Wealth manager Bimpe Nkontchou said educating their children was a reason West African clients sought London property.", "evidence": ["explains Bimpe Nkontchou, a British-Nigerian wealth manager based in London.", "\"West African clients are very much driven by the need to educate their children,\" says Nkontchou.\n\"Education usually means putting the children on an international stage, and that's one reason why this is feeding into the demand for property in London.\""], "rationale": "Education is a central stated reason for property demand. It is one reason, not the sole motivation or a claim about every buyer."}
+    ]
+  },
+  {
+    "id": "V03",
+    "facts": [
+      {"id": "F1", "proposition": "AQAP said its leader Ibrahim al-Rubaish had been killed in an airstrike in Yemen.", "evidence": ["A top al Qaeda in the Arabian Peninsula leader -- who a few years ago was in a U.S. detention facility -- was among five killed in an airstrike in Yemen, the terror group said", "Ibrahim al-Rubaish died Monday night in what AQAP's media wing, Al-Malahem Media, called a \"crusader airstrike.\""], "rationale": "The reported death is the main event. AQAP's attribution for the airstrike is essential because the mechanism was not independently established in the source."},
+      {"id": "F2", "proposition": "Yemeni officials confirmed al-Rubaish's death without confirming how he died.", "evidence": ["A Yemeni Defense Ministry official and two Yemeni national security officials not authorized to speak on record confirmed that al-Rubaish had been killed, but could not specify how he died."], "rationale": "This is one bounded confirmation claim: its limit is essential, not an incidental contrasting detail. The number and departments of the officials are not required."},
+      {"id": "F3", "proposition": "Al-Rubaish had previously been detained by the United States at Guantanamo Bay.", "evidence": ["Al-Rubaish was once held by the U.S. government at its detention facility in Guantanamo Bay, Cuba."], "rationale": "His former Guantanamo detention is central identifying background emphasized in the lead. The lawsuit and rehabilitation program are separate details."}
+    ]
+  },
+  {
+    "id": "V04",
+    "facts": [
+      {"id": "F1", "proposition": "Prince Jan Zylinski challenged Nigel Farage to a sword duel in London's Hyde Park.", "evidence": ["A Polish Prince has challenged populist British politician Nigel Farage to a duel  in London's Hyde Park over his immigration policy.", "In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain.", "I would like us to meet in Hyde Park one morning with our swords and resolve this matter"], "rationale": "The physical-duel challenge is the central event. The prince's motivation is a separate fact."},
+      {"id": "F2", "proposition": "Zylinski said he was protesting discrimination against Polish people in Britain.", "evidence": ["In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain.", "\"What I cannot accept is the amount of hostility and in some cases hatred towards the Poles.\nEnough is enough, I say, this has got to stop.\""], "rationale": "The prince's stated objection explains the challenge. His assessment remains attributed; specific traffic comments and historical contributions are incidental."},
+      {"id": "F3", "proposition": "Farage said he did not intend to accept the sword-duel challenge.", "evidence": ["Farage -- who is on the campaign trail ahead of Britain's general elections on May 7 -- said he did not intend to cross swords with the prince.", "But I'm not intending to accept the offer,\" a spokesman quoted him as saying."], "rationale": "Farage's response is the central outcome of the challenge. It does not establish a response to the separate proposed television debate."}
+    ]
+  },
+  {
+    "id": "V05",
+    "facts": [
+      {"id": "F1", "proposition": "Hawaii's legislature passed a bill to raise the tobacco-purchase age from 18 to 21.", "evidence": ["Hawaii is poised to become the first state in the nation to prohibit the sale of cigarettes and other tobacco products to anybody under age 21.", "The state's legislature on Friday passed a bill raising the minimum legal age -- currently 18 -- to buy tobacco or e-cigarettes."], "rationale": "The bill's passage and proposed age change are one legislative action. This does not claim the bill had already become law."},
+      {"id": "F2", "proposition": "Whether Governor David Ige would sign the bill remained unclear.", "evidence": ["The bill will now go before Gov.\nDavid Ige, whose signature would make it law in Hawaii as of January 1, 2016.", "It was not clear Monday whether Ige would sign the bill", "A spokeswoman for the governor told CNN in an email that he would need some time to review the bill."], "rationale": "Pending gubernatorial review is essential to the measure's legal status; the proposed effective date is not required."},
+      {"id": "F3", "proposition": "An Institute of Medicine report estimated that a nationwide tobacco-purchase age of 21 would avert nearly 250,000 premature deaths among people born from 2000 through 2019.", "evidence": ["The legislation comes after a report last month from the Institute of Medicine that said barring people under age 21 from buying cigarettes would have significant public health benefits.", "Setting the minimum age at 21 nationwide would result in nearly a quarter-million fewer premature deaths and 50,000 fewer deaths from lung cancer among people born between 2000 and 2019, the report estimated."], "rationale": "This is the central quantified health rationale. The estimate, nationwide condition, approximate scale and birth cohort matter; the separate lung-cancer subtotal is not required."}
+    ]
+  },
+  {
+    "id": "V06",
+    "facts": [
+      {"id": "F1", "proposition": "Julian Assange agreed to be interviewed by Swedish prosecutors in London, according to his lawyer.", "evidence": ["WikiLeaks founder Julian Assange has agreed to be interviewed by Swedish prosecutors in London, his lawyer in Sweden told CNN."], "rationale": "The agreement is the main update. It does not claim the interview had already occurred or all official permissions had been obtained."},
+      {"id": "F2", "proposition": "Swedish prosecutors wanted to question Assange about allegations of sexual offenses.", "evidence": ["where prosecutors want to question him about 2010 allegations that he raped one woman and sexually molested another."], "rationale": "The purpose of questioning is central. These are allegations, not established acts or charges. The year and exhaustive enumeration of alleged offenses are not required by this proposition."},
+      {"id": "F3", "proposition": "Some of the alleged offenses would become time-barred in August 2015.", "evidence": ["However, some of the alleged crimes will be subject to a statute of limitations in August 2015, according to a statement from Marianne Ny, the director of public prosecutions."], "rationale": "The approaching limitation date is central to the prosecutors' changed approach. The qualifier some is essential; it must not be generalized to the whole case."}
+    ]
+  }
+]

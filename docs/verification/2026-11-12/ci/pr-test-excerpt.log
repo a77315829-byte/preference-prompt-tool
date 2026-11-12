@@ -1,0 +1,35 @@
+pytest	Run tests without API	﻿2026-11-12T11:37:50.8375592Z ##[group]Run python -m pytest -m "not api" -q
+pytest	Run tests without API	2026-11-12T11:37:50.8375941Z ^[[36;1mpython -m pytest -m "not api" -q^[[0m
+pytest	Run tests without API	2026-11-12T11:37:50.8424292Z shell: /usr/bin/bash -e {0}
+pytest	Run tests without API	2026-11-12T11:37:50.8424533Z env:
+pytest	Run tests without API	2026-11-12T11:37:50.8424787Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+pytest	Run tests without API	2026-11-12T11:37:50.8425159Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+pytest	Run tests without API	2026-11-12T11:37:50.8425512Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+pytest	Run tests without API	2026-11-12T11:37:50.8425831Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+pytest	Run tests without API	2026-11-12T11:37:50.8426157Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+pytest	Run tests without API	2026-11-12T11:37:50.8426469Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+pytest	Run tests without API	2026-11-12T11:37:50.8426741Z ##[endgroup]
+pytest	Run tests without API	2026-11-12T11:38:16.3796035Z ........................................................................ [  5%]
+pytest	Run tests without API	2026-11-12T11:38:31.1912101Z ...................................................s.................... [ 10%]
+pytest	Run tests without API	2026-11-12T11:38:43.8627948Z ........................................................................ [ 15%]
+pytest	Run tests without API	2026-11-12T11:38:45.8452824Z ........................................................................ [ 21%]
+pytest	Run tests without API	2026-11-12T11:38:48.8619379Z ..........................s............................................. [ 26%]
+pytest	Run tests without API	2026-11-12T11:38:50.5385655Z ........................................................................ [ 31%]
+pytest	Run tests without API	2026-11-12T11:38:52.4259896Z ........................................................................ [ 37%]
+pytest	Run tests without API	2026-11-12T11:38:52.8516644Z ........................................................................ [ 42%]
+pytest	Run tests without API	2026-11-12T11:38:54.9170231Z ........................................................................ [ 47%]
+pytest	Run tests without API	2026-11-12T11:39:11.1470232Z ........................................................................ [ 53%]
+pytest	Run tests without API	2026-11-12T11:39:48.1697745Z ........................................................................ [ 58%]
+pytest	Run tests without API	2026-11-12T11:40:03.2283087Z ..............s......................................................... [ 63%]
+pytest	Run tests without API	2026-11-12T11:40:07.2523213Z ........................................................................ [ 69%]
+pytest	Run tests without API	2026-11-12T11:40:16.9800246Z ........................................................................ [ 74%]
+pytest	Run tests without API	2026-11-12T11:40:26.0404494Z ........................................................................ [ 79%]
+pytest	Run tests without API	2026-11-12T11:40:27.5149382Z ........................................................................ [ 84%]
+pytest	Run tests without API	2026-11-12T11:40:29.7276288Z ........................................................................ [ 90%]
+pytest	Run tests without API	2026-11-12T11:40:38.5143088Z ........................................................................ [ 95%]
+pytest	Run tests without API	2026-11-12T11:41:19.8857778Z ............................................................             [100%]
+pytest	Run tests without API	2026-11-12T11:41:19.8858998Z 1353 passed, 3 skipped, 16 deselected in 208.07s (0:03:28)
+frontend-build	Frontend unit tests	2026-11-12T11:37:07.4508144Z # tests 123
+frontend-build	Frontend unit tests	2026-11-12T11:37:07.4508590Z # pass 123
+frontend-build	Frontend unit tests	2026-11-12T11:37:07.4508770Z # fail 0
+frontend-build	Frontend unit tests	2026-11-12T11:37:07.4509190Z # skipped 0

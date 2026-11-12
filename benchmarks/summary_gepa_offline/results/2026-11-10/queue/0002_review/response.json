@@ -1,0 +1,167 @@
+{
+  "request_sha256": "8e987f5857d4d44f8dce12baf07f293915717b6e66362800fcdb641aaf276311",
+  "rows": [
+    {
+      "output_id": "Q68384cbdb88f4e33",
+      "sentence_count": 2,
+      "wording_pass": true,
+      "wording_reason": "Both sentences reproduce complete source sentences, including the sentence ending in 'shock!!'. The quoted speech continues with further sentences in the source, but the selected sentence itself is complete and unchanged.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": ["Drake appeared less than enthused after Madonna's prolonged smooch onstage at the Coachella music festival in California on Sunday."],
+          "reason": "Madonna's onstage kiss with Drake at Coachella is explicitly conveyed."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": ["Drake appeared less than enthused after Madonna's prolonged smooch"],
+          "reason": "The reaction is represented as apparent displeasure, preserving the interpretation of his visible response without asserting that he actually disliked the kiss."
+        },
+        {
+          "id": "F3",
+          "preserved": false,
+          "summary_evidence": [],
+          "reason": "The Instagram clarification is mentioned, but 'Don't misinterpret my shock!!' alone does not convey that he felt positively about kissing Madonna; the positive statement is omitted."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Q5df009999e796e13",
+      "sentence_count": 9,
+      "wording_pass": true,
+      "wording_reason": "The output substantially reuses source sentences and distinctive phrases, including 'the stomping ground of the elite', the research sentence about over $900 million, and the complete quotation beginning 'Virtually all the transactions'. Shortenings and combinations retain this extensive source wording.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": ["Mayfair, Kensington and Chelsea have long been the stomping ground of the elite -- and are now welcoming a new wave of African investors."],
+          "reason": "The new wave of African investment in London's luxury property market is explicit, with the following sentences establishing the London luxury-property context."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": ["according to luxury property agents Beauchamp Estates. Their research shows that over the past three years Africans have spent over $900 million on luxury residential property in London."],
+          "reason": "The attribution, spending amount greater than $900 million, three-year period and London luxury residential market are all preserved."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": ["As well as an intelligent investment, many of the African buyers see these houses as a way of maintaining long standing cultural ties with London -- and it's here they want to send their children to school."],
+          "reason": "Children's education in London is retained as one property-buying motive alongside investment and cultural ties for many African buyers. This preserves the core motivation, which the source also states in its own narrative, without making it the sole motive or applying it to every buyer."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Q48d94ba77aea9b8f",
+      "sentence_count": 9,
+      "wording_pass": true,
+      "wording_reason": "Most clauses are reformulated, such as 'could not establish how he was killed, leaving the circumstances uncertain' and 'withdrawn its remaining special operations personnel the previous month'. Retained names and terms such as 'religious scholar' and 'combat commander' do not make the output mostly copied sentences.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": ["Al Qaeda in the Arabian Peninsula said senior leader Ibrahim al-Rubaish was one of five people killed in an airstrike in Yemen on Monday night."],
+          "reason": "The reported airstrike death in Yemen remains explicitly attributed to AQAP."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": ["Three Yemeni officials confirmed his death but could not establish how he was killed, leaving the circumstances uncertain."],
+          "reason": "Both the officials' confirmation of death and their inability to confirm the mechanism are retained."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": ["Al-Rubaish had previously been detained at Guantanamo Bay"],
+          "reason": "The prior Guantanamo detention is unambiguously identified, preserving the central identifying background."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Q93a4ce338fe9a21a",
+      "sentence_count": 4,
+      "wording_pass": true,
+      "wording_reason": "All four sentences are complete original source sentences. The first retains the original 'London (CNN)' prefix; the differences in internal spacing are permitted whitespace normalization. The period in 'Mr.' does not divide the final sentence.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": ["A Polish Prince has challenged populist British politician Nigel Farage to a duel in London's Hyde Park over his immigration policy.", "Prince Jan Zylinski", "said he did not intend to cross swords with the prince."],
+          "reason": "The challenge, its participants and Hyde Park location are explicit; 'cross swords' identifies the proposed physical sword duel."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": ["In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain."],
+          "reason": "His objection to discrimination against Polish people in Britain remains attributed to him."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": ["Farage -- who is on the campaign trail ahead of Britain's general elections on May 7 -- said he did not intend to cross swords with the prince."],
+          "reason": "Farage's stated intention not to accept the sword duel is explicit and is not extended to the separate television debate proposal."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Q4a56080ccbff74b5",
+      "sentence_count": 4,
+      "wording_pass": true,
+      "wording_reason": "The summary extensively retains source phrasing, including 'poised to become the first state in the nation', 'whose signature would make it law in Hawaii', the health-estimate wording and the entire final fines sentence. Joining source clauses does not remove the substantial reuse.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": ["Hawaii is poised to become the first state in the nation to prohibit the sale of cigarettes and other tobacco products to anybody under age 21, after the state's legislature on Friday passed a bill raising the minimum legal age -- currently 18 -- to buy tobacco or e-cigarettes."],
+          "reason": "Legislative passage and the proposed change from 18 to 21 are explicit, without presenting the bill as enacted law."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": ["The bill will now go before Gov. David Ige, whose signature would make it law in Hawaii as of January 1, 2016, but it was not clear Monday whether he would sign it."],
+          "reason": "The governor's decision remains pending and uncertain."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": ["An Institute of Medicine report estimated that setting the minimum age at 21 nationwide would result in nearly a quarter-million fewer premature deaths and 50,000 fewer deaths from lung cancer among people born between 2000 and 2019."],
+          "reason": "The report attribution, estimated status, nationwide age-21 condition, approximate 250,000 scale and 2000–2019 birth cohort are all conveyed."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Q259ee5a468531c33",
+      "sentence_count": 2,
+      "wording_pass": true,
+      "wording_reason": "The source is compressed into two substantially reformulated sentences, using expressions such as 'agreed to questioning', 'permission is still needed' and 'face an August 2015 limitation deadline'. Names and the short factual phrase about not being charged are appropriately retained.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": ["Julian Assange agreed to questioning by Swedish prosecutors at Ecuador's London embassy over 2010 rape and molestation allegations, his lawyer said, although British and Ecuadorian permission is still needed."],
+          "reason": "The London interview agreement is attributed to his lawyer and is not represented as an interview already conducted or fully authorized."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": ["questioning by Swedish prosecutors at Ecuador's London embassy over 2010 rape and molestation allegations", "Assange has not been charged and denies the allegations."],
+          "reason": "The questioning concerns alleged sexual offenses; allegation status is explicit and reinforced by the statement that he has not been charged and denies them."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": ["some alleged offenses face an August 2015 limitation deadline"],
+          "reason": "The approaching statutory deadline and its August 2015 timing are retained, and the qualifier 'some' prevents extension to the whole case."
+        }
+      ],
+      "issues": []
+    }
+  ]
+}

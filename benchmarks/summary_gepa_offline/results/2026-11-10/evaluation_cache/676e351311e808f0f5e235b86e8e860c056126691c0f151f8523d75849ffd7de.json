@@ -1,0 +1,65 @@
+{
+  "cache_key": "676e351311e808f0f5e235b86e8e860c056126691c0f151f8523d75849ffd7de",
+  "case": {
+    "record_index": 751,
+    "dataset_split": "train",
+    "source": "Delhi (CNN)An international human rights group is calling for an independent investigation of the killings by police of 20 suspected red sandalwood smugglers in southeastern India.\n\"There must be a criminal investigation to determine whether the police used excessive force, and whether the killings amount to 'fake encounters,' or staged extrajudicial executions\", said Abhirr Vp, of Amnesty International India.\n\"The police are not above the law, and must not be treated like they are.\"\nThose responsible should be brought to justice, according to Amnesty.\n\"Lethal force should not be used except when strictly unavoidable in order to protect life,\" Vp said.\nA police official, Deputy Inspector General Kantha Rao, declined comment Wednesday, saying an \"investigation is still going on.\"\nThe incident in question took place early Tuesday in India's southeastern Andhra Pradesh state.\nForest officials near the town of Tirupati spotted hundreds of smugglers cutting trees for red sandalwood, Rao said Tuesday.\nThe forest officials, who were unarmed, called for police.\n\"We saw several trees chopped down,\" Rao said said.\n\"These guys came prepared and were heavily armed.\"\nRao said that the ensuing gun battle lasted more than three hours and 20 smugglers were shot.\nMany of them came from the neighboring state of Tamil Nadu, he said.\nAmnesty International said the police were claiming self-defense, alleging the suspects attacked them with stone and axes.\n\"However, no police official was injured,\" the  Amnesty statement said.\n\"Most of the suspected smugglers were shot in the back.\"\nAccording to Amnesty, India's National Human Rights Commission has said the incident \"involved a serious violation of human rights of the individuals,\" and that \"the opening of firing cannot be justified on the ground of self defense since it resulted in the loss of lives of 20 persons.\"\nThe commission has asked senior government and police officials to explain the actions of the police and forest officials within two weeks, Amnesty said.\nPolice said sandalwood smuggling is common in the area.\nLocal media are reporting that politicians from Tamil Nadu have lodged a protest against the Andhra Pradesh government, saying the alleged smugglers were murdered in cold blood.\nKunal Sehgal in Delhi contributed to this report.",
+    "source_sha256": "1a1141eb607b017d7403e79f44379c2b53b722e4777c7c801e2813eb4ea3654d",
+    "source_words": 361,
+    "id": "G02",
+    "profile": {
+      "length": "normal",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "base_prompt": "You summarize English text according to the requested conditions while staying grounded in the source.\n\nSummarize the source text below in English according to these instructions.\n\n## Conditions for this summary\nThese are the conditions for this summary.\n- Length: Write three to four sentences.\n- Use of source wording: Select complete sentences verbatim from the source. Do not change words or punctuation or write new sentences. Only whitespace normalization and omission of a leading document publisher tag (CNN) or (The Hollywood Reporter), case-insensitively, are allowed. Do not remove attribution inside a sentence.\n\n## Preserve source facts and central information\n- Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition.\n- Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus.\n- Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately.\n- Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first.\n- For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text.\n- If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage.\n- Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check.\n\n## Output format\nOutput only the summary, in English. No preamble, title, checklist, explanation, or closing."
+  },
+  "supplement": "",
+  "summary": "Delhi (CNN)An international human rights group is calling for an independent investigation of the killings by police of 20 suspected red sandalwood smugglers in southeastern India. Rao said that the ensuing gun battle lasted more than three hours and 20 smugglers were shot. According to Amnesty, India's National Human Rights Commission has said the incident \"involved a serious violation of human rights of the individuals,\" and that \"the opening of firing cannot be justified on the ground of self defense since it resulted in the loss of lives of 20 persons.\" The commission has asked senior government and police officials to explain the actions of the police and forest officials within two weeks, Amnesty said.",
+  "score": 0.3333333333333333,
+  "feedback": "{\"preserved_facts\": [{\"id\": \"F1\", \"preserved\": true, \"summary_evidence\": [\"An international human rights group is calling for an independent investigation of the killings by police of 20 suspected red sandalwood smugglers in southeastern India.\"], \"reason\": \"Preserves the rights group's investigation demand, the police killings, the number 20 and the victims' suspected-smuggler status. The group's proper name is not needed to preserve this central event.\"}, {\"id\": \"F2\", \"preserved\": false, \"summary_evidence\": [], \"reason\": \"The summary reports a gun battle and the commission's rejection of self-defense as a justification, but does not state that police themselves claimed self-defense.\"}, {\"id\": \"F3\", \"preserved\": false, \"summary_evidence\": [], \"reason\": \"No sentence conveys Amnesty's statement that most suspected smugglers were shot in the back.\"}], \"factual_issues\": [], \"reviewed_wording\": \"All four sentences reproduce complete source sentences with unchanged words and punctuation, including the initial 'Delhi (CNN)' text, the 'Rao said' sentence and the two sentences attributing statements to Amnesty. Quoted clauses in the third sentence do not create additional grammatical sentences.\", \"automatic\": {\"length\": {\"score\": 1.0, \"feedback\": \"문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다.\"}, \"extractiveness\": {\"score\": 1.0, \"feedback\": \"완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다.\"}}, \"score_rule\": \"coverage only when all condition checks pass and no factual issue is flagged\"}",
+  "review": {
+    "output_id": "Q676e351311e808f0",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences reproduce complete source sentences with unchanged words and punctuation, including the initial 'Delhi (CNN)' text, the 'Rao said' sentence and the two sentences attributing statements to Amnesty. Quoted clauses in the third sentence do not create additional grammatical sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "An international human rights group is calling for an independent investigation of the killings by police of 20 suspected red sandalwood smugglers in southeastern India."
+        ],
+        "reason": "Preserves the rights group's investigation demand, the police killings, the number 20 and the victims' suspected-smuggler status. The group's proper name is not needed to preserve this central event."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The summary reports a gun battle and the commission's rejection of self-defense as a justification, but does not state that police themselves claimed self-defense."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "No sentence conveys Amnesty's statement that most suspected smugglers were shot in the back."
+      }
+    ],
+    "issues": []
+  },
+  "automatic": {
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+    }
+  },
+  "objective_scores": {
+    "coverage": 0.3333333333333333,
+    "conditions": 1.0,
+    "no_factual_flags": 1.0
+  }
+}

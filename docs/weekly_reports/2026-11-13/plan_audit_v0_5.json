@@ -1,0 +1,26 @@
+[
+  {
+    "plan": "저장·재사용과 복귀 보완",
+    "status": "완료(보고서 5쪽의 확인 범위)",
+    "previous_status": "완료(구현·관련 검사)",
+    "new_evidence": "docs/verification/2026-11-12/results.json"
+  },
+  {
+    "plan": "팀 기능·권한 점검",
+    "status": "완료(보고서 5쪽의 확인 범위)",
+    "previous_status": "일부 완료",
+    "new_evidence": "docs/verification/2026-11-12/results.json"
+  },
+  {
+    "plan": "설계 대응·전체 회귀 확인",
+    "status": "완료(보고서 5쪽의 확인 범위)",
+    "previous_status": "일부 완료",
+    "new_evidence": "docs/verification/2026-11-12/results.json"
+  },
+  {
+    "plan": "독립 평가 준비",
+    "status": "완료(보고서 5쪽의 확인 범위)",
+    "previous_status": "완료(새 평가 실행 포함)",
+    "new_evidence": "docs/verification/2026-11-12/results.json"
+  }
+]

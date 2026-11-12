@@ -1,0 +1,32 @@
+{
+  "commit": "c7848083c4c0931fb7c3f649e3f4087685e31a11",
+  "selected_tests": 1356,
+  "method": "Same-commit pytest collection order aligned with complete progress logs; both contain 1356 outcomes.",
+  "ci_skips": [
+    {
+      "position_1_based": 124,
+      "test": "tests/test_checks_vs_labels.py::test_recompute_matches_saved",
+      "ci_outcome": "skipped",
+      "previous_local_outcome": "passed"
+    },
+    {
+      "position_1_based": 315,
+      "test": "tests/test_coding_public.py::test_full_cached_audit_is_offline_and_preserves_unknown_outcomes",
+      "ci_outcome": "skipped",
+      "previous_local_outcome": "passed"
+    },
+    {
+      "position_1_based": 807,
+      "test": "tests/test_persona.py::test_personas_come_from_real_macsum_attributes",
+      "ci_outcome": "skipped",
+      "previous_local_outcome": "passed"
+    }
+  ],
+  "previous_local_skips": [
+    {
+      "test": "tests/test_hosting_server.py::test_symlink_outside_build_is_not_served",
+      "ci_outcome": "passed"
+    }
+  ],
+  "ci_log_sha256": "b74cf27391ed8a1388268f6be1610da67f4ad90b28140b807129895d330b096e"
+}

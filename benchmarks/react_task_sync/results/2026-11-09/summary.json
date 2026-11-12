@@ -1,0 +1,180 @@
+{
+  "baseline_commit": "3b6b550418dcaf8cb184563f699bdc727f5dd54b",
+  "profile": {
+    "language": "JavaScript",
+    "framework": "React",
+    "extra": "",
+    "preferences": {
+      "explanation": "brief",
+      "comments": "essential",
+      "structure": "compact",
+      "output": "changes"
+    }
+  },
+  "runs": [
+    {
+      "arm": "arm_a",
+      "candidate_started": "2026-11-09T07:41:27.0014288Z",
+      "candidate_finished": "2026-11-09T07:44:03.7386219Z",
+      "agent_work_seconds": 156.737,
+      "evaluation_started": "2026-11-09T07:45:48.191329+00:00",
+      "evaluation_seconds": 14.744,
+      "command_exit_code": 0,
+      "test_sha256": "d890986da8e873293788ec9206c243906d0f6519516bc214b569ba7273f7b5d5",
+      "cases": [
+        {
+          "name": "R1 initial parent task is visible",
+          "passed": true
+        },
+        {
+          "name": "R2 late parent task fills untouched empty draft",
+          "passed": true
+        },
+        {
+          "name": "R3 untouched draft tracks parent replacement and clearing without writes",
+          "passed": true
+        },
+        {
+          "name": "R4 direct edit survives parent changes",
+          "passed": true
+        },
+        {
+          "name": "R5 deliberately cleared text stays empty",
+          "passed": true
+        },
+        {
+          "name": "R6 editing back to original still counts as manual edit",
+          "passed": true
+        },
+        {
+          "name": "R7 parent updates preserve all other draft fields",
+          "passed": true
+        },
+        {
+          "name": "R8 submitted record remains frozen; new comparison uses latest task and resets edit ownership",
+          "passed": true
+        },
+        {
+          "name": "R9 opening saved record preserves it; cancel keeps it, confirmed new comparison uses current parent",
+          "passed": true
+        }
+      ],
+      "passed": 9,
+      "total": 9,
+      "human_edit_seconds": null,
+      "paid_api_requests": 0,
+      "candidate_component_sha256": "5cb1d38ba0e656e8af5f87d880446459ddc0f49d250da9219dd488c151e3802f",
+      "agent_record": {
+        "finishedAt": "2026-11-09T07:44:03.7386219Z",
+        "selfTests": [
+          {
+            "check": "Code review and JSX compilation with installed esbuild",
+            "result": "passed"
+          },
+          {
+            "check": "node --check src/features/coding-instructions/CodingTrialPanel.sync.test.js",
+            "result": "passed"
+          },
+          {
+            "result": "passed",
+            "failures": 0,
+            "check": "node --test src/features/coding-instructions/CodingTrialPanel.sync.test.js src/features/coding-instructions/codingWorkflow.test.js",
+            "tests": 3
+          }
+        ],
+        "modifiedPaths": [
+          "frontend/src/features/coding-instructions/CodingTrialPanel.jsx",
+          "frontend/src/features/coding-instructions/CodingTrialPanel.sync.test.js"
+        ]
+      },
+      "condition": "general",
+      "changed_existing_files": [
+        "frontend/src/features/coding-instructions/CodingTrialPanel.jsx"
+      ],
+      "production_added_lines": 14,
+      "production_removed_lines": 2
+    },
+    {
+      "arm": "arm_b",
+      "candidate_started": "2026-11-09T07:41:40.6592761Z",
+      "candidate_finished": "2026-11-09T07:44:27.5540182Z",
+      "agent_work_seconds": 166.895,
+      "evaluation_started": "2026-11-09T07:47:02.059013+00:00",
+      "evaluation_seconds": 14.383,
+      "command_exit_code": 0,
+      "test_sha256": "d890986da8e873293788ec9206c243906d0f6519516bc214b569ba7273f7b5d5",
+      "cases": [
+        {
+          "name": "R1 initial parent task is visible",
+          "passed": true
+        },
+        {
+          "name": "R2 late parent task fills untouched empty draft",
+          "passed": true
+        },
+        {
+          "name": "R3 untouched draft tracks parent replacement and clearing without writes",
+          "passed": true
+        },
+        {
+          "name": "R4 direct edit survives parent changes",
+          "passed": true
+        },
+        {
+          "name": "R5 deliberately cleared text stays empty",
+          "passed": true
+        },
+        {
+          "name": "R6 editing back to original still counts as manual edit",
+          "passed": true
+        },
+        {
+          "name": "R7 parent updates preserve all other draft fields",
+          "passed": true
+        },
+        {
+          "name": "R8 submitted record remains frozen; new comparison uses latest task and resets edit ownership",
+          "passed": true
+        },
+        {
+          "name": "R9 opening saved record preserves it; cancel keeps it, confirmed new comparison uses current parent",
+          "passed": true
+        }
+      ],
+      "passed": 9,
+      "total": 9,
+      "human_edit_seconds": null,
+      "paid_api_requests": 0,
+      "candidate_component_sha256": "616e6bbc28aec74bbaf2f2eb1c099a309853fb230c2ce9affee6d86b20e02c6f",
+      "agent_record": {
+        "self_tests": {
+          "jsx_compile": "esbuild compilation passed",
+          "test_command": "node --test src/features/coding-instructions/codingTrialTaskSync.test.js src/features/coding-instructions/codingWorkflow.test.js",
+          "passed": 3,
+          "syntax_check": "node --check codingTrialTaskSync.test.js passed",
+          "failed": 0,
+          "source_review": "completed before execution"
+        },
+        "execution_note": "A compiler output was accidentally written to frontend/node_modules/.ignored-output.js, then removed. No dependency changes were intended.",
+        "finished_at": "2026-11-09T07:44:27.5540182Z",
+        "temporary_compile_output_removed": true,
+        "modified_paths": [
+          "frontend/src/features/coding-instructions/CodingTrialPanel.jsx",
+          "frontend/src/features/coding-instructions/codingTrialTaskSync.test.js"
+        ]
+      },
+      "condition": "personalized",
+      "changed_existing_files": [
+        "frontend/src/features/coding-instructions/CodingTrialPanel.jsx"
+      ],
+      "production_added_lines": 14,
+      "production_removed_lines": 2
+    }
+  ],
+  "paid_api_requests": 0,
+  "human_edit_seconds": null,
+  "log_normalization": "Repository path replaced with $REPO; line endings and trailing whitespace normalized; test outcomes unchanged.",
+  "delta_agent_seconds_personalized_minus_general": 10.158,
+  "protocol_deviation": "arm_b temporarily wrote a compiler output to shared node_modules and removed it; verified absent by parent. No tracked dependency files changed. This is not complete filesystem isolation.",
+  "inference": "Single-case description only; no demonstrated preference, speed or general accuracy advantage."
+}

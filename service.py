@@ -144,6 +144,8 @@ class SessionState:
     pair: PairView | None = None
     axes: list[AxisView] = field(default_factory=list)
     done: bool = False
+    # Why comparisons ended; this is not a calibrated confidence claim.
+    completion_reason: str | None = None
     # 최적화 진행 상황. 스레드가 여기에만 쓴다.
     optimize_progress: float = 0.0
     optimize_status: str = "idle"  # idle | running | done | error
@@ -376,6 +378,8 @@ def start_session(
     """세션을 열고 첫 쌍을 만든다."""
     if template_id is not None:
         template = template_library.get(template_id)
+        if not template.personalizable:
+            raise ValueError("이 업무 템플릿은 아직 선택 비교를 지원하지 않습니다. 내용을 확인하고 복사해 사용해 주세요.")
         if template.domain != domain_key:
             raise ValueError(f"템플릿 '{template_id}' 은 '{template.domain}' 용이다 (요청: {domain_key}).")
     state = SessionState(
@@ -429,14 +433,18 @@ def submit_choice(state: SessionState, pair_id: str, chosen: str) -> SessionStat
 
     if len(updated.history) >= updated.total_rounds:
         updated.done = True
+        updated.completion_reason = 'round_limit'
         return updated
 
     pair = selector.next_pair(estimator)
     if pair is None:
-        # 더 물을 질문이 없다 - 모든 축에서 1위가 도전자를 다 이겼다.
+        # 더 물을 질문이 없다. 동률만 고른 경우도 있으므로 선호 발견과 구분한다.
         # 진행 표시가 맞도록 총 라운드를 실제로 물은 수로 줄인다.
         updated.total_rounds = len(updated.history)
         updated.done = True
+        updated.completion_reason = ('selection_resolved' if all(
+            estimator.has_signal(name) for name in estimator.enum_axis_names()) else 'no_more_pairs')
+        updated.axes = _axis_views(updated, estimator)
         return updated
     combo_a, combo_b = pair
     updated.pair = _generate_pair(updated, domain, combo_a, combo_b)
@@ -460,6 +468,7 @@ def undo_choice(state: SessionState) -> SessionState:
         history=state.history[:-1],
         pair=None,
         done=False,
+        completion_reason=None,
         prompt=None,
         optimize_status="idle",
         optimize_progress=0.0,

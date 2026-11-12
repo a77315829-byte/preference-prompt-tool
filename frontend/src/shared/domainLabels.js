@@ -2,7 +2,7 @@
 
 export const CATEGORY_LABEL = {
   coding: '코딩 도움',
-  idle_tracker: 'AWS 비용 보고',
+  coding_profile: '코딩 작성 선호 · 설명·주석·구성·출력',
   review: '고객 리뷰 작성',
   email: '이메일 초안',
   summarization: '문서 요약 (영어)',
@@ -13,8 +13,8 @@ export const CATEGORY_LABEL = {
 
 export const categoryLabel = (domainKey) => CATEGORY_LABEL[domainKey] || domainKey;
 
-// 도메인 이름 -> 비교 화면 흐름 이름 (AWS 만 화면 이름이 다르다. App.jsx 와 같다).
-export const flowOfDomain = (domainKey) => (domainKey === 'idle_tracker' ? 'idleTracker' : domainKey);
+// 도메인 이름과 비교 화면 흐름 이름은 같다.
+export const flowOfDomain = (domainKey) => domainKey;
 
 export const AXIS_LABELS = {
   code_structure: {

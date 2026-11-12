@@ -1,0 +1,17 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\n\nexport type Row = { id: string; name: string; team: string };\nexport type Props = { rows: Row[]; onSelectionChange: (ids: string[]) => void };\n\nexport function Component({ rows, onSelectionChange }: Props) {\n  const [query, setQuery] = useState('');\n  const [selected, setSelected] = useState<string[]>([]);\n  const visible = rows.filter(row => row.name.toLowerCase().includes(query.trim().toLowerCase()));\n  function toggle(id: string) {\n    const next = selected.includes(id) ? selected.filter(value => value !== id) : [...selected, id];\n    setSelected(next);\n    onSelectionChange(next);\n  }\n  function selectVisible(select: boolean) {\n    const ids = visible.map(row => row.id);\n    const next = select ? [...selected, ...ids.filter(id => !selected.includes(id))] : selected.filter(id => !ids.includes(id));\n    setSelected(next);\n    onSelectionChange(next);\n  }\n  return <section aria-label=\"Team roster\">\n    <label>Search members<input value={query} onChange={event => setQuery(event.currentTarget.value)} /></label>\n    <output aria-label=\"Selected count\">{selected.length}</output>\n    <button type=\"button\" disabled={visible.length === 0} onClick={() => selectVisible(true)}>Select visible</button>\n    <button type=\"button\" disabled={visible.length === 0} onClick={() => selectVisible(false)}>Clear visible</button>\n    <table><thead><tr><th>Select</th><th>Name</th><th>Team</th></tr></thead><tbody>\n      {visible.map(row => <tr key={row.id}>\n        <td><input\n  type=\"checkbox\"\n  aria-label={`Select ${row.name}`}\n  checked={selected.includes(row.id)}\n  onChange={() => toggle(row.id)}\n/>\n</td>\n        <td>{row.name}</td><td>{row.team}</td>\n      </tr>)}\n    </tbody></table>\n    {visible.length === 0 && <p role=\"status\">No members</p>}\n  </section>;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_span",
+      "block": 0,
+      "reason": "답변 첫 문장: \"`Component.tsx`의 `visible.map(...)` 안에서 행 선택용 `<input>`을 다음 코드로 교체하세요.\" 해당 map 안의 유일한 행 선택 input 전체를 교체한다.",
+      "anchor": "<input type=\"checkbox\" aria-label={`Select ${row.name}`} checked={selected.includes(String(visible.indexOf(row)))} onChange={() => toggle(String(visible.indexOf(row)))} />",
+      "answer_start": 79,
+      "answer_end": 215
+    }
+  ]
+}

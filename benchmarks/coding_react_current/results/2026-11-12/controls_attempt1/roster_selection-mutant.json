@@ -1,0 +1,65 @@
+{
+  "evaluatorVersion": "coding-react-current-v1",
+  "taskId": "roster_selection",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": false,
+    "checks": [
+      {
+        "name": "initial_table_unselected_without_callback",
+        "passed": true
+      },
+      {
+        "name": "toggle_reports_stable_ids_once_and_deselects",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    [\n+     '1'\n-     'u2'\n    ]\n  ]\n"
+      },
+      {
+        "name": "search_normalizes_case_and_whitespace",
+        "passed": true
+      },
+      {
+        "name": "hidden_selection_is_retained",
+        "passed": true
+      },
+      {
+        "name": "reordered_new_row_objects_keep_identity",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n\nfalse !== true\n"
+      },
+      {
+        "name": "select_visible_preserves_hidden_selection_and_order",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    [\n+     '1'\n-     'u2'\n    ],\n    [\n+     '1',\n-     'u2',\n      'u7'\n    ]\n  ]\n"
+      },
+      {
+        "name": "clear_visible_keeps_hidden_ids",
+        "passed": true
+      },
+      {
+        "name": "repeated_bulk_selection_has_no_duplicate_ids",
+        "passed": true
+      },
+      {
+        "name": "empty_search_disables_bulk_actions",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0
+}

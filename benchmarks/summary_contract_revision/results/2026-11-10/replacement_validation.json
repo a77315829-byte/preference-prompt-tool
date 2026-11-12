@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "final_input_files": [
+    "evaluation_sources.json",
+    "evaluation_annotations.json",
+    "evaluation_sampling.json"
+  ],
+  "artifact_sha256": {
+    "evaluation_sources.json": "2f578e0ef2ae6ed9db11919f67c361f6a2a9e452bbd9583ba5761fd16a4aa56c",
+    "evaluation_annotations.json": "4ba8bb7c9b66a2ec731aa5d486bd1cba09ac6ceb9771d21ae59c015ccf43cb18",
+    "evaluation_sampling.json": "65b4ff88fefcf09c61b4b28df2b82e350dd7a0091a576aa36b57e82c1d4afc85"
+  },
+  "original_artifact_sha256": {
+    "sources.json": "ff470dcc013d26b81094ae26dd2437f4f5d49511bee498399671fb438cb9e13b",
+    "sampling.json": "99ca7cc9718fcdd8bc87e440f71f32d1d31e6e6ca8d901a5e69f7ada6676b356",
+    "source_annotations.json": "ac874d13063d0004fda36c26c5d4dba846e16a1d1488af1f72e9dcd8a28aa65e",
+    "source_annotation_validation.json": "69b83d2cb1acab0d0bb265ada803bc9194a6597d29e12b4933b9e3d76d2377f0"
+  },
+  "original_files_unchanged": true,
+  "case_count": 9,
+  "unchanged_source_records": 8,
+  "unchanged_annotation_records": 8,
+  "replaced_case": {
+    "id": "C03",
+    "original_record_index": 32,
+    "final_record_index": 67,
+    "profile_and_resolution_unchanged": true
+  },
+  "quarantine": {
+    "id": "C03",
+    "record_index": 32,
+    "source_sha256": "640d7cae44f7a4eff224ffb0b484bf6ada7998eeb07bb0bd833781cb68c05380",
+    "max_word_5gram_jaccard": 0.18216682646212848,
+    "shared_5grams": 190,
+    "nearest_prior_id": "T17",
+    "nearest_prior_case_file": "benchmarks/summary_reflection/results/2026-11-10/final/cases.json",
+    "reason": "Pre-generation source contamination audit exceeded the conservative Jaccard threshold."
+  },
+  "selection": {
+    "id": "C03",
+    "record_index": 67,
+    "source_sha256": "2bb248d0fa80602687e641ac81da924bdb0932b7fa328c50ae6ed86acd237f54",
+    "candidates_examined": [
+      {
+        "shuffle_position_one_based": 10,
+        "record_index": 67,
+        "max_jaccard": 0.0,
+        "nearest_id": "S01",
+        "accepted": true
+      }
+    ],
+    "profile_and_resolution_unchanged": true
+  },
+  "exclusion_unique_source_count": 64,
+  "prior_unique_source_count": 63,
+  "new_exact_overlap_count": 0,
+  "required_sentence_count": 27,
+  "private_fact_count": 27,
+  "exact_source_quote_count": 31,
+  "source_overlap": {
+    "tokenization": "lowercase regex \\w+",
+    "word_ngram_size": 5,
+    "measure": "set Jaccard",
+    "strict_upper_bound": 0.1,
+    "prior_pairs": 567,
+    "selected_pairs": 36,
+    "max_against_prior": 0.025974025974025976,
+    "max_within_final": 0.0,
+    "all_pairs_below_threshold": true
+  },
+  "case_validation": [
+    {
+      "id": "C01",
+      "required_sentences": 3,
+      "distinct_complete_v3_sentences": true,
+      "fact_count": 3,
+      "exact_evidence_quote_count": 3
+    },
+    {
+      "id": "C02",
+      "required_sentences": 3,
+      "distinct_complete_v3_sentences": true,
+      "fact_count": 3,
+      "exact_evidence_quote_count": 3
+    },
+    {
+      "id": "C03",
+      "required_sentences": 3,
+      "distinct_complete_v3_sentences": true,
+      "fact_count": 3,
+      "exact_evidence_quote_count": 3
+    },
+    {
+      "id": "C04",
+      "required_sentences": 3,
+      "distinct_complete_v3_sentences": true,
+      "fact_count": 3,
+      "exact_evidence_quote_count": 3
+    },
+    {
+      "id": "C05",
+      "required_sentences": 3,
+      "distinct_complete_v3_sentences": true,
+      "fact_count": 3,
+      "exact_evidence_quote_count": 4
+    },
+    {
+      "id": "C06",
+      "required_sentences": 3,
+      "distinct_complete_v3_sentences": true,
+      "fact_count": 3,
+      "exact_evidence_quote_count": 4
+    },
+    {
+      "id": "C07",
+      "required_sentences": 3,
+      "distinct_complete_v3_sentences": true,
+      "fact_count": 3,
+      "exact_evidence_quote_count": 4
+    },
+    {
+      "id": "C08",
+      "required_sentences": 3,
+      "distinct_complete_v3_sentences": true,
+      "fact_count": 3,
+      "exact_evidence_quote_count": 3
+    },
+    {
+      "id": "C09",
+      "required_sentences": 3,
+      "distinct_complete_v3_sentences": true,
+      "fact_count": 3,
+      "exact_evidence_quote_count": 4
+    }
+  ],
+  "checker": {
+    "path": "checks/summarization_grounded_v3.py",
+    "file_sha256": "3e2d9bda8f6fc587d6d3ae6172b5297e96e262a47edc85bd55de2dc08fb755c1"
+  },
+  "provenance": [
+    "Replacement selection used only exact source identity and preregistered conservative textual-overlap filtering; no model outputs, candidate prompts, reviews, or scores were read.",
+    "Final evaluation_sources.json was written before displaying replacement source text and creating its annotation; the first eligible post-original-sample candidate was accepted.",
+    "Original four files remain intact as provenance. Evaluation uses the three evaluation_ files named here.",
+    "Only control attributes from human references were used for eligibility; reference summary bodies were neither displayed nor used.",
+    "Evidence checks verify exact quotation and complete normalized sentence identity, not external truth or an exhaustive semantic evaluation.",
+    "The shared priorities measure explicit-source-priority following. This repaired new holdout uses original val sources and is not official test performance."
+  ]
+}

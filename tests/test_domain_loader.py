@@ -13,8 +13,9 @@ import yaml
 from engine.domain_loader import DomainError, load_domain
 from engine.estimator import Estimator
 from engine.selector import SequentialAxisSelector, UncertaintySelector
+from tests.domain_inventory import ENGINE_DOMAINS
 
-DOMAINS = sorted(Path("domains").glob("*.yaml"))
+DOMAINS = ENGINE_DOMAINS
 
 
 @pytest.mark.parametrize("path", DOMAINS, ids=lambda p: p.stem)

@@ -1,0 +1,25 @@
+
+> preference-prompt-tool-ui@0.1.0 build
+> vite build
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 511 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                       0.73 kB │ gzip:   0.50 kB
+dist/assets/HandoffsSection-DbMqZ_eQ.css              5.91 kB │ gzip:   1.69 kB
+dist/assets/CodingWorkflowPanel-DXKZIk97.css          7.07 kB │ gzip:   1.75 kB
+dist/assets/CodingInstructionsSection-BPnR3NeJ.css   16.51 kB │ gzip:   3.82 kB
+dist/assets/index-D_Fb6WTx.css                       82.42 kB │ gzip:  15.47 kB
+dist/assets/HandoffsSection-YNL3p7Yb.js              24.64 kB │ gzip:   8.31 kB
+dist/assets/CodingWorkflowPanel-CAWY4utX.js          34.35 kB │ gzip:  11.60 kB
+dist/assets/CodingInstructionsSection-zIzj0A6-.js    40.54 kB │ gzip:  12.27 kB
+dist/assets/PreferencesSection-ChRx0VAY.js           51.93 kB │ gzip:  14.68 kB
+dist/assets/index-Dhn2zllh.js                       526.54 kB │ gzip: 164.18 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 28.41s

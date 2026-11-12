@@ -7,7 +7,7 @@ const scenes = [
     number: '01',
     kicker: 'CHOOSE',
     title: '좋아하는 결과를 고르면',
-    description: '문서 요약, 코딩, AWS 비용 점검처럼 지금 필요한 카테고리를 선택합니다.',
+    description: '회의록을 정리하거나 코드를 작성할 때, 원하는 AI 결과의 기준부터 찾아보세요.',
     visual: 'category',
   },
   {
@@ -21,20 +21,20 @@ const scenes = [
     number: '03',
     kicker: 'REUSE',
     title: '나만의 프롬프트를 다시 씁니다',
-    description: '선택 기록이 하나의 코딩 기준이 되어 다음 작업에도 이어집니다.',
+    description: '찾은 개인 기준을 다음 작업에 다시 씁니다. 같은 비교 항목을 사용하는 팀 모드에서는 팀원들의 선택도 모을 수 있어요.',
     visual: 'result',
   },
 ];
 
 // 앞에 보이는 핵심 카테고리. 타깃("AI 를 매일 쓰는 작은 개발팀")이 반복하는 일에
-// 맞춘 세 가지다. 요약은 영어·한국어를 한 카드로 두고 비교 화면에서 언어를 고른다.
+// 맞춘 시작점이다. 팀 업무는 인수인계로 이어지며 별도 선호 추정 분야가 아니다.
 const coreCategories = [
   {
     id: 'summary',
     number: '01',
     label: 'DOCUMENT',
     title: '문서 요약',
-    description: '회의록·기술 문서·기사를 내가 좋아하는 길이와 표현으로 요약합니다. 영어·한국어.',
+    description: '영어·한국어 문서의 요약 길이와 표현을 비교합니다. 최대 8회 안에서 선택에 따라 자동으로 마쳐요.',
     accent: 'blue',
   },
   {
@@ -42,16 +42,14 @@ const coreCategories = [
     number: '02',
     label: 'CODE',
     title: '코딩 도움',
-    description: '선호하는 TypeScript와 React 작성 방식을 찾아 Copilot·Cursor 설정 파일로 가져갑니다.',
-    accent: 'purple',
+    description: 'AI 답변 방식과 React 코드 스타일 중 설정할 내용을 고르세요. 만든 지침은 다음 작업에도 쓸 수 있어요.',
+    accent: 'purple', cta: 'AI 답변 방식 설정', actionDescription: '설명·주석·구성·출력',
+    secondaryCta: 'React 코드 스타일 비교', secondaryDescription: '구성·스타일 관리·타입 작성',
   },
   {
-    id: 'idleTracker',
-    number: '03',
-    label: 'AWS COST',
-    title: 'AWS 비용 보고',
-    description: '서비스별 비용 현황을 내가 보기 편한 상세도와 강조점으로 보고받습니다.',
-    accent: 'green',
+    id: 'teamWork', number: '03', label: 'TEAM WORK', title: '팀 업무 정리',
+    description: '작업 목적·진행 상황·남은 일과 사용한 프롬프트를 팀원에게 넘기고 이어서 진행합니다.',
+    accent: 'teal', cta: '작업 인수인계 시작하기',
   },
 ];
 
@@ -102,7 +100,7 @@ function StoryVisual({ type }) {
           <div className="story-mini-options">
           <div className="story-mini-option story-mini-blue">문서 요약</div>
           <div className="story-mini-option story-mini-purple">코딩 도움</div>
-          <div className="story-mini-option story-mini-green">AWS 비용</div>
+          <div className="story-mini-option">팀 업무 정리</div>
         </div>
         <div className="story-visual-arrow" aria-hidden="true">↗</div>
       </div>
@@ -161,7 +159,7 @@ function NarrativeScene({ scene, direction, reducedMotion }) {
   );
 }
 
-function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction, reducedMotion }) {
+function IntroScene({ selectedCategory, onSelectCategory, onContinue, onReactComparison, onOpenTeams, onOpenLibrary, direction, reducedMotion }) {
   const [showLab, setShowLab] = useState(labIds.has(selectedCategory));
   const options = showLab ? [...coreCategories, ...labCategories] : coreCategories;
   const toggleLab = () => {
@@ -181,11 +179,13 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction,
       <div className="narrative-intro-copy">
         <p className="hero-kicker">PREFERENCE PROMPT TOOL</p>
         <h1>
-          좋아하는 결과를
+          작은 개발팀의 AI,
           <br />
-          <em>고르는 것</em>부터 시작하세요.
+          <em>내 방식에서 팀 기준</em>으로.
         </h1>
-        <p>복잡한 프롬프트를 직접 작성하지 않아도, 선택만으로 나만의 기준을 만들 수 있습니다.</p>
+        <p>예시를 골라 내 선호를 찾고, 팀원과 다른 항목을 확인해 이번 작업의 지침을 고르세요. 작업 맥락과 프롬프트를 함께 넘겨 다음 사람이 이어갈 수 있어요.</p>
+        {onOpenTeams && <button className="ws-small-button" type="button" onClick={onOpenTeams}>팀 만들기 · 초대로 참여</button>}
+        {onOpenLibrary && <button className="ws-small-button" type="button" onClick={onOpenLibrary}>저장한 내 선호 다시 쓰기</button>}
       </div>
 
       <div className="narrative-category-stage">
@@ -198,7 +198,7 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction,
         </div>
 
         <CategoryDeck options={options} selectedCategory={selectedCategory}
-          onSelect={onSelectCategory} onContinue={onContinue} />
+          onSelect={onSelectCategory} onContinue={onContinue} onSecondaryContinue={onReactComparison} />
         <div className="category-lab-toggle">
           <button type="button" onClick={toggleLab} aria-expanded={showLab}>
             {showLab ? '핵심 카테고리만 보기' : `실험실 카테고리 보기 (${labCategories.length})`}
@@ -210,7 +210,7 @@ function IntroScene({ selectedCategory, onSelectCategory, onContinue, direction,
   );
 }
 
-function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequest }) {
+function ScrollStory({ selectedCategory, onSelectCategory, onContinue, onReactComparison, sceneRequest, onOpenTeams, onOpenLibrary }) {
   const [activeScene, setActiveScene] = useState(0);
   const [direction, setDirection] = useState(1);
   const touchStartY = useRef(null);
@@ -301,6 +301,9 @@ function ScrollStory({ selectedCategory, onSelectCategory, onContinue, sceneRequ
               selectedCategory={selectedCategory}
               onSelectCategory={onSelectCategory}
               onContinue={onContinue}
+              onReactComparison={onReactComparison}
+              onOpenTeams={onOpenTeams}
+              onOpenLibrary={onOpenLibrary}
               direction={direction}
               reducedMotion={reducedMotion}
             />

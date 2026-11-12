@@ -1,0 +1,71 @@
+{
+  "cache_key": "6ca154ce23547c8078d60e67494fb1e56eda3215e1f94e840cdef58de9ff55fe",
+  "case": {
+    "record_index": 52,
+    "dataset_split": "val",
+    "source": "London (CNN)A Polish Prince has challenged populist British politician Nigel Farage to a duel  in London's Hyde Park over his immigration policy.\nFarage, the leader of  the UK Independence Party (UKIP), complains that Britain's membership of the European Union means it is powerless to stop a flow of foreign immigrants, many from impoverished Eastern Europe, into his \"small island\" nation.\nIn a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain.\n\"The most idiotic example I've heard of has been Mr. Nigel Farage blaming migrants for traffic jams on the M40,\" Zylinksi said.\nHolding a sword that had belonged to his father -- a  World War II war hero -- the prince laid down a verbal gauntlet.\n\"Enough is enough, Mr. Farage.\nSo what I'd like to do, Mr. Farage, is to challenge you to a duel,\" he said.\n\"I would like us to meet in Hyde Park one morning with our swords and resolve this matter in the way that an 18th century Polish aristocrat and an English gentleman would traditionally do.\n\"Are you up for it Mr.\nFarage?\"\nFarage -- who is on the campaign trail ahead of Britain's general elections on May 7 -- said he did not intend to cross swords with the prince.\n\"It is an impressive sword.\nI don't have one but I'm sure we could find one if we had to.\nBut I'm not intending to accept the offer,\" a spokesman quoted him as saying.\n\"I would have thought that a Polish prince with a long Polish lineage would rather agree with me that it's a complete tragedy for Poland that it's lost so many of its brightest and best young people.\"\nUKIP wants Britain to leave the European Union.\nIt says it would not seek to remain a party to the region's free trade or economic treaties \"while those treaties maintain a principle of free movement of labor, which prevents the UK managing its own borders.\"\nIt has also pledged to cut the country's £9 billion ($12.4B) annual foreign aid budget.\nAnother UKIP politician appeared to back his party leader's chances in a duel, tweeting an image of a medieval knight sliced in two, with the comment: \"This is what Nigel would do to him.\"\nBut there was no word on whether Farage would even accept the prince's less life-threatening back-up challenge.\n\"Alternatively, if you don't agree or if your sword is a little bit rusty, Mr. Farage, we can meet for a different kind of duel -- a duel with words in a TV studio in the run-up to the elections,\" Zylinski suggested.\n\"I'm up for it, it would be really nice, hopefully you will agree.\"\nZylinski posted a separate video on YouTube entitled \"7 reasons why the British should love the Poles,\" in which he pointed to a Times newspaper headline from March reading: \"We need more migrants ... they are the best workers in Britain.\"\nThe headline, he said, applied \"principally\" to the Poles.\n\"What I cannot accept is the amount of hostility and in some cases hatred towards the Poles.\nEnough is enough, I say, this has got to stop.\"\nZylinski pointed to Polish contributions to Britain including  those made by Polish RAF pilots during the Battle of Britain, what he said was a \"wonderful work ethic\" and easy integration into the community.\n\"We are often more loyal to Britain than many British people I know,\" he said.\n\"We are very grateful to be here.\nWe would like you to be grateful too.\nPlease stop knocking the Poles.\nWe love this country we would like British to love us too.\"",
+    "source_sha256": "2073cc88986db4db56ff004716a1c13eb56310455137f58cdd0ab86c0b44125c",
+    "source_words": 612,
+    "id": "V04",
+    "profile": {
+      "length": "normal",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "base_prompt": "You summarize English text according to the requested conditions while staying grounded in the source.\n\nSummarize the source text below in English according to these instructions.\n\n## Conditions for this summary\nThese are the conditions for this summary.\n- Length: Write three to four sentences.\n- Use of source wording: Select complete sentences verbatim from the source. Do not change words or punctuation or write new sentences. Only whitespace normalization and omission of a leading document publisher tag (CNN) or (The Hollywood Reporter), case-insensitively, are allowed. Do not remove attribution inside a sentence.\n\n## Preserve source facts and central information\n- Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition.\n- Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus.\n- Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately.\n- Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first.\n- For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text.\n- If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage.\n- Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check.\n\n## Output format\nOutput only the summary, in English. No preamble, title, checklist, explanation, or closing."
+  },
+  "supplement": "Read through the whole source before selecting material; the opening event can supply context while later passages carry the article's distinctive focus. Give sentence space to distinct central developments or perspectives, rather than repeated setup, vivid scene-setting, or several details about the same event. A prominent response or conclusion can be central even when it contains no numerical result. For strict extraction, consider candidate sentence combinations as a whole: prefer those that jointly retain the main event and another central aspect with clear referents and intact attribution. Do not automatically copy an opening sentence merely to introduce a name. Keep context necessary to understand selected sentences; when that context would consume the available budget, choose a clearer combination. When rewriting is permitted, combine compatible source clauses only when their subjects, status, and attribution remain clear. Use additional permitted space to preserve substantive distinctions, not repetition. Apply all base constraints throughout; do not lengthen a short extractive summary or alter copied sentences to force in every point.",
+  "summary": "London (CNN)A Polish Prince has challenged populist British politician Nigel Farage to a duel in London's Hyde Park over his immigration policy. In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain. Farage -- who is on the campaign trail ahead of Britain's general elections on May 7 -- said he did not intend to cross swords with the prince. \"Alternatively, if you don't agree or if your sword is a little bit rusty, Mr. Farage, we can meet for a different kind of duel -- a duel with words in a TV studio in the run-up to the elections,\" Zylinski suggested.",
+  "score": 1.0,
+  "feedback": "{\"preserved_facts\": [{\"id\": \"F1\", \"preserved\": true, \"summary_evidence\": [\"London (CNN)A Polish Prince has challenged populist British politician Nigel Farage to a duel in London's Hyde Park over his immigration policy.\", \"In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain.\", \"said he did not intend to cross swords with the prince.\"], \"reason\": \"The first two sentences identify Zylinski's Hyde Park challenge, and the reference to crossing swords establishes the physical sword duel.\"}, {\"id\": \"F2\", \"preserved\": true, \"summary_evidence\": [\"In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain.\"], \"reason\": \"The objection to discrimination against Poles is explicit and attributed to Zylinski.\"}, {\"id\": \"F3\", \"preserved\": true, \"summary_evidence\": [\"Farage -- who is on the campaign trail ahead of Britain's general elections on May 7 -- said he did not intend to cross swords with the prince.\"], \"reason\": \"Farage's refusal is expressly about the sword duel; the separately quoted television alternative is not presented as accepted or rejected.\"}], \"factual_issues\": [], \"reviewed_wording\": \"All four sentences are complete source sentences with only whitespace normalized. The initial 'London (CNN)' is retained, and the quotation containing 'Mr. Farage' is one grammatical sentence rather than splitting at the abbreviation.\", \"automatic\": {\"length\": {\"score\": 1.0, \"feedback\": \"문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다.\"}, \"extractiveness\": {\"score\": 1.0, \"feedback\": \"완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다.\"}}, \"score_rule\": \"coverage only when all condition checks pass and no factual issue is flagged\"}",
+  "review": {
+    "output_id": "Q6ca154ce23547c80",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete source sentences with only whitespace normalized. The initial 'London (CNN)' is retained, and the quotation containing 'Mr. Farage' is one grammatical sentence rather than splitting at the abbreviation.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "London (CNN)A Polish Prince has challenged populist British politician Nigel Farage to a duel in London's Hyde Park over his immigration policy.",
+          "In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain.",
+          "said he did not intend to cross swords with the prince."
+        ],
+        "reason": "The first two sentences identify Zylinski's Hyde Park challenge, and the reference to crossing swords establishes the physical sword duel."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain."
+        ],
+        "reason": "The objection to discrimination against Poles is explicit and attributed to Zylinski."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Farage -- who is on the campaign trail ahead of Britain's general elections on May 7 -- said he did not intend to cross swords with the prince."
+        ],
+        "reason": "Farage's refusal is expressly about the sword duel; the separately quoted television alternative is not presented as accepted or rejected."
+      }
+    ],
+    "issues": []
+  },
+  "automatic": {
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+    }
+  },
+  "objective_scores": {
+    "coverage": 1.0,
+    "conditions": 1.0,
+    "no_factual_flags": 1.0
+  }
+}

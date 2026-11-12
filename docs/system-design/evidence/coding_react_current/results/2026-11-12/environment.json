@@ -1,0 +1,20 @@
+{
+  "versions": {
+    "typescript": "5.9.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "jsdom": "20.0.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4"
+  },
+  "node": "v22.23.2",
+  "branch": "microstone",
+  "head": "43024129a480c1fecb1c8013af5717b7003e3e34",
+  "product_source_sha256": {
+    "coding_instructions.py": "1fcd6f0e5e604ab538b28106f2f86b4b6d27848a384017145c98c36dfe2c1aa0",
+    "coding_work_trials.py": "814104f04d1dfb228b72c218c909515f4dd47d71bf30fa36a86e5fedbfaf99b2",
+    "coding_examples.py": "9800c0a246f3f7a62603af75c3d6df46edee06de12295f36bf935a0c8774e7b6",
+    "coding_framework_examples.py": "8211a2656ae5c4e5c239374f837cdb921a24c5145a9ba152de0431d6a678da99",
+    "coding_elicitation.py": "71b4a4044e55e8380ac98643de1a5b0880e7eb34b201a66b774f3a119770bff0"
+  }
+}

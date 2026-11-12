@@ -1,0 +1,69 @@
+{
+  "cache_key": "8ff5c13ae44003acdb6d4bff2d441437be31353dd13e12d0f7dff04de7a5fa0c",
+  "case": {
+    "record_index": 611,
+    "dataset_split": "train",
+    "source": "(CNN)Arizona investigators have released dramatic video of a Walmart parking lot brawl that left a police officer wounded, one man dead, and reportedly involved members of a Christian family band.\nEnoch Gaver, 21, was killed in the fight in the town of Cottonwood, and suspect David Gaver, 28, was shot in the stomach and taken into custody.\nPolice Sergeant Jeremy Daniels was hit in the leg by a bullet fired during the melee.\nThe police dashcam video, released Friday, shows Cottonwood Police approaching the group of eight people -- all identified as members of the Gaver family -- around a large SUV in a Walmart parking lot on March 21.\nOfficers wanted to question them about the alleged assault of a Walmart employee who was going into the store bathroom.\nThe police were accompanied by another Walmart employee.\nOn the video, an officer tells the group that they \"need to separate these folks and talk to them.\"\nSomeone then responds, \"No, you are not going to separate me from my parents,\" and, \"don't touch me.\"\nThe video then shows a police officer being put in a headlock and knocked to the ground.\nThe sound of Taser fire is heard.\nPolice say pepper spray was deployed and that at least three shots were fired in an apparent struggle for an officer's gun.\nSeveral times on the video the group appears to surrender, but starts fighting again.\nThe melee goes for several minutes until backup officers arrive and make arrests.\nPolice charged four members of the family with assaulting an officer and resisting arrest.\nTwo minors were also taken into custody and are being held at a juvenile detention facility.\nAt least three members of the family are reportedly in a Christian band named \"Matthew 24 Now,\" which is a Bible verse that refers to the end times, according to CNN affiliate KPHO.\nThe family was living out of its Chevy Suburban.\nCNN's Greg Morrison contributed to this report.",
+    "source_sha256": "ee969075dcb7f965ea2a3bcd87a99b30d9969de783f637960a02b28beeb10d29",
+    "source_words": 327,
+    "id": "G01",
+    "profile": {
+      "length": "long",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "base_prompt": "You summarize English text according to the requested conditions while staying grounded in the source.\n\nSummarize the source text below in English according to these instructions.\n\n## Conditions for this summary\nThese are the conditions for this summary.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible. There is no upper limit on the amount reused.\n\n## Preserve source facts and central information\n- Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition.\n- Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus.\n- Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately.\n- Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first.\n- For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text.\n- If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage.\n- Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check.\n\n## Output format\nOutput only the summary, in English. No preamble, title, checklist, explanation, or closing."
+  },
+  "supplement": "",
+  "summary": "Arizona investigators have released dramatic video of a Walmart parking lot brawl that left a police officer wounded, one man dead, and reportedly involved members of a Christian family band. Enoch Gaver, 21, was killed in the fight in the town of Cottonwood, and suspect David Gaver, 28, was shot in the stomach and taken into custody. Police Sergeant Jeremy Daniels was hit in the leg by a bullet fired during the melee. The police dashcam video, released Friday, shows Cottonwood Police approaching the group of eight people -- all identified as members of the Gaver family -- around a large SUV in a Walmart parking lot on March 21. Officers wanted to question them about the alleged assault of a Walmart employee who was going into the store bathroom. The video then shows a police officer being put in a headlock and knocked to the ground. Police say pepper spray was deployed and that at least three shots were fired in an apparent struggle for an officer's gun. The melee goes for several minutes until backup officers arrive and make arrests. Police charged four members of the family with assaulting an officer and resisting arrest. Two minors were also taken into custody and are being held at a juvenile detention facility. At least three members of the family are reportedly in a Christian band named \"Matthew 24 Now,\" which is a Bible verse that refers to the end times, according to CNN affiliate KPHO.",
+  "score": 1.0,
+  "feedback": "{\"preserved_facts\": [{\"id\": \"F1\", \"preserved\": true, \"summary_evidence\": [\"Arizona investigators have released dramatic video of a Walmart parking lot brawl\"], \"reason\": \"The release of the parking lot brawl video by Arizona investigators is explicitly conveyed.\"}, {\"id\": \"F2\", \"preserved\": true, \"summary_evidence\": [\"Enoch Gaver, 21, was killed in the fight in the town of Cottonwood\"], \"reason\": \"Enoch Gaver's death in the fight is explicit.\"}, {\"id\": \"F3\", \"preserved\": true, \"summary_evidence\": [\"Police Sergeant Jeremy Daniels was hit in the leg by a bullet fired during the melee.\"], \"reason\": \"The officer, the gunshot injury to his leg, and its occurrence during the fight are all retained without inventing a shooter.\"}], \"factual_issues\": [], \"reviewed_wording\": \"The summary substantially reuses distinctive source wording, including complete copied sentences such as Police Sergeant Jeremy Daniels was hit in the leg by a bullet fired during the melee and the sentence describing at least three shots in an apparent struggle for an officer's gun.\", \"automatic\": {\"length\": {\"score\": 1.0, \"feedback\": \"문장 구분 휴리스틱 v2 기준 길이 충족: 11문장. 내용 보존은 별도 확인한다.\"}, \"extractiveness\": {\"score\": 1.0, \"feedback\": \"표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 99%.\"}}, \"score_rule\": \"coverage only when all condition checks pass and no factual issue is flagged\"}",
+  "review": {
+    "output_id": "Q8ff5c13ae44003ac",
+    "sentence_count": 11,
+    "wording_pass": true,
+    "wording_reason": "The summary substantially reuses distinctive source wording, including complete copied sentences such as Police Sergeant Jeremy Daniels was hit in the leg by a bullet fired during the melee and the sentence describing at least three shots in an apparent struggle for an officer's gun.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Arizona investigators have released dramatic video of a Walmart parking lot brawl"
+        ],
+        "reason": "The release of the parking lot brawl video by Arizona investigators is explicitly conveyed."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Enoch Gaver, 21, was killed in the fight in the town of Cottonwood"
+        ],
+        "reason": "Enoch Gaver's death in the fight is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Police Sergeant Jeremy Daniels was hit in the leg by a bullet fired during the melee."
+        ],
+        "reason": "The officer, the gunshot injury to his leg, and its occurrence during the fight are all retained without inventing a shooter."
+      }
+    ],
+    "issues": []
+  },
+  "automatic": {
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 11문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 99%."
+    }
+  },
+  "objective_scores": {
+    "coverage": 1.0,
+    "conditions": 1.0,
+    "no_factual_flags": 1.0
+  }
+}

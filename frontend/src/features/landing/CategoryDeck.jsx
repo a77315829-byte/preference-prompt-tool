@@ -1,9 +1,10 @@
 import { motion, useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
-export default function CategoryDeck({ options, selectedCategory, onSelect, onContinue }) {
+export default function CategoryDeck({ options, selectedCategory, onSelect, onContinue, onSecondaryContinue }) {
   const index = Math.max(0, options.findIndex(({ id }) => id === selectedCategory));
   const selected = options[index];
+  const hasTwoActions = Boolean(selected.secondaryCta && onSecondaryContinue);
   const viewport = useRef(null);
   const pointer = useRef(null);
   const dragged = useRef(false);
@@ -100,11 +101,20 @@ export default function CategoryDeck({ options, selectedCategory, onSelect, onCo
         </div>
         <button type="button" aria-label="다음 카테고리" onClick={() => selectRelative(1)}>→</button>
       </div>
-      <div className="category-selection">
+      <div className={`category-selection ${hasTwoActions ? 'has-two-actions' : ''}`}>
         <p role="status" aria-live="polite"><span className="category-count">{String(index + 1).padStart(2, '0')} / {String(options.length).padStart(2, '0')}</span><strong>{selected.title}</strong></p>
-        <button className="selection-button" type="button" onClick={onContinue}>
-          {selected.id === 'idleTracker' ? '비용 점검 시작하기' : '선택 비교 시작하기'}<span aria-hidden="true">→</span>
-        </button>
+        {hasTwoActions ? <div className="coding-mode-actions" role="group" aria-label="코딩 기능 선택">
+          <button className="selection-button coding-mode-button" type="button" aria-label={selected.cta} onClick={onContinue}>
+            <span>{selected.cta}<span aria-hidden="true"> →</span></span>
+            <small>{selected.actionDescription}</small>
+          </button>
+          <button className="coding-mode-button is-react" type="button" aria-label={selected.secondaryCta} onClick={onSecondaryContinue}>
+            <span>{selected.secondaryCta}<span aria-hidden="true"> →</span></span>
+            <small>{selected.secondaryDescription}</small>
+          </button>
+        </div> : <button className="selection-button" type="button" onClick={onContinue}>
+          {selected.cta || '선택 비교 시작하기'}<span aria-hidden="true">→</span>
+        </button>}
       </div>
     </div>
   );

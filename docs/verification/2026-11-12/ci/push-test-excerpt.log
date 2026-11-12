@@ -1,0 +1,35 @@
+frontend-build	Frontend unit tests	2026-11-12T11:37:02.1892609Z # tests 123
+frontend-build	Frontend unit tests	2026-11-12T11:37:02.1892961Z # pass 123
+frontend-build	Frontend unit tests	2026-11-12T11:37:02.1893187Z # fail 0
+frontend-build	Frontend unit tests	2026-11-12T11:37:02.1893557Z # skipped 0
+pytest	Run tests without API	﻿2026-11-12T11:37:34.4053664Z ##[group]Run python -m pytest -m "not api" -q
+pytest	Run tests without API	2026-11-12T11:37:34.4053895Z ^[[36;1mpython -m pytest -m "not api" -q^[[0m
+pytest	Run tests without API	2026-11-12T11:37:34.4095255Z shell: /usr/bin/bash -e {0}
+pytest	Run tests without API	2026-11-12T11:37:34.4095397Z env:
+pytest	Run tests without API	2026-11-12T11:37:34.4095561Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+pytest	Run tests without API	2026-11-12T11:37:34.4095796Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+pytest	Run tests without API	2026-11-12T11:37:34.4096023Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+pytest	Run tests without API	2026-11-12T11:37:34.4096231Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+pytest	Run tests without API	2026-11-12T11:37:34.4096439Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+pytest	Run tests without API	2026-11-12T11:37:34.4096649Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+pytest	Run tests without API	2026-11-12T11:37:34.4096826Z ##[endgroup]
+pytest	Run tests without API	2026-11-12T11:37:57.4789903Z ........................................................................ [  5%]
+pytest	Run tests without API	2026-11-12T11:38:10.5115975Z ...................................................s.................... [ 10%]
+pytest	Run tests without API	2026-11-12T11:38:19.6697553Z ........................................................................ [ 15%]
+pytest	Run tests without API	2026-11-12T11:38:21.4997870Z ........................................................................ [ 21%]
+pytest	Run tests without API	2026-11-12T11:38:23.7617706Z ..........................s............................................. [ 26%]
+pytest	Run tests without API	2026-11-12T11:38:25.2805002Z ........................................................................ [ 31%]
+pytest	Run tests without API	2026-11-12T11:38:26.4999650Z ........................................................................ [ 37%]
+pytest	Run tests without API	2026-11-12T11:38:26.7975914Z ........................................................................ [ 42%]
+pytest	Run tests without API	2026-11-12T11:38:28.4617581Z ........................................................................ [ 47%]
+pytest	Run tests without API	2026-11-12T11:38:42.7511822Z ........................................................................ [ 53%]
+pytest	Run tests without API	2026-11-12T11:39:09.6146800Z ........................................................................ [ 58%]
+pytest	Run tests without API	2026-11-12T11:39:21.3259982Z ..............s......................................................... [ 63%]
+pytest	Run tests without API	2026-11-12T11:39:23.7291157Z ........................................................................ [ 69%]
+pytest	Run tests without API	2026-11-12T11:39:32.6136795Z ........................................................................ [ 74%]
+pytest	Run tests without API	2026-11-12T11:39:40.5051181Z ........................................................................ [ 79%]
+pytest	Run tests without API	2026-11-12T11:39:41.7081237Z ........................................................................ [ 84%]
+pytest	Run tests without API	2026-11-12T11:39:43.2894353Z ........................................................................ [ 90%]
+pytest	Run tests without API	2026-11-12T11:39:50.7337524Z ........................................................................ [ 95%]
+pytest	Run tests without API	2026-11-12T11:40:21.3816812Z ............................................................             [100%]
+pytest	Run tests without API	2026-11-12T11:40:21.3819594Z 1353 passed, 3 skipped, 16 deselected in 165.80s (0:02:45)

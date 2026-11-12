@@ -1,0 +1,126 @@
+{
+  "request_id": "0011_review",
+  "kind": "review",
+  "payload": {
+    "packet": [
+      {
+        "output_id": "Qf34cb125f1b7a8c5",
+        "case_id": "G04",
+        "source": "Melamchi, Nepal (CNN)Even from high above, flying in an Indian Air Force helicopter, it is easy to see that the people of Melamchi, central Nepal, are happy to see us.\nResidents in this remote village, about a 44km drive from Nepal's capital, Kathmandu, stand on the distinctive steeply terraced hillsides and wave furiously as the relief flight passes overhead.\nThe mission, a joint effort between Indian air crew and a Nepalese army medical team, is only the third operation of its kind to reach the village since Saturday's massive 7.8-magnitude quake, which left more than 5,000 people dead.\nThe aircraft is stuffed to capacity with tents, medicines and packages of tinned tuna, instant noodles and rice, all bundled haphazardly aboard the Mi-17 by soldiers at the air base in Kathmandu barely 15 minutes earlier.\nLocal official Upendra Tamang is there to greet the helicopter as it touches down on a field in front of the village medical clinic, and waiting soldiers swing into action to unload the delivery.\nHe says people have been desperately awaiting the supplies.\nThe situation in Melamchi and the surrounding villages is \"dire,\" he tells CNN through a translator.\nAccording to Nepal's National Emergency Operation Center, 1,376 people were killed in Sindhupalchok District, where Melamchi is located, when the earthquake hit.\nSome 18,000 houses were destroyed and 100,000 people have been displaced in the surrounding area, says Tamang.\n\"Everyone is sleeping outside,\" he says.\nHe has serious concerns about food supplies in the region, saying the piled boxes of rice and noodles aren't nearly enough to meet the needs of local people.\n\"Aid agencies need to do something very quickly,\" he says.\nIn the days since the quake, injured people from the region have been told to find their way to Melamchi so they can be picked up by the relief flights, he says.\nThey've sent about 500 of the most seriously injured people for treatment in Kathmandu already -- the majority by road -- but many more are stuck in a local clinic waiting for help.\nSeven of them, five women and two men, are suddenly driven onto the airfield in a truck and on the back of a pickup.\nTheir injuries are not life-threatening, but they look to be in a bad state: bloodied, exhausted and traumatized.\nAn elderly woman's face is covered in bandages that look like they haven't been changed in days.\nAnother cries in pain as she is loaded on to a stretcher from the back of the pickup, then awkwardly hoisted on to the helicopter.\nAmong the injured brought on board the flight is Forshani Tamang, accompanied by her son.\nHe tells CNN their family lives in a village called Bachunde, where nearly all the houses were destroyed.\nHe and other family members carried Forshani for four hours to reach Melamchi.\nWith their home destroyed and their stores of grain lost, the family are in crisis.\nAs the helicopter takes off for the capital, flying over a landscape dotted with collapsed buildings and bright orange tents, Nepalese army doctor Naveen Tiwari offers perhaps the only positive for those on board.\nThe patients' injuries are mostly lacerations of varying degrees, he says.\nTheir vital signs are all stable, and with antibiotics and intravenous drips, they should recover.\nWhen the helicopter touches down at Kathmandu airbase, the patients are swiftly unloaded and unceremoniously laid out on the tarmac in the emergency triage area in front of an aircraft hangar, and paramedics scramble to administer IV drips to those in need .\nAs Forshani's son feeds her a cracker softened with water, the relief team turn to prepare for another mission.\nHow you can help victims of the Nepal earthquakeNepal earthquake's victims overwhelm hospitals .",
+        "target": {
+          "length": "long",
+          "extractiveness": "normal",
+          "topic": ""
+        },
+        "key_facts": [
+          {
+            "id": "F1",
+            "proposition": "A helicopter relief mission delivered supplies to earthquake-hit Melamchi in Nepal.",
+            "evidence": [
+              "The mission, a joint effort between Indian air crew and a Nepalese army medical team, is only the third operation of its kind to reach the village since Saturday's massive 7.8-magnitude quake",
+              "The aircraft is stuffed to capacity with tents, medicines and packages of tinned tuna, instant noodles and rice",
+              "Local official Upendra Tamang is there to greet the helicopter as it touches down on a field in front of the village medical clinic, and waiting soldiers swing into action to unload the delivery.",
+              "The situation in Melamchi and the surrounding villages is \"dire,\" he tells CNN through a translator."
+            ],
+            "rationale": "The observed aid delivery is the report's central event. The exact cargo, crew composition and flight count are incidental."
+          },
+          {
+            "id": "F2",
+            "proposition": "Local official Upendra Tamang said the food supplies delivered were insufficient for local people's needs.",
+            "evidence": [
+              "Local official Upendra Tamang is there to greet the helicopter",
+              "He has serious concerns about food supplies in the region, saying the piled boxes of rice and noodles aren't nearly enough to meet the needs of local people."
+            ],
+            "rationale": "The insufficiency of available food is a central assessment of the relief effort, attributed to the local official."
+          },
+          {
+            "id": "F3",
+            "proposition": "According to Tamang, about 500 of the most seriously injured people had already been sent to Kathmandu for treatment.",
+            "evidence": [
+              "In the days since the quake, injured people from the region have been told to find their way to Melamchi so they can be picked up by the relief flights, he says.\nThey've sent about 500 of the most seriously injured people for treatment in Kathmandu already -- the majority by road -- but many more are stuck in a local clinic waiting for help."
+            ],
+            "rationale": "Medical evacuation is the other main activity described. Approximate scale and completed treatment transfers matter; travel mode and those still waiting are not bundled into this proposition."
+          }
+        ],
+        "summary": "A joint mission by an Indian Air Force helicopter crew and a Nepalese army medical team delivered tents, medicines and food to Melamchi, a remote village about a 44km drive from Kathmandu, on only the third such operation to reach it since Saturday's 7.8-magnitude earthquake killed more than 5,000 people. According to Nepal's National Emergency Operation Center, Sindhupalchok District, which includes Melamchi, suffered 1,376 deaths. Local official Upendra Tamang said about 18,000 homes had been destroyed and 100,000 people displaced in the surrounding area, with everyone sleeping outdoors. He warned that the food delivered was inadequate and urged aid agencies to act quickly. Tamang said around 500 of the most seriously injured had already been sent to Kathmandu, mostly by road, while many others remained at a local clinic awaiting help. The helicopter evacuated seven patients—five women and two men—whose injuries were not life-threatening but who appeared exhausted and traumatized. Among them was Forshani Tamang, whose son said relatives had carried her for four hours from Bachunde, where nearly all homes were destroyed. Her family had lost its house and grain supplies. Nepalese army doctor Naveen Tiwari said the patients mainly had lacerations, their vital signs were stable, and they should recover with antibiotics and intravenous fluids. At Kathmandu airbase, paramedics treated the patients while the relief team prepared for another mission."
+      },
+      {
+        "output_id": "Qbc462c41228fb0d3",
+        "case_id": "G05",
+        "source": "(CNN)Here you go, galaxy.\nThe Force is back.\nAt an emotional event in Anaheim, California, director J.J. Abrams and the \"Star Wars: Episode VII -- The Force Awakens\" cast showed off for the audience and then capped the presentation with the trailer for the new film.\nThe audience gasped, cheered and applauded.\nThe cast was appreciative of the welcome.\n\"You're more than fans.\nYou're family,\" Mark Hamill told the crowd.\nCarrie Fisher was also there, though without her trademark Princess Leia hair buns.\nThey're \"retired,\" she said.\nAirline unveils 'Star Wars' 787 Dreamliner painted like R2-D2 .\nAlso introduced: \"Star Wars\" emoji, some new Stormtroopers and the BB8, the soccer-ball-like droid that rolled around the stage, to the delight of the audience.\nIt wasn't CGI, either, as much of the movie, Abrams said, was filmed on actual sets.\nTwitter erupted with near-instantaneous reaction, most of it enthusiastic.\nCNNMoney: 'Star Wars' teaser sends Twitter into lightspeed .\nThe new \"Star Wars\" is due out December 18.\nCNN's Henry Hanks was in the audience.\nHere are his five top takeaways from the event: .\n1.\nHan flies again .\nThe trailer ended in a big way, with Han Solo and Chewbacca having apparently arrived after a flight on the Millennium Falcon.\nThe reaction in the room of fans was nothing short of rapturous upon seeing Harrison Ford back in character as Han.\nA few burst into tears at the end of the the 110-second teaser.\n2.\nThat's not Tatooine .\nAbrams revealed that their shooting location was not meant to represent the Skywalker ancestral home of Tatooine, as many believed.\nInstead, it's a planet called Jakku, where much of the early action of the movie takes place.\nDaisy Ridley's Rey meets up with a stromtrooper, Finn (John Boyega) and that's where the adventure begins.\n3.\nHints of Luke and Leia .\nOscar Isaac dropped a major hint that his pilot character of Poe is sent on a mission by \"a princess,\" and we're fairly certain which one he meant.\nLeia and Luke aren't seen in the trailer, but we hear Luke's unmistakable voice as he passes along a lightsaber, presumably to other Skywalker family members.\nCarrie Fisher also teased her new wardrobe, and promised no metal bikini.\n4.\nThere's less CGI than in the prequels .\nAbrams said he was proud that \"you can watch the movie and see what it is\" before the effects wizards at Industrial Light and Magic did their work.\nAnd yes, the new droid BB-8 (who was a fan favorite at the panel) is not CGI.\n5.\nThe ruins of the Empire are all around .\nA crashed Star Destroyer can be seen at the opening of the trailer, as well as a look at Vader's charred helmet.\nChills.\nCreating the sounds of 'Star Wars' CNN's Henry Hanks contributed to this story.",
+        "target": {
+          "length": "short",
+          "extractiveness": "normal",
+          "topic": ""
+        },
+        "key_facts": [
+          {
+            "id": "F1",
+            "proposition": "J.J. Abrams and the cast presented a trailer for Star Wars: The Force Awakens at an event in Anaheim.",
+            "evidence": [
+              "At an emotional event in Anaheim, California, director J.J. Abrams and the \"Star Wars: Episode VII -- The Force Awakens\" cast showed off for the audience and then capped the presentation with the trailer for the new film."
+            ],
+            "rationale": "The trailer presentation is the main news event. Emotional atmosphere is not required."
+          },
+          {
+            "id": "F2",
+            "proposition": "The Force Awakens was scheduled for release on December 18.",
+            "evidence": [
+              "The new \"Star Wars\" is due out December 18."
+            ],
+            "rationale": "The scheduled release date is central forward-looking information, not a claim that release had already occurred."
+          },
+          {
+            "id": "F3",
+            "proposition": "The trailer showed Han Solo and Chewbacca returning.",
+            "evidence": [
+              "The trailer ended in a big way, with Han Solo and Chewbacca having apparently arrived after a flight on the Millennium Falcon.",
+              "The reaction in the room of fans was nothing short of rapturous upon seeing Harrison Ford back in character as Han."
+            ],
+            "rationale": "The returning characters are the highlighted trailer reveal. An inferred preceding flight and fan reactions are not required."
+          }
+        ],
+        "summary": "Director J.J. Abrams and the cast unveiled a 110-second trailer for \"Star Wars: Episode VII -- The Force Awakens\" at an enthusiastically received Anaheim event, with Harrison Ford's return as Han Solo alongside Chewbacca drawing an emotional response; the film is scheduled for December 18. Abrams identified the desert planet as Jakku, where Rey meets stormtrooper Finn, and highlighted the use of real sets and a physical BB-8 droid, while the trailer also featured Luke's voice and remnants of the Empire."
+      },
+      {
+        "output_id": "Q676e351311e808f0",
+        "case_id": "G02",
+        "source": "Delhi (CNN)An international human rights group is calling for an independent investigation of the killings by police of 20 suspected red sandalwood smugglers in southeastern India.\n\"There must be a criminal investigation to determine whether the police used excessive force, and whether the killings amount to 'fake encounters,' or staged extrajudicial executions\", said Abhirr Vp, of Amnesty International India.\n\"The police are not above the law, and must not be treated like they are.\"\nThose responsible should be brought to justice, according to Amnesty.\n\"Lethal force should not be used except when strictly unavoidable in order to protect life,\" Vp said.\nA police official, Deputy Inspector General Kantha Rao, declined comment Wednesday, saying an \"investigation is still going on.\"\nThe incident in question took place early Tuesday in India's southeastern Andhra Pradesh state.\nForest officials near the town of Tirupati spotted hundreds of smugglers cutting trees for red sandalwood, Rao said Tuesday.\nThe forest officials, who were unarmed, called for police.\n\"We saw several trees chopped down,\" Rao said said.\n\"These guys came prepared and were heavily armed.\"\nRao said that the ensuing gun battle lasted more than three hours and 20 smugglers were shot.\nMany of them came from the neighboring state of Tamil Nadu, he said.\nAmnesty International said the police were claiming self-defense, alleging the suspects attacked them with stone and axes.\n\"However, no police official was injured,\" the  Amnesty statement said.\n\"Most of the suspected smugglers were shot in the back.\"\nAccording to Amnesty, India's National Human Rights Commission has said the incident \"involved a serious violation of human rights of the individuals,\" and that \"the opening of firing cannot be justified on the ground of self defense since it resulted in the loss of lives of 20 persons.\"\nThe commission has asked senior government and police officials to explain the actions of the police and forest officials within two weeks, Amnesty said.\nPolice said sandalwood smuggling is common in the area.\nLocal media are reporting that politicians from Tamil Nadu have lodged a protest against the Andhra Pradesh government, saying the alleged smugglers were murdered in cold blood.\nKunal Sehgal in Delhi contributed to this report.",
+        "target": {
+          "length": "normal",
+          "extractiveness": "fully",
+          "topic": ""
+        },
+        "key_facts": [
+          {
+            "id": "F1",
+            "proposition": "Amnesty International called for an independent investigation of police killings of 20 suspected red sandalwood smugglers in India.",
+            "evidence": [
+              "An international human rights group is calling for an independent investigation of the killings by police of 20 suspected red sandalwood smugglers in southeastern India.",
+              "said Abhirr Vp, of Amnesty International India."
+            ],
+            "rationale": "The investigation demand is the main event. The number killed and suspected status define the incident under scrutiny."
+          },
+          {
+            "id": "F2",
+            "proposition": "Police claimed that they acted in self-defense.",
+            "evidence": [
+              "Amnesty International said the police were claiming self-defense, alleging the suspects attacked them with stone and axes."
+            ],
+            "rationale": "This records the police's stated justification as a claim, not an established finding. The alleged weapons are not required."
+          },
+          {
+            "id": "F3",
+            "proposition": "Amnesty International said most of the suspected smugglers were shot in the back.",
+            "evidence": [
+              "\"However, no police official was injured,\" the  Amnesty statement said.\n\"Most of the suspected smugglers were shot in the back.\""
+            ],
+            "rationale": "This is a central basis for challenging the official account. Attribution to Amnesty and the qualifier most are essential; the separate claim about police injuries is not part of this fact."
+          }
+        ],
+        "summary": "Delhi (CNN)An international human rights group is calling for an independent investigation of the killings by police of 20 suspected red sandalwood smugglers in southeastern India. Rao said that the ensuing gun battle lasted more than three hours and 20 smugglers were shot. According to Amnesty, India's National Human Rights Commission has said the incident \"involved a serious violation of human rights of the individuals,\" and that \"the opening of firing cannot be justified on the ground of self defense since it resulted in the loss of lives of 20 persons.\" The commission has asked senior government and police officials to explain the actions of the police and forest officials within two weeks, Amnesty said."
+      }
+    ]
+  },
+  "created_utc": "2026-11-10T07:55:17.256139+00:00"
+}

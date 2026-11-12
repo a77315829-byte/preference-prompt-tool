@@ -1,0 +1,155 @@
+{
+  "version": "react-current-v1",
+  "provenance": "New synthetic TypeScript/React mini-component acceptance tasks. Not production incidents, user tasks, or human preference evidence. Evaluator controls and assertions are excluded from generator packets.",
+  "environment": {
+    "react": "19.3.0",
+    "typescript": "5.9.3",
+    "jsdom": "20.0.3"
+  },
+  "tasks": [
+    {
+      "id": "roster_selection",
+      "kind": "bug",
+      "title": "팀 명단 선택을 행 ID로 유지하기",
+      "contract_types": "type Row = { id: string; name: string; team: string };\ntype ExpectedProps = { rows: Row[]; onSelectionChange: (ids: string[]) => void };",
+      "requirements": [
+        "제공된 Component.tsx의 선택 버그를 고친다. 행의 id는 고유하며 rows는 같은 구성원의 필터 없는 전체 명단이다. 부모는 같은 ID의 행을 새 객체와 다른 순서로 다시 줄 수 있다. 이 과제에서는 명단의 ID 추가/삭제는 하지 않는다.",
+        "검색 입력의 접근 가능한 이름은 Search members이며 이름의 대소문자를 무시하고 양끝 공백을 제거한 부분 문자열로 화면의 행만 필터링한다. 빈 검색은 전체 행이다.",
+        "의미상 table에 Name, Team 열과 행마다 Select {name} 체크박스를 표시한다. 선택의 정체성은 row.id다. 검색으로 숨겨진 선택을 보존하고, 부모의 행 순서 변경에도 해당 ID만 선택 상태로 유지한다.",
+        "Selected count라는 접근 가능한 이름의 output은 숨겨진 행까지 전체 선택 개수다. Select visible 버튼은 보이는 모든 ID를 기존 선택에 중복 없이 추가하고, Clear visible 버튼은 보이는 ID만 선택에서 제거한다. 결과가 없으면 두 버튼을 비활성화하고 No members 상태 메시지를 표시한다.",
+        "체크박스/일괄 버튼의 사용자 조작마다 onSelectionChange를 정확히 한 번 호출한다. 인자는 선택된 실제 ID들로, 기존 선택 순서를 유지하고 새 선택은 클릭 순서(일괄 추가는 현재 화면 순서)로 뒤에 붙인다. 초기 마운트/검색/부모의 순서 변경은 콜백을 호출하지 않는다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {
+        "Component.tsx": "import { useState } from 'react';\n\nexport type Row = { id: string; name: string; team: string };\nexport type Props = { rows: Row[]; onSelectionChange: (ids: string[]) => void };\n\nexport function Component({ rows, onSelectionChange }: Props) {\n  const [query, setQuery] = useState('');\n  const [selected, setSelected] = useState<string[]>([]);\n  const visible = rows.filter(row => row.name.toLowerCase().includes(query.trim().toLowerCase()));\n  function toggle(id: string) {\n    const next = selected.includes(id) ? selected.filter(value => value !== id) : [...selected, id];\n    setSelected(next);\n    onSelectionChange(next);\n  }\n  function selectVisible(select: boolean) {\n    const ids = visible.map(row => row.id);\n    const next = select ? [...selected, ...ids.filter(id => !selected.includes(id))] : selected.filter(id => !ids.includes(id));\n    setSelected(next);\n    onSelectionChange(next);\n  }\n  return <section aria-label=\"Team roster\">\n    <label>Search members<input value={query} onChange={event => setQuery(event.currentTarget.value)} /></label>\n    <output aria-label=\"Selected count\">{selected.length}</output>\n    <button type=\"button\" disabled={visible.length === 0} onClick={() => selectVisible(true)}>Select visible</button>\n    <button type=\"button\" disabled={visible.length === 0} onClick={() => selectVisible(false)}>Clear visible</button>\n    <table><thead><tr><th>Select</th><th>Name</th><th>Team</th></tr></thead><tbody>\n      {visible.map(row => <tr key={row.id}>\n        <td><input type=\"checkbox\" aria-label={`Select ${row.name}`} checked={selected.includes(String(visible.indexOf(row)))} onChange={() => toggle(String(visible.indexOf(row)))} /></td>\n        <td>{row.name}</td><td>{row.team}</td>\n      </tr>)}\n    </tbody></table>\n    {visible.length === 0 && <p role=\"status\">No members</p>}\n  </section>;\n}\n"
+      },
+      "prompt": "TypeScript/React 합성 미니 컴포넌트 과제: 팀 명단 선택을 행 ID로 유지하기\n환경: React 19.3.0, TypeScript 5.9.3(strict), react-dom/client, JSDOM 20.0.3. 설치된 React 이외 새 패키지는 사용하지 않는다. Component.tsx에서 named export Component와 Props를 제공한다. 추가 소스 파일은 상대 경로로만 참조한다. 파일 또는 변경 위치를 식별할 수 있게 답한다. 표시 문자열과 접근 가능한 이름은 아래 영문 그대로 사용한다.\n\n계약:\ntype Row = { id: string; name: string; team: string };\ntype Props = { rows: Row[]; onSelectionChange: (ids: string[]) => void };\n\n요구사항:\n1. 제공된 Component.tsx의 선택 버그를 고친다. 행의 id는 고유하며 rows는 같은 구성원의 필터 없는 전체 명단이다. 부모는 같은 ID의 행을 새 객체와 다른 순서로 다시 줄 수 있다. 이 과제에서는 명단의 ID 추가/삭제는 하지 않는다.\n2. 검색 입력의 접근 가능한 이름은 Search members이며 이름의 대소문자를 무시하고 양끝 공백을 제거한 부분 문자열로 화면의 행만 필터링한다. 빈 검색은 전체 행이다.\n3. 의미상 table에 Name, Team 열과 행마다 Select {name} 체크박스를 표시한다. 선택의 정체성은 row.id다. 검색으로 숨겨진 선택을 보존하고, 부모의 행 순서 변경에도 해당 ID만 선택 상태로 유지한다.\n4. Selected count라는 접근 가능한 이름의 output은 숨겨진 행까지 전체 선택 개수다. Select visible 버튼은 보이는 모든 ID를 기존 선택에 중복 없이 추가하고, Clear visible 버튼은 보이는 ID만 선택에서 제거한다. 결과가 없으면 두 버튼을 비활성화하고 No members 상태 메시지를 표시한다.\n5. 체크박스/일괄 버튼의 사용자 조작마다 onSelectionChange를 정확히 한 번 호출한다. 인자는 선택된 실제 ID들로, 기존 선택 순서를 유지하고 새 선택은 클릭 순서(일괄 추가는 현재 화면 순서)로 뒤에 붙인다. 초기 마운트/검색/부모의 순서 변경은 콜백을 호출하지 않는다.\n\n제공 파일 Component.tsx:\n```tsx\nimport { useState } from 'react';\n\nexport type Row = { id: string; name: string; team: string };\nexport type Props = { rows: Row[]; onSelectionChange: (ids: string[]) => void };\n\nexport function Component({ rows, onSelectionChange }: Props) {\n  const [query, setQuery] = useState('');\n  const [selected, setSelected] = useState<string[]>([]);\n  const visible = rows.filter(row => row.name.toLowerCase().includes(query.trim().toLowerCase()));\n  function toggle(id: string) {\n    const next = selected.includes(id) ? selected.filter(value => value !== id) : [...selected, id];\n    setSelected(next);\n    onSelectionChange(next);\n  }\n  function selectVisible(select: boolean) {\n    const ids = visible.map(row => row.id);\n    const next = select ? [...selected, ...ids.filter(id => !selected.includes(id))] : selected.filter(id => !ids.includes(id));\n    setSelected(next);\n    onSelectionChange(next);\n  }\n  return <section aria-label=\"Team roster\">\n    <label>Search members<input value={query} onChange={event => setQuery(event.currentTarget.value)} /></label>\n    <output aria-label=\"Selected count\">{selected.length}</output>\n    <button type=\"button\" disabled={visible.length === 0} onClick={() => selectVisible(true)}>Select visible</button>\n    <button type=\"button\" disabled={visible.length === 0} onClick={() => selectVisible(false)}>Clear visible</button>\n    <table><thead><tr><th>Select</th><th>Name</th><th>Team</th></tr></thead><tbody>\n      {visible.map(row => <tr key={row.id}>\n        <td><input type=\"checkbox\" aria-label={`Select ${row.name}`} checked={selected.includes(String(visible.indexOf(row)))} onChange={() => toggle(String(visible.indexOf(row)))} /></td>\n        <td>{row.name}</td><td>{row.team}</td>\n      </tr>)}\n    </tbody></table>\n    {visible.length === 0 && <p role=\"status\">No members</p>}\n  </section>;\n}\n```"
+    },
+    {
+      "id": "reservation_validation",
+      "kind": "feature",
+      "title": "기간과 정원을 검증하는 예약 폼",
+      "contract_types": "type Reservation = { start: string; end: string; guests: number };\ntype ExpectedProps = { capacity: number; onReserve: (reservation: Reservation) => void };",
+      "requirements": [
+        "새 예약 폼을 만든다. capacity는 양의 정수이며 부모가 변경할 수 있다. 초기 세 입력은 비어 있다. Start date, End date라는 label의 date 입력, Guests라는 label의 number 입력, Reserve 제출 버튼, Reservation이라는 이름의 form을 제공한다.",
+        "제출 때 start와 end는 필수이며 end는 start보다 엄격하게 뒤여야 한다. 유효한 날짜 문자열은 YYYY-MM-DD로 브라우저 date 입력이 제공한다고 가정한다. 현재 시각/오늘 날짜와 비교하지 않는다.",
+        "Guests는 필수, 정수, 1 이상, 최신 capacity 이하이어야 한다. 0, 음수, 소수, 빈 값, 정원 초과를 거절한다. HTML 기본 검증에만 의존하지 않고 form submit 이벤트를 직접 처리하며 페이지를 이동하지 않는다.",
+        "실패한 제출은 onReserve를 호출하지 않는다. 잘못된 입력에 aria-invalid=true를 지정하고 비어 있지 않은 role=alert 오류를 표시한다. 기간 순서 오류는 End date에 표시한다. 여러 잘못된 필드는 동시에 표시한다.",
+        "정상 제출은 숫자로 변환한 guests와 원래 날짜 문자열로 onReserve({start,end,guests})를 정확히 한 번 호출한다. 지난 오류/aria-invalid를 해제하며 입력값은 유지한다. 검사 시점은 제출 때이며 입력 중 실시간 오류 갱신은 요구하지 않는다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 합성 미니 컴포넌트 과제: 기간과 정원을 검증하는 예약 폼\n환경: React 19.3.0, TypeScript 5.9.3(strict), react-dom/client, JSDOM 20.0.3. 설치된 React 이외 새 패키지는 사용하지 않는다. Component.tsx에서 named export Component와 Props를 제공한다. 추가 소스 파일은 상대 경로로만 참조한다. 파일 또는 변경 위치를 식별할 수 있게 답한다. 표시 문자열과 접근 가능한 이름은 아래 영문 그대로 사용한다.\n\n계약:\ntype Reservation = { start: string; end: string; guests: number };\ntype Props = { capacity: number; onReserve: (reservation: Reservation) => void };\n\n요구사항:\n1. 새 예약 폼을 만든다. capacity는 양의 정수이며 부모가 변경할 수 있다. 초기 세 입력은 비어 있다. Start date, End date라는 label의 date 입력, Guests라는 label의 number 입력, Reserve 제출 버튼, Reservation이라는 이름의 form을 제공한다.\n2. 제출 때 start와 end는 필수이며 end는 start보다 엄격하게 뒤여야 한다. 유효한 날짜 문자열은 YYYY-MM-DD로 브라우저 date 입력이 제공한다고 가정한다. 현재 시각/오늘 날짜와 비교하지 않는다.\n3. Guests는 필수, 정수, 1 이상, 최신 capacity 이하이어야 한다. 0, 음수, 소수, 빈 값, 정원 초과를 거절한다. HTML 기본 검증에만 의존하지 않고 form submit 이벤트를 직접 처리하며 페이지를 이동하지 않는다.\n4. 실패한 제출은 onReserve를 호출하지 않는다. 잘못된 입력에 aria-invalid=true를 지정하고 비어 있지 않은 role=alert 오류를 표시한다. 기간 순서 오류는 End date에 표시한다. 여러 잘못된 필드는 동시에 표시한다.\n5. 정상 제출은 숫자로 변환한 guests와 원래 날짜 문자열로 onReserve({start,end,guests})를 정확히 한 번 호출한다. 지난 오류/aria-invalid를 해제하며 입력값은 유지한다. 검사 시점은 제출 때이며 입력 중 실시간 오류 갱신은 요구하지 않는다.\n\n기존 파일은 없다."
+    },
+    {
+      "id": "optimistic_favorite",
+      "kind": "feature",
+      "title": "실패 시 되돌리는 즐겨찾기 저장",
+      "contract_types": "type ExpectedProps = { initialValue: boolean; save: (next: boolean) => Promise<void> };",
+      "requirements": [
+        "새 즐겨찾기 컴포넌트를 만든다. initialValue를 마운트 시점의 초기값으로 사용한다. 이후 initialValue 변경 동기화는 이 과제 범위가 아니다. Favorite 버튼의 aria-pressed로 현재 값을 표현한다.",
+        "버튼 클릭 즉시 현재 값을 반전해 화면에 보여주고 save(반전된 boolean)를 정확히 한 번 호출한다. save는 Promise<void>를 반환하며 동기적으로 throw하지 않는다고 가정한다.",
+        "Promise가 끝나기 전 버튼을 disabled로 하고 role=status의 Saving 메시지를 보인다. 대기 중 추가 클릭은 다른 save를 만들지 않는다.",
+        "성공하면 반전된 값을 유지한다. 실패하면 직전 값으로 되돌리고 role=alert에 Save failed를 표시한다. 성공/실패 모두 대기 표시를 제거하고 버튼을 다시 활성화한다.",
+        "실패 뒤 다시 시도할 수 있다. 재시도 시작 시 지난 오류를 지우고 되돌려진 값의 반대값을 저장한다. 이후 성공한 상태에서 다시 클릭하면 반대 방향 값도 저장할 수 있다. 네트워크나 타이머를 직접 만들지 말고 주어진 save만 사용한다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 합성 미니 컴포넌트 과제: 실패 시 되돌리는 즐겨찾기 저장\n환경: React 19.3.0, TypeScript 5.9.3(strict), react-dom/client, JSDOM 20.0.3. 설치된 React 이외 새 패키지는 사용하지 않는다. Component.tsx에서 named export Component와 Props를 제공한다. 추가 소스 파일은 상대 경로로만 참조한다. 파일 또는 변경 위치를 식별할 수 있게 답한다. 표시 문자열과 접근 가능한 이름은 아래 영문 그대로 사용한다.\n\n계약:\ntype Props = { initialValue: boolean; save: (next: boolean) => Promise<void> };\n\n요구사항:\n1. 새 즐겨찾기 컴포넌트를 만든다. initialValue를 마운트 시점의 초기값으로 사용한다. 이후 initialValue 변경 동기화는 이 과제 범위가 아니다. Favorite 버튼의 aria-pressed로 현재 값을 표현한다.\n2. 버튼 클릭 즉시 현재 값을 반전해 화면에 보여주고 save(반전된 boolean)를 정확히 한 번 호출한다. save는 Promise<void>를 반환하며 동기적으로 throw하지 않는다고 가정한다.\n3. Promise가 끝나기 전 버튼을 disabled로 하고 role=status의 Saving 메시지를 보인다. 대기 중 추가 클릭은 다른 save를 만들지 않는다.\n4. 성공하면 반전된 값을 유지한다. 실패하면 직전 값으로 되돌리고 role=alert에 Save failed를 표시한다. 성공/실패 모두 대기 표시를 제거하고 버튼을 다시 활성화한다.\n5. 실패 뒤 다시 시도할 수 있다. 재시도 시작 시 지난 오류를 지우고 되돌려진 값의 반대값을 저장한다. 이후 성공한 상태에서 다시 클릭하면 반대 방향 값도 저장할 수 있다. 네트워크나 타이머를 직접 만들지 말고 주어진 save만 사용한다.\n\n기존 파일은 없다."
+    },
+    {
+      "id": "accordion_keyboard",
+      "kind": "feature",
+      "title": "키보드로 이동하는 도움말 아코디언",
+      "contract_types": "type Item = { id: string; title: string; body: string; disabled?: boolean };\ntype ExpectedProps = { items: Item[] };",
+      "requirements": [
+        "새 단일 펼침 아코디언을 만든다. items의 id는 고유하다. 각 title을 접근 가능한 이름으로 갖는 native button이 있으며 처음에는 모두 닫혀 있다. disabled 항목은 native disabled 버튼이다.",
+        "활성 제목 클릭은 그 항목을 열고 다른 항목을 닫는다. 열린 제목을 다시 클릭하면 모두 닫힌다. 닫힌 내용은 DOM에서 제거한다.",
+        "버튼에 aria-expanded 및 패널을 가리키는 aria-controls를 설정한다. 열린 내용은 role=region이고, id는 버튼 aria-controls와 일치하며, aria-labelledby는 버튼 id를 가리킨다. 두 컴포넌트 인스턴스의 ID도 충돌하지 않아야 한다.",
+        "활성 버튼에서 ArrowDown/ArrowUp은 disabled 제목을 건너뛰어 다음/이전 활성 제목으로 포커스를 옮기고 끝에서 순환한다. Home/End는 첫/마지막 활성 제목으로 이동한다. 이 네 키의 기본 동작을 막는다.",
+        "포커스 이동만으로 펼침 상태를 바꾸지 않는다. disabled 제목은 클릭으로 열리지 않는다. 빈 배열과 활성 제목 하나만 있는 경우도 오류 없이 동작한다. CSS, 실제 브라우저 레이아웃, 스크린리더 발화는 요구하지 않는다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 합성 미니 컴포넌트 과제: 키보드로 이동하는 도움말 아코디언\n환경: React 19.3.0, TypeScript 5.9.3(strict), react-dom/client, JSDOM 20.0.3. 설치된 React 이외 새 패키지는 사용하지 않는다. Component.tsx에서 named export Component와 Props를 제공한다. 추가 소스 파일은 상대 경로로만 참조한다. 파일 또는 변경 위치를 식별할 수 있게 답한다. 표시 문자열과 접근 가능한 이름은 아래 영문 그대로 사용한다.\n\n계약:\ntype Item = { id: string; title: string; body: string; disabled?: boolean };\ntype Props = { items: Item[] };\n\n요구사항:\n1. 새 단일 펼침 아코디언을 만든다. items의 id는 고유하다. 각 title을 접근 가능한 이름으로 갖는 native button이 있으며 처음에는 모두 닫혀 있다. disabled 항목은 native disabled 버튼이다.\n2. 활성 제목 클릭은 그 항목을 열고 다른 항목을 닫는다. 열린 제목을 다시 클릭하면 모두 닫힌다. 닫힌 내용은 DOM에서 제거한다.\n3. 버튼에 aria-expanded 및 패널을 가리키는 aria-controls를 설정한다. 열린 내용은 role=region이고, id는 버튼 aria-controls와 일치하며, aria-labelledby는 버튼 id를 가리킨다. 두 컴포넌트 인스턴스의 ID도 충돌하지 않아야 한다.\n4. 활성 버튼에서 ArrowDown/ArrowUp은 disabled 제목을 건너뛰어 다음/이전 활성 제목으로 포커스를 옮기고 끝에서 순환한다. Home/End는 첫/마지막 활성 제목으로 이동한다. 이 네 키의 기본 동작을 막는다.\n5. 포커스 이동만으로 펼침 상태를 바꾸지 않는다. disabled 제목은 클릭으로 열리지 않는다. 빈 배열과 활성 제목 하나만 있는 경우도 오류 없이 동작한다. CSS, 실제 브라우저 레이아웃, 스크린리더 발화는 요구하지 않는다.\n\n기존 파일은 없다."
+    },
+    {
+      "id": "queue_pagination",
+      "kind": "bug",
+      "title": "목록 축소 시 유효 페이지로 이동하기",
+      "contract_types": "type Item = { id: string; label: string };\ntype ExpectedProps = { items: Item[]; pageSize: number };",
+      "requirements": [
+        "제공된 페이지네이션 버그를 고친다. items의 id는 고유하고 pageSize는 항상 양의 정수다. 페이지는 1부터 시작하며 부모는 items 또는 pageSize를 변경할 수 있다.",
+        "Queue items라는 이름의 ul에 현재 페이지 항목을 원래 순서대로 li로 표시한다. Page라는 이름의 output에는 현재 / 전체 페이지를 표시한다(예: 1 / 3). 총 페이지는 올림 나눗셈이며 빈 배열도 1페이지다.",
+        "Previous/Next 버튼은 한 페이지만 이동하고 첫/마지막 페이지에서는 각각 disabled이다. 빈 목록에서는 둘 다 비활성화하고 No items 상태 메시지를 표시한다.",
+        "목록 축소 또는 pageSize 변경으로 현재 페이지가 범위를 벗어나면 마지막 유효 페이지로 내려간다. 그 보정값을 상태로 유지하므로 목록이 다시 늘어나도 오래된 페이지로 튀어 돌아가지 않는다.",
+        "현재 페이지가 여전히 유효하면 items 갱신이나 pageSize 변경만으로 1페이지로 돌아가지 않는다. 부모의 배열을 변경하지 않는다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {
+        "Component.tsx": "import { useEffect, useState } from 'react';\n\nexport type Item = { id: string; label: string };\nexport type Props = { items: Item[]; pageSize: number };\n\nexport function Component({ items, pageSize }: Props) {\n  const [page, setPage] = useState(1);\n  const total = Math.max(1, Math.ceil(items.length / pageSize));\n  const current = page;\n  useEffect(() => {}, [total]);\n  const visible = items.slice((current - 1) * pageSize, current * pageSize);\n  return <section aria-label=\"Review queue\">\n    <ul aria-label=\"Queue items\">{visible.map(item => <li key={item.id}>{item.label}</li>)}</ul>\n    {items.length === 0 && <p role=\"status\">No items</p>}\n    <output aria-label=\"Page\">{current} / {total}</output>\n    <button type=\"button\" disabled={current === 1} onClick={() => setPage(current - 1)}>Previous</button>\n    <button type=\"button\" disabled={current === total} onClick={() => setPage(current + 1)}>Next</button>\n  </section>;\n}\n"
+      },
+      "prompt": "TypeScript/React 합성 미니 컴포넌트 과제: 목록 축소 시 유효 페이지로 이동하기\n환경: React 19.3.0, TypeScript 5.9.3(strict), react-dom/client, JSDOM 20.0.3. 설치된 React 이외 새 패키지는 사용하지 않는다. Component.tsx에서 named export Component와 Props를 제공한다. 추가 소스 파일은 상대 경로로만 참조한다. 파일 또는 변경 위치를 식별할 수 있게 답한다. 표시 문자열과 접근 가능한 이름은 아래 영문 그대로 사용한다.\n\n계약:\ntype Item = { id: string; label: string };\ntype Props = { items: Item[]; pageSize: number };\n\n요구사항:\n1. 제공된 페이지네이션 버그를 고친다. items의 id는 고유하고 pageSize는 항상 양의 정수다. 페이지는 1부터 시작하며 부모는 items 또는 pageSize를 변경할 수 있다.\n2. Queue items라는 이름의 ul에 현재 페이지 항목을 원래 순서대로 li로 표시한다. Page라는 이름의 output에는 현재 / 전체 페이지를 표시한다(예: 1 / 3). 총 페이지는 올림 나눗셈이며 빈 배열도 1페이지다.\n3. Previous/Next 버튼은 한 페이지만 이동하고 첫/마지막 페이지에서는 각각 disabled이다. 빈 목록에서는 둘 다 비활성화하고 No items 상태 메시지를 표시한다.\n4. 목록 축소 또는 pageSize 변경으로 현재 페이지가 범위를 벗어나면 마지막 유효 페이지로 내려간다. 그 보정값을 상태로 유지하므로 목록이 다시 늘어나도 오래된 페이지로 튀어 돌아가지 않는다.\n5. 현재 페이지가 여전히 유효하면 items 갱신이나 pageSize 변경만으로 1페이지로 돌아가지 않는다. 부모의 배열을 변경하지 않는다.\n\n제공 파일 Component.tsx:\n```tsx\nimport { useEffect, useState } from 'react';\n\nexport type Item = { id: string; label: string };\nexport type Props = { items: Item[]; pageSize: number };\n\nexport function Component({ items, pageSize }: Props) {\n  const [page, setPage] = useState(1);\n  const total = Math.max(1, Math.ceil(items.length / pageSize));\n  const current = page;\n  useEffect(() => {}, [total]);\n  const visible = items.slice((current - 1) * pageSize, current * pageSize);\n  return <section aria-label=\"Review queue\">\n    <ul aria-label=\"Queue items\">{visible.map(item => <li key={item.id}>{item.label}</li>)}</ul>\n    {items.length === 0 && <p role=\"status\">No items</p>}\n    <output aria-label=\"Page\">{current} / {total}</output>\n    <button type=\"button\" disabled={current === 1} onClick={() => setPage(current - 1)}>Previous</button>\n    <button type=\"button\" disabled={current === total} onClick={() => setPage(current + 1)}>Next</button>\n  </section>;\n}\n```"
+    },
+    {
+      "id": "undo_removal",
+      "kind": "bug",
+      "title": "첨부 삭제를 원래 위치로 한 번 복원하기",
+      "contract_types": "type Item = { id: string; label: string };\ntype ExpectedProps = { initialItems: Item[]; onChange: (items: Item[]) => void };",
+      "requirements": [
+        "제공된 삭제 취소 버그를 고친다. initialItems는 고유 id를 가진 초기 첨부 목록이며 마운트 이후 동기화는 요구하지 않는다. Attachments라는 이름의 ul에 현재 순서대로 표시한다.",
+        "각 항목의 삭제 버튼 접근 가능한 이름은 Remove {label}이다. 클릭한 ID 항목만 제거하고 새 목록으로 onChange를 정확히 한 번 호출한다. 부모가 준 배열/항목 객체를 직접 변경하지 않는다.",
+        "Undo 버튼은 아직 취소할 삭제가 없으면 disabled이다. 마지막 삭제의 항목과 그 삭제 직전 위치를 기억한다. Undo는 그 위치에 항목을 복원하고 복원된 순서의 새 목록으로 onChange를 정확히 한 번 호출한다.",
+        "취소 기록은 한 단계다. 연속 삭제하면 가장 최근 삭제만 복원할 수 있으며, 한 번 Undo 후에는 다시 disabled이다. 이미 없어진 이전 삭제까지 되돌리거나 중복 항목을 추가하지 않는다.",
+        "빈 목록에는 No attachments 상태 메시지를 표시한다. 초기 마운트는 콜백을 호출하지 않는다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {
+        "Component.tsx": "import { useState } from 'react';\n\nexport type Item = { id: string; label: string };\nexport type Props = { initialItems: Item[]; onChange: (items: Item[]) => void };\n\nexport function Component({ initialItems, onChange }: Props) {\n  const [items, setItems] = useState(initialItems);\n  const [removed, setRemoved] = useState<{ item: Item; index: number } | null>(null);\n  function remove(id: string) {\n    const index = items.findIndex(item => item.id === id);\n    if (index < 0) return;\n    const next = items.filter(item => item.id !== id);\n    setRemoved({ item: items[index], index });\n    setItems(next);\n    onChange(next);\n  }\n  function undo() {\n    if (!removed) return;\n    const next = [...items];\n    next.push(removed.item);\n    setItems(next);\n    setRemoved(null);\n    onChange(next);\n  }\n  return <section aria-label=\"Attachment list\">\n    <ul aria-label=\"Attachments\">{items.map(item => <li key={item.id}>{item.label}<button type=\"button\" aria-label={`Remove ${item.label}`} onClick={() => remove(item.id)}>Remove</button></li>)}</ul>\n    {items.length === 0 && <p role=\"status\">No attachments</p>}\n    <button type=\"button\" disabled={!removed} onClick={undo}>Undo</button>\n  </section>;\n}\n"
+      },
+      "prompt": "TypeScript/React 합성 미니 컴포넌트 과제: 첨부 삭제를 원래 위치로 한 번 복원하기\n환경: React 19.3.0, TypeScript 5.9.3(strict), react-dom/client, JSDOM 20.0.3. 설치된 React 이외 새 패키지는 사용하지 않는다. Component.tsx에서 named export Component와 Props를 제공한다. 추가 소스 파일은 상대 경로로만 참조한다. 파일 또는 변경 위치를 식별할 수 있게 답한다. 표시 문자열과 접근 가능한 이름은 아래 영문 그대로 사용한다.\n\n계약:\ntype Item = { id: string; label: string };\ntype Props = { initialItems: Item[]; onChange: (items: Item[]) => void };\n\n요구사항:\n1. 제공된 삭제 취소 버그를 고친다. initialItems는 고유 id를 가진 초기 첨부 목록이며 마운트 이후 동기화는 요구하지 않는다. Attachments라는 이름의 ul에 현재 순서대로 표시한다.\n2. 각 항목의 삭제 버튼 접근 가능한 이름은 Remove {label}이다. 클릭한 ID 항목만 제거하고 새 목록으로 onChange를 정확히 한 번 호출한다. 부모가 준 배열/항목 객체를 직접 변경하지 않는다.\n3. Undo 버튼은 아직 취소할 삭제가 없으면 disabled이다. 마지막 삭제의 항목과 그 삭제 직전 위치를 기억한다. Undo는 그 위치에 항목을 복원하고 복원된 순서의 새 목록으로 onChange를 정확히 한 번 호출한다.\n4. 취소 기록은 한 단계다. 연속 삭제하면 가장 최근 삭제만 복원할 수 있으며, 한 번 Undo 후에는 다시 disabled이다. 이미 없어진 이전 삭제까지 되돌리거나 중복 항목을 추가하지 않는다.\n5. 빈 목록에는 No attachments 상태 메시지를 표시한다. 초기 마운트는 콜백을 호출하지 않는다.\n\n제공 파일 Component.tsx:\n```tsx\nimport { useState } from 'react';\n\nexport type Item = { id: string; label: string };\nexport type Props = { initialItems: Item[]; onChange: (items: Item[]) => void };\n\nexport function Component({ initialItems, onChange }: Props) {\n  const [items, setItems] = useState(initialItems);\n  const [removed, setRemoved] = useState<{ item: Item; index: number } | null>(null);\n  function remove(id: string) {\n    const index = items.findIndex(item => item.id === id);\n    if (index < 0) return;\n    const next = items.filter(item => item.id !== id);\n    setRemoved({ item: items[index], index });\n    setItems(next);\n    onChange(next);\n  }\n  function undo() {\n    if (!removed) return;\n    const next = [...items];\n    next.push(removed.item);\n    setItems(next);\n    setRemoved(null);\n    onChange(next);\n  }\n  return <section aria-label=\"Attachment list\">\n    <ul aria-label=\"Attachments\">{items.map(item => <li key={item.id}>{item.label}<button type=\"button\" aria-label={`Remove ${item.label}`} onClick={() => remove(item.id)}>Remove</button></li>)}</ul>\n    {items.length === 0 && <p role=\"status\">No attachments</p>}\n    <button type=\"button\" disabled={!removed} onClick={undo}>Undo</button>\n  </section>;\n}\n```"
+    },
+    {
+      "id": "resource_union",
+      "kind": "feature",
+      "title": "프로젝트 로딩 상태 유니언 패널",
+      "contract_types": "type Resource = { status: 'idle' } | { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; title: string; members: string[] };\ntype ExpectedProps = { resource: Resource; onRetry: () => void };",
+      "requirements": [
+        "새 프로젝트 패널을 TypeScript discriminated union으로 구현한다. Props의 resource는 idle/loading/error/ready 중 하나이며 해당 상태에만 있는 속성은 그 상태에서만 읽는다. onRetry는 () => void이다.",
+        "idle은 Choose a project라는 role=status 메시지, loading은 Loading project라는 role=status 메시지를 표시한다.",
+        "error는 전달된 message를 role=alert의 텍스트로 표시하고 Retry 버튼을 제공한다. 클릭할 때마다 인자 없이 onRetry를 정확히 한 번 호출한다. 마운트나 상태 변경 자체는 재시도 콜백을 호출하지 않는다.",
+        "ready는 전달된 title의 h2와 Members라는 이름의 ul에 members 문자열을 순서대로 li로 표시한다. 같은 이름이 여러 번 있어도 빠뜨리지 않는다. members가 비었으면 목록 대신 No members라는 role=status 메시지를 표시한다.",
+        "부모가 resource를 바꾸면 현재 상태에 맞는 내용만 남기고 지난 오류, 재시도 버튼, 로딩 문구, 이전 프로젝트 내용을 제거한다. message/title/member의 HTML 모양 문자열도 실제 태그로 해석하지 않고 텍스트로 렌더링한다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 합성 미니 컴포넌트 과제: 프로젝트 로딩 상태 유니언 패널\n환경: React 19.3.0, TypeScript 5.9.3(strict), react-dom/client, JSDOM 20.0.3. 설치된 React 이외 새 패키지는 사용하지 않는다. Component.tsx에서 named export Component와 Props를 제공한다. 추가 소스 파일은 상대 경로로만 참조한다. 파일 또는 변경 위치를 식별할 수 있게 답한다. 표시 문자열과 접근 가능한 이름은 아래 영문 그대로 사용한다.\n\n계약:\ntype Resource = { status: 'idle' } | { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; title: string; members: string[] };\ntype Props = { resource: Resource; onRetry: () => void };\n\n요구사항:\n1. 새 프로젝트 패널을 TypeScript discriminated union으로 구현한다. Props의 resource는 idle/loading/error/ready 중 하나이며 해당 상태에만 있는 속성은 그 상태에서만 읽는다. onRetry는 () => void이다.\n2. idle은 Choose a project라는 role=status 메시지, loading은 Loading project라는 role=status 메시지를 표시한다.\n3. error는 전달된 message를 role=alert의 텍스트로 표시하고 Retry 버튼을 제공한다. 클릭할 때마다 인자 없이 onRetry를 정확히 한 번 호출한다. 마운트나 상태 변경 자체는 재시도 콜백을 호출하지 않는다.\n4. ready는 전달된 title의 h2와 Members라는 이름의 ul에 members 문자열을 순서대로 li로 표시한다. 같은 이름이 여러 번 있어도 빠뜨리지 않는다. members가 비었으면 목록 대신 No members라는 role=status 메시지를 표시한다.\n5. 부모가 resource를 바꾸면 현재 상태에 맞는 내용만 남기고 지난 오류, 재시도 버튼, 로딩 문구, 이전 프로젝트 내용을 제거한다. message/title/member의 HTML 모양 문자열도 실제 태그로 해석하지 않고 텍스트로 렌더링한다.\n\n기존 파일은 없다."
+    },
+    {
+      "id": "draft_filters",
+      "kind": "bug",
+      "title": "임시 검색과 적용된 이슈 필터 분리하기",
+      "contract_types": "type Filters = { query: string; onlyOpen: boolean };\ntype Item = { id: string; title: string; open: boolean };\ntype ExpectedProps = { items: Item[]; onApply: (filters: Filters) => void };",
+      "requirements": [
+        "제공된 임시 필터 버그를 고친다. Search issues 입력, Only open 체크박스, Apply/Reset 버튼과 Issues라는 이름의 ul을 제공한다. 처음에는 검색어 빈 값/체크 해제이며 모든 항목이 보인다. items는 고유 id를 가지며 부모가 새 배열로 바꿀 수 있다.",
+        "입력/체크 변경은 임시값만 바꾼다. Apply 전에는 결과 목록과 onApply 호출에 영향을 주지 않는다. 적용된 검색은 대소문자 무시 부분 일치, onlyOpen=true이면 open 항목만 허용하며 두 조건은 AND이다.",
+        "Apply는 검색어 양끝 공백을 제거한 {query,onlyOpen}를 적용하고 onApply를 정확히 한 번 호출한다. 입력에도 정리한 검색어를 반영한다. 임시값이 적용값과 같으면 Apply를 disabled로 한다. 같음 비교는 검색어의 양끝 공백을 제거해서 비교하되 대소문자는 구분한다.",
+        "Reset은 임시값과 적용값을 모두 빈 검색어/false로 돌리고 전체 목록을 표시하며 onApply({query:\"\",onlyOpen:false})를 정확히 한 번 호출한다. 초기 마운트/입력 변경/부모 items 갱신은 콜백을 호출하지 않는다.",
+        "부모의 items가 갱신되면 현재 적용값으로 새 목록을 필터링한다. 일치 항목이 없으면 No issues 상태 메시지를 표시한다. 부모의 items 배열을 변경하지 않는다. 외부의 필터 초안/소유자 동기화는 없다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {
+        "Component.tsx": "import { useState } from 'react';\n\nexport type Filters = { query: string; onlyOpen: boolean };\nexport type Item = { id: string; title: string; open: boolean };\nexport type Props = { items: Item[]; onApply: (filters: Filters) => void };\n\nexport function Component({ items, onApply }: Props) {\n  const empty = { query: '', onlyOpen: false };\n  const [draft, setDraft] = useState<Filters>(empty);\n  const [applied, setApplied] = useState<Filters>(empty);\n  const dirty = draft.query.trim() !== applied.query || draft.onlyOpen !== applied.onlyOpen;\n  function apply() {\n    const next = { ...draft, query: draft.query.trim() };\n    setDraft(next);\n    setApplied(next);\n    onApply(next);\n  }\n  function reset() {\n    setDraft(empty);\n    setApplied(empty);\n    onApply(empty);\n  }\n  const visible = items.filter(item => item.title.toLowerCase().includes(draft.query.toLowerCase()) && (!draft.onlyOpen || item.open));\n  return <section aria-label=\"Issue filters\">\n    <label>Search issues<input value={draft.query} onChange={event => setDraft({ ...draft, query: event.currentTarget.value })} /></label>\n    <label><input type=\"checkbox\" checked={draft.onlyOpen} onChange={event => setDraft({ ...draft, onlyOpen: event.currentTarget.checked })} />Only open</label>\n    <button type=\"button\" disabled={!dirty} onClick={apply}>Apply</button>\n    <button type=\"button\" onClick={reset}>Reset</button>\n    <ul aria-label=\"Issues\">{visible.map(item => <li key={item.id}>{item.title}</li>)}</ul>\n    {visible.length === 0 && <p role=\"status\">No issues</p>}\n  </section>;\n}\n"
+      },
+      "prompt": "TypeScript/React 합성 미니 컴포넌트 과제: 임시 검색과 적용된 이슈 필터 분리하기\n환경: React 19.3.0, TypeScript 5.9.3(strict), react-dom/client, JSDOM 20.0.3. 설치된 React 이외 새 패키지는 사용하지 않는다. Component.tsx에서 named export Component와 Props를 제공한다. 추가 소스 파일은 상대 경로로만 참조한다. 파일 또는 변경 위치를 식별할 수 있게 답한다. 표시 문자열과 접근 가능한 이름은 아래 영문 그대로 사용한다.\n\n계약:\ntype Filters = { query: string; onlyOpen: boolean };\ntype Item = { id: string; title: string; open: boolean };\ntype Props = { items: Item[]; onApply: (filters: Filters) => void };\n\n요구사항:\n1. 제공된 임시 필터 버그를 고친다. Search issues 입력, Only open 체크박스, Apply/Reset 버튼과 Issues라는 이름의 ul을 제공한다. 처음에는 검색어 빈 값/체크 해제이며 모든 항목이 보인다. items는 고유 id를 가지며 부모가 새 배열로 바꿀 수 있다.\n2. 입력/체크 변경은 임시값만 바꾼다. Apply 전에는 결과 목록과 onApply 호출에 영향을 주지 않는다. 적용된 검색은 대소문자 무시 부분 일치, onlyOpen=true이면 open 항목만 허용하며 두 조건은 AND이다.\n3. Apply는 검색어 양끝 공백을 제거한 {query,onlyOpen}를 적용하고 onApply를 정확히 한 번 호출한다. 입력에도 정리한 검색어를 반영한다. 임시값이 적용값과 같으면 Apply를 disabled로 한다. 같음 비교는 검색어의 양끝 공백을 제거해서 비교하되 대소문자는 구분한다.\n4. Reset은 임시값과 적용값을 모두 빈 검색어/false로 돌리고 전체 목록을 표시하며 onApply({query:\"\",onlyOpen:false})를 정확히 한 번 호출한다. 초기 마운트/입력 변경/부모 items 갱신은 콜백을 호출하지 않는다.\n5. 부모의 items가 갱신되면 현재 적용값으로 새 목록을 필터링한다. 일치 항목이 없으면 No issues 상태 메시지를 표시한다. 부모의 items 배열을 변경하지 않는다. 외부의 필터 초안/소유자 동기화는 없다.\n\n제공 파일 Component.tsx:\n```tsx\nimport { useState } from 'react';\n\nexport type Filters = { query: string; onlyOpen: boolean };\nexport type Item = { id: string; title: string; open: boolean };\nexport type Props = { items: Item[]; onApply: (filters: Filters) => void };\n\nexport function Component({ items, onApply }: Props) {\n  const empty = { query: '', onlyOpen: false };\n  const [draft, setDraft] = useState<Filters>(empty);\n  const [applied, setApplied] = useState<Filters>(empty);\n  const dirty = draft.query.trim() !== applied.query || draft.onlyOpen !== applied.onlyOpen;\n  function apply() {\n    const next = { ...draft, query: draft.query.trim() };\n    setDraft(next);\n    setApplied(next);\n    onApply(next);\n  }\n  function reset() {\n    setDraft(empty);\n    setApplied(empty);\n    onApply(empty);\n  }\n  const visible = items.filter(item => item.title.toLowerCase().includes(draft.query.toLowerCase()) && (!draft.onlyOpen || item.open));\n  return <section aria-label=\"Issue filters\">\n    <label>Search issues<input value={draft.query} onChange={event => setDraft({ ...draft, query: event.currentTarget.value })} /></label>\n    <label><input type=\"checkbox\" checked={draft.onlyOpen} onChange={event => setDraft({ ...draft, onlyOpen: event.currentTarget.checked })} />Only open</label>\n    <button type=\"button\" disabled={!dirty} onClick={apply}>Apply</button>\n    <button type=\"button\" onClick={reset}>Reset</button>\n    <ul aria-label=\"Issues\">{visible.map(item => <li key={item.id}>{item.title}</li>)}</ul>\n    {visible.length === 0 && <p role=\"status\">No issues</p>}\n  </section>;\n}\n```"
+    }
+  ]
+}

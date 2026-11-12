@@ -1,0 +1,3 @@
+# Same prompts and targets as v2; only the sentence-boundary checker changes.
+extends: summarization_grounded_v2.yaml
+checks_module: checks.summarization_grounded_v3

@@ -2,15 +2,11 @@
 
 from __future__ import annotations
 
-import re
+from checks.summarization_grounded_v3 import split_sentences
 
 
 def _sentences(text: str) -> list[str]:
-    normalized = re.sub(r"\s+", " ", text.strip())
-    if not normalized:
-        return []
-    parts = re.split(r"(?<=[.!?])\s+", normalized)
-    return [part.strip() for part in parts if part.strip()]
+    return split_sentences(text)
 
 
 def _sentence_limit(length: str) -> int:

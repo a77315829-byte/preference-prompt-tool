@@ -1,0 +1,655 @@
+{
+  "date_kst": "2026-11-09",
+  "status": "completed_with_one_unresolved_reference_failure",
+  "offline": {
+    "schema_version": 1,
+    "model_api_calls": 0,
+    "model_api_cost_usd": 0,
+    "race_revision": "3b8ee591abd5febd8ae8ec17c7b9907949c5e1d5",
+    "race_functions_verified": [
+      "extract_function_names",
+      "extract_function_bodies",
+      "metrics_for_readability_function_snake",
+      "metrics_for_readability_length",
+      "metrics_for_readability_comment_by_function",
+      "metrics_for_readability_comment_by_line",
+      "metrics_for_maintainability_module_count"
+    ],
+    "project_source_sha256": {
+      "coding_examples.py": "9800c0a246f3f7a62603af75c3d6df46edee06de12295f36bf935a0c8774e7b6",
+      "coding_framework_examples.py": "8211a2656ae5c4e5c239374f837cdb921a24c5145a9ba152de0431d6a678da99",
+      "coding_elicitation.py": "b3e4f1c3cd2cebe598e06548fa24935e8f12edaef9cab1b55e3348f9551f6843",
+      "coding_instructions.py": "8f2a91bc32c742fca334ef26cd9ddd6454e33b2dadc63ff4a06b3be824213360",
+      "benchmarks/coding_public/run.py": "fa8901079039630d7bd6f606e3babb90b51384f0a564cdb3fbefe75e99a06fc2",
+      "benchmarks/coding_public/race_static.py": "9041a58a4124ac35ef7410a9c22b47c9645b03f977e5f6bf58d974f05085aa0b",
+      "benchmarks/coding_public/evaluate_docker.py": "230884990d2fc4d06e59505e5cc3a63c48a847722770c722113fb3b764383a04",
+      "benchmarks/coding_public/container_controls.py": "5dbdbeeacacd54832c651eb147b6c40d1884759cb23f824ccaf1c4440b517df4"
+    },
+    "datasets": {
+      "humaneval": {
+        "tasks": 164,
+        "reference_syntax_valid": 164,
+        "base_inputs": 1570,
+        "plus_inputs": 122683,
+        "tasks_without_plus_inputs": [],
+        "syntax_warnings": [],
+        "sha256": "272720b90ac375502c8ed23cd791c2a93dfb22a911641a494da74a426c09f101",
+        "functional_pass_rate": null,
+        "note": "Input counts are inventories, not executed or passing test counts."
+      },
+      "mbpp": {
+        "tasks": 378,
+        "reference_syntax_valid": 378,
+        "base_inputs": 1174,
+        "plus_inputs": 39841,
+        "tasks_without_plus_inputs": [
+          "Mbpp/793"
+        ],
+        "syntax_warnings": [
+          {
+            "task_id": "Mbpp/305",
+            "message": "invalid escape sequence '\\w'"
+          },
+          {
+            "task_id": "Mbpp/593",
+            "message": "invalid escape sequence '\\.'"
+          }
+        ],
+        "sha256": "af43697e8791c4c149bdfd6b489d8b5412507551ac20e28a439f650b8225db63",
+        "functional_pass_rate": null,
+        "note": "Input counts are inventories, not executed or passing test counts."
+      }
+    },
+    "prepared_examples": {
+      "scope": "prepared Python language-only examples; not model-generated answers",
+      "examples": 24,
+      "contexts": 3,
+      "arithmetic_checks": 480,
+      "arithmetic_passed": 480,
+      "rows": [
+        {
+          "id": "order:explanation",
+          "axis": "explanation",
+          "value": "brief",
+          "code_sha256": "2218675d57dccb7e0612a1d0bd5f8adbf82e8b1d55c4c046c87c5a0dca983d9d",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "order:explanation",
+          "axis": "explanation",
+          "value": "steps",
+          "code_sha256": "2218675d57dccb7e0612a1d0bd5f8adbf82e8b1d55c4c046c87c5a0dca983d9d",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "order:comments",
+          "axis": "comments",
+          "value": "essential",
+          "code_sha256": "2218675d57dccb7e0612a1d0bd5f8adbf82e8b1d55c4c046c87c5a0dca983d9d",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "order:comments",
+          "axis": "comments",
+          "value": "detailed",
+          "code_sha256": "2aca14391fb4acd6ca7b47246fb288ab6db8b95eb39ce9ba035b7691edc9da3b",
+          "functions": 1,
+          "comment_tokens": 1,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": true,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "order:structure",
+          "axis": "structure",
+          "value": "compact",
+          "code_sha256": "2218675d57dccb7e0612a1d0bd5f8adbf82e8b1d55c4c046c87c5a0dca983d9d",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "order:structure",
+          "axis": "structure",
+          "value": "modular",
+          "code_sha256": "bf4a8b280368bd9af023c05b4614caf92da24add6ae0d8d1a04aa8e67d945374",
+          "functions": 2,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": false,
+          "race_module_count_2": true,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "order:output",
+          "axis": "output",
+          "value": "complete",
+          "code_sha256": "2afe100579f7dd5cafae4a9efc44d11bfe159cf630dd9eafdf86625959665aa1",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "order:output",
+          "axis": "output",
+          "value": "changes",
+          "code_sha256": "2afe100579f7dd5cafae4a9efc44d11bfe159cf630dd9eafdf86625959665aa1",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "rental:explanation",
+          "axis": "explanation",
+          "value": "steps",
+          "code_sha256": "841cff9d74bbcfa6f226dbbde169f0feef27e4d7bd9ef837ece80051fee8377e",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "rental:explanation",
+          "axis": "explanation",
+          "value": "brief",
+          "code_sha256": "841cff9d74bbcfa6f226dbbde169f0feef27e4d7bd9ef837ece80051fee8377e",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "rental:comments",
+          "axis": "comments",
+          "value": "detailed",
+          "code_sha256": "95a2cc57a45c8d107a13232a6a240448b66d09f842289af08e7cf292fa756e75",
+          "functions": 1,
+          "comment_tokens": 1,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": true,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "rental:comments",
+          "axis": "comments",
+          "value": "essential",
+          "code_sha256": "841cff9d74bbcfa6f226dbbde169f0feef27e4d7bd9ef837ece80051fee8377e",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "rental:structure",
+          "axis": "structure",
+          "value": "modular",
+          "code_sha256": "7795e6f4781717847f2311b90c57c1db0b9d4ecfb74d6c1c3a7c6ff5436365c4",
+          "functions": 2,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": false,
+          "race_module_count_2": true,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "rental:structure",
+          "axis": "structure",
+          "value": "compact",
+          "code_sha256": "841cff9d74bbcfa6f226dbbde169f0feef27e4d7bd9ef837ece80051fee8377e",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "rental:output",
+          "axis": "output",
+          "value": "changes",
+          "code_sha256": "27e1e712140353bdc57532558708dd2f0900eebaf17b16f45dd5e66c2b330022",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "rental:output",
+          "axis": "output",
+          "value": "complete",
+          "code_sha256": "27e1e712140353bdc57532558708dd2f0900eebaf17b16f45dd5e66c2b330022",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "print:explanation",
+          "axis": "explanation",
+          "value": "brief",
+          "code_sha256": "a61a999809758e64e1eeecc7efd76068fac865862d7af47f805919079bf3d3a1",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "print:explanation",
+          "axis": "explanation",
+          "value": "steps",
+          "code_sha256": "a61a999809758e64e1eeecc7efd76068fac865862d7af47f805919079bf3d3a1",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "print:comments",
+          "axis": "comments",
+          "value": "essential",
+          "code_sha256": "a61a999809758e64e1eeecc7efd76068fac865862d7af47f805919079bf3d3a1",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "print:comments",
+          "axis": "comments",
+          "value": "detailed",
+          "code_sha256": "a8c843588e32b16b178b1e20702a07f60bbb89e88f0f9ad4532e00e2b942b84d",
+          "functions": 1,
+          "comment_tokens": 1,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": true,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "print:structure",
+          "axis": "structure",
+          "value": "compact",
+          "code_sha256": "a61a999809758e64e1eeecc7efd76068fac865862d7af47f805919079bf3d3a1",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "print:structure",
+          "axis": "structure",
+          "value": "modular",
+          "code_sha256": "da1d183a7fa2a6c93d13aa11f87f99d83c0fb4441f81671c6534ace20fb5ee48",
+          "functions": 2,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": false,
+          "race_module_count_2": true,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "print:output",
+          "axis": "output",
+          "value": "complete",
+          "code_sha256": "5f3dfa2a4271799671e2a830094a9b8e861a4abd788a539f6bb51fec166698ac",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        },
+        {
+          "id": "print:output",
+          "axis": "output",
+          "value": "changes",
+          "code_sha256": "5f3dfa2a4271799671e2a830094a9b8e861a4abd788a539f6bb51fec166698ac",
+          "functions": 1,
+          "comment_tokens": 0,
+          "race_function_snake": true,
+          "race_length_100_40": true,
+          "race_comment_by_function": false,
+          "race_comment_by_line_075": false,
+          "race_module_count_1": true,
+          "race_module_count_2": false,
+          "arithmetic_checks": 20,
+          "arithmetic_passed": 20
+        }
+      ]
+    },
+    "mbpp_noextreme_audit": {
+      "tasks": 378,
+      "reference_syntax_valid": 378,
+      "base_inputs": 1174,
+      "plus_inputs": 39636,
+      "tasks_without_plus_inputs": [
+        "Mbpp/793"
+      ],
+      "syntax_warnings": [
+        {
+          "task_id": "Mbpp/305",
+          "message": "invalid escape sequence '\\w'"
+        },
+        {
+          "task_id": "Mbpp/593",
+          "message": "invalid escape sequence '\\.'"
+        }
+      ],
+      "sha256": "72d32acaea73d5606cb97041b30d45bbda9435a675369d3e31965513ee94e564",
+      "functional_pass_rate": null,
+      "note": "Input counts are inventories, not executed or passing test counts.",
+      "excluded_plus_inputs_by_task": {
+        "Mbpp/239": 31,
+        "Mbpp/274": 78,
+        "Mbpp/388": 23,
+        "Mbpp/392": 15,
+        "Mbpp/599": 16,
+        "Mbpp/605": 33,
+        "Mbpp/781": 9
+      }
+    },
+    "assembled_profiles": 16,
+    "prepared_requests": 2710,
+    "cost_estimates": {
+      "rates_checked": "2026-11-09",
+      "currency": "USD",
+      "scenarios": {
+        "pilot_20_tasks": {
+          "calls": 100,
+          "input_token_budget": 226505,
+          "models": {
+            "gpt-6-luna": {
+              "usd_if_output_1024_each": 0.0739,
+              "usd_if_output_cap_4096_each": 0.2275
+            },
+            "gpt-6.1-sol": {
+              "usd_if_output_1024_each": 1.477,
+              "usd_if_output_cap_4096_each": 4.549
+            }
+          }
+        },
+        "humaneval_164_tasks": {
+          "calls": 820,
+          "input_token_budget": 2005577,
+          "models": {
+            "gpt-6-luna": {
+              "usd_if_output_1024_each": 0.6204,
+              "usd_if_output_cap_4096_each": 1.8799
+            },
+            "gpt-6.1-sol": {
+              "usd_if_output_1024_each": 12.408,
+              "usd_if_output_cap_4096_each": 37.5984
+            }
+          }
+        },
+        "all_542_tasks": {
+          "calls": 2710,
+          "input_token_budget": 5994368,
+          "models": {
+            "gpt-6-luna": {
+              "usd_if_output_1024_each": 1.987,
+              "usd_if_output_cap_4096_each": 6.1495
+            },
+            "gpt-6.1-sol": {
+              "usd_if_output_1024_each": 39.7391,
+              "usd_if_output_cap_4096_each": 122.9903
+            }
+          }
+        }
+      },
+      "assumptions": "Standard API, uncached input, no retries/tools/GEPA; input budget is UTF-8 bytes * 1.1 + 128 per request, not measured tokens. Output includes reasoning. Tax/exchange fees excluded. No calls executed.",
+      "sources": [
+        "https://developers.openai.com/api/docs/models/gpt-6-luna",
+        "https://developers.openai.com/api/docs/models/gpt-6.1-sol"
+      ]
+    },
+    "evalplus_execution": "Separate Docker step required; no functional pass rate claimed here.",
+    "personalization_effectiveness": "Not measured; requires unseen-task model answers and user evaluation."
+  },
+  "evalplus": {
+    "image": "ganler/evalplus@sha256:26b118098bef281fe8dfe999bf05f1d5b45374b4e6c00161ec0f30592aef4740",
+    "package_version": "0.4.0.dev2",
+    "publisher_image_tag": "v0.3.1 (tag differs from installed package version)",
+    "run_id": "20261108T234902Z-c9a29a25",
+    "scope": "evaluation harness controls, not project prompt effectiveness",
+    "dataset_variants": {
+      "humaneval": "humaneval",
+      "mbpp": "mbpp_noextreme"
+    },
+    "dataset_sha256": {
+      "humaneval": "272720b90ac375502c8ed23cd791c2a93dfb22a911641a494da74a426c09f101",
+      "mbpp": "72d32acaea73d5606cb97041b30d45bbda9435a675369d3e31965513ee94e564"
+    },
+    "official_fix": {
+      "file": "evalplus_eval_fixed.py",
+      "sha256": "3c833c39b842e33f251c83db4347e0a95191909f23b390c12d73ab29a28a4daf",
+      "url": "https://raw.githubusercontent.com/evalplus/evalplus/6eb1e199c2e370518e7bf3e8eee6322c2b23c89c/evalplus/eval/__init__.py"
+    },
+    "driver_sha256": "5dbdbeeacacd54832c651eb147b6c40d1884759cb23f824ccaf1c4440b517df4",
+    "scheduling": "One ThreadPoolExecutor scheduling worker; official per-candidate guarded child processes remain enabled. Avoids copying large oracle outputs through the process-pool queue.",
+    "status": "unexpected_results",
+    "results": {
+      "humaneval": {
+        "reference": {
+          "tasks": 164,
+          "base_passed": 164,
+          "base_and_plus_passed": 164,
+          "base_pass_at_1": 1.0,
+          "plus_pass_at_1": 1.0,
+          "unexpected": [],
+          "result_sha256": {
+            "humaneval.batch00.reference_eval_results.json": "b4289164e80944e03f6431990a3a43aabc83c775100da7610f9e568c19576b50"
+          }
+        },
+        "negative": {
+          "tasks": 164,
+          "base_passed": 0,
+          "base_and_plus_passed": 0,
+          "base_pass_at_1": 0.0,
+          "plus_pass_at_1": 0.0,
+          "unexpected": [],
+          "result_sha256": {
+            "humaneval.batch00.negative_eval_results.json": "88b5bc87dd09284250f8d1541b52e6474d485b512bbf50dd8ab942b3f1c89e83"
+          }
+        }
+      },
+      "mbpp": {
+        "reference": {
+          "tasks": 378,
+          "base_passed": 378,
+          "base_and_plus_passed": 377,
+          "base_pass_at_1": 1.0,
+          "plus_pass_at_1": 0.9973544973544973,
+          "unexpected": [
+            {
+              "task_id": "Mbpp/255",
+              "base": "pass",
+              "plus": "fail"
+            }
+          ],
+          "result_sha256": {
+            "mbpp.batch00.reference_eval_results.json": "597508a164180ea5eafc641096ce12c7167efcd30f7db7131079d4d19c26aa42",
+            "mbpp.batch01.reference_eval_results.json": "0f0640b3d3a6b3a495f59ac77e65e467812c701ae39f08a0b14c2eaab1bb8a21",
+            "mbpp.batch02.reference_eval_results.json": "7630848a0eb2f7d57919f5b7fc8bf96e295782788f76679374fe279931b472c4",
+            "mbpp.batch03.reference_eval_results.json": "83dc2b3a74f38409f951a68266f5357aeb218c1a0398f5dd435b0e0fc7b25a72",
+            "mbpp.batch04.reference_eval_results.json": "58a1064969b69ef4d14c18d879ced6b42afe3ea2953e181ac5ebb2177ebb951c",
+            "mbpp.batch05.reference_eval_results.json": "643560c5cc82900942fdc37f38f66bf6a41f2a897a052e2e92202364e5f146f1",
+            "mbpp.batch06.reference_eval_results.json": "6435fe9969d8dfa3eb1e11096d4d164f346ba66f78e72302f8f8d313aa501672",
+            "mbpp.batch07.reference_eval_results.json": "6c92753d5c046f994d016a8feee1c8609f242a0b108696760ced83284612319f"
+          }
+        },
+        "negative": {
+          "tasks": 378,
+          "base_passed": 0,
+          "base_and_plus_passed": 0,
+          "base_pass_at_1": 0.0,
+          "plus_pass_at_1": 0.0,
+          "unexpected": [],
+          "result_sha256": {
+            "mbpp.batch00.negative_eval_results.json": "53672a869139e515fdd96d19b129d5b9004860c86b369a07be03d98e2cddee8c",
+            "mbpp.batch01.negative_eval_results.json": "ff3935a2fb0125e255a14f234a6cb2a3cdee6e6a90084a9576bb88ffaa130c16",
+            "mbpp.batch02.negative_eval_results.json": "992537f879540d58e5916f9d2899ab66298282e2d56eef1428ded8bbdc58686b",
+            "mbpp.batch03.negative_eval_results.json": "4f7a2199d7ca54e1667da3c4c58e8fa24d70a63d46a798bc2970662c2417e6ab",
+            "mbpp.batch04.negative_eval_results.json": "398a243a278fa2a66624bd959d1362c8cdf19024d94e88474567cfdb22fd890d",
+            "mbpp.batch05.negative_eval_results.json": "ee73df7742392a55af5f72afce41a64cf11cf1cc8ee8dd8864844f81e1d198e9",
+            "mbpp.batch06.negative_eval_results.json": "aa5c4cc0ed4fa56c532182881fe81e50b33dca7c28161dc1bd02d7d96c62acee",
+            "mbpp.batch07.negative_eval_results.json": "947f98d17d40a9ce45da9fbf2281b610ec18e7f4be427ea724e36b559447f407"
+          }
+        }
+      }
+    }
+  },
+  "unresolved": {
+    "task_id": "Mbpp/255",
+    "failed_extra_inputs": 1,
+    "combinations_required": 1663740,
+    "cause": "Not established: the evaluator records failed inputs, not exception details. Large-output resource/time effects are suspected."
+  },
+  "tests": {
+    "command": "pytest tests/test_coding_public.py tests/test_coding_elicitation.py -q",
+    "passed": 36
+  },
+  "claims_not_supported": [
+    "Personalization effectiveness",
+    "8-10 comparisons are sufficient",
+    "User editing-time reduction",
+    "MBPP+ full extreme-input success",
+    "Performance of model-generated answers"
+  ]
+}

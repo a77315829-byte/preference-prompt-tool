@@ -1,0 +1,16 @@
+{
+  "id": "react-task-sync-20261109",
+  "frozen_at_utc": "2026-11-09T07:40:14Z",
+  "baseline_commit": "3b6b550418dcaf8cb184563f699bdc727f5dd54b",
+  "actual_stack": "React 19 JSX, JavaScript source; no TS/TSX source files in frontend/src",
+  "bug": "Parent task updates do not reach the untouched real-work comparison draft; new comparison also reuses stale task",
+  "baseline_acceptance": { "passed": 5, "total": 9, "failed": ["R2", "R3", "R8", "R9"] },
+  "acceptance_sha256": "d890986da8e873293788ec9206c243906d0f6519516bc214b569ba7273f7b5d5",
+  "runs_per_condition": 1,
+  "conditions": { "arm_a": "general_prompt with same environment and common rules", "arm_b": "build_coding_instructions with brief/essential/compact/changes" },
+  "profile_origin": "Experimenter-fixed profile, not this user's measured or inferred preference",
+  "common_controls": ["same source commit", "same task acceptance requirements", "same installed dependencies", "fresh conversation without parent history", "same inherited model settings", "no peer output access", "same maximum 8 minute work budget", "no paid API or network calls", "same prewritten external evaluation"],
+  "timing": { "agent_work": "UTC timestamp in first tool call through timestamp in final tool call; includes analysis, edits and agent-selected local checks", "external_validation": "Same locked test command measured by parent wall clock", "human_edit_time": null, "human_edit_time_reason": "No human participant in this agent pilot" },
+  "interpretation": "Single case descriptive result. No statistical significance, causal benefit, human preference or productivity claim. Concurrent host resource contention can affect time.",
+  "billing": "No separate model API invoked. Codex session/subagent usage may consume plan allowance or credits; account charges are not visible here."
+}

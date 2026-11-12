@@ -1,0 +1,16 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState, type FormEvent } from 'react';\n\nexport type Reservation = { start: string; end: string; guests: number };\nexport type Props = {\n  capacity: number;\n  onReserve: (reservation: Reservation) => void;\n};\n\ntype Errors = Partial<Record<'start' | 'end' | 'guests', string>>;\n\nexport function Component({ capacity, onReserve }: Props) {\n  const [start, setStart] = useState('');\n  const [end, setEnd] = useState('');\n  const [guests, setGuests] = useState('');\n  const [errors, setErrors] = useState<Errors>({});\n\n  function submit(event: FormEvent<HTMLFormElement>) {\n    event.preventDefault();\n    const nextErrors: Errors = {};\n    const guestCount = Number(guests);\n\n    if (!start) {\n      nextErrors.start = 'Start date is required';\n    }\n    if (!end) {\n      nextErrors.end = 'End date is required';\n    } else if (start && end <= start) {\n      nextErrors.end = 'End date must be after start date';\n    }\n    if (!guests.trim()) {\n      nextErrors.guests = 'Guests is required';\n    } else if (!Number.isInteger(guestCount) || guestCount < 1) {\n      nextErrors.guests = 'Guests must be a positive integer';\n    } else if (guestCount > capacity) {\n      nextErrors.guests = `Guests must not exceed ${capacity}`;\n    }\n\n    setErrors(nextErrors);\n    if (Object.keys(nextErrors).length > 0) return;\n    onReserve({ start, end, guests: guestCount });\n  }\n\n  return (\n    <form aria-label=\"Reservation\" noValidate onSubmit={submit}>\n      <label>\n        Start date\n        <input\n          type=\"date\"\n          value={start}\n          onChange={event => setStart(event.currentTarget.value)}\n          aria-invalid={errors.start ? true : undefined}\n        />\n      </label>\n      {errors.start && <p role=\"alert\">{errors.start}</p>}\n\n      <label>\n        End date\n        <input\n          type=\"date\"\n          value={end}\n          onChange={event => setEnd(event.currentTarget.value)}\n          aria-invalid={errors.end ? true : undefined}\n        />\n      </label>\n      {errors.end && <p role=\"alert\">{errors.end}</p>}\n\n      <label>\n        Guests\n        <input\n          type=\"number\"\n          min={1}\n          max={capacity}\n          step={1}\n          value={guests}\n          onChange={event => setGuests(event.currentTarget.value)}\n          aria-invalid={errors.guests ? true : undefined}\n        />\n      </label>\n      {errors.guests && <p role=\"alert\">{errors.guests}</p>}\n\n      <button type=\"submit\">Reserve</button>\n    </form>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_file",
+      "block": 0,
+      "reason": "답변 첫 문장: \"Component.tsx를 아래 내용으로 새로 만드세요.\"",
+      "answer_start": 97,
+      "answer_end": 2575
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "date": "2026-11-12",
+  "purpose": "Compare current TypeScript/React product instructions with general work requests and strong semantically matched manual instructions. Separately measure TypeScript compilation, executed React DOM behavior and response target match.",
+  "product": "Exact build_coding_instructions({language:TypeScript,framework:React,extra:'',preferences:...}).prompt from the existing four-preference UI path; direct settings, no example provenance/team overlay/export wrapper/GEPA. This is not coding_contract_v1 and not the separate React three-axis style-comparison feature.",
+  "arms": {
+    "general": "Current general_prompt removes preference section but retains the same environment and always rules. Same complete functional requirements/starters/runtime constraints as other arms. It is not an intentionally vague baseline.",
+    "manual": "Same environment/always rules plus independently phrased explicit obligations semantically matched to current product. No extra numerical explanation/comment/function/file quotas.",
+    "product": "Unedited current product prompt plus its ordinary copy-with-task heading and the same task request."
+  },
+  "tasks": {
+    "count": 8,
+    "origin": "New synthetic, specification-driven mini-components prepared before generation. Four bug fixes made from deliberate defects and four new implementations; not newly discovered production bugs or public benchmark scores.",
+    "novel_mechanisms": ["ID-preserving selection and filtered bulk actions", "date-order and capacity validation", "optimistic save rollback/retry", "disabled-skipping keyboard focus and unique ARIA relationships", "pagination clamping retained after regrowth", "one-level undo at original list position", "discriminated resource state and callback contract", "draft versus applied filters"],
+    "excluded_mechanism": "Previously repeated ComparisonSection/CodingTrialPanel external task/draft synchronization bug. No old outputs are reused.",
+    "controls": "Four development evaluator sanity families (valid click, type failure with working event, typed inert event, invalid code/import escape) and additional boundary tests. Eight task reference implementations plus eight deliberate behavior mutants. These are evaluator controls, not model-training examples or generated candidates.",
+    "profile_assignment": "Two complementary real-product bundles, four tasks each with two bugs/two features. P1 brief/essential/modular/changes; P2 steps/detailed/compact/complete. Assignment fixed in run.py. Not all16combinations and not separate causal effects of each preference."
+  },
+  "freeze": "Task specs/starters, reference and mutant controls, 69 runtime assertion definitions, compiler/VM, literal application policy, prompts, rubric, aggregation code and source hashes are fixed only after control validation and before first candidate generation. No optimization on final outputs.",
+  "generation": "Three fresh independent Codex agent contexts, one per arm, inherited runtime without model overrides. Each receives only its inputs, keeps first answer per task, and cannot run code/tests/read other arms/control code/reviews. Raw answer JSON only; no hidden fullfiles parallel artifact. Fixed cyclic task-order offsets 0/3/6 reduce shared position effects. Eight answers within an agent may be correlated; 24 outputs are not24independent tasks. Exact model/decoding/token usage not independently exposed.",
+  "literal_application": "After raw outputs are sealed, blinded answers are mapped to files using their visible file/location instructions. Allowed: exact complete fenced files; exact full-function/declaration/span replacement with one unique literal starter anchor; exact fenced insertion at unique explicit anchor; strict one-file unified diff. Filename ./ prefixes normalize; safe relative names accepted; .d.ts excluded equally from all requests. No inferred imports, invented helpers, syntax repair, omitted code reconstruction or performance feedback. Ambiguous/unsupported delivery is delivery_unresolved, with type/runtime not_run. Entire fence bodies only, application operations and exact source offsets preserved.",
+  "execution": "All materialized sources are reviewed before runtime; review hashes must match. Separate child Node process per answer, restricted module resolver, in-memory compiler/VM, isolated JSDOM, no candidate model/network/filesystem access, secret-free allowlisted environment, bounded parent timeout. Controls validate real React events, not a hand-simulated state evaluator. These measures are not a claim of a complete OS security sandbox.",
+  "metrics": {
+    "type": "Actual strict TypeScript program with installed React/DOM types, public Component and bidirectional exported Props witness; all supplied source files checked. compilerPassed reported separately from clean type pass requiring no explicit any/no suppression. External library declarations use skipLibCheck; candidate .d.ts is disallowed.",
+    "runtime": "Actual ReactDOM createRoot/act rendering, native DOM input/click/keyboard events, prop rerenders and deferred Promise settlement in JSDOM20.0.3. Each named assertion resets its mount; expected assertion names/counts verified. Runtime still runs on type failures when source is reviewed and passes execution gate. Not a full browser/layout/screen-reader/backend/security test.",
+    "target_match": "Two independent blinded reviews of raw answers against frozen four-dimensional semantic rubric. No arm names/prompts/execution outcomes/other review. Exact quote evidence required. General target mismatch is spontaneous alignment failure, not refusal to follow an unsupplied preference. Record disagreements/ambiguity; no numeric comment/function count stand-ins or post-hoc regrading.",
+    "joint": "Report type+runtime jointly and type+runtime+all four target dimensions separately for each reviewer. Never turn not_run/harness_error into success; show complete/evaluated denominator as well as total8perarm. Individual assertions/dimensions are not independent tasks.",
+    "not_measured": ["human preference inference", "satisfaction", "editing time", "team productivity", "performance across all supported languages", "React style three-axis product quality"]
+  },
+  "decision": "One technical pilot. Preserve ties/failures and current product instructions. No superiority/equivalence claim from eight cases, no automatic product rewrite, no GEPA mandatory adoption. Sources become observed after this run; later tuning requires new final tasks.",
+  "paid_model_api_calls": 0,
+  "new_dependencies": 0,
+  "cost_notice": "Codex usage is consumed. No paid model API is connected or invoked; this does not imply cost-free production inference."
+}

@@ -1,0 +1,494 @@
+[
+  {
+    "output_id": "E001",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses distinctive source phrases, including 'being warned to be on guard for flash floods and landslides', 'Authorities took preemptive steps', and 'the southeastern coast of Isabela province'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Filipinos are being warned to be on guard for flash floods and landslides as tropical storm Maysak approached Saturday"],
+        "reason": "Preserves the warning, both possible hazards, the affected people and the approaching storm."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Identifies Maysak as a tropical storm but omits its weakening from super typhoon status."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["ahead of expected landfall Sunday morning on the southeastern coast of Isabela province"],
+        "reason": "Preserves Isabela as the forecast landfall location and retains forecast status."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E002",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Mostly reformulates clauses, for example 'has shifted from pursuing cigarette and drug smugglers to helping rescue migrants', 'memories that Cortese said return', and 'survival may depend on rescue', while retaining names and necessary factual terms.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["The Calabrese, an Italian Finance Police ship patrolling the Mediterranean near Lampedusa, has shifted from pursuing cigarette and drug smugglers to helping rescue migrants from Africa and the Middle East with its 12-man crew."],
+        "reason": "Preserves the Italian ship and crew's migrant rescue role and the migrants' origins."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["Most of its crew participated in rescue efforts after a migrant ship sank off Lampedusa on October 3, 2013, killing more than 350 people; the Calabrese rescued four survivors."],
+        "reason": "Explicitly preserves the four survivors rescued from the migrant shipwreck off Lampedusa."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["Crew members Gaetano Cortese and Enzo Idone described recovering dead children and a pregnant woman, memories that Cortese said return when they are home trying to sleep."],
+        "reason": "Preserves Cortese's attribution, the recurring memories and their return at home while trying to sleep."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E003",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete, unchanged source sentences. The first removes only the allowed initial '(CNN)' label; sentence separation changes only whitespace.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Mentions the earthquake and Ziv's concern but omits the disruption of his planned trip for the birth."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["In the current chaos of Kathmandu, he worries his surrogate mother, Nafisa Shaje, will not get the proper medical attention required for a safe and healthy birth."],
+        "reason": "Explicitly preserves the concern about safe delivery as Ziv's worry, with an unambiguous preceding reference to Ziv."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["Cila Tamir, Ziv's attorney, has been working with the Ministry of the Interior to try to bring Shaje to Israel."],
+        "reason": "Preserves the attorney, ministry, destination and attempted rather than completed transfer."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E004",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete, unchanged source sentences; the first removes only the allowed initial '(CNN)' label.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Actress Mindy Kaling's brother says that he posed as a black man years ago to get into medical school", "But a Saint Louis University spokeswoman disputed the account, telling the Huffington Post that race never played a role in Chokal-Ingam's admission."],
+        "reason": "Preserves the admissions strategy as his claim; the following reference to the disputed account and Chokal-Ingam makes the subject clear without establishing causal success."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["But a Saint Louis University spokeswoman disputed the account, telling the Huffington Post that race never played a role in Chokal-Ingam's admission."],
+        "reason": "Preserves the university spokeswoman's denial and its attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Does not state that only one medical school accepted him."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E005",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "Mostly recasts source clauses, for example 'The article identifies several subjects viewers hope it will explore', 'the possibility of hurting the children was a particular concern', and 'the visibility gained through the Kardashian show could provide an opportunity to do good'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["E! plans to launch an as-yet-untitled documentary series about Bruce Jenner's transition on July 26, with eight hour-long episodes."],
+        "reason": "Preserves E!'s planned documentary about Jenner's transition, understood as gender transition from the surrounding transgender discussion."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["E! plans to launch an as-yet-untitled documentary series about Bruce Jenner's transition on July 26, with eight hour-long episodes."],
+        "reason": "Preserves the July 26 premiere as a plan."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Reports the two youngest daughters' loving statement, but does not convey the broader observation that many of Jenner's children appeared supportive of the transition."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E006",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "Mostly reformulates source clauses, including 'Jenner recently disclosed that he is transgender', 'will advise the production', and 'he hopes to use his visibility to make a positive difference', rather than reproducing source sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["E! plans to premiere an eight-part documentary series about Bruce Jenner's transition from male to female on July 26, with each episode lasting an hour."],
+        "reason": "Preserves E!'s planned documentary and its subject."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["E! plans to premiere an eight-part documentary series about Bruce Jenner's transition from male to female on July 26, with each episode lasting an hour."],
+        "reason": "Explicitly preserves the scheduled July 26 premiere."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Says several children have expressed support rather than preserving the source's qualified observation that many appear supportive. The explicit statement by Kendall and Kylie supports those two, but does not remove the qualification for the wider group."
+      }
+    ],
+    "issues": [
+      {
+        "summary_quote": "Several children have expressed support, including Kendall and Kylie",
+        "reason": "Strengthens the source's observation that many children appear supportive into an assertion that several expressed support. The source explicitly supplies a statement from Kendall and Kylie, while retaining uncertainty about the broader group.",
+        "source_evidence": ["Many of his kids appear supportive of his transition and his two youngest, daughter Kendall and Kylie, released the following statement to ABC about their father: \"We love our dad very much as he is an amazing father."]
+      }
+    ]
+  },
+  {
+    "output_id": "E007",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses source language, including 'the project that ends up giving the foursome their powers', 'a first glimpse of the villainous Dr. Doom', 'promises a very different take on the classic Marvel comics characters', and 'a genetically modified mutant dinosaur escapes from an island theme park'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["The new \"Fantastic Four\" trailer, released Sunday, shows Sue and Johnny Storm's father initiating the project that ends up giving the foursome their powers"],
+        "reason": "Preserves the trailer, the father initiating the project, and the resulting powers."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["The new trailer for \"Jurassic World,\" out June 12, came out Monday morning"],
+        "reason": "Explicitly reports release of the new Jurassic World trailer."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["features Chris Pratt's scientist character taking charge of a mission to contain dangerous creatures after a genetically modified mutant dinosaur escapes from an island theme park along with others"],
+        "reason": "Preserves Pratt's character leading the containment mission after the dinosaurs escape."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E008",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Reorganizes and compresses multiple source sentences into new clauses, including 'militants raided a prison and seized other government buildings', 'Most militants fled after troops clashed with them', and 'raising the risk of a regional proxy war'. Names, locations and quantities appropriately remain.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Yemeni officials said al Qaeda militants raided a prison and seized other government buildings in Al Mukallah early Thursday, freeing at least 270 inmates"],
+        "reason": "Preserves the prison attack, location, minimum number freed and attribution to Yemeni officials. The precise official's ministry title is generalized without changing the reported claim into an unattributed fact."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["Yemeni officials said al Qaeda militants raided a prison and seized other government buildings in Al Mukallah early Thursday, freeing at least 270 inmates, a third with al Qaeda ties, including senior figure Khaled Batarfi."],
+        "reason": "Preserves the escape of senior al Qaeda figure Batarfi under the sentence's official attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["Most militants fled after troops clashed with them, officials said"],
+        "reason": "Preserves both the majority qualifier and attribution for the militants' departure."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E009",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses distinctive source phrases and full sentences, including 'His greatest joy was his family', the complete sentence about retiring from the building automation industry, and 'We know he's up there giggling right now, just laughing out loud'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["In his obituary, his family made just two requests: donate to Shriners Hospital for Children in lieu of flowers, and do not vote for Hillary Clinton in 2016."],
+        "reason": "Preserves the family as the requester, the obituary context and the 2016 anti-Clinton request."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["In his obituary, his family made just two requests: donate to Shriners Hospital for Children in lieu of flowers, and do not vote for Hillary Clinton in 2016."],
+        "reason": "Preserves the memorial donation request, named hospital and substitution for flowers."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["The last few lines of his obituary spurred comments from across the country, including promises in the online guestbook not to vote for Clinton."],
+        "reason": "Explicitly preserves the nationwide comments prompted by the political request."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E010",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "All eight sentences are complete, unchanged source sentences after whitespace normalization and allowed removal of the initial '(CNN)' label. 'Rep.' is an abbreviation within a sentence, and the quoted report passages retain their original wording and punctuation.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["A Transportation Security Administration committee concluded that full screening of airport employees nationwide would not lower the overall risk to the public, according to a report released Monday."],
+        "reason": "Preserves the committee's conclusion about overall protection through the source's own opening formulation; it does not claim physical screening has no value in every context."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Lists several report recommendations and quotes Stover's view of layered security, but does not convey the committee's recommendation of a risk-based, multilayered approach. Stover's own position is not a substitute for that attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["TSA Secretary Jeh Johnson announced immediate actions, including criminal background checks every two years for all airport aviation workers"],
+        "reason": "Preserves Johnson's announcement, criminal background checks, two-year interval and all airport aviation workers."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E011",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "All eight sentences are complete, unchanged source sentences after whitespace normalization and allowed removal of the initial '(CNN)' label. The physical-screening sentence and the quoted report and Stover passages preserve source wording and punctuation.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["A Transportation Security Administration committee concluded that full screening of airport employees nationwide would not lower the overall risk to the public, according to a report released Monday."],
+        "reason": "Preserves the committee's conclusion about overall protection through the source's own opening formulation; it does not claim physical screening has no value in every context."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Lists several report recommendations and quotes Stover's view of layered security, but does not convey the committee's recommendation of a risk-based, multilayered approach. Stover's own position is not a substitute for that attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["TSA Secretary Jeh Johnson announced immediate actions, including criminal background checks every two years for all airport aviation workers"],
+        "reason": "Preserves Johnson's announcement, criminal background checks, two-year interval and all airport aviation workers."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E012",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Recasts attribution and combines several source sentences into newly structured clauses, for example 'Officials said senior al Qaeda figure Khaled Batarfi escaped and that attackers seized government buildings' and 'before troops confronted them'. Retained names, quantities and institutional terms carry the facts rather than forming copied complete sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["A senior Defense Ministry official said al Qaeda fighters raided a prison in Al Mukallah, Yemen, early Thursday and freed at least 270 inmates"],
+        "reason": "Preserves the attributed prison attack in Al Mukallah and the minimum number of prisoners freed."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["Officials said senior al Qaeda figure Khaled Batarfi escaped"],
+        "reason": "Explicitly preserves Batarfi's escape, senior status and official attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["Officials said senior al Qaeda figure Khaled Batarfi escaped and that attackers seized government buildings, including the Central Bank and radio station, before troops confronted them and most militants fled."],
+        "reason": "The sentence retains official attribution for the outcome and says most, rather than all, militants fled."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E013",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete, unchanged source sentences; the first removes only the allowed initial '(CNN)' label.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Actress Mindy Kaling's brother says that he posed as a black man years ago to get into medical school", "But a Saint Louis University spokeswoman disputed the account, telling the Huffington Post that race never played a role in Chokal-Ingam's admission."],
+        "reason": "Preserves the admissions strategy as his claim; the following reference to the disputed account and Chokal-Ingam makes the subject clear without establishing causal success."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["But a Saint Louis University spokeswoman disputed the account, telling the Huffington Post that race never played a role in Chokal-Ingam's admission."],
+        "reason": "Preserves the university spokeswoman's denial and its attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Does not state that only one medical school accepted him."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E014",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Mostly reformulates clauses, including 'has shifted from pursuing cigarette and drug smugglers to helping rescue migrants', 'its crew saved four survivors', and 'describe enduring memories of recovering dead children', while retaining names and essential quantities.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["The Calabrese, an Italian Finance Police ship patrolling the Mediterranean near Lampedusa, has shifted from pursuing cigarette and drug smugglers to helping rescue migrants from Africa and the Middle East with its 12-member crew."],
+        "reason": "Preserves the Italian ship and crew's migrant rescue role and the migrants' origins."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["During the October 3, 2013, shipwreck off Lampedusa, which killed more than 350 people, its crew saved four survivors."],
+        "reason": "Preserves the rescue of four survivors off Lampedusa, with the migrant context and crew identified in the preceding sentence."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Mentions enduring memories but not Cortese's account of their return when the crew are home trying to sleep. Anchor ambiguity: lasting memories and the specific home/sleep recurrence are separable details; the former is conveyed, but the latter part of the frozen proposition is not."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E015",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses distinctive source phrases, including 'being warned to be on guard for flash floods and landslides', 'the southeastern coast of Isabela province', and 'barring outdoor activities like swimming, surfing, diving and boating in some locales'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["Filipinos are being warned to be on guard for flash floods and landslides as tropical storm Maysak", "is expected to make landfall Sunday morning on the southeastern coast of Isabela province"],
+        "reason": "Preserves the warning of both hazards to Filipinos and the storm's impending approach through its forecast landfall."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Identifies Maysak as a tropical storm but omits its weakening from super typhoon status."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["is expected to make landfall Sunday morning on the southeastern coast of Isabela province"],
+        "reason": "Preserves Isabela as the forecast landfall location and retains forecast status."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E016",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete, unchanged source sentences. The first removes only the allowed initial '(CNN)' label; sentence separation changes only whitespace.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Mentions the earthquake and Ziv's concern but omits the disruption of his planned trip for the birth."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["In the current chaos of Kathmandu, he worries his surrogate mother, Nafisa Shaje, will not get the proper medical attention required for a safe and healthy birth."],
+        "reason": "Explicitly preserves the concern about safe delivery as Ziv's worry, with an unambiguous preceding reference to Ziv."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["Cila Tamir, Ziv's attorney, has been working with the Ministry of the Interior to try to bring Shaje to Israel."],
+        "reason": "Preserves the attorney, ministry, destination and attempted rather than completed transfer."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E017",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses distinctive source language, including 'a first glimpse of the villainous Dr. Doom', 'promises a very different take on the classic Marvel comics characters', 'features even more of star Chris Pratt', and the clause about a genetically modified mutant dinosaur escaping from an island theme park.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["The new \"Fantastic Four\" trailer, released Sunday, shows Sue and Johnny Storm's father initiating the project that gives the foursome their powers"],
+        "reason": "Preserves the trailer, the father initiating the project, and the resulting powers."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": ["The new trailer for \"Jurassic World,\" out June 12, came out Monday morning"],
+        "reason": "Explicitly reports release of the new Jurassic World trailer."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["After a genetically modified mutant dinosaur escapes from an island theme park along with others, Pratt's scientist character takes charge of a mission to contain the dangerous creatures"],
+        "reason": "Preserves Pratt's character leading the containment mission after the dinosaurs escape."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "E018",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses distinctive source phrases, including 'his family made just two requests', 'His greatest joy was his family', 'spurred comments from across the country', and the quotation 'We know he's up there giggling right now, just laughing out loud'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": ["In his obituary, his family made just two requests: please donate to Shriners Hospital for Children, and please don't vote for Clinton in 2016."],
+        "reason": "Preserves the family as the requester, the obituary context and the 2016 anti-Clinton request."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Preserves the obituary's request to donate to the named hospital but omits that donations were requested instead of flowers. Anchor ambiguity: the charitable request and its replacement-for-flowers qualification are separable; the first is present, but the complete frozen proposition is not conveyed."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": ["The last few lines of his obituary spurred comments from across the country, including Marina Shear's promise not to vote for Clinton and Ron Renno's pledge to remember the request in November 2016."],
+        "reason": "Explicitly preserves nationwide comments prompted by the political request."
+      }
+    ],
+    "issues": []
+  }
+]

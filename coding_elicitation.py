@@ -1,0 +1,145 @@
+"""Bounded repeated comparisons of prepared examples; not a calibrated preference model."""
+from __future__ import annotations
+
+import hashlib
+import json
+
+from coding_examples import build_coding_examples
+
+AXES = ('explanation', 'comments', 'structure', 'output')
+
+
+def _variant(value, replacements):
+    if isinstance(value, str):
+        for before, after in replacements:
+            value = value.replace(before, after)
+        return value
+    if isinstance(value, list):
+        return [_variant(item, replacements) for item in value]
+    if isinstance(value, dict):
+        return {key: _variant(item, replacements) for key, item in value.items()}
+    return value
+
+
+def build_coding_elicitation(profile):
+    base = build_coding_examples(profile)
+    contexts = [
+        ('order', '주문 합계', []),
+        ('rental', '대여 요금', [('23,000', '21,000'), ('23000', '21000'), ('Order', 'Rental'), ('order', 'rental'), ('상품', '대여'), ('주문', '대여'),
+            ('배송비', '보증금'), ('수량', '대여 일수'), ('quantity', 'days'), ('단가', '하루 요금'),
+            ('3,000', '1,000'), ('3000', '1000'), ('2,500', '500'), ('2500', '500'), ('23,000', '21,000')]),
+        ('print', '인쇄 요금', [('23,000', '20,200'), ('23000', '20200'), ('Order', 'Print'), ('order', 'print'), ('상품', '인쇄'), ('주문', '인쇄'),
+            ('배송비', '기본 작업비'), ('수량', '인쇄 부수'), ('quantity', 'copies'), ('단가', '장당 요금'),
+            ('3,000', '200'), ('3000', '200'), ('2,500', '100'), ('2500', '100'), ('23,000', '20,200')]),
+    ]
+    rounds = []
+    for context, label, replacements in contexts:
+        for pair in base['pairs']:
+            item = _variant(pair, replacements)
+            item.update(id=f'{context}:{pair["axis"]}', context=label,
+                        task=_variant(base['task'], replacements))
+            if context == 'rental':
+                item['options'].reverse()
+            rounds.append(item)
+    return {**base, 'version': 3, 'pairs': rounds[:8], 'followups': rounds[8:],
+            'source': {**base['source'], 'id': base['source']['id'] + ':repeated-v1',
+                       'label': base['source']['label'] + ' · 주문·대여·인쇄 비교'},
+            'notice': base['notice'] + ' 기본 8회, 미확정 항목은 최대 2회 더 비교합니다. 반복 선택의 일관성만 확인하며, 취향의 정확도나 코드 품질을 보장하지 않습니다.'}
+
+
+def build_adaptive_coding_elicitation(profile):
+    """A bounded, optional comparison path; earlier records keep their original protocol."""
+    bank = build_coding_elicitation(profile)
+    environment = json.dumps([profile['language'], profile['framework']], ensure_ascii=False, separators=(',', ':'))
+    source_id = bank['source']['id'].replace(':repeated-v1', ':adaptive-v1')
+    source_id += ':env:' + hashlib.sha256(environment.encode('utf-8')).hexdigest()[:16]
+    return {**bank, 'version': 4, 'followups': [], 'max_rounds': 8,
+            'source': {**bank['source'], 'id': source_id,
+                       'label': bank['source']['label'].replace('주문·대여·인쇄 비교', '주문·대여 비교')},
+            'notice': build_coding_examples(profile)['notice'] +
+                ' 비교는 최대 8회이며, 원하는 시점에 마치고 선택을 확인할 수 있습니다. 한 번 고른 항목과 반복해서 같은 쪽을 고른 항목을 구분합니다. 횟수는 취향의 정확도나 코드 품질을 보장하지 않습니다.'}
+
+
+def summarize_rounds(rounds, bank, *, allow_single=False):
+    by_id = {item['id']: item for item in bank['pairs'] + bank['followups']}
+    summary = {}
+    for axis in AXES:
+        rows = [row for row in rounds if by_id[row['id']]['axis'] == axis]
+        values = [row['value'] for row in rows if row['value'] is not None]
+        consistent = len(values) >= 2 and len(set(values)) == 1
+        single = allow_single and len(values) == 1
+        summary[axis] = {'answered': len(values), 'total': len(rows), 'consistent': consistent,
+                         'value': values[0] if consistent or single else None,
+                         'status': 'consistent' if consistent else 'mixed' if len(set(values)) > 1 else 'single' if single else 'unresolved'}
+    return summary
+
+
+def validate_elicitation(comparison, profile):
+    if comparison['version'] == 4:
+        return _validate_adaptive_elicitation(comparison, profile)
+    bank = build_coding_elicitation(profile)
+    rows = comparison.get('rounds')
+    if not isinstance(rows, list) or not 8 <= len(rows) <= 10:
+        raise ValueError('8~10회의 비교 기록을 확인해 주세요.')
+    expected = bank['pairs'][:]
+    normalized = []
+    for index, row in enumerate(rows):
+        if index == 8:
+            summary = summarize_rounds(normalized, bank)
+            unresolved = [axis for axis in AXES if not summary[axis]['consistent']][:2]
+            expected += [item for item in bank['followups'] if item['axis'] in unresolved]
+        if index >= len(expected) or not isinstance(row, dict) or row.get('id') != expected[index]['id']:
+            raise ValueError('비교 순서나 예시가 현재 개발 환경과 다릅니다. 다시 비교해 주세요.')
+        value = row.get('value')
+        if 'value' not in row or (value is not None and value not in [option['value'] for option in expected[index]['options']]):
+            raise ValueError('비교에서 고른 값을 확인해 주세요.')
+        normalized.append({'id': row['id'], 'value': value})
+    base_summary = summarize_rounds(normalized[:8], bank)
+    required = 8 + min(2, sum(not item['consistent'] for item in base_summary.values()))
+    recorded = comparison.get('example')
+    if (len(rows) != required or not isinstance(recorded, dict)
+            or any(recorded.get(key) != bank['source'][key] for key in ('id', 'kind', 'label'))):
+        raise ValueError('남은 비교를 마치거나 개발 환경을 다시 확인해 주세요.')
+    summary = summarize_rounds(normalized, bank)
+    for axis in AXES:
+        if comparison['choices'][axis] is not None and comparison['choices'][axis] != summary[axis]['value']:
+            raise ValueError('미확정 항목은 확인 화면에서 직접 골라 주세요.')
+    return {'version': 3, 'choices': dict(comparison['choices']), 'rounds': normalized,
+            'example': bank['source'], 'summary': summary}
+
+
+def _validate_adaptive_elicitation(comparison, profile):
+    bank = build_adaptive_coding_elicitation(profile)
+    rows = comparison.get('rounds')
+    if not isinstance(rows, list) or not 1 <= len(rows) <= bank['max_rounds']:
+        raise ValueError('비교 기록은 1~8회까지 남길 수 있습니다. 비교 없이 고르려면 직접 설정을 사용해 주세요.')
+    recorded = comparison.get('example')
+    if not isinstance(recorded, dict):
+        raise ValueError('비교한 개발 환경을 다시 확인해 주세요.')
+    source = bank['source']
+    if recorded.get('id') != source['id']:
+        # Early v4 saved IDs omitted environment. Preserve their original identity
+        # only when the recorded canonical label/kind confirms the example language.
+        # A basic-example legacy record cannot certify its old framework; do not
+        # upgrade it to the new environment-bound ID or invent missing evidence.
+        legacy = {**source, 'id': source['id'].split(':env:')[0]}
+        if any(recorded.get(key) != legacy[key] for key in ('id', 'kind', 'label')):
+            raise ValueError('비교한 개발 환경을 다시 확인해 주세요.')
+        source = legacy
+    normalized = []
+    for row, pair in zip(rows, bank['pairs']):
+        if not isinstance(row, dict) or row.get('id') != pair['id']:
+            raise ValueError('비교 순서나 예시가 현재 개발 환경과 다릅니다. 다시 비교해 주세요.')
+        value = row.get('value')
+        if 'value' not in row or (value is not None and (not isinstance(value, str)
+                or value not in [option['value'] for option in pair['options']])):
+            raise ValueError('비교에서 고른 값을 확인해 주세요.')
+        normalized.append({'id': pair['id'], 'value': value})
+    summary = summarize_rounds(normalized, bank, allow_single=True)
+    for axis in AXES:
+        if comparison['choices'][axis] is not None and comparison['choices'][axis] != summary[axis]['value']:
+            raise ValueError('미확정 항목은 확인 화면에서 직접 골라 주세요.')
+    stop_reason = ('consistent' if all(item['consistent'] for item in summary.values()) else
+                   'limit' if len(rows) == bank['max_rounds'] else 'user')
+    return {'version': 4, 'choices': dict(comparison['choices']), 'rounds': normalized,
+            'example': source, 'summary': summary, 'stop_reason': stop_reason}

@@ -1,0 +1,40 @@
+{
+  "report_version": "0.5",
+  "report_date": "2026-11-13",
+  "evidence_cutoff": "2026-11-12",
+  "output": "output/pdf/Revealed_진행현황_주간보고서_v0.5.pdf",
+  "sha256": "be07f9ec3ab0f7f47f3c1a2a148479e4d545bc9ff66bff3e371bc039c304da6c",
+  "pages": 30,
+  "main_pages": [1, 2, 3],
+  "current_backup_pages": [4, 5, 6, 7, 8, 9, 10, 11, 12],
+  "historical_backup_page_range": [13, 30],
+  "checks": {
+    "numeric_results_match_verification_results_json": true,
+    "prior_report_and_frozen_experiment_sources_unchanged": true,
+    "paragraph_overflow_assertions_passed": true,
+    "all_30_pages_rendered": true,
+    "all_pages_visually_reviewed_in_contact_sheets": true,
+    "full_size_pages_reviewed": [3, 5, 11, 12],
+    "report_period_and_history_footer_checks_passed": true,
+    "no_clipping_or_overlap_observed": true
+  },
+  "verification": {
+    "backend_passed": 1355,
+    "backend_failed": 0,
+    "backend_skipped": 1,
+    "api_tests_deselected": 16,
+    "frontend_passed": 123,
+    "integration_scenarios_passed": 18,
+    "production_build_passed": true,
+    "source_hashes_recorded_and_compared": 342
+  },
+  "paid_model_api_calls": 0,
+  "notes": [
+    "The Windows symlink test was skipped because the host does not permit creating symlinks; API-marked tests were excluded.",
+    "Two active browser accounts plus a replacement recipient and anonymous controls were tested with local HTTP and a disposable database.",
+    "Team-profile integration checks used authenticated HTTP requests; not every team-profile step was a UI click.",
+    "The two previously partial plan items are complete within the explicit local integration and not-api regression scope.",
+    "Human usability, public deployment, paid GEPA calls and superiority over manual prompts are not newly established.",
+    "The existing build chunk-size warning remains. No GitHub publication or app deployment was performed."
+  ]
+}

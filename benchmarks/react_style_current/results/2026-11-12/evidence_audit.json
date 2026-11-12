@@ -1,0 +1,1155 @@
+{
+  "reviewers": {
+    "a": "/root/react_style_validation/review_a",
+    "b": "/root/react_style_validation/review_b"
+  },
+  "review_process": "Independent fresh fork_turns=none contexts, sequential due shared agent slots, inherited runtime without overrides. Only CLAUDE.md, rubric and blind packet allowed. No execution results, mapping, condition inputs or other review. First judgments retained unchanged.",
+  "blinding_limit": "Condition labels and scores hidden; answer style may suggest a treatment. Shared filesystem access is instruction-based, not OS isolation; two model judgments are not human evaluation.",
+  "first_answers": 24,
+  "literal_applied_files": 50,
+  "css_files": 14,
+  "technical_failures": [],
+  "delivery_or_evaluation_errors": [],
+  "candidate_repairs": 0,
+  "quality_retries": 0,
+  "paired_dimension_verdicts": 72,
+  "agreements": 71,
+  "disagreements": [
+    {
+      "output_id": "S007",
+      "dimensions": [
+        "code_structure"
+      ]
+    }
+  ],
+  "disagreement_policy": "S007 general text expander only: A treats local toggle/prop reset as trivial with meaningful CSS split; B treats reset/preview/state as nontrivial responsibility left in UI. Both judgments preserved; all-three result remains false because explicit typing target is unmatched. No adjudication or post-result rubric change.",
+  "design_source_scope": "Exact required colors and spacing occur in all 24 supplied source sets; attached excerpts are source observations, not browser visual/layout or computed-style measurements. Reviewers inspect actual responsibility and token data flow rather than filename/count proxies.",
+  "prompt_scope": "The actual default English service.final_prompt text is preserved. Same common strict-required-type exception and disclosed CSS environment appended to all conditions. This is not a test of the bare product prompt in arbitrary environments, of the Korean translation, or of preference inference.",
+  "interpretation": "All three arms pass the same limited strict/type and ReactDOM behavioral checks. Manual and product both match all three given targets in all eight tasks; general matches one, although general was not given these targets. This supports limited transmission of known choices, not product superiority over strong manual instructions, equivalence, human preference or productivity.",
+  "follow_up_candidates": [
+    "Align the English inferred clause with the Korean necessary-state/event-type exceptions; preserve strict functionality.",
+    "Align separated responsibility semantics between English AND and Korean OR; make intended boundary explicit before another fresh test.",
+    "Keep known-choice transmission separate from human selection accuracy, time saving and adoption."
+  ],
+  "non_axis_quality_note": "Both reviewers preserve S009 manual tag-editor prose containing 小규모. No axis-score repair or language-perfect claim.",
+  "paid_model_api_calls": 0,
+  "new_dependencies": 0,
+  "product_implementation_modified": false,
+  "cases": [
+    {
+      "output_id": "S001",
+      "arm": "product",
+      "task_id": "text_expander",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx",
+        "useTextExpansion.ts",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "background-color: #f2f6fc;",
+          "color: #1d3150;",
+          "padding: 16px;",
+          "display: grid;",
+          "gap: 8px;"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S002",
+      "arm": "manual",
+      "task_id": "breadcrumb_browser",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx",
+        "useFolderBrowser.ts",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "--folder-background: #f2f6fc;",
+          "--folder-text: #1d3150;",
+          "--folder-padding: 16px;",
+          "--folder-gap: 8px;",
+          "display: flex;",
+          "background-color: var(--folder-background);",
+          "padding: var(--folder-padding);",
+          "gap: var(--folder-gap);"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S003",
+      "arm": "manual",
+      "task_id": "step_wizard",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "Component.tsx": [
+          "colors: { background: '#f2f6fc', text: '#1d3150' },",
+          "spacing: { panel: 16, gap: 8 },",
+          "display: 'flex',",
+          "backgroundColor: theme.colors.background,",
+          "padding: theme.spacing.panel,",
+          "gap: theme.spacing.gap,"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S004",
+      "arm": "product",
+      "task_id": "tag_editor",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "Component.tsx": [
+          "style={{ backgroundColor: '#f2f6fc', color: '#1d3150', padding: 16, display: 'grid', gap: 8 }}"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S005",
+      "arm": "general",
+      "task_id": "unit_converter",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": false,
+          "style_management": false,
+          "type_detail": false
+        },
+        "b": {
+          "code_structure": false,
+          "style_management": false,
+          "type_detail": false
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "display: grid;",
+          "gap: 8px;",
+          "padding: 16px;",
+          "background-color: #f2f6fc;",
+          "color: #1d3150;"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S006",
+      "arm": "product",
+      "task_id": "range_pair",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx",
+        "useRangePair.ts",
+        "theme.ts",
+        "styles.ts"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "theme.ts": [
+          "colors: { panel: '#f2f6fc', text: '#1d3150' },",
+          "spacing: { panel: 16, gap: 8 },"
+        ],
+        "styles.ts": [
+          "backgroundColor: theme.colors.panel,",
+          "padding: theme.spacing.panel,",
+          "display: 'grid',",
+          "gap: theme.spacing.gap,"
+        ]
+      },
+      "ambiguities_by_reviewer": {
+        "b": [
+          "inferred의 public boundaries 문구를 문자 그대로 모든 내부 매개변수 표기 금지로 읽으면 submit의 FormEvent 표기가 경계에 걸린다. 이 매개변수는 선언된 독립 함수에서 문맥 추론되지 않아 strict 환경에 필요하며, 명확한 로컬 값·반환의 추론 선호에는 어긋나지 않는 것으로 판단했다."
+        ]
+      },
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S007",
+      "arm": "general",
+      "task_id": "text_expander",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": false
+        },
+        "b": {
+          "code_structure": false,
+          "style_management": true,
+          "type_detail": false
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "display: grid;",
+          "gap: 8px;",
+          "padding: 16px;",
+          "background-color: #f2f6fc;",
+          "color: #1d3150;"
+        ]
+      },
+      "ambiguities_by_reviewer": {
+        "a": [
+          "separated의 영문은 상태 분리도 언급하지만 고정 3파일을 요구하지 않는다. 이 답변의 prop 연동 초기화를 비자명한 상태 책임으로 보면 판정이 달라질 수 있다. 여기서는 단일 플래그와 짧은 초기화 효과를 사소한 상태 처리로 보고 연결된 CSS 분리를 인정했다."
+        ],
+        "b": [
+          "separated의 영문 component/state/styles와 한국어 style OR state 범위가 다르다. CSS 분리만으로 작은 기능에는 충분할 수 있지만, 이 답변의 prop 의존 초기화와 펼침·미리 보기 결합을 의미 있는 상태 책임으로 판단하여 불일치로 기록했다. 단순 파일 수에 따른 판정은 아니다."
+        ]
+      },
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S008",
+      "arm": "manual",
+      "task_id": "sortable_table",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "Component.tsx": [
+          "const displayedRows: Row[] = orderRows(rows, direction);",
+          "display: 'flex',",
+          "backgroundColor: '#f2f6fc',",
+          "color: '#1d3150',",
+          "padding: 16,",
+          "gap: 8,",
+          "{displayedRows.map((row: Row): ReactElement => ("
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S009",
+      "arm": "manual",
+      "task_id": "tag_editor",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "Component.tsx": [
+          "display: 'flex',",
+          "backgroundColor: '#f2f6fc',",
+          "color: '#1d3150',",
+          "padding: 16,",
+          "gap: 8,"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {
+        "a": [
+          {
+            "answer_quotes": [
+              "小규모 기능을 한 파일에 모으고"
+            ],
+            "reason": "설명 첫 단어에 한자 小가 섞였다. 스타일 세 축과 별개인 출력 언어상의 관찰이다."
+          }
+        ],
+        "b": [
+          {
+            "answer_quotes": [
+              "小규모 기능을 한 파일에 모으고"
+            ],
+            "reason": "후속 설명에 한자 小가 한국어와 혼용되어 있다. UI 영문 문자열 문제나 React 3축 불일치로 감점하지 않았다."
+          }
+        ]
+      }
+    },
+    {
+      "output_id": "S010",
+      "arm": "product",
+      "task_id": "breadcrumb_browser",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx",
+        "useFolderBrowser.ts",
+        "theme.ts",
+        "styles.ts"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "theme.ts": [
+          "spacing: { panel: number; gap: number };",
+          "colors: { panel: '#f2f6fc', text: '#1d3150' },",
+          "spacing: { panel: 16, gap: 8 },"
+        ],
+        "styles.ts": [
+          "backgroundColor: theme.colors.panel,",
+          "padding: theme.spacing.panel,",
+          "display: 'grid',",
+          "gap: theme.spacing.gap,"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S011",
+      "arm": "product",
+      "task_id": "password_visibility",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx",
+        "usePasswordVisibility.ts",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "background-color: #f2f6fc;",
+          "color: #1d3150;",
+          "padding: 16px;",
+          "display: grid;",
+          "gap: 8px;"
+        ]
+      },
+      "ambiguities_by_reviewer": {
+        "b": [
+          "updateValue의 string 매개변수는 public boundaries만이라는 좁은 해석과 충돌할 여지가 있다. 독립 함수 선언의 인자는 호출 위치에서 추론되지 않아 strict에 필요하므로, 추론 가능한 로컬 값·반환에 불필요한 표기를 하는 경우와 구분하여 일치로 판단했다."
+        ]
+      },
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S012",
+      "arm": "general",
+      "task_id": "password_visibility",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "display: grid;",
+          "gap: 8px;",
+          "padding: 16px;",
+          "background-color: #f2f6fc;",
+          "color: #1d3150;"
+        ]
+      },
+      "ambiguities_by_reviewer": {
+        "a": [
+          "separated의 상태까지 분리한다는 영문을 엄격하게 적용하면 UI 내 상태가 남는 점이 경계 사례다. 여기서는 입력값 저장과 토글이 사소한 작업이라는 rubric 예외를 적용해 실제 연결된 스타일 분리를 인정했다."
+        ],
+        "b": [
+          "separated의 영문 표현은 state 분리까지 요구한다고 읽을 여지가 있다. 이 답변은 CSS만 분리하지만 남은 로컬 상태 작업이 단순 입력 보관과 boolean 전환이어서, rubric이 허용한 스타일 모듈만으로 충분한 경우로 판단했다."
+        ]
+      },
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S013",
+      "arm": "general",
+      "task_id": "breadcrumb_browser",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": false,
+          "style_management": false,
+          "type_detail": false
+        },
+        "b": {
+          "code_structure": false,
+          "style_management": false,
+          "type_detail": false
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "display: grid;",
+          "gap: 8px;",
+          "padding: 16px;",
+          "background-color: #f2f6fc;",
+          "color: #1d3150;"
+        ]
+      },
+      "ambiguities_by_reviewer": {
+        "a": [
+          "separated는 스타일만 나눠도 다른 작업이 사소하면 인정할 수 있다. 이 답변은 중첩 트리 해석과 경로 이동을 UI에 모아 그 예외에 해당하지 않는다고 판정했다. 한국어의 스타일 또는 상태 분리만 적용하면 달라질 수 있으나 이 검토는 영문 기준을 쓴다."
+        ],
+        "b": [
+          "CSS 분리 자체는 의미 있지만, 영문 component/state/styles 범위에서는 복수 단계 트리 해석과 경로 전환이 UI에 남은 점을 평가해야 한다. 한국어의 style OR state만으로 두 파일을 자동 일치 처리하지 않았으며 상태 책임이 비사소하다고 판단했다."
+        ]
+      },
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S014",
+      "arm": "product",
+      "task_id": "sortable_table",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "Component.tsx": [
+          "backgroundColor: '#f2f6fc',",
+          "color: '#1d3150',",
+          "padding: 16,",
+          "display: 'grid',",
+          "gap: 8,"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S015",
+      "arm": "manual",
+      "task_id": "unit_converter",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "Component.tsx": [
+          "colors: { background: string; text: string };",
+          "spacing: { panel: number; gap: number };",
+          "colors: { background: '#f2f6fc', text: '#1d3150' },",
+          "spacing: { panel: 16, gap: 8 },",
+          "display: 'flex',",
+          "backgroundColor: theme.colors.background,",
+          "padding: theme.spacing.panel,",
+          "gap: theme.spacing.gap,"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S016",
+      "arm": "general",
+      "task_id": "range_pair",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": false,
+          "style_management": false,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": false,
+          "style_management": false,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "display: grid;",
+          "gap: 8px;",
+          "padding: 16px;",
+          "background-color: #f2f6fc;",
+          "color: #1d3150;"
+        ]
+      },
+      "ambiguities_by_reviewer": {
+        "a": [
+          "스타일 파일 분리 자체는 의미 있는 경계다. 다만 영문 separated 조건 및 rubric의 비자명한 상태 책임 조항에 따라, UI 내부에 남은 다중 필드 검증과 제출 처리를 사소한 작업으로 보지 않아 불일치로 판정했다."
+        ],
+        "b": [
+          "영문 separated 범위에서 단순 CSS 분리만 허용할 수 있는 사소한 상태의 범위는 해석 여지가 있다. 여기서는 두 필드의 누락·순서와 오류 표시를 결합한 제출 검증이 의미 있는 상태 책임이라 판단하여 불일치로 기록했다."
+        ]
+      },
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S017",
+      "arm": "general",
+      "task_id": "step_wizard",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": false,
+          "style_management": false,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": false,
+          "style_management": false,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "display: grid;",
+          "gap: 8px;",
+          "padding: 16px;",
+          "background-color: #f2f6fc;",
+          "color: #1d3150;"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S018",
+      "arm": "general",
+      "task_id": "sortable_table",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": false,
+          "style_management": true,
+          "type_detail": false
+        },
+        "b": {
+          "code_structure": false,
+          "style_management": true,
+          "type_detail": false
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "display: grid;",
+          "gap: 8px;",
+          "padding: 16px;",
+          "background-color: #f2f6fc;",
+          "color: #1d3150;"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S019",
+      "arm": "general",
+      "task_id": "tag_editor",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": false,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": false,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "display: grid;",
+          "gap: 8px;",
+          "padding: 16px;",
+          "background-color: #f2f6fc;",
+          "color: #1d3150;",
+          "display: flex;",
+          "gap: 8px;"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S020",
+      "arm": "product",
+      "task_id": "step_wizard",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "Component.tsx": [
+          "colors: { panel: '#f2f6fc', text: '#1d3150' },",
+          "spacing: { panel: 16, gap: 8 },",
+          "backgroundColor: theme.colors.panel,",
+          "padding: theme.spacing.panel,",
+          "display: 'grid',",
+          "gap: theme.spacing.gap,"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S021",
+      "arm": "product",
+      "task_id": "unit_converter",
+      "target": {
+        "code_structure": "compact",
+        "style_management": "theme",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "Component.tsx": [
+          "spacing: { panel: number; gap: number };",
+          "colors: { panel: '#f2f6fc', text: '#1d3150' },",
+          "spacing: { panel: 16, gap: 8 },",
+          "backgroundColor: theme.colors.panel,",
+          "padding: theme.spacing.panel,",
+          "display: 'grid',",
+          "gap: theme.spacing.gap,"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S022",
+      "arm": "manual",
+      "task_id": "text_expander",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "explicit"
+      },
+      "source_files": [
+        "Component.tsx",
+        "useTextExpander.ts",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "display: flex;",
+          "background-color: #f2f6fc;",
+          "color: #1d3150;",
+          "padding: 16px;",
+          "gap: 8px;"
+        ]
+      },
+      "ambiguities_by_reviewer": {},
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S023",
+      "arm": "manual",
+      "task_id": "range_pair",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "theme",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx",
+        "useRangePair.ts",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "--range-background: #f2f6fc;",
+          "--range-text: #1d3150;",
+          "--range-padding: 16px;",
+          "--range-gap: 8px;",
+          "display: flex;",
+          "background-color: var(--range-background);",
+          "padding: var(--range-padding);",
+          "gap: var(--range-gap);"
+        ]
+      },
+      "ambiguities_by_reviewer": {
+        "b": [
+          "독립 submit 함수의 FormEvent와 exported 훅의 매개변수 표기는 public Props boundaries만이라는 좁은 문구와 해석 여지가 있다. 문맥 추론이 불가능한 함수 인자의 strict 호환 표기로 보며 명확한 로컬 값·단순 반환의 과잉 표기로 처리하지 않았다."
+        ]
+      },
+      "other_observations_by_reviewer": {}
+    },
+    {
+      "output_id": "S024",
+      "arm": "manual",
+      "task_id": "password_visibility",
+      "target": {
+        "code_structure": "separated",
+        "style_management": "direct",
+        "type_detail": "inferred"
+      },
+      "source_files": [
+        "Component.tsx",
+        "usePasswordVisibility.ts",
+        "styles.css"
+      ],
+      "literal_fences_verified": true,
+      "strict_type_pass": true,
+      "runtime_completed": true,
+      "runtime_pass": true,
+      "runtime_checks_pass": 7,
+      "runtime_checks_total": 7,
+      "style_by_reviewer": {
+        "a": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        },
+        "b": {
+          "code_structure": true,
+          "style_management": true,
+          "type_detail": true
+        }
+      },
+      "source_design_excerpts": {
+        "styles.css": [
+          "display: flex;",
+          "background-color: #f2f6fc;",
+          "color: #1d3150;",
+          "padding: 16px;",
+          "gap: 8px;"
+        ]
+      },
+      "ambiguities_by_reviewer": {
+        "b": [
+          "updateValue의 내부 매개변수 string 표기는 public boundaries만이라는 문자적 해석과 경계가 있다. 독립 선언의 인자가 strict에서 스스로 추론되지 않는 점을 반영해 필요한 표기로 보았으며, 로컬 스칼라·반환에 불필요한 타입을 반복한 것으로 보지 않았다."
+        ]
+      },
+      "other_observations_by_reviewer": {}
+    }
+  ]
+}

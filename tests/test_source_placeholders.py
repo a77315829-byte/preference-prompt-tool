@@ -13,8 +13,9 @@ import pytest
 from engine import generator
 from engine.domain_loader import load_domain
 from engine.generator import build_prompt, fill_source_placeholders
+from tests.domain_inventory import ENGINE_DOMAINS
 
-DOMAINS = sorted(Path("domains").glob("*.yaml"))
+DOMAINS = ENGINE_DOMAINS
 SOURCE = " ".join(["word"] * 1000)
 
 

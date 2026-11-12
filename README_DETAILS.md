@@ -1,5 +1,10 @@
 # 선호 기반 프롬프트 자동 생성 도구
 
+> 새 대회용 `codex/summary-coding-no-aws` 브랜치는 문서 요약·코딩 기능을 유지하고
+> AWS 화면·조회 API·템플릿을 제외합니다. 아래 AWS 관련 기능·설정·실험 설명은
+> 기존 프로젝트 기록이며 이 브랜치에서 제공하는 기능이 아닙니다.
+> 현재 사용 방법은 [사용 설명서](docs/USER_GUIDE.md)를 참고하세요.
+
 사용자가 결과물 두 개 중 마음에 드는 쪽을 몇 번(최대 8회) 고르면, 그 선택 이력에서
 사용자의 암묵적 선호를 추정해 프롬프트를 조립한다. 추정 선호를 평가 함수로
 변환해 최적화기([GEPA](https://arxiv.org/abs/2507.19457))에 전달하는 단계는 선택 사항이다. 최종
@@ -761,6 +766,7 @@ npm run dev
 | `PPT_OPTIMIZATIONS_PER_DAY` | 30 | 하루 GEPA 최적화("선호 기준으로 최적화") 상한 (세션당 2회) |
 | `PPT_POLISHES_PER_DAY` | 60 | 하루 "프롬프트 다듬기" LLM 재작성 상한 (`PPT_LIVE=1` 일 때만 동작) |
 | `PPT_WORKSPACE_CALLS_PER_DAY` | 60 | 하루 "서비스용 프롬프트" AI 호출 상한 (요구사항 정리 + 시험 실행 + AI 추천. 입력 오류로 멈춘 시험은 차감 안 함) |
+| `PPT_PREFERENCE_RUNS_PER_DAY` · `PPT_USER_PREFERENCE_RUNS_PER_DAY` | 60 · 20 | 새 대회 브랜치의 보관한 지침으로 AI 실행 상한 (서버 전체 · 로그인한 사용자마다). 저장·수정·복사는 모델을 호출하지 않음 |
 | `PPT_USER_SESSIONS_PER_DAY` · `PPT_USER_OPTIMIZATIONS_PER_DAY` · `PPT_USER_POLISHES_PER_DAY` · `PPT_USER_WORKSPACE_CALLS_PER_DAY` | 20 · 5 · 20 · 30 | 위 네 상한의 **사람마다 몫**. 위 값은 서버 전체 상한으로 그대로 남는다 |
 | `PPT_ANON_..._PER_DAY` (같은 네 가지) | 사람마다 몫과 같음 | 로그인하지 않은 방문자 **전체가 나눠 쓰는** 한 몫 |
 | `PPT_AWS_LIVE` | 꺼짐 | `1` 이면 AWS 비용 화면의 "실제 AWS 연결 시도"가 서버 자격 증명으로 Cost Explorer 를 조회한다. 꺼져 있으면 브라우저가 요청해도 데모 데이터를 준다 |

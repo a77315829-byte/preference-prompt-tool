@@ -1,0 +1,14 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\Laptop_PC\preference-prompt-tool\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Laptop_PC\preference-prompt-tool
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 3 items
+
+tests/test_checks_vs_labels.py::test_recompute_matches_saved PASSED      [ 33%]
+tests/test_coding_public.py::test_full_cached_audit_is_offline_and_preserves_unknown_outcomes PASSED [ 66%]
+tests/test_persona.py::test_personas_come_from_real_macsum_attributes PASSED [100%]
+
+- generated xml file: C:\Users\Laptop_PC\preference-prompt-tool\tmp\ci-skip-audit-20261112\focused.xml -
+============================== 3 passed in 6.55s ==============================

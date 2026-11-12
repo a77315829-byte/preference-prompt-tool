@@ -1,0 +1,65 @@
+선호 설정·재사용 계약 독립 감사 — 2026-11-10
+
+결론: 확인한 범위에서 제품 결함을 발견하지 못했다. 작업 요청은 복사본에만 합쳐졌고,
+선호 보관본에는 들어가지 않았다. 한 항목을 바꾼 새 저장본은 원본을 보존했다.
+
+기준: HEAD def4d7cf3bb32d40770e70e91205a6ee7a708eb2.
+백엔드 대상은 HEAD와 같음. UI는 부모가 바꾼 안내문 3줄을 포함한 워킹트리이며
+선택/저장 로직 변경은 없었다. 각 결과 JSON에 검사 전후 파일 SHA-256을 남겼고 실행 중 불변이었다.
+감사 에이전트는 이 폴더 밖 파일, 프로덕션 코드, 기존 테스트를 수정하지 않았다.
+
+검증 범위와 결과
+- Python/FastAPI, JavaScript/React, TypeScript/React, Python/Flask, Java/Spring Boot.
+- 환경마다 4개 이진 선호의 16조합 × 직접 설정/4회 비교/8회 비교 = 240경로.
+  직접 기준 80개와 비교 160개를 포함하며, 네 선호 규칙과 개발 환경이 동일하게 전달됐다.
+  4회는 항목별 1회 선택, 8회 일관 응답은 항목별 반복 일치로 구별됐다.
+- 저장·새 Database 인스턴스로 재열기·일시 작업 분리: 240/240 통과.
+  task/sourceText/output 부가 필드는 보관본에 없었고, 작업을 본문에 붙여 codingProfile과
+  함께 저장하려는 요청은 거절됐다. 수동 일반 프롬프트 입력까지 차단한다는 뜻은 아니다.
+- 각 경로에서 네 항목을 하나씩 반전 후 새 저장: 960/960 통과.
+  해당 항목만 직접 설정 출처가 되고 비교 이력·다른 출처·원본 ID/버전/본문은 유지됐다.
+- AGENTS.md/CLAUDE.md/Copilot/Cursor/Markdown 내보내기: 1,200/1,200 통과.
+  순수 지침 보존, task 부가 필드 제외, 원본 불변, 비-Cursor 형식의 표시 영역 밖 내용 보존.
+- 같은 환경의 선택/횟수에 따른 출처 안정성 160/160, 다른 환경의 v4 출처 거절 20/20.
+  FastAPI/Spring Boot는 framework 출처, React(JS/TS)/Flask는 language 출처였다.
+  후자를 프레임워크 전용 예시로 해석하지 않았다. 초기 legacy v4 증거를 확장한 검사는 아니다.
+
+화면 보충 검증: 3/3 통과
+- Python/FastAPI 4회, JavaScript/React 직접 설정, TypeScript/React 8회.
+- 실제 React appHarness/JSDOM, 모의 fetch 통신, stdin/stdout subprocess로 실제 Python
+  build_coding_instructions/PersonalPromptStore를 임시 SQLite에 연결했다.
+- 생성 → 작업 A와 함께 복사 → 작업 B로 교체 → 지침만 복사 → 저장 → 보관함 재사용
+  → 재사용 작업 교체 → 저장한 설정으로 새 지침 → 주석 하나 변경 → 별도 저장.
+- 두 복사 경로 모두 최신 작업만 포함. 저장 요청 payload와 DB에는 작업 문자열이 없음.
+  재사용 시 작업 입력은 비었고, 주석 외 세 항목과 원래 보관본은 유지됐다.
+- HTTP 서버·API 라우팅·로그인 권한 검증·실제 브라우저 배치·AI 실행을 검증한 것은 아니다.
+
+실행과 결과
+- audit_contracts.py: 실제 Python 함수/임시 DB 사용. 첫 실행은 PATH의 Python 3.12.10,
+  C:\Users\Laptop_PC\AppData\Local\Programs\Python\Python312\python.exe였다.
+- backend_bridge.py/audit_ui.mjs: 최초 결과를 보존하고, 부모 검토 후 .venv 인터프리터를
+  명시한 최종 스크립트로 재실행했다. 최종 UI도 3/3 통과.
+  최종 실행은 프로젝트 .venv\Scripts\python.exe, Python 3.12.10이며 결과 JSON에 기록했다.
+- backend 결과: run-20261110T041235176118Z/results.json
+- 실제 조립된 대표 프롬프트: run-20261110T041235176118Z/sample-prompts.json
+- UI 최초 결과: ui-1794284121879/ui-results.json
+- UI 최종 결과: ui-1794284310950/ui-results.json
+- DB는 모두 이 폴더 아래 감사 전용이다. 사용자 DB, .env, API, 새 의존성은 사용하지 않았다.
+
+재현 명령 (저장소 루트 PowerShell):
+  .\.venv\Scripts\python.exe -B tmp/preference-reuse-audit-20261110/audit_contracts.py
+  node tmp/preference-reuse-audit-20261110/audit_ui.mjs
+새 실행은 별도 하위 폴더를 만들며 이전 결과/DB를 덮어쓰지 않는다.
+
+주요 코드 근거
+- coding_instructions.py:37,86 — 검증된 설정과 동일한 네 규칙을 조립.
+- coding_elicitation.py:54,111,138 — 환경 출처 및 응답 요약 재검증.
+- personal_prompts.py:92,115,130 — 설정/본문 일치 검증 후 새 ID로 INSERT.
+- coding_work_exports.py:12,28,34 — 순수 지침 변환과 표시 영역 밖 보존.
+- CodingInstructionsSection.jsx:60,101 및 SavePreferencePanel — 항목별 직접 설정,
+  작업을 합친 복사와 순수 지침 저장을 분리.
+- PreferencesSection.jsx:50,121 — 새 보관본 열기에서 작업 초기화, 복사용 요청문 합성.
+
+수치 해석: 총 2,820은 그룹별 소프트웨어 계약 케이스 수다. 같은 조합이 여러 그룹에
+재등장한다. 사람의 취향 정확도·4/8회 충분성·설정 편의성·시간 절약·만족도·AI 코드 품질을
+측정한 사용자 실험이 아니다. 사용자 편의성 결론에는 별도 실제 사용자/작업 기록이 필요하다.

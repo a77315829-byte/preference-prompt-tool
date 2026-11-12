@@ -1,0 +1,55 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "password_visibility",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_value_is_masked_without_callback",
+        "passed": true
+      },
+      {
+        "name": "reveal_and_hide_preserve_value",
+        "passed": true
+      },
+      {
+        "name": "editing_preserves_raw_string_and_calls_once",
+        "passed": true
+      },
+      {
+        "name": "visible_edit_survives_multiple_toggles",
+        "passed": true
+      },
+      {
+        "name": "empty_value_is_retained_when_toggled",
+        "passed": true
+      },
+      {
+        "name": "rerender_keeps_value_visibility_and_uses_latest_callback",
+        "passed": true
+      },
+      {
+        "name": "markup_like_value_is_only_input_text",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

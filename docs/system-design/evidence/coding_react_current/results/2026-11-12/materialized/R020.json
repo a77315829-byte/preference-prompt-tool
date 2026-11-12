@@ -1,0 +1,17 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\n\nexport type Filters = { query: string; onlyOpen: boolean };\nexport type Item = { id: string; title: string; open: boolean };\nexport type Props = { items: Item[]; onApply: (filters: Filters) => void };\n\nexport function Component({ items, onApply }: Props) {\n  const empty = { query: '', onlyOpen: false };\n  const [draft, setDraft] = useState<Filters>(empty);\n  const [applied, setApplied] = useState<Filters>(empty);\n  const dirty = draft.query.trim() !== applied.query || draft.onlyOpen !== applied.onlyOpen;\n  function apply() {\n    const next = { ...draft, query: draft.query.trim() };\n    setDraft(next);\n    setApplied(next);\n    onApply(next);\n  }\n  function reset() {\n    setDraft(empty);\n    setApplied(empty);\n    onApply(empty);\n  }\nconst visible = items.filter(item =>\n  item.title.toLowerCase().includes(applied.query.toLowerCase()) &&\n  (!applied.onlyOpen || item.open)\n);\n  return <section aria-label=\"Issue filters\">\n    <label>Search issues<input value={draft.query} onChange={event => setDraft({ ...draft, query: event.currentTarget.value })} /></label>\n    <label><input type=\"checkbox\" checked={draft.onlyOpen} onChange={event => setDraft({ ...draft, onlyOpen: event.currentTarget.checked })} />Only open</label>\n    <button type=\"button\" disabled={!dirty} onClick={apply}>Apply</button>\n    <button type=\"button\" onClick={reset}>Reset</button>\n    <ul aria-label=\"Issues\">{visible.map(item => <li key={item.id}>{item.title}</li>)}</ul>\n    {visible.length === 0 && <p role=\"status\">No issues</p>}\n  </section>;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_span",
+      "block": 0,
+      "reason": "답변 첫 문장: \"Component.tsx의 `const visible = ...` 부분을 아래 코드로 교체하세요.\" 기존 visible 선언 전체의 유일한 리터럴 범위를 교체한다.",
+      "anchor": "  const visible = items.filter(item => item.title.toLowerCase().includes(draft.query.toLowerCase()) && (!draft.onlyOpen || item.open));\n",
+      "answer_start": 93,
+      "answer_end": 236
+    }
+  ]
+}

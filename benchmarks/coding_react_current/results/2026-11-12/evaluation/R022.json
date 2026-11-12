@@ -1,0 +1,59 @@
+{
+  "evaluatorVersion": "coding-react-current-v1",
+  "taskId": "undo_removal",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_order_and_undo_disabled_without_callback",
+        "passed": true
+      },
+      {
+        "name": "remove_targets_id_and_reports_remaining_order",
+        "passed": true
+      },
+      {
+        "name": "undo_middle_restores_original_position",
+        "passed": true
+      },
+      {
+        "name": "undo_first_restores_front",
+        "passed": true
+      },
+      {
+        "name": "undo_last_preserves_end_position",
+        "passed": true
+      },
+      {
+        "name": "consecutive_removals_keep_only_latest_undo",
+        "passed": true
+      },
+      {
+        "name": "undo_cannot_restore_twice_or_duplicate_item",
+        "passed": true
+      },
+      {
+        "name": "removing_only_attachment_shows_empty_then_undo_clears_it",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

@@ -1,0 +1,194 @@
+[
+  {
+    "output_id": "B001",
+    "arm": "candidate",
+    "case_id": "D06",
+    "words": 148,
+    "word_ratio": 0.40437158469945356,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 8문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 92%."
+    },
+    "bigram_overlap_diagnostic": 0.916083916083916
+  },
+  {
+    "output_id": "B002",
+    "arm": "candidate",
+    "case_id": "D05",
+    "words": 159,
+    "word_ratio": 0.3935643564356436,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 7문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 28%."
+    },
+    "bigram_overlap_diagnostic": 0.2848101265822785
+  },
+  {
+    "output_id": "B003",
+    "arm": "candidate",
+    "case_id": "D03",
+    "words": 127,
+    "word_ratio": 0.1806543385490754,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 89%."
+    },
+    "bigram_overlap_diagnostic": 0.8888888888888888
+  },
+  {
+    "output_id": "B004",
+    "arm": "candidate",
+    "case_id": "D01",
+    "words": 41,
+    "word_ratio": 0.11357340720221606,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+    },
+    "bigram_overlap_diagnostic": 0.9743589743589743
+  },
+  {
+    "output_id": "B005",
+    "arm": "current",
+    "case_id": "D04",
+    "words": 82,
+    "word_ratio": 0.17484008528784648,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+    },
+    "bigram_overlap_diagnostic": 0.974025974025974
+  },
+  {
+    "output_id": "B006",
+    "arm": "candidate",
+    "case_id": "D04",
+    "words": 95,
+    "word_ratio": 0.2025586353944563,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+    },
+    "bigram_overlap_diagnostic": 0.9777777777777777
+  },
+  {
+    "output_id": "B007",
+    "arm": "current",
+    "case_id": "D02",
+    "words": 53,
+    "word_ratio": 0.08576051779935275,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 27%."
+    },
+    "bigram_overlap_diagnostic": 0.2727272727272727
+  },
+  {
+    "output_id": "B008",
+    "arm": "current",
+    "case_id": "D06",
+    "words": 200,
+    "word_ratio": 0.546448087431694,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 11문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 89%."
+    },
+    "bigram_overlap_diagnostic": 0.8894736842105263
+  },
+  {
+    "output_id": "B009",
+    "arm": "current",
+    "case_id": "D03",
+    "words": 135,
+    "word_ratio": 0.19203413940256045,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 88%."
+    },
+    "bigram_overlap_diagnostic": 0.8823529411764706
+  },
+  {
+    "output_id": "B010",
+    "arm": "candidate",
+    "case_id": "D02",
+    "words": 64,
+    "word_ratio": 0.10355987055016182,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 32%."
+    },
+    "bigram_overlap_diagnostic": 0.3181818181818182
+  },
+  {
+    "output_id": "B011",
+    "arm": "current",
+    "case_id": "D01",
+    "words": 41,
+    "word_ratio": 0.11357340720221606,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+    },
+    "bigram_overlap_diagnostic": 0.9743589743589743
+  },
+  {
+    "output_id": "B012",
+    "arm": "current",
+    "case_id": "D05",
+    "words": 172,
+    "word_ratio": 0.42574257425742573,
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 30%."
+    },
+    "bigram_overlap_diagnostic": 0.3
+  }
+]

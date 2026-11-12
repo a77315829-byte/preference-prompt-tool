@@ -1,0 +1,16 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useEffect, useState } from 'react';\n\nexport type Item = { id: string; label: string };\nexport type Props = { items: Item[]; pageSize: number };\n\nexport function Component({ items, pageSize }: Props) {\n  const [page, setPage] = useState(1);\n  const total = Math.max(1, Math.ceil(items.length / pageSize));\n  const current = Math.min(page, total);\n\n  useEffect(() => {\n    // 표시만 보정하면 목록이 늘어날 때 과거 페이지로 돌아가므로 상태도 보정한다.\n    setPage(previous => Math.min(previous, total));\n  }, [total]);\n\n  const visible = items.slice((current - 1) * pageSize, current * pageSize);\n\n  return (\n    <section aria-label=\"Review queue\">\n      <ul aria-label=\"Queue items\">\n        {visible.map(item => <li key={item.id}>{item.label}</li>)}\n      </ul>\n      {items.length === 0 && <p role=\"status\">No items</p>}\n      <output aria-label=\"Page\">{current} / {total}</output>\n      <button\n        type=\"button\"\n        disabled={current === 1}\n        onClick={() => setPage(current - 1)}\n      >\n        Previous\n      </button>\n      <button\n        type=\"button\"\n        disabled={current === total}\n        onClick={() => setPage(current + 1)}\n      >\n        Next\n      </button>\n    </section>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_file",
+      "block": 0,
+      "reason": "답변 3번 지시: \"아래 코드로 `Component.tsx` 전체를 교체하세요. 추가 파일은 필요 없습니다.\"",
+      "answer_start": 241,
+      "answer_end": 1432
+    }
+  ]
+}
