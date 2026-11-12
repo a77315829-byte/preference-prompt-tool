@@ -232,3 +232,73 @@ test('긴 원문을 잘라내지 않고 길이 초과를 알리며 요청을 차
     assert.equal(ui.state.requests.at(-1).sourceText, withinLimit);
   } finally { await ui.close(); }
 });
+
+test('원문 문장 부족에는 가능한 선택만 표시하고 분량 축소를 명시적으로 확인한다', async () => {
+  const source = SENTENCES.slice(0, 2).join(' ');
+  const conflict = { kind: 'source_under_minimum', message: '2개로 최소 5문장 발췌를 할 수 없습니다.' };
+  const ui = await mount(body => response({ ...ready(body),
+    available_sentences: SENTENCES.slice(0, 2), conflict,
+    available_resolutions: ['shorten', 'rephrase'],
+    status: body.resolution ? 'ready' : 'needs_resolution',
+    effective_profile: { ...body.profile, length: body.resolution === 'shorten' ? 'short' : 'long' },
+  }), { initialSource: source, initialProfile: { ...initialProfile, length: 'long' } });
+  try {
+    await ui.click('조건 확인');
+    const choices = () => [...document.querySelectorAll('[type="radio"]')].map(input => input.value);
+    assert.deepEqual(choices(), ['shorten', 'rephrase']);
+    assert.equal(ui.findButton('재사용 지침만 복사'), undefined);
+    assert.equal(document.querySelector('[type="radio"]:checked'), null);
+    await ui.act(async () => document.querySelector('[value="shorten"]').click());
+    assert.deepEqual(choices(), ['shorten', 'rephrase'], 'Choosing must retain the applicable choices');
+    await ui.click('조건 확인');
+    assert.equal(ui.state.requests.at(-1).resolution, 'shorten');
+    const values = [...document.querySelectorAll('dd')].map(node => node.textContent);
+    assert.match(values[0], /5문장 이상/);
+    assert.match(values[1], /1~2문장/);
+    assert.match(values[2], /분량을 줄여/);
+    await ui.fill('.summary-contract-source', source + ' New information arrived.');
+    assert.equal(document.querySelector('.summary-contract-result'), null);
+    assert.equal(document.querySelector('[type="radio"]'), null);
+    await ui.click('조건 확인');
+    assert.equal(ui.state.requests.at(-1).resolution, null);
+  } finally { await ui.close(); }
+});
+
+test('완전한 문장이 없으면 재서술만 선택 가능하며 일부 생략은 전체 보존과 구분한다', async () => {
+  const ui = await mount(body => response({ ...ready(body),
+    conflict: { message: '완전한 문장이 없습니다.' }, available_sentences: [],
+    available_resolutions: ['rephrase'], status: 'needs_resolution',
+  }));
+  try {
+    await ui.click('조건 확인');
+    assert.deepEqual([...document.querySelectorAll('[type="radio"]')].map(input => input.value), ['rephrase']);
+  } finally { await ui.close(); }
+  const omission = await mount(body => response({ ...ready(body), resolution: 'keep_limits', coverage_policy: 'prioritize_with_omission' }));
+  try {
+    await omission.click('조건 확인');
+    assert.match(document.querySelector('.summary-contract-result').textContent, /일부 생략 허용 · 전체 보존 아님/);
+  } finally { await omission.close(); }
+});
+
+test('요약 초점도 공백·유니코드 기준으로 검사하고 넘친 입력을 자르지 않는다', async () => {
+  const ui = await mount();
+  const selector = 'input[placeholder="예: 일정 변경과 남은 위험"]';
+  try {
+    const boundary = '🙂'.repeat(300);
+    await ui.fill(selector, boundary);
+    assert.equal(document.querySelector(selector).hasAttribute('maxlength'), false);
+    assert.equal(ui.findButton('조건 확인').disabled, false);
+    await ui.click('조건 확인');
+    assert.equal(ui.state.requests.at(-1).profile.topic, boundary);
+    const count = ui.state.requests.length;
+    await ui.fill(selector, boundary + ' ');
+    assert.equal(document.querySelector(selector).value, boundary + ' ');
+    assert.equal(document.querySelector(selector).getAttribute('aria-invalid'), 'true');
+    assert.equal(ui.findButton('조건 확인').disabled, true);
+    assert.equal(document.querySelector('.summary-contract-result'), null);
+    await ui.act(async () => document.querySelector('form').dispatchEvent(new ui.dom.window.Event('submit', { bubbles: true, cancelable: true })));
+    assert.equal(ui.state.requests.length, count);
+    await ui.fill(selector, '업무 일정');
+    assert.equal(ui.findButton('조건 확인').disabled, false);
+  } finally { await ui.close(); }
+});

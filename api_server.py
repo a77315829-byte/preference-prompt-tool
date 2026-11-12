@@ -784,7 +784,7 @@ class ApiHandler(BaseHTTPRequestHandler):
                 return
             body = self._read_json(MAX_UPLOAD_JSON if uploading else 256_000)
             if path == "/api/summary-contract":
-                from summary_contracts import prepare_summary_contract
+                from summary_contracts_v2 import prepare_summary_contract
 
                 self._send(200, prepare_summary_contract(body))
                 return
@@ -1220,10 +1220,13 @@ class ApiHandler(BaseHTTPRequestHandler):
             self._send(400, {"error": str(exc)})
 
     def _start_session(self, body: dict[str, Any]) -> None:
+        from summary_input_policy import SUMMARY_DOMAINS, validate_summary_source
+
         domain_key = str(body.get("domainKey", "coding"))
         domain_path = _domain_path(domain_key)
         session_model = CODING_MODEL if domain_key == "coding" else DEFAULT_MODEL
-        source_text = str(body.get("sourceText", "")).strip()
+        source_text = (validate_summary_source(body.get("sourceText")) if domain_key in SUMMARY_DOMAINS
+                       else str(body.get("sourceText", "")).strip()[:12_000])
         if not source_text:
             raise ValueError("sourceText가 필요합니다.")
         demo_mode = True
@@ -1237,7 +1240,7 @@ class ApiHandler(BaseHTTPRequestHandler):
                 demo_reason = "daily_limit"
                 print("[session] 오늘 실제 생성 상한에 도달해 데모로 진행한다", flush=True)
         args = dict(
-            source_text=source_text[:12_000],
+            source_text=source_text,
             domain_key=domain_key,
             domain_path=domain_path,
             # 모델은 서버가 정한다 (요청 본문의 model 은 무시). 브라우저가

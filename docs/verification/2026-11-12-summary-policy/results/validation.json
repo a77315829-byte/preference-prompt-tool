@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-12",
+  "scope": "Summary product input and conflict policy v2; deterministic technical checks, not model-output or human preference evaluation",
+  "backend_full": {
+    "tests": 1400,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "passed": 1399,
+    "seconds": 478.484,
+    "skip_details": [
+      {
+        "name": "test_symlink_outside_build_is_not_served",
+        "reason": "Host does not permit creating symlinks"
+      }
+    ]
+  },
+  "backend_focused": {
+    "tests": 73,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 73,
+    "seconds": 9.003,
+    "skip_details": []
+  },
+  "frontend": {
+    "tests": 129,
+    "pass": 129,
+    "fail": 0,
+    "skipped": 0
+  },
+  "browser_passed": 8,
+  "build": "passed; existing >500kB chunk warning remains",
+  "offline_guard": {
+    "dotenv_disabled": true,
+    "model_credentials_removed": true,
+    "model_live_flags_disabled": true,
+    "database": "C:\\Users\\Laptop_PC\\preference-prompt-tool\\tmp\\summary-policy-20261112\\regression-import.db",
+    "non_loopback_denials": []
+  },
+  "source_baseline": {
+    "count": 342,
+    "changed": [
+      "api_server.py",
+      "frontend/src/features/comparison/comparison.css",
+      "frontend/src/features/comparison/ComparisonSection.jsx",
+      "frontend/src/features/comparison/summaryContract.test.js",
+      "frontend/src/features/comparison/SummaryContractPanel.jsx"
+    ],
+    "unchanged": 337
+  },
+  "source_sha256": {
+    "api_server.py": "b648ba5899e7556da1129b24fb88425755247b86d14b67b61affcd332847982f",
+    "domains/summary_contract.yaml": "08132b0a3472f1be0cd3a99fb1a4ca4715043af2b4f39769ffbba50fd514148b",
+    "domains/summary_contract/v2.yaml": "c57fafdc34dc7a7233b788594b976fa0479b1079f24fe846b2f8e96908083478",
+    "frontend/src/features/comparison/ComparisonSection.jsx": "c1c4a891cd57e678d24488ca80943b5f6a80323a8ce7eb847d85b704fb36d60a",
+    "frontend/src/features/comparison/SummaryContractPanel.jsx": "1dbf490d48135c1805f93b69a7def36fe15f69c05f6cff8eff7667d92c920308",
+    "frontend/src/features/comparison/comparison.css": "791b36e48d2f63a4d54899579e1b3d64ff0028167dfd2946df1052e6799519c8",
+    "frontend/src/features/comparison/summaryContract.test.js": "b66581397d93df010f2ed17ccbb3b50eb78e2f952f5f8796874f101682c8f832",
+    "frontend/src/features/comparison/summaryInputPolicy.js": "ad27b5859966f67ed59f22cc19b6ac68c58bda93794d35d207b14175a9bd9712",
+    "summary_contracts.py": "982bde83b8b57b6cd45f1bb6ff2a1d6198953d74123f02db7d45ec73758ea573",
+    "summary_contracts_v2.py": "5d6f133fd92e04ae5af0d1f9153d373b4d2e777c8ce1420219ca233b012ba20f",
+    "summary_input_policy.py": "f5c856a2edad3817a6d98adf5e9eec05f1c5db382259dff78ec525709993fe14"
+  }
+}

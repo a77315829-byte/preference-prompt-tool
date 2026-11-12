@@ -65,7 +65,8 @@
 .preference-comparison.is-setup .task-input-row { max-width: none; }
 .preference-comparison.is-setup .task-input { min-height: 6.5rem; resize: none; }
 .preference-comparison.is-setup .task-start-button { min-width: 8.5rem; }
-.preference-comparison .comparison-source-hint { margin-top: 0.35rem; color: #697588; font-size: 0.75rem; }
+.preference-comparison .comparison-source-hint,
+.preference-comparison .comparison-source-policy { margin-top: 0.35rem; color: #697588; font-size: 0.75rem; }
 .preference-comparison .comparison-identical-note { margin: 0 0 0.55rem; color: #875515; font-size: 0.76rem; line-height: 1.4; }
 .coding-demo-guide { margin: 0.65rem 0 0.8rem; color: #667085; font-size: 0.78rem; line-height: 1.5; }
 .coding-demo-guide p { margin: 0.35rem 0; }

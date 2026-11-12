@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import SavePreferencePanel from '../preferences/SavePreferencePanel';
 import SummaryContractPanel from './SummaryContractPanel';
+import { characterCount, isSummaryDomain, MAX_SOURCE_CHARS, sourceTooLong } from './summaryInputPolicy';
 import { fetchHealth, fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice, undoPreferenceChoice } from './codingApi';
 import ExportPanel from '../../shared/components/ExportPanel';
 import TeamPanel from '../../shared/components/TeamPanel';
@@ -85,6 +86,8 @@ function ComparisonSection({
   // 사용자가 고른 프롬프트 언어. 고르기 전에는 서버의 기본값을 쓴다.
   const [promptLanguage, setPromptLanguage] = useState(null);
   const [previewOption, setPreviewOption] = useState(null);
+  const isSummary = isSummaryDomain(domainKey);
+  const summaryOverLimit = isSummary && sourceTooLong(taskDescription);
 
   useEffect(() => {
     if (!previewOption) return undefined;
@@ -101,12 +104,14 @@ function ComparisonSection({
   }, [remoteSession, taskDescription, onDraftChange]);
 
   const requestRemoteSession = async (sourceText) => {
+    if (isSummary && (!sourceText.trim() || sourceTooLong(sourceText))) return;
     setConnection('connecting');
     setSessionError('');
     setCopied(false);
     setCopiedWithTask(false);
     try {
-      const { session } = await startPreferenceSession(domainKey, sourceText.trim() || domainCopy.task, 8, template?.id);
+      const { session } = await startPreferenceSession(domainKey,
+        isSummary ? sourceText : sourceText.trim() || domainCopy.task, 8, template?.id);
       setRemoteSession(session);
       setConnection('connected');
     } catch (error) {
@@ -290,19 +295,28 @@ function ComparisonSection({
               id={`${domainKey}-task`}
               className="task-input"
               value={taskDescription}
-              onChange={(event) => setTaskDescription(event.target.value)}
+              aria-invalid={isSummary ? summaryOverLimit : undefined}
+              aria-describedby={isSummary ? `${domainKey}-source-policy` : undefined}
+              onChange={(event) => { setTaskDescription(event.target.value); setSessionError(''); }}
               rows={2}
               placeholder={domainCopy.task || '비교할 내용을 적어 주세요.'}
             />
             <button
               className="task-start-button"
               type="button"
-              disabled={!taskDescription.trim() || connection === 'connecting' || connection === 'checking'}
+              disabled={!taskDescription.trim() || summaryOverLimit || connection === 'connecting' || connection === 'checking'}
               onClick={() => requestRemoteSession(taskDescription)}
             >
               이 내용으로 시작
             </button>
           </div>}
+          {!isRemote && isSummary && (
+            <p id={`${domainKey}-source-policy`} className={summaryOverLimit ? 'comparison-error' : 'comparison-source-policy'}
+              role={summaryOverLimit ? 'alert' : undefined}>
+              {characterCount(taskDescription).toLocaleString('ko-KR')} / {MAX_SOURCE_CHARS.toLocaleString('ko-KR')}자 · 공백 포함, 유니코드 문자 기준입니다. 조합형 이모지는 여러 글자로 셀 수 있습니다.
+              {summaryOverLimit ? ' 원문을 자르지 않았습니다. 내용을 직접 줄이거나 나눠 주세요.' : ' 원문을 자동으로 자르지 않습니다.'}
+            </p>
+          )}
           {!isRemote && (domainKey === 'summarization' || domainKey === 'summarization_ko') && (
             <p className="comparison-source-hint">최대 8회 안에서 비교하며, 선택에 따라 더 물을 항목이 없으면 자동으로 마쳐요. 횟수를 모두 채울 필요는 없어요. 요약 길이를 비교하려면 여러 문장으로 된 원문을 입력해 주세요. 짧은 원문은 두 예시가 같아질 수 있습니다.</p>
           )}

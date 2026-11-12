@@ -1,10 +1,12 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import { characterCount, MAX_SOURCE_CHARS, MAX_TOPIC_CHARS } from './summaryInputPolicy';
 import './SummaryContractPanel.css';
 
 const LENGTHS = { short: '짧게 · 1~2문장', normal: '보통 · 3~4문장', long: '자세히 · 5문장 이상' };
 const WORDING = { normal: '다시 표현하기', high: '원문 표현 많이 유지하기', fully: '완전한 원문 문장만 발췌하기' };
 const RESOLUTIONS = [
   ['expand', '분량을 늘려 모두 담기'],
+  ['shorten', '분량을 줄여 원문 안에서 발췌하기'],
   ['rephrase', '길이 유지 · 재서술 허용'],
   ['keep_limits', '길이·발췌 유지 · 일부 생략 허용'],
 ];
@@ -23,6 +25,7 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
   const [required, setRequired] = useState([]);
   const [resolution, setResolution] = useState(null);
   const [conflict, setConflict] = useState(null);
+  const [resolutionOptions, setResolutionOptions] = useState([]);
   const [result, setResult] = useState(null);
   const [language, setLanguage] = useState('ko');
   const [busy, setBusy] = useState(false);
@@ -31,8 +34,10 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
   const revision = useRef(0);
   const pending = useRef(null);
   // Count Unicode characters like the server, rather than UTF-16 code units.
-  const sourceLength = Array.from(source).length;
-  const sourceTooLong = sourceLength > 12000;
+  const sourceLength = characterCount(source);
+  const sourceTooLong = sourceLength > MAX_SOURCE_CHARS;
+  const topicLength = characterCount(topic);
+  const topicTooLong = topicLength > MAX_TOPIC_CHARS;
 
   useEffect(() => () => {
     revision.current += 1;
@@ -49,6 +54,7 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
     setCopied('');
     if (!keepConflict) {
       setConflict(null);
+      setResolutionOptions([]);
       setResolution(null);
     }
   };
@@ -68,7 +74,7 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
 
   const inspect = async (event) => {
     event.preventDefault();
-    if (!source.trim() || sourceTooLong || !length || !wording || busy) return;
+    if (!source.trim() || sourceTooLong || topicTooLong || !length || !wording || busy) return;
     const ticket = ++revision.current;
     pending.current?.abort();
     const controller = new AbortController();
@@ -80,7 +86,7 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
     try {
       const response = await fetch('/api/summary-contract', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: controller.signal,
-        body: JSON.stringify({ domainKey, profile: { length, extractiveness: wording, topic: topic.trim() },
+        body: JSON.stringify({ domainKey, profile: { length, extractiveness: wording, topic },
           sourceText: source, requiredSentences: required, resolution }),
       });
       const body = await response.json().catch(() => ({}));
@@ -91,6 +97,7 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
       }
       setSentences(body.available_sentences);
       setConflict(body.conflict || null);
+      setResolutionOptions(body.available_resolutions || ['expand', 'rephrase', 'keep_limits']);
       setResult(body);
     } catch (cause) {
       if (ticket === revision.current && cause.name !== 'AbortError') {
@@ -130,7 +137,7 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
           onChange={(event) => changeSource(event.target.value)} />
         <p id={`${id}-source-help`} className="summary-contract-help">비교에 쓴 원문으로 시작합니다. 다른 원문으로 바꾸면 남길 문장을 다시 고릅니다.</p>
         <p id={`${id}-source-count`} className={sourceTooLong ? 'summary-contract-error' : 'summary-contract-help'} role={sourceTooLong ? 'alert' : undefined}>
-          {sourceLength.toLocaleString('ko-KR')} / 12,000자
+          {sourceLength.toLocaleString('ko-KR')} / {MAX_SOURCE_CHARS.toLocaleString('ko-KR')}자 · 공백 포함, 유니코드 문자 기준입니다. 조합형 이모지는 여러 글자로 셀 수 있습니다.
           {sourceTooLong && ' · 원문은 12,000자까지 확인할 수 있습니다. 붙여 넣은 내용은 그대로 유지했으니 직접 줄이거나 나눠 주세요.'}
         </p>
         <div className="summary-contract-fields">
@@ -148,8 +155,14 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
           </label>
         </div>
         <label htmlFor={`${id}-topic`}>요약 초점 (선택)</label>
-        <input id={`${id}-topic`} value={topic} maxLength={300} placeholder="예: 일정 변경과 남은 위험"
+        <input id={`${id}-topic`} value={topic} placeholder="예: 일정 변경과 남은 위험"
+          aria-invalid={topicTooLong} aria-describedby={`${id}-topic-count`}
           onChange={(event) => { invalidate(); setTopic(event.target.value); }} />
+        <p id={`${id}-topic-count`} className={topicTooLong ? 'summary-contract-error' : 'summary-contract-help'}
+          role={topicTooLong ? 'alert' : undefined}>
+          {topicLength.toLocaleString('ko-KR')} / {MAX_TOPIC_CHARS}자
+          {topicTooLong && ' · 요약 초점을 직접 줄여 주세요. 입력한 내용은 자르지 않았습니다.'}
+        </p>
         {sentences.length > 0 ? (
           <details className="summary-contract-sentences">
             <summary>꼭 남길 내용이 있는 원문 문장 고르기 · {required.length}개 선택</summary>
@@ -171,7 +184,7 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
             <p role="alert">{conflict.message}</p>
             <fieldset>
               <legend>충돌하는 조건 중 무엇을 바꿀까요?</legend>
-              {RESOLUTIONS.map(([value, title]) => (
+              {RESOLUTIONS.filter(([value]) => resolutionOptions.includes(value)).map(([value, title]) => (
                 <label key={value}>
                   <input type="radio" name={`${id}-resolution`} value={value} checked={resolution === value}
                     onChange={() => { invalidate(true); setResolution(value); }} />
@@ -182,7 +195,7 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
             {!resolution && <p className="summary-contract-help">처리 방법을 고르고 다시 조건을 확인해 주세요. 지침은 아직 만들지 않았습니다.</p>}
           </div>
         )}
-        <button className="prompt-reset-button" type="submit" disabled={busy || !source.trim() || sourceTooLong || !length || !wording || (Boolean(conflict) && !resolution)}>
+        <button className="prompt-reset-button" type="submit" disabled={busy || !source.trim() || sourceTooLong || topicTooLong || !length || !wording || (Boolean(conflict) && !resolution)}>
           {busy ? '조건 확인 중…' : '조건 확인'}
         </button>
       </form>
@@ -194,6 +207,9 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
           <dl>
             <dt>처음 고른 조건</dt><dd>{describe(result.original_profile)}</dd>
             <dt>이번에 적용할 조건</dt><dd>{describe(result.effective_profile)}</dd>
+            <dt>조건 처리</dt><dd>{RESOLUTIONS.find(([value]) => value === result.resolution)?.[1] || '원래 조건 유지'}</dd>
+            <dt>고른 내용의 보존 요청</dt><dd>{result.coverage_policy === 'prioritize_with_omission' || result.resolution === 'keep_limits'
+              ? '분량에 맞춰 일부 생략 허용 · 전체 보존 아님' : '고른 내용 모두 보존 요청 · 실제 결과 확인 필요'}</dd>
           </dl>
           <p className="summary-contract-help">조건을 조립한 지침입니다. 실제 요약의 내용 보존이나 사실성이 검증됐다는 뜻은 아닙니다.</p>
           <label>지침 언어
