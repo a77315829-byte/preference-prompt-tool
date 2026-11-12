@@ -201,12 +201,12 @@ auth/me의 ownedShared는 계정 삭제 전에 사라질 소유 공유 프로젝
 | 시작 필드 | 형식·규칙 | 비고 |
 |---|---|---|
 | domainKey | coding 기본값; 허용 도메인 이름 | coding, review, email, summarization, summarization_ko, summarization_hybrid, macsum_eval_agent |
-| sourceText | 문자열화 후 trim, 빈 값 거절 | 기존 비교 경로는 12,000자에서 잘라서 전달한다 |
+| sourceText | 요약은 원시 입력의 공백 포함 Unicode 코드 포인트를 계산, 빈 값 거절 | 12,000자 초과는 자르지 않고 거절하며 화면 입력 유지 |
 | totalRounds | 정수로 변환 후 1~8 범위 제한 | 생략 시 서비스 기본값 |
 | templateId | 선택 템플릿 ID | 없거나 다른 도메인의 ID는 거절 |
 | demoMode/model | 서버가 결정 | 요청 필드로 실제 모드·비싼 모델을 강제하지 못함 |
 
-서비스 화면의 대표 분류와 API 허용 도메인 목록은 다르다. 허용 목록의 연구·과거 경로가 모두 시작 화면의 주요 제품이라는 뜻은 아니다. 새 요약 조건 API는 비교 시작과 달리 12,000자 초과 원문을 자르지 않고 거절한다. 두 동작을 동일하다고 문서화하지 않는다.
+서비스 화면의 대표 분류와 API 허용 도메인 목록은 다르다. 허용 목록의 연구·과거 경로가 모두 시작 화면의 주요 제품이라는 뜻은 아니다. 현행 요약 비교 시작과 조건 API는 summary_input_policy.py의 동일한 최대 12,000자 정책을 따른다. 원문을 자동 절단하지 않는다.
 
 | session 주요 필드 | 의미 |
 |---|---|
@@ -235,9 +235,9 @@ choice는 pairId와 chosen=a/b/tie를 보낸다. 지나간 pairId를 재전송�
 | profile.topic | 선택 문자열, 300자 이하 | 이번 요약의 초점 |
 | sourceText | 1~12,000자, 초과 자동 절단 없음 | 보존 문장 대조 |
 | requiredSentences | 문자열 목록, 최대 8개, 중복 불가 | 현재 원문의 완전한 문장과 일치해야 함 |
-| resolution | 선택 expand/rephrase/keep_limits | 실제 분량·완전 발췌 충돌이 있을 때만 허용 |
+| resolution | 선택 expand/rephrase/keep_limits/shorten | 현재 available_resolutions에 있는 값만 허용; 축소 불가능하면 shorten 제외 |
 
-결과는 version=1, status, available_sentences, required_sentences, original_profile, effective_profile, conflict, resolution, notices, prompts, task_requests다. 충돌이 있으면 선택한 서로 다른 문장 수와 최대 문장 수를 conflict에 넣는다. 미해결 상태에서는 prompts와 task_requests가 빈 객체다.
+현행 결과는 version=2이며 기존 상태·문장·프로필·conflict·resolution·안내·지침 필드에 input_policy, length_limits, available_resolutions, coverage_policy를 더한다. conflict.kind는 required_over_budget(선택 상한 초과) 또는 source_under_minimum(사용 가능한 원문 문장 하한 부족)이다. 상한은 expand/rephrase/keep_limits, 하한은 가능한 shorten/rephrase를 제공한다. 미해결 상태에서는 prompts와 task_requests가 빈 객체다. 과거 version=1 모듈과 실험 결과는 보존한다.
 
 prompts는 en·ko 재사용 지침만 포함한다. task_requests는 그 지침과 이번 원문·고른 문장을 포함한다. 어느 쪽도 이 요청 자체로 저장하지 않는다. ready는 규칙상 조립이 가능함을 뜻하고 의미 보존·사실성·핵심 내용 자동 판정 결과가 아니다.
 

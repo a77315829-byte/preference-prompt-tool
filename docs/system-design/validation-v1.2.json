@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-13",
+  "code_basis": "cfd1fe4",
+  "phases": 5,
+  "activities": 16,
+  "parent_cases": 24,
+  "child_cases": 79,
+  "primary_and_related_wbs_consistent": true,
+  "dates_status_dependencies_preserved": true,
+  "documentation_complete_vs_remaining_separated": true,
+  "repository_dates_preserved": true,
+  "formulas_preserved": 335,
+  "formula_errors": 0,
+  "input_edits_recalculated": true,
+  "formula_caches_present": true,
+  "workbook_native_features_preserved": true,
+  "opened_in_microsoft_excel": false,
+  "paid_model_api_calls": 0,
+  "application_code_changed": false,
+  "product_regression_rerun": false,
+  "visual_review": "completed",
+  "sha256": {
+    "output/pdf/Revealed_WBS_v3.3_보고서형.pdf": "e5f22a90bdd604f6e77775dbea0b481c63c3264a57cd4f59d33f724a05727770",
+    "outputs/wbs-20261112/Revealed_WBS_v3.3_보고서형.xlsx": "c9461040b9fc8bb36d104ddae64a7b91ddd0a8a3beaeb48c2b0f47fd3da87ee4",
+    "docs/system-design/Revealed_Analysis_Design_v1.2.pdf": "313c25805b3870b030721b2ae18c8e403f6274743ee537d4351dc3bb61d7c2eb"
+  },
+  "version": "1.2",
+  "pages": 151,
+  "referenced_diagrams": 77,
+  "all_uc_ids_in_pdf": true,
+  "publication_link_check": {
+    "markdown_targets_checked": 137,
+    "pdf_repository_targets_checked": 1,
+    "pdf_text_unchanged_pages_ignoring_trailing_space": 151,
+    "pdf_drawing_unchanged_pages": 150,
+    "changed_visual_page": 2,
+    "publication_branch": "docs/wbs-v3.2"
+  },
+  "visual_review_scope": "All 151 design pages reviewed before publication; page 2 rerendered and reviewed after making the repository link clickable. Text unchanged on 151 pages; drawing streams unchanged on the other 150 pages."
+}

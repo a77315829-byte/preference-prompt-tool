@@ -116,7 +116,7 @@ CI의 일반 범위는 API 미사용 pytest, 프론트 빌드, node --test다. �
 |---|---|---|---|
 | FR-01 | UC-01/UI-02 | auth.py, tests/test_auth.py | 실패 제한·계정 간 접근·로그아웃 |
 | FR-02 | UC-02~03/UI-03 | service.py, engine/selector.py | 반복 회피·동률·종료·되돌림 |
-| FR-03 | UC-04~05/UI-04 | summary_contracts.py, tests/test_summary_contracts.py | 약어·중복·원문변경·세 해결값 |
+| FR-03 | UC-04~05/UI-04 | summary_contracts_v2.py, summary_input_policy.py, docs/verification/2026-11-12-summary-policy | 약어·중복·원문변경·상한/하한 충돌·허용 해결값 |
 | FR-04 | UC-06/UI-05~07 | coding_instructions.py, tests/test_coding_instructions.py | 미선택·환경 변경·조립 일치 |
 | FR-05 | UC-08/UI-08 | domains/coding.yaml, benchmarks/react_style_current | 세 축·기본 영어·새 실행 과제 |
 | FR-06 | UC-07/UI-06 | coding_elicitation.py, tests/test_coding_elicitation.py | 취소·엇갈림·ID·이력 버전 |

@@ -357,9 +357,10 @@ GEPA 작업은 SQLite에 7일간 임시 보관하며, 재시작으로 중단된 
 
 권한을 회수한 작업에 접근이 거절돼도 이전 내용이 화면에 남던 문제를 수정했습니다. 요약 보조 설정을 엔진 도메인으로 잘못 수집하던 검사도 분리하고 전용 형식 검사를 추가했습니다. 합성 계정과 테스트 DB를 사용한 로컬 기술 검증이며, 사람의 사용 효과나 공개 배포 검증은 아닙니다.
 
-- [최신 주간보고서 v0.6 PDF](output/pdf/Revealed_진행현황_주간보고서_v0.6.pdf) — 통합·로컬 회귀 11~12쪽, CI·자료 의존 검사 재검증 13~14쪽
+- [최신 주간보고서 v0.9 PDF](output/pdf/Revealed_진행현황_주간보고서_v0.9.pdf) — 기능 개선·프롬프트 검증·팀 공유 및 권한 보완·분석 및 설계서 작성. 주요 이슈·요청 사항 공란, 실적 11/06~11/12·계획 11/13~11/19. GitHub·분석·설계서 위치는 11쪽
 - [검증 방법·수정 내용·실행 로그](docs/verification/2026-11-12/README.md)
-- [전체 분석·설계서](docs/system-design/README.md) · [주간보고서 버전 관리](docs/weekly_reports/README.md)
+- [전체 분석·설계서 v1.2 — PDF 151쪽](docs/system-design/README.md) · [WBS v3.3 — PDF·Excel·UC 연결표](docs/wbs/2026-11-12/README.md)
+- [주간보고서 버전 관리](docs/weekly_reports/README.md)
 
 같은 코드 `c784808`의 **GitHub 브랜치·PR 검사와 컨테이너 검사도 성공**했습니다. CI는 Python 1,353 통과·3 건너뜀·API 16개 제외, 프론트 123 통과입니다. MACSum 자료와 RACE/EvalPlus 캐시 부재로 빠진 3개는 이전 로컬 전체 검사 및 별도 오프라인 재검사에서 모두 통과했습니다. 로컬의 심볼릭 링크 검사 1개는 CI에서 통과했습니다. 환경별 결과는 중복 합산하지 않으며 [CI·재검증 원자료](docs/verification/2026-11-12/ci/results.json)에 구분해 기록했습니다.
 

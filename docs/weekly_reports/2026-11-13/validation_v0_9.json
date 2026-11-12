@@ -1,0 +1,43 @@
+{
+  "version": "0.9",
+  "report_date": "2026-11-13",
+  "actual_period": [
+    "2026-11-06",
+    "2026-11-12"
+  ],
+  "plan_period": [
+    "2026-11-13",
+    "2026-11-19"
+  ],
+  "pages": 11,
+  "main_pages": [
+    1,
+    2,
+    3
+  ],
+  "backup_pages": [
+    4,
+    11
+  ],
+  "achievement_groups": [
+    "기능 개선",
+    "프롬프트 검증",
+    "팀 공유·권한 보완",
+    "분석·설계서 작성"
+  ],
+  "historical_backup_pages": 0,
+  "issue_and_request_fields": "blank",
+  "previous_pdf_preserved": true,
+  "previous_pdf_sha256": "15a4a7ec4ad351e96d3353b5ddc965330b6eee868e3fc086147f0ab408f79e31",
+  "output": "output/pdf/Revealed_진행현황_주간보고서_v0.9.pdf",
+  "sha256": "b21ee5247f44ecb19fa2c2fbf040e523ac7ea381e7ac70dc06dc9f588ba415d5",
+  "paid_model_api_calls": 0,
+  "text_overflows": 0,
+  "visual_review": "completed",
+  "four_groups_verified": true,
+  "blank_fields_verified_by_coordinates": true,
+  "next_plan_and_dates_preserved": true,
+  "other_page_text_preserved_except_version": true,
+  "all_pdf_links_preserved": true,
+  "all_pages_rendered": true
+}

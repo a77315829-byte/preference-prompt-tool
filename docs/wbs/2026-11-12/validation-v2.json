@@ -1,0 +1,25 @@
+{
+  "pdf_pages": 1,
+  "groups": 7,
+  "work_packages": 29,
+  "required_activity_primary_mapping": 73,
+  "mapping_duplicates": 0,
+  "mapping_missing": 0,
+  "excluded_items_preserved": 4,
+  "worksheet_count": 2,
+  "owners_unassigned": true,
+  "formula_errors": 0,
+  "name_edit_recalculation_test": "passed in JS authoring check",
+  "visual_review": "One-page PDF and both workbook sheet previews reviewed.",
+  "paid_model_api_calls": 0,
+  "files": {
+    "output/pdf/Revealed_WBS_v2.0_한장.pdf": {
+      "sha256": "60f902790410d8aac12840c9e3067ad7d8d82b262a41cd283a00e4ba0c7a5c5c",
+      "bytes": 91798
+    },
+    "outputs/wbs-20261112/Revealed_WBS_v2.0.xlsx": {
+      "sha256": "38a749123faa50fd7f20fd24cb673a307dd0ae1faa95a478c82b5b9d693acf95",
+      "bytes": 10794
+    }
+  }
+}

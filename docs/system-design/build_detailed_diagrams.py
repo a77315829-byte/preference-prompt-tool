@@ -126,7 +126,7 @@ def summary_activity():
     node(270,510,280,48,'ready · 지침 + 작업용 요청',fill=MINT,size=14)
     route([(168,388),(168,534),(270,534)])
     route([(652,485),(652,534),(550,534)])
-    label(410,474,'expand · rephrase\nkeep_limits',180,12)
+    label(410,474,'상한: expand / rephrase / keep_limits\n하한: shorten(가능 시) / rephrase',330,12)
     d.end(s)
 
 
