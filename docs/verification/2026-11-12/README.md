@@ -52,4 +52,25 @@ node docs/verification/2026-11-12/browser_integration.cjs browser-new-run
 - [18시나리오 결과](results/browser.json), [수정 전 UI 재현](results/browser-before-fix.json)
 - [최종 코드 342개 해시](results/source-hashes.json), [외부 연결 차단 기록](results/offline-guard.json)
 
-보고서에 포함할 근거만 복사했으며 계정 비밀번호·쿠키·DB는 포함하지 않는다. 이번 요청에서는 원격 push·공개 배포를 하지 않는다.
+보고서에 포함할 근거만 복사했으며 계정 비밀번호·쿠키·DB는 포함하지 않는다. 위 로컬 검증 실행 당시에는 원격 push·공개 배포를 하지 않았으며, 이후 사용자 요청에 따라 코드와 보고서를 GitHub에 게시했다. 아래는 그 후속 CI 확인 기록이다.
+
+## GitHub CI 완료와 건너뛴 3개 재검증
+
+검증 커밋은 `c7848083c4c0931fb7c3f649e3f4087685e31a11`이다. 2026-11-12 [브랜치 Tests](https://github.com/a77315829-byte/preference-prompt-tool/actions/runs/43210641135), [PR Tests](https://github.com/a77315829-byte/preference-prompt-tool/actions/runs/43210647977), [Hosted container](https://github.com/a77315829-byte/preference-prompt-tool/actions/runs/43210641521)가 모두 성공했다. 두 Tests 실행 각각 Python 1,353 통과·3 건너뜀·API 16개 제외, 프론트 123 통과다. 컨테이너 빌드·실행·JS/TS 도구·재시작 후 데이터 유지를 확인했으며 공개 서비스 배포를 뜻하지 않는다.
+
+| CI에서 건너뛴 검사 | 이유 | 이전 로컬 전체 / 별도 재검증 |
+|---|---|---|
+| `test_checks_vs_labels.py::test_recompute_matches_saved` | MACSum 원문 없음 | 통과 / 통과 |
+| `test_persona.py::test_personas_come_from_real_macsum_attributes` | MACSum 원문·속성 없음 | 통과 / 통과 |
+| `test_coding_public.py::test_full_cached_audit_is_offline_and_preserves_unknown_outcomes` | 고정 버전 RACE/EvalPlus 자료 캐시 없음 | 통과 / 통과 |
+
+`data/`는 저장소에서 제외하며 CI가 해당 자료를 자동 내려받지 않는다. 같은 코드의 수집 목록과 로컬·CI 진행 로그 각각의 1,356개 결과 순서를 대조해 위 세 항목을 확인했다. 세 검사만 별도로 다시 실행해 **3 통과·0 실패·0 건너뜀, 6.55초**를 확인했다. `.env` 로딩·모델 키·LIVE 설정을 끄고 소켓 연결을 차단했으며 외부 연결 시도·유료 모델 API 호출은 0회다. 검증된 소스 342개의 해시도 그대로다.
+
+로컬의 Windows 권한 제한으로 빠졌던 `test_symlink_outside_build_is_not_served`는 CI에서 통과했다. 따라서 로컬 1,355 통과·1 건너뜀과 CI 1,353 통과·3 건너뜀의 차이를 제품 실패로 해석하지 않는다. 재검증 3개는 기존 로컬 검사에 포함되므로 합산하지 않는다. 실제 API 검사 16개는 실행하지 않았다. RACE/EvalPlus 검사는 자료 무결성과 준비 경로 확인이며 새 모델 출력의 실행 정확도 검사가 아니다.
+
+- [집계·검증 범위](ci/results.json), [원격 실행 상태·단계](ci/runs.json)
+- [브랜치 검사 발췌](ci/push-test-excerpt.log), [PR 검사 발췌](ci/pr-test-excerpt.log)
+- [검사 이름 대조](ci/comparison.json), [같은 코드의 수집 목록](ci/collected.json)
+- [개별 재검증 로그](ci/focused.log), [JUnit XML](ci/focused.xml), [네트워크 차단 기록](ci/focused-guard.json)
+
+원자료는 기존 완료 실행을 보존한 것이다. 보고서 게시 커밋이 만드는 새로운 CI 실행은 별도이며 그 결과를 위 실행에 소급해 넣지 않는다.

@@ -1,0 +1,45 @@
+{
+  "report_version": "0.6",
+  "report_date": "2026-11-13",
+  "evidence_cutoff": "2026-11-12",
+  "output": "output/pdf/Revealed_진행현황_주간보고서_v0.6.pdf",
+  "sha256": "eaa7d2641735c39ca423bdc2a72d0b531f79c2af5d7bb910028db162d56e9112",
+  "pages": 32,
+  "main_pages": [1, 2, 3],
+  "current_backup_page_range": [4, 14],
+  "historical_backup_page_range": [15, 32],
+  "new_evidence_pages": [13, 14],
+  "checks": {
+    "metrics_match_completed_ci_and_offline_rerun": true,
+    "previous_report_and_experiment_sources_unchanged": true,
+    "paragraph_overflow_assertions_passed": true,
+    "all_32_pages_rendered": true,
+    "all_pages_reviewed_in_contact_sheets": true,
+    "full_size_pages_reviewed": [3, 5, 13, 14],
+    "report_period_history_footers_and_ci_links_checked": true,
+    "no_clipping_or_overlap_observed": true
+  },
+  "evidence": {
+    "verified_code_commit": "c7848083c4c0931fb7c3f649e3f4087685e31a11",
+    "completed_ci_runs": [43210641135, 43210647977, 43210641521],
+    "all_runs_success": true,
+    "ci_python_passed_per_run": 1353,
+    "ci_python_skipped_per_run": 3,
+    "api_tests_deselected_per_run": 16,
+    "frontend_passed_per_run": 123,
+    "local_focused_rerun_passed": 3,
+    "local_focused_rerun_failed": 0,
+    "local_focused_rerun_skipped": 0,
+    "local_focused_rerun_seconds": 6.55,
+    "paid_model_api_calls": 0,
+    "focused_network_attempts": 0,
+    "unchanged_verified_source_hashes": 342
+  },
+  "notes": [
+    "Focused reruns overlap with the prior local full run and are not added to its count.",
+    "The Windows symlink test skipped locally passed in Linux CI.",
+    "The three CI data skips were already passing locally and passed again in the focused offline rerun.",
+    "The report cites completed runs for c784808; report publication triggers separate CI runs.",
+    "No product implementation, frozen experiments, v0.5 PDF or prior validation receipts were changed."
+  ]
+}
