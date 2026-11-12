@@ -359,7 +359,8 @@ GEPA 작업은 SQLite에 7일간 임시 보관하며, 재시작으로 중단된 
 
 - [최신 주간보고서 v0.6 PDF](output/pdf/Revealed_진행현황_주간보고서_v0.6.pdf) — 통합·로컬 회귀 11~12쪽, CI·자료 의존 검사 재검증 13~14쪽
 - [검증 방법·수정 내용·실행 로그](docs/verification/2026-11-12/README.md)
-- [전체 분석·설계서](docs/system-design/README.md) · [주간보고서 버전 관리](docs/weekly_reports/README.md)
+- [전체 분석·설계서 v1.2 — PDF 151쪽](docs/system-design/README.md) · [WBS v3.3 — PDF·Excel·UC 연결표](docs/wbs/2026-11-12/README.md)
+- [주간보고서 버전 관리](docs/weekly_reports/README.md)
 
 같은 코드 `c784808`의 **GitHub 브랜치·PR 검사와 컨테이너 검사도 성공**했습니다. CI는 Python 1,353 통과·3 건너뜀·API 16개 제외, 프론트 123 통과입니다. MACSum 자료와 RACE/EvalPlus 캐시 부재로 빠진 3개는 이전 로컬 전체 검사 및 별도 오프라인 재검사에서 모두 통과했습니다. 로컬의 심볼릭 링크 검사 1개는 CI에서 통과했습니다. 환경별 결과는 중복 합산하지 않으며 [CI·재검증 원자료](docs/verification/2026-11-12/ci/results.json)에 구분해 기록했습니다.
 

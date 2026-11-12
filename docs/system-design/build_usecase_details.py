@@ -134,19 +134,22 @@ def chapter():
       '전체 색인에서 기능 영역을 고르고, 영역별 그림에서 상위 UC를 찾은 뒤, 해당 UC의 하위 그림·명세·기본 흐름을 읽는다. 하위 기능은 79개이며 버튼·검사 함수마다 별도 UC를 추가하지 않았다. 영역·상위 UC로 묶는 것은 문서의 상세화 관계다. UML include는 필수 공통 행동의 포함, extend는 조건부 확장일 때 쓰므로 여기서는 단순 하위 목록에 그 관계를 붙이지 않았다.\n',
       '중간보고서의 기능별 그림과 명세표 구성을 참고하여 개요·액터·사전/사후조건·입력·기본/대안/예외 흐름·검사 기준을 함께 기술한다. 날짜는 문서 수정일, 상태는 현행 구현 기준 검토용이다. 우선순위나 실제 담당자·완료일을 임의 확정하지 않는다. 검사 기준은 앞으로 재확인할 수용 기준이며 새 실행 결과가 아니다.\n',
       '## 2.2 유즈케이스 목록\n']
-    lines.append(table([['ID','유즈케이스 이름','구현 WBS']]+[[u['id'],u['name'],u['wbs']] for u in D['usecases']]))
+    def related(u):
+        return ', '.join(x['id']+' ('+x['role']+')' for x in u.get('related_wbs',[])) or '-'
+    lines.append(table([['ID','유즈케이스 이름','주 구현 WBS','관련 WBS']]+[[u['id'],u['name'],u['wbs'],related(u)] for u in D['usecases']]))
     for i,g in enumerate(D['groups'],1):
         lines.extend([f'## 2.{i+2} {g["name"]} 하위 구성\n',f'![{g["name"]} 참여 관계](../diagrams/uc-domain-{i:02d}.png)\n',
           '이 영역은 '+', '.join(g['ids'])+'로 구성한다. 각 기능의 참여 역할과 처리 결과는 이어지는 개별 명세를 따른다. 공통 UC-03은 요약과 React 비교에서 함께 사용하며 WBS에는 중복 작업으로 합산하지 않는다.\n' if i in (2,3) else '이 영역은 '+', '.join(g['ids'])+'로 구성한다. 그림의 역할 묶음이 모든 하위 동작에 동일 권한을 부여한다는 뜻은 아니다. 개별 명세에서 실제 수행 주체와 권한을 구분한다.\n'])
     lines.extend(['<!-- pagebreak -->\n','## 2.11 WBS와 유즈케이스 연결 원칙\n',
       'PMI는 WBS를 프로젝트 전체 범위를 조직하는 구조로 설명한다. OMG UML의 유즈케이스는 외부 액터와 상호작용하여 가치 있는 결과를 제공하는 시스템 행동을 설명한다. 이 정의에 비추어 두 산출물의 이름이나 개수가 항상 같아야 한다고 해석할 근거는 없다. WBS에는 설계·검증·문서화·운영처럼 사용자 기능 이외의 일도 들어간다. 이는 두 정의를 비교한 본 문서의 적용 판단이며 학교의 별도 양식 규칙을 확인했다는 뜻은 아니다.\n',
-      '이 프로젝트에서는 공통 기능명은 일치시키고, 기능 구현 WBS 3.1~3.4에 상위 UC를 연결한다. 하위 UC는 부모의 WBS를 상속한다. 분석 1.2, 설계 2.1~2.3, 회귀 4.2는 전체 UC를 다루는 공통 작업이다. 새로운 그림과 명세는 설계 산출물 상세화이므로 그것만으로 제품 기능 수나 개발 작업 수가 늘었다고 계산하지 않는다. WBS는 기존 5단계·16개 주요 작업을 유지한다.\n',
-      table([['WBS','주요 구현 범위','연결 UC']]+[['3.1','문서 요약 기능 구현','UC-02~UC-05'],['3.2','코딩 도움·React 비교 구현','UC-06~UC-08 (공통 UC-03 참조)'],['3.3','계정·지침 저장·재사용 구현','UC-01, UC-09~10, UC-19~24'],['3.4','팀 공유·인수인계 구현','UC-11~UC-18']]),
-      '참고: [PMI WBS Practice Standard 소개](https://www.pmi.org/standards/work-breakdown-structures-third-edition), [OMG UML 2.5.1, 18장 Use Cases](https://www.omg.org/spec/UML/2.5.1). WBS 일정·상태는 별도 보고서형 WBS v3.1과 연결한다.\n'])
+      '이 프로젝트에서는 공통 기능명은 일치시키고, 기능 구현 WBS 3.1~3.4에 상위 UC를 연결한다. 주 구현과 공통 사용·보완 예정 관계를 구별한다. 하위 UC는 부모의 연결 범위를 상속하되, 관련 WBS의 보완 대상은 명시한 범위에만 적용한다. 분석 1.2, 설계 2.1~2.3, 회귀 4.2는 전체 UC를 다루는 공통 작업이다. WBS는 기존 5단계·16개 주요 작업을 유지한다.\n',
+      table([['WBS','주요 구현 범위','연결 UC']]+[['3.1','문서 요약 기능 구현','UC-02~UC-05'],['3.2','코딩 도움·React 비교 구현','UC-06~UC-08 (공통 UC-03 참조)'],['3.3','계정·지침 저장·재사용 구현','UC-01, UC-09~10, UC-19~24; 세션 정책 보완 대상 UC-02·03'],['3.4','팀 공유·인수인계 구현','UC-11~UC-18']]),
+      'UC-02·03의 주 구현은 3.1이다. 3.3은 비교 세션 접근·소유권·만료 정책을 확정하고 구현할 보완 작업이며 현재 계정 격리 완료를 뜻하지 않는다. UC-03은 React 비교의 3.2에서도 공통 사용한다. 요약 v2의 길이 제한·충돌 처리 설명은 반영됐고, 2.1~2.3에는 세션 정책 확정 후 설계·화면·명세 반영이 남아 있다.\n',
+      '참고: [PMI WBS Practice Standard 소개](https://www.pmi.org/standards/work-breakdown-structures-third-edition), [OMG UML 2.5.1, 18장 Use Cases](https://www.omg.org/spec/UML/2.5.1). 일정·상태는 보고서형 WBS v3.3과 연결한다.\n'])
     for u in D['usecases']:
         ident=u['id'];actors=' / '.join(dict.fromkeys(ch['actor'] for ch in u['children']))
         lines.extend([f'## {ident} {u["name"]}\n',f'![{ident} 하위 유즈케이스](../diagrams/{ident.lower()}-detail.png)\n',
-          table([['명세 항목','내용'],['시스템 / 서브시스템','Revealed / '+u['group']],['UC-ID / 이름',ident+' / '+u['name']],['단계 / 작성일 / 버전','현행 구현 기준 검토용 / 2026-11-13 / v1.1'],['개요',u['goal']],['주요 액터',actors],['사전조건',u['pre']],['사후조건',u['post']],['추적 관계',u['requirements']+' / '+u['screens']+' / WBS '+u['wbs']]]),
+          table([['명세 항목','내용'],['시스템 / 서브시스템','Revealed / '+u['group']],['UC-ID / 이름',ident+' / '+u['name']],['단계 / 작성일 / 버전','현행 구현 기준 검토용 / 2026-11-13 / v1.2'],['개요',u['goal']],['주요 액터',actors],['사전조건',u['pre']],['사후조건',u['post']],['추적 관계',u['requirements']+' / '+u['screens']+' / 주 구현 WBS '+u['wbs']+(' / 관련 '+related(u) if u.get('related_wbs') else '')]]),
           '### 하위 기능 설명\n',table([['하위 ID','기능 이름','액터·처리 결과']]+[[ch['id'],ch['name'],ch['actor']+' : '+ch['description']] for ch in u['children']]),
           '### 기본·대안·예외 흐름\n',f'![{ident} 기본 처리와 예외 설명](../diagrams/{ident.lower()}-flow.png)\n',
           table([['흐름','설명']]+[[str(i),s] for i,s in enumerate(u['flow'],1)]+[['대안',u['alternate']],['예외',u['error']],['검사 기준',u['check']]]),

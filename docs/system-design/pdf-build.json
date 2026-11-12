@@ -1,5 +1,5 @@
 {
-  "pdf": "Revealed_Analysis_Design_v1.1.pdf",
+  "pdf": "Revealed_Analysis_Design_v1.2.pdf",
   "pages": 151,
   "chapters": [
     "chapters/00-system-overview.md",
@@ -15,5 +15,5 @@
     "chapters/10-appendices.md"
   ],
   "diagram_count": 77,
-  "sha256": "c298ff5320db63393fc70f1db7f22cd53b536fcf676bf9e4cddd76ea5bb9b942"
+  "sha256": "313c25805b3870b030721b2ae18c8e403f6274743ee537d4351dc3bb61d7c2eb"
 }

@@ -134,9 +134,14 @@ def main():
         group=next(name for name,ids in GROUPS if n in ids)
         wbs='3.1' if n in (2,3,4,5) else '3.2' if n in (6,7,8) else '3.4' if 11<=n<=18 else '3.3'
         children=[dict(id=f'{ident}-{i:02d}',name=name,actor=actor,description=description) for i,(name,actor,description) in enumerate(d['children'],1)]
-        item={**d,'id':ident,'name':title,'group':group,'requirements':REQ[n-1],'screens':', '.join('UI-'+x for x in UI[n-1].split(',')),'wbs':wbs,'children':children,'notes':notes.strip()}
+        related=[]
+        if n==3:
+            related.append(dict(id='3.2',role='공통',scope='React 코드 스타일 비교에서 응답·되돌리기 재사용'))
+        if n in (2,3):
+            related.append(dict(id='3.3',role='보완 예정',scope='비교 세션 접근·소유권·만료 정책 확정 및 구현'))
+        item={**d,'id':ident,'name':title,'group':group,'requirements':REQ[n-1],'screens':', '.join('UI-'+x for x in UI[n-1].split(',')),'wbs':wbs,'related_wbs':related,'children':children,'notes':notes.strip()}
         catalog.append(item)
-    result=dict(version='1.1',date='2026-11-13',code_basis='cfd1fe4',groups=[dict(name=name,ids=[f'UC-{i:02d}' for i in ids]) for name,ids in GROUPS],usecases=catalog)
+    result=dict(version='1.2',date='2026-11-13',code_basis='cfd1fe4',groups=[dict(name=name,ids=[f'UC-{i:02d}' for i in ids]) for name,ids in GROUPS],usecases=catalog)
     (HERE/'usecase-catalog.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(f'{len(catalog)} parent cases; {sum(len(x["children"]) for x in catalog)} child cases; all mapped to WBS.')
 
