@@ -1,0 +1,60 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "text_expander",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": false,
+    "checks": [
+      {
+        "name": "long_text_initially_has_exact_truncated_preview",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Willow …'\n- 'Willow…'\n         ^\n"
+      },
+      {
+        "name": "expand_same_props_and_collapse_preserve_whitespace",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n\n'  mos…' !== '  mo…'\n"
+      },
+      {
+        "name": "short_and_exact_length_text_have_no_toggle",
+        "passed": true
+      },
+      {
+        "name": "empty_text_and_zero_limit_follow_same_rule",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n\n'a…' !== '…'\n"
+      },
+      {
+        "name": "changed_text_resets_expanded_state",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Second…'\n- 'Secon…'\n        ^\n"
+      },
+      {
+        "name": "changed_limit_resets_expanded_state",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Bright …'\n- 'Bright…'\n         ^\n"
+      },
+      {
+        "name": "markup_text_never_creates_elements",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n\n'<b>B…' !== '<b>…'\n"
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0
+}

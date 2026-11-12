@@ -1,0 +1,54 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "range_pair",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_options_include_bounds_and_empty_selection",
+        "passed": true
+      },
+      {
+        "name": "missing_both_values_reports_both_fields",
+        "passed": true
+      },
+      {
+        "name": "one_missing_value_marks_only_missing_field",
+        "passed": true
+      },
+      {
+        "name": "reversed_range_is_rejected_on_end",
+        "passed": true
+      },
+      {
+        "name": "valid_negative_to_positive_range_clears_errors",
+        "passed": true
+      },
+      {
+        "name": "equal_zero_endpoints_and_single_option_range_are_valid",
+        "passed": true
+      },
+      {
+        "name": "rerender_keeps_selection_and_uses_latest_callback",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0
+}

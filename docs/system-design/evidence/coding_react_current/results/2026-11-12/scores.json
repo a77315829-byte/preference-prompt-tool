@@ -1,0 +1,122 @@
+{
+  "technical": {
+    "general": {
+      "answers": 8,
+      "delivery_ready": 8,
+      "compiler_pass": 8,
+      "clean_type_pass": 8,
+      "type_completed": 8,
+      "runtime_pass": 8,
+      "runtime_completed": 8,
+      "type_runtime_joint": 8,
+      "runtime_checks_passed": 69,
+      "runtime_checks_total": 69,
+      "unresolved_or_errors": []
+    },
+    "manual": {
+      "answers": 8,
+      "delivery_ready": 8,
+      "compiler_pass": 8,
+      "clean_type_pass": 8,
+      "type_completed": 8,
+      "runtime_pass": 8,
+      "runtime_completed": 8,
+      "type_runtime_joint": 8,
+      "runtime_checks_passed": 69,
+      "runtime_checks_total": 69,
+      "unresolved_or_errors": []
+    },
+    "product": {
+      "answers": 8,
+      "delivery_ready": 8,
+      "compiler_pass": 8,
+      "clean_type_pass": 8,
+      "type_completed": 8,
+      "runtime_pass": 8,
+      "runtime_completed": 8,
+      "type_runtime_joint": 8,
+      "runtime_checks_passed": 69,
+      "runtime_checks_total": 69,
+      "unresolved_or_errors": []
+    }
+  },
+  "target_match_by_reviewer": {
+    "a": {
+      "general": {
+        "answers": 8,
+        "dimensions": {
+          "explanation": 4,
+          "comments": 4,
+          "structure": 8,
+          "output": 6
+        },
+        "all_four": 0,
+        "type_runtime_all_four_joint": 0
+      },
+      "manual": {
+        "answers": 8,
+        "dimensions": {
+          "explanation": 8,
+          "comments": 8,
+          "structure": 8,
+          "output": 8
+        },
+        "all_four": 8,
+        "type_runtime_all_four_joint": 8
+      },
+      "product": {
+        "answers": 8,
+        "dimensions": {
+          "explanation": 8,
+          "comments": 8,
+          "structure": 8,
+          "output": 8
+        },
+        "all_four": 8,
+        "type_runtime_all_four_joint": 8
+      }
+    },
+    "b": {
+      "general": {
+        "answers": 8,
+        "dimensions": {
+          "explanation": 4,
+          "comments": 4,
+          "structure": 8,
+          "output": 6
+        },
+        "all_four": 0,
+        "type_runtime_all_four_joint": 0
+      },
+      "manual": {
+        "answers": 8,
+        "dimensions": {
+          "explanation": 8,
+          "comments": 8,
+          "structure": 8,
+          "output": 8
+        },
+        "all_four": 8,
+        "type_runtime_all_four_joint": 8
+      },
+      "product": {
+        "answers": 8,
+        "dimensions": {
+          "explanation": 8,
+          "comments": 8,
+          "structure": 8,
+          "output": 8
+        },
+        "all_four": 8,
+        "type_runtime_all_four_joint": 8
+      }
+    }
+  },
+  "disagreements": [],
+  "ambiguity_flags": [
+    "R004",
+    "R008"
+  ],
+  "execution_claim_flags": [],
+  "interpretation": "General target match is spontaneous alignment, not violation of unsupplied preferences. Denominator is eight paired tasks per arm; individual assertions and rubric dimensions are not independent tasks. Missing execution remains unknown, not success. AI review is not human preference evidence."
+}

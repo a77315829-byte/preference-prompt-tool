@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "purpose": "Evaluator sensitivity controls only. Each unique replacement preserves TypeScript types but intentionally breaks one required behavior. These are never candidate results.",
+  "mutations": [
+    {
+      "task_id": "tag_editor",
+      "id": "case_sensitive_duplicate",
+      "explanation": "Different letter case incorrectly allows an existing tag to be added again.",
+      "replacements": [{ "from": "tag.toLowerCase() === nextTag.toLowerCase()", "to": "tag === nextTag" }]
+    },
+    {
+      "task_id": "sortable_table",
+      "id": "nulls_first_in_descending",
+      "explanation": "Descending sort moves null values ahead of numeric values.",
+      "replacements": [{ "from": "b.row.score === null ? a.index - b.index : 1", "to": "b.row.score === null ? a.index - b.index : direction === 'descending' ? -1 : 1" }]
+    },
+    {
+      "task_id": "step_wizard",
+      "id": "review_keeps_outer_spaces",
+      "explanation": "Valid Next retains untrimmed text in review and when returning to edit.",
+      "replacements": [{ "from": "setName(trimmed);", "to": "setName(name);" }]
+    },
+    {
+      "task_id": "unit_converter",
+      "id": "wrong_celsius_offset",
+      "explanation": "Celsius-to-Fahrenheit conversion adds 30 instead of 32.",
+      "replacements": [{ "from": "numeric * 9 / 5 + 32", "to": "numeric * 9 / 5 + 30" }]
+    },
+    {
+      "task_id": "password_visibility",
+      "id": "cannot_hide_after_reveal",
+      "explanation": "The visibility action always shows the password and cannot hide it again.",
+      "replacements": [{ "from": "setVisible(!visible)", "to": "setVisible(true)" }]
+    },
+    {
+      "task_id": "text_expander",
+      "id": "preview_off_by_one",
+      "explanation": "Collapsed preview exposes one more code unit than maxChars permits.",
+      "replacements": [{ "from": "text.slice(0, maxChars)", "to": "text.slice(0, maxChars + 1)" }]
+    },
+    {
+      "task_id": "range_pair",
+      "id": "equal_endpoints_rejected",
+      "explanation": "A valid range with equal start and end is rejected.",
+      "replacements": [{ "from": "Number(start) > Number(end)", "to": "Number(start) >= Number(end)" }]
+    },
+    {
+      "task_id": "breadcrumb_browser",
+      "id": "back_always_returns_root",
+      "explanation": "Back skips intermediate folders and always returns to the root.",
+      "replacements": [{ "from": "navigate(path.slice(0, -1))", "to": "navigate([])" }]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "scope": "Current product's four explicit TypeScript/React response preferences. Same target-match rubric for all anonymous answers, regardless of whether the target was supplied in the hidden arm. General baseline target mismatch is not disobedience to a preference it never received.",
+  "independent_dimensions": ["explanation", "comments", "structure", "output"],
+  "explanation": {
+    "brief": "Code comes before explanatory prose (a file heading or short application label is allowed). After code, concise concrete reasons for important choices and practical usage/application information are given. No arbitrary character/word/bullet count; answer length alone is not evidence of compliance.",
+    "steps": "Explains a meaningful sequence of solution steps, the reasons for important decisions, and usage/application. A numbered list of vague labels or a bare code block is insufficient. No mandatory number of steps; implementation detail must support the explanation."
+  },
+  "comments": {
+    "essential": "Comments, if present, explain non-obvious intent, edge cases or cautions instead of narrating obvious syntax. Zero comments is permitted for clear code; do not require a fixed count. Flag unnecessary repetitive narration with specific evidence.",
+    "detailed": "Code comments help understand key logic and relevant caveats, while not repeating obvious syntax. Evaluate explanation of intent/edge cases in this task, not number of lines or comments. Prose outside code alone does not satisfy code-comment guidance."
+  },
+  "structure": {
+    "compact": "Small task stays readable with no unnecessary abstraction, indirection or file proliferation; necessary helpers and React structure are allowed. One file alone does not prove success, multiple functions alone do not prove failure.",
+    "modular": "Responsibilities are usefully separated into functions/modules/files in proportion to the task. Multiple files are not mandatory. Identify meaningful boundaries (e.g. validation versus UI, state transitions versus rendering) rather than counting functions. Avoid demanding abstractions for trivial operations."
+  },
+  "output": {
+    "complete": "Names and complete contents of all needed files are supplied; no unexplained ellipses, missing imports or helper implementations. The main file is unambiguous if the task requests Component.tsx and the answer supplies one complete block. A patch alone does not meet complete-file output.",
+    "changes": "When starter code exists, identify the file/application location and focus on changed parts. Exact full-function replacement or unified diff is acceptable; showing an entire file can be justified when the change is truly file-wide, but merely reprinting a mostly unchanged file without change focus is insufficient. For a new implementation, provide all needed complete files. Do not ban every full function or demand diff format absent from the instruction."
+  },
+  "evidence_policy": "Use the frozen task, starter and raw answer only; no arm/prompt/test results/other review. Every dimension needs match:true|false and a concrete reason plus exact answer_quotes; empty quotes allowed only for an absent obligation and must be explained. For code/prose contradiction, cite exact excerpts. Do not infer actual human satisfaction, comment usefulness to humans, production quality or runtime success from this review. Technical correctness is independently tested; do not double-penalize a functional bug as style mismatch unless that dimension is also violated.",
+  "execution_claims": "Separately record unsupported statements that tests/build/typechecks were actually run or passed. All generation workers are instructed not to execute code; a proposed test command or explicitly conditional expectation is not a false execution claim.",
+  "review_schema": {
+    "output_id": "R001",
+    "dimensions": {
+      "explanation": {"match": true, "answer_quotes": ["exact quote"], "reason": "concrete reason"},
+      "comments": {"match": true, "answer_quotes": [], "reason": "absence permitted in this case, explain why"},
+      "structure": {"match": true, "answer_quotes": ["exact quote"], "reason": "concrete boundary"},
+      "output": {"match": true, "answer_quotes": ["exact quote"], "reason": "application evidence"}
+    },
+    "unsupported_execution_claims": [],
+    "ambiguities": []
+  },
+  "limits": "Two preference bundles over eight tasks, not all16combinations or causal effects per axis. No arbitrary numeric thresholds for ambiguous product preferences. Two independent AI reviews are not human ground truth. Preserve disagreement and first reviews; do not tune rubric after answers."
+}

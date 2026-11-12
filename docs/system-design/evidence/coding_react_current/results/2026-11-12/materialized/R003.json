@@ -1,0 +1,17 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\n\nexport type Item = { id: string; label: string };\nexport type Props = { initialItems: Item[]; onChange: (items: Item[]) => void };\n\nexport function Component({ initialItems, onChange }: Props) {\n  const [items, setItems] = useState(initialItems);\n  const [removed, setRemoved] = useState<{ item: Item; index: number } | null>(null);\n  function remove(id: string) {\n    const index = items.findIndex(item => item.id === id);\n    if (index < 0) return;\n    const next = items.filter(item => item.id !== id);\n    setRemoved({ item: items[index], index });\n    setItems(next);\n    onChange(next);\n  }\nfunction undo() {\n  if (!removed) return;\n\n  const next = [...items];\n  next.splice(removed.index, 0, removed.item);\n  setItems(next);\n  setRemoved(null);\n  onChange(next);\n}\n  return <section aria-label=\"Attachment list\">\n    <ul aria-label=\"Attachments\">{items.map(item => <li key={item.id}>{item.label}<button type=\"button\" aria-label={`Remove ${item.label}`} onClick={() => remove(item.id)}>Remove</button></li>)}</ul>\n    {items.length === 0 && <p role=\"status\">No attachments</p>}\n    <button type=\"button\" disabled={!removed} onClick={undo}>Undo</button>\n  </section>;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_span",
+      "block": 0,
+      "reason": "답변 첫 문장: \"Component.tsx의 `undo` 함수만 아래 코드로 교체하세요.\" 기존 undo 함수 전체의 유일한 리터럴 범위를 교체한다.",
+      "anchor": "  function undo() {\n    if (!removed) return;\n    const next = [...items];\n    next.push(removed.item);\n    setItems(next);\n    setRemoved(null);\n    onChange(next);\n  }\n",
+      "answer_start": 98,
+      "answer_end": 273
+    }
+  ]
+}

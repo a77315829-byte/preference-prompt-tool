@@ -1,0 +1,15 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\n\nexport type Props = { initialName: string; onSubmit: (name: string) => void };\n\nconst theme = {\n  colors: { panel: '#f2f6fc', text: '#1d3150' },\n  spacing: { panel: 16, gap: 8 },\n};\n\nexport function Component({ initialName, onSubmit }: Props) {\n  const [name, setName] = useState(initialName);\n  const [reviewing, setReviewing] = useState(false);\n  const [invalid, setInvalid] = useState(false);\n\n  return (\n    <form\n      aria-label=\"Name wizard\"\n      data-testid=\"panel\"\n      style={{\n        backgroundColor: theme.colors.panel,\n        color: theme.colors.text,\n        padding: theme.spacing.panel,\n        display: 'grid',\n        gap: theme.spacing.gap,\n      }}\n      onSubmit={event => {\n        event.preventDefault();\n        if (reviewing) return;\n        const trimmedName = name.trim();\n        if (!trimmedName) {\n          setInvalid(true);\n          return;\n        }\n        setName(trimmedName);\n        setInvalid(false);\n        setReviewing(true);\n      }}\n    >\n      {reviewing ? (\n        <>\n          <output aria-label=\"Review name\">{name}</output>\n          <button type=\"button\" onClick={() => setReviewing(false)}>Back</button>\n          <button type=\"button\" onClick={() => onSubmit(name)}>Submit</button>\n        </>\n      ) : (\n        <>\n          <label>\n            Name\n            <input\n              type=\"text\"\n              value={name}\n              aria-invalid={invalid || undefined}\n              onChange={event => setName(event.currentTarget.value)}\n            />\n          </label>\n          {invalid && <p role=\"alert\">Name required</p>}\n          <button type=\"submit\">Next</button>\n        </>\n      )}\n    </form>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 1734
+    }
+  ]
+}

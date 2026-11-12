@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "reviewer_disagreements": [],
+  "reviewer_factual_flags": [],
+  "automatic_vs_reviewer_sentence_count_disagreements": [],
+  "preserved_first_outputs": 27,
+  "unique_output_texts": 17,
+  "duplicate_groups": [["B002", "B015", "B018"], ["B003", "B004", "B006"], ["B007", "B019", "B021"], ["B009", "B023"], ["B012", "B016"], ["B022", "B024", "B025"]],
+  "duplicate_grading": "Both reviewers checked identical outputs consistently. Counts refer to 9 source tasks per arm, not 27 independent source tasks or 54 human observations.",
+  "root_source_audit": {
+    "scope": "Read C03/C05/C06/C07 full sources, selected passages, anchors and all three outputs after blind reviews. No response or grade was changed.",
+    "C05": "All arms retain two of three requested information units under explicit keep_limits. Manual/revised omit competition-driven adaptation; current omits the auto-show promotional-model change. All omissions are permitted by the selected policy, visible in coverage and not counted as fabricated facts.",
+    "C06": "All arms omit the apology under keep_limits and retain the incident and announced investigation. The summary identifies the TV host by role but does not retain the full personal name; reviewers accept this as the central incident anchor under the frozen contextual-reference rubric. The aggregate does not certify preservation of every name or all source details.",
+    "B001_B010": "v3 lexical-overlap hints fall slightly below 1 (0.9667/0.9714); both blinded semantic reviews accept the rewritten clauses. Proper names, dates, technical terms and retained source phrases contribute to overlap. These hints are not semantic failures; no threshold or prompt was retuned after observing outputs. The heuristic remains limited."
+  },
+  "coverage_policy_breakdown_each_arm": {
+    "all_required": {"sources": 7, "core_preserved": 21, "core_total": 21, "priorities_preserved": 21, "priorities_total": 21},
+    "prioritize_with_omission": {"sources": 2, "core_preserved": 4, "core_total": 6, "priorities_preserved": 4, "priorities_total": 6}
+  },
+  "interpretation": "All three arms tie in this small explicit-priority study. No superior content preservation, statistical equivalence, human preference inference or usability improvement was established. The deterministic conflict feature is validated separately from generated-summary quality. No global automatic summary evaluator is claimed to be fixed or complete."
+}

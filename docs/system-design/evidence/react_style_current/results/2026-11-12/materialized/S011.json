@@ -1,0 +1,31 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { usePasswordVisibility } from './usePasswordVisibility';\nimport './styles.css';\n\nexport type Props = { initialValue: string; onChange: (value: string) => void };\n\nexport function Component(props: Props) {\n  const { value, visible, updateValue, toggle } = usePasswordVisibility(props);\n\n  return (\n    <section data-testid=\"panel\" className=\"password-panel\">\n      <label>\n        Password\n        <input\n          type={visible ? 'text' : 'password'}\n          value={value}\n          onChange={event => updateValue(event.currentTarget.value)}\n        />\n      </label>\n      <button type=\"button\" aria-pressed={visible} onClick={toggle}>Toggle visibility</button>\n    </section>\n  );\n}\n",
+    "usePasswordVisibility.ts": "import { useState } from 'react';\nimport type { Props } from './Component';\n\nexport function usePasswordVisibility({ initialValue, onChange }: Props) {\n  const [value, setValue] = useState(initialValue);\n  const [visible, setVisible] = useState(false);\n\n  function updateValue(nextValue: string) {\n    setValue(nextValue);\n    onChange(nextValue);\n  }\n\n  function toggle() {\n    setVisible(current => !current);\n  }\n\n  return { value, visible, updateValue, toggle };\n}\n",
+    "styles.css": ".password-panel {\n  background-color: #f2f6fc;\n  color: #1d3150;\n  padding: 16px;\n  display: grid;\n  gap: 8px;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 716
+    },
+    {
+      "path": "usePasswordVisibility.ts",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: usePasswordVisibility.ts",
+      "start": 752,
+      "end": 1221
+    },
+    {
+      "path": "styles.css",
+      "block": 2,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 1244,
+      "end": 1357
+    }
+  ]
+}

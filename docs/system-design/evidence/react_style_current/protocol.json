@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "date": "2026-11-12",
+  "scope": "Current React code-style comparison, domains/coding.yaml, three axes. English final prompt is the UI default. This is separate from the four-axis coding_instructions feature.",
+  "source_path": "api_server._state_payload -> service.final_prompt -> engine.generator.build_final_prompt, language=en, no template, individual mode, no GEPA.",
+  "preference_input": "Eight known target combinations are injected as unique estimator utilities only to obtain the actual final prompt. No human choices or preference inference accuracy are measured. The product's provenance sentence is preserved verbatim as part of the tested artifact, not accepted as study evidence.",
+  "conditions": {
+    "general": "Exact product role/task/always/output instructions, preference section omitted; same complete functional tasks and common environment.",
+    "manual": "Same general base and semantically equivalent independently worded three selected style obligations.",
+    "product": "Exact service.final_prompt result, with identical appended common environment and task. No rewriting/optimization."
+  },
+  "tasks": "Eight new synthetic feature tasks, one per 2x2x2 style combination. All three conditions solve each task. Distinct from previous current React eight tasks and prior counter/checklist/price/external-draft-sync experiments. Eight tasks are not eight observations per style combination; task and combination are confounded, so no per-axis causal effect claims.",
+  "generation": "Fresh independent Codex context per condition, fork_turns=none, inherited runtime without override. Each receives only its own eight requests and CLAUDE.md. Fixed cyclic offsets 0/3/6. First natural answer per task cached; no code execution, hidden tests, other outputs, network, paid APIs or quality retries. At most two generator agents run concurrently due shared slots. Eight within-context answers may correlate; exact model revision/decoding/token metadata is not exposed.",
+  "freeze": "Tasks, acceptance suites, eight reference implementations and typed behavioral mutants, prompt snapshots, application policy, evaluator and three-axis rubric are hashed after controls and before generation.",
+  "application": "All required named .ts/.tsx and optional plain side-effect .css files must be supplied in full fenced blocks, as current product always rules request. A blinded literal mapping records filename and fence index. No code synthesis, missing imports/helper completion, syntax repair or failure-guided retry. Ambiguous mapping remains delivery_unresolved.",
+  "execution": "Reviewed source only. Actual strict TypeScript/React type checking, exported Component/Props contract witness; type pass and no-any/no-suppression separately recorded. Each answer runs through ReactDOM/JSDOM in a separate bounded Node child with allowlisted secret-free environment and restricted imports. Plain CSS side-effect imports supported; CSS modules, external fonts/imports/URLs, CSS backslash escapes and .d.ts excluded equally and disclosed in all inputs. CSS at-rules are limited to media/supports/keyframes/-webkit-keyframes; custom properties allowed. The identical common contract permits types necessary for strict correctness under inferred preference; no preference exemption for redundant annotations. VM and AST gate are not an OS security sandbox.",
+  "behavior": "56 independent fresh-mount checks over state transitions, native DOM events, callbacks and prop changes. Not browser layout/rendered visual fidelity, backend, screen reader or production integration. Required design values provide style-management material, but JSDOM custom-property computed styles are not used as correctness oracles.",
+  "style": "Two independent blind reviews of raw answers + task + selected targets and fixed rubric; no condition names, input wording, technical scores or other review. Three semantic axes: compact/separated, direct/theme, inferred/explicit. Structural source facts supplement but do not replace semantic judgments. General target mismatch is not disobedience to an unsupplied preference. Exact quotes, ambiguities and execution claims preserved.",
+  "report": "Type, behavior, three-axis target match, joint pass and unresolved/error counts reported separately. First outputs and reviews retained; disagreements not forced into agreement. No statistical superiority/equivalence claim from eight tasks. Human preference, convenience, correction time and team adoption are unmeasured. Sources become observed after this run.",
+  "paid_model_api_calls": 0,
+  "new_packages": 0,
+  "cost_notice": "Codex quota usage is consumed. No paid API or GEPA is invoked; production operation is not claimed to be free."
+}

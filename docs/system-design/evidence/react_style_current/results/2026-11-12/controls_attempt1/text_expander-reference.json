@@ -1,0 +1,54 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "text_expander",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "long_text_initially_has_exact_truncated_preview",
+        "passed": true
+      },
+      {
+        "name": "expand_same_props_and_collapse_preserve_whitespace",
+        "passed": true
+      },
+      {
+        "name": "short_and_exact_length_text_have_no_toggle",
+        "passed": true
+      },
+      {
+        "name": "empty_text_and_zero_limit_follow_same_rule",
+        "passed": true
+      },
+      {
+        "name": "changed_text_resets_expanded_state",
+        "passed": true
+      },
+      {
+        "name": "changed_limit_resets_expanded_state",
+        "passed": true
+      },
+      {
+        "name": "markup_text_never_creates_elements",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0
+}

@@ -1,0 +1,23 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\nimport './styles.css';\n\nexport type Folder = {\n  id: string;\n  name: string;\n  children: Folder[];\n};\n\nexport type Props = {\n  folders: Folder[];\n  onNavigate: (path: string[]) => void;\n};\n\nexport function Component({ folders, onNavigate }: Props) {\n  const [path, setPath] = useState<string[]>([]);\n  const names: string[] = [];\n  let currentFolders = folders;\n\n  for (const id of path) {\n    const folder = currentFolders.find((candidate) => candidate.id === id);\n    if (!folder) break;\n    names.push(folder.name);\n    currentFolders = folder.children;\n  }\n\n  return (\n    <div className=\"folder-browser\" data-testid=\"panel\">\n      <output aria-label=\"Current path\">{'/' + names.join('/')}</output>\n      <button\n        type=\"button\"\n        disabled={path.length === 0}\n        onClick={() => {\n          if (path.length === 0) return;\n          const nextPath = path.slice(0, -1);\n          setPath(nextPath);\n          onNavigate(nextPath);\n        }}\n      >\n        Back\n      </button>\n      <ul aria-label=\"Folders\">\n        {currentFolders.map((folder) => (\n          <li key={folder.id}>\n            <button\n              type=\"button\"\n              onClick={() => {\n                const nextPath = [...path, folder.id];\n                setPath(nextPath);\n                onNavigate(nextPath);\n              }}\n            >\n              Enter {folder.name}\n            </button>\n          </li>\n        ))}\n      </ul>\n      {currentFolders.length === 0 && <p role=\"status\">No folders</p>}\n    </div>\n  );\n}\n",
+    "styles.css": ".folder-browser {\n  display: grid;\n  gap: 8px;\n  padding: 16px;\n  background-color: #f2f6fc;\n  color: #1d3150;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 1580
+    },
+    {
+      "path": "styles.css",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 1603,
+      "end": 1716
+    }
+  ]
+}

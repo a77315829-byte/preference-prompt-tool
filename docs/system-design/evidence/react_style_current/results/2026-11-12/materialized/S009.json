@@ -1,0 +1,15 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\n\nexport type Props = {\n  initialTags: string[];\n  onChange: (tags: string[]) => void;\n};\n\nexport function Component({ initialTags, onChange }: Props) {\n  const [tags, setTags] = useState(() => [...initialTags]);\n  const [input, setInput] = useState('');\n  const [error, setError] = useState('');\n\n  return (\n    <form\n      aria-label=\"Tag editor\"\n      data-testid=\"panel\"\n      style={{\n        display: 'flex',\n        flexDirection: 'column',\n        backgroundColor: '#f2f6fc',\n        color: '#1d3150',\n        padding: 16,\n        gap: 8,\n      }}\n      onSubmit={(event) => {\n        event.preventDefault();\n        const tag = input.trim();\n\n        if (tag === '') {\n          setError('Empty tag');\n          return;\n        }\n        if (tags.some((existing) => existing.toLowerCase() === tag.toLowerCase())) {\n          setError('Duplicate tag');\n          return;\n        }\n\n        const nextTags = [...tags, tag];\n        setTags(nextTags);\n        setInput('');\n        setError('');\n        onChange([...nextTags]);\n      }}\n    >\n      <label>\n        Add tag\n        <input\n          type=\"text\"\n          value={input}\n          onChange={(event) => setInput(event.currentTarget.value)}\n        />\n      </label>\n      <button type=\"submit\">Add</button>\n      {error && <p role=\"alert\">{error}</p>}\n      <ul aria-label=\"Tags\">\n        {tags.map((tag) => (\n          <li key={tag}>\n            <span>{tag}</span>\n            <button\n              type=\"button\"\n              onClick={() => {\n                const nextTags = tags.filter((existing) => existing !== tag);\n                setTags(nextTags);\n                setError('');\n                onChange([...nextTags]);\n              }}\n            >\n              {'Remove ' + tag}\n            </button>\n          </li>\n        ))}\n      </ul>\n    </form>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 22,
+      "end": 1897
+    }
+  ]
+}

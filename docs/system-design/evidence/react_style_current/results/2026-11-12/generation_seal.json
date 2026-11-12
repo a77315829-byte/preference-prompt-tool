@@ -1,0 +1,7 @@
+{
+  "benchmarks\\react_style_current\\results\\2026-11-12\\outputs\\general.json": "6a8e739cbef10777b2347d16781ace7e73b8b38153f0ebae181cd127fdbd8220",
+  "benchmarks\\react_style_current\\results\\2026-11-12\\outputs\\manual.json": "06fd6d6b15a12a3ae555fbb16608aaacb179d5ea54729449990b399ce4f92bda",
+  "benchmarks\\react_style_current\\results\\2026-11-12\\outputs\\product.json": "f6aeb6525972ece117d73740684785e8b3b1f0a6e48865e4789879f4e177fee8",
+  "benchmarks\\react_style_current\\results\\2026-11-12\\blind_packet.json": "1597e07d9f36103646610638acdade3b9e8a988718d4cbd8bc20689502778f08",
+  "benchmarks\\react_style_current\\results\\2026-11-12\\blind_mapping.json": "1457e3d53b71b1e904f8f1974b1c99a9f85671e9f80d99a6abb70a17b8e29a14"
+}

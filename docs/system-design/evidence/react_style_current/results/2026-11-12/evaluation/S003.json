@@ -1,0 +1,55 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "step_wizard",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_edit_stage_uses_initial_name",
+        "passed": true
+      },
+      {
+        "name": "blank_next_stays_in_edit_and_reports_error",
+        "passed": true
+      },
+      {
+        "name": "valid_next_trims_name_and_clears_error",
+        "passed": true
+      },
+      {
+        "name": "back_preserves_name_and_next_uses_edits",
+        "passed": true
+      },
+      {
+        "name": "submit_calls_once_per_click_and_keeps_review",
+        "passed": true
+      },
+      {
+        "name": "rerender_preserves_stage_and_uses_latest_submit",
+        "passed": true
+      },
+      {
+        "name": "review_renders_name_as_plain_text",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}
