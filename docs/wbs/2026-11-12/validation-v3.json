@@ -1,0 +1,22 @@
+{
+  "pdf_pages": 2,
+  "phases": 5,
+  "activities": 16,
+  "hierarchy_levels": 2,
+  "source_reference_page": 31,
+  "formula_errors": 0,
+  "date_status_gantt_edit_checks": "passed",
+  "dates_are": "planning proposal, not historical actuals",
+  "progress": "completed 100%, planned 0%, others unmeasured",
+  "visual_review": "PDF two pages and both Excel tabs checked",
+  "files": {
+    "output/pdf/Revealed_WBS_v3.0_보고서형.pdf": {
+      "bytes": 99413,
+      "sha256": "0e73821509ba9117b99615e2f2384c8b177d7cdf57faa9b3fd2a3e4208e5085f"
+    },
+    "outputs/wbs-20261112/Revealed_WBS_v3.0_보고서형.xlsx": {
+      "bytes": 12528,
+      "sha256": "1516a9990ccc2dc192bf8c50118de0d2f4c60cefc1826cc708650ae65ed47b8d"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "version": "3.1",
+  "document_date": "2026-11-13",
+  "project_status_date": "2026-11-12",
+  "phases": 5,
+  "activities": 16,
+  "parent_use_cases": 24,
+  "child_use_cases": 79,
+  "all_parent_use_cases_mapped": true,
+  "child_mapping_rule": "Children inherit their parent's implementation WBS; shared UC-03 also supports WBS 3.2.",
+  "previous_dates_status_dependencies_preserved": true,
+  "previous_formulas_preserved": true,
+  "input_edits_recalculated_and_restored": true,
+  "formula_errors": 0,
+  "pdf_pages": 3,
+  "workbook_sheets": ["WBS", "간트차트", "UC 연결표"],
+  "visual_review": {
+    "status": "completed",
+    "pdf_pages_reviewed": 3,
+    "workbook_sheets_reviewed": 3
+  },
+  "paid_model_api_calls": 0,
+  "application_code_changed": false,
+  "product_regression_rerun": false,
+  "sha256": {
+    "output/pdf/Revealed_WBS_v3.1_보고서형.pdf": "b262c4ffc3a6cdcc1c2c4198c49c9bfb270d8d157b761fe82dcff44e2a24af2d",
+    "outputs/wbs-20261112/Revealed_WBS_v3.1_보고서형.xlsx": "084aab0d93cdcf1941862b025389e3709870990728cc926874117c006f039804"
+  },
+  "notes": [
+    "Document and mapping validation only; this does not establish new product evaluation results.",
+    "Schedules are proposals, not reconstructed actual start and finish dates."
+  ]
+}
