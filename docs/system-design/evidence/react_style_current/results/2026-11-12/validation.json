@@ -1,0 +1,52 @@
+{
+  "status": "completed",
+  "pre_generation_controls": {
+    "completed_utc": "2026-11-12T10:16:37.321940+00:00",
+    "references_pass": 8,
+    "typed_behavior_mutants_detected": 8,
+    "behavior_checks_per_arm": 56,
+    "evaluator_development_tests_passed": 22,
+    "earlier_20_test_run_overlaps": true,
+    "source_review": "Driver read all eight reference sources, exact mutant replacements and runtime/evaluator before control execution. Executor separately reviewed evaluator/development fixtures before tests. No control safety violations found.",
+    "pre_generation_fixes": [
+      "Plain side-effect CSS support and common disclosed CSS subset",
+      "Local parent/top identifier false positive removed; window parent/top direct access blocked",
+      "Common task type sentence delegates local annotation level to supplied style",
+      "Manual inferred only aligned; identical strict-required annotation exception for all arms",
+      "Select accessible labels exclude embedded option text"
+    ],
+    "product_prompt_identity": true,
+    "language": "en default UI",
+    "paid_model_api_calls": 0,
+    "candidate_generation_started": false
+  },
+  "frozen_sources_inputs_first_outputs_applications_reviews_and_evaluations_hashes": "verified",
+  "identical_common_contract_and_functional_task_suffixes": 24,
+  "literal_applications_verified": 24,
+  "applied_source_files": 50,
+  "applied_css_files": 14,
+  "strict_type_pass": 24,
+  "runtime_tasks_pass": 24,
+  "runtime_checks_pass": 168,
+  "runtime_checks_total": 168,
+  "independent_review_records": 48,
+  "review_dimension_verdicts_per_reviewer": 72,
+  "paired_dimension_agreements": 71,
+  "paired_dimension_disagreements": 1,
+  "disagreements_preserved": true,
+  "review_schema_and_exact_quotes": "passed",
+  "candidate_console_messages": 0,
+  "unresolved_or_evaluator_errors": 0,
+  "prior_completion_seals_verified": {
+    "coding_react_current": 157
+  },
+  "pending_files": 0,
+  "all_existing_json_parse": "passed",
+  "new_tree_trailing_whitespace": "passed",
+  "readme_relative_links": "existing or final validation/seal generated next",
+  "product_application_changes_this_experiment": false,
+  "validation_scope": "New benchmark only. No repeated full frontend build or unrelated tests; pre-generation 22 evaluator tests are recorded once and not summed with the overlapping earlier 20-test run.",
+  "paid_model_api_calls": 0,
+  "new_dependencies": 0,
+  "human_outcomes_measured": false
+}

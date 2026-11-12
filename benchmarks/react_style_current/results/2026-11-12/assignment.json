@@ -1,0 +1,42 @@
+{
+  "tag_editor": {
+    "code_structure": "compact",
+    "style_management": "direct",
+    "type_detail": "inferred"
+  },
+  "sortable_table": {
+    "code_structure": "compact",
+    "style_management": "direct",
+    "type_detail": "explicit"
+  },
+  "step_wizard": {
+    "code_structure": "compact",
+    "style_management": "theme",
+    "type_detail": "inferred"
+  },
+  "unit_converter": {
+    "code_structure": "compact",
+    "style_management": "theme",
+    "type_detail": "explicit"
+  },
+  "password_visibility": {
+    "code_structure": "separated",
+    "style_management": "direct",
+    "type_detail": "inferred"
+  },
+  "text_expander": {
+    "code_structure": "separated",
+    "style_management": "direct",
+    "type_detail": "explicit"
+  },
+  "range_pair": {
+    "code_structure": "separated",
+    "style_management": "theme",
+    "type_detail": "inferred"
+  },
+  "breadcrumb_browser": {
+    "code_structure": "separated",
+    "style_management": "theme",
+    "type_detail": "explicit"
+  }
+}

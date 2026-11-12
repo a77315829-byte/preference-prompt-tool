@@ -43,6 +43,25 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, onNavigationRisk, 
     window.setTimeout(() => editor.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
   };
   const upsert = (next) => setItems((current) => [next, ...(current || []).filter((r) => r.id !== next.id)]);
+  const handleRequestError = async (failure, token, id, directRead = false) => {
+    if (token !== request.current) return;
+    setError(failure.message);
+    if (![401, 403, 404].includes(failure.status)) return;
+    // An absent historical version or a denied edit need not revoke read access.
+    // Confirm the current resource before discarding its cached draft; a 409
+    // conflict or transient server failure must preserve the user's input.
+    let unavailable = directRead || failure.status === 401;
+    if (!unavailable && id) {
+      try { await getHandoff(id); }
+      catch (check) { unavailable = [401, 403, 404].includes(check.status); }
+    }
+    if (!unavailable || token !== request.current) return;
+    if (failure.status === 401 || item?.id === id) {
+      setItem(null); setForm(null); setRecipient(''); setHistory(null); setSnapshot(null);
+      setNotice(''); setCopied(''); setFile(null);
+    }
+    setItems((current) => failure.status === 401 ? [] : (current || []).filter((entry) => entry.id !== id));
+  };
 
   useEffect(() => {
     const token = ++request.current;
@@ -77,7 +96,7 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, onNavigationRisk, 
     if (!leaveOk()) return;
     const token = ++request.current; setBusy('open'); setError(''); setNotice('');
     try { const next = await getHandoff(id); if (token === request.current) adopt(next); }
-    catch (e) { if (token === request.current) setError(e.message); }
+    catch (e) { await handleRequestError(e, token, id, true); }
     finally { if (token === request.current) setBusy(''); }
   };
   const mutate = async (action, payload = {}) => {
@@ -93,7 +112,7 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, onNavigationRisk, 
           share: '지정한 팀원이 열 수 있어요. 링크를 복사해 전달하세요.', claim: '이 작업을 이어서 맡았어요. 진행 상황과 남은 일을 갱신하세요.', complete: '작업을 완료로 표시했어요.', reopen: '다시 진행 중으로 바꿨어요.',
           attach: '파일을 저장했어요. 이 작업을 볼 수 있는 팀원도 열거나 내려받을 수 있어요.', detach: '현재 첨부에서 뺐어요. 이전 기록에는 파일이 그대로 남아 있어요.' })[action]);
       }
-    } catch (e) { if (token === request.current) setError(e.message); }
+    } catch (e) { await handleRequestError(e, token, item?.id); }
     finally { if (token === request.current) setBusy(''); }
   };
   const save = (event) => { event.preventDefault(); if (snapshot || (item && !item.can_edit)) return; mutate(item ? 'update' : 'create', handoffBody(form)); };
@@ -102,7 +121,7 @@ function HandoffsSection({ user, signupOpen, onLogin, onBack, onNavigationRisk, 
     try {
       if (revision) { const next = await getHandoffVersion(item.id, revision); if (token === request.current) setSnapshot(next); }
       else { const next = await getHandoffHistory(item.id); if (token === request.current) setHistory(next); }
-    } catch (e) { if (token === request.current) setError(e.message); }
+    } catch (e) { await handleRequestError(e, token, item.id); }
     finally { if (token === request.current) setBusy(''); }
   };
   const copy = async (kind, text) => {

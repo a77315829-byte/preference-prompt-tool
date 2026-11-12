@@ -1,0 +1,74 @@
+[
+  {
+    "id": "H01",
+    "facts": [
+      {"id": "F1", "proposition": "E! announced a documentary series about Jenner's gender transition.", "evidence": ["With the announcement that E!\nwill air a new documentary series this summer about Bruce Jenner's transition from male to female"], "rationale": "The planned documentary is the central news event. This does not claim it had already aired or that the writer's hoped-for subjects were confirmed content."},
+      {"id": "F2", "proposition": "The series was scheduled to premiere on July 26.", "evidence": ["The as yet not titled eight-part, one-hour series is set to premiere July 26."], "rationale": "The announced premiere date is central forward-looking information. Episode count, duration and title status are not required."},
+      {"id": "F3", "proposition": "Many of Jenner's children appeared supportive of the transition.", "evidence": ["Many of his kids appear supportive of his transition and his two youngest, daughter Kendall and Kylie, released the following statement to ABC about their father"], "rationale": "Family support is a central relationship theme. The source's limited scope and apparent rather than universal support must remain; the number of children and each child's name are incidental."}
+    ]
+  },
+  {
+    "id": "H02",
+    "facts": [
+      {"id": "F1", "proposition": "People in the Philippines were warned of flash floods and landslides as Maysak approached.", "evidence": ["Filipinos are being warned to be on guard for flash floods and landslides as tropical storm Maysak approached the Asian island nation Saturday."], "rationale": "The warning is the central event. It is a warning of possible hazards, not a report that those hazards had already occurred."},
+      {"id": "F2", "proposition": "Maysak had weakened from a super typhoon to a tropical storm.", "evidence": ["Just a few days ago, Maysak gained super typhoon status thanks to its sustained 150 mph winds.\nIt has since lost a lot of steam as it has spun west in the Pacific Ocean.\nIt's now classified as a tropical storm, according to the Philippine national weather service, which calls it a different name, Chedeng."], "rationale": "The change in storm classification is central status information. Exact wind speeds, movement and alternate name are separate details."},
+      {"id": "F3", "proposition": "Maysak was expected to make landfall in Isabela province.", "evidence": ["It's expected to make landfall Sunday morning on the southeastern coast of Isabela province and be out of the Philippines by Monday."], "rationale": "The forecasted Isabela landfall defines the immediate threat. Forecast status matters; exact day, time of day, side of the coast and the separate departure forecast are not required."}
+    ]
+  },
+  {
+    "id": "H03",
+    "facts": [
+      {"id": "F1", "proposition": "Al Qaeda fighters freed at least 270 prisoners in an attack on a prison in Al Mukallah, Yemen, according to a Defense Ministry official.", "evidence": ["Al Qaeda fighters attacked a prison in the coastal Yemeni city of Al Mukallah early Thursday, freeing at least 270 prisoners, a third of whom have al Qaeda links, a senior Defense Ministry official has told CNN."], "rationale": "The prison break and its minimum scale form the central event. The fraction with al Qaeda links and precise time are not required."},
+      {"id": "F2", "proposition": "Officials said senior al Qaeda figure Khaled Batarfi was among the escapees.", "evidence": ["Khaled Batarfi, a senior al Qaeda figure, was among the escapees, officials said."], "rationale": "The escape of a senior figure is the central identified consequence. His status is supported by the source."},
+      {"id": "F3", "proposition": "Officials said most of the attacking militants fled.", "evidence": ["Government troops arrived early Thursday and clashed with the al Qaeda fighters, and most of the militants fled, the officials said."], "rationale": "The militants' departure is the reported immediate outcome. Most must not become all; the arrival and clash are contextual evidence, not additional coverage requirements."}
+    ]
+  },
+  {
+    "id": "H04",
+    "facts": [
+      {"id": "F1", "proposition": "A TSA advisory committee concluded that screening every airport employee would not appreciably improve overall system-wide protection.", "evidence": ["The report by the TSA's Aviation Security Advisory Committee said that full employee screening would not \"appreciably increase the overall system-wide protection.\""], "rationale": "This is the report's central conclusion. It concerns overall appreciable protection, not an absolute assertion that physical screening has no value."},
+      {"id": "F2", "proposition": "The committee recommended risk-based, multilayered aviation security.", "evidence": ["\"Therefore, risk-based, multi-layered security offers the greatest ability to mitigate risks through the application of flexible and unpredictable measures to protect commercial aviation.\""], "rationale": "The advocated security approach is the central alternative. Individual mechanisms in the recommendation are not bundled into this fact."},
+      {"id": "F3", "proposition": "Jeh Johnson announced criminal background checks every two years for all airport aviation workers.", "evidence": ["As a result of the report, TSA Secretary Jeh Johnson announced immediate actions, including criminal background checks every two years for all airport aviation workers"], "rationale": "This is one concrete central response to the report. The interval and covered population define the action; other announced measures are separate."}
+    ]
+  },
+  {
+    "id": "H05",
+    "facts": [
+      {"id": "F1", "proposition": "Vijay Chokal-Ingam said he posed as a black applicant to gain admission to medical school.", "evidence": ["Actress Mindy Kaling's brother says that he posed as a black man years ago to get into medical school", "The revelation comes as Vijay Chokal-Ingam, who is of Indian descent, is pitching a book about his experiences", "\"So, I shaved my head, trimmed my long Indian eyelashes, and applied to medical school as a black man,\" he wrote on the website."], "rationale": "His account of the admissions strategy is the central claim. Attribution is essential; it does not establish that the strategy caused admission."},
+      {"id": "F2", "proposition": "A Saint Louis University spokeswoman said race did not factor into Chokal-Ingam's admission.", "evidence": ["But a Saint Louis University spokeswoman disputed the account, telling the Huffington Post that race never played a role in Chokal-Ingam's admission."], "rationale": "The university's denial is a central counterclaim about the reason for acceptance. It must remain attributed rather than treated as an independently proven causal finding."},
+      {"id": "F3", "proposition": "Chokal-Ingam was accepted by only one medical school.", "evidence": ["He was wait-listed at four schools and got into only one."], "rationale": "The actual number of acceptances is central to evaluating the claimed result. Wait-list, interview and application counts are separate details not required here."}
+    ]
+  },
+  {
+    "id": "H06",
+    "facts": [
+      {"id": "F1", "proposition": "The Calabrese's crew had joined Italy's effort to rescue migrants crossing from Africa and the Middle East.", "evidence": ["A few years ago, the Calabrese was on the look out for \"contrabandisti,\" smugglers trafficking in cigarettes and drugs.\nBut in recent years, its 12-man crew has joined Italy's effort to rescue migrants coming from Africa and the Middle East."], "rationale": "Migrant rescue is the ship's central current role. Its previous enforcement role and exact crew size are contextual rather than required."},
+      {"id": "F2", "proposition": "The Calabrese's crew rescued four survivors of a migrant shipwreck off Lampedusa.", "evidence": ["He and most of his shipmates took part in the rescue effort on October 3, 2013, after a ship with hundreds of migrants had gone down off Lampedusa.\nMore than 350 people died in that disaster.\nThe crew of the Calabrese was able to rescue four of the survivors."], "rationale": "The four-person rescue outcome grounds the crew's account. The exact date and death toll are context, not additional coverage requirements."},
+      {"id": "F3", "proposition": "Cortese said memories of the rescue returned to the crew when they went home and tried to sleep.", "evidence": ["Cortese and Idone stress that as fathers, there is nothing worse than having to see the bodies of dead children.\n\"At the moment,\" recalls Cortese, \"we were too busy to think about it, but when we go home, before going to sleep, it comes back to us.\""], "rationale": "The recurring memories are central to the report's portrayal of rescue work. This does not diagnose a disorder or require specific family status."}
+    ]
+  },
+  {
+    "id": "H07",
+    "facts": [
+      {"id": "F1", "proposition": "The Nepal earthquake disrupted Ronen Ziv's planned trip for the birth of his child by a surrogate in Kathmandu.", "evidence": ["His unborn baby is due this week in Kathmandu.\nHe had tickets to travel to Nepal for his child's birth from a surrogate mother, but now he has no choice but to wait in his native Israel for news.", "They were planning on making the trip once again, but the earthquake forced them to change their plans."], "rationale": "The disruption of the planned birth trip is the central personal event. His first child's history is separate background."},
+      {"id": "F2", "proposition": "Ziv feared that the surrogate mother would not receive the medical attention needed for a safe birth.", "evidence": ["In the current chaos of Kathmandu, he worries his surrogate mother, Nafisa Shaje, will not get the proper medical attention required for a safe and healthy birth."], "rationale": "The concern about safe delivery is central. It is his fear, not an established report that treatment was denied."},
+      {"id": "F3", "proposition": "Ziv's attorney was working with Israel's Interior Ministry to try to bring the surrogate mother to Israel.", "evidence": ["Cila Tamir, Ziv's attorney, has been working with the Ministry of the Interior to try to bring Shaje to Israel."], "rationale": "The attempted transfer is the central proposed response. It was being pursued, not completed or guaranteed."}
+    ]
+  },
+  {
+    "id": "H08",
+    "facts": [
+      {"id": "F1", "proposition": "Larry Upright's family asked in his obituary that people not vote for Hillary Clinton in 2016.", "evidence": ["And in his obituary, his family made just two requests: please donate to a children's hospital, and please don't vote for Clinton.", "\"Also, the family respectfully asks that you do not vote for Hillary Clinton in 2016."], "rationale": "The unusual political request is the central news event. It is the family's request, not an instruction spoken by the deceased."},
+      {"id": "F2", "proposition": "The obituary requested memorial donations to Shriners Hospital for Children instead of flowers.", "evidence": ["\"In lieu of flowers, memorials may be sent to Shriners Hospital for Children,\" his obituary reads."], "rationale": "The charitable request is the other explicit central request. It is not evidence that donations were actually made."},
+      {"id": "F3", "proposition": "The obituary's political request prompted comments from across the country.", "evidence": ["But it's the last few lines of his obituary that is spurred comments from across the country."], "rationale": "The national response is the reported outcome. Individual reactions or a claim of unanimous agreement are not required."}
+    ]
+  },
+  {
+    "id": "H09",
+    "facts": [
+      {"id": "F1", "proposition": "The new Fantastic Four trailer showed Sue and Johnny Storm's father initiating the project that gives the team its powers.", "evidence": ["For starters, as a new trailer shows, Sue and Johnny Storm's father initiates the project that ends up giving the foursome their powers."], "rationale": "This is the central revealed change in the first film covered. It is one origin-project relationship, not a requirement to list every trailer reveal."},
+      {"id": "F2", "proposition": "A new Jurassic World trailer was released.", "evidence": ["Not to be outdone, the new trailer for \"Jurassic World\" came out Monday morning."], "rationale": "The second trailer's release is the other main news event. The exact day and time of day are incidental; the opening rhetorical phrase has no factual requirement."},
+      {"id": "F3", "proposition": "In Jurassic World, Chris Pratt's character leads a mission to contain escaped dinosaurs.", "evidence": ["It features even more of star Chris Pratt.\nPratt's scientist character knows dinosaurs better than anyone.\nAfter a genetically modified mutant dinosaur escapes from an island theme park along with others, he takes charge of a mission to contain the dangerous creatures."], "rationale": "The containment mission is the central plot action described for the second film. Character expertise, genetic modification and the park setting are separate details, not requirements of this proposition."}
+    ]
+  }
+]

@@ -1,0 +1,115 @@
+{
+  "stage": "pre-output, pre-freeze final-anchor audit",
+  "scope": "Independent AI source-only review of the nine final cases and 27 frozen-candidate anchors; independent of the anchor author, not independent human gold annotation.",
+  "verdict": "ready_to_freeze_with_declared_limits",
+  "generated_summaries_seen": false,
+  "queue_or_reflection_material_seen": false,
+  "facts_edited_by_auditor": false,
+  "base_prompt_used_for_judgment": false,
+  "input_handling_note": "Only source, id and profile were used from final/cases.json. A whole-file read surfaced base_prompt fields; those fields were ignored in anchor judgments. The auditor previously reviewed experiment code but saw no generated summaries, queue contents or reflection proposals.",
+  "input_sha256": {
+    "benchmarks/summary_gepa_offline/results/2026-11-10/final/cases.json": "4a863e7cee9ecea3c1b73e2e8653474459d111a4e211328bf19c07789781e2f6",
+    "benchmarks/summary_gepa_offline/results/2026-11-10/final/facts.json": "c57a614b8365091e336c602955db69c1cc0394e85e4f787d2b6b20cf639c1ef8",
+    "benchmarks/summary_gepa_offline/results/2026-11-10/annotation_limits.json": "1c5f2cb0aa36606c6e0707c1bc2b6eecb9bb31efa2391945d4b8318b454d33f6"
+  },
+  "checks": {
+    "cases_reviewed": 9,
+    "anchors_reviewed": 27,
+    "exact_source_support": "All 27 propositions are supported by their sources; evidence strings match source passages.",
+    "atomicity": "Each anchor expresses one event, outcome, position, concern or relation. Defining actors, quantities and evidential qualifications remain part of that atom; separate surrounding details are not silently required.",
+    "centrality": "All anchors are reasonable central selections within their articles. This does not establish that they are the only or uniquely best three facts.",
+    "incidental_requirements": "Three overly specific time/location requirements were simplified before outputs, and the revised rationales explicitly exclude incidental evidence details.",
+    "format_feasibility": "H05 cannot express all three selected anchors within two complete unchanged source sentences. The limitation is explicitly recorded rather than treated as a model failure."
+  },
+  "must_fix": [],
+  "pre_output_corrections_verified": [
+    {
+      "case_id": "H02",
+      "fact_id": "F3",
+      "resolution": "The proposition now requires forecasted landfall in Isabela. Exact day, morning timing and southeastern-coast granularity are explicitly not required."
+    },
+    {
+      "case_id": "H06",
+      "fact_id": "F2",
+      "resolution": "The proposition now requires the four-person rescue from a migrant shipwreck off Lampedusa. The exact date and death toll remain contextual evidence, not additional requirements."
+    },
+    {
+      "case_id": "H09",
+      "fact_id": "F2",
+      "resolution": "The proposition now requires release of a new Jurassic World trailer. Monday morning is explicitly incidental."
+    },
+    {
+      "case_id": "H05",
+      "fact_id": null,
+      "resolution": "annotation_limits.json records that full three-anchor coverage is infeasible in the assigned short, fully extractive profile; at most two anchors is a source-sentence upper bound, not guaranteed attainable coverage."
+    }
+  ],
+  "case_reviews": [
+    {
+      "case_id": "H01",
+      "facts": ["F1", "F2", "F3"],
+      "status": "supported_and_suitably_scoped",
+      "note": "The announced documentary, scheduled premiere and apparent support among many children are supported. Planned content must not become completed airing, and limited apparent family support must not become unanimous certainty."
+    },
+    {
+      "case_id": "H02",
+      "facts": ["F1", "F2", "F3"],
+      "status": "supported_and_suitably_scoped_after_simplification",
+      "note": "Hazard warnings, weakening to tropical-storm status and forecasted Isabela landfall are distinct central claims. Warnings and forecasts must not become reports that hazards or landfall already occurred."
+    },
+    {
+      "case_id": "H03",
+      "facts": ["F1", "F2", "F3"],
+      "status": "supported_and_suitably_scoped",
+      "note": "The prison break's minimum scale, identified senior escapee and most militants fleeing are supported. Official attribution and at-least/most qualifiers matter; the fraction of linked prisoners, exact time and troop-arrival sequence are not extra coverage requirements."
+    },
+    {
+      "case_id": "H04",
+      "facts": ["F1", "F2", "F3"],
+      "status": "supported_and_suitably_scoped",
+      "note": "The committee's limited protection conclusion, recommended security approach and announced two-year background checks are supported separate propositions. F1 does not assert that physical screening has no value; F3 does not require every other announced measure."
+    },
+    {
+      "case_id": "H05",
+      "facts": ["F1", "F2", "F3"],
+      "status": "supported_with_declared_format_ceiling",
+      "note": "The applicant's attributed account, university counterclaim and single-school acceptance outcome are distinct supported claims. Neither account proves the causal role of race. All three occur in separate source sentences, so three-of-three coverage is not an attainable mandatory target under two-sentence complete extraction."
+    },
+    {
+      "case_id": "H06",
+      "facts": ["F1", "F2", "F3"],
+      "status": "supported_and_suitably_scoped_after_simplification",
+      "note": "The crew's rescue role, four survivors rescued and reported recurring memories are supported. F3 describes reported memories, not a clinical diagnosis; F2 does not require the exact date or death toll."
+    },
+    {
+      "case_id": "H07",
+      "facts": ["F1", "F2", "F3"],
+      "status": "supported_and_suitably_scoped",
+      "note": "The earthquake's disruption of the birth trip, Ziv's concern about care and the attempted transfer to Israel are supported. Fear is not proof of denied treatment, and efforts to arrange travel are not a completed or guaranteed transfer."
+    },
+    {
+      "case_id": "H08",
+      "facts": ["F1", "F2", "F3"],
+      "status": "supported_and_suitably_scoped",
+      "note": "The family's political request, memorial-donation request and resulting national comments are supported. Requests are not evidence of actual votes or donations, and the political request belongs to the family rather than a quoted instruction from the deceased."
+    },
+    {
+      "case_id": "H09",
+      "facts": ["F1", "F2", "F3"],
+      "status": "supported_and_suitably_scoped_after_simplification",
+      "note": "The Fantastic Four origin-project relation, Jurassic World trailer release and dinosaur-containment mission are supported. Each is one event or relation; other trailer reveals, weekday timing and claimed character expertise are not extra requirements."
+    }
+  ],
+  "limits": [
+    "This is AI review by a different agent, not a human annotation study; shared-model bias remains possible.",
+    "Source support is assessed against the supplied historical articles, without external fact checking or correction of the articles themselves.",
+    "Three selected anchors are an incomplete content sample. Coverage is not comprehensive factual accuracy, summary quality or human preference.",
+    "Appropriate paraphrases and unambiguous contextual references should count; evidence passages can include details outside the proposition.",
+    "Summary-level factuality still requires checking every generated claim against the full source, including claims outside the three anchors.",
+    "The H05 feasibility ceiling is source-only. No exhaustive sentence-combination feasibility proof was performed for other final profiles.",
+    "Known annotation_limits.json notes about training and validation were not independently reassessed in this final-only audit.",
+    "If any hashed input changes, this audit must be rechecked before being represented as applying to the changed artifacts."
+  ],
+  "external_api_calls": 0,
+  "network_calls": 0
+}

@@ -1,0 +1,32 @@
+{
+  "method": "Lowercase word 5-gram Jaccard across splits, diagnostic only; no resampling.",
+  "highest_cross_split_pairs": [
+    {
+      "left": "selection:D01",
+      "right": "training:N05",
+      "word_5gram_jaccard": 0.004750593824228029
+    },
+    {
+      "left": "final:T16",
+      "right": "training:S03",
+      "word_5gram_jaccard": 0.0036452004860267314
+    },
+    {
+      "left": "final:T17",
+      "right": "training:S07",
+      "word_5gram_jaccard": 0.001004016064257028
+    },
+    {
+      "left": "final:T13",
+      "right": "selection:D02",
+      "word_5gram_jaccard": 0.0006968641114982578
+    },
+    {
+      "left": "selection:D01",
+      "right": "training:S01",
+      "word_5gram_jaccard": 0.0
+    }
+  ],
+  "pairs_at_least_point8": 0,
+  "does_not_prove": "No semantic/topic overlap or pretraining exclusion."
+}

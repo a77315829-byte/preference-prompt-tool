@@ -1,0 +1,10 @@
+{
+  "results\\2026-11-10\\protocol.json": "2f15b022a15557cdbe288b090dfd5b657b783ce80b6b135797226af53a446fee",
+  "results\\2026-11-10\\cases.json": "98f4b95d05988c8e1aafb1c7cff6683242ceb737172ea869453cd9cee1373690",
+  "results\\2026-11-10\\facts.json": "7a1b5035fbc257cfbacda886290e2e39259a5402a185debebddafd43a3a017fd",
+  "evaluate.py": "c48c8b865dbf07382e19087c4b00cf46f125cb9ded23d8be80b0fcb14f13c3a4",
+  "rubric.json": "4f97c0c2b3d3043899d2b3b09f8e28579af4872ee8bbffaedc61112c9c39a94e",
+  "results\\2026-11-10\\inputs\\general.json": "36a040993a7a0aa7a2026ede8c8d301249985eb2b814ffeeedd1b3528aa8fe01",
+  "results\\2026-11-10\\inputs\\manual.json": "16909eed7e11ef71569f7ffc769aaee567bfb0e47f6835137c22f1785652f7be",
+  "results\\2026-11-10\\inputs\\assembled.json": "da419d5e1fb17f85d9981f258fb823e91cdb5ea364acbf651dbf82777d4ac2e2"
+}

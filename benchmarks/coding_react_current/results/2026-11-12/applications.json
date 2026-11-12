@@ -1,0 +1,250 @@
+{
+  "R001": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변 첫 문장: \"Component.tsx를 아래 내용으로 새로 만드세요.\""
+      }
+    ]
+  },
+  "R002": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변의 위치 지시: \"새 `Component.tsx` 파일의 전체 코드입니다. 추가 파일은 필요 없습니다.\""
+      }
+    ]
+  },
+  "R003": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_span",
+        "block": 0,
+        "reason": "답변 첫 문장: \"Component.tsx의 `undo` 함수만 아래 코드로 교체하세요.\" 기존 undo 함수 전체의 유일한 리터럴 범위를 교체한다.",
+        "anchor": "  function undo() {\n    if (!removed) return;\n    const next = [...items];\n    next.push(removed.item);\n    setItems(next);\n    setRemoved(null);\n    onChange(next);\n  }\n"
+      }
+    ]
+  },
+  "R004": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변 첫 줄: \"Component.tsx — 새 파일 전체\""
+      }
+    ]
+  },
+  "R005": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_span",
+        "block": 0,
+        "reason": "답변 첫 문장: \"Component.tsx에서 `const current = page;`와 비어 있는 `useEffect`를 다음 코드로 교체하세요. 나머지 코드는 그대로 둡니다.\" 지목한 연속 두 선언 전체를 교체한다.",
+        "anchor": "  const current = page;\n  useEffect(() => {}, [total]);\n"
+      }
+    ]
+  },
+  "R006": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_span",
+        "block": 0,
+        "reason": "답변 첫 문장: \"Component.tsx의 `visible.map` 안에 있는 체크박스를 다음 코드로 교체하세요.\" 해당 map 안의 유일한 checkbox input 전체를 교체한다.",
+        "anchor": "<input type=\"checkbox\" aria-label={`Select ${row.name}`} checked={selected.includes(String(visible.indexOf(row)))} onChange={() => toggle(String(visible.indexOf(row)))} />"
+      }
+    ]
+  },
+  "R007": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변 3번 지시: \"아래 코드로 `Component.tsx` 전체를 교체하세요. 추가 파일은 필요 없습니다.\""
+      }
+    ]
+  },
+  "R008": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변 첫 줄: \"`Component.tsx` — 새 파일 전체입니다.\""
+      }
+    ]
+  },
+  "R009": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "코드 앞 지시: \"기존 `Component.tsx` 전체를 다음 코드로 교체하세요.\""
+      }
+    ]
+  },
+  "R010": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_span",
+        "block": 0,
+        "reason": "답변 첫 문장: \"Component.tsx — 기존 `undo` 함수만 다음으로 교체하세요.\" 기존 undo 함수 전체의 유일한 리터럴 범위를 교체한다.",
+        "anchor": "  function undo() {\n    if (!removed) return;\n    const next = [...items];\n    next.push(removed.item);\n    setItems(next);\n    setRemoved(null);\n    onChange(next);\n  }\n"
+      }
+    ]
+  },
+  "R011": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_span",
+        "block": 0,
+        "reason": "답변 첫 문장: \"`Component.tsx`의 `visible.map(...)` 안에서 행 선택용 `<input>`을 다음 코드로 교체하세요.\" 해당 map 안의 유일한 행 선택 input 전체를 교체한다.",
+        "anchor": "<input type=\"checkbox\" aria-label={`Select ${row.name}`} checked={selected.includes(String(visible.indexOf(row)))} onChange={() => toggle(String(visible.indexOf(row)))} />"
+      }
+    ]
+  },
+  "R012": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변 첫 줄: \"Component.tsx — 새 파일 전체\""
+      }
+    ]
+  },
+  "R013": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "코드 앞 지시: \"기존 `Component.tsx` 전체를 다음 코드로 교체하세요.\""
+      }
+    ]
+  },
+  "R014": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "코드 앞 지시: \"`Component.tsx`를 다음 전체 코드로 만드세요.\""
+      }
+    ]
+  },
+  "R015": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변 첫 문장: \"Component.tsx를 아래 내용으로 새로 만드세요.\""
+      }
+    ]
+  },
+  "R016": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변 3번 지시에서 새 `Component.tsx` 파일에 아래 전체 코드를 넣으라고 명시하고 추가 파일은 필요 없다고 안내한다."
+      }
+    ]
+  },
+  "R017": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_span",
+        "block": 0,
+        "reason": "답변 첫 문장: \"Component.tsx — `visible.map` 안에서 체크박스를 담은 첫 번째 `<td>`를 교체하세요.\" 지목된 checkbox 포함 td 전체를 교체한다.",
+        "anchor": "        <td><input type=\"checkbox\" aria-label={`Select ${row.name}`} checked={selected.includes(String(visible.indexOf(row)))} onChange={() => toggle(String(visible.indexOf(row)))} /></td>\n"
+      }
+    ]
+  },
+  "R018": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변 첫 줄: \"`Component.tsx` — 새 파일 전체입니다.\""
+      }
+    ]
+  },
+  "R019": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변 첫 문장: \"Component.tsx를 아래 내용으로 새로 만드세요.\""
+      }
+    ]
+  },
+  "R020": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_span",
+        "block": 0,
+        "reason": "답변 첫 문장: \"Component.tsx의 `const visible = ...` 부분을 아래 코드로 교체하세요.\" 기존 visible 선언 전체의 유일한 리터럴 범위를 교체한다.",
+        "anchor": "  const visible = items.filter(item => item.title.toLowerCase().includes(draft.query.toLowerCase()) && (!draft.onlyOpen || item.open));\n"
+      }
+    ]
+  },
+  "R021": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변 3번 지시: \"`Component.tsx` 전체를 아래 코드로 교체하세요.\""
+      }
+    ]
+  },
+  "R022": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_span",
+        "block": 0,
+        "reason": "답변 첫 문장: \"`Component.tsx`에서 기존 `undo` 함수만 다음 코드로 교체하세요.\" 기존 undo 함수 전체의 유일한 리터럴 범위를 교체한다.",
+        "anchor": "  function undo() {\n    if (!removed) return;\n    const next = [...items];\n    next.push(removed.item);\n    setItems(next);\n    setRemoved(null);\n    onChange(next);\n  }\n"
+      }
+    ]
+  },
+  "R023": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "코드 앞 지시: \"`Component.tsx`를 다음 전체 코드로 만드세요.\""
+      }
+    ]
+  },
+  "R024": {
+    "operations": [
+      {
+        "path": "Component.tsx",
+        "mode": "replace_file",
+        "block": 0,
+        "reason": "답변 첫 문장: \"Component.tsx를 아래 내용으로 새로 만드세요.\""
+      }
+    ]
+  }
+}

@@ -16,8 +16,9 @@ from engine.domain_loader import DomainError, load_domain
 from engine.estimator import Comparison, Estimator
 from engine.generator import build_final_prompt, build_prompt
 from optimize.run_gepa import build_seed_prompt
+from tests.domain_inventory import ENGINE_DOMAINS
 
-DOMAINS = sorted(Path("domains").glob("*.yaml"))
+DOMAINS = ENGINE_DOMAINS
 
 
 def _preferred_combo(domain) -> dict[str, str]:

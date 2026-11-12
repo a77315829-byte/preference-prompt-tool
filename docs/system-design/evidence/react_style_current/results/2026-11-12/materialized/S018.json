@@ -1,0 +1,23 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\nimport './styles.css';\n\nexport type Row = {\n  id: string;\n  label: string;\n  score: number | null;\n};\n\nexport type Props = { rows: Row[] };\n\nexport function Component({ rows }: Props) {\n  const [direction, setDirection] = useState<'none' | 'ascending' | 'descending'>('none');\n  const orderedRows = rows.map((row, index) => ({ row, index }));\n\n  if (direction !== 'none') {\n    orderedRows.sort((a, b) => {\n      if (a.row.score === null && b.row.score === null) {\n        return a.index - b.index;\n      }\n      if (a.row.score === null) return 1;\n      if (b.row.score === null) return -1;\n\n      const difference = a.row.score - b.row.score;\n      if (difference === 0) return a.index - b.index;\n      return direction === 'ascending' ? difference : -difference;\n    });\n  }\n\n  return (\n    <section className=\"score-table\" data-testid=\"panel\">\n      <button\n        type=\"button\"\n        onClick={() => setDirection((current) =>\n          current === 'ascending' ? 'descending' : 'ascending'\n        )}\n      >\n        Sort score\n      </button>\n      <table aria-label=\"Rows\">\n        <thead>\n          <tr>\n            <th scope=\"col\">Label</th>\n            <th scope=\"col\" aria-sort={direction}>Score</th>\n          </tr>\n        </thead>\n        <tbody>\n          {orderedRows.map(({ row }) => (\n            <tr key={row.id}>\n              <td>{row.label}</td>\n              <td>{row.score === null ? '—' : row.score}</td>\n            </tr>\n          ))}\n        </tbody>\n      </table>\n      {rows.length === 0 && <p role=\"status\">No rows</p>}\n    </section>\n  );\n}\n",
+    "styles.css": ".score-table {\n  display: grid;\n  gap: 8px;\n  padding: 16px;\n  background-color: #f2f6fc;\n  color: #1d3150;\n}\n\n.score-table th,\n.score-table td {\n  text-align: left;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 1630
+    },
+    {
+      "path": "styles.css",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 1653,
+      "end": 1821
+    }
+  ]
+}

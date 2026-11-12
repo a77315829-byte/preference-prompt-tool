@@ -1,0 +1,31 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import type { ReactElement } from 'react';\nimport { useTextExpansion, type TextExpansion } from './useTextExpansion';\nimport './styles.css';\n\nexport type Props = { text: string; maxChars: number };\n\nexport function Component({ text, maxChars }: Props): ReactElement {\n  const expansion: TextExpansion = useTextExpansion(text, maxChars);\n\n  return (\n    <section data-testid=\"panel\" className=\"text-panel\">\n      <output aria-label=\"Preview\" className=\"text-preview\">{expansion.preview}</output>\n      {expansion.isLong && (\n        <button type=\"button\" aria-expanded={expansion.expanded} onClick={expansion.toggle}>\n          {expansion.expanded ? 'Show less' : 'Show more'}\n        </button>\n      )}\n    </section>\n  );\n}\n",
+    "useTextExpansion.ts": "import { useState } from 'react';\n\ntype ExpansionState = {\n  text: string;\n  maxChars: number;\n  expanded: boolean;\n};\n\nexport type TextExpansion = {\n  preview: string;\n  isLong: boolean;\n  expanded: boolean;\n  toggle: () => void;\n};\n\nexport function useTextExpansion(text: string, maxChars: number): TextExpansion {\n  const [state, setState] = useState<ExpansionState>({ text, maxChars, expanded: false });\n  const changed: boolean = state.text !== text || state.maxChars !== maxChars;\n\n  if (changed) {\n    setState({ text, maxChars, expanded: false });\n  }\n\n  const expanded: boolean = !changed && state.expanded;\n  const isLong: boolean = text.length > maxChars;\n  const preview: string = isLong && !expanded ? text.slice(0, maxChars) + '…' : text;\n\n  function toggle(): void {\n    setState((current: ExpansionState): ExpansionState => ({\n      text,\n      maxChars,\n      expanded: !current.expanded,\n    }));\n  }\n\n  return { preview, isLong, expanded, toggle };\n}\n",
+    "styles.css": ".text-panel {\n  background-color: #f2f6fc;\n  color: #1d3150;\n  padding: 16px;\n  display: grid;\n  gap: 8px;\n}\n\n.text-preview {\n  white-space: pre-wrap;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 746
+    },
+    {
+      "path": "useTextExpansion.ts",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: useTextExpansion.ts",
+      "start": 777,
+      "end": 1747
+    },
+    {
+      "path": "styles.css",
+      "block": 2,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 1770,
+      "end": 1923
+    }
+  ]
+}

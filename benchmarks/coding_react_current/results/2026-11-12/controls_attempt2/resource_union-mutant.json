@@ -1,0 +1,59 @@
+{
+  "evaluatorVersion": "coding-react-current-v1",
+  "taskId": "resource_union",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": false,
+    "checks": [
+      {
+        "name": "idle_renders_prompt_without_retry",
+        "passed": true
+      },
+      {
+        "name": "loading_renders_only_loading_state",
+        "passed": true
+      },
+      {
+        "name": "error_message_and_retry_callback_once_per_click",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n\n0 !== 2\n"
+      },
+      {
+        "name": "ready_renders_title_and_ordered_duplicate_members",
+        "passed": true
+      },
+      {
+        "name": "ready_empty_members_has_explicit_empty_state",
+        "passed": true
+      },
+      {
+        "name": "error_to_ready_removes_old_error_and_retry",
+        "passed": true
+      },
+      {
+        "name": "ready_to_loading_to_idle_removes_stale_data",
+        "passed": true
+      },
+      {
+        "name": "payload_markup_is_rendered_as_text",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0
+}

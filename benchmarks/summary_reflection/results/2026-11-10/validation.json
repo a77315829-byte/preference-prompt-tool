@@ -1,0 +1,20 @@
+{
+  "completed_utc": "2026-11-10T07:00:36.369464+00:00",
+  "tests_passed": 98,
+  "tests_scope": "11 reflection integrity/evidence/eligibility tests + 87 current grounded checks/prompt/integration/domain-agnostic regression tests",
+  "test_command": "python -X utf8 -m pytest benchmarks/summary_reflection/test_run.py tests/test_summarization_grounded.py tests/test_summarization_grounded_v2.py tests/test_summary_grounded_integration.py tests/test_final_prompt.py tests/test_prompt_language.py tests/test_engine_domain_agnostic.py -q --tb=short --basetemp <fresh repository tmp path>",
+  "strict_reviews_validated": 132,
+  "identical_output_judgment_consistency": true,
+  "split_and_frozen_integrity": "selection/final and previous revision verify passed; git diff --check passed",
+  "new_benchmark_code_sha256": {
+    "run.py": "d1a566c367e6fb5e75b83532dea8e00da44543712e617038ce482005256e611b",
+    "audit.py": "0e3d19af21495d89d0c899ace218c633eecc32d16f626d6e516251da8107875f",
+    "test_run.py": "fb398a89da1efe9aeb350714bfd4507a6fb2592aa9860fcc96cfa829870f8851"
+  },
+  "external_paid_model_api_calls": 0,
+  "actual_gepa_runs": 0,
+  "generated_summaries": 66,
+  "product_default_changed": false,
+  "mandatory_gepa_enabled": false,
+  "limitations": "No actual GEPA/model-latency or billing meter, real users, Korean semantic experiment, or statistical superiority test."
+}

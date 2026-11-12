@@ -1,0 +1,10 @@
+{
+  "roster_selection": "P1",
+  "queue_pagination": "P2",
+  "undo_removal": "P1",
+  "draft_filters": "P2",
+  "reservation_validation": "P1",
+  "optimistic_favorite": "P2",
+  "accordion_keyboard": "P1",
+  "resource_union": "P2"
+}

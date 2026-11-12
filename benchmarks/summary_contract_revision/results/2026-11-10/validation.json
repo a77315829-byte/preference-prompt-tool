@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-10",
+  "paid_model_api_calls": 0,
+  "new_dependencies": 0,
+  "test_groups": [
+    {"scope": "New v3 checker plus preserved v1/v2 checker regressions", "passed": 76},
+    {"scope": "Summary contract backend, grounded integration and engine domain independence", "passed": 33, "localhost_http": true},
+    {"scope": "Frozen benchmark fixture and reviewer-schema validation", "passed": 27},
+    {"scope": "Frontend summary contract (8), completion (3) and coding instructions flow (12)", "passed": 23},
+    {"scope": "Demo boundary regressions (33), existing demo tests and v3 checker", "passed": 85},
+    {"scope": "Existing API server (21) and summary integration (4), rerun after demo change", "passed": 25, "seconds": 18.07, "localhost_http": true}
+  ],
+  "test_count_notice": "Groups overlap. Do not add their counts and present the sum as unique tests. HTTP tests use localhost and mock or disable model generation. Sandbox binding restriction required the approved local-network execution context, not a paid API.",
+  "frontend_build": {"command": "npm run build --prefix frontend", "passed": true, "notice": "Existing large-chunk warning; no build error."},
+  "browser_checks": {
+    "url": "http://127.0.0.1:8000/",
+    "synthetic_data_only": true,
+    "free_demo": true,
+    "comparison_completed_after_choices": 4,
+    "conflict_reproduced": "Three selected complete sentences with short/fully requires an explicit choice and exposes no new ready contract before it.",
+    "explicit_resolution": "expand changes short (1-2) to normal (3-4), preserves fully; original and effective conditions visibly differ.",
+    "reuse_copy": "After copy-complete confirmation, clipboard contains adjusted conditions and excludes synthetic source.",
+    "task_copy": "Copy-complete confirmation and clipboard contain source and required_passages.",
+    "visual_check": "Mobile-width panel displays notices, original/effective profile and copy controls without horizontal overflow in the observed view."
+  },
+  "server_after_demo_fix": {
+    "binding": "127.0.0.1:8000",
+    "root_http_status": 200,
+    "session_demo_mode": true,
+    "observed_demo": "Summary: Gov. Han proposed a river trial.\n\nThe trial would cost $29 million.",
+    "all_live_flags_disabled": true
+  },
+  "benchmark_integrity": {
+    "new_frozen_generation_review_seals": "verified",
+    "prior_revision_verify": "passed",
+    "prior_reflection_final_verify": "passed",
+    "prior_gepa_verify": "passed",
+    "prior_reflection_completion_files": 57,
+    "prior_gepa_completion_files": 138,
+    "historical_scores_rewritten": false
+  },
+  "git_diff_check": "passed; existing LF/CRLF normalization warning only",
+  "coding_scope_this_turn": "Read-only evidence audit and 12 DOM regressions. No new coding generation/type/runtime quality benchmark was executed."
+}

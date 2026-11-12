@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "purpose": "Evaluator controls only; these are deliberately wrong implementations, never candidate results.",
+  "mutations": [
+    {
+      "task_id": "roster_selection",
+      "id": "visible_index_identity",
+      "explanation": "Stores current visible row positions instead of stable IDs; selection and callbacks change meaning after filter/reorder.",
+      "replacements": [
+        {
+          "from": "checked={selected.includes(row.id)} onChange={() => toggle(row.id)}",
+          "to": "checked={selected.includes(String(visible.indexOf(row)))} onChange={() => toggle(String(visible.indexOf(row)))}"
+        }
+      ]
+    },
+    {
+      "task_id": "reservation_validation",
+      "id": "equal_dates_allowed",
+      "explanation": "Accepts an end date equal to the start date.",
+      "replacements": [
+        {
+          "from": "end <= start",
+          "to": "end < start"
+        }
+      ]
+    },
+    {
+      "task_id": "optimistic_favorite",
+      "id": "rollback_keeps_optimistic_value",
+      "explanation": "Failed save retains the optimistic value instead of restoring the prior value.",
+      "replacements": [
+        {
+          "from": "setFavorite(previous);",
+          "to": "setFavorite(next);"
+        }
+      ]
+    },
+    {
+      "task_id": "accordion_keyboard",
+      "id": "focus_does_not_skip_disabled",
+      "explanation": "Keyboard navigation chooses disabled headings, whose native buttons cannot receive focus.",
+      "replacements": [
+        {
+          "from": "items.map((item, position) => item.disabled ? -1 : position).filter(position => position >= 0)",
+          "to": "items.map((_item, position) => position)"
+        }
+      ]
+    },
+    {
+      "task_id": "queue_pagination",
+      "id": "stale_page_after_shrink",
+      "explanation": "Current page never clamps when the item count or page size changes.",
+      "replacements": [
+        {
+          "from": "const current = Math.min(page, total);",
+          "to": "const current = page;"
+        },
+        {
+          "from": "useEffect(() => { setPage(value => Math.min(value, total)); }, [total]);",
+          "to": "useEffect(() => {}, [total]);"
+        }
+      ]
+    },
+    {
+      "task_id": "undo_removal",
+      "id": "undo_appends",
+      "explanation": "Undo restores the removed item at the end instead of its previous position.",
+      "replacements": [
+        {
+          "from": "next.splice(removed.index, 0, removed.item);",
+          "to": "next.push(removed.item);"
+        }
+      ]
+    },
+    {
+      "task_id": "resource_union",
+      "id": "retry_is_inert",
+      "explanation": "The retry button renders but does not notify the owner.",
+      "replacements": [
+        {
+          "from": "onClick={() => onRetry()}",
+          "to": "onClick={() => {}}"
+        }
+      ]
+    },
+    {
+      "task_id": "draft_filters",
+      "id": "draft_changes_results",
+      "explanation": "Typing draft controls changes results before Apply.",
+      "replacements": [
+        {
+          "from": "item.title.toLowerCase().includes(applied.query.toLowerCase()) && (!applied.onlyOpen || item.open)",
+          "to": "item.title.toLowerCase().includes(draft.query.toLowerCase()) && (!draft.onlyOpen || item.open)"
+        }
+      ]
+    }
+  ]
+}

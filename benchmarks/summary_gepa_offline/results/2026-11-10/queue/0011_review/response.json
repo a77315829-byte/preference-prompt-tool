@@ -1,0 +1,108 @@
+{
+  "request_sha256": "297e0990b86b5eda8e98517db851e2a7a39fd0e71475918763b184dd343e080e",
+  "rows": [
+    {
+      "output_id": "Qf34cb125f1b7a8c5",
+      "sentence_count": 10,
+      "wording_pass": true,
+      "wording_reason": "Most clauses are reformulated: the source's 'aircraft is stuffed to capacity' and unloading narrative become 'delivered tents, medicines and food', while the concern that boxes 'aren't nearly enough' becomes 'the food delivered was inadequate'. Names, quantities and medical terms are retained without making the summary predominantly copied sentences.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "A joint mission by an Indian Air Force helicopter crew and a Nepalese army medical team delivered tents, medicines and food to Melamchi",
+            "since Saturday's 7.8-magnitude earthquake"
+          ],
+          "reason": "Explicitly conveys the helicopter relief delivery to earthquake-hit Melamchi; the surrounding Nepalese and Kathmandu references preserve the location context."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "Local official Upendra Tamang said",
+            "He warned that the food delivered was inadequate and urged aid agencies to act quickly."
+          ],
+          "reason": "The pronoun clearly refers to Tamang, preserving the local official's assessment that the delivered food was insufficient."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": [
+            "Tamang said around 500 of the most seriously injured had already been sent to Kathmandu, mostly by road, while many others remained at a local clinic awaiting help."
+          ],
+          "reason": "Preserves Tamang's attribution, approximate number, severe injuries and already-completed transfers to Kathmandu; the medical evacuation and clinic context conveys their treatment purpose."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Qbc462c41228fb0d3",
+      "sentence_count": 2,
+      "wording_pass": true,
+      "wording_reason": "The two sentences consolidate and reformulate multiple source passages, for example 'unveiled a 110-second trailer' and 'drawing an emotional response' replace the presentation and fan-reaction narrative. Titles, names and the release date are appropriately retained.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "Director J.J. Abrams and the cast unveiled a 110-second trailer for \"Star Wars: Episode VII -- The Force Awakens\" at an enthusiastically received Anaheim event"
+          ],
+          "reason": "Preserves the director and cast presenting this film's trailer at the Anaheim event."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "the film is scheduled for December 18"
+          ],
+          "reason": "In the film-trailer context this conveys the planned release date, retaining its prospective rather than completed status."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": [
+            "with Harrison Ford's return as Han Solo alongside Chewbacca drawing an emotional response"
+          ],
+          "reason": "The clause describing the trailer presentation conveys the return of Han Solo with Chewbacca."
+        }
+      ],
+      "issues": [
+        {
+          "summary_quote": "the desert planet",
+          "reason": "The supplied source identifies the planet as Jakku but never describes its terrain as desert. This added description is unsupported by the supplied text.",
+          "source_evidence": []
+        }
+      ]
+    },
+    {
+      "output_id": "Q676e351311e808f0",
+      "sentence_count": 4,
+      "wording_pass": true,
+      "wording_reason": "All four sentences reproduce complete source sentences with unchanged words and punctuation, including the initial 'Delhi (CNN)' text, the 'Rao said' sentence and the two sentences attributing statements to Amnesty. Quoted clauses in the third sentence do not create additional grammatical sentences.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "An international human rights group is calling for an independent investigation of the killings by police of 20 suspected red sandalwood smugglers in southeastern India."
+          ],
+          "reason": "Preserves the rights group's investigation demand, the police killings, the number 20 and the victims' suspected-smuggler status. The group's proper name is not needed to preserve this central event."
+        },
+        {
+          "id": "F2",
+          "preserved": false,
+          "summary_evidence": [],
+          "reason": "The summary reports a gun battle and the commission's rejection of self-defense as a justification, but does not state that police themselves claimed self-defense."
+        },
+        {
+          "id": "F3",
+          "preserved": false,
+          "summary_evidence": [],
+          "reason": "No sentence conveys Amnesty's statement that most suspected smugglers were shot in the back."
+        }
+      ],
+      "issues": []
+    }
+  ]
+}

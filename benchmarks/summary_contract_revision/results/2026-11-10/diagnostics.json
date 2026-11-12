@@ -1,0 +1,451 @@
+{
+  "means": {
+    "manual": {
+      "reference_word_lcs_f1": 0.20118862355550438,
+      "words": 77.66666666666667
+    },
+    "current": {
+      "reference_word_lcs_f1": 0.1872190029113688,
+      "words": 75.44444444444444
+    },
+    "revised": {
+      "reference_word_lcs_f1": 0.2033516463275974,
+      "words": 76.11111111111111
+    }
+  },
+  "rows": [
+    {
+      "output_id": "B001",
+      "arm": "revised",
+      "case_id": "C07",
+      "words": 61,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 0.9666666666666666,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 위반: 원문과의 표현 겹침 52% (목표 50% 이하). 표현을 더 바꿔 써라."
+      },
+      "max_reference_word_lcs_f1": 0.18947368421052632
+    },
+    {
+      "output_id": "B002",
+      "arm": "revised",
+      "case_id": "C02",
+      "words": 73,
+      "automatic_sentences": 3,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 3문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.14414414414414414
+    },
+    {
+      "output_id": "B003",
+      "arm": "manual",
+      "case_id": "C08",
+      "words": 62,
+      "automatic_sentences": 3,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 3문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 100%."
+      },
+      "max_reference_word_lcs_f1": 0.27972027972027974
+    },
+    {
+      "output_id": "B004",
+      "arm": "revised",
+      "case_id": "C08",
+      "words": 62,
+      "automatic_sentences": 3,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 3문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 100%."
+      },
+      "max_reference_word_lcs_f1": 0.27972027972027974
+    },
+    {
+      "output_id": "B005",
+      "arm": "current",
+      "case_id": "C03",
+      "words": 62,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 44%."
+      },
+      "max_reference_word_lcs_f1": 0.14814814814814814
+    },
+    {
+      "output_id": "B006",
+      "arm": "current",
+      "case_id": "C08",
+      "words": 62,
+      "automatic_sentences": 3,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 3문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 100%."
+      },
+      "max_reference_word_lcs_f1": 0.27972027972027974
+    },
+    {
+      "output_id": "B007",
+      "arm": "manual",
+      "case_id": "C01",
+      "words": 97,
+      "automatic_sentences": 4,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.2094240837696335
+    },
+    {
+      "output_id": "B008",
+      "arm": "current",
+      "case_id": "C09",
+      "words": 202,
+      "automatic_sentences": 9,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.20553359683794467
+    },
+    {
+      "output_id": "B009",
+      "arm": "manual",
+      "case_id": "C05",
+      "words": 57,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.24489795918367346
+    },
+    {
+      "output_id": "B010",
+      "arm": "revised",
+      "case_id": "C03",
+      "words": 70,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 0.9714285714285715,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 위반: 원문과의 표현 겹침 51% (목표 50% 이하). 표현을 더 바꿔 써라."
+      },
+      "max_reference_word_lcs_f1": 0.15789473684210525
+    },
+    {
+      "output_id": "B011",
+      "arm": "manual",
+      "case_id": "C04",
+      "words": 62,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 38%."
+      },
+      "max_reference_word_lcs_f1": 0.13793103448275862
+    },
+    {
+      "output_id": "B012",
+      "arm": "manual",
+      "case_id": "C09",
+      "words": 184,
+      "automatic_sentences": 8,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 8문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.22127659574468084
+    },
+    {
+      "output_id": "B013",
+      "arm": "manual",
+      "case_id": "C03",
+      "words": 74,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 38%."
+      },
+      "max_reference_word_lcs_f1": 0.15126050420168066
+    },
+    {
+      "output_id": "B014",
+      "arm": "revised",
+      "case_id": "C04",
+      "words": 50,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 31%."
+      },
+      "max_reference_word_lcs_f1": 0.13333333333333333
+    },
+    {
+      "output_id": "B015",
+      "arm": "current",
+      "case_id": "C02",
+      "words": 73,
+      "automatic_sentences": 3,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 3문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.14414414414414414
+    },
+    {
+      "output_id": "B016",
+      "arm": "revised",
+      "case_id": "C09",
+      "words": 184,
+      "automatic_sentences": 8,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 8문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.22127659574468084
+    },
+    {
+      "output_id": "B017",
+      "arm": "current",
+      "case_id": "C07",
+      "words": 52,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 33%."
+      },
+      "max_reference_word_lcs_f1": 0.18604651162790697
+    },
+    {
+      "output_id": "B018",
+      "arm": "manual",
+      "case_id": "C02",
+      "words": 73,
+      "automatic_sentences": 3,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 3문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.14414414414414414
+    },
+    {
+      "output_id": "B019",
+      "arm": "revised",
+      "case_id": "C01",
+      "words": 97,
+      "automatic_sentences": 4,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.2094240837696335
+    },
+    {
+      "output_id": "B020",
+      "arm": "current",
+      "case_id": "C05",
+      "words": 51,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.15384615384615385
+    },
+    {
+      "output_id": "B021",
+      "arm": "current",
+      "case_id": "C01",
+      "words": 97,
+      "automatic_sentences": 4,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.2094240837696335
+    },
+    {
+      "output_id": "B022",
+      "arm": "manual",
+      "case_id": "C06",
+      "words": 31,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.25
+    },
+    {
+      "output_id": "B023",
+      "arm": "revised",
+      "case_id": "C05",
+      "words": 57,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.24489795918367346
+    },
+    {
+      "output_id": "B024",
+      "arm": "current",
+      "case_id": "C06",
+      "words": 31,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.25
+    },
+    {
+      "output_id": "B025",
+      "arm": "revised",
+      "case_id": "C06",
+      "words": 31,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v3). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "max_reference_word_lcs_f1": 0.25
+    },
+    {
+      "output_id": "B026",
+      "arm": "manual",
+      "case_id": "C07",
+      "words": 59,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 43%."
+      },
+      "max_reference_word_lcs_f1": 0.17204301075268819
+    },
+    {
+      "output_id": "B027",
+      "arm": "current",
+      "case_id": "C04",
+      "words": 49,
+      "automatic_sentences": 2,
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v3 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 40%."
+      },
+      "max_reference_word_lcs_f1": 0.10810810810810811
+    }
+  ],
+  "notice": "Automatic heuristic/reference overlap only, not semantic quality or a selection metric."
+}

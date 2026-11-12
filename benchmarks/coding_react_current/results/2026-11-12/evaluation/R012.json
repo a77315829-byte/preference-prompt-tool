@@ -1,0 +1,67 @@
+{
+  "evaluatorVersion": "coding-react-current-v1",
+  "taskId": "accordion_keyboard",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "starts_closed_with_disabled_heading",
+        "passed": true
+      },
+      {
+        "name": "click_toggles_panel_and_semantic_links",
+        "passed": true
+      },
+      {
+        "name": "opening_second_panel_removes_first",
+        "passed": true
+      },
+      {
+        "name": "arrow_down_skips_disabled_and_wraps",
+        "passed": true
+      },
+      {
+        "name": "arrow_up_skips_disabled_and_wraps",
+        "passed": true
+      },
+      {
+        "name": "home_end_target_enabled_extremes",
+        "passed": true
+      },
+      {
+        "name": "focus_navigation_does_not_change_open_panel",
+        "passed": true
+      },
+      {
+        "name": "disabled_heading_cannot_open",
+        "passed": true
+      },
+      {
+        "name": "empty_and_single_enabled_lists_are_safe",
+        "passed": true
+      },
+      {
+        "name": "two_instances_have_unique_trigger_and_panel_ids",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

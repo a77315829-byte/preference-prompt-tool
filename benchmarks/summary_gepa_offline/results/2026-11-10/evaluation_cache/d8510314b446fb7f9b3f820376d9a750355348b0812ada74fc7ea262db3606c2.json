@@ -1,0 +1,69 @@
+{
+  "cache_key": "d8510314b446fb7f9b3f820376d9a750355348b0812ada74fc7ea262db3606c2",
+  "case": {
+    "record_index": 83,
+    "dataset_split": "val",
+    "source": "(CNN)Hawaii is poised to become the first state in the nation to prohibit the sale of cigarettes and other tobacco products to anybody under age 21.\nThe state's legislature on Friday passed a bill raising the minimum legal age -- currently 18 -- to buy tobacco or e-cigarettes.\nThe bill will now go before Gov.\nDavid Ige, whose signature would make it law in Hawaii as of January 1, 2016.\nForty-six U.S. states permit the sale of tobacco to anyone 18 or older, while Alabama, Alaska, New Jersey and Utah require customers to be at least 19.\nDozens of cities and towns, including New York, have already raised the minimum legal age for tobacco purchases to 21.\n\"This bold step will reduce smoking among young people, save lives and help make the next generation tobacco-free,\" said Matthew L. Myers, president of the Campaign for Tobacco-Free Kids, in a prepared statement.\n\"Increasing the sale age to 21 will reduce tobacco use among youth and young adults, age groups when nearly all smoking begins and that are heavily targeted by the tobacco industry,\" he said.\nIt was not clear Monday whether Ige would sign the bill, although on Friday he approved legislation banning the the use of e-cigarettes in all locations where smoking is illegal.\nA spokeswoman for the governor told CNN in an email that he would need some time to review the bill.\nThe legislation comes after a report last month from the Institute of Medicine that said barring people under age 21 from buying cigarettes would have significant public health benefits.\nSetting the minimum age at 21 nationwide would result in nearly a quarter-million fewer premature deaths and 50,000 fewer deaths from lung cancer among people born between 2000 and 2019, the report estimated.\nRaise the smoking age?\nReport predicts big health benefits if we do .\nTeenagers, especially those between 15 and 17, are most vulnerable to addiction at a time when their brains are still developing, said the study, which was conducted at the request of the U.S. Food and Drug Administration.\nIf the minimum legal age for tobacco use was raised to 21, the prevalence of smokers among today's teens would decline by 12% when they become adults, the report said.\nUnder the Hawaii bill, anyone caught breaking the law would face a $10 fine for the first offense and a $50 fine or community service for a second offense.\nA 2014 survey of Hawaii voters found that 71% favored raising the legal age to 21.",
+    "source_sha256": "3b7e7614acd3a625a7e29992bca37a212200976483f93cb497e37aa371263cec",
+    "source_words": 420,
+    "id": "V05",
+    "profile": {
+      "length": "normal",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "base_prompt": "You summarize English text according to the requested conditions while staying grounded in the source.\n\nSummarize the source text below in English according to these instructions.\n\n## Conditions for this summary\nThese are the conditions for this summary.\n- Length: Write three to four sentences.\n- Use of source wording: Reuse the source's words and phrases as much as possible. There is no upper limit on the amount reused.\n\n## Preserve source facts and central information\n- Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition.\n- Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus.\n- Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately.\n- Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first.\n- For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text.\n- If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage.\n- Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check.\n\n## Output format\nOutput only the summary, in English. No preamble, title, checklist, explanation, or closing."
+  },
+  "supplement": "Use only information stated in the supplied text, including in brief descriptive modifiers and appositives. Familiarity with a subject does not license adding a category, property, setting or explanation. Remove any unsupported embellishment rather than relying on outside knowledge.\n\nWhen the source presents a dispute, prioritize the main event, the participants' attributed positions and the source-supported basis of the disagreement over secondary chronology or procedural details. A criticism of a position does not by itself communicate who holds that position. Select complementary content rather than several passages serving the same role.\n\nFor exact extraction, preserve the context needed to identify a quotation's speaker and the referents of dependent sentences. Choose a feasible set of complete source sentences within the existing budget; if necessary, prefer a clearer self-contained alternative. Do not rewrite, combine or add attribution to extracted sentences.",
+  "summary": "Hawaii's legislature on Friday passed a bill raising the minimum legal age to buy tobacco or e-cigarettes from 18 to 21, poised to make Hawaii the first state in the nation to prohibit such sales to anybody under age 21. Gov. David Ige's signature would make it law as of January 1, 2016, but it was not clear Monday whether he would sign, and a spokeswoman said he would need some time to review the bill. An Institute of Medicine report estimated that setting the minimum age at 21 nationwide would result in nearly a quarter-million fewer premature deaths and 50,000 fewer deaths from lung cancer among people born between 2000 and 2019. Under the Hawaii bill, anyone caught breaking the law would face a $10 fine for the first offense and a $50 fine or community service for a second offense.",
+  "score": 0.0,
+  "feedback": "{\"preserved_facts\": [{\"id\": \"F1\", \"preserved\": true, \"summary_evidence\": [\"Hawaii's legislature on Friday passed a bill raising the minimum legal age to buy tobacco or e-cigarettes from 18 to 21\"], \"reason\": \"Legislative passage and the proposed change from 18 to 21 are both explicit and are not presented as an already enacted law.\"}, {\"id\": \"F2\", \"preserved\": true, \"summary_evidence\": [\"Gov. David Ige's signature would make it law as of January 1, 2016, but it was not clear Monday whether he would sign, and a spokeswoman said he would need some time to review the bill.\"], \"reason\": \"The governor's pending decision and the uncertainty about signing are explicit.\"}, {\"id\": \"F3\", \"preserved\": true, \"summary_evidence\": [\"An Institute of Medicine report estimated that setting the minimum age at 21 nationwide would result in nearly a quarter-million fewer premature deaths and 50,000 fewer deaths from lung cancer among people born between 2000 and 2019.\"], \"reason\": \"The attributed estimate retains the nationwide age-21 condition, approximate 250,000 scale and specified birth cohort.\"}], \"factual_issues\": [], \"reviewed_wording\": \"The summary substantially reuses distinctive source phrases such as passed a bill raising the minimum legal age, whose-signature legal-status wording, nearly a quarter-million fewer premature deaths, and the complete sentence describing fines.\", \"automatic\": {\"length\": {\"score\": 0.7, \"feedback\": \"길이 위반: 5문장, 최대 4문장.\"}, \"extractiveness\": {\"score\": 1.0, \"feedback\": \"표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 81%.\"}}, \"score_rule\": \"coverage only when all condition checks pass and no factual issue is flagged\"}",
+  "review": {
+    "output_id": "Qd8510314b446fb7f",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "The summary substantially reuses distinctive source phrases such as passed a bill raising the minimum legal age, whose-signature legal-status wording, nearly a quarter-million fewer premature deaths, and the complete sentence describing fines.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Hawaii's legislature on Friday passed a bill raising the minimum legal age to buy tobacco or e-cigarettes from 18 to 21"
+        ],
+        "reason": "Legislative passage and the proposed change from 18 to 21 are both explicit and are not presented as an already enacted law."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Gov. David Ige's signature would make it law as of January 1, 2016, but it was not clear Monday whether he would sign, and a spokeswoman said he would need some time to review the bill."
+        ],
+        "reason": "The governor's pending decision and the uncertainty about signing are explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "An Institute of Medicine report estimated that setting the minimum age at 21 nationwide would result in nearly a quarter-million fewer premature deaths and 50,000 fewer deaths from lung cancer among people born between 2000 and 2019."
+        ],
+        "reason": "The attributed estimate retains the nationwide age-21 condition, approximate 250,000 scale and specified birth cohort."
+      }
+    ],
+    "issues": []
+  },
+  "automatic": {
+    "length": {
+      "score": 0.7,
+      "feedback": "길이 위반: 5문장, 최대 4문장."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 81%."
+    }
+  },
+  "objective_scores": {
+    "coverage": 1.0,
+    "conditions": 0.0,
+    "no_factual_flags": 1.0
+  }
+}

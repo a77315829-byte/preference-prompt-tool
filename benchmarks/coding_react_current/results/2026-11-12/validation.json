@@ -1,0 +1,51 @@
+{
+  "status": "completed",
+  "pre_generation_controls": {
+    "frozen_ready_utc": "2026-11-12T08:18:03.105002+00:00",
+    "product_prompt_identity": true,
+    "profile_task_balance": {
+      "P1": {
+        "bug": 2,
+        "feature": 2
+      },
+      "P2": {
+        "feature": 2,
+        "bug": 2
+      }
+    },
+    "materialization_tests_passed": 12,
+    "evaluator_full_tests_passed": 14,
+    "final_scoped_evaluator_regressions_passed": 4,
+    "test_counts_overlap": true,
+    "reference_tasks_passed": 8,
+    "typed_behavior_mutants_detected": 8,
+    "behavior_assertions_per_arm": 69,
+    "first_control_attempt": "Preserved pre-generation timeout on DOM mismatch formatting; concise identity assertions preserve criteria; attempt2 completes all controls.",
+    "independent_design_audit": "Read-only task, compiler, callback, VM realm, prompt parity, literal application and rubric review; fixes completed before candidates.",
+    "candidate_generation_started": false,
+    "paid_model_api_calls": 0
+  },
+  "frozen_input_and_code_hashes": "verified",
+  "first_outputs_application_reviews_and_evaluations_hashes": "verified",
+  "literal_applications_verified": 24,
+  "strict_type_pass": 24,
+  "runtime_tasks_pass": 24,
+  "runtime_assertions_pass": 207,
+  "runtime_assertions_total": 207,
+  "independent_review_records": 48,
+  "review_dimension_verdicts_per_reviewer": 96,
+  "review_disagreements": 0,
+  "review_schema_and_exact_quotes": "passed",
+  "candidate_console_messages": 0,
+  "unresolved_or_evaluator_errors": 0,
+  "prior_completion_seals_verified": {
+    "summary_contract_revision": 34,
+    "summary_gepa_offline": 138,
+    "summary_reflection": 57
+  },
+  "pending_files": 0,
+  "git_diff_check": "passed; LF/CRLF informational warnings only",
+  "product_application_changes_this_experiment": false,
+  "validation_scope": "New benchmark only; product implementation unchanged in this experiment, no repeated full frontend build. Existing summary work retained.",
+  "paid_model_api_calls": 0
+}

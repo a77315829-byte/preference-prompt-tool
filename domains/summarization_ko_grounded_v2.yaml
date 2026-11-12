@@ -1,0 +1,3 @@
+# Same prompts as grounded v1; only the form-check implementation changes.
+extends: summarization_ko_grounded.yaml
+checks_module: checks.summarization_grounded_v2

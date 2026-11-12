@@ -6,7 +6,11 @@ async function call(path = '', body) {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
   });
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || `인수인계 요청에 실패했습니다 (${response.status})`);
+  if (!response.ok) {
+    const error = new Error(data.error || `인수인계 요청에 실패했습니다 (${response.status})`);
+    error.status = response.status;
+    throw error;
+  }
   return data;
 }
 export const listHandoffs = () => call().then((r) => r.handoffs);

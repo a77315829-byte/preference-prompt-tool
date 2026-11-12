@@ -1,0 +1,1046 @@
+{
+  "date": "2026-11-12",
+  "local_branch": "microstone",
+  "local_head": "43024129a480c1fecb1c8013af5717b7003e3e34",
+  "remote_microstone_head_observed": "a2f12928717c11555c7376d0efdd27e0b0703b51",
+  "scope": "Current local implementation, including existing uncommitted summary changes. Documentation branch does not deploy or synchronize all application source. No user database or env files read. Schema derived from migration literals executed only in empty in-memory SQLite.",
+  "migrations": 14,
+  "tables": {
+    "coding_optimization_jobs": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "owner_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "expires_at",
+          "type": "REAL",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "job_json",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "users",
+          "from": "owner_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "coding_team_guides": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "code",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "revision",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": "1",
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "profile_json",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "rules_json",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "teams",
+          "from": "code",
+          "to": "code",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "coding_work_trials": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "owner_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "revision",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": "1",
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "record_json",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "updated_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "users",
+          "from": "owner_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "handoff_files": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "handoff_id",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "content_type",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "size",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "data",
+          "type": "BLOB",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "created_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "handoffs",
+          "from": "handoff_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "handoff_versions": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "handoff_id",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "revision",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 2
+        },
+        {
+          "cid": 2,
+          "name": "actor_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "event",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "snapshot_json",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "saved_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "users",
+          "from": "actor_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "SET NULL",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "handoffs",
+          "from": "handoff_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "handoffs": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "owner_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "recipient_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "recipient_from_revision",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": "0",
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "title",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "body_json",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "status",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": "'draft'",
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "revision",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": "1",
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "created_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "updated_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "users",
+          "from": "recipient_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "SET NULL",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "users",
+          "from": "owner_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "personal_prompts": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "owner_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "title",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "domain_key",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "prompt",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "note",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": "''",
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "revision",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": "1",
+          "pk": 0
+        },
+        {
+          "cid": 7,
+          "name": "created_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 8,
+          "name": "updated_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 9,
+          "name": "provenance_json",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 10,
+          "name": "coding_profile_json",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "users",
+          "from": "owner_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "sessions": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "token_hash",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "user_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "created_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "expires_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "users",
+          "from": "user_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "team_members": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "code",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "member_key",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 2
+        },
+        {
+          "cid": 2,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "user_id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "history_json",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "joined_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "users",
+          "from": "user_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "teams",
+          "from": "code",
+          "to": "code",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "teams": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "code",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "domain_key",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "created_by",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "created_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": "''",
+          "pk": 0
+        },
+        {
+          "cid": 5,
+          "name": "invite_until",
+          "type": "REAL",
+          "notnull": 1,
+          "default": "0",
+          "pk": 0
+        },
+        {
+          "cid": 6,
+          "name": "protected",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": "0",
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "users",
+          "from": "created_by",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "SET NULL",
+          "match": "NONE"
+        }
+      ]
+    },
+    "usage": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "day",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "kind",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 2
+        },
+        {
+          "cid": 2,
+          "name": "subject",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 3
+        },
+        {
+          "cid": 3,
+          "name": "count",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": []
+    },
+    "users": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "username",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "password_hash",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "created_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": []
+    },
+    "workspace_drafts": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "project_id",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "user_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 2
+        },
+        {
+          "cid": 2,
+          "name": "saved_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "base_version",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "project_json",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "users",
+          "from": "user_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "workspace_projects",
+          "from": "project_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "workspace_members": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "project_id",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "user_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 2
+        },
+        {
+          "cid": 2,
+          "name": "role",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "added_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "users",
+          "from": "user_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        },
+        {
+          "id": 1,
+          "seq": 0,
+          "table": "workspace_projects",
+          "from": "project_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "workspace_projects": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "TEXT",
+          "notnull": 0,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "owner_id",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 2,
+          "name": "title",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "created_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "updated_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "users",
+          "from": "owner_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    },
+    "workspace_versions": {
+      "columns": [
+        {
+          "cid": 0,
+          "name": "project_id",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 1
+        },
+        {
+          "cid": 1,
+          "name": "version",
+          "type": "INTEGER",
+          "notnull": 1,
+          "default": null,
+          "pk": 2
+        },
+        {
+          "cid": 2,
+          "name": "saved_at",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 3,
+          "name": "label",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        },
+        {
+          "cid": 4,
+          "name": "project_json",
+          "type": "TEXT",
+          "notnull": 1,
+          "default": null,
+          "pk": 0
+        }
+      ],
+      "foreign_keys": [
+        {
+          "id": 0,
+          "seq": 0,
+          "table": "workspace_projects",
+          "from": "project_id",
+          "to": "id",
+          "on_update": "NO ACTION",
+          "on_delete": "CASCADE",
+          "match": "NONE"
+        }
+      ]
+    }
+  },
+  "source_sha256": {
+    "api_server.py": "c1fcf8f07eb93d6c9276bbf255bbd2ab5ac9bbcae151d591feaad7a39b882dd1",
+    "hosting_server.py": "b2792f2f78d6012160b6ef212564bf4cc371c93fc408b99a7ada84af43e8ec60",
+    "service.py": "d5950e4f26e984dc3f2f12d714364397e605c279faf1cf3027a361ca9b52c053",
+    "engine/domain_loader.py": "740cc89326c123201b59360ff47d5689a2b996046c6535964a383c35be97aa25",
+    "engine/estimator.py": "d350822e600a8cbae48c5d944c3b9d9742e7b97723c9c1920aa834ac360a236a",
+    "engine/selector.py": "de20063876b9136cd71381e6cdbb737aa0aeca50cfad3566310d5964817c048f",
+    "engine/generator.py": "6e6d3d96792b1ff7f603c65e5287a591823340cbee65dbce523e73c57f0f9f62",
+    "domains/coding.yaml": "8bda3ae9b07029f86e586da50664060b588b5aa272d55afe3af0053f78aba734",
+    "summary_contracts.py": "982bde83b8b57b6cd45f1bb6ff2a1d6198953d74123f02db7d45ec73758ea573",
+    "checks/summarization_grounded_v3.py": "3e2d9bda8f6fc587d6d3ae6172b5297e96e262a47edc85bd55de2dc08fb755c1",
+    "coding_instructions.py": "1fcd6f0e5e604ab538b28106f2f86b4b6d27848a384017145c98c36dfe2c1aa0",
+    "coding_elicitation.py": "71b4a4044e55e8380ac98643de1a5b0880e7eb34b201a66b774f3a119770bff0",
+    "personal_prompts.py": "d0d77426d3901162a2f23ca3fdca20b7adbdaea5dcbe6c118db5d5147311d140",
+    "coding_team_guides.py": "02db83306961e55cb1d5691ab4f17d83090d715e4d7f89f8e9ccd6f7955fc907",
+    "coding_optimization_jobs.py": "b59f654419a5a7a050f2ba83b9cbd69b938f7754a0309328382f41284ea56b89",
+    "coding_work_trials.py": "814104f04d1dfb228b72c218c909515f4dd47d71bf30fa36a86e5fedbfaf99b2",
+    "handoffs.py": "be633cdad3fe4a5705f79b2b0428afa192b3e30d875dd89f8c4b2cf502585fa1",
+    "handoff_files.py": "337e51c7f5540b13aa2a0ca99268fb3c9d728102df9d3a54e6be0d3f69fffb93",
+    "app_db.py": "900b9efe3268ccae73fce43bc9c3c73afc7010695ad712f4f169eaf5edf63cb3",
+    "auth.py": "b1f8d58608d790f5806c4976527c4b8d6b6a7a2f89701757da52b73dd2cfe4a6",
+    "frontend/src/app/App.jsx": "3d9a66107ec231f0b119480eecf2cc60b3b840cc9bd179abb51aa2b45050f528",
+    "frontend/src/shared/draftCache.js": "cf84723893eb0783d6255ddc77c80b89f3a77a230c094c5043f1bf0cb4dedf33"
+  }
+}

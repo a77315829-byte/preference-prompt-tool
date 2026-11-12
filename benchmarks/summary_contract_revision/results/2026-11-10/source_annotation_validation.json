@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "artifact_sha256": {
+    "sources.json": "ff470dcc013d26b81094ae26dd2437f4f5d49511bee498399671fb438cb9e13b",
+    "sampling.json": "99ca7cc9718fcdd8bc87e440f71f32d1d31e6e6ca8d901a5e69f7ada6676b356",
+    "source_annotations.json": "ac874d13063d0004fda36c26c5d4dba846e16a1d1488af1f72e9dcd8a28aa65e"
+  },
+  "checker": {
+    "path": "checks/summarization_grounded_v3.py",
+    "file_sha256": "3e2d9bda8f6fc587d6d3ae6172b5297e96e262a47edc85bd55de2dc08fb755c1"
+  },
+  "case_count": 9,
+  "old_unique_source_count": 63,
+  "new_source_overlap_count": 0,
+  "required_sentence_count": 27,
+  "private_fact_count": 27,
+  "exact_source_quote_count": 31,
+  "cases": [
+    {
+      "id": "C01",
+      "required_sentence_count": 3,
+      "distinct_complete_source_sentences": true,
+      "fact_count": 3,
+      "exact_source_quote_count": 3,
+      "all_evidence_exact": true
+    },
+    {
+      "id": "C02",
+      "required_sentence_count": 3,
+      "distinct_complete_source_sentences": true,
+      "fact_count": 3,
+      "exact_source_quote_count": 3,
+      "all_evidence_exact": true
+    },
+    {
+      "id": "C03",
+      "required_sentence_count": 3,
+      "distinct_complete_source_sentences": true,
+      "fact_count": 3,
+      "exact_source_quote_count": 3,
+      "all_evidence_exact": true
+    },
+    {
+      "id": "C04",
+      "required_sentence_count": 3,
+      "distinct_complete_source_sentences": true,
+      "fact_count": 3,
+      "exact_source_quote_count": 3,
+      "all_evidence_exact": true
+    },
+    {
+      "id": "C05",
+      "required_sentence_count": 3,
+      "distinct_complete_source_sentences": true,
+      "fact_count": 3,
+      "exact_source_quote_count": 4,
+      "all_evidence_exact": true
+    },
+    {
+      "id": "C06",
+      "required_sentence_count": 3,
+      "distinct_complete_source_sentences": true,
+      "fact_count": 3,
+      "exact_source_quote_count": 4,
+      "all_evidence_exact": true
+    },
+    {
+      "id": "C07",
+      "required_sentence_count": 3,
+      "distinct_complete_source_sentences": true,
+      "fact_count": 3,
+      "exact_source_quote_count": 4,
+      "all_evidence_exact": true
+    },
+    {
+      "id": "C08",
+      "required_sentence_count": 3,
+      "distinct_complete_source_sentences": true,
+      "fact_count": 3,
+      "exact_source_quote_count": 3,
+      "all_evidence_exact": true
+    },
+    {
+      "id": "C09",
+      "required_sentence_count": 3,
+      "distinct_complete_source_sentences": true,
+      "fact_count": 3,
+      "exact_source_quote_count": 4,
+      "all_evidence_exact": true
+    }
+  ],
+  "provenance": [
+    "sources.json was written before selected source texts were displayed for annotation; sampling.json followed before source annotation.",
+    "Only selected source texts informed annotations. No model API, network, generated summaries, candidate prompts, old reviews, old scores, or human-reference summary bodies were used.",
+    "One preliminary schema inspection displayed reference titles for unselected val record 0; sampling.json discloses this exposure. The fixed sample did not contain that record.",
+    "Fact anchors were manually selected from source text before generation; evidence substring checks validate quotation fidelity, not semantic centrality or external truth.",
+    "The same three selected source sentences will be shared across arms. This is explicit-source-priority following, not unprompted key-point discovery or validation of real users' preferences.",
+    "Six short/fully cases deliberately create a three-priority versus two-sentence conflict. Source_annotations.json records the consequences without bundling all required information into fewer anchors.",
+    "This is a new holdout from unused original val sources and must not be labeled official test performance."
+  ]
+}

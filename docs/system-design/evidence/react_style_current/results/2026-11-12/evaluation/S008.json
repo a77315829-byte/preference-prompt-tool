@@ -1,0 +1,55 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "sortable_table",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_order_and_null_display",
+        "passed": true
+      },
+      {
+        "name": "ascending_is_numeric_stable_and_nulls_last",
+        "passed": true
+      },
+      {
+        "name": "descending_keeps_ties_and_nulls_stable",
+        "passed": true
+      },
+      {
+        "name": "third_click_returns_to_ascending_without_mutation",
+        "passed": true
+      },
+      {
+        "name": "new_rows_keep_direction_and_current_tie_order",
+        "passed": true
+      },
+      {
+        "name": "empty_rows_then_new_data_remain_usable",
+        "passed": true
+      },
+      {
+        "name": "labels_are_text_and_equal_numeric_values_keep_order",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

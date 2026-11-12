@@ -1,0 +1,32 @@
+{
+  "adjudicator": "root Codex agent, source-based review; not a human evaluator",
+  "review_policy": "Retain both original independent reviews and their score ranges. Do not rewrite ratings to force agreement.",
+  "disagreements": [
+    {
+      "output_id": "O17",
+      "case_id": "S03",
+      "fact_id": "F3",
+      "review_a": false,
+      "review_b": true,
+      "decision": "ambiguous; retain 21-22/27 range for manual arm",
+      "reason": "The summary states the late-2013 original plan, the March 2014 shift, and the eventual May television premiere. Repeated delay can be inferred from that sequence, but the source's explicit cancellation of the March plan is omitted. The frozen binary coverage rubric does not resolve this temporal inference uniquely.",
+      "source_evidence": ["That planned March release was then scrubbed, when Cannes expressed interest in debuting the director's version of the movie in May."],
+      "impact": "Does not support assembled-prompt superiority under either interpretation."
+    }
+  ],
+  "all_flagged_factual_outputs": [
+    {
+      "output_id": "O20",
+      "case_id": "S04",
+      "reviewers": ["a", "b"],
+      "summary_quote": "disgruntled former participants",
+      "decision": "unsupported status qualifier in supplied source",
+      "reason": "The source describes people dissatisfied with their experiences but does not establish that they had left. This is a small added factual qualification, not evidence that the whole summary is false or that general prompting has a population error rate of 1/9.",
+      "source_evidence": ["Travolta said he believed the doc was a result of \"people who were disgruntled with their experiences\" with the Church of Scientology, which he touted as a positive experience for him."]
+    }
+  ],
+  "wording_failure_interpretation": "Both manual and assembled S03 lose strict fully-verbatim compliance by removing the leading (The Hollywood Reporter) source prefix. This is a literal-form violation under the frozen rubric, not a semantic factual error.",
+  "source_reference_warning": "Human reference summaries were not treated as infallible factual gold. S08 references include square miles where the source specifies square kilometers; source evidence controls the review.",
+  "coverage_warning": "Each binary anchor bundles some details. Missing the exact timing, named institution, attribution or qualification can fail an entire anchor even when the summary captures its gist. These counts are coverage of the frozen AI annotations, not percentages of all document meaning preserved.",
+  "shared_model_warning": "Independent contexts do not make the two reviewers' biases independent. Agreement is an internal diagnostic, not human validation."
+}

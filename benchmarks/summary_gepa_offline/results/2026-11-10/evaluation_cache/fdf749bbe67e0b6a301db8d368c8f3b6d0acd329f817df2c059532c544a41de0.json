@@ -1,0 +1,71 @@
+{
+  "cache_key": "fdf749bbe67e0b6a301db8d368c8f3b6d0acd329f817df2c059532c544a41de0",
+  "case": {
+    "record_index": 249,
+    "dataset_split": "train",
+    "source": "Melamchi, Nepal (CNN)Even from high above, flying in an Indian Air Force helicopter, it is easy to see that the people of Melamchi, central Nepal, are happy to see us.\nResidents in this remote village, about a 44km drive from Nepal's capital, Kathmandu, stand on the distinctive steeply terraced hillsides and wave furiously as the relief flight passes overhead.\nThe mission, a joint effort between Indian air crew and a Nepalese army medical team, is only the third operation of its kind to reach the village since Saturday's massive 7.8-magnitude quake, which left more than 5,000 people dead.\nThe aircraft is stuffed to capacity with tents, medicines and packages of tinned tuna, instant noodles and rice, all bundled haphazardly aboard the Mi-17 by soldiers at the air base in Kathmandu barely 15 minutes earlier.\nLocal official Upendra Tamang is there to greet the helicopter as it touches down on a field in front of the village medical clinic, and waiting soldiers swing into action to unload the delivery.\nHe says people have been desperately awaiting the supplies.\nThe situation in Melamchi and the surrounding villages is \"dire,\" he tells CNN through a translator.\nAccording to Nepal's National Emergency Operation Center, 1,376 people were killed in Sindhupalchok District, where Melamchi is located, when the earthquake hit.\nSome 18,000 houses were destroyed and 100,000 people have been displaced in the surrounding area, says Tamang.\n\"Everyone is sleeping outside,\" he says.\nHe has serious concerns about food supplies in the region, saying the piled boxes of rice and noodles aren't nearly enough to meet the needs of local people.\n\"Aid agencies need to do something very quickly,\" he says.\nIn the days since the quake, injured people from the region have been told to find their way to Melamchi so they can be picked up by the relief flights, he says.\nThey've sent about 500 of the most seriously injured people for treatment in Kathmandu already -- the majority by road -- but many more are stuck in a local clinic waiting for help.\nSeven of them, five women and two men, are suddenly driven onto the airfield in a truck and on the back of a pickup.\nTheir injuries are not life-threatening, but they look to be in a bad state: bloodied, exhausted and traumatized.\nAn elderly woman's face is covered in bandages that look like they haven't been changed in days.\nAnother cries in pain as she is loaded on to a stretcher from the back of the pickup, then awkwardly hoisted on to the helicopter.\nAmong the injured brought on board the flight is Forshani Tamang, accompanied by her son.\nHe tells CNN their family lives in a village called Bachunde, where nearly all the houses were destroyed.\nHe and other family members carried Forshani for four hours to reach Melamchi.\nWith their home destroyed and their stores of grain lost, the family are in crisis.\nAs the helicopter takes off for the capital, flying over a landscape dotted with collapsed buildings and bright orange tents, Nepalese army doctor Naveen Tiwari offers perhaps the only positive for those on board.\nThe patients' injuries are mostly lacerations of varying degrees, he says.\nTheir vital signs are all stable, and with antibiotics and intravenous drips, they should recover.\nWhen the helicopter touches down at Kathmandu airbase, the patients are swiftly unloaded and unceremoniously laid out on the tarmac in the emergency triage area in front of an aircraft hangar, and paramedics scramble to administer IV drips to those in need .\nAs Forshani's son feeds her a cracker softened with water, the relief team turn to prepare for another mission.\nHow you can help victims of the Nepal earthquakeNepal earthquake's victims overwhelm hospitals .",
+    "source_sha256": "3727e6e13861bb15df7fbd04b702f4ce91844b62de85a59c0a7885d51bb64367",
+    "source_words": 622,
+    "id": "G04",
+    "profile": {
+      "length": "long",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "base_prompt": "You summarize English text according to the requested conditions while staying grounded in the source.\n\nSummarize the source text below in English according to these instructions.\n\n## Conditions for this summary\nThese are the conditions for this summary.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Mostly rephrase in your own words while preserving meaning, quantities and attribution; retain source expressions where helpful.\n\n## Preserve source facts and central information\n- Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition.\n- Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus.\n- Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately.\n- Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first.\n- For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text.\n- If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage.\n- Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check.\n\n## Output format\nOutput only the summary, in English. No preamble, title, checklist, explanation, or closing."
+  },
+  "supplement": "Use only information stated in the supplied text, including in brief descriptive modifiers and appositives. Familiarity with a subject does not license adding a category, property, setting or explanation. Remove any unsupported embellishment rather than relying on outside knowledge.\n\nWhen the source presents a dispute, prioritize the main event, the participants' attributed positions and the source-supported basis of the disagreement over secondary chronology or procedural details. A criticism of a position does not by itself communicate who holds that position. Select complementary content rather than several passages serving the same role.\n\nFor exact extraction, preserve the context needed to identify a quotation's speaker and the referents of dependent sentences. Choose a feasible set of complete source sentences within the existing budget; if necessary, prefer a clearer self-contained alternative. Do not rewrite, combine or add attribution to extracted sentences.",
+  "summary": "A joint Indian air crew and Nepalese army medical team delivered tents, medicines and food to Melamchi on only the third such mission to reach the village after Saturday's 7.8-magnitude earthquake, which killed more than 5,000 people. Nepal's National Emergency Operation Center reported 1,376 deaths in Sindhupalchok District, where Melamchi is located. Local official Upendra Tamang said some 18,000 houses had been destroyed and 100,000 people displaced in the surrounding area. He described conditions as dire and warned that the delivered rice and noodles were nowhere near enough to meet local needs. Tamang said about 500 of the most seriously injured people had already been sent to Kathmandu, mostly by road, but many others remained at the local clinic awaiting help. Seven injured people, five women and two men, were evacuated on the helicopter. Among them was Forshani Tamang, whose family had carried her for four hours to Melamchi and had lost their home and stored grain. Army doctor Naveen Tiwari said the patients mainly had lacerations, their vital signs were stable, and they should recover with antibiotics and intravenous drips. At Kathmandu airbase, paramedics administered IV drips to those who needed them while the relief team prepared for another mission.",
+  "score": 1.0,
+  "feedback": "{\"preserved_facts\": [{\"id\": \"F1\", \"preserved\": true, \"summary_evidence\": [\"A joint Indian air crew and Nepalese army medical team delivered tents, medicines and food to Melamchi on only the third such mission to reach the village after Saturday's 7.8-magnitude earthquake, which killed more than 5,000 people.\", \"Seven injured people, five women and two men, were evacuated on the helicopter.\"], \"reason\": \"The aid delivery to earthquake-hit Melamchi is explicit, and the subsequent reference to the helicopter identifies the aircraft used on the mission.\"}, {\"id\": \"F2\", \"preserved\": true, \"summary_evidence\": [\"Local official Upendra Tamang said some 18,000 houses had been destroyed and 100,000 people displaced in the surrounding area.\", \"He described conditions as dire and warned that the delivered rice and noodles were nowhere near enough to meet local needs.\"], \"reason\": \"The pronoun clearly refers to local official Tamang, preserving his assessment that the delivered food was insufficient.\"}, {\"id\": \"F3\", \"preserved\": true, \"summary_evidence\": [\"Tamang said about 500 of the most seriously injured people had already been sent to Kathmandu, mostly by road, but many others remained at the local clinic awaiting help.\"], \"reason\": \"The summary preserves Tamang's attribution, the approximate number, the most seriously injured group and the completed transfers to Kathmandu. The medical-transfer purpose is clear from the injured patients and clinic context.\"}], \"factual_issues\": [], \"reviewed_wording\": \"The summary mostly recomposes and reformulates the account: 'warned that the delivered rice and noodles were nowhere near enough' restates the source's food concerns, and 'whose family had carried her for four hours' combines separate source sentences. Names, figures, medical terms and some short phrases are retained without making most sentences copied or minimally edited source sentences.\", \"automatic\": {\"length\": {\"score\": 1.0, \"feedback\": \"문장 구분 휴리스틱 v2 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다.\"}, \"extractiveness\": {\"score\": 1.0, \"feedback\": \"표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 49%.\"}}, \"score_rule\": \"coverage only when all condition checks pass and no factual issue is flagged\"}",
+  "review": {
+    "output_id": "Qfdf749bbe67e0b6a",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "The summary mostly recomposes and reformulates the account: 'warned that the delivered rice and noodles were nowhere near enough' restates the source's food concerns, and 'whose family had carried her for four hours' combines separate source sentences. Names, figures, medical terms and some short phrases are retained without making most sentences copied or minimally edited source sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "A joint Indian air crew and Nepalese army medical team delivered tents, medicines and food to Melamchi on only the third such mission to reach the village after Saturday's 7.8-magnitude earthquake, which killed more than 5,000 people.",
+          "Seven injured people, five women and two men, were evacuated on the helicopter."
+        ],
+        "reason": "The aid delivery to earthquake-hit Melamchi is explicit, and the subsequent reference to the helicopter identifies the aircraft used on the mission."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Local official Upendra Tamang said some 18,000 houses had been destroyed and 100,000 people displaced in the surrounding area.",
+          "He described conditions as dire and warned that the delivered rice and noodles were nowhere near enough to meet local needs."
+        ],
+        "reason": "The pronoun clearly refers to local official Tamang, preserving his assessment that the delivered food was insufficient."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Tamang said about 500 of the most seriously injured people had already been sent to Kathmandu, mostly by road, but many others remained at the local clinic awaiting help."
+        ],
+        "reason": "The summary preserves Tamang's attribution, the approximate number, the most seriously injured group and the completed transfers to Kathmandu. The medical-transfer purpose is clear from the injured patients and clinic context."
+      }
+    ],
+    "issues": []
+  },
+  "automatic": {
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 49%."
+    }
+  },
+  "objective_scores": {
+    "coverage": 1.0,
+    "conditions": 1.0,
+    "no_factual_flags": 1.0
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState, type ChangeEvent, type CSSProperties, type ReactElement } from 'react';\n\nexport type Unit = 'C' | 'F';\nexport type Props = { initialValue: string; initialUnit: Unit };\n\ntype Theme = {\n  colors: { panel: string; text: string };\n  spacing: { panel: number; gap: number };\n};\n\nconst theme: Theme = {\n  colors: { panel: '#f2f6fc', text: '#1d3150' },\n  spacing: { panel: 16, gap: 8 },\n};\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.panel,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n  display: 'grid',\n  gap: theme.spacing.gap,\n};\n\nfunction convert(raw: string, unit: Unit): number | null {\n  const trimmed: string = raw.trim();\n  if (!/^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)$/.test(trimmed)) return null;\n  const value: number = Number(trimmed);\n  if (!Number.isFinite(value)) return null;\n  const result: number = unit === 'C' ? value * 9 / 5 + 32 : (value - 32) * 5 / 9;\n  return Number.isFinite(result) ? result : null;\n}\n\nexport function Component({ initialValue, initialUnit }: Props): ReactElement {\n  const [value, setValue] = useState<string>(initialValue);\n  const [unit, setUnit] = useState<Unit>(initialUnit);\n  const targetUnit: Unit = unit === 'C' ? 'F' : 'C';\n  const result: number | null = convert(value, unit);\n  const formatted: string | null = result === null ? null : result.toFixed(2);\n\n  function changeValue(event: ChangeEvent<HTMLInputElement>): void {\n    setValue(event.currentTarget.value);\n  }\n\n  function changeUnit(event: ChangeEvent<HTMLSelectElement>): void {\n    const nextUnit: string = event.currentTarget.value;\n    if (nextUnit === 'C' || nextUnit === 'F') setUnit(nextUnit);\n  }\n\n  function swap(): void {\n    if (formatted === null) return;\n    setValue(formatted);\n    setUnit(targetUnit);\n  }\n\n  return (\n    <section data-testid=\"panel\" style={panelStyle}>\n      <label>\n        Temperature\n        <input type=\"text\" value={value} onChange={changeValue} aria-invalid={formatted === null || undefined} />\n      </label>\n      <label>\n        From unit\n        <select value={unit} onChange={changeUnit}>\n          <option value=\"C\">C</option>\n          <option value=\"F\">F</option>\n        </select>\n      </label>\n      <output aria-label=\"Converted\">\n        {formatted === null ? 'Invalid temperature' : `${formatted} ${targetUnit}`}\n      </output>\n      <button type=\"button\" disabled={formatted === null} onClick={swap}>Swap</button>\n    </section>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 2472
+    }
+  ]
+}

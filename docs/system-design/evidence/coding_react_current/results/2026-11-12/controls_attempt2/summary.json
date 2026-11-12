@@ -1,0 +1,151 @@
+{
+  "attempt": 2,
+  "rows": [
+    {
+      "task_id": "roster_selection",
+      "kind": "reference",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": true,
+      "checks_total": 9,
+      "checks_passed": 9
+    },
+    {
+      "task_id": "roster_selection",
+      "kind": "mutant",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": false,
+      "checks_total": 9,
+      "checks_passed": 6
+    },
+    {
+      "task_id": "reservation_validation",
+      "kind": "reference",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": true,
+      "checks_total": 9,
+      "checks_passed": 9
+    },
+    {
+      "task_id": "reservation_validation",
+      "kind": "mutant",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": false,
+      "checks_total": 9,
+      "checks_passed": 8
+    },
+    {
+      "task_id": "optimistic_favorite",
+      "kind": "reference",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": true,
+      "checks_total": 8,
+      "checks_passed": 8
+    },
+    {
+      "task_id": "optimistic_favorite",
+      "kind": "mutant",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": false,
+      "checks_total": 8,
+      "checks_passed": 5
+    },
+    {
+      "task_id": "accordion_keyboard",
+      "kind": "reference",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": true,
+      "checks_total": 10,
+      "checks_passed": 10
+    },
+    {
+      "task_id": "accordion_keyboard",
+      "kind": "mutant",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": false,
+      "checks_total": 10,
+      "checks_passed": 7
+    },
+    {
+      "task_id": "queue_pagination",
+      "kind": "reference",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": true,
+      "checks_total": 8,
+      "checks_passed": 8
+    },
+    {
+      "task_id": "queue_pagination",
+      "kind": "mutant",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": false,
+      "checks_total": 8,
+      "checks_passed": 5
+    },
+    {
+      "task_id": "undo_removal",
+      "kind": "reference",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": true,
+      "checks_total": 8,
+      "checks_passed": 8
+    },
+    {
+      "task_id": "undo_removal",
+      "kind": "mutant",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": false,
+      "checks_total": 8,
+      "checks_passed": 4
+    },
+    {
+      "task_id": "resource_union",
+      "kind": "reference",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": true,
+      "checks_total": 8,
+      "checks_passed": 8
+    },
+    {
+      "task_id": "resource_union",
+      "kind": "mutant",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": false,
+      "checks_total": 8,
+      "checks_passed": 7
+    },
+    {
+      "task_id": "draft_filters",
+      "kind": "reference",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": true,
+      "checks_total": 9,
+      "checks_passed": 9
+    },
+    {
+      "task_id": "draft_filters",
+      "kind": "mutant",
+      "type_pass": true,
+      "runtime_complete": true,
+      "runtime_pass": false,
+      "checks_total": 9,
+      "checks_passed": 6
+    }
+  ],
+  "all_references_pass": true,
+  "all_mutants_detected": true
+}

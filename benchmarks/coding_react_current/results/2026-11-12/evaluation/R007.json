@@ -1,0 +1,59 @@
+{
+  "evaluatorVersion": "coding-react-current-v1",
+  "taskId": "queue_pagination",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "first_page_has_expected_slice_and_boundaries",
+        "passed": true
+      },
+      {
+        "name": "next_and_previous_move_exactly_one_page",
+        "passed": true
+      },
+      {
+        "name": "partial_last_page_disables_next",
+        "passed": true
+      },
+      {
+        "name": "shrink_clamps_and_growth_does_not_restore_stale_page",
+        "passed": true
+      },
+      {
+        "name": "empty_after_navigation_is_page_one_with_no_items",
+        "passed": true
+      },
+      {
+        "name": "larger_page_size_clamps_current_page",
+        "passed": true
+      },
+      {
+        "name": "valid_page_survives_data_and_page_size_updates",
+        "passed": true
+      },
+      {
+        "name": "empty_to_populated_removes_empty_message",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

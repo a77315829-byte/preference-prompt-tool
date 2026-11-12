@@ -1,0 +1,50 @@
+{
+  "B001": {
+    "arm": "candidate",
+    "case_id": "D06"
+  },
+  "B002": {
+    "arm": "candidate",
+    "case_id": "D05"
+  },
+  "B003": {
+    "arm": "candidate",
+    "case_id": "D03"
+  },
+  "B004": {
+    "arm": "candidate",
+    "case_id": "D01"
+  },
+  "B005": {
+    "arm": "current",
+    "case_id": "D04"
+  },
+  "B006": {
+    "arm": "candidate",
+    "case_id": "D04"
+  },
+  "B007": {
+    "arm": "current",
+    "case_id": "D02"
+  },
+  "B008": {
+    "arm": "current",
+    "case_id": "D06"
+  },
+  "B009": {
+    "arm": "current",
+    "case_id": "D03"
+  },
+  "B010": {
+    "arm": "candidate",
+    "case_id": "D02"
+  },
+  "B011": {
+    "arm": "current",
+    "case_id": "D01"
+  },
+  "B012": {
+    "arm": "current",
+    "case_id": "D05"
+  }
+}

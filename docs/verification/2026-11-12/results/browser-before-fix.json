@@ -1,0 +1,174 @@
+{
+  "pass": false,
+  "results": [
+    {
+      "name": "01 offline health and two independent browser signups",
+      "pass": true,
+      "ms": 3554
+    },
+    {
+      "name": "02 private source preference preserved separately",
+      "pass": true,
+      "ms": 59
+    },
+    {
+      "name": "03 owner creates handoff through UI",
+      "pass": true,
+      "ms": 1006
+    },
+    {
+      "name": "04 draft denied to recipient, third account and anonymous",
+      "pass": true,
+      "ms": 1060
+    },
+    {
+      "name": "05 attach then remove private draft file through UI",
+      "pass": true,
+      "ms": 1118
+    },
+    {
+      "name": "06 attach shared UTF-8 file and share to second account through UI",
+      "pass": true,
+      "ms": 3410
+    },
+    {
+      "name": "07 recipient downloads exact bytes and opens safe preview in real tab",
+      "pass": true,
+      "ms": 1440
+    },
+    {
+      "name": "08 private history/files, unauthorized files and pre-claim editing denied",
+      "pass": true,
+      "ms": 109
+    },
+    {
+      "name": "09 recipient replacement revokes body, history and file access",
+      "pass": true,
+      "ms": 233
+    },
+    {
+      "name": "10 denied reopen clears revoked content in already-open browser",
+      "pass": false,
+      "ms": 92,
+      "error": "Revoked handoff must disappear after server rejects reopening it\n\n1 !== 0\n"
+    }
+  ],
+  "requests": [
+    {
+      "endpoint": "/api/health",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/auth/signup",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/preferences",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "endpoint": "/api/preferences/af678317504245fb884d8218c7e38973",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f/history",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f/history/2",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f/files/baf88263bd5b40148ee53e370e1967d0?revision=2",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f/files/baf88263bd5b40148ee53e370e1967d0?revision=5",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f/files/342c9d9c2f2646abb613548bc1ae6be1?revision=5",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f/files/342c9d9c2f2646abb613548bc1ae6be1?revision=5",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f/update",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f/update",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f/history",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f/files/342c9d9c2f2646abb613548bc1ae6be1?revision=5",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "endpoint": "/api/handoffs/e6c393882c7346209e7f70cb5b7b0f6f/history/5",
+      "method": "GET",
+      "status": 404
+    }
+  ],
+  "pageErrors": [],
+  "blockedExternal": [],
+  "browser": "151.0.7922.34",
+  "contexts": "two active browser accounts plus replacement account and anonymous control",
+  "paidModelApiCalls": 0,
+  "completedAt": "2026-11-12T11:14:31.556Z"
+}

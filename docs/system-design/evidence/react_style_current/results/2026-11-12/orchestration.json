@@ -1,0 +1,19 @@
+{
+  "generation_workers": {
+    "general": "/root/react_style_validation/generate_general",
+    "manual": "/root/react_style_validation/generate_manual",
+    "product": "/root/react_style_validation/generate_product"
+  },
+  "generation_runtime": "Fresh fork_turns=none, inherited runtime; no override. Exact model revision/decoding metadata unavailable.",
+  "scheduling": "General and manual started together; product starts after general completes due four total agent slots including root and driver. No performance feedback or other-arm material is sent.",
+  "read_boundary": "CLAUDE.md and own inputs only. Shared filesystem instruction boundary, not OS isolation.",
+  "first_response_policy": "Eight first natural answers per arm, schema/ID validation only; no candidate execution or quality retries.",
+  "control_author": "/root/react_style_validation/tasks_runtime",
+  "evaluator_author_and_auditor": "/root/react_style_validation/style_executor",
+  "source_and_execution_review": "/root/react_style_validation",
+  "paid_model_api_calls": 0,
+  "new_dependencies": 0,
+  "human_data": false,
+  "human_editing_time_measured": false,
+  "cost_notice": "Codex quota is consumed; no paid model API, GEPA or external inference invoked."
+}

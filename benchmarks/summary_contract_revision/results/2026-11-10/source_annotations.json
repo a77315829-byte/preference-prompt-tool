@@ -1,0 +1,374 @@
+[
+  {
+    "id": "C01",
+    "required_sentences": [
+      "Kathmandu, Nepal (CNN)On Day Six of Nepal's tragedy, life triumphed as rescuers pulled an 15-year-old from the rubble of a multistory residential building in one of Kathmandu's hard-hit neighborhoods.",
+      "Also Thursday, a U.S. special operations forces team rescued 30 people, including three Americans, by helicopter from an area of Nepal called Bamboo Village, according to the U.S. ambassador to Nepal.",
+      "They are looking for survivors from the magnitude-7.8 earthquake that struck Saturday, killing at least 6,134 people and wounding almost 14,000, according to Nepali authorities."
+    ],
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Rescuers pulled a 15-year-old alive from a collapsed residential building in Kathmandu on the sixth day of Nepal's disaster.",
+        "evidence": [
+          "Kathmandu, Nepal (CNN)On Day Six of Nepal's tragedy, life triumphed as rescuers pulled an 15-year-old from the rubble of a multistory residential building in one of Kathmandu's hard-hit neighborhoods."
+        ],
+        "rationale": "The rescue is the article's leading event; the age and day identify that event without requiring incidental descriptions."
+      },
+      {
+        "id": "F2",
+        "proposition": "According to the U.S. ambassador to Nepal, a U.S. special operations team rescued 30 people by helicopter from Bamboo Village.",
+        "evidence": [
+          "Also Thursday, a U.S. special operations forces team rescued 30 people, including three Americans, by helicopter from an area of Nepal called Bamboo Village, according to the U.S. ambassador to Nepal."
+        ],
+        "rationale": "This separate rescue is a major reported development in the article, with the reporting authority retained."
+      },
+      {
+        "id": "F3",
+        "proposition": "Nepali authorities reported that the earthquake had killed at least 6,134 people.",
+        "evidence": [
+          "They are looking for survivors from the magnitude-7.8 earthquake that struck Saturday, killing at least 6,134 people and wounding almost 14,000, according to Nepali authorities."
+        ],
+        "rationale": "The reported death toll establishes the scale of the disaster surrounding the rescue."
+      }
+    ],
+    "limits": [
+      "Priority sentences are common task data for all three arms; these private source-only anchors may overlap them. This measures explicit-source-priority following, not unprompted key-point discovery.",
+      "The three anchors are a selective source-based evaluation set, not external fact checking, exhaustive content coverage, or measured human preferences.",
+      "The casualty total is a contemporaneous attributed report, not a current or independently verified total.",
+      "The three anchors concern distinct reported events or outcomes; fully extractive coverage of all three requires at least three of the relevant source sentences."
+    ]
+  },
+  {
+    "id": "C02",
+    "required_sentences": [
+      "Rome (CNN)Muslims who were among migrants trying to get from Libya to Italy in a boat this week threw 12 fellow passengers overboard -- killing them -- because the 12 were Christians, Italian police said Thursday.",
+      "Italian authorities have arrested 15 people on suspicion of murdering the Christians at sea, police in Palermo, Sicily, said.",
+      "Since 2000, according to the International Organization for Migration, almost 22,000 people have died fleeing across the Mediterranean."
+    ],
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Italian police alleged that fellow migrants killed 12 Christian passengers by throwing them overboard.",
+        "evidence": [
+          "Rome (CNN)Muslims who were among migrants trying to get from Libya to Italy in a boat this week threw 12 fellow passengers overboard -- killing them -- because the 12 were Christians, Italian police said Thursday."
+        ],
+        "rationale": "The police-attributed killing of the 12 passengers is the central reported event; the anchor does not bundle every reported detail of the alleged motive."
+      },
+      {
+        "id": "F2",
+        "proposition": "Italian authorities arrested 15 people on suspicion of murdering the Christian passengers at sea.",
+        "evidence": [
+          "Italian authorities have arrested 15 people on suspicion of murdering the Christians at sea, police in Palermo, Sicily, said."
+        ],
+        "rationale": "The arrests are the central official response, separate from proof of guilt."
+      },
+      {
+        "id": "F3",
+        "proposition": "According to the International Organization for Migration, almost 22,000 people had died fleeing across the Mediterranean since 2000.",
+        "evidence": [
+          "Since 2000, according to the International Organization for Migration, almost 22,000 people have died fleeing across the Mediterranean."
+        ],
+        "rationale": "This attributed cumulative toll is central context for the article's broader account of the dangerous migration route."
+      }
+    ],
+    "limits": [
+      "Priority sentences are common task data for all three arms; these private source-only anchors may overlap them. This measures explicit-source-priority following, not unprompted key-point discovery.",
+      "The three anchors are a selective source-based evaluation set, not external fact checking, exhaustive content coverage, or measured human preferences.",
+      "Preserve police attribution and the distinction between suspicion, allegation, and conviction; the article does not establish a court finding.",
+      "The cumulative migration toll uses the article's historical reporting period.",
+      "The three facts are separate anchors and cannot all be retained through only two complete source sentences."
+    ]
+  },
+  {
+    "id": "C03",
+    "required_sentences": [
+      "The presence of a harmful pesticide at a luxury villa in the U.S. Virgin Islands may have resulted in the illness of a Delaware family, the U.S. Environmental Protection Agency said Friday.",
+      "\"Our preliminary results do show that there was a presence of methyl bromide in the unit where the family was staying,\" said Elias Rodriguez, an EPA spokesman.",
+      "The U.S. Department of Justice has initiated a criminal investigation into the matter, according to a U.S. Securities and Exchange Commission filing made Monday by ServiceMaster Global Holdings, the parent company of Terminix."
+    ],
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "The EPA said a harmful pesticide at the U.S. Virgin Islands villa may have caused a Delaware family's illness.",
+        "evidence": [
+          "The presence of a harmful pesticide at a luxury villa in the U.S. Virgin Islands may have resulted in the illness of a Delaware family, the U.S. Environmental Protection Agency said Friday."
+        ],
+        "rationale": "This is the main suspected causal link, with uncertainty and the agency attribution preserved."
+      },
+      {
+        "id": "F2",
+        "proposition": "EPA spokesman Elias Rodriguez said preliminary results showed methyl bromide in the unit where the family stayed.",
+        "evidence": [
+          "\"Our preliminary results do show that there was a presence of methyl bromide in the unit where the family was staying,\" said Elias Rodriguez, an EPA spokesman."
+        ],
+        "rationale": "The preliminary chemical finding is the principal evidence reported for the suspected exposure."
+      },
+      {
+        "id": "F3",
+        "proposition": "The U.S. Department of Justice initiated a criminal investigation, according to a filing by Terminix's parent company.",
+        "evidence": [
+          "The U.S. Department of Justice has initiated a criminal investigation into the matter, according to a U.S. Securities and Exchange Commission filing made Monday by ServiceMaster Global Holdings, the parent company of Terminix."
+        ],
+        "rationale": "The criminal investigation is a separate major official development."
+      }
+    ],
+    "limits": [
+      "Priority sentences are common task data for all three arms; these private source-only anchors may overlap them. This measures explicit-source-priority following, not unprompted key-point discovery.",
+      "The three anchors are a selective source-based evaluation set, not external fact checking, exhaustive content coverage, or measured human preferences.",
+      "Pesticide causation is possible rather than established; the chemical results were preliminary.",
+      "The criminal investigation is reported through ServiceMaster's SEC filing and is not a finding of criminal liability.",
+      "All three anchors require distinct source sentences under full extraction."
+    ]
+  },
+  {
+    "id": "C04",
+    "required_sentences": [
+      "It's not going to be enough to slake the thirst of the elusive Mars bunny, but scientists say new research seems to support the theory that what looks like a bone-dry red planet during the day could be dotted with tiny puddles of salty water at night.",
+      "Researchers aren't saying they've seen direct evidence of brine hiding out in the Martian night.",
+      "The researchers say the temperatures they measured are too low and water too scarce \"to support terrestrial organisms\" (sorry, bunny fans)."
+    ],
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Scientists said new research supported the possibility of small pools of salty water forming on Mars at night.",
+        "evidence": [
+          "It's not going to be enough to slake the thirst of the elusive Mars bunny, but scientists say new research seems to support the theory that what looks like a bone-dry red planet during the day could be dotted with tiny puddles of salty water at night."
+        ],
+        "rationale": "Possible nighttime brine is the study's headline finding, stated as support for a theory rather than a confirmed observation."
+      },
+      {
+        "id": "F2",
+        "proposition": "The researchers did not claim to have directly observed nighttime brine on Mars.",
+        "evidence": [
+          "Researchers aren't saying they've seen direct evidence of brine hiding out in the Martian night."
+        ],
+        "rationale": "This qualification is essential to the evidential strength of the headline finding."
+      },
+      {
+        "id": "F3",
+        "proposition": "The researchers said the measured conditions were too cold and had too little water to support terrestrial organisms.",
+        "evidence": [
+          "The researchers say the temperatures they measured are too low and water too scarce \"to support terrestrial organisms\" (sorry, bunny fans)."
+        ],
+        "rationale": "The habitability limitation is a central consequence of the reported study."
+      }
+    ],
+    "limits": [
+      "Priority sentences are common task data for all three arms; these private source-only anchors may overlap them. This measures explicit-source-priority following, not unprompted key-point discovery.",
+      "The three anchors are a selective source-based evaluation set, not external fact checking, exhaustive content coverage, or measured human preferences.",
+      "The study supports a theory and does not establish direct detection of liquid brine or life.",
+      "The organism limitation concerns the conditions measured and terrestrial organisms, not every possible form of life.",
+      "The three selected complete sentences express distinct findings or qualifications; two fully extracted sentences cannot cover every anchor."
+    ]
+  },
+  {
+    "id": "C05",
+    "required_sentences": [
+      "Shanghai, China (CNN)When China's biggest auto show opens in Shanghai this week, the only models on display will be the ones with four wheels.",
+      "Intense competition for China's drivers means that car manufacturers are increasingly developing vehicles that cater to Chinese preferences.",
+      "In 2014, growth in sales halved to 7% and according to the China Association of Automobile Manufacturers, the slowdown continued in the first three months of this year when sales rose just 3.9%."
+    ],
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Shanghai auto show organizers planned to exclude the human promotional models featured at previous shows.",
+        "evidence": [
+          "Shanghai, China (CNN)When China's biggest auto show opens in Shanghai this week, the only models on display will be the ones with four wheels.",
+          "Gone, show organizers hope, will be the scantily-clad \"car babes\" that in previous years have posed provocatively on car hoods and sashayed through the aisles to draw crowds to the 9-day event."
+        ],
+        "rationale": "The change to the show is the opening news event; it is not a requirement to retain descriptions of the models' clothing or behavior."
+      },
+      {
+        "id": "F2",
+        "proposition": "Car manufacturers were increasingly developing vehicles to suit Chinese preferences because of intense competition for Chinese drivers.",
+        "evidence": [
+          "Intense competition for China's drivers means that car manufacturers are increasingly developing vehicles that cater to Chinese preferences."
+        ],
+        "rationale": "This is the article's main account of how manufacturers were responding to the market."
+      },
+      {
+        "id": "F3",
+        "proposition": "According to the China Association of Automobile Manufacturers, vehicle sales grew only 3.9% in the first three months of 2015.",
+        "evidence": [
+          "In 2014, growth in sales halved to 7% and according to the China Association of Automobile Manufacturers, the slowdown continued in the first three months of this year when sales rose just 3.9%."
+        ],
+        "rationale": "The early-2015 growth figure is the central quantified evidence of the market slowdown."
+      }
+    ],
+    "limits": [
+      "Priority sentences are common task data for all three arms; these private source-only anchors may overlap them. This measures explicit-source-priority following, not unprompted key-point discovery.",
+      "The three anchors are a selective source-based evaluation set, not external fact checking, exhaustive content coverage, or measured human preferences.",
+      "The first anchor captures the show's planned change; source wording about organizers' hopes should not be strengthened into an independently confirmed outcome.",
+      "The slowdown figure concerns sales growth in the first three months, not an absolute decline in sales.",
+      "These three distinct subjects cannot all be covered by two complete source sentences; keep_limits intentionally accepts omissions."
+    ]
+  },
+  {
+    "id": "C06",
+    "required_sentences": [
+      "A popular Chinese television host known for impromptu satire is now the subject of controversy after being caught on camera cursing the late Chairman Mao Zedong.",
+      "Bi later apologized.",
+      "CCTV said it would investigate."
+    ],
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Chinese television host Bi Fujian was recorded insulting Mao Zedong.",
+        "evidence": [
+          "A popular Chinese television host known for impromptu satire is now the subject of controversy after being caught on camera cursing the late Chairman Mao Zedong.",
+          "Bi Fujian, who works for state-run China Central Television, was filmed at a dinner party singing a revolutionary song that eulogizes the Communist Party's early years when he started going off script."
+        ],
+        "rationale": "The recorded insult by the television host is the incident that drives the entire report."
+      },
+      {
+        "id": "F2",
+        "proposition": "Bi Fujian later apologized.",
+        "evidence": [
+          "Bi later apologized."
+        ],
+        "rationale": "The host's response is a separate central development."
+      },
+      {
+        "id": "F3",
+        "proposition": "CCTV said it would investigate the incident.",
+        "evidence": [
+          "CCTV said it would investigate."
+        ],
+        "rationale": "The employer's announced investigation is the main institutional response."
+      }
+    ],
+    "limits": [
+      "Priority sentences are common task data for all three arms; these private source-only anchors may overlap them. This measures explicit-source-priority following, not unprompted key-point discovery.",
+      "The three anchors are a selective source-based evaluation set, not external fact checking, exhaustive content coverage, or measured human preferences.",
+      "An announced investigation is not a reported firing, punishment, or completed finding.",
+      "The exact incident date and relationship between the person filming and Bi are explicitly uncertain in the source.",
+      "The incident, apology, and planned investigation are in distinct source sentences; keep_limits intentionally accepts omissions."
+    ]
+  },
+  {
+    "id": "C07",
+    "required_sentences": [
+      "Actress Linda Thompson, Bruce Jenner's second wife, says she can \"breathe a little easier\" knowing her ex-husband has found the strength to publicly declare he is transgender.",
+      "Thompson said Jenner told her in 1985 that, despite it all, \"he identified as a woman\" and hoped to move forward with the process of becoming a woman.\"",
+      "They separated after going to therapy for about six months and Jenner began taking female hormones and removing his hair through electrolysis."
+    ],
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Linda Thompson publicly supported Jenner's announcement of being transgender.",
+        "evidence": [
+          "Actress Linda Thompson, Bruce Jenner's second wife, says she can \"breathe a little easier\" knowing her ex-husband has found the strength to publicly declare he is transgender.",
+          "Thompson, who had two sons with Jenner during their five-year marriage, was one of many relatives to cheer Jenner for publicly sharing what she had known for decades."
+        ],
+        "rationale": "Thompson's supportive response is the article's leading news event."
+      },
+      {
+        "id": "F2",
+        "proposition": "Thompson said Jenner told her in 1985 about identifying as a woman.",
+        "evidence": [
+          "Thompson said Jenner told her in 1985 that, despite it all, \"he identified as a woman\" and hoped to move forward with the process of becoming a woman.\""
+        ],
+        "rationale": "The private disclosure is central to Thompson's account of their relationship."
+      },
+      {
+        "id": "F3",
+        "proposition": "Thompson and Jenner separated after about six months of therapy.",
+        "evidence": [
+          "They separated after going to therapy for about six months and Jenner began taking female hormones and removing his hair through electrolysis."
+        ],
+        "rationale": "The separation is the central relationship outcome in the account."
+      }
+    ],
+    "limits": [
+      "Priority sentences are common task data for all three arms; these private source-only anchors may overlap them. This measures explicit-source-priority following, not unprompted key-point discovery.",
+      "The three anchors are a selective source-based evaluation set, not external fact checking, exhaustive content coverage, or measured human preferences.",
+      "The private disclosure is Thompson's retrospective account and should retain that attribution.",
+      "Exact source sentences preserve the historical article's names and pronouns; the anchors do not require reproducing those choices in a paraphrase.",
+      "The three anchors are selective facts, not an exhaustive account of the article or a judgment of gender identity."
+    ]
+  },
+  {
+    "id": "C08",
+    "required_sentences": [
+      "ABC is filming a proof of concept for a revival of \"The Muppets,\" The Hollywood Reporter has learned.",
+      "\"The Big Bang Theory\" co-creator Bill Prady is co-writing the script for a pilot presentation that sources say could be unspooled at May's upfront presentation to Madison Avenue advertisers.",
+      "Sources tell THR that the project, if all goes well, could go straight to series."
+    ],
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "ABC was filming a proof of concept for a revival of The Muppets, according to The Hollywood Reporter.",
+        "evidence": [
+          "ABC is filming a proof of concept for a revival of \"The Muppets,\" The Hollywood Reporter has learned."
+        ],
+        "rationale": "This is the main development reported by the article."
+      },
+      {
+        "id": "F2",
+        "proposition": "Bill Prady was co-writing the pilot-presentation script.",
+        "evidence": [
+          "\"The Big Bang Theory\" co-creator Bill Prady is co-writing the script for a pilot presentation that sources say could be unspooled at May's upfront presentation to Madison Avenue advertisers."
+        ],
+        "rationale": "Prady's creative role is a central production detail rather than the many historical background facts."
+      },
+      {
+        "id": "F3",
+        "proposition": "Sources said the project could go straight to series if it went well.",
+        "evidence": [
+          "Sources tell THR that the project, if all goes well, could go straight to series."
+        ],
+        "rationale": "The conditional route to a series is central to the project's reported status."
+      }
+    ],
+    "limits": [
+      "Priority sentences are common task data for all three arms; these private source-only anchors may overlap them. This measures explicit-source-priority following, not unprompted key-point discovery.",
+      "The three anchors are a selective source-based evaluation set, not external fact checking, exhaustive content coverage, or measured human preferences.",
+      "A proof of concept and possible series order must not be reported as a confirmed series order or a premiere.",
+      "The potential order is attributed to sources and conditional.",
+      "The anchors focus on the current development, creative leadership, and status rather than exhaustive franchise history."
+    ]
+  },
+  {
+    "id": "C09",
+    "required_sentences": [
+      "A NASA astrophysicist has named an asteroid after the teenage education activist from Pakistan, who was gravely wounded by a Pakistani Taliban gunman for promoting the right of girls' to go to school.",
+      "\"My postdoctoral fellow Dr. Carrie Nugent brought to my attention the fact that although many asteroids have been named, very few have been named to honor the contributions of women (and particularly women of color),\" Mainzer wrote in a note to Malala.",
+      "\"We desperately need the brainpower of all smart people to solve some of humanity's most difficult problems, and we can't afford to reject half the population's,\" Mainzer wrote."
+    ],
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "A NASA astrophysicist named an asteroid in honor of Pakistani education activist Malala Yousafzai.",
+        "evidence": [
+          "A NASA astrophysicist has named an asteroid after the teenage education activist from Pakistan, who was gravely wounded by a Pakistani Taliban gunman for promoting the right of girls' to go to school.",
+          "Mainzer gave it the name 316201 Malala, or 2010 ML48."
+        ],
+        "rationale": "The naming honor and honoree are the central news event."
+      },
+      {
+        "id": "F2",
+        "proposition": "Amy Mainzer said very few asteroids had been named to honor women's contributions, especially those of women of color.",
+        "evidence": [
+          "\"My postdoctoral fellow Dr. Carrie Nugent brought to my attention the fact that although many asteroids have been named, very few have been named to honor the contributions of women (and particularly women of color),\" Mainzer wrote in a note to Malala."
+        ],
+        "rationale": "The underrepresentation of women is the stated context for choosing the honor."
+      },
+      {
+        "id": "F3",
+        "proposition": "Mainzer argued that solving humanity's difficult problems requires the brainpower of all smart people rather than excluding half the population.",
+        "evidence": [
+          "\"We desperately need the brainpower of all smart people to solve some of humanity's most difficult problems, and we can't afford to reject half the population's,\" Mainzer wrote."
+        ],
+        "rationale": "This is the article's central explanation linking the scientist's support to girls' education."
+      }
+    ],
+    "limits": [
+      "Priority sentences are common task data for all three arms; these private source-only anchors may overlap them. This measures explicit-source-priority following, not unprompted key-point discovery.",
+      "The three anchors are a selective source-based evaluation set, not external fact checking, exhaustive content coverage, or measured human preferences.",
+      "Naming an asteroid after Malala does not mean that she physically traveled into space.",
+      "The underrepresentation statement and educational rationale are Mainzer's attributed statements.",
+      "These are three central event-and-purpose anchors; orbital details and the complete biography are outside this limited coverage set."
+    ]
+  }
+]

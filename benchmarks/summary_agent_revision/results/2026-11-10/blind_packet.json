@@ -1,0 +1,1031 @@
+[
+  {
+    "output_id": "R01",
+    "case_id": "N04",
+    "source": "(CNN)ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group.\nThe U.S. Consulate was the target of the attack, ISIS said.\nAt least four people were killed and 18 injured, police said.\nAll U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said.\nIrbil is the capital of Iraq's semi-autonomous Kurdistan Regional Government.\nPolice said the incident began with an explosion of a small improvised bomb in the area.\nAfter that blast, a car moved in the direction of the consulate.\nSecurity personnel fired at the car, which exploded but did not reach the consulate, a police official said.\nIt appeared that people inside the car detonated explosives that the vehicle was carrying, according to the police official.\nA separate official, B.G.\nHazhar Ismail, said three civilians were killed and five others were injured.\nIsmail is a spokesman for the Peshmerga, the  force that defends Iraq's Kurdish region.\nThe blast sent a huge fireball into the sky on a street parallel to the consulate.\nDark smoke filled the air, and gunfire was heard intermittently for the next hour.\nOne witness said he saw attackers in a gunbattle with consulate security and police.\nHelicopters circled the neighborhood where the blast occurred, and a loudspeaker at the consulate building warned people to stay indoors and away from windows.\nIn addition to the U.S. Consulate, the blast occurred immediately across the street from a strip of bars, cafes and shops popular with expats and consulate employees.\nThe State Department thanked the response by the Kurdish government and will investigate the bombing together with them.\n\"The United States will continue to stand with the people of the Iraqi Kurdistan Region and all Iraqis as we work together in confronting these terrorist acts and towards our shared goal of degrading and defeating (ISIS),\" the department said in a statement.\nCNN's Kareem Khadder and Jason Hanna and journalist Mat Wolf contributed to this report.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "ISIS claimed responsibility for a suicide car bombing near the U.S. Consulate in Irbil.",
+        "evidence": [
+          "(CNN)ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group."
+        ],
+        "rationale": "The bombing and the group's claim are the central event; the claim must remain attributed rather than asserted as proven responsibility."
+      },
+      {
+        "id": "F2",
+        "proposition": "Police reported that at least four people were killed.",
+        "evidence": [
+          "At least four people were killed and 18 injured, police said."
+        ],
+        "rationale": "The death toll conveys the immediate human outcome; police attribution matters because another official gives different casualty figures."
+      },
+      {
+        "id": "F3",
+        "proposition": "The State Department said all U.S. Consulate personnel were safe.",
+        "evidence": [
+          "All U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said."
+        ],
+        "rationale": "Personnel safety is a central outcome given the consulate's proximity to the attack."
+      }
+    ],
+    "summary": "ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group. At least four people were killed and 18 injured, police said; a separate official, B.G. Hazhar Ismail, said three civilians were killed and five others were injured. Security personnel fired at the car, which exploded but did not reach the consulate, a police official said. All U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said."
+  },
+  {
+    "output_id": "R02",
+    "case_id": "N04",
+    "source": "(CNN)ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group.\nThe U.S. Consulate was the target of the attack, ISIS said.\nAt least four people were killed and 18 injured, police said.\nAll U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said.\nIrbil is the capital of Iraq's semi-autonomous Kurdistan Regional Government.\nPolice said the incident began with an explosion of a small improvised bomb in the area.\nAfter that blast, a car moved in the direction of the consulate.\nSecurity personnel fired at the car, which exploded but did not reach the consulate, a police official said.\nIt appeared that people inside the car detonated explosives that the vehicle was carrying, according to the police official.\nA separate official, B.G.\nHazhar Ismail, said three civilians were killed and five others were injured.\nIsmail is a spokesman for the Peshmerga, the  force that defends Iraq's Kurdish region.\nThe blast sent a huge fireball into the sky on a street parallel to the consulate.\nDark smoke filled the air, and gunfire was heard intermittently for the next hour.\nOne witness said he saw attackers in a gunbattle with consulate security and police.\nHelicopters circled the neighborhood where the blast occurred, and a loudspeaker at the consulate building warned people to stay indoors and away from windows.\nIn addition to the U.S. Consulate, the blast occurred immediately across the street from a strip of bars, cafes and shops popular with expats and consulate employees.\nThe State Department thanked the response by the Kurdish government and will investigate the bombing together with them.\n\"The United States will continue to stand with the people of the Iraqi Kurdistan Region and all Iraqis as we work together in confronting these terrorist acts and towards our shared goal of degrading and defeating (ISIS),\" the department said in a statement.\nCNN's Kareem Khadder and Jason Hanna and journalist Mat Wolf contributed to this report.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "ISIS claimed responsibility for a suicide car bombing near the U.S. Consulate in Irbil.",
+        "evidence": [
+          "(CNN)ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group."
+        ],
+        "rationale": "The bombing and the group's claim are the central event; the claim must remain attributed rather than asserted as proven responsibility."
+      },
+      {
+        "id": "F2",
+        "proposition": "Police reported that at least four people were killed.",
+        "evidence": [
+          "At least four people were killed and 18 injured, police said."
+        ],
+        "rationale": "The death toll conveys the immediate human outcome; police attribution matters because another official gives different casualty figures."
+      },
+      {
+        "id": "F3",
+        "proposition": "The State Department said all U.S. Consulate personnel were safe.",
+        "evidence": [
+          "All U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said."
+        ],
+        "rationale": "Personnel safety is a central outcome given the consulate's proximity to the attack."
+      }
+    ],
+    "summary": "ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group. At least four people were killed and 18 injured, police said, while Peshmerga spokesman Hazhar Ismail said three civilians were killed and five others were injured. Security personnel fired at the car, which exploded but did not reach the consulate, a police official said. All U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said."
+  },
+  {
+    "output_id": "R03",
+    "case_id": "N04",
+    "source": "(CNN)ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group.\nThe U.S. Consulate was the target of the attack, ISIS said.\nAt least four people were killed and 18 injured, police said.\nAll U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said.\nIrbil is the capital of Iraq's semi-autonomous Kurdistan Regional Government.\nPolice said the incident began with an explosion of a small improvised bomb in the area.\nAfter that blast, a car moved in the direction of the consulate.\nSecurity personnel fired at the car, which exploded but did not reach the consulate, a police official said.\nIt appeared that people inside the car detonated explosives that the vehicle was carrying, according to the police official.\nA separate official, B.G.\nHazhar Ismail, said three civilians were killed and five others were injured.\nIsmail is a spokesman for the Peshmerga, the  force that defends Iraq's Kurdish region.\nThe blast sent a huge fireball into the sky on a street parallel to the consulate.\nDark smoke filled the air, and gunfire was heard intermittently for the next hour.\nOne witness said he saw attackers in a gunbattle with consulate security and police.\nHelicopters circled the neighborhood where the blast occurred, and a loudspeaker at the consulate building warned people to stay indoors and away from windows.\nIn addition to the U.S. Consulate, the blast occurred immediately across the street from a strip of bars, cafes and shops popular with expats and consulate employees.\nThe State Department thanked the response by the Kurdish government and will investigate the bombing together with them.\n\"The United States will continue to stand with the people of the Iraqi Kurdistan Region and all Iraqis as we work together in confronting these terrorist acts and towards our shared goal of degrading and defeating (ISIS),\" the department said in a statement.\nCNN's Kareem Khadder and Jason Hanna and journalist Mat Wolf contributed to this report.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "ISIS claimed responsibility for a suicide car bombing near the U.S. Consulate in Irbil.",
+        "evidence": [
+          "(CNN)ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group."
+        ],
+        "rationale": "The bombing and the group's claim are the central event; the claim must remain attributed rather than asserted as proven responsibility."
+      },
+      {
+        "id": "F2",
+        "proposition": "Police reported that at least four people were killed.",
+        "evidence": [
+          "At least four people were killed and 18 injured, police said."
+        ],
+        "rationale": "The death toll conveys the immediate human outcome; police attribution matters because another official gives different casualty figures."
+      },
+      {
+        "id": "F3",
+        "proposition": "The State Department said all U.S. Consulate personnel were safe.",
+        "evidence": [
+          "All U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said."
+        ],
+        "rationale": "Personnel safety is a central outcome given the consulate's proximity to the attack."
+      }
+    ],
+    "summary": "ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group. At least four people were killed and 18 injured, police said, while Peshmerga spokesman Hazhar Ismail said three civilians were killed and five others were injured. All U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said. Security personnel fired at the car, which exploded but did not reach the consulate, a police official said."
+  },
+  {
+    "output_id": "R04",
+    "case_id": "N03",
+    "source": "Kano, Nigeria (CNN)Hundreds of decomposed corpses were discovered buried in shallow graves in the streets of the northeastern Nigerian town of Damasak this past weekend, according to local officials and a resident.\nThe town had recently been freed from the Boko Haram terror group in a joint Nigerian-Chadian military operation.\nA provincial government committee was visiting the area as part of an effort to assess the level of destruction in towns that had been in the deadly grip of Boko Haram.\n\"We found hundreds of dead bodies in shallow graves and on the streets of Damasak during our visit,\" Damasak local government spokesman Babagana Mustapha told CNN on Monday.\n\"Those bodies in shallow graves have badly decomposed while those found on the streets were desiccated from [exposure to] dry ‎winds,\" Mustapha added.\nThe victims included men, women and children murdered by Boko Haram when they seized the area in November, said Abubakar Kyari, a senator-elect for the region.\n\"The staggering number of dead bodies found in Damasak is a testimony of the large-scale atrocity Boko Haram committed when they were in control of the town\" Kyari added.\nMustapha said the bodies were buried in 20 clearly marked mass graves.\nAlthough Mustapha did not give a precise number of corpses recovered, Damasak residents who participated in the exhumations put the figure at more than 400.\n\"‎We collected over 400 corpses from the streets and in shallow graves during our visit in Damasak,\" said Idris Karimbe, one of the volunteers who took part in the burial.\n\"The number of bodies we recovered this time around far exceeded the ones found last month,\" said another resident, Musa Bremah‎.\nBremah was referring to the discovery of around 90 bodies in a shallow grave outside Damasak last month after its recapture.\n‎A regional military coalition involving troops from Nigeria, Niger, Chad and Cameroon has in recent months recaptured swathes of Nigerien territory seized by Boko Haram.\nThe joint military operation is part of an ongoing collaborative effort at crushing the Islamist group that has widened its deadly attacks to Niger, Chad and Cameroon.",
+    "target": {
+      "length": "short",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Local officials and a resident reported the discovery of hundreds of corpses in Damasak, Nigeria.",
+        "evidence": [
+          "Kano, Nigeria (CNN)Hundreds of decomposed corpses were discovered buried in shallow graves in the streets of the northeastern Nigerian town of Damasak this past weekend, according to local officials and a resident."
+        ],
+        "rationale": "The large-scale discovery is the lead event; Damasak is the discovery site, while Kano is the dateline."
+      },
+      {
+        "id": "F2",
+        "proposition": "A joint military operation had recently recaptured Damasak from Boko Haram.",
+        "evidence": [
+          "The town had recently been freed from the Boko Haram terror group in a joint Nigerian-Chadian military operation."
+        ],
+        "rationale": "The recapture supplies the essential context for the subsequent discovery."
+      },
+      {
+        "id": "F3",
+        "proposition": "A senator-elect for the region said Boko Haram had murdered the victims when it seized the town.",
+        "evidence": [
+          "The victims included men, women and children murdered by Boko Haram when they seized the area in November, said Abubakar Kyari, a senator-elect for the region."
+        ],
+        "rationale": "The attributed account of responsibility is central; it should not become an independently verified causal finding."
+      }
+    ],
+    "summary": "Hundreds of decomposed corpses were discovered in shallow graves and on the streets of Damasak after the town was freed from Boko Haram in a joint Nigerian-Chadian military operation; residents who participated in the exhumations put the figure at more than 400. The victims included men, women and children murdered by Boko Haram when they seized the area in November, said Abubakar Kyari, a senator-elect for the region."
+  },
+  {
+    "output_id": "R05",
+    "case_id": "N02",
+    "source": "(CNN)Five young men were arrested Saturday in Melbourne, Australia, in what police called a major counterterrorism operation.\nThree of the teens, all of them either 18 or 19, have since been released \"pending further enquiries,\" Australia's Federal Police said, but two remain in custody.\nSevdet Besim, 18, has been charged with conspiring to commit a terrorist act, and was denied bail Saturday.\nThe other suspect, a 19-year-old, has not yet appeared in court.\n\"Some evidence that we have collected at a couple of the scenes and some other information we have leads us to believe that this particular matter was ISIS-inspired,\" said Neil Gaughan, acting deputy commissioner of the Australian Federal Police.\nThe suspects planned to attack during a major national commemoration in a week, Prime Minister Tony Abbott said Saturday.\n\"The act that we believe was in preparation involved attacks against police officers,\" he said.\nThere was also a risk to the public, police said.\nPolice said the suspects were targeting a ceremony on Anzac Day (Australia and New Zealand Army Corps Day), which is April 25 and this year is the centennial of the Gallipoli Campaign in World War I. Abbott avoided the term ISIS -- or Islamic State -- to call out those who authorities believed influenced the suspects.\nHe instead referred to the group as the \"Daesh death cult,\" employing the acronym that is transliterated from the group's name in Arabic.\nIt's a handle ISIS is known to loathe.\nPolice also distanced the suspects from any ethnic connection.\nThe men \"are individuals acting by themselves.\nThey are not representatives of any religious, cultural or national group,\" Victoria Police Acting Deputy Commissioner Shane Patton said.\n\"I think the entire Australian community should be concerned about the young age of those particular men,\" Gaughan said.\n\"And this is an issue not just with law enforcement, but for the broader community.\n... We need to get better in relation to identifying young men and woman involved in this type of behavior, at the very early stage.\"\nThe suspects were associates of 18-year-old Nadun Haider, who was killed while stabbing officers at a police station in September, police said.\nAbbott lamented a string of extremist attacks on Australian soil.\nIn December, Australian authorities stormed a Sydney chocolate cafe where a self-styled Muslim cleric had been holding hostages, killing the gunman.\nTwo of the 17 hostages initially held by the gunman died.\nIn February, two men were charged with plotting terror activities in Sydney.\nDespite distancing the suspects from religion, Abbott did make a connection to the Middle East.\n\"There are now about a hundred Australians who are fighting with terrorists in the Middle East,\" and another 150 people in Australia support them with funds and recruiting, the Prime Minister said.\nIn February, Abbott announced tougher citizenship laws as a part of the government's new counterterrorism strategy.\nAuthorities have suspended Australian passports of those they suspect of terrorist activity.\nAustralians should be stoic about the threat of terrorism, Abbott said Saturday.\n\"The best thing you can do in the face of those who would do us harm is live your life normally.\"\nHe asked Australians to turn out in droves on Anzac Day.\nPolice said this particular threat had been fully contained.",
+    "target": {
+      "length": "long",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Five young men were arrested in a counterterrorism operation in Melbourne.",
+        "evidence": [
+          "(CNN)Five young men were arrested Saturday in Melbourne, Australia, in what police called a major counterterrorism operation."
+        ],
+        "rationale": "The arrests are the central reported event; the weekday and individual ages are incidental."
+      },
+      {
+        "id": "F2",
+        "proposition": "Authorities believed the suspects planned to attack police during an Anzac Day ceremony.",
+        "evidence": [
+          "The suspects planned to attack during a major national commemoration in a week, Prime Minister Tony Abbott said Saturday.",
+          "\"The act that we believe was in preparation involved attacks against police officers,\" he said.",
+          "Police said the suspects were targeting a ceremony on Anzac Day (Australia and New Zealand Army Corps Day), which is April 25 and this year is the centennial of the Gallipoli Campaign in World War I."
+        ],
+        "rationale": "The alleged attack's target explains the operation; attribution preserves that this was an official allegation."
+      },
+      {
+        "id": "F3",
+        "proposition": "One suspect was charged with conspiring to commit a terrorist act.",
+        "evidence": [
+          "Sevdet Besim, 18, has been charged with conspiring to commit a terrorist act, and was denied bail Saturday."
+        ],
+        "rationale": "The charge is a central procedural outcome, distinct from assuming guilt or that every arrested person was charged."
+      }
+    ],
+    "summary": "Australian police arrested five men aged 18 or 19 in Melbourne on Saturday in a counterterrorism operation, subsequently releasing three pending further inquiries. Sevdet Besim, 18, was charged with conspiring to commit a terrorist act and denied bail, while a 19-year-old remained in custody without having appeared in court. Federal Police acting deputy commissioner Neil Gaughan said evidence and other information suggested the alleged plot was inspired by ISIS. Authorities said the suspects intended to attack police at an Anzac Day ceremony on April 25, marking the centennial of the Gallipoli Campaign, and that the public was also at risk. Police said the suspects were associates of Nadun Haider, 18, who was killed while stabbing officers at a police station in September. Victoria Police acting deputy commissioner Shane Patton emphasized that the suspects acted as individuals and did not represent a religious, cultural or national group. Prime Minister Tony Abbott cited earlier extremist incidents, including December's Sydney cafe siege, in which two of the 17 hostages and the gunman died, and February charges against two men accused of planning terrorist activities in Sydney. Abbott said about 100 Australians were fighting with terrorists in the Middle East and another 150 people in Australia supported them through funding and recruitment. He had announced tougher citizenship laws in February, and authorities had suspended passports of people suspected of terrorist activity. Police said this particular threat was fully contained, and Abbott encouraged Australians to continue their normal lives and attend Anzac Day commemorations."
+  },
+  {
+    "output_id": "R06",
+    "case_id": "N02",
+    "source": "(CNN)Five young men were arrested Saturday in Melbourne, Australia, in what police called a major counterterrorism operation.\nThree of the teens, all of them either 18 or 19, have since been released \"pending further enquiries,\" Australia's Federal Police said, but two remain in custody.\nSevdet Besim, 18, has been charged with conspiring to commit a terrorist act, and was denied bail Saturday.\nThe other suspect, a 19-year-old, has not yet appeared in court.\n\"Some evidence that we have collected at a couple of the scenes and some other information we have leads us to believe that this particular matter was ISIS-inspired,\" said Neil Gaughan, acting deputy commissioner of the Australian Federal Police.\nThe suspects planned to attack during a major national commemoration in a week, Prime Minister Tony Abbott said Saturday.\n\"The act that we believe was in preparation involved attacks against police officers,\" he said.\nThere was also a risk to the public, police said.\nPolice said the suspects were targeting a ceremony on Anzac Day (Australia and New Zealand Army Corps Day), which is April 25 and this year is the centennial of the Gallipoli Campaign in World War I. Abbott avoided the term ISIS -- or Islamic State -- to call out those who authorities believed influenced the suspects.\nHe instead referred to the group as the \"Daesh death cult,\" employing the acronym that is transliterated from the group's name in Arabic.\nIt's a handle ISIS is known to loathe.\nPolice also distanced the suspects from any ethnic connection.\nThe men \"are individuals acting by themselves.\nThey are not representatives of any religious, cultural or national group,\" Victoria Police Acting Deputy Commissioner Shane Patton said.\n\"I think the entire Australian community should be concerned about the young age of those particular men,\" Gaughan said.\n\"And this is an issue not just with law enforcement, but for the broader community.\n... We need to get better in relation to identifying young men and woman involved in this type of behavior, at the very early stage.\"\nThe suspects were associates of 18-year-old Nadun Haider, who was killed while stabbing officers at a police station in September, police said.\nAbbott lamented a string of extremist attacks on Australian soil.\nIn December, Australian authorities stormed a Sydney chocolate cafe where a self-styled Muslim cleric had been holding hostages, killing the gunman.\nTwo of the 17 hostages initially held by the gunman died.\nIn February, two men were charged with plotting terror activities in Sydney.\nDespite distancing the suspects from religion, Abbott did make a connection to the Middle East.\n\"There are now about a hundred Australians who are fighting with terrorists in the Middle East,\" and another 150 people in Australia support them with funds and recruiting, the Prime Minister said.\nIn February, Abbott announced tougher citizenship laws as a part of the government's new counterterrorism strategy.\nAuthorities have suspended Australian passports of those they suspect of terrorist activity.\nAustralians should be stoic about the threat of terrorism, Abbott said Saturday.\n\"The best thing you can do in the face of those who would do us harm is live your life normally.\"\nHe asked Australians to turn out in droves on Anzac Day.\nPolice said this particular threat had been fully contained.",
+    "target": {
+      "length": "long",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Five young men were arrested in a counterterrorism operation in Melbourne.",
+        "evidence": [
+          "(CNN)Five young men were arrested Saturday in Melbourne, Australia, in what police called a major counterterrorism operation."
+        ],
+        "rationale": "The arrests are the central reported event; the weekday and individual ages are incidental."
+      },
+      {
+        "id": "F2",
+        "proposition": "Authorities believed the suspects planned to attack police during an Anzac Day ceremony.",
+        "evidence": [
+          "The suspects planned to attack during a major national commemoration in a week, Prime Minister Tony Abbott said Saturday.",
+          "\"The act that we believe was in preparation involved attacks against police officers,\" he said.",
+          "Police said the suspects were targeting a ceremony on Anzac Day (Australia and New Zealand Army Corps Day), which is April 25 and this year is the centennial of the Gallipoli Campaign in World War I."
+        ],
+        "rationale": "The alleged attack's target explains the operation; attribution preserves that this was an official allegation."
+      },
+      {
+        "id": "F3",
+        "proposition": "One suspect was charged with conspiring to commit a terrorist act.",
+        "evidence": [
+          "Sevdet Besim, 18, has been charged with conspiring to commit a terrorist act, and was denied bail Saturday."
+        ],
+        "rationale": "The charge is a central procedural outcome, distinct from assuming guilt or that every arrested person was charged."
+      }
+    ],
+    "summary": "Australian police arrested five men aged 18 or 19 in Melbourne on Saturday in a major counterterrorism operation, then released three while inquiries continued. Sevdet Besim, 18, was charged with conspiring to commit a terrorist act and denied bail, while a 19-year-old remained in custody without yet appearing in court. Authorities alleged that the suspects planned to attack police at an April 25 Anzac Day ceremony marking the centennial of the Gallipoli Campaign, with civilians also at risk. Federal Police acting deputy commissioner Neil Gaughan said evidence and other information suggested the alleged plot was inspired by ISIS. Police said the suspects were associates of Nadun Haider, an 18-year-old killed while stabbing police officers in September. Victoria Police stressed that the men acted as individuals and did not represent any religious, cultural or national group. Gaughan expressed concern about their youth and urged earlier community efforts to identify such behavior. Prime Minister Tony Abbott said about 100 Australians were fighting with terrorists in the Middle East and another 150 people in Australia supported them through financing and recruitment. He urged Australians to continue their normal lives and attend Anzac Day commemorations in large numbers. Police said the specific threat had been fully contained."
+  },
+  {
+    "output_id": "R07",
+    "case_id": "N06",
+    "source": "(CNN)Feidin Santana, the man who recorded a South Carolina police officer fatally shooting a fleeing, unarmed man, told CNN on Thursday night he was told by another cop to stop using his phone to capture the incident.\n\"One of the officers told me to stop, but it was because I (said) to them that what they did it was an abuse and I witnessed everything,\" he told CNN's \"Anderson Cooper 360˚.\"\nSantana told Cooper an officer told him to wait where he was but eventually he left the scene to go to work.\nIn other interviews, Santana has said he feared for his life, which almost kept him from revealing the recording.\nSantana recalled the moments when he recorded a roughly three-minute video of North Charleston Police officer Michael Slager shooting Walter Scott as Scott was running away Saturday.\nThat evidence led to the officer's firing and arrest on a murder charge.\nSantana said when he first came on the scene while walking to his job he saw Slager on top of Scott, who was on the ground.\nHe could hear the sound of a Taser in use.\nAt no time did Santana see Scott go after the Taser.\nHe believes Scott was trying to get away.\n\"Mr. Scott never tried to fight,\" Santana told CNN.\nPolice said Slager used a Taser against Scott, but Slager would also later tell a dispatcher that Scott at some point had grabbed the Taser.\nAfter Slager shot Scott five times, the officer went back to pick up something.\nSantana thinks it was the Taser but said he wasn't 100% sure what it was.\nNeither the struggle nor the use of a Taser was captured on video, because Santana had yet to begin recording.\nWhat we know about Officer Slager .\nThe cell phone video, which Santana revealed this week, reignited national outcries surrounding police treatment of African-Americans and led to a murder charge against Slager, who is white.\nScott was black.\nPolice said Slager pulled the 50-year-old Scott over for a nonworking brake light on Saturday morning.\nScott, according to a dash cam video, fled from Slager for unexplained reasons, and the officer chased him on foot.\nWhen Santana's video begins, Scott starts running away from the officer, with Scott's back to Slager.\nThe video shows Slager shooting at Scott eight times before Scott falls down.\nWho was Walter Scott?\nScott's mother, Judy Scott, told Cooper this week that she would want to thank Santana for coming forward.\n\"He was there.\nGod planned that.\nHe's the ram in the bush -- I truly believe that,\" Judy Scott said.\nSantana agreed.\n\"I think she was right,\" he said.\n\"God put me there for a reason.\"\nJudy Scott said she couldn't watch the whole recording.\n\"When I saw my son running and I saw the policeman behind him, I couldn't take it,\" she said.\n\"I had to turn away.\nI couldn't handle it.\nIn an interview with NBC's Matt Lauer, Santana suggested that he was giving media interviews in part to protect himself against retribution.\n\"At some point I thought about staying anonymous, and don't show my face, don't talk about it.\nBut ... if I wouldn't show my face, everybody over there knows, including the police, who I am,\" Santana said.\nSantana did not say whether he had received threats.\nHis attorney, Todd Rutherford, said Santana's video would be useful in an investigation -- not only into the shooting but also into whether Scott received prompt medical attention.\nIn the last half of the video, a second officer appears to examine Scott with gloved hands.\nWitness video, official accounts raise questions .\nSantana said after he stopped recording, he watched for a few more minutes but never saw anyone perform CPR.\nA police report says a third officer -- not shown in the video -- reported seeing an officer administering first aid, and that the third officer approached and helped that person \"with first aid and CPR.\"\nOn Wednesday, asked whether CPR was performed on Scott, North Charleston police Chief Eddie Driggers said: \"In the end of it (the video), what I saw was (what I) believed to be a police officer removing the shirt of the individual and performing some type of life-saving (procedure), but I'm not sure what took place there.\"\nA timeline of events .\nCNN's Jason Hanna, Ashley Fantz and Ray Sanchez contributed to this report.\nWatch Anderson Cooper 360° weeknights 8pm ET.\nFor the latest from AC360° click here.",
+    "target": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Santana recorded officer Slager fatally shooting Walter Scott as Scott fled unarmed.",
+        "evidence": [
+          "(CNN)Feidin Santana, the man who recorded a South Carolina police officer fatally shooting a fleeing, unarmed man, told CNN on Thursday night he was told by another cop to stop using his phone to capture the incident.",
+          "Santana recalled the moments when he recorded a roughly three-minute video of North Charleston Police officer Michael Slager shooting Walter Scott as Scott was running away Saturday."
+        ],
+        "rationale": "The recorded shooting is the central event; the exact number of shots and participants' full names are unnecessary for this anchor."
+      },
+      {
+        "id": "F2",
+        "proposition": "The recording led to a murder charge against Slager.",
+        "evidence": [
+          "That evidence led to the officer's firing and arrest on a murder charge.",
+          "The cell phone video, which Santana revealed this week, reignited national outcries surrounding police treatment of African-Americans and led to a murder charge against Slager, who is white."
+        ],
+        "rationale": "The charge is the central legal consequence of the video; it is not a conviction."
+      },
+      {
+        "id": "F3",
+        "proposition": "Santana said another officer told him to stop filming the incident.",
+        "evidence": [
+          "(CNN)Feidin Santana, the man who recorded a South Carolina police officer fatally shooting a fleeing, unarmed man, told CNN on Thursday night he was told by another cop to stop using his phone to capture the incident."
+        ],
+        "rationale": "The witness's attributed account is the article's lead development and should not be presented as independently verified."
+      }
+    ],
+    "summary": "Feidin Santana's video of North Charleston officer Michael Slager firing eight times at the fleeing, unarmed Walter Scott led to Slager's dismissal and arrest on a murder charge. Santana told CNN another officer ordered him to stop recording, and said he saw neither Scott grab a Taser nor officers perform CPR, observations that differ from Slager's account and a police report, respectively."
+  },
+  {
+    "output_id": "R08",
+    "case_id": "N02",
+    "source": "(CNN)Five young men were arrested Saturday in Melbourne, Australia, in what police called a major counterterrorism operation.\nThree of the teens, all of them either 18 or 19, have since been released \"pending further enquiries,\" Australia's Federal Police said, but two remain in custody.\nSevdet Besim, 18, has been charged with conspiring to commit a terrorist act, and was denied bail Saturday.\nThe other suspect, a 19-year-old, has not yet appeared in court.\n\"Some evidence that we have collected at a couple of the scenes and some other information we have leads us to believe that this particular matter was ISIS-inspired,\" said Neil Gaughan, acting deputy commissioner of the Australian Federal Police.\nThe suspects planned to attack during a major national commemoration in a week, Prime Minister Tony Abbott said Saturday.\n\"The act that we believe was in preparation involved attacks against police officers,\" he said.\nThere was also a risk to the public, police said.\nPolice said the suspects were targeting a ceremony on Anzac Day (Australia and New Zealand Army Corps Day), which is April 25 and this year is the centennial of the Gallipoli Campaign in World War I. Abbott avoided the term ISIS -- or Islamic State -- to call out those who authorities believed influenced the suspects.\nHe instead referred to the group as the \"Daesh death cult,\" employing the acronym that is transliterated from the group's name in Arabic.\nIt's a handle ISIS is known to loathe.\nPolice also distanced the suspects from any ethnic connection.\nThe men \"are individuals acting by themselves.\nThey are not representatives of any religious, cultural or national group,\" Victoria Police Acting Deputy Commissioner Shane Patton said.\n\"I think the entire Australian community should be concerned about the young age of those particular men,\" Gaughan said.\n\"And this is an issue not just with law enforcement, but for the broader community.\n... We need to get better in relation to identifying young men and woman involved in this type of behavior, at the very early stage.\"\nThe suspects were associates of 18-year-old Nadun Haider, who was killed while stabbing officers at a police station in September, police said.\nAbbott lamented a string of extremist attacks on Australian soil.\nIn December, Australian authorities stormed a Sydney chocolate cafe where a self-styled Muslim cleric had been holding hostages, killing the gunman.\nTwo of the 17 hostages initially held by the gunman died.\nIn February, two men were charged with plotting terror activities in Sydney.\nDespite distancing the suspects from religion, Abbott did make a connection to the Middle East.\n\"There are now about a hundred Australians who are fighting with terrorists in the Middle East,\" and another 150 people in Australia support them with funds and recruiting, the Prime Minister said.\nIn February, Abbott announced tougher citizenship laws as a part of the government's new counterterrorism strategy.\nAuthorities have suspended Australian passports of those they suspect of terrorist activity.\nAustralians should be stoic about the threat of terrorism, Abbott said Saturday.\n\"The best thing you can do in the face of those who would do us harm is live your life normally.\"\nHe asked Australians to turn out in droves on Anzac Day.\nPolice said this particular threat had been fully contained.",
+    "target": {
+      "length": "long",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Five young men were arrested in a counterterrorism operation in Melbourne.",
+        "evidence": [
+          "(CNN)Five young men were arrested Saturday in Melbourne, Australia, in what police called a major counterterrorism operation."
+        ],
+        "rationale": "The arrests are the central reported event; the weekday and individual ages are incidental."
+      },
+      {
+        "id": "F2",
+        "proposition": "Authorities believed the suspects planned to attack police during an Anzac Day ceremony.",
+        "evidence": [
+          "The suspects planned to attack during a major national commemoration in a week, Prime Minister Tony Abbott said Saturday.",
+          "\"The act that we believe was in preparation involved attacks against police officers,\" he said.",
+          "Police said the suspects were targeting a ceremony on Anzac Day (Australia and New Zealand Army Corps Day), which is April 25 and this year is the centennial of the Gallipoli Campaign in World War I."
+        ],
+        "rationale": "The alleged attack's target explains the operation; attribution preserves that this was an official allegation."
+      },
+      {
+        "id": "F3",
+        "proposition": "One suspect was charged with conspiring to commit a terrorist act.",
+        "evidence": [
+          "Sevdet Besim, 18, has been charged with conspiring to commit a terrorist act, and was denied bail Saturday."
+        ],
+        "rationale": "The charge is a central procedural outcome, distinct from assuming guilt or that every arrested person was charged."
+      }
+    ],
+    "summary": "Australian police arrested five men aged 18 or 19 Saturday in Melbourne over an alleged plan to attack police during the April 25 Anzac Day commemoration of the Gallipoli campaign's centennial. Three were released pending further investigation, while Sevdet Besim, 18, was charged with conspiring to commit a terrorist act and denied bail. A second detainee, 19, had not yet appeared in court. Investigators said evidence suggested ISIS had inspired the alleged plot and warned of a risk to the public, but police said the specific threat was fully contained. Police said the suspects were associates of Nadun Haider, 18, who was killed in September while stabbing officers. They emphasized that the men did not represent any religious, cultural or national group and urged broader community efforts to identify young people becoming involved in extremism. Prime Minister Tony Abbott cited earlier extremist incidents and said about 100 Australians were fighting alongside terrorists in the Middle East, with another 150 in Australia providing financial or recruitment support. His government had announced stricter citizenship laws as part of its counterterrorism strategy, and authorities had suspended passports of people suspected of terrorist activity. Abbott encouraged Australians to continue their normal lives and attend Anzac Day events in large numbers."
+  },
+  {
+    "output_id": "R09",
+    "case_id": "N07",
+    "source": "Seoul, South Korea (CNN)On March 20, 2013, a cyberattack brought chaos to several banks and media outlets in South Korea.\nThen more ominously on December 23 last year, computers at the country's nuclear operator were breached.\nAgain cybercrime was suspected.\nThe source of these attacks?\nNorth Korea.\nAnd South Korean investigators say they have proof -- the actual malicious codes used in the attacks.\nThey shared this data with CNN.\nThe 2013 attack, known as \"Dark Seoul,\" paralyzed an estimated 48,000 computers at a number of major banks and broadcasters, disrupting network systems and wiping their hard disks clean.\n\"It would try to delete essentially all your files... then restart the system.\nYou would come back up and nothing would be there,\" Joshua James, a digital forensic expert, told CNN.\n\"If it infected more financial systems, it could have deleted all financial data in Korea.\nI mean, it is dangerous,\" the visiting professor at Chuncheon's Hallym University added.\nLive footage of the breaches showed computer screens at the media companies completely down, while bank customers were unable to make withdrawals, or transfer money online.\n\"Dark Seoul\" happened shortly after the North Korean government announced it would end the armistice agreement that brought the three-year Korean War to an end in July 1953 amid growing tensions with its neighbor.\nThe latest high-profile digital incursion, in December, attempted to steal data from South Korea's nuclear operator, including plant blueprints and personnel information.\nThough investigators said no critical data was stolen, the attack raised serious concerns about the safety and security of the 23 nuclear power plants it runs.\nThe attack itself was described by James as a \"spear-fishing\" exercise where unsuspecting victims -- retired and current employees of the nuclear operator -- were prompted to open up a disguised document in their email.\n\"As soon as you double click on it, it starts running in the background of your computer where you can't see ... it's also trying to open up your computer -- what we call a back door -- to give access to the infected system by the attacker,\" he told CNN.\nThe attack, which James said was simpler than \"Dark Seoul,\" came just a few days after Sony Pictures said their systems has been \"hacked,\" another attack the South Korean authorities blamed on North Korea.\n\"From a law enforcement or investigation side, we're trying to actually trace back to who did it,\" said James.\nSeoul announced in mid-March that some of the IP addresses used in December incursion could be traced back to Shenyang, China, which can be easily accessed from the North Korean border.\nCodes used in the attack were said to be similar in pattern to those used by the North Koreans, South Korean authorities said.\n\"The malicious codes used in the attack were same in composition and working methods as \"Kimsuky\" codes known to be used by North Korea,\" the prosecutor's office that leads 17 other government agencies and Internet companies in the investigation said in the statement in March.\nPyongyang has dismissed the claims it launched these attacks, calling them a \"plot and fabrication that can never win over the truth.\"\nBut many experts say North Korea appears to be investing more in cyberwarfare because it is cheaper than spending on conventional weapons and can cause significant economic damage to its southern rival.\nIndeed South Korea's Defense Ministry estimates that North Korea is operating a \"cyberarmy\" of 6,000 workers as it focuses on strengthening its asymmetrical warfare capability.\n\"Hacks are going on all the time, constantly -- though how many actually make the news is a very small amount,\" said James.\n\"How many are detected in general?\nI think the average person would have no clue they've been hacked.\n\"Organizations need to invest the same amount that hackers are investing to protect themselves and right now they're not,\" he added.\nMany in South Korea believe not enough effort is being put into defending against cyberattacks.\nA report by the Korea Institute for Industrial Economics and Trade, a government-funded think tank, estimates that \"Dark Seoul\" caused about $820 million worth of damage.\nIts report, published in 2014, predicted that by 2020, South Korea could be exposed to hacking attacks causing up to $25 billion in economic damage.",
+    "target": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "South Korean investigators attributed cyberattacks on the country's banks, media outlets and nuclear operator to North Korea.",
+        "evidence": [
+          "Seoul, South Korea (CNN)On March 20, 2013, a cyberattack brought chaos to several banks and media outlets in South Korea.\nThen more ominously on December 23 last year, computers at the country's nuclear operator were breached.\nAgain cybercrime was suspected.\nThe source of these attacks?\nNorth Korea.\nAnd South Korean investigators say they have proof -- the actual malicious codes used in the attacks.",
+          "Pyongyang has dismissed the claims it launched these attacks, calling them a \"plot and fabrication that can never win over the truth.\""
+        ],
+        "rationale": "The investigators' attribution is the central report; keeping it attributed avoids resolving the accusation that North Korea disputes."
+      },
+      {
+        "id": "F2",
+        "proposition": "The Dark Seoul attack disabled an estimated 48,000 computers at major South Korean banks and broadcasters.",
+        "evidence": [
+          "The 2013 attack, known as \"Dark Seoul,\" paralyzed an estimated 48,000 computers at a number of major banks and broadcasters, disrupting network systems and wiping their hard disks clean."
+        ],
+        "rationale": "The scale of disruption is a central concrete outcome of the earlier attack; the count remains an estimate."
+      },
+      {
+        "id": "F3",
+        "proposition": "Investigators said no critical data was stolen in the nuclear-operator attack.",
+        "evidence": [
+          "The latest high-profile digital incursion, in December, attempted to steal data from South Korea's nuclear operator, including plant blueprints and personnel information.",
+          "Though investigators said no critical data was stolen, the attack raised serious concerns about the safety and security of the 23 nuclear power plants it runs."
+        ],
+        "rationale": "This attributed limitation is essential to avoid implying that the attempted theft succeeded or that power plants themselves were compromised."
+      }
+    ],
+    "summary": "The latest high-profile digital incursion, in December, attempted to steal data from South Korea's nuclear operator, including plant blueprints and personnel information. Codes used in the attack were said to be similar in pattern to those used by the North Koreans, South Korean authorities said."
+  },
+  {
+    "output_id": "R10",
+    "case_id": "N09",
+    "source": "Catania, Sicily (CNN)We are at the beginning of a massive and mounting crisis with no solution in sight.\nPerhaps that's incorrect.\nThe migrant crisis that has suddenly drawn hundreds of journalists to Sicily has been brewing for years, but in the past 10 days, with as many as 1,600 deaths in the Mediterranean, suddenly minds are focused -- for now.\nAlmost exactly four years ago, in Libya, I caught, perhaps, a glimpse of what was to come.\nIt was late at night in the besieged city of Misrata.\nHundreds of African migrants were caught between the Libyan civil war (back then some optimistically called it a \"revolution\") and the deep blue sea.\nThey had come to Misrata from Ghana, Nigeria and elsewhere, hoping to board rickety boats to cross the sea to Europe.\nThey had been pinned down under sporadic shelling from government forces, but weren't welcome by the rebels who controlled the city.\nThey appealed to us to help them escape.\nWe could do nothing, but they may have eventually found their way out when the fighting subsided.\nThe fall of Libyan leader Moammar Gadhafi's regime, which we reporters covered so avidly, was followed by chaos, which we in the news media largely neglected, focused as we journalists were on the next catastrophe, the Syrian civil war.\nIn that chaos, the business of human trafficking has boomed.\nAnd now that boom in human misery is coming in waves to the shores of Italy.\nThe focus today is on those lost at sea.\nAware of the tragedy underway, however, Italians are alarmed at the prospect that this year alone as many as a million migrants could arrive in Europe, according to one European Union official.\nThat is certainly the case in the Sicilian port of Catania, where many migrants arrive.\nThe city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers.\nThe rest of Europe must help carry the burden.\n\"If something serious isn't done,\" he warns, \"dramas like these will be repeated.\nThis problem will not be resolved by hiding our heads in the sand.\"\nIncreasingly, some Italians are losing their patience.\nTwo northern regions, Veneto and Valle d'Aosta, have declared they will no longer accept new migrants.\nThe rightist Lega Nord has made opposition to new migrants a pillar of its party program.\nOthers, however, insist Italy must keep its doors open.\nIn Catania port, I spoke with Grazia Giurato, who had joined a small protest in solidarity with the migrants.\n\"Many years ago, our grandparents emigrated,\" she recalled.\n\"Let's keep that in mind.\"\nIndeed, in tougher times, millions of impoverished Italians left their homeland to settle in the Americas and Australia.\nThey, too, like the migrants from Africa and the Middle East, were fleeing grinding poverty and war.\nAnd they, too, experienced the kind of prejudice and resentment in lands their descendants now proudly call home.\nThat's the long view, perhaps.\nBut now, today, Italians are grappling to deal with the consequences of an array of old and new ills, ranging from failing states and failing economies to endemic corruption, hopeless poverty, oppression and injustice that no one state or group of states can solve without a gargantuan, expensive and politically daunting effort.\nAnd while this crisis has been brewing for years, it is now truly upon us.",
+    "target": {
+      "length": "long",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "As many as 1,600 migrants had died in the Mediterranean in the preceding ten days.",
+        "evidence": [
+          "The migrant crisis that has suddenly drawn hundreds of journalists to Sicily has been brewing for years, but in the past 10 days, with as many as 1,600 deaths in the Mediterranean, suddenly minds are focused -- for now."
+        ],
+        "rationale": "The recent death toll explains the crisis's urgency; the upper-bound wording is essential."
+      },
+      {
+        "id": "F2",
+        "proposition": "An EU official said as many as one million migrants could arrive in Europe that year.",
+        "evidence": [
+          "Aware of the tragedy underway, however, Italians are alarmed at the prospect that this year alone as many as a million migrants could arrive in Europe, according to one European Union official."
+        ],
+        "rationale": "The attributed possible inflow is central to the pressure on Italy; it is neither a confirmed arrival count nor a forecast of more than one million."
+      },
+      {
+        "id": "F3",
+        "proposition": "Catania's mayor said Catania and Sicily could not absorb the growing number of migrants.",
+        "evidence": [
+          "The city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers."
+        ],
+        "rationale": "The mayor's assessment captures the central local-capacity concern without turning it into an independently established limit for all of Italy."
+      }
+    ],
+    "summary": "The migrant crisis that has suddenly drawn hundreds of journalists to Sicily has been brewing for years, but in the past 10 days, with as many as 1,600 deaths in the Mediterranean, suddenly minds are focused -- for now. The fall of Libyan leader Moammar Gadhafi's regime, which we reporters covered so avidly, was followed by chaos, which we in the news media largely neglected, focused as we journalists were on the next catastrophe, the Syrian civil war. In that chaos, the business of human trafficking has boomed. Aware of the tragedy underway, however, Italians are alarmed at the prospect that this year alone as many as a million migrants could arrive in Europe, according to one European Union official. That is certainly the case in the Sicilian port of Catania, where many migrants arrive. The city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers. The rest of Europe must help carry the burden. Two northern regions, Veneto and Valle d'Aosta, have declared they will no longer accept new migrants. Others, however, insist Italy must keep its doors open."
+  },
+  {
+    "output_id": "R11",
+    "case_id": "N01",
+    "source": "Obock, Djibouti (CNN)Amina Ali Qassim is sitting with her youngest grandchild on her lap, wiping away tears with her headscarf.\nOnly a few months old, this is the baby girl whose ears she desperately tried to cover the night the aerial bombardment started.\nShe lay awake, she says, in a village mosque on the Yemeni island of Birim, counting explosions as the baby cried.\nIt could have been worse though.\nThey could have still been in their house when the first missile landed.\n\"Our neighbor shouted to my husband 'you have to leave, they're coming.'\nAnd we just ran.\nAs soon as we left the house, the first missile fell right by it and then a second on it.\nIt burned everything to the ground,\" Qassim tells us.\nQassim and her family fled Birim at first light, piling in with three other families.\nTwenty-five of them squeezed into one boat setting sail through the Bab al-Mandab Strait to Djibouti.\nBab al-Mandab is one of the busiest waterways in the world, a thoroughfare for oil tankers and cargo ships.\nIt's now being crossed by desperate Yemenis in rickety fishing boats seeking refuge from the conflict threatening to engulf their country.\nQassim's son Mohamed describes the families' journey across this part of the Red Sea as \"a window into hell.\"\n\"The women were violently ill,\" he tells us.\n\"It was a catastrophe.\"\nIt took them five hours to cross into the north of Djibouti, where the government is providing the refugees with temporary shelter in this unfinished orphanage here in Obock.\nAnd the U.N. says thousands more refugees are expected.\nQassim and her family will soon have to move to the plastic tents that have been prepared for them on the dusty outskirts of the town, taking with them only the collection of plastic mats and pots neatly stacked in the corner.\nIt's all that remains of everything they once owned.\nHer two daughters are trapped back in Yemen, in Taiz.\nShe hasn't been able to reach them and the worry she says is almost unbearable.\nI ask her how many days it was after the Saudi aerial bombardment began that they left.\nShe looks at me and laughs, \"How many days would you have stayed?\"\nThen she goes quiet, looking down at the granddaughter in her lap.\nFinally she tells me, \"I thought she would never be able to stop screaming.\nThat the fear would stay with her forever.\"\n\"May God please have mercy on Yemen.\"",
+    "target": {
+      "length": "normal",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Qassim's family fled the bombing in Yemen by boat to Djibouti.",
+        "evidence": [
+          "Qassim and her family fled Birim at first light, piling in with three other families.",
+          "Twenty-five of them squeezed into one boat setting sail through the Bab al-Mandab Strait to Djibouti.",
+          "I ask her how many days it was after the Saudi aerial bombardment began that they left."
+        ],
+        "rationale": "The family's escape from the conflict is the central event; the exact passenger count and route name are not required."
+      },
+      {
+        "id": "F2",
+        "proposition": "Djibouti's government is providing temporary shelter for the refugees.",
+        "evidence": [
+          "It took them five hours to cross into the north of Djibouti, where the government is providing the refugees with temporary shelter in this unfinished orphanage here in Obock."
+        ],
+        "rationale": "Temporary refuge is the immediate outcome of the escape."
+      },
+      {
+        "id": "F3",
+        "proposition": "The U.N. expects thousands more refugees to arrive.",
+        "evidence": [
+          "And the U.N. says thousands more refugees are expected."
+        ],
+        "rationale": "The attributed forecast connects one family's journey to the wider displacement without treating a prediction as an established count."
+      }
+    ],
+    "summary": "Amina Ali Qassim and her family escaped their home on Yemen's Birim island just before missiles destroyed it, then crossed to Djibouti the next morning. They joined three other families in a crowded boat carrying 25 people on a difficult five-hour journey across the Bab al-Mandab Strait. They are staying in an unfinished orphanage in Obock before moving to tents outside town, while the United Nations expects thousands more refugees. With nearly all their belongings gone, Qassim fears for her two daughters trapped in Taiz, whom she cannot reach, and for the lasting effect of the bombardment on her infant granddaughter."
+  },
+  {
+    "output_id": "R12",
+    "case_id": "N07",
+    "source": "Seoul, South Korea (CNN)On March 20, 2013, a cyberattack brought chaos to several banks and media outlets in South Korea.\nThen more ominously on December 23 last year, computers at the country's nuclear operator were breached.\nAgain cybercrime was suspected.\nThe source of these attacks?\nNorth Korea.\nAnd South Korean investigators say they have proof -- the actual malicious codes used in the attacks.\nThey shared this data with CNN.\nThe 2013 attack, known as \"Dark Seoul,\" paralyzed an estimated 48,000 computers at a number of major banks and broadcasters, disrupting network systems and wiping their hard disks clean.\n\"It would try to delete essentially all your files... then restart the system.\nYou would come back up and nothing would be there,\" Joshua James, a digital forensic expert, told CNN.\n\"If it infected more financial systems, it could have deleted all financial data in Korea.\nI mean, it is dangerous,\" the visiting professor at Chuncheon's Hallym University added.\nLive footage of the breaches showed computer screens at the media companies completely down, while bank customers were unable to make withdrawals, or transfer money online.\n\"Dark Seoul\" happened shortly after the North Korean government announced it would end the armistice agreement that brought the three-year Korean War to an end in July 1953 amid growing tensions with its neighbor.\nThe latest high-profile digital incursion, in December, attempted to steal data from South Korea's nuclear operator, including plant blueprints and personnel information.\nThough investigators said no critical data was stolen, the attack raised serious concerns about the safety and security of the 23 nuclear power plants it runs.\nThe attack itself was described by James as a \"spear-fishing\" exercise where unsuspecting victims -- retired and current employees of the nuclear operator -- were prompted to open up a disguised document in their email.\n\"As soon as you double click on it, it starts running in the background of your computer where you can't see ... it's also trying to open up your computer -- what we call a back door -- to give access to the infected system by the attacker,\" he told CNN.\nThe attack, which James said was simpler than \"Dark Seoul,\" came just a few days after Sony Pictures said their systems has been \"hacked,\" another attack the South Korean authorities blamed on North Korea.\n\"From a law enforcement or investigation side, we're trying to actually trace back to who did it,\" said James.\nSeoul announced in mid-March that some of the IP addresses used in December incursion could be traced back to Shenyang, China, which can be easily accessed from the North Korean border.\nCodes used in the attack were said to be similar in pattern to those used by the North Koreans, South Korean authorities said.\n\"The malicious codes used in the attack were same in composition and working methods as \"Kimsuky\" codes known to be used by North Korea,\" the prosecutor's office that leads 17 other government agencies and Internet companies in the investigation said in the statement in March.\nPyongyang has dismissed the claims it launched these attacks, calling them a \"plot and fabrication that can never win over the truth.\"\nBut many experts say North Korea appears to be investing more in cyberwarfare because it is cheaper than spending on conventional weapons and can cause significant economic damage to its southern rival.\nIndeed South Korea's Defense Ministry estimates that North Korea is operating a \"cyberarmy\" of 6,000 workers as it focuses on strengthening its asymmetrical warfare capability.\n\"Hacks are going on all the time, constantly -- though how many actually make the news is a very small amount,\" said James.\n\"How many are detected in general?\nI think the average person would have no clue they've been hacked.\n\"Organizations need to invest the same amount that hackers are investing to protect themselves and right now they're not,\" he added.\nMany in South Korea believe not enough effort is being put into defending against cyberattacks.\nA report by the Korea Institute for Industrial Economics and Trade, a government-funded think tank, estimates that \"Dark Seoul\" caused about $820 million worth of damage.\nIts report, published in 2014, predicted that by 2020, South Korea could be exposed to hacking attacks causing up to $25 billion in economic damage.",
+    "target": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "South Korean investigators attributed cyberattacks on the country's banks, media outlets and nuclear operator to North Korea.",
+        "evidence": [
+          "Seoul, South Korea (CNN)On March 20, 2013, a cyberattack brought chaos to several banks and media outlets in South Korea.\nThen more ominously on December 23 last year, computers at the country's nuclear operator were breached.\nAgain cybercrime was suspected.\nThe source of these attacks?\nNorth Korea.\nAnd South Korean investigators say they have proof -- the actual malicious codes used in the attacks.",
+          "Pyongyang has dismissed the claims it launched these attacks, calling them a \"plot and fabrication that can never win over the truth.\""
+        ],
+        "rationale": "The investigators' attribution is the central report; keeping it attributed avoids resolving the accusation that North Korea disputes."
+      },
+      {
+        "id": "F2",
+        "proposition": "The Dark Seoul attack disabled an estimated 48,000 computers at major South Korean banks and broadcasters.",
+        "evidence": [
+          "The 2013 attack, known as \"Dark Seoul,\" paralyzed an estimated 48,000 computers at a number of major banks and broadcasters, disrupting network systems and wiping their hard disks clean."
+        ],
+        "rationale": "The scale of disruption is a central concrete outcome of the earlier attack; the count remains an estimate."
+      },
+      {
+        "id": "F3",
+        "proposition": "Investigators said no critical data was stolen in the nuclear-operator attack.",
+        "evidence": [
+          "The latest high-profile digital incursion, in December, attempted to steal data from South Korea's nuclear operator, including plant blueprints and personnel information.",
+          "Though investigators said no critical data was stolen, the attack raised serious concerns about the safety and security of the 23 nuclear power plants it runs."
+        ],
+        "rationale": "This attributed limitation is essential to avoid implying that the attempted theft succeeded or that power plants themselves were compromised."
+      }
+    ],
+    "summary": "The latest high-profile digital incursion, in December, attempted to steal data from South Korea's nuclear operator, including plant blueprints and personnel information. Codes used in the attack were said to be similar in pattern to those used by the North Koreans, South Korean authorities said."
+  },
+  {
+    "output_id": "R13",
+    "case_id": "N06",
+    "source": "(CNN)Feidin Santana, the man who recorded a South Carolina police officer fatally shooting a fleeing, unarmed man, told CNN on Thursday night he was told by another cop to stop using his phone to capture the incident.\n\"One of the officers told me to stop, but it was because I (said) to them that what they did it was an abuse and I witnessed everything,\" he told CNN's \"Anderson Cooper 360˚.\"\nSantana told Cooper an officer told him to wait where he was but eventually he left the scene to go to work.\nIn other interviews, Santana has said he feared for his life, which almost kept him from revealing the recording.\nSantana recalled the moments when he recorded a roughly three-minute video of North Charleston Police officer Michael Slager shooting Walter Scott as Scott was running away Saturday.\nThat evidence led to the officer's firing and arrest on a murder charge.\nSantana said when he first came on the scene while walking to his job he saw Slager on top of Scott, who was on the ground.\nHe could hear the sound of a Taser in use.\nAt no time did Santana see Scott go after the Taser.\nHe believes Scott was trying to get away.\n\"Mr. Scott never tried to fight,\" Santana told CNN.\nPolice said Slager used a Taser against Scott, but Slager would also later tell a dispatcher that Scott at some point had grabbed the Taser.\nAfter Slager shot Scott five times, the officer went back to pick up something.\nSantana thinks it was the Taser but said he wasn't 100% sure what it was.\nNeither the struggle nor the use of a Taser was captured on video, because Santana had yet to begin recording.\nWhat we know about Officer Slager .\nThe cell phone video, which Santana revealed this week, reignited national outcries surrounding police treatment of African-Americans and led to a murder charge against Slager, who is white.\nScott was black.\nPolice said Slager pulled the 50-year-old Scott over for a nonworking brake light on Saturday morning.\nScott, according to a dash cam video, fled from Slager for unexplained reasons, and the officer chased him on foot.\nWhen Santana's video begins, Scott starts running away from the officer, with Scott's back to Slager.\nThe video shows Slager shooting at Scott eight times before Scott falls down.\nWho was Walter Scott?\nScott's mother, Judy Scott, told Cooper this week that she would want to thank Santana for coming forward.\n\"He was there.\nGod planned that.\nHe's the ram in the bush -- I truly believe that,\" Judy Scott said.\nSantana agreed.\n\"I think she was right,\" he said.\n\"God put me there for a reason.\"\nJudy Scott said she couldn't watch the whole recording.\n\"When I saw my son running and I saw the policeman behind him, I couldn't take it,\" she said.\n\"I had to turn away.\nI couldn't handle it.\nIn an interview with NBC's Matt Lauer, Santana suggested that he was giving media interviews in part to protect himself against retribution.\n\"At some point I thought about staying anonymous, and don't show my face, don't talk about it.\nBut ... if I wouldn't show my face, everybody over there knows, including the police, who I am,\" Santana said.\nSantana did not say whether he had received threats.\nHis attorney, Todd Rutherford, said Santana's video would be useful in an investigation -- not only into the shooting but also into whether Scott received prompt medical attention.\nIn the last half of the video, a second officer appears to examine Scott with gloved hands.\nWitness video, official accounts raise questions .\nSantana said after he stopped recording, he watched for a few more minutes but never saw anyone perform CPR.\nA police report says a third officer -- not shown in the video -- reported seeing an officer administering first aid, and that the third officer approached and helped that person \"with first aid and CPR.\"\nOn Wednesday, asked whether CPR was performed on Scott, North Charleston police Chief Eddie Driggers said: \"In the end of it (the video), what I saw was (what I) believed to be a police officer removing the shirt of the individual and performing some type of life-saving (procedure), but I'm not sure what took place there.\"\nA timeline of events .\nCNN's Jason Hanna, Ashley Fantz and Ray Sanchez contributed to this report.\nWatch Anderson Cooper 360° weeknights 8pm ET.\nFor the latest from AC360° click here.",
+    "target": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Santana recorded officer Slager fatally shooting Walter Scott as Scott fled unarmed.",
+        "evidence": [
+          "(CNN)Feidin Santana, the man who recorded a South Carolina police officer fatally shooting a fleeing, unarmed man, told CNN on Thursday night he was told by another cop to stop using his phone to capture the incident.",
+          "Santana recalled the moments when he recorded a roughly three-minute video of North Charleston Police officer Michael Slager shooting Walter Scott as Scott was running away Saturday."
+        ],
+        "rationale": "The recorded shooting is the central event; the exact number of shots and participants' full names are unnecessary for this anchor."
+      },
+      {
+        "id": "F2",
+        "proposition": "The recording led to a murder charge against Slager.",
+        "evidence": [
+          "That evidence led to the officer's firing and arrest on a murder charge.",
+          "The cell phone video, which Santana revealed this week, reignited national outcries surrounding police treatment of African-Americans and led to a murder charge against Slager, who is white."
+        ],
+        "rationale": "The charge is the central legal consequence of the video; it is not a conviction."
+      },
+      {
+        "id": "F3",
+        "proposition": "Santana said another officer told him to stop filming the incident.",
+        "evidence": [
+          "(CNN)Feidin Santana, the man who recorded a South Carolina police officer fatally shooting a fleeing, unarmed man, told CNN on Thursday night he was told by another cop to stop using his phone to capture the incident."
+        ],
+        "rationale": "The witness's attributed account is the article's lead development and should not be presented as independently verified."
+      }
+    ],
+    "summary": "Feidin Santana said another officer ordered him to stop filming after he witnessed North Charleston officer Michael Slager fatally shoot Walter Scott, who was unarmed and fleeing; Santana's recording led to Slager's dismissal and arrest on a murder charge. Santana said he never saw Scott grab the Taser or receive CPR, although the initial struggle was not recorded and police accounts differed."
+  },
+  {
+    "output_id": "R14",
+    "case_id": "N09",
+    "source": "Catania, Sicily (CNN)We are at the beginning of a massive and mounting crisis with no solution in sight.\nPerhaps that's incorrect.\nThe migrant crisis that has suddenly drawn hundreds of journalists to Sicily has been brewing for years, but in the past 10 days, with as many as 1,600 deaths in the Mediterranean, suddenly minds are focused -- for now.\nAlmost exactly four years ago, in Libya, I caught, perhaps, a glimpse of what was to come.\nIt was late at night in the besieged city of Misrata.\nHundreds of African migrants were caught between the Libyan civil war (back then some optimistically called it a \"revolution\") and the deep blue sea.\nThey had come to Misrata from Ghana, Nigeria and elsewhere, hoping to board rickety boats to cross the sea to Europe.\nThey had been pinned down under sporadic shelling from government forces, but weren't welcome by the rebels who controlled the city.\nThey appealed to us to help them escape.\nWe could do nothing, but they may have eventually found their way out when the fighting subsided.\nThe fall of Libyan leader Moammar Gadhafi's regime, which we reporters covered so avidly, was followed by chaos, which we in the news media largely neglected, focused as we journalists were on the next catastrophe, the Syrian civil war.\nIn that chaos, the business of human trafficking has boomed.\nAnd now that boom in human misery is coming in waves to the shores of Italy.\nThe focus today is on those lost at sea.\nAware of the tragedy underway, however, Italians are alarmed at the prospect that this year alone as many as a million migrants could arrive in Europe, according to one European Union official.\nThat is certainly the case in the Sicilian port of Catania, where many migrants arrive.\nThe city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers.\nThe rest of Europe must help carry the burden.\n\"If something serious isn't done,\" he warns, \"dramas like these will be repeated.\nThis problem will not be resolved by hiding our heads in the sand.\"\nIncreasingly, some Italians are losing their patience.\nTwo northern regions, Veneto and Valle d'Aosta, have declared they will no longer accept new migrants.\nThe rightist Lega Nord has made opposition to new migrants a pillar of its party program.\nOthers, however, insist Italy must keep its doors open.\nIn Catania port, I spoke with Grazia Giurato, who had joined a small protest in solidarity with the migrants.\n\"Many years ago, our grandparents emigrated,\" she recalled.\n\"Let's keep that in mind.\"\nIndeed, in tougher times, millions of impoverished Italians left their homeland to settle in the Americas and Australia.\nThey, too, like the migrants from Africa and the Middle East, were fleeing grinding poverty and war.\nAnd they, too, experienced the kind of prejudice and resentment in lands their descendants now proudly call home.\nThat's the long view, perhaps.\nBut now, today, Italians are grappling to deal with the consequences of an array of old and new ills, ranging from failing states and failing economies to endemic corruption, hopeless poverty, oppression and injustice that no one state or group of states can solve without a gargantuan, expensive and politically daunting effort.\nAnd while this crisis has been brewing for years, it is now truly upon us.",
+    "target": {
+      "length": "long",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "As many as 1,600 migrants had died in the Mediterranean in the preceding ten days.",
+        "evidence": [
+          "The migrant crisis that has suddenly drawn hundreds of journalists to Sicily has been brewing for years, but in the past 10 days, with as many as 1,600 deaths in the Mediterranean, suddenly minds are focused -- for now."
+        ],
+        "rationale": "The recent death toll explains the crisis's urgency; the upper-bound wording is essential."
+      },
+      {
+        "id": "F2",
+        "proposition": "An EU official said as many as one million migrants could arrive in Europe that year.",
+        "evidence": [
+          "Aware of the tragedy underway, however, Italians are alarmed at the prospect that this year alone as many as a million migrants could arrive in Europe, according to one European Union official."
+        ],
+        "rationale": "The attributed possible inflow is central to the pressure on Italy; it is neither a confirmed arrival count nor a forecast of more than one million."
+      },
+      {
+        "id": "F3",
+        "proposition": "Catania's mayor said Catania and Sicily could not absorb the growing number of migrants.",
+        "evidence": [
+          "The city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers."
+        ],
+        "rationale": "The mayor's assessment captures the central local-capacity concern without turning it into an independently established limit for all of Italy."
+      }
+    ],
+    "summary": "The migrant crisis that has suddenly drawn hundreds of journalists to Sicily has been brewing for years, but in the past 10 days, with as many as 1,600 deaths in the Mediterranean, suddenly minds are focused -- for now. The fall of Libyan leader Moammar Gadhafi's regime, which we reporters covered so avidly, was followed by chaos, which we in the news media largely neglected, focused as we journalists were on the next catastrophe, the Syrian civil war. In that chaos, the business of human trafficking has boomed. Aware of the tragedy underway, however, Italians are alarmed at the prospect that this year alone as many as a million migrants could arrive in Europe, according to one European Union official. That is certainly the case in the Sicilian port of Catania, where many migrants arrive. The city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers. The rest of Europe must help carry the burden. Two northern regions, Veneto and Valle d'Aosta, have declared they will no longer accept new migrants. Others, however, insist Italy must keep its doors open. But now, today, Italians are grappling to deal with the consequences of an array of old and new ills, ranging from failing states and failing economies to endemic corruption, hopeless poverty, oppression and injustice that no one state or group of states can solve without a gargantuan, expensive and politically daunting effort."
+  },
+  {
+    "output_id": "R15",
+    "case_id": "N03",
+    "source": "Kano, Nigeria (CNN)Hundreds of decomposed corpses were discovered buried in shallow graves in the streets of the northeastern Nigerian town of Damasak this past weekend, according to local officials and a resident.\nThe town had recently been freed from the Boko Haram terror group in a joint Nigerian-Chadian military operation.\nA provincial government committee was visiting the area as part of an effort to assess the level of destruction in towns that had been in the deadly grip of Boko Haram.\n\"We found hundreds of dead bodies in shallow graves and on the streets of Damasak during our visit,\" Damasak local government spokesman Babagana Mustapha told CNN on Monday.\n\"Those bodies in shallow graves have badly decomposed while those found on the streets were desiccated from [exposure to] dry ‎winds,\" Mustapha added.\nThe victims included men, women and children murdered by Boko Haram when they seized the area in November, said Abubakar Kyari, a senator-elect for the region.\n\"The staggering number of dead bodies found in Damasak is a testimony of the large-scale atrocity Boko Haram committed when they were in control of the town\" Kyari added.\nMustapha said the bodies were buried in 20 clearly marked mass graves.\nAlthough Mustapha did not give a precise number of corpses recovered, Damasak residents who participated in the exhumations put the figure at more than 400.\n\"‎We collected over 400 corpses from the streets and in shallow graves during our visit in Damasak,\" said Idris Karimbe, one of the volunteers who took part in the burial.\n\"The number of bodies we recovered this time around far exceeded the ones found last month,\" said another resident, Musa Bremah‎.\nBremah was referring to the discovery of around 90 bodies in a shallow grave outside Damasak last month after its recapture.\n‎A regional military coalition involving troops from Nigeria, Niger, Chad and Cameroon has in recent months recaptured swathes of Nigerien territory seized by Boko Haram.\nThe joint military operation is part of an ongoing collaborative effort at crushing the Islamist group that has widened its deadly attacks to Niger, Chad and Cameroon.",
+    "target": {
+      "length": "short",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Local officials and a resident reported the discovery of hundreds of corpses in Damasak, Nigeria.",
+        "evidence": [
+          "Kano, Nigeria (CNN)Hundreds of decomposed corpses were discovered buried in shallow graves in the streets of the northeastern Nigerian town of Damasak this past weekend, according to local officials and a resident."
+        ],
+        "rationale": "The large-scale discovery is the lead event; Damasak is the discovery site, while Kano is the dateline."
+      },
+      {
+        "id": "F2",
+        "proposition": "A joint military operation had recently recaptured Damasak from Boko Haram.",
+        "evidence": [
+          "The town had recently been freed from the Boko Haram terror group in a joint Nigerian-Chadian military operation."
+        ],
+        "rationale": "The recapture supplies the essential context for the subsequent discovery."
+      },
+      {
+        "id": "F3",
+        "proposition": "A senator-elect for the region said Boko Haram had murdered the victims when it seized the town.",
+        "evidence": [
+          "The victims included men, women and children murdered by Boko Haram when they seized the area in November, said Abubakar Kyari, a senator-elect for the region."
+        ],
+        "rationale": "The attributed account of responsibility is central; it should not become an independently verified causal finding."
+      }
+    ],
+    "summary": "Hundreds of decomposed corpses were discovered buried in shallow graves in the streets of the northeastern Nigerian town of Damasak this past weekend, according to local officials and a resident. The victims included men, women and children murdered by Boko Haram when they seized the area in November, said Abubakar Kyari, a senator-elect for the region."
+  },
+  {
+    "output_id": "R16",
+    "case_id": "N05",
+    "source": "(CNN)James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness.\nHe was 88.\nBest died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague.\nAlthough he'd been a busy actor for decades in theater and in Hollywood, Best didn't become famous until 1979, when \"The Dukes of Hazzard's\" cornpone charms began beaming into millions of American homes almost every Friday night.\nFor seven seasons, Best's Rosco P. Coltrane chased the moonshine-running Duke boys back and forth across the back roads of fictitious Hazzard County, Georgia, although his \"hot pursuit\" usually ended with him crashing his patrol car.\nAlthough Rosco was slow-witted and corrupt, Best gave him a childlike enthusiasm that got laughs and made him endearing.\nHis character became known for his distinctive \"kew-kew-kew\" chuckle and for goofy catchphrases such as \"cuff 'em and stuff 'em!\"\nupon making an arrest.\nAmong the most popular shows on TV in the early '80s, \"The Dukes of Hazzard\" ran until 1985 and spawned TV movies, an animated series and video games.\nSeveral of Best's \"Hazzard\" co-stars paid tribute to the late actor on social media.\n\"I laughed and learned more from Jimmie in one hour than from anyone else in a whole year,\" co-star John Schneider, who played Bo Duke, said on Twitter.\n\"Give Uncle Jesse my love when you see him dear friend.\"\n\"Jimmy Best was the most constantly creative person I have ever known,\" said Ben Jones, who played mechanic Cooter on the show, in a Facebook post.\n\"Every minute of his long life was spent acting, writing, producing, painting, teaching, fishing, or involved in another of his life's many passions.\"\nBorn Jewel Guy on July 26, 1926, in Powderly, Kentucky, Best was orphaned at 3 and adopted by Armen and Essa Best, who renamed him James and raised him in rural Indiana.\nBest served in the Army during World War II before launching his acting career.\nIn the 1950s and 1960s, he accumulated scores of credits, playing a range of colorful supporting characters in such TV shows as \"The Twilight Zone,\" \"Bonanza,\" \"The Andy Griffith Show\" and \"Gunsmoke.\"\nHe later appeared in a handful of Burt Reynolds' movies, including \"Hooper\" and \"The End.\"\nBut Best will always be best known for his \"Hazzard\" role, which lives on in reruns.\n\"Jimmie was my teacher, mentor, close friend and collaborator for 26 years,\" Latshaw said.\n\"I directed two of his feature films, including the recent 'Return of the Killer Shrews,' a sequel he co-wrote and was quite proud of as he had made the first one more than 50 years earlier.\"\nPeople we've lost in 2015 .\nCNN's Stella Chan contributed to this story.",
+    "target": {
+      "length": "long",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Actor James Best died at age 88.",
+        "evidence": [
+          "(CNN)James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness.",
+          "He was 88."
+        ],
+        "rationale": "The death and age identify the central obituary event without requiring the precise date or hospice location."
+      },
+      {
+        "id": "F2",
+        "proposition": "Best was best known for playing Sheriff Rosco on The Dukes of Hazzard.",
+        "evidence": [
+          "(CNN)James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness."
+        ],
+        "rationale": "His defining role explains why his death is news; the character's full name and comic mannerisms are not required."
+      },
+      {
+        "id": "F3",
+        "proposition": "A longtime friend said Best died from complications of pneumonia.",
+        "evidence": [
+          "Best died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague."
+        ],
+        "rationale": "The attributed cause is a central circumstance of the death."
+      }
+    ],
+    "summary": "James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness at 88. Best died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague. Although he'd been a busy actor for decades in theater and in Hollywood, Best didn't become famous until 1979, when \"The Dukes of Hazzard's\" cornpone charms began beaming into millions of American homes almost every Friday night. For seven seasons, Best's Rosco P. Coltrane chased the moonshine-running Duke boys back and forth across the back roads of fictitious Hazzard County, Georgia, although his \"hot pursuit\" usually ended with him crashing his patrol car. Among the most popular shows on TV in the early '80s, \"The Dukes of Hazzard\" ran until 1985 and spawned TV movies, an animated series and video games. Several of Best's \"Hazzard\" co-stars paid tribute to the late actor on social media. Born Jewel Guy on July 26, 1926, in Powderly, Kentucky, Best was orphaned at 3 and adopted by Armen and Essa Best, who renamed him James and raised him in rural Indiana. Best served in the Army during World War II before launching his acting career. In the 1950s and 1960s, he accumulated scores of credits, playing a range of colorful supporting characters in such TV shows as \"The Twilight Zone,\" \"Bonanza,\" \"The Andy Griffith Show\" and \"Gunsmoke.\""
+  },
+  {
+    "output_id": "R17",
+    "case_id": "N08",
+    "source": "(CNN)What do Walmart, Target, and now the Koch Brothers have in common with the American Civil Liberties Union, ColorOfChange.org, and the Center for American Progress?\nAll of them are adopting or advocating for hiring practices that open up work opportunities for people with convictions and leverage untapped potential in the labor market.\nKoch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions -- is a big step forward in the movement to break down barriers to employment for job-seekers with records.\n\"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process.\nIt's one item on a menu of fair-chance hiring reforms intended to ensure that job applicants are evaluated on their skills and qualifications first, rather than judged solely on past mistakes.\nThese policies help reduce recidivism by making employment accessible to job-seekers who need a second chance, and they help break down the stigma of an arrest or conviction record.\nTwo generations of the war on drugs, zero tolerance, and aggressive policing have left 70 million adults  with arrest or conviction records that undermine their ability to be considered for jobs, even as the job market has grown steadily.\nMillions of people are being left behind, and it's taking a toll on our economy: The reduced economic output of people with records cost our economy $57-$65 billion in 2008 alone.\nThese criminal justice policies disproportionately impact African-Americans, who are incarcerated at a rate six times that of whites.\nThe Department of Justice's recent investigation of the Ferguson Police Department, for example, shows the extent to which racism is perpetuated through police departments and the court system.\nThat systemic racial disparity is then repeated throughout the economy, and the community is put at a severe disadvantage in the job market long after individuals have served their time.\nThat's one reason the African-American unemployment rate is persistently twice that of whites.\nIn a job market where employers that didn't previously do background checks now make them a routine part of hiring, qualified job-seekers are being screened out of the applicant pools for more and more jobs.\nNearly one in three adults in America has an arrest or conviction history that will show up on a routine background check.\nCompanies like Koch, Walmart, Target, and Bed Bath & Beyond recognize that this is a huge source of untapped talent, and that's why they've already banned the box on their job applications.\nThese policies are also gaining traction with politicians across the political spectrum.\nVermont Gov.\nPeter Shumlin, Georgia Gov.\nNathan Deal, and Virginia Gov.\nTerry McAuliffe recently signed executive orders removing the conviction question from initial applications for state employment.\nSo far, 16 states and more than 100 cities and counties have adopted fair-chance hiring policies.\nSix of those states and the District of Columbia, plus 25 cities and counties, have applied their policies to government contractors or private employers as well.\nThe Obama administration took an important step toward fairer and smarter federal hiring practices last year when it issued an executive order prohibiting contractors from discriminating against LGBT individuals.\nBanning the box and other common-sense hiring reforms would build on that progress and on the successful work of governors and the corporate sector.\nThe administration should ensure that the federal government does not continue to erect unfair and unnecessary barriers to employment of people with records.\nAlready, more than 200 organizations and prominent individuals have publicly urged the Obama administration to take these practical steps.\nIf Koch Industries -- a major federal contractor -- can ban the box, there's no reason why other federal contractors cannot.\nNow it's time for President Obama to lead the way and embrace fair-chance hiring of people with records.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Koch Industries announced it would remove the convictions checkbox from job applications.",
+        "evidence": [
+          "Koch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions -- is a big step forward in the movement to break down barriers to employment for job-seekers with records."
+        ],
+        "rationale": "The company's policy change is the concrete event motivating the opinion piece."
+      },
+      {
+        "id": "F2",
+        "proposition": "Ban-the-box policies postpone background checks until later in hiring rather than prohibit them.",
+        "evidence": [
+          "\"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process."
+        ],
+        "rationale": "The timing distinction defines the reform and prevents a misleading interpretation of what the policy does."
+      },
+      {
+        "id": "F3",
+        "proposition": "The author urges the Obama administration to adopt fair-chance hiring for people with criminal records.",
+        "evidence": [
+          "The administration should ensure that the federal government does not continue to erect unfair and unnecessary barriers to employment of people with records.",
+          "Now it's time for President Obama to lead the way and embrace fair-chance hiring of people with records."
+        ],
+        "rationale": "The federal call to action is the article's main purpose; author attribution distinguishes advocacy from an enacted policy."
+      }
+    ],
+    "summary": "Koch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions -- is a big step forward in the movement to break down barriers to employment for job-seekers with records. \"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process. Two generations of the war on drugs, zero tolerance, and aggressive policing have left 70 million adults with arrest or conviction records that undermine their ability to be considered for jobs, even as the job market has grown steadily. Now it's time for President Obama to lead the way and embrace fair-chance hiring of people with records."
+  },
+  {
+    "output_id": "R18",
+    "case_id": "N06",
+    "source": "(CNN)Feidin Santana, the man who recorded a South Carolina police officer fatally shooting a fleeing, unarmed man, told CNN on Thursday night he was told by another cop to stop using his phone to capture the incident.\n\"One of the officers told me to stop, but it was because I (said) to them that what they did it was an abuse and I witnessed everything,\" he told CNN's \"Anderson Cooper 360˚.\"\nSantana told Cooper an officer told him to wait where he was but eventually he left the scene to go to work.\nIn other interviews, Santana has said he feared for his life, which almost kept him from revealing the recording.\nSantana recalled the moments when he recorded a roughly three-minute video of North Charleston Police officer Michael Slager shooting Walter Scott as Scott was running away Saturday.\nThat evidence led to the officer's firing and arrest on a murder charge.\nSantana said when he first came on the scene while walking to his job he saw Slager on top of Scott, who was on the ground.\nHe could hear the sound of a Taser in use.\nAt no time did Santana see Scott go after the Taser.\nHe believes Scott was trying to get away.\n\"Mr. Scott never tried to fight,\" Santana told CNN.\nPolice said Slager used a Taser against Scott, but Slager would also later tell a dispatcher that Scott at some point had grabbed the Taser.\nAfter Slager shot Scott five times, the officer went back to pick up something.\nSantana thinks it was the Taser but said he wasn't 100% sure what it was.\nNeither the struggle nor the use of a Taser was captured on video, because Santana had yet to begin recording.\nWhat we know about Officer Slager .\nThe cell phone video, which Santana revealed this week, reignited national outcries surrounding police treatment of African-Americans and led to a murder charge against Slager, who is white.\nScott was black.\nPolice said Slager pulled the 50-year-old Scott over for a nonworking brake light on Saturday morning.\nScott, according to a dash cam video, fled from Slager for unexplained reasons, and the officer chased him on foot.\nWhen Santana's video begins, Scott starts running away from the officer, with Scott's back to Slager.\nThe video shows Slager shooting at Scott eight times before Scott falls down.\nWho was Walter Scott?\nScott's mother, Judy Scott, told Cooper this week that she would want to thank Santana for coming forward.\n\"He was there.\nGod planned that.\nHe's the ram in the bush -- I truly believe that,\" Judy Scott said.\nSantana agreed.\n\"I think she was right,\" he said.\n\"God put me there for a reason.\"\nJudy Scott said she couldn't watch the whole recording.\n\"When I saw my son running and I saw the policeman behind him, I couldn't take it,\" she said.\n\"I had to turn away.\nI couldn't handle it.\nIn an interview with NBC's Matt Lauer, Santana suggested that he was giving media interviews in part to protect himself against retribution.\n\"At some point I thought about staying anonymous, and don't show my face, don't talk about it.\nBut ... if I wouldn't show my face, everybody over there knows, including the police, who I am,\" Santana said.\nSantana did not say whether he had received threats.\nHis attorney, Todd Rutherford, said Santana's video would be useful in an investigation -- not only into the shooting but also into whether Scott received prompt medical attention.\nIn the last half of the video, a second officer appears to examine Scott with gloved hands.\nWitness video, official accounts raise questions .\nSantana said after he stopped recording, he watched for a few more minutes but never saw anyone perform CPR.\nA police report says a third officer -- not shown in the video -- reported seeing an officer administering first aid, and that the third officer approached and helped that person \"with first aid and CPR.\"\nOn Wednesday, asked whether CPR was performed on Scott, North Charleston police Chief Eddie Driggers said: \"In the end of it (the video), what I saw was (what I) believed to be a police officer removing the shirt of the individual and performing some type of life-saving (procedure), but I'm not sure what took place there.\"\nA timeline of events .\nCNN's Jason Hanna, Ashley Fantz and Ray Sanchez contributed to this report.\nWatch Anderson Cooper 360° weeknights 8pm ET.\nFor the latest from AC360° click here.",
+    "target": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Santana recorded officer Slager fatally shooting Walter Scott as Scott fled unarmed.",
+        "evidence": [
+          "(CNN)Feidin Santana, the man who recorded a South Carolina police officer fatally shooting a fleeing, unarmed man, told CNN on Thursday night he was told by another cop to stop using his phone to capture the incident.",
+          "Santana recalled the moments when he recorded a roughly three-minute video of North Charleston Police officer Michael Slager shooting Walter Scott as Scott was running away Saturday."
+        ],
+        "rationale": "The recorded shooting is the central event; the exact number of shots and participants' full names are unnecessary for this anchor."
+      },
+      {
+        "id": "F2",
+        "proposition": "The recording led to a murder charge against Slager.",
+        "evidence": [
+          "That evidence led to the officer's firing and arrest on a murder charge.",
+          "The cell phone video, which Santana revealed this week, reignited national outcries surrounding police treatment of African-Americans and led to a murder charge against Slager, who is white."
+        ],
+        "rationale": "The charge is the central legal consequence of the video; it is not a conviction."
+      },
+      {
+        "id": "F3",
+        "proposition": "Santana said another officer told him to stop filming the incident.",
+        "evidence": [
+          "(CNN)Feidin Santana, the man who recorded a South Carolina police officer fatally shooting a fleeing, unarmed man, told CNN on Thursday night he was told by another cop to stop using his phone to capture the incident."
+        ],
+        "rationale": "The witness's attributed account is the article's lead development and should not be presented as independently verified."
+      }
+    ],
+    "summary": "Feidin Santana said an officer ordered him to stop filming the fatal shooting of unarmed Walter Scott by North Charleston officer Michael Slager, and fear for his safety nearly kept him from releasing the video. The recording showed Slager firing at Scott as he fled and led to Slager's dismissal and arrest on a murder charge, while accounts conflicted over whether Scott received CPR."
+  },
+  {
+    "output_id": "R19",
+    "case_id": "N01",
+    "source": "Obock, Djibouti (CNN)Amina Ali Qassim is sitting with her youngest grandchild on her lap, wiping away tears with her headscarf.\nOnly a few months old, this is the baby girl whose ears she desperately tried to cover the night the aerial bombardment started.\nShe lay awake, she says, in a village mosque on the Yemeni island of Birim, counting explosions as the baby cried.\nIt could have been worse though.\nThey could have still been in their house when the first missile landed.\n\"Our neighbor shouted to my husband 'you have to leave, they're coming.'\nAnd we just ran.\nAs soon as we left the house, the first missile fell right by it and then a second on it.\nIt burned everything to the ground,\" Qassim tells us.\nQassim and her family fled Birim at first light, piling in with three other families.\nTwenty-five of them squeezed into one boat setting sail through the Bab al-Mandab Strait to Djibouti.\nBab al-Mandab is one of the busiest waterways in the world, a thoroughfare for oil tankers and cargo ships.\nIt's now being crossed by desperate Yemenis in rickety fishing boats seeking refuge from the conflict threatening to engulf their country.\nQassim's son Mohamed describes the families' journey across this part of the Red Sea as \"a window into hell.\"\n\"The women were violently ill,\" he tells us.\n\"It was a catastrophe.\"\nIt took them five hours to cross into the north of Djibouti, where the government is providing the refugees with temporary shelter in this unfinished orphanage here in Obock.\nAnd the U.N. says thousands more refugees are expected.\nQassim and her family will soon have to move to the plastic tents that have been prepared for them on the dusty outskirts of the town, taking with them only the collection of plastic mats and pots neatly stacked in the corner.\nIt's all that remains of everything they once owned.\nHer two daughters are trapped back in Yemen, in Taiz.\nShe hasn't been able to reach them and the worry she says is almost unbearable.\nI ask her how many days it was after the Saudi aerial bombardment began that they left.\nShe looks at me and laughs, \"How many days would you have stayed?\"\nThen she goes quiet, looking down at the granddaughter in her lap.\nFinally she tells me, \"I thought she would never be able to stop screaming.\nThat the fear would stay with her forever.\"\n\"May God please have mercy on Yemen.\"",
+    "target": {
+      "length": "normal",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Qassim's family fled the bombing in Yemen by boat to Djibouti.",
+        "evidence": [
+          "Qassim and her family fled Birim at first light, piling in with three other families.",
+          "Twenty-five of them squeezed into one boat setting sail through the Bab al-Mandab Strait to Djibouti.",
+          "I ask her how many days it was after the Saudi aerial bombardment began that they left."
+        ],
+        "rationale": "The family's escape from the conflict is the central event; the exact passenger count and route name are not required."
+      },
+      {
+        "id": "F2",
+        "proposition": "Djibouti's government is providing temporary shelter for the refugees.",
+        "evidence": [
+          "It took them five hours to cross into the north of Djibouti, where the government is providing the refugees with temporary shelter in this unfinished orphanage here in Obock."
+        ],
+        "rationale": "Temporary refuge is the immediate outcome of the escape."
+      },
+      {
+        "id": "F3",
+        "proposition": "The U.N. expects thousands more refugees to arrive.",
+        "evidence": [
+          "And the U.N. says thousands more refugees are expected."
+        ],
+        "rationale": "The attributed forecast connects one family's journey to the wider displacement without treating a prediction as an established count."
+      }
+    ],
+    "summary": "Amina Ali Qassim says her family escaped their home on Yemen's Birim island just before missiles destroyed it during the Saudi aerial bombardment, spending the night in a mosque with her terrified infant granddaughter. At first light, 25 people from four families crowded into a boat and made a five-hour crossing of the Bab al-Mandab Strait to Djibouti. The government is temporarily housing them in an unfinished orphanage in Obock before they move to tents outside town, while the United Nations expects thousands more refugees. Qassim has been unable to contact her two daughters trapped in Taiz and fears for them."
+  },
+  {
+    "output_id": "R20",
+    "case_id": "N05",
+    "source": "(CNN)James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness.\nHe was 88.\nBest died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague.\nAlthough he'd been a busy actor for decades in theater and in Hollywood, Best didn't become famous until 1979, when \"The Dukes of Hazzard's\" cornpone charms began beaming into millions of American homes almost every Friday night.\nFor seven seasons, Best's Rosco P. Coltrane chased the moonshine-running Duke boys back and forth across the back roads of fictitious Hazzard County, Georgia, although his \"hot pursuit\" usually ended with him crashing his patrol car.\nAlthough Rosco was slow-witted and corrupt, Best gave him a childlike enthusiasm that got laughs and made him endearing.\nHis character became known for his distinctive \"kew-kew-kew\" chuckle and for goofy catchphrases such as \"cuff 'em and stuff 'em!\"\nupon making an arrest.\nAmong the most popular shows on TV in the early '80s, \"The Dukes of Hazzard\" ran until 1985 and spawned TV movies, an animated series and video games.\nSeveral of Best's \"Hazzard\" co-stars paid tribute to the late actor on social media.\n\"I laughed and learned more from Jimmie in one hour than from anyone else in a whole year,\" co-star John Schneider, who played Bo Duke, said on Twitter.\n\"Give Uncle Jesse my love when you see him dear friend.\"\n\"Jimmy Best was the most constantly creative person I have ever known,\" said Ben Jones, who played mechanic Cooter on the show, in a Facebook post.\n\"Every minute of his long life was spent acting, writing, producing, painting, teaching, fishing, or involved in another of his life's many passions.\"\nBorn Jewel Guy on July 26, 1926, in Powderly, Kentucky, Best was orphaned at 3 and adopted by Armen and Essa Best, who renamed him James and raised him in rural Indiana.\nBest served in the Army during World War II before launching his acting career.\nIn the 1950s and 1960s, he accumulated scores of credits, playing a range of colorful supporting characters in such TV shows as \"The Twilight Zone,\" \"Bonanza,\" \"The Andy Griffith Show\" and \"Gunsmoke.\"\nHe later appeared in a handful of Burt Reynolds' movies, including \"Hooper\" and \"The End.\"\nBut Best will always be best known for his \"Hazzard\" role, which lives on in reruns.\n\"Jimmie was my teacher, mentor, close friend and collaborator for 26 years,\" Latshaw said.\n\"I directed two of his feature films, including the recent 'Return of the Killer Shrews,' a sequel he co-wrote and was quite proud of as he had made the first one more than 50 years earlier.\"\nPeople we've lost in 2015 .\nCNN's Stella Chan contributed to this story.",
+    "target": {
+      "length": "long",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Actor James Best died at age 88.",
+        "evidence": [
+          "(CNN)James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness.",
+          "He was 88."
+        ],
+        "rationale": "The death and age identify the central obituary event without requiring the precise date or hospice location."
+      },
+      {
+        "id": "F2",
+        "proposition": "Best was best known for playing Sheriff Rosco on The Dukes of Hazzard.",
+        "evidence": [
+          "(CNN)James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness."
+        ],
+        "rationale": "His defining role explains why his death is news; the character's full name and comic mannerisms are not required."
+      },
+      {
+        "id": "F3",
+        "proposition": "A longtime friend said Best died from complications of pneumonia.",
+        "evidence": [
+          "Best died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague."
+        ],
+        "rationale": "The attributed cause is a central circumstance of the death."
+      }
+    ],
+    "summary": "James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness at 88. Best died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague. Although he'd been a busy actor for decades in theater and in Hollywood, Best didn't become famous until 1979, when \"The Dukes of Hazzard's\" cornpone charms began beaming into millions of American homes almost every Friday night. For seven seasons, Best's Rosco P. Coltrane chased the moonshine-running Duke boys back and forth across the back roads of fictitious Hazzard County, Georgia, although his \"hot pursuit\" usually ended with him crashing his patrol car. Among the most popular shows on TV in the early '80s, \"The Dukes of Hazzard\" ran until 1985 and spawned TV movies, an animated series and video games. Born Jewel Guy on July 26, 1926, in Powderly, Kentucky, Best was orphaned at 3 and adopted by Armen and Essa Best, who renamed him James and raised him in rural Indiana. Best served in the Army during World War II before launching his acting career. In the 1950s and 1960s, he accumulated scores of credits, playing a range of colorful supporting characters in such TV shows as \"The Twilight Zone,\" \"Bonanza,\" \"The Andy Griffith Show\" and \"Gunsmoke.\" \"I laughed and learned more from Jimmie in one hour than from anyone else in a whole year,\" co-star John Schneider, who played Bo Duke, said on Twitter."
+  },
+  {
+    "output_id": "R21",
+    "case_id": "N05",
+    "source": "(CNN)James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness.\nHe was 88.\nBest died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague.\nAlthough he'd been a busy actor for decades in theater and in Hollywood, Best didn't become famous until 1979, when \"The Dukes of Hazzard's\" cornpone charms began beaming into millions of American homes almost every Friday night.\nFor seven seasons, Best's Rosco P. Coltrane chased the moonshine-running Duke boys back and forth across the back roads of fictitious Hazzard County, Georgia, although his \"hot pursuit\" usually ended with him crashing his patrol car.\nAlthough Rosco was slow-witted and corrupt, Best gave him a childlike enthusiasm that got laughs and made him endearing.\nHis character became known for his distinctive \"kew-kew-kew\" chuckle and for goofy catchphrases such as \"cuff 'em and stuff 'em!\"\nupon making an arrest.\nAmong the most popular shows on TV in the early '80s, \"The Dukes of Hazzard\" ran until 1985 and spawned TV movies, an animated series and video games.\nSeveral of Best's \"Hazzard\" co-stars paid tribute to the late actor on social media.\n\"I laughed and learned more from Jimmie in one hour than from anyone else in a whole year,\" co-star John Schneider, who played Bo Duke, said on Twitter.\n\"Give Uncle Jesse my love when you see him dear friend.\"\n\"Jimmy Best was the most constantly creative person I have ever known,\" said Ben Jones, who played mechanic Cooter on the show, in a Facebook post.\n\"Every minute of his long life was spent acting, writing, producing, painting, teaching, fishing, or involved in another of his life's many passions.\"\nBorn Jewel Guy on July 26, 1926, in Powderly, Kentucky, Best was orphaned at 3 and adopted by Armen and Essa Best, who renamed him James and raised him in rural Indiana.\nBest served in the Army during World War II before launching his acting career.\nIn the 1950s and 1960s, he accumulated scores of credits, playing a range of colorful supporting characters in such TV shows as \"The Twilight Zone,\" \"Bonanza,\" \"The Andy Griffith Show\" and \"Gunsmoke.\"\nHe later appeared in a handful of Burt Reynolds' movies, including \"Hooper\" and \"The End.\"\nBut Best will always be best known for his \"Hazzard\" role, which lives on in reruns.\n\"Jimmie was my teacher, mentor, close friend and collaborator for 26 years,\" Latshaw said.\n\"I directed two of his feature films, including the recent 'Return of the Killer Shrews,' a sequel he co-wrote and was quite proud of as he had made the first one more than 50 years earlier.\"\nPeople we've lost in 2015 .\nCNN's Stella Chan contributed to this story.",
+    "target": {
+      "length": "long",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Actor James Best died at age 88.",
+        "evidence": [
+          "(CNN)James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness.",
+          "He was 88."
+        ],
+        "rationale": "The death and age identify the central obituary event without requiring the precise date or hospice location."
+      },
+      {
+        "id": "F2",
+        "proposition": "Best was best known for playing Sheriff Rosco on The Dukes of Hazzard.",
+        "evidence": [
+          "(CNN)James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness."
+        ],
+        "rationale": "His defining role explains why his death is news; the character's full name and comic mannerisms are not required."
+      },
+      {
+        "id": "F3",
+        "proposition": "A longtime friend said Best died from complications of pneumonia.",
+        "evidence": [
+          "Best died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague."
+        ],
+        "rationale": "The attributed cause is a central circumstance of the death."
+      }
+    ],
+    "summary": "James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness. He was 88. Best died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague. Although he'd been a busy actor for decades in theater and in Hollywood, Best didn't become famous until 1979, when \"The Dukes of Hazzard's\" cornpone charms began beaming into millions of American homes almost every Friday night. For seven seasons, Best's Rosco P. Coltrane chased the moonshine-running Duke boys back and forth across the back roads of fictitious Hazzard County, Georgia, although his \"hot pursuit\" usually ended with him crashing his patrol car. Among the most popular shows on TV in the early '80s, \"The Dukes of Hazzard\" ran until 1985 and spawned TV movies, an animated series and video games. Several of Best's \"Hazzard\" co-stars paid tribute to the late actor on social media. Born Jewel Guy on July 26, 1926, in Powderly, Kentucky, Best was orphaned at 3 and adopted by Armen and Essa Best, who renamed him James and raised him in rural Indiana. Best served in the Army during World War II before launching his acting career. In the 1950s and 1960s, he accumulated scores of credits, playing a range of colorful supporting characters in such TV shows as \"The Twilight Zone,\" \"Bonanza,\" \"The Andy Griffith Show\" and \"Gunsmoke.\""
+  },
+  {
+    "output_id": "R22",
+    "case_id": "N08",
+    "source": "(CNN)What do Walmart, Target, and now the Koch Brothers have in common with the American Civil Liberties Union, ColorOfChange.org, and the Center for American Progress?\nAll of them are adopting or advocating for hiring practices that open up work opportunities for people with convictions and leverage untapped potential in the labor market.\nKoch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions -- is a big step forward in the movement to break down barriers to employment for job-seekers with records.\n\"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process.\nIt's one item on a menu of fair-chance hiring reforms intended to ensure that job applicants are evaluated on their skills and qualifications first, rather than judged solely on past mistakes.\nThese policies help reduce recidivism by making employment accessible to job-seekers who need a second chance, and they help break down the stigma of an arrest or conviction record.\nTwo generations of the war on drugs, zero tolerance, and aggressive policing have left 70 million adults  with arrest or conviction records that undermine their ability to be considered for jobs, even as the job market has grown steadily.\nMillions of people are being left behind, and it's taking a toll on our economy: The reduced economic output of people with records cost our economy $57-$65 billion in 2008 alone.\nThese criminal justice policies disproportionately impact African-Americans, who are incarcerated at a rate six times that of whites.\nThe Department of Justice's recent investigation of the Ferguson Police Department, for example, shows the extent to which racism is perpetuated through police departments and the court system.\nThat systemic racial disparity is then repeated throughout the economy, and the community is put at a severe disadvantage in the job market long after individuals have served their time.\nThat's one reason the African-American unemployment rate is persistently twice that of whites.\nIn a job market where employers that didn't previously do background checks now make them a routine part of hiring, qualified job-seekers are being screened out of the applicant pools for more and more jobs.\nNearly one in three adults in America has an arrest or conviction history that will show up on a routine background check.\nCompanies like Koch, Walmart, Target, and Bed Bath & Beyond recognize that this is a huge source of untapped talent, and that's why they've already banned the box on their job applications.\nThese policies are also gaining traction with politicians across the political spectrum.\nVermont Gov.\nPeter Shumlin, Georgia Gov.\nNathan Deal, and Virginia Gov.\nTerry McAuliffe recently signed executive orders removing the conviction question from initial applications for state employment.\nSo far, 16 states and more than 100 cities and counties have adopted fair-chance hiring policies.\nSix of those states and the District of Columbia, plus 25 cities and counties, have applied their policies to government contractors or private employers as well.\nThe Obama administration took an important step toward fairer and smarter federal hiring practices last year when it issued an executive order prohibiting contractors from discriminating against LGBT individuals.\nBanning the box and other common-sense hiring reforms would build on that progress and on the successful work of governors and the corporate sector.\nThe administration should ensure that the federal government does not continue to erect unfair and unnecessary barriers to employment of people with records.\nAlready, more than 200 organizations and prominent individuals have publicly urged the Obama administration to take these practical steps.\nIf Koch Industries -- a major federal contractor -- can ban the box, there's no reason why other federal contractors cannot.\nNow it's time for President Obama to lead the way and embrace fair-chance hiring of people with records.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Koch Industries announced it would remove the convictions checkbox from job applications.",
+        "evidence": [
+          "Koch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions -- is a big step forward in the movement to break down barriers to employment for job-seekers with records."
+        ],
+        "rationale": "The company's policy change is the concrete event motivating the opinion piece."
+      },
+      {
+        "id": "F2",
+        "proposition": "Ban-the-box policies postpone background checks until later in hiring rather than prohibit them.",
+        "evidence": [
+          "\"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process."
+        ],
+        "rationale": "The timing distinction defines the reform and prevents a misleading interpretation of what the policy does."
+      },
+      {
+        "id": "F3",
+        "proposition": "The author urges the Obama administration to adopt fair-chance hiring for people with criminal records.",
+        "evidence": [
+          "The administration should ensure that the federal government does not continue to erect unfair and unnecessary barriers to employment of people with records.",
+          "Now it's time for President Obama to lead the way and embrace fair-chance hiring of people with records."
+        ],
+        "rationale": "The federal call to action is the article's main purpose; author attribution distinguishes advocacy from an enacted policy."
+      }
+    ],
+    "summary": "Koch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions -- is a big step forward in the movement to break down barriers to employment for job-seekers with records. \"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process. So far, 16 states and more than 100 cities and counties have adopted fair-chance hiring policies. Now it's time for President Obama to lead the way and embrace fair-chance hiring of people with records."
+  },
+  {
+    "output_id": "R23",
+    "case_id": "N07",
+    "source": "Seoul, South Korea (CNN)On March 20, 2013, a cyberattack brought chaos to several banks and media outlets in South Korea.\nThen more ominously on December 23 last year, computers at the country's nuclear operator were breached.\nAgain cybercrime was suspected.\nThe source of these attacks?\nNorth Korea.\nAnd South Korean investigators say they have proof -- the actual malicious codes used in the attacks.\nThey shared this data with CNN.\nThe 2013 attack, known as \"Dark Seoul,\" paralyzed an estimated 48,000 computers at a number of major banks and broadcasters, disrupting network systems and wiping their hard disks clean.\n\"It would try to delete essentially all your files... then restart the system.\nYou would come back up and nothing would be there,\" Joshua James, a digital forensic expert, told CNN.\n\"If it infected more financial systems, it could have deleted all financial data in Korea.\nI mean, it is dangerous,\" the visiting professor at Chuncheon's Hallym University added.\nLive footage of the breaches showed computer screens at the media companies completely down, while bank customers were unable to make withdrawals, or transfer money online.\n\"Dark Seoul\" happened shortly after the North Korean government announced it would end the armistice agreement that brought the three-year Korean War to an end in July 1953 amid growing tensions with its neighbor.\nThe latest high-profile digital incursion, in December, attempted to steal data from South Korea's nuclear operator, including plant blueprints and personnel information.\nThough investigators said no critical data was stolen, the attack raised serious concerns about the safety and security of the 23 nuclear power plants it runs.\nThe attack itself was described by James as a \"spear-fishing\" exercise where unsuspecting victims -- retired and current employees of the nuclear operator -- were prompted to open up a disguised document in their email.\n\"As soon as you double click on it, it starts running in the background of your computer where you can't see ... it's also trying to open up your computer -- what we call a back door -- to give access to the infected system by the attacker,\" he told CNN.\nThe attack, which James said was simpler than \"Dark Seoul,\" came just a few days after Sony Pictures said their systems has been \"hacked,\" another attack the South Korean authorities blamed on North Korea.\n\"From a law enforcement or investigation side, we're trying to actually trace back to who did it,\" said James.\nSeoul announced in mid-March that some of the IP addresses used in December incursion could be traced back to Shenyang, China, which can be easily accessed from the North Korean border.\nCodes used in the attack were said to be similar in pattern to those used by the North Koreans, South Korean authorities said.\n\"The malicious codes used in the attack were same in composition and working methods as \"Kimsuky\" codes known to be used by North Korea,\" the prosecutor's office that leads 17 other government agencies and Internet companies in the investigation said in the statement in March.\nPyongyang has dismissed the claims it launched these attacks, calling them a \"plot and fabrication that can never win over the truth.\"\nBut many experts say North Korea appears to be investing more in cyberwarfare because it is cheaper than spending on conventional weapons and can cause significant economic damage to its southern rival.\nIndeed South Korea's Defense Ministry estimates that North Korea is operating a \"cyberarmy\" of 6,000 workers as it focuses on strengthening its asymmetrical warfare capability.\n\"Hacks are going on all the time, constantly -- though how many actually make the news is a very small amount,\" said James.\n\"How many are detected in general?\nI think the average person would have no clue they've been hacked.\n\"Organizations need to invest the same amount that hackers are investing to protect themselves and right now they're not,\" he added.\nMany in South Korea believe not enough effort is being put into defending against cyberattacks.\nA report by the Korea Institute for Industrial Economics and Trade, a government-funded think tank, estimates that \"Dark Seoul\" caused about $820 million worth of damage.\nIts report, published in 2014, predicted that by 2020, South Korea could be exposed to hacking attacks causing up to $25 billion in economic damage.",
+    "target": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "South Korean investigators attributed cyberattacks on the country's banks, media outlets and nuclear operator to North Korea.",
+        "evidence": [
+          "Seoul, South Korea (CNN)On March 20, 2013, a cyberattack brought chaos to several banks and media outlets in South Korea.\nThen more ominously on December 23 last year, computers at the country's nuclear operator were breached.\nAgain cybercrime was suspected.\nThe source of these attacks?\nNorth Korea.\nAnd South Korean investigators say they have proof -- the actual malicious codes used in the attacks.",
+          "Pyongyang has dismissed the claims it launched these attacks, calling them a \"plot and fabrication that can never win over the truth.\""
+        ],
+        "rationale": "The investigators' attribution is the central report; keeping it attributed avoids resolving the accusation that North Korea disputes."
+      },
+      {
+        "id": "F2",
+        "proposition": "The Dark Seoul attack disabled an estimated 48,000 computers at major South Korean banks and broadcasters.",
+        "evidence": [
+          "The 2013 attack, known as \"Dark Seoul,\" paralyzed an estimated 48,000 computers at a number of major banks and broadcasters, disrupting network systems and wiping their hard disks clean."
+        ],
+        "rationale": "The scale of disruption is a central concrete outcome of the earlier attack; the count remains an estimate."
+      },
+      {
+        "id": "F3",
+        "proposition": "Investigators said no critical data was stolen in the nuclear-operator attack.",
+        "evidence": [
+          "The latest high-profile digital incursion, in December, attempted to steal data from South Korea's nuclear operator, including plant blueprints and personnel information.",
+          "Though investigators said no critical data was stolen, the attack raised serious concerns about the safety and security of the 23 nuclear power plants it runs."
+        ],
+        "rationale": "This attributed limitation is essential to avoid implying that the attempted theft succeeded or that power plants themselves were compromised."
+      }
+    ],
+    "summary": "The latest high-profile digital incursion, in December, attempted to steal data from South Korea's nuclear operator, including plant blueprints and personnel information. Codes used in the attack were said to be similar in pattern to those used by the North Koreans, South Korean authorities said."
+  },
+  {
+    "output_id": "R24",
+    "case_id": "N01",
+    "source": "Obock, Djibouti (CNN)Amina Ali Qassim is sitting with her youngest grandchild on her lap, wiping away tears with her headscarf.\nOnly a few months old, this is the baby girl whose ears she desperately tried to cover the night the aerial bombardment started.\nShe lay awake, she says, in a village mosque on the Yemeni island of Birim, counting explosions as the baby cried.\nIt could have been worse though.\nThey could have still been in their house when the first missile landed.\n\"Our neighbor shouted to my husband 'you have to leave, they're coming.'\nAnd we just ran.\nAs soon as we left the house, the first missile fell right by it and then a second on it.\nIt burned everything to the ground,\" Qassim tells us.\nQassim and her family fled Birim at first light, piling in with three other families.\nTwenty-five of them squeezed into one boat setting sail through the Bab al-Mandab Strait to Djibouti.\nBab al-Mandab is one of the busiest waterways in the world, a thoroughfare for oil tankers and cargo ships.\nIt's now being crossed by desperate Yemenis in rickety fishing boats seeking refuge from the conflict threatening to engulf their country.\nQassim's son Mohamed describes the families' journey across this part of the Red Sea as \"a window into hell.\"\n\"The women were violently ill,\" he tells us.\n\"It was a catastrophe.\"\nIt took them five hours to cross into the north of Djibouti, where the government is providing the refugees with temporary shelter in this unfinished orphanage here in Obock.\nAnd the U.N. says thousands more refugees are expected.\nQassim and her family will soon have to move to the plastic tents that have been prepared for them on the dusty outskirts of the town, taking with them only the collection of plastic mats and pots neatly stacked in the corner.\nIt's all that remains of everything they once owned.\nHer two daughters are trapped back in Yemen, in Taiz.\nShe hasn't been able to reach them and the worry she says is almost unbearable.\nI ask her how many days it was after the Saudi aerial bombardment began that they left.\nShe looks at me and laughs, \"How many days would you have stayed?\"\nThen she goes quiet, looking down at the granddaughter in her lap.\nFinally she tells me, \"I thought she would never be able to stop screaming.\nThat the fear would stay with her forever.\"\n\"May God please have mercy on Yemen.\"",
+    "target": {
+      "length": "normal",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Qassim's family fled the bombing in Yemen by boat to Djibouti.",
+        "evidence": [
+          "Qassim and her family fled Birim at first light, piling in with three other families.",
+          "Twenty-five of them squeezed into one boat setting sail through the Bab al-Mandab Strait to Djibouti.",
+          "I ask her how many days it was after the Saudi aerial bombardment began that they left."
+        ],
+        "rationale": "The family's escape from the conflict is the central event; the exact passenger count and route name are not required."
+      },
+      {
+        "id": "F2",
+        "proposition": "Djibouti's government is providing temporary shelter for the refugees.",
+        "evidence": [
+          "It took them five hours to cross into the north of Djibouti, where the government is providing the refugees with temporary shelter in this unfinished orphanage here in Obock."
+        ],
+        "rationale": "Temporary refuge is the immediate outcome of the escape."
+      },
+      {
+        "id": "F3",
+        "proposition": "The U.N. expects thousands more refugees to arrive.",
+        "evidence": [
+          "And the U.N. says thousands more refugees are expected."
+        ],
+        "rationale": "The attributed forecast connects one family's journey to the wider displacement without treating a prediction as an established count."
+      }
+    ],
+    "summary": "Amina Ali Qassim says her family narrowly escaped their home on Yemen's Birim island before missiles destroyed it during the Saudi aerial bombardment. At dawn, they joined three other families in a boat carrying 25 people and endured a five-hour crossing to Djibouti. The government is temporarily housing them in an unfinished orphanage in Obock before they move to tents, while the United Nations expects thousands more refugees. Having lost nearly everything, Qassim is also unable to contact her two daughters trapped in Taiz and fears the lasting effects of the bombardment on her infant granddaughter."
+  },
+  {
+    "output_id": "R25",
+    "case_id": "N09",
+    "source": "Catania, Sicily (CNN)We are at the beginning of a massive and mounting crisis with no solution in sight.\nPerhaps that's incorrect.\nThe migrant crisis that has suddenly drawn hundreds of journalists to Sicily has been brewing for years, but in the past 10 days, with as many as 1,600 deaths in the Mediterranean, suddenly minds are focused -- for now.\nAlmost exactly four years ago, in Libya, I caught, perhaps, a glimpse of what was to come.\nIt was late at night in the besieged city of Misrata.\nHundreds of African migrants were caught between the Libyan civil war (back then some optimistically called it a \"revolution\") and the deep blue sea.\nThey had come to Misrata from Ghana, Nigeria and elsewhere, hoping to board rickety boats to cross the sea to Europe.\nThey had been pinned down under sporadic shelling from government forces, but weren't welcome by the rebels who controlled the city.\nThey appealed to us to help them escape.\nWe could do nothing, but they may have eventually found their way out when the fighting subsided.\nThe fall of Libyan leader Moammar Gadhafi's regime, which we reporters covered so avidly, was followed by chaos, which we in the news media largely neglected, focused as we journalists were on the next catastrophe, the Syrian civil war.\nIn that chaos, the business of human trafficking has boomed.\nAnd now that boom in human misery is coming in waves to the shores of Italy.\nThe focus today is on those lost at sea.\nAware of the tragedy underway, however, Italians are alarmed at the prospect that this year alone as many as a million migrants could arrive in Europe, according to one European Union official.\nThat is certainly the case in the Sicilian port of Catania, where many migrants arrive.\nThe city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers.\nThe rest of Europe must help carry the burden.\n\"If something serious isn't done,\" he warns, \"dramas like these will be repeated.\nThis problem will not be resolved by hiding our heads in the sand.\"\nIncreasingly, some Italians are losing their patience.\nTwo northern regions, Veneto and Valle d'Aosta, have declared they will no longer accept new migrants.\nThe rightist Lega Nord has made opposition to new migrants a pillar of its party program.\nOthers, however, insist Italy must keep its doors open.\nIn Catania port, I spoke with Grazia Giurato, who had joined a small protest in solidarity with the migrants.\n\"Many years ago, our grandparents emigrated,\" she recalled.\n\"Let's keep that in mind.\"\nIndeed, in tougher times, millions of impoverished Italians left their homeland to settle in the Americas and Australia.\nThey, too, like the migrants from Africa and the Middle East, were fleeing grinding poverty and war.\nAnd they, too, experienced the kind of prejudice and resentment in lands their descendants now proudly call home.\nThat's the long view, perhaps.\nBut now, today, Italians are grappling to deal with the consequences of an array of old and new ills, ranging from failing states and failing economies to endemic corruption, hopeless poverty, oppression and injustice that no one state or group of states can solve without a gargantuan, expensive and politically daunting effort.\nAnd while this crisis has been brewing for years, it is now truly upon us.",
+    "target": {
+      "length": "long",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "As many as 1,600 migrants had died in the Mediterranean in the preceding ten days.",
+        "evidence": [
+          "The migrant crisis that has suddenly drawn hundreds of journalists to Sicily has been brewing for years, but in the past 10 days, with as many as 1,600 deaths in the Mediterranean, suddenly minds are focused -- for now."
+        ],
+        "rationale": "The recent death toll explains the crisis's urgency; the upper-bound wording is essential."
+      },
+      {
+        "id": "F2",
+        "proposition": "An EU official said as many as one million migrants could arrive in Europe that year.",
+        "evidence": [
+          "Aware of the tragedy underway, however, Italians are alarmed at the prospect that this year alone as many as a million migrants could arrive in Europe, according to one European Union official."
+        ],
+        "rationale": "The attributed possible inflow is central to the pressure on Italy; it is neither a confirmed arrival count nor a forecast of more than one million."
+      },
+      {
+        "id": "F3",
+        "proposition": "Catania's mayor said Catania and Sicily could not absorb the growing number of migrants.",
+        "evidence": [
+          "The city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers."
+        ],
+        "rationale": "The mayor's assessment captures the central local-capacity concern without turning it into an independently established limit for all of Italy."
+      }
+    ],
+    "summary": "The migrant crisis that has suddenly drawn hundreds of journalists to Sicily has been brewing for years, but in the past 10 days, with as many as 1,600 deaths in the Mediterranean, suddenly minds are focused -- for now. The fall of Libyan leader Moammar Gadhafi's regime, which we reporters covered so avidly, was followed by chaos, which we in the news media largely neglected, focused as we journalists were on the next catastrophe, the Syrian civil war. In that chaos, the business of human trafficking has boomed. Aware of the tragedy underway, however, Italians are alarmed at the prospect that this year alone as many as a million migrants could arrive in Europe, according to one European Union official. The city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers. The rest of Europe must help carry the burden. Two northern regions, Veneto and Valle d'Aosta, have declared they will no longer accept new migrants. Others, however, insist Italy must keep its doors open. Indeed, in tougher times, millions of impoverished Italians left their homeland to settle in the Americas and Australia. They, too, like the migrants from Africa and the Middle East, were fleeing grinding poverty and war."
+  },
+  {
+    "output_id": "R26",
+    "case_id": "N08",
+    "source": "(CNN)What do Walmart, Target, and now the Koch Brothers have in common with the American Civil Liberties Union, ColorOfChange.org, and the Center for American Progress?\nAll of them are adopting or advocating for hiring practices that open up work opportunities for people with convictions and leverage untapped potential in the labor market.\nKoch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions -- is a big step forward in the movement to break down barriers to employment for job-seekers with records.\n\"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process.\nIt's one item on a menu of fair-chance hiring reforms intended to ensure that job applicants are evaluated on their skills and qualifications first, rather than judged solely on past mistakes.\nThese policies help reduce recidivism by making employment accessible to job-seekers who need a second chance, and they help break down the stigma of an arrest or conviction record.\nTwo generations of the war on drugs, zero tolerance, and aggressive policing have left 70 million adults  with arrest or conviction records that undermine their ability to be considered for jobs, even as the job market has grown steadily.\nMillions of people are being left behind, and it's taking a toll on our economy: The reduced economic output of people with records cost our economy $57-$65 billion in 2008 alone.\nThese criminal justice policies disproportionately impact African-Americans, who are incarcerated at a rate six times that of whites.\nThe Department of Justice's recent investigation of the Ferguson Police Department, for example, shows the extent to which racism is perpetuated through police departments and the court system.\nThat systemic racial disparity is then repeated throughout the economy, and the community is put at a severe disadvantage in the job market long after individuals have served their time.\nThat's one reason the African-American unemployment rate is persistently twice that of whites.\nIn a job market where employers that didn't previously do background checks now make them a routine part of hiring, qualified job-seekers are being screened out of the applicant pools for more and more jobs.\nNearly one in three adults in America has an arrest or conviction history that will show up on a routine background check.\nCompanies like Koch, Walmart, Target, and Bed Bath & Beyond recognize that this is a huge source of untapped talent, and that's why they've already banned the box on their job applications.\nThese policies are also gaining traction with politicians across the political spectrum.\nVermont Gov.\nPeter Shumlin, Georgia Gov.\nNathan Deal, and Virginia Gov.\nTerry McAuliffe recently signed executive orders removing the conviction question from initial applications for state employment.\nSo far, 16 states and more than 100 cities and counties have adopted fair-chance hiring policies.\nSix of those states and the District of Columbia, plus 25 cities and counties, have applied their policies to government contractors or private employers as well.\nThe Obama administration took an important step toward fairer and smarter federal hiring practices last year when it issued an executive order prohibiting contractors from discriminating against LGBT individuals.\nBanning the box and other common-sense hiring reforms would build on that progress and on the successful work of governors and the corporate sector.\nThe administration should ensure that the federal government does not continue to erect unfair and unnecessary barriers to employment of people with records.\nAlready, more than 200 organizations and prominent individuals have publicly urged the Obama administration to take these practical steps.\nIf Koch Industries -- a major federal contractor -- can ban the box, there's no reason why other federal contractors cannot.\nNow it's time for President Obama to lead the way and embrace fair-chance hiring of people with records.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Koch Industries announced it would remove the convictions checkbox from job applications.",
+        "evidence": [
+          "Koch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions -- is a big step forward in the movement to break down barriers to employment for job-seekers with records."
+        ],
+        "rationale": "The company's policy change is the concrete event motivating the opinion piece."
+      },
+      {
+        "id": "F2",
+        "proposition": "Ban-the-box policies postpone background checks until later in hiring rather than prohibit them.",
+        "evidence": [
+          "\"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process."
+        ],
+        "rationale": "The timing distinction defines the reform and prevents a misleading interpretation of what the policy does."
+      },
+      {
+        "id": "F3",
+        "proposition": "The author urges the Obama administration to adopt fair-chance hiring for people with criminal records.",
+        "evidence": [
+          "The administration should ensure that the federal government does not continue to erect unfair and unnecessary barriers to employment of people with records.",
+          "Now it's time for President Obama to lead the way and embrace fair-chance hiring of people with records."
+        ],
+        "rationale": "The federal call to action is the article's main purpose; author attribution distinguishes advocacy from an enacted policy."
+      }
+    ],
+    "summary": "Koch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions -- is a big step forward in the movement to break down barriers to employment for job-seekers with records. \"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process. So far, 16 states and more than 100 cities and counties have adopted fair-chance hiring policies. Now it's time for President Obama to lead the way and embrace fair-chance hiring of people with records."
+  },
+  {
+    "output_id": "R27",
+    "case_id": "N03",
+    "source": "Kano, Nigeria (CNN)Hundreds of decomposed corpses were discovered buried in shallow graves in the streets of the northeastern Nigerian town of Damasak this past weekend, according to local officials and a resident.\nThe town had recently been freed from the Boko Haram terror group in a joint Nigerian-Chadian military operation.\nA provincial government committee was visiting the area as part of an effort to assess the level of destruction in towns that had been in the deadly grip of Boko Haram.\n\"We found hundreds of dead bodies in shallow graves and on the streets of Damasak during our visit,\" Damasak local government spokesman Babagana Mustapha told CNN on Monday.\n\"Those bodies in shallow graves have badly decomposed while those found on the streets were desiccated from [exposure to] dry ‎winds,\" Mustapha added.\nThe victims included men, women and children murdered by Boko Haram when they seized the area in November, said Abubakar Kyari, a senator-elect for the region.\n\"The staggering number of dead bodies found in Damasak is a testimony of the large-scale atrocity Boko Haram committed when they were in control of the town\" Kyari added.\nMustapha said the bodies were buried in 20 clearly marked mass graves.\nAlthough Mustapha did not give a precise number of corpses recovered, Damasak residents who participated in the exhumations put the figure at more than 400.\n\"‎We collected over 400 corpses from the streets and in shallow graves during our visit in Damasak,\" said Idris Karimbe, one of the volunteers who took part in the burial.\n\"The number of bodies we recovered this time around far exceeded the ones found last month,\" said another resident, Musa Bremah‎.\nBremah was referring to the discovery of around 90 bodies in a shallow grave outside Damasak last month after its recapture.\n‎A regional military coalition involving troops from Nigeria, Niger, Chad and Cameroon has in recent months recaptured swathes of Nigerien territory seized by Boko Haram.\nThe joint military operation is part of an ongoing collaborative effort at crushing the Islamist group that has widened its deadly attacks to Niger, Chad and Cameroon.",
+    "target": {
+      "length": "short",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "key_facts": [
+      {
+        "id": "F1",
+        "proposition": "Local officials and a resident reported the discovery of hundreds of corpses in Damasak, Nigeria.",
+        "evidence": [
+          "Kano, Nigeria (CNN)Hundreds of decomposed corpses were discovered buried in shallow graves in the streets of the northeastern Nigerian town of Damasak this past weekend, according to local officials and a resident."
+        ],
+        "rationale": "The large-scale discovery is the lead event; Damasak is the discovery site, while Kano is the dateline."
+      },
+      {
+        "id": "F2",
+        "proposition": "A joint military operation had recently recaptured Damasak from Boko Haram.",
+        "evidence": [
+          "The town had recently been freed from the Boko Haram terror group in a joint Nigerian-Chadian military operation."
+        ],
+        "rationale": "The recapture supplies the essential context for the subsequent discovery."
+      },
+      {
+        "id": "F3",
+        "proposition": "A senator-elect for the region said Boko Haram had murdered the victims when it seized the town.",
+        "evidence": [
+          "The victims included men, women and children murdered by Boko Haram when they seized the area in November, said Abubakar Kyari, a senator-elect for the region."
+        ],
+        "rationale": "The attributed account of responsibility is central; it should not become an independently verified causal finding."
+      }
+    ],
+    "summary": "Hundreds of decomposed corpses were discovered buried in shallow graves in the streets of the northeastern Nigerian town of Damasak this past weekend, according to local officials and a resident, after the town had recently been freed from the Boko Haram terror group in a joint Nigerian-Chadian military operation. Damasak residents who participated in the exhumations put the figure at more than 400, and Abubakar Kyari, a senator-elect for the region, said the victims included men, women and children murdered by Boko Haram when they seized the area in November."
+  }
+]

@@ -1,0 +1,390 @@
+{
+  "reason": "Post-generation independent code audit found quote-attribution and sentence-final acronym bugs. Fixed in separate checker v2; prompts/rubric/first submissions/frozen diagnostic kept unchanged. No model regeneration.",
+  "prompt_strings_equal": true,
+  "pass_changes": 0,
+  "rows": [
+    {
+      "output_id": "R01",
+      "arm": "revised",
+      "case_id": "N04",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 97%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R02",
+      "arm": "previous",
+      "case_id": "N04",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 93%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R03",
+      "arm": "manual",
+      "case_id": "N04",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 92%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R04",
+      "arm": "revised",
+      "case_id": "N03",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 87%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R05",
+      "arm": "manual",
+      "case_id": "N02",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 10문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 43%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R06",
+      "arm": "revised",
+      "case_id": "N02",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 10문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 40%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R07",
+      "arm": "manual",
+      "case_id": "N06",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 43%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R08",
+      "arm": "previous",
+      "case_id": "N02",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 34%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R09",
+      "arm": "revised",
+      "case_id": "N07",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R10",
+      "arm": "manual",
+      "case_id": "N09",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R11",
+      "arm": "previous",
+      "case_id": "N01",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 24%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R12",
+      "arm": "manual",
+      "case_id": "N07",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R13",
+      "arm": "revised",
+      "case_id": "N06",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 35%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R14",
+      "arm": "revised",
+      "case_id": "N09",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 10문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R15",
+      "arm": "previous",
+      "case_id": "N03",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 100%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R16",
+      "arm": "previous",
+      "case_id": "N05",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 98%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R17",
+      "arm": "revised",
+      "case_id": "N08",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R18",
+      "arm": "previous",
+      "case_id": "N06",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 40%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R19",
+      "arm": "manual",
+      "case_id": "N01",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 28%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R20",
+      "arm": "revised",
+      "case_id": "N05",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 98%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R21",
+      "arm": "manual",
+      "case_id": "N05",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 10문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 99%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R22",
+      "arm": "previous",
+      "case_id": "N08",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R23",
+      "arm": "previous",
+      "case_id": "N07",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R24",
+      "arm": "revised",
+      "case_id": "N01",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 24%."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R25",
+      "arm": "previous",
+      "case_id": "N09",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 10문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R26",
+      "arm": "manual",
+      "case_id": "N08",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 4문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "완전 발췌 형식 충족(v2). 공백·문서 맨 앞의 지정 매체 태그만 정규화했다. 내용 보존은 별도 확인한다."
+      },
+      "pass_change_from_frozen": false
+    },
+    {
+      "output_id": "R27",
+      "arm": "manual",
+      "case_id": "N03",
+      "length": {
+        "score": 1.0,
+        "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 2문장. 내용 보존은 별도 확인한다."
+      },
+      "extractiveness": {
+        "score": 1.0,
+        "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 93%."
+      },
+      "pass_change_from_frozen": false
+    }
+  ],
+  "new_code_sha256": {
+    "checks/summarization_grounded_v2.py": "05dec42e6e84edfdc2dce75f28891890d5b9c41fd5f15e4736a811c78bd58505",
+    "domains/summarization_grounded_v2.yaml": "8542ce273576b3f9cfe75067b7cc702a52e57eb1271591948183ce9b959f3c03",
+    "domains/summarization_ko_grounded_v2.yaml": "225bfb9933d544e77bb295044a246153cb8dae0aac184ee31f6fcb4a96e2109d"
+  }
+}

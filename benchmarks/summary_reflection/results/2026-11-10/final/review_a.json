@@ -1,0 +1,1779 @@
+[
+  {
+    "output_id": "B001",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "Mostly reformulates, for example 'finished collecting the principal evidence', 'personal belongings', and 'intentionally accelerated'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "investigators had finished collecting the principal evidence from the Germanwings Flight 9525 crash site"
+        ],
+        "reason": "Completion of the principal site evidence collection is conveyed without claiming completed analysis."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "killed all 150 people aboard"
+        ],
+        "reason": "All 150 fatalities are explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Authorities say co-pilot Andreas Lubitz locked the captain out and deliberately crashed the aircraft."
+        ],
+        "reason": "Authorities' account of deliberate causation by the co-pilot is retained."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B002",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences reproduce complete source sentences; the initial CNN label may be retained or removed.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Novak Djokovic extended his current winning streak to 17 matches after beating Thomas Berdych 7-5, 4-6, 6-3 in the rain-interrupted final of the Monte Carlo Masters."
+        ],
+        "reason": "The final victory over Berdych is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Novak Djokovic extended his current winning streak to 17 matches"
+        ],
+        "reason": "The 17-match winning streak is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sunday's victory over Berdych means he becomes the first man to win the opening three Masters tournaments of the season."
+        ],
+        "reason": "The first-man distinction and opening three Masters are explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B003",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses distinctive source clauses, including the normalization sentence and 'highest-level talks'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "President Obama and his Cuban counterpart, Raul Castro, greeted each other and shook hands Friday night",
+          "for the Summit of the Americas"
+        ],
+        "reason": "The leaders' encounter and handshake at the summit are explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Obama and Castro discussed the ongoing process of normalizing relations between the United States and Cuba"
+        ],
+        "reason": "Normalization is described as an ongoing effort, not completed."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Obama is expected to announce he is removing Cuba from the United States' list of countries that sponsor terrorism, but said Thursday a panel of experts was reviewing the State Department report before he makes a final determination."
+        ],
+        "reason": "Expected removal is distinguished from a pending final determination."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B004",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Retains extensive source phrases such as 'greeted each other and shook hands', 'highest-level talks', and 'reopening embassies'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "President Obama and his Cuban counterpart, Raul Castro, greeted each other and shook hands Friday night at a dinner in Panama City for the Summit of the Americas."
+        ],
+        "reason": "The leaders' encounter and handshake at the summit are explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "seeking to engage Havana in talks over reopening embassies and removing barriers to commerce and travel, and discussed normalizing relations with Castro"
+        ],
+        "reason": "Normalization is described as an ongoing effort, not completed."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Obama is expected to announce Cuba's removal from the United States' list of countries that sponsor terrorism, but a panel of experts was reviewing the State Department's report before he makes a final determination."
+        ],
+        "reason": "Expected removal is distinguished from a pending final determination."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B005",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences reproduce complete source sentences; the initial CNN label may be retained or removed.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Novak Djokovic extended his current winning streak to 17 matches after beating Thomas Berdych 7-5, 4-6, 6-3 in the rain-interrupted final of the Monte Carlo Masters."
+        ],
+        "reason": "The final victory over Berdych is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Novak Djokovic extended his current winning streak to 17 matches"
+        ],
+        "reason": "The 17-match winning streak is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sunday's victory over Berdych means he becomes the first man to win the opening three Masters tournaments of the season."
+        ],
+        "reason": "The first-man distinction and opening three Masters are explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B006",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Recombines and reformulates as 'freed', 'reporting ... releases', and 'helped arrange the release'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "ISIS freed more than 200 Yazidis"
+        ],
+        "reason": "The ISIS release of more than 200 Yazidis is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "mostly women and children"
+        ],
+        "reason": "Women and children are identified as the majority."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The reason was unclear"
+        ],
+        "reason": "The unknown release motive is preserved."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B007",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "All eight sentences are complete original source sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "al Qaeda confirmed that two of its leaders, known as Ustad Ahmad Farooq and Qari Abdullah Mansur, were killed in CIA drone strikes"
+        ],
+        "reason": "Al Qaeda's confirmation of two leadership deaths in CIA strikes is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "'On life support' conveys severe core weakness but does not state virtually no capacity to attack the West; the anchor's specific capability assessment is absent."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "To be sure, al Qaeda's Yemen-based affiliate, al Qaeda in the Arabian Peninsula, or AQAP, continues to pose a threat to American aviation."
+        ],
+        "reason": "The aviation threat is attributed to the Yemen affiliate, distinct from the weakened core."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B008",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "All nine sentences reproduce complete source sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "With his early leap into the 2016 race, Marco Rubio is positioning himself as the next generation of GOP leadership.",
+          "Rubio's candidacy"
+        ],
+        "reason": "Entering the 2016 race as GOP leadership, together with his candidacy, conveys the nomination bid implicitly."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Attributed limited Latino support is included, but the contrast with his Hispanic background is absent. The anchor bundles this contrast with the support assessment."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Back in 2013, Rubio was a member of the Senate \"Gang of 8\" that crafted a bipartisan proposal for comprehensive reform",
+          "He later distanced himself from the bill"
+        ],
+        "reason": "His role in developing comprehensive reform and subsequent retreat are explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B009",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete source sentences; the initial dateline and label are retained exactly.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Sudan looks like any other northern white rhino",
+          "He's the last known male northern white rhino left in the entire world."
+        ],
+        "reason": "Sudan's last-known-male status and northern white subspecies are explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The absence of conceptions after mating is omitted."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "A committee at the conservancy is also looking at various alternative reproduction techniques, including in vitro fertilization."
+        ],
+        "reason": "Exploration of alternative reproduction, including IVF, is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B010",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses 'probably did not survive to March 1945', the typhus interval, and 'exact dates of death remain unclear'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "New research released by the Anne Frank House concludes that Anne and her older sister, Margot Frank, probably did not survive to March 1945, at least a month earlier than Anne's supposed death on March 31, 1945."
+        ],
+        "reason": "The revised earlier death estimate retains its probabilistic status and research attribution."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Witnesses said both sisters had typhus symptoms before February 7, and most deaths caused by typhus occur around twelve days after the first symptoms appear, the researchers wrote"
+        ],
+        "reason": "The early witnessed typhus symptoms are presented as context supporting the preceding revised chronology."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "the exact dates of death remain unclear"
+        ],
+        "reason": "The exact death dates remain explicitly uncertain."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B011",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Mostly reformulates: 'received seven-year prison sentences', 'overstating profits', and 'acquired'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Former Satyam Computers Services chairman Ramalinga Raju and nine others received seven-year prison sentences"
+        ],
+        "reason": "Raju and nine others' seven-year sentences are connected to the fraud case."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Raju admitted overstating profits through invented assets and cash"
+        ],
+        "reason": "Raju's admission and fictitious assets/cash inflating profits are explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "After Raju's disclosures, the government dismissed Satyam's board, and Tech Mahindra acquired"
+        ],
+        "reason": "Tech Mahindra's post-disclosure acquisition is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B012",
+    "sentence_count": 7,
+    "wording_pass": true,
+    "wording_reason": "Mostly rephrases, for example 'examining a potential', 'intercepted communications', and 'extra checks'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "the FBI was examining a potential terrorist threat in the United States that might have been inspired by ISIS"
+        ],
+        "reason": "The FBI inquiry concerns a possible ISIS-inspired U.S. threat, preserving its tentative status."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "investigators did not know whether it reflected a real plan or merely an aspiration"
+        ],
+        "reason": "Uncertainty between a real plan and aspiration is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Other American cities also strengthened security as a precaution."
+        ],
+        "reason": "Increased city security is presented as precautionary."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B013",
+    "sentence_count": 7,
+    "wording_pass": true,
+    "wording_reason": "Substantially retains source phrases such as 'pole-to-flag win', 'third straight podium', and 'taking life out of his tyres'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Lewis Hamilton took victory for Mercedes at the Chinese Grand Prix"
+        ],
+        "reason": "Hamilton's Chinese Grand Prix victory is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Rosberg complained after the race that Hamilton's slow driving was holding him up"
+        ],
+        "reason": "The compromise to Rosberg's race remains attributed to his complaint."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Hamilton said he didn't do anything intentionally to slow the cars down"
+        ],
+        "reason": "Hamilton's denial of intentional slowing is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B014",
+    "sentence_count": 7,
+    "wording_pass": true,
+    "wording_reason": "Reformulates most clauses with 'examining a potential', 'had not established', and 'broader measures'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "the FBI was examining a potential terrorist threat in the United States that might have been inspired by ISIS"
+        ],
+        "reason": "The FBI inquiry concerns a possible ISIS-inspired U.S. threat, preserving its tentative status."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "officials had not established whether the threat reflected an actual plan or merely an aspiration"
+        ],
+        "reason": "Uncertainty between a real plan and aspiration is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Several American cities increased precautions"
+        ],
+        "reason": "Increased city security is presented as precautionary."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B015",
+    "sentence_count": 11,
+    "wording_pass": true,
+    "wording_reason": "All 11 sentences reproduce complete source sentences, including the source's quoted or parenthetical punctuation.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "al Qaeda confirmed that two of its leaders, known as Ustad Ahmad Farooq and Qari Abdullah Mansur, were killed in CIA drone strikes"
+        ],
+        "reason": "Al Qaeda's confirmation of two leadership deaths in CIA strikes is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Indeed, al Qaeda has virtually no capacity to carry out attacks in the West.",
+          "the core al Qaeda organization that killed almost 3,000 men, women and children on 9/11 is on life support"
+        ],
+        "reason": "The source's assessment is reproduced with the core/affiliate distinction preserved; it is not presented as a new outside prediction."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "To be sure, al Qaeda's Yemen-based affiliate, al Qaeda in the Arabian Peninsula, or AQAP, continues to pose a threat to American aviation."
+        ],
+        "reason": "The aviation threat is assigned to the Yemen affiliate, preserving the exception."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B016",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses the handshake, 'half-century of enmity', embassies, commerce/travel, and designation phrases.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "President Obama and his Cuban counterpart, Raul Castro, greeted each other and shook hands Friday night at a dinner in Panama City for the Summit of the Americas"
+        ],
+        "reason": "The leaders' encounter and handshake at the summit are explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Obama is seeking to engage Havana in talks over reopening embassies and removing barriers to commerce and travel as part of the ongoing process of normalizing relations."
+        ],
+        "reason": "Normalization is described as an ongoing effort, not completed."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Obama is expected to announce he is removing Cuba from the United States' list of countries that sponsor terrorism, but a panel of experts was reviewing the State Department's report before his final determination."
+        ],
+        "reason": "Expected removal is distinguished from a pending final determination."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B017",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "Substantially retains source phrasing, including the family goal, shrapnel account, evacuation concern, and government's response.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Jamal al-Labani",
+          "family members identified him as a victim killed in a mortar strike last week in Aden",
+          "He is believed to be the first U.S. citizen killed in the current violence in Yemen."
+        ],
+        "reason": "The family-attributed mortar-strike death and U.S. citizenship are conveyed."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "al-Labani had told family members he was concerned about not being able to evacuate",
+          "two days before he was killed"
+        ],
+        "reason": "His inability to evacuate is conveyed by his concerns before the reported death in Yemen."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "the State Department said there are no current plans to evacuate private U.S. citizens from Yemen"
+        ],
+        "reason": "The State Department's current lack of plans for private U.S. citizens is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B018",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Reformulates and combines source clauses as 'alleging', 'who has quadriplegia', and 'must finish unspecified treatment'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Philadelphia police added attempted murder to the charges against Nyia Parler"
+        ],
+        "reason": "The added attempted-murder charge is explicit and not presented as a conviction."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "alleging she left her 21-year-old son, who has quadriplegia and cerebral palsy, in Cobbs Creek Park for more than four days"
+        ],
+        "reason": "Police allegation of prolonged abandonment of her quadriplegic son is retained; the park reference preserves the setting."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "must finish unspecified treatment before extradition to Philadelphia"
+        ],
+        "reason": "Extradition is explicitly conditional on finishing treatment of unspecified kind."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B019",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Retains distinctive source phrases including 'probably did not survive to March 1945' and the witness/date clauses.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "New research released by the Anne Frank House concluded that Anne and her older sister, Margot Frank, probably did not survive to March 1945, contradicting the previously determined March 31, 1945, date of Anne's death."
+        ],
+        "reason": "The revised earlier death estimate retains its probabilistic status and research attribution."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Witnesses at the camp said the sisters both had symptoms of typhus before February 7"
+        ],
+        "reason": "The early witnessed typhus symptoms are presented as context supporting the preceding revised chronology."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "the exact dates of death for Anne and Margot remain unclear"
+        ],
+        "reason": "The exact death dates remain explicitly uncertain."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B020",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete source sentences; only whitespace is normalized.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Sudan is elderly in rhino years.",
+          "He's the last known male northern white rhino left in the entire world."
+        ],
+        "reason": "Sudan's last-known-male status and northern white subspecies are explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The absence of conceptions after mating is omitted."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Resorting to science conveys a conservation effort but does not specify assisted reproduction."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B021",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses 'document the real-life experience', 'taking full advantage', and the 12% clause.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Photographer Johan Bavman used his photography to document the real-life experience of fathers taking full advantage of Sweden's parental leave program"
+        ],
+        "reason": "The photographic documentation of fathers using parental leave is conveyed; caring for children is clear in context."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "grants a total of 480 calendar days",
+          "Swedish couples equally share the 480 days of leave"
+        ],
+        "reason": "The 480-day entitlement and couples sharing it are conveyed."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "only 12% of Swedish couples equally share the 480 days of leave, Bavman said"
+        ],
+        "reason": "Bavman's report of only 12% sharing equally preserves the limited uptake and attribution."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B022",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete source sentences with permitted whitespace normalization.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Sudan's female companions",
+          "He's the last known male northern white rhino left in the entire world."
+        ],
+        "reason": "Sudan's last-known-male status and northern white subspecies are explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The absence of conceptions after mating is omitted."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "A committee at the conservancy is also looking at various alternative reproduction techniques, including in vitro fertilization."
+        ],
+        "reason": "Exploration of alternative reproduction, including IVF, is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B023",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "Retains extensive source language, including 'under Shanghai's sunny skies', the standings sentence, and 'top step of the podium'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Lewis Hamilton took victory for Mercedes at the Chinese Grand Prix"
+        ],
+        "reason": "Hamilton's Chinese Grand Prix victory is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Rosberg complained after the race that Hamilton's slow driving was holding him up"
+        ],
+        "reason": "The compromise to Rosberg's race remains attributed to his complaint."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Hamilton said he did not do anything intentionally to slow the cars down"
+        ],
+        "reason": "Hamilton's denial of intentional slowing is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B024",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses the research, earlier-death, symptom and uncertainty phrases.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "New research released by the Anne Frank House concludes that Anne and her older sister, Margot Frank, probably did not survive to March 1945, dying at least a month earlier than previously thought."
+        ],
+        "reason": "The revised earlier death estimate retains its probabilistic status and research attribution."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Witnesses at the camp said both sisters had symptoms of typhus before February 7"
+        ],
+        "reason": "The early witnessed typhus symptoms are presented as context supporting the preceding revised chronology."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "the exact dates of death remain unclear"
+        ],
+        "reason": "The exact death dates remain explicitly uncertain."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B025",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Extensively retains source phrasing about stable/critical conditions, occupational therapy, indoor pesticide prohibition, and investigation.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "after the family became sick -- perhaps from pesticide exposure, federal officials say -- during a trip to the U.S. Virgin Islands"
+        ],
+        "reason": "The family illness during its Virgin Islands trip retains possible pesticide causation."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "his two teenage sons remain in critical condition"
+        ],
+        "reason": "Both sons' continuing critical condition is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "An EPA spokesman said preliminary test results showed the presence of methyl bromide in the family's rented villa"
+        ],
+        "reason": "The preliminary EPA detection of methyl bromide in their accommodation is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B026",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Recasts the source as 'recaptured' and 'crew, comprising' rather than copying its sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "the navy had recaptured the fishing boat Airone hours after armed men seized it"
+        ],
+        "reason": "Retaking the seized fishing boat is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Naval personnel boarded the vessel about 90 kilometers (56 miles) from Libya's port of Misrata and detained a Libyan soldier"
+        ],
+        "reason": "Detention of a Libyan soldier aboard is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "accidental rifle fire during the operation slightly injured one of the seven fishermen aboard"
+        ],
+        "reason": "A fisherman's slight injury during the operation is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B027",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences reproduce complete source sentences without edits.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Bundchen walked the runway for the last time Wednesday"
+        ],
+        "reason": "Her last runway appearance is explicit; the retirement follows from 'for the last time'."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "the New England Patriots quarterback wasn't just there to support her in person, he expressed his emotions to the world on Facebook."
+        ],
+        "reason": "The source's quarterback reference identifies Brady and conveys a supportive public Facebook response; praise is implicit rather than quoted."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Continued work elsewhere in the fashion business is not stated."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B028",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences reproduce complete source sentences; the initial CNN label may be retained or removed.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Novak Djokovic extended his current winning streak to 17 matches after beating Thomas Berdych 7-5, 4-6, 6-3 in the rain-interrupted final of the Monte Carlo Masters."
+        ],
+        "reason": "The final victory over Berdych is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Novak Djokovic extended his current winning streak to 17 matches"
+        ],
+        "reason": "The 17-match winning streak is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sunday's victory over Berdych means he becomes the first man to win the opening three Masters tournaments of the season."
+        ],
+        "reason": "The first-man distinction and opening three Masters are explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B029",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Recasts source clauses as 'received', 'acknowledged fabricating', and 'purchased the company'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Former Satyam Computers Services chairman Ramalinga Raju and nine others received seven-year prison sentences"
+        ],
+        "reason": "Raju and nine others' seven-year sentences are connected to the fraud case."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Raju acknowledged fabricating assets and cash to inflate profits"
+        ],
+        "reason": "Raju's admission and fictitious assets/cash inflating profits are explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Following his disclosures, the government dismissed Satyam's board, and Tech Mahindra purchased the company"
+        ],
+        "reason": "Tech Mahindra's post-disclosure acquisition is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B030",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Substantially copies or closely retains the health-status, therapy, test-result and investigation clauses.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "after they became sick -- perhaps from pesticide exposure, federal officials say -- during a trip to the U.S. Virgin Islands"
+        ],
+        "reason": "The family illness during its Virgin Islands trip retains possible pesticide causation."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "his two boys remain in critical condition"
+        ],
+        "reason": "Both sons' continuing critical condition is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "EPA spokesman Elias Rodriguez said preliminary test results showed the presence of methyl bromide in the unit where the family was staying"
+        ],
+        "reason": "The preliminary EPA detection of methyl bromide in their accommodation is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B031",
+    "sentence_count": 7,
+    "wording_pass": true,
+    "wording_reason": "Recasts and combines clauses using 'recovered the principal evidence', 'distinguished', and 'preliminary recorder analysis'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "investigators had recovered the principal evidence from the Germanwings Flight 9525 crash site"
+        ],
+        "reason": "Completion of the principal site evidence collection is conveyed without claiming completed analysis."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "killing all 150 aboard"
+        ],
+        "reason": "All 150 fatalities are explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Authorities accused co-pilot Andreas Lubitz of locking the captain out and deliberately crashing the aircraft"
+        ],
+        "reason": "Authorities' account of deliberate causation by the co-pilot is retained."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B032",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Reuses long source phrases including 'stable condition and improving', 'occupational therapy', and the EPA investigation clause.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "after they became sick, perhaps from pesticide exposure, during a trip to St. John in the U.S. Virgin Islands"
+        ],
+        "reason": "The family illness during its Virgin Islands trip retains possible pesticide causation."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "his two teenage boys remain in critical condition"
+        ],
+        "reason": "Both sons' continuing critical condition is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "EPA spokesman Elias Rodriguez said preliminary test results showed the presence of methyl bromide in the family's rented villa"
+        ],
+        "reason": "The preliminary EPA detection of methyl bromide in their accommodation is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B033",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Mostly recasts the source with 'freed', 'putting the number at', and 'were taken by Kurdish forces'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "ISIS freed more than 200 Yazidis"
+        ],
+        "reason": "The ISIS release of more than 200 Yazidis is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "The freed captives, mostly women and children"
+        ],
+        "reason": "Women and children are identified as the majority."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "the reason for their release remained unclear"
+        ],
+        "reason": "The unknown release motive is preserved."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B034",
+    "sentence_count": 11,
+    "wording_pass": true,
+    "wording_reason": "All 11 sentences reproduce complete source sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "The Republican senator from Florida has announced that he is seeking the Republican presidential nomination"
+        ],
+        "reason": "The announced Republican nomination bid is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Attributed limited Latino support is included, but the contrast with his Hispanic background is absent. The anchor bundles this contrast with the support assessment."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Back in 2013, Rubio was a member of the Senate \"Gang of 8\" that crafted a bipartisan proposal for comprehensive reform",
+          "He later distanced himself from the bill"
+        ],
+        "reason": "His role in developing comprehensive reform and subsequent retreat are explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B035",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences reproduce complete source sentences; the initial CNN label may be retained or removed.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Universal's \"Furious 7\" continues to build momentum at the Friday box office for a weekend debut in the $135 million-$138 million range, the largest opening in North America since fall 2013."
+        ],
+        "reason": "The North American opening range remains a forecast."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "for a possible worldwide debut approaching or crossing $300 million"
+        ],
+        "reason": "The possible worldwide $300 million debut and uncertainty are explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The final film featuring the late Paul Walker, \"Furious 7\""
+        ],
+        "reason": "The film is explicitly Walker's last."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B036",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences reproduce complete source sentences; the initial CNN label may be retained or removed.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Universal's \"Furious 7\" continues to build momentum at the Friday box office for a weekend debut in the $135 million-$138 million range, the largest opening in North America since fall 2013."
+        ],
+        "reason": "The North American opening range remains a forecast."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "for a possible worldwide debut approaching or crossing $300 million"
+        ],
+        "reason": "The possible worldwide $300 million debut and uncertainty are explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The final film featuring the late Paul Walker, \"Furious 7\""
+        ],
+        "reason": "The film is explicitly Walker's last."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B037",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Retains distinctive phrases including 'real-life experience', 'taking full advantage', and 'devotion ... realistic imagery'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Johan Bavman is documenting the real-life experience of fathers taking full advantage of Sweden's 480 calendar days of parental leave"
+        ],
+        "reason": "The photographic documentation of fathers using parental leave is conveyed; caring for children is clear in context."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Sweden's 480 calendar days of parental leave",
+          "Swedish couples equally share the leave"
+        ],
+        "reason": "The 480-day entitlement and couples sharing it are conveyed."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Bavman says only 12% of Swedish couples equally share the leave"
+        ],
+        "reason": "Bavman's report of only 12% sharing equally preserves the limited uptake and attribution."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B038",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Mostly newly constructed clauses including 'whom they accuse' and 'extradition must await completion'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Philadelphia police added an attempted-murder charge against Nyia Parler"
+        ],
+        "reason": "The added attempted-murder charge is explicit and not presented as a conviction."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "whom they accuse of leaving her 21-year-old son, a quadriplegic with cerebral palsy, in woods for more than four days"
+        ],
+        "reason": "Police allegation of prolonged abandonment of her quadriplegic son is retained; the park reference preserves the setting."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "her extradition must await completion of unspecified treatment"
+        ],
+        "reason": "Extradition is explicitly conditional on finishing treatment of unspecified kind."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B039",
+    "sentence_count": 10,
+    "wording_pass": true,
+    "wording_reason": "All 10 sentences reproduce complete source sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "The Republican senator from Florida has announced that he is seeking the Republican presidential nomination"
+        ],
+        "reason": "The announced Republican nomination bid is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Attributed limited Latino support is included, but the contrast with his Hispanic background is absent. The anchor bundles this contrast with the support assessment."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Back in 2013, Rubio was a member of the Senate \"Gang of 8\" that crafted a bipartisan proposal for comprehensive reform",
+          "He later distanced himself from the bill"
+        ],
+        "reason": "His role in developing comprehensive reform and subsequent retreat are explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B040",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences reproduce complete source sentences without edits.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Bundchen walked the runway for the last time Wednesday"
+        ],
+        "reason": "Her last runway appearance is explicit; the retirement follows from 'for the last time'."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "the New England Patriots quarterback wasn't just there to support her in person, he expressed his emotions to the world on Facebook."
+        ],
+        "reason": "The source's quarterback reference identifies Brady and conveys a supportive public Facebook response; praise is implicit rather than quoted."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Wanting family time and special projects does not establish continued work in the fashion business."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B041",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences reproduce complete source sentences; the initial CNN label may be retained or removed.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Universal's \"Furious 7\" continues to build momentum at the Friday box office for a weekend debut in the $135 million-$138 million range, the largest opening in North America since fall 2013."
+        ],
+        "reason": "The North American opening range remains a forecast."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "for a possible worldwide debut approaching or crossing $300 million"
+        ],
+        "reason": "The possible worldwide $300 million debut and uncertainty are explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The final film featuring the late Paul Walker, \"Furious 7\""
+        ],
+        "reason": "The film is explicitly Walker's last."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B042",
+    "sentence_count": 7,
+    "wording_pass": true,
+    "wording_reason": "Mostly reformulates through 'finished gathering', 'preventing ... reentering', and 'preliminary recorder analysis'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "investigators had finished gathering the principal evidence from the Germanwings Flight 9525 crash site"
+        ],
+        "reason": "Completion of the principal site evidence collection is conveyed without claiming completed analysis."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "killing all 150 people aboard"
+        ],
+        "reason": "All 150 fatalities are explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Authorities say co-pilot Andreas Lubitz deliberately crashed the plane after preventing the captain from reentering the cockpit"
+        ],
+        "reason": "Authorities' account of deliberate causation by the co-pilot is retained."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B043",
+    "sentence_count": 8,
+    "wording_pass": true,
+    "wording_reason": "Extensively reuses the family, mortar-shrapnel, evacuation, airstrike, and Red Cross clauses.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "The family-attributed mortar-strike death is explicit, but his U.S. citizenship is not. Returning to the United States and a general Yemeni-American discussion do not unambiguously establish citizenship."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "al-Labani had told family members he was concerned about not being able to evacuate as the situation deteriorated",
+          "he died minutes later"
+        ],
+        "reason": "His inability to evacuate is conveyed by his concerns before the reported death in Yemen."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "the U.S. State Department said there are no current plans to evacuate private U.S. citizens from Yemen"
+        ],
+        "reason": "The State Department's current lack of plans for private U.S. citizens is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B044",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "Substantially retains distinctive source clauses, including the evacuation concerns, uncertain first-citizen status, and no-current-plans response.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Jamal al-Labani",
+          "family members identified him as a victim killed in a mortar strike last week in Aden",
+          "He is believed to be the first U.S. citizen killed in the current violence in Yemen."
+        ],
+        "reason": "The family-attributed mortar-strike death and U.S. citizenship are conveyed."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "al-Labani had told family members he was concerned about not being able to evacuate as the situation deteriorated",
+          "died minutes later"
+        ],
+        "reason": "His inability to evacuate is conveyed by his concerns before the reported death in Yemen."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "the U.S. State Department said there are no current plans to evacuate private U.S. citizens from Yemen"
+        ],
+        "reason": "The State Department's current lack of plans for private U.S. citizens is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B045",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Reformulates clauses with 'recovered' and 'The crew comprised'; retained names and quantities are appropriate.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "its navy had recovered the fishing boat Airone hours after armed men seized it"
+        ],
+        "reason": "Retaking the seized fishing boat is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "a naval unit detained a Libyan soldier aboard"
+        ],
+        "reason": "Detention of a Libyan soldier aboard is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "accidental rifle fire during the operation slightly injured one of the seven fishermen"
+        ],
+        "reason": "A fisherman's slight injury during the operation is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B046",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Uses reformulations such as 'recovered', 'slightly wounded', and 'crew, comprising'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "its navy had recovered the fishing boat Airone hours after armed men seized it"
+        ],
+        "reason": "Retaking the seized fishing boat is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Naval personnel boarded the vessel about 90 kilometers (56 miles) from Libya's port of Misrata and detained a Libyan soldier"
+        ],
+        "reason": "Detention of a Libyan soldier aboard is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "accidental rifle fire during the operation slightly wounded one of the seven fishermen aboard"
+        ],
+        "reason": "A fisherman's slight injury during the operation is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B047",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Reformulates most clauses, including 'acknowledged overstating' and 'acquired the company'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "former Satyam Computers Services chairman Ramalinga Raju and nine others received seven-year prison sentences"
+        ],
+        "reason": "Raju and nine others' seven-year sentences are connected to the fraud case."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Raju acknowledged overstating profits through invented assets and cash"
+        ],
+        "reason": "Raju's admission and fictitious assets/cash inflating profits are explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Following the disclosures, India's government dismissed Satyam's board, and Tech Mahindra acquired the company"
+        ],
+        "reason": "Tech Mahindra's post-disclosure acquisition is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B048",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Reformulates the account using 'accused of abandoning' and 'must finish unspecified treatment'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Philadelphia police added an attempted-murder charge against Nyia Parler"
+        ],
+        "reason": "The added attempted-murder charge is explicit and not presented as a conviction."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "accused of abandoning her 21-year-old quadriplegic son in a park for more than four days"
+        ],
+        "reason": "Police allegation of prolonged abandonment of her quadriplegic son is retained; the park reference preserves the setting."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "she must finish unspecified treatment before she can be extradited to Philadelphia"
+        ],
+        "reason": "Extradition is explicitly conditional on finishing treatment of unspecified kind."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B049",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "Several sentences are copied and others retain distinctive phrases such as 'Vettel's thrall' and 'exorcise his frustrations'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Lewis Hamilton took victory for the Silver Arrows at the Chinese Grand Prix"
+        ],
+        "reason": "Hamilton's Chinese Grand Prix victory is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Rosberg complained after the race that Hamilton's lackadaisical Sunday driving was holding him up"
+        ],
+        "reason": "The compromise to Rosberg's race remains attributed to his complaint."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Hamilton said it was his job to bring the car home and that he didn't do anything intentionally to slow the cars down"
+        ],
+        "reason": "Hamilton's denial of intentional slowing is explicit."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B050",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Substantially retains source phrasing: 'taking full advantage', 'looking for a total of 60 fathers', and '480 calendar days'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Photographer Johan Bavman documents fathers taking full advantage of Sweden's parental leave"
+        ],
+        "reason": "The photographic documentation of fathers using parental leave is conveyed; caring for children is clear in context."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Sweden grants 480 calendar days of shared parental leave"
+        ],
+        "reason": "The 480-day entitlement and couples sharing it are conveyed."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "only 12% of Swedish couples equally share the leave, Bavman said"
+        ],
+        "reason": "Bavman's report of only 12% sharing equally preserves the limited uptake and attribution."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B051",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences reproduce complete source sentences without edits.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Bundchen walked the runway for the last time Wednesday"
+        ],
+        "reason": "Her last runway appearance is explicit; the retirement follows from 'for the last time'."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "the New England Patriots quarterback wasn't just there to support her in person, he expressed his emotions to the world on Facebook."
+        ],
+        "reason": "The source's quarterback reference identifies Brady and conveys a supportive public Facebook response; praise is implicit rather than quoted."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Continued work elsewhere in the fashion business is not stated."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B052",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Uses newly combined clauses and reformulations such as 'freed', 'former captives', and 'remained unknown'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "ISIS freed more than 200 Yazidis"
+        ],
+        "reason": "The ISIS release of more than 200 Yazidis is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "mostly women and children"
+        ],
+        "reason": "Women and children are identified as the majority."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "the reason for their release remained unknown"
+        ],
+        "reason": "The unknown release motive is preserved."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B053",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "All 9 sentences reproduce complete source sentences, including the source's quoted or parenthetical punctuation.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "al Qaeda confirmed that two of its leaders, known as Ustad Ahmad Farooq and Qari Abdullah Mansur, were killed in CIA drone strikes"
+        ],
+        "reason": "Al Qaeda's confirmation of two leadership deaths in CIA strikes is explicit."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Indeed, al Qaeda has virtually no capacity to carry out attacks in the West.",
+          "the core al Qaeda organization that killed almost 3,000 men, women and children on 9/11 is on life support"
+        ],
+        "reason": "The source's assessment is reproduced with the core/affiliate distinction preserved; it is not presented as a new outside prediction."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "To be sure, al Qaeda's Yemen-based affiliate, al Qaeda in the Arabian Peninsula, or AQAP, continues to pose a threat to American aviation."
+        ],
+        "reason": "The aviation threat is assigned to the Yemen affiliate, preserving the exception."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "B054",
+    "sentence_count": 7,
+    "wording_pass": true,
+    "wording_reason": "Rephrases and combines clauses, including 'examining', 'prompted the inquiry', and 'additional safeguards'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "the FBI was examining a possible terrorist threat in the United States inspired by ISIS"
+        ],
+        "reason": "The FBI inquiry concerns a possible ISIS-inspired U.S. threat, preserving its tentative status."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "officials could not establish whether it was an actual plan or an aspiration"
+        ],
+        "reason": "Uncertainty between a real plan and aspiration is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Some other cities also strengthened security as a precaution."
+        ],
+        "reason": "Increased city security is presented as precautionary."
+      }
+    ],
+    "issues": []
+  }
+]

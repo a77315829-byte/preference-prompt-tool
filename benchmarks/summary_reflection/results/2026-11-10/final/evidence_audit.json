@@ -1,0 +1,8 @@
+{
+  "stage": "final",
+  "reviews_validated": 108,
+  "nonempty_exact_evidence": true,
+  "reviewer_scores_changed": false,
+  "audit_code_sha256": "0e3d19af21495d89d0c899ace218c633eecc32d16f626d6e516251da8107875f",
+  "note": "Format/source-evidence audit only. Exact quotation presence does not prove semantic correctness."
+}

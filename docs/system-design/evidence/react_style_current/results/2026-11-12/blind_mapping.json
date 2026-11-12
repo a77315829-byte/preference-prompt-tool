@@ -1,0 +1,98 @@
+{
+  "S001": {
+    "arm": "product",
+    "task_id": "text_expander"
+  },
+  "S002": {
+    "arm": "manual",
+    "task_id": "breadcrumb_browser"
+  },
+  "S003": {
+    "arm": "manual",
+    "task_id": "step_wizard"
+  },
+  "S004": {
+    "arm": "product",
+    "task_id": "tag_editor"
+  },
+  "S005": {
+    "arm": "general",
+    "task_id": "unit_converter"
+  },
+  "S006": {
+    "arm": "product",
+    "task_id": "range_pair"
+  },
+  "S007": {
+    "arm": "general",
+    "task_id": "text_expander"
+  },
+  "S008": {
+    "arm": "manual",
+    "task_id": "sortable_table"
+  },
+  "S009": {
+    "arm": "manual",
+    "task_id": "tag_editor"
+  },
+  "S010": {
+    "arm": "product",
+    "task_id": "breadcrumb_browser"
+  },
+  "S011": {
+    "arm": "product",
+    "task_id": "password_visibility"
+  },
+  "S012": {
+    "arm": "general",
+    "task_id": "password_visibility"
+  },
+  "S013": {
+    "arm": "general",
+    "task_id": "breadcrumb_browser"
+  },
+  "S014": {
+    "arm": "product",
+    "task_id": "sortable_table"
+  },
+  "S015": {
+    "arm": "manual",
+    "task_id": "unit_converter"
+  },
+  "S016": {
+    "arm": "general",
+    "task_id": "range_pair"
+  },
+  "S017": {
+    "arm": "general",
+    "task_id": "step_wizard"
+  },
+  "S018": {
+    "arm": "general",
+    "task_id": "sortable_table"
+  },
+  "S019": {
+    "arm": "general",
+    "task_id": "tag_editor"
+  },
+  "S020": {
+    "arm": "product",
+    "task_id": "step_wizard"
+  },
+  "S021": {
+    "arm": "product",
+    "task_id": "unit_converter"
+  },
+  "S022": {
+    "arm": "manual",
+    "task_id": "text_expander"
+  },
+  "S023": {
+    "arm": "manual",
+    "task_id": "range_pair"
+  },
+  "S024": {
+    "arm": "manual",
+    "task_id": "password_visibility"
+  }
+}

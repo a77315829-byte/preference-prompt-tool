@@ -1,0 +1,29 @@
+{
+  "report_version": "0.4",
+  "report_date": "2026-11-13",
+  "evidence_cutoff": "2026-11-12",
+  "output": "output/pdf/Revealed_진행현황_주간보고서_v0.4.pdf",
+  "sha256": "fd335c7751c10f07ac6cab596a57e0bf3c64d2071bafdcddf161164b5e93b1d4",
+  "pages": 28,
+  "main_pages": [1, 2, 3],
+  "current_backup_pages": [4, 5, 6, 7, 8, 9, 10],
+  "historical_backup_pages": [11, 28],
+  "checks": {
+    "numeric_results_compared_with_frozen_score_files": true,
+    "prior_report_and_experiment_sources_unchanged": true,
+    "paragraph_overflow_assertions_passed": true,
+    "all_28_pages_rendered": true,
+    "all_pages_visually_reviewed_in_contact_sheets": true,
+    "full_size_pages_reviewed": [3, 5, 7, 9],
+    "report_period_and_history_footer_checks_passed": true,
+    "no_clipping_or_overlap_observed": true
+  },
+  "paid_model_api_calls_for_report": 0,
+  "product_tests_rerun_for_report": false,
+  "notes": [
+    "11/09 full regression result is historical evidence, not validation of every later code change.",
+    "Completion classifications use the four plans on v0.3 page 3; two complete within stated implementation/evaluation scope and two partial.",
+    "No GitHub publication or app deployment was performed for this weekly report.",
+    "Historical backup content is preserved and explicitly dated; current findings take precedence."
+  ]
+}

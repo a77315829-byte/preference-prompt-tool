@@ -1,0 +1,15 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState, type ReactElement } from 'react';\n\nexport type Row = { id: string; label: string; score: number | null };\nexport type Props = { rows: Row[] };\n\ntype Direction = 'none' | 'ascending' | 'descending';\ntype IndexedRow = { row: Row; index: number };\n\nfunction orderRows(rows: Row[], direction: Direction): Row[] {\n  if (direction === 'none') return [...rows];\n\n  const indexed: IndexedRow[] = rows.map(\n    (row: Row, index: number): IndexedRow => ({ row, index }),\n  );\n\n  indexed.sort((left: IndexedRow, right: IndexedRow): number => {\n    const a: number | null = left.row.score;\n    const b: number | null = right.row.score;\n    if (a === null && b === null) return left.index - right.index;\n    if (a === null) return 1;\n    if (b === null) return -1;\n\n    const difference: number = direction === 'ascending' ? a - b : b - a;\n    return difference === 0 ? left.index - right.index : difference;\n  });\n\n  return indexed.map((entry: IndexedRow): Row => entry.row);\n}\n\nexport function Component({ rows }: Props): ReactElement {\n  const [direction, setDirection] = useState<Direction>('none');\n  const displayedRows: Row[] = orderRows(rows, direction);\n\n  function toggleSort(): void {\n    setDirection((current: Direction): Direction =>\n      current === 'ascending' ? 'descending' : 'ascending',\n    );\n  }\n\n  return (\n    <div\n      data-testid=\"panel\"\n      style={{\n        display: 'flex',\n        flexDirection: 'column',\n        backgroundColor: '#f2f6fc',\n        color: '#1d3150',\n        padding: 16,\n        gap: 8,\n      }}\n    >\n      <button type=\"button\" onClick={toggleSort}>Sort score</button>\n      <table aria-label=\"Rows\">\n        <thead>\n          <tr>\n            <th scope=\"col\">Label</th>\n            <th scope=\"col\" aria-sort={direction}>Score</th>\n          </tr>\n        </thead>\n        <tbody>\n          {displayedRows.map((row: Row): ReactElement => (\n            <tr key={row.id}>\n              <td>{row.label}</td>\n              <td>{row.score === null ? '—' : row.score}</td>\n            </tr>\n          ))}\n        </tbody>\n      </table>\n      {rows.length === 0 && <p role=\"status\">No rows</p>}\n    </div>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 22,
+      "end": 2188
+    }
+  ]
+}

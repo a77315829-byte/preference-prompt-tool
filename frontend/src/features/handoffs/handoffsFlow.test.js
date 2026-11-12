@@ -233,3 +233,46 @@ test('저장 전 본문 변경·선택 파일 보존과 파일 크기 검증', a
     assert.equal(api.state.records[0].revision, 3);
   } finally { await ui.close(); }
 });
+
+for (const action of ['작업 열기', '이전 기록 확인']) {
+  test(`공유 회수 후 ${action} 요청이 거절되면 내용·이전 기록·임시 초안을 정리한다`, async () => {
+    const api = handoffServer(); let ui = await mount('https://example.test/', 'coding', api.fetch);
+    let id;
+    try {
+      await openNew(ui); await fillWork(ui); await ui.click('내 작업으로 저장');
+      await ui.fill('#handoff-recipient', 'bob'); await ui.click('이 팀원에게 공유');
+      id = api.state.records[0].id;
+    } finally { await ui.close(); }
+    api.state.username = 'bob'; ui = await mount(`https://example.test/?handoff=${id}`, 'coding', api.fetch);
+    try {
+      await ui.click('이전 기록 확인'); await ui.click('2번째 기록 보기');
+      assert.equal(document.querySelector('#handoff-purpose').value, initialBody.purpose);
+      api.state.records[0].recipient = 'carol';
+      await ui.click(action);
+      assert.ok(document.querySelector('[role="alert"]').textContent.includes('공유되지 않았습니다'));
+      assert.equal(document.querySelector('#handoff-purpose'), null);
+      assert.equal(document.querySelector('.handoff-snapshot'), null);
+      assert.equal(document.querySelector('.handoff-list'), null);
+      assert.equal(Object.values(window.sessionStorage).some(value => value.includes(initialBody.purpose)), false);
+      assert.equal(api.state.records[0].body.purpose, initialBody.purpose);
+    } finally { await ui.close(); }
+  });
+}
+
+test('없는 기록의 404 또는 서버 장애는 현재 읽기 권한과 미저장 초안을 지우지 않는다', async () => {
+  const api = handoffServer(); let failure = null;
+  const fetch = async (path, options) => {
+    if (failure && path.endsWith('/history')) return { ok: false, status: failure, json: async () => ({ error: '검사 중인 오류' }) };
+    return api.fetch(path, options);
+  };
+  const ui = await mount('https://example.test/', 'coding', fetch);
+  try {
+    await openNew(ui); await fillWork(ui); await ui.click('내 작업으로 저장');
+    await ui.fill('#handoff-progress', '아직 저장하지 않은 내용');
+    for (const status of [404, 500]) {
+      failure = status; await ui.click('이전 기록 확인');
+      assert.equal(document.querySelector('#handoff-progress').value, '아직 저장하지 않은 내용');
+      assert.ok(document.querySelector('[role="alert"]').textContent.includes('검사 중인 오류'));
+    }
+  } finally { await ui.close(); }
+});

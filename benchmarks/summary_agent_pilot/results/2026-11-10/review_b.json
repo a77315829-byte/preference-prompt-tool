@@ -1,0 +1,328 @@
+[
+  {
+    "output_id": "O01",
+    "sentence_count": 6,
+    "wording_pass": true,
+    "wording_reason": "The clauses are predominantly recast: 'Federal statistics reported in 2013 showed' replaces the source's attribution construction, and 'drew criticism for advising Rock to adapt' condenses several source sentences. Names, numbers and the short expression 'driving while black' are legitimate retained wording.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["Chris Rock posted photos documenting three police traffic stops in seven weeks", "Many Twitter users supported him"], "reason": "The photo posts, three stops and seven-week interval are retained. The Twitter context makes the photo-post description an adequate paraphrase of the documented tweets."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["Rock did not explain the stops' outcomes."], "reason": "The lack of disclosed outcomes is retained. The plural is slightly broader than the source's singular stop, but the source also says he had not commented on the tweets; I do not treat this as an established contradiction."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["prompting debate about racial profiling", "Many Twitter users supported him, while others accused him of race-baiting.", "Actor Isaiah Washington drew criticism for advising Rock to adapt, saying he replaced his Mercedes with Priuses to avoid repeated stops."], "reason": "The named adviser's adaptation advice and criticism are conveyed in the surrounding racial-profiling and Twitter context."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O02",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences recombine and paraphrase the source, including 'disclosed how the latest stop ended' and 'he wanted to start a conversation'. Retention of the numerical interval and the Mercedes model does not make the prose predominantly copied.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["Chris Rock posted photos documenting three traffic stops in seven weeks", "he had not commented on the tweets"], "reason": "The posts are identified as tweets and retain the number of traffic stops and interval."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["he had not commented on the tweets or disclosed how the latest stop ended"], "reason": "The undisclosed outcome is expressly retained and limited to the latest stop."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["amid debate over racial profiling", "Actor Isaiah Washington drew criticism for urging Rock to adapt", "he had replaced his $90,000 Mercedes G500 with three Priuses because he was tired of police stops"], "reason": "The advice, its purpose, and criticism are conveyed within the tweet discussion. The social-media setting is contextual rather than repeated explicitly in the second sentence."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O03",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete verbatim source sentences, beginning 'In a tweet Friday' and 'The #FoodBankNYCChallenge is an attempt'. Only the separator between them changes from a newline to a space.",
+    "facts": [
+      {"id": "F1", "preserved": false, "summary_evidence": ["Paltrow showcased an array of leafy greens, dried beans and rice", "The #FoodBankNYCChallenge is an attempt to live on a food stamp budget for one week"], "reason": "Paltrow's shopping and the named challenge are juxtaposed, which suggests participation, but neither sentence actually links her activity to taking part in that challenge. I conservatively treat this implicit link as incomplete coverage."},
+      {"id": "F2", "preserved": false, "summary_evidence": ["a food stamp budget for one week, which translates to $1.38 per meal"], "reason": "The week and a per-meal estimate appear, but the $29 total limit covering all food is absent. Inferring that exact total would require an unstated meal count and rounding assumption."},
+      {"id": "F3", "preserved": false, "summary_evidence": [], "reason": "The organizers' intended awareness benefit and families' difficulty affording food are omitted."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O04",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete verbatim sentences selected from the source, including the full 'As eight of Mary Jane Veloso's fellow death row inmates' sentence and the full Widodo attribution sentence.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["on the Indonesian island of Nusa Kambangan, the Filipina maid and mother of two was spared, at least for now"], "reason": "The execution context and 'at least for now' convey a temporary reprieve in Indonesia rather than a canceled execution."},
+      {"id": "F2", "preserved": false, "summary_evidence": ["Indonesian President Joko Widodo told reporters Wednesday that the decision was the result of the Indonesian government's desire to cooperate with the ongoing case in the Philippines."], "reason": "The official cooperation rationale is retained, but the ongoing Philippine case is not identified as a human-trafficking legal process. The preceding trafficking-victim allegation suggests a connection without specifying the subject of those proceedings."},
+      {"id": "F3", "preserved": false, "summary_evidence": ["Supporters, including the Filipino advocacy group Migrante, and her lawyers claim the young mother was the victim of human trafficking."], "reason": "The attributed trafficking-victim claim is present, but the essential assertion that she did not know her luggage contained drugs is missing."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O05",
+    "sentence_count": 5,
+    "wording_pass": false,
+    "wording_reason": "This is a paraphrase, not complete verbatim sentences: 'will premiere on Lifetime on May 25 instead of receiving a U.S. theatrical release' merges source information, and 'faced repeated release delays and a dispute' is newly phrased.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["Grace of Monaco, starring Nicole Kidman as Grace Kelly, will premiere on Lifetime on May 25"], "reason": "The film, star, network and premiere date are all retained."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["instead of receiving a U.S. theatrical release", "The Weinstein Co. sold the film to the network after poor reviews and disappointing international performances."], "reason": "The distribution choice and poor international performance are conveyed across the first two sentences."},
+      {"id": "F3", "preserved": false, "summary_evidence": ["the film faced repeated release delays"], "reason": "Repeated delays are stated, but the original late-2013 schedule specified in the frozen proposition is omitted."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O06",
+    "sentence_count": 5,
+    "wording_pass": true,
+    "wording_reason": "Although the opening largely retains the source's event description, most subsequent clauses are reformulated, such as 'both that inmate and the worker underwent emergency surgery' and 'Firefighters extinguished the blaze, which left a crater'. The summary overall is predominantly rewritten.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["A natural gas line explosion at a law enforcement shooting range in Fresno, California, injured 11 people, including inmates assigned to maintenance work.", "both that inmate and the worker underwent emergency surgery"], "reason": "The incident, location, inmates and injured county worker are conveyed. The total 11 follows the source lead; the source's later counts are not cleanly reconcilable, so I do not infer a summary error from that total."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["its cause remains under investigation"], "reason": "The unknown cause is explicit and the front loader is described only as being present."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["One inmate was airlifted to a hospital, and both that inmate and the worker underwent emergency surgery"], "reason": "Both identified patients and emergency surgery are retained. 'Underwent' shifts the reporting tense but does not explicitly assert a completed or successful operation; I accept it as reporting the same treatment event."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O07",
+    "sentence_count": 5,
+    "wording_pass": false,
+    "wording_reason": "The summary uses newly composed sentences, including 'Indonesia postponed the execution of Mary Jane Veloso' and 'The reprieve followed the surrender of her alleged recruiter'. These are not complete verbatim source sentences.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["Indonesia postponed the execution of Mary Jane Veloso", "the delay respects the Philippine legal proceedings but does not cancel her execution"], "reason": "The postponed execution and explicit non-cancellation qualification are preserved."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["The reprieve followed the surrender of her alleged recruiter in the Philippines, where authorities are investigating human trafficking allegations.", "Indonesian President Joko Widodo said the delay respects the Philippine legal proceedings"], "reason": "The Philippine human-trafficking proceedings are identified and connected to Widodo's stated reason for the delay."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["her alleged recruiter in the Philippines, where authorities are investigating human trafficking allegations", "Veloso's lawyers and supporters say she unknowingly carried heroin hidden in luggage supplied to her after a promised job fell through."], "reason": "The attributed account of unwitting carriage after a false job offer, within the expressly identified recruitment and human-trafficking case, conveys the victim claim. The word 'victim' is implicit, while the essential lack of knowledge and defense attribution are explicit."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O08",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The summary substantially reuses source clauses: 'tour bus caught fire on a Texas freeway Thursday morning', 'the bus stopped after a rear tire blew out' and 'it burst into flames after everyone had gotten off'. Combining those clauses still satisfies high reuse.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["Lady Antebellum singer Hillary Scott's tour bus caught fire on a Texas freeway Thursday morning"], "reason": "The person, event, freeway location and Thursday-morning timing are explicit."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["Scott, her husband, the tour manager and the driver were all evacuated safely", "it burst into flames after everyone had gotten off"], "reason": "All occupants' safety and evacuation before the flames are retained."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["The tour manager told CNN affiliate KTVT that the bus stopped after a rear tire blew out"], "reason": "The manager attribution, stopping, rear tire and temporal sequence all appear."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O09",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The first sentence reproduces the source lead apart from '(CNN)', and the second closely combines 'the bus stopped after a rear tire blew out' with 'burst into flames after everyone had gotten off'. This is substantial source-phrase reuse.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["Lady Antebellum singer Hillary Scott's tour bus caught fire on a Texas freeway Thursday morning"], "reason": "The central event and its identifying details are retained."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["everyone on board was safely evacuated", "burst into flames after everyone had gotten off"], "reason": "The safety and before-fire sequence are explicit."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["The tour manager told CNN affiliate KTVT that the bus stopped after a rear tire blew out"], "reason": "The attributed tire-failure and stopping sequence is complete."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O10",
+    "sentence_count": 7,
+    "wording_pass": true,
+    "wording_reason": "The summary repeatedly retains distinctive clauses, including 'turning prison food into fake limbs covered with ketchup to resemble blood', 'together unsupervised on a work detail', and the complete sentence about hitting Dahmer twice with a metal bar. The final sentence compresses quotations but does not remove the substantial reuse.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["Scarver was sentenced to two life terms in prison for killing Dahmer and another man at Columbia Correctional Institution in 1994.", "Dahmer and another inmate, Jesse Anderson"], "reason": "The sentence, two victims, institution, year and other victim's inmate status are retained."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["Christopher Scarver says he beat serial killer Jeffrey Dahmer to death inside a Wisconsin prison because of Dahmer's creepy sense of humor", "the New York Post reports"], "reason": "The motive is expressly Scarver's claim as reported by the Post, not an independently established explanation."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["Scarver said he kept a newspaper article detailing Dahmer's crimes", "confronted him with the clipping just before he killed him", "Scarver said he hit Dahmer twice in the head with a metal bar from a weight room."], "reason": "The confrontation over crimes, subsequent head blows with the metal bar and Scarver attribution are all preserved."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O11",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete verbatim source sentences, beginning 'In a tweet Friday' and 'The #FoodBankNYCChallenge is an attempt'. The newline between the selected sentences is the only relevant formatting change.",
+    "facts": [
+      {"id": "F1", "preserved": false, "summary_evidence": ["Paltrow showcased an array of leafy greens, dried beans and rice", "The #FoodBankNYCChallenge is an attempt to live on a food stamp budget for one week"], "reason": "The juxtaposition suggests Paltrow's participation, but the text never actually links her shopping to taking part in the named challenge. This is an uncertain implication, conservatively treated as incomplete coverage."},
+      {"id": "F2", "preserved": false, "summary_evidence": ["a food stamp budget for one week, which translates to $1.38 per meal"], "reason": "A week and a per-meal estimate do not explicitly preserve the $29 limit for all food; deriving it would require unstated meal-count and rounding assumptions."},
+      {"id": "F3", "preserved": false, "summary_evidence": [], "reason": "The organizers' awareness goal and families' affordability struggles are absent."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O12",
+    "sentence_count": 8,
+    "wording_pass": false,
+    "wording_reason": "The body sentences otherwise match the source, but the first sentence removes the source prefix '(The Hollywood Reporter)'. The rubric explicitly says removing a source prefix fails fully verbatim wording. U.S. and Co. are abbreviations, not extra sentence boundaries.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["\"Grace of Monaco,\" starring Nicole Kidman as star-turned-princess Grace Kelly, is heading straight to Lifetime.", "will premiere on Lifetime on Memorial Day, May 25"], "reason": "The title, star, network and announced date are all explicit."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["After the movie performed poorly in its international engagements, The Weinstein Co.", "decided to sell it directly to Lifetime rather than book it into U.S. theaters"], "reason": "The copied distribution sentence conveys the choice and its international-performance context."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["was originally scheduled for release in late 2013", "shifted its release to March 14, 2014", "That planned March release was then scrubbed"], "reason": "The original schedule and both subsequent postponement steps are explicit."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O13",
+    "sentence_count": 5,
+    "wording_pass": false,
+    "wording_reason": "Most clauses replace source phrasing: 'disturbing jokes and apparent lack of remorse helped motivate him', 'fashioned food into fake body parts' and 'used to cope with imprisonment'. Shared names and shorter phrases such as 'morbid humor' and 'metal bar' do not amount to substantial distinctive-clause reuse across the summary.",
+    "facts": [
+      {"id": "F1", "preserved": false, "summary_evidence": ["kill the serial murderer in prison in 1994", "then killed fellow inmate Jesse Anderson", "Scarver received two life sentences for the killings."], "reason": "The killings, year, other inmate and two life sentences are conveyed, but the specified Columbia Correctional Institution location is missing from the frozen proposition."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["Christopher Scarver told the New York Post that Jeffrey Dahmer's disturbing jokes and apparent lack of remorse helped motivate him to kill the serial murderer"], "reason": "The claimed motive and Post attribution are retained. Lack of remorse is a reasonable synthesis of Scarver's quoted statement that Dahmer was not repentant."},
+      {"id": "F3", "preserved": false, "summary_evidence": ["Scarver said he confronted Dahmer with an article about his crimes before striking him with a metal bar"], "reason": "The attributed confrontation, weapon and sequence are present, but the proposition's head-strike detail is omitted."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O14",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are verbatim complete source sentences, from the long temporary-reprieve sentence through the Widodo attribution. No source-sentence prefixes or punctuation are removed from those selections.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["on the Indonesian island of Nusa Kambangan, the Filipina maid and mother of two was spared, at least for now"], "reason": "The death-row context and temporary 'at least for now' qualification convey postponement, not a permanent cancellation."},
+      {"id": "F2", "preserved": false, "summary_evidence": ["Indonesian President Joko Widodo told reporters Wednesday that the decision was the result of the Indonesian government's desire to cooperate with the ongoing case in the Philippines."], "reason": "The official cooperation rationale is stated, but the Philippine proceeding is not identified as a human-trafficking legal process. The nearby victim allegation suggests that connection without making the proceeding's subject explicit."},
+      {"id": "F3", "preserved": false, "summary_evidence": ["Supporters, including the Filipino advocacy group Migrante, and her lawyers claim the young mother was the victim of human trafficking."], "reason": "The attributed victim allegation is retained, but her claimed lack of knowledge about drugs in the luggage is not."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O15",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "The summary mostly recasts clauses, for example 'investigators had not determined the cause', 'One inmate was flown to a hospital', and 'both that inmate and the county worker were receiving emergency surgery'. Retained incident terms and numbers are necessary factual wording.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["An explosion in a natural gas line at a Fresno, California, law enforcement firing range injured 11 people, including inmates doing maintenance and cleaning.", "both that inmate and the county worker were receiving emergency surgery"], "reason": "The incident, location and both affected groups are preserved. The total 11 is supported by the source lead despite ambiguity in its later injury counts."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["investigators had not determined the cause"], "reason": "The unresolved cause is explicitly retained without blaming the front loader."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["One inmate was flown to a hospital, and both that inmate and the county worker were receiving emergency surgery"], "reason": "Both patients, emergency surgery and its ongoing state are conveyed."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O16",
+    "sentence_count": 5,
+    "wording_pass": true,
+    "wording_reason": "There is substantial phrase reuse despite rewritten connective wording: 'Lady Antebellum singer Hillary Scott's tour bus caught fire', 'a rear tire blew out', 'the bus burst into flames', and 'the fire destroyed everything in the back lounge except her Bible'. This is a borderline pass because later clauses are paraphrased, but the central distinctive descriptions remain recognizably reused.",
+    "facts": [
+      {"id": "F1", "preserved": false, "summary_evidence": ["Lady Antebellum singer Hillary Scott's tour bus caught fire on Interstate 30 near Dallas on Thursday"], "reason": "The bus, fire, specific freeway location and Thursday are retained, but the frozen proposition's morning timing is omitted."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["Scott, her husband, the tour manager and the driver all exited safely before the bus burst into flames."], "reason": "All identified occupants and their safe exit before the fire are explicit."},
+      {"id": "F3", "preserved": false, "summary_evidence": ["on Thursday after a rear tire blew out"], "reason": "The rear-tire failure is mentioned, but neither the bus stopping after it nor the tour manager's attribution is retained. 'After' alone is temporal, so I do not additionally flag an invented causal claim."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O17",
+    "sentence_count": 6,
+    "wording_pass": false,
+    "wording_reason": "The selected prose otherwise reproduces complete source sentences, but the opening removes '(The Hollywood Reporter)'. Removing that source prefix fails the rubric's strict fully verbatim rule. Co. and U.S. do not create extra grammatical sentences.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["\"Grace of Monaco,\" starring Nicole Kidman as star-turned-princess Grace Kelly, is heading straight to Lifetime.", "will premiere on Lifetime on Memorial Day, May 25"], "reason": "The film, star, network and premiere date are preserved."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["After the movie performed poorly in its international engagements, The Weinstein Co.", "decided to sell it directly to Lifetime rather than book it into U.S. theaters"], "reason": "The choice to bypass theaters after poor international performance is explicit."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["was originally scheduled for release in late 2013", "shifted its release to March 14, 2014", "will premiere on Lifetime on Memorial Day, May 25"], "reason": "The original late-2013 schedule, shift to March 2014 and later announced May premiere convey successive delayed release plans. The cancellation of the March release is implied by this chronology rather than stated; I accept that temporal inference."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O18",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Most clauses are rewritten, including 'investigators had not determined the cause', 'a county employee was using a front loader', and 'conditions resembling sunburn'. The factual event description and short medical phrases are appropriately retained.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["A natural gas line explosion Friday at a law enforcement shooting range in Fresno, California, injured 11 people, including inmates on a work assignment.", "An inmate who was airlifted to a hospital and the county worker were undergoing emergency surgery"], "reason": "The incident and location, inmate injuries and county worker's injury are all conveyed. The stated 11 follows the source lead; the source's inconsistent-looking counts do not establish that this summary invented the total."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["Fresno County Sheriff Margaret Mims said investigators had not determined the cause"], "reason": "The unresolved cause and official attribution are clear."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["An inmate who was airlifted to a hospital and the county worker were undergoing emergency surgery"], "reason": "Both patients and ongoing emergency surgery are explicitly retained."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O19",
+    "sentence_count": 6,
+    "wording_pass": true,
+    "wording_reason": "The summary reformulates the source through phrases such as 'had no desire to see it', 'suggested the documentary reflected the views of people unhappy with their experiences', and 'speculated that Tom Cruise might feel similarly'. Film titles and personal names account for much of the unavoidable reuse.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["John Travolta said he had not watched HBO's documentary \"Going Clear: Scientology and the Prison of Belief\" and had no desire to see it"], "reason": "Both not having watched and not wanting to watch are explicitly attributed to Travolta."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["Travolta described his own 40 years in Scientology as positive", "He said its allegations did not match his experience"], "reason": "The defense is grounded in his own positive 40-year experience rather than an objective refutation."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["Travolta credited the church with helping him cope with the loss of his teenage son, Jett"], "reason": "The bereavement support is presented as his credited benefit."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O20",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "The summary mainly paraphrases, as in 'has no interest in doing so', 'Citing 40 years of positive experiences', and 'helping him cope with the death'. It does not primarily copy source sentences.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["John Travolta says he has not watched HBO's critical Scientology documentary Going Clear and has no interest in doing so."], "reason": "The unwatched film and refusal to watch are both attributed to him."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["Citing 40 years of positive experiences with the church", "said its allegations did not reflect his own experience"], "reason": "His defense is specifically based on his own positive experience over the required duration."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["Travolta also credited Scientology with helping him cope with the death of his teenage son, Jett, in 2009."], "reason": "The claimed help with Jett's death is clearly attributed to Travolta."}
+    ],
+    "issues": [
+      {"summary_quote": "disgruntled former participants", "reason": "The source describes people unhappy with their experiences but does not establish that they were former participants or had left the church. 'Former' adds an unsupported status qualification; this is not a claim that it is false outside the supplied source.", "source_evidence": ["Travolta said he believed the doc was a result of \"people who were disgruntled with their experiences\" with the Church of Scientology, which he touted as a positive experience for him."]}
+    ]
+  },
+  {
+    "output_id": "O21",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "The clauses are recast and compressed, such as 'renewing discussion of racial profiling amid heightened concern' and 'citing his own switch from an expensive Mercedes to Priuses'. This is predominantly new wording rather than copied source sentences.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["Chris Rock posted photos documenting three police traffic stops in seven weeks"], "reason": "The public photographic documentation, three police stops and seven-week interval preserve the central event. Twitter is not named; I accept 'posted photos' as an accurate description of the source's photo tweets, while noting that the medium is less explicit."},
+      {"id": "F2", "preserved": false, "summary_evidence": [], "reason": "The lack of disclosure about how the stop ended is omitted."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["While many supported him, actor Isaiah Washington drew criticism for advising Rock to adapt to avoid profiling, citing his own switch from an expensive Mercedes to Priuses."], "reason": "The named adviser's adaptation advice, purpose and criticism are explicit. Their social-media setting is implicit in the discussion of Rock's posts, which I accept as contextual coverage."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O22",
+    "sentence_count": 5,
+    "wording_pass": false,
+    "wording_reason": "Although facts and technical terms are shared, the summary mainly replaces source clauses: 'announced plans to double', 'if the initial ... zone yields no wreckage', 'all areas considered highly probable', and 'Satellite data indicated it ended up'. This falls short of substantial reuse of the source's distinctive phrasing across the summary.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["Malaysia, Australia and China announced plans to double the underwater search area for missing Malaysia Airlines Flight 370 if the initial 60,000-square-kilometer zone yields no wreckage."], "reason": "All three governments, the conditional expansion and correct area unit are retained; doubling a 60,000-square-kilometer zone conveys an additional equal area."},
+      {"id": "F2", "preserved": false, "summary_evidence": ["Searchers had covered about 60% of that area without finding the aircraft"], "reason": "The percentage is retained, but not finding the aircraft is weaker than no reported trace whatsoever; it leaves open discovery of fragments or other traces. I therefore count the frozen no-trace qualification as incomplete, without treating this weaker true statement as hallucination."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["Searching the additional zone could take another year"], "reason": "The extra search duration remains a possibility rather than a guaranteed date. 'Could take another year' adequately conveys the possible year-long duration."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O23",
+    "sentence_count": 6,
+    "wording_pass": true,
+    "wording_reason": "The source is largely reworded, including 'did not want to', 'had little to contribute to such a negative portrayal', and 'strong entertainment industry ties'. The unchanged film and book titles are necessary names rather than copied prose.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["John Travolta told the Tampa Bay Times he had not watched HBO's documentary \"Going Clear: Scientology and the Prison of Belief\" and did not want to."], "reason": "The attributed statement includes both lack of viewing and lack of desire to watch."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["He said his 40 years in Scientology had been positive and that he had little to contribute to such a negative portrayal.", "said their claims did not reflect his own experience"], "reason": "His positive 40-year personal experience is explicitly the basis for rejecting the portrayal."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["He credited Scientology with helping him cope after his teenage son, Jett, died"], "reason": "The claimed benefit in coping with Jett's death remains attributed to him."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O24",
+    "sentence_count": 7,
+    "wording_pass": true,
+    "wording_reason": "The summary substantially reuses distinctive wording, including 'sentenced to two life terms', 'fake limbs covered with ketchup to resemble blood', 'together unsupervised on a work detail' and 'twice in the head with a metal bar from a weight room'. The embedded 'I bite.' quotation completes its reporting sentence rather than creating an additional standalone sentence.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["Christopher Scarver, who was sentenced to two life terms in prison for killing Jeffrey Dahmer and another man at Columbia Correctional Institution in 1994", "Dahmer and another inmate, Jesse Anderson"], "reason": "The two life terms, victims, inmate status, institution and year are all preserved."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["told the New York Post that Dahmer's creepy sense of humor was the reason he killed him"], "reason": "The motive is explicitly attributed to Scarver's statement to the Post."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["Just before he killed Dahmer, Scarver said, he confronted him with a newspaper clipping detailing his crimes", "Scarver said he hit Dahmer twice in the head with a metal bar from a weight room"], "reason": "The attributed confrontation over crimes and subsequent metal-bar blows to the head are complete."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O25",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "The summary retains extensive source phrasing, notably the full conditional-expansion sentence, 'without reporting any trace of the airliner', and 'covering the new zone could take as long as a year'. The opening and closing combine existing clauses with modest changes.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["If the searchers haven't found anything by the time they've covered the entire 60,000-square-kilometer priority zone, the search will stretch into a new equally vast area, government officials from Malaysia, Australia and China announced Thursday."], "reason": "The full condition, equal additional area, unit and government attribution are preserved."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["Teams have covered about 60% of the priority search zone in the southern Indian Ocean without reporting any trace of the airliner."], "reason": "The approximate coverage and complete lack of a reported trace are explicit."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["covering the new zone could take as long as a year"], "reason": "The possible maximum duration is retained without converting it into certainty."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O26",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Large source passages are reused, including the complete conditional-expansion sentence and current-zone completion sentence, plus 'without reporting any trace of the airliner' and 'all high probability search areas would have been covered'. This clearly meets high reuse.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["If the searchers haven't found anything by the time they've covered the entire 60,000-square-kilometer priority zone, the search will stretch into a new equally vast area, government officials from Malaysia, Australia and China announced Thursday."], "reason": "The named governments, conditional trigger and additional equal-sized zone with correct units are retained."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["have covered about 60% of the priority search zone without reporting any trace of the airliner"], "reason": "The approximate percentage and no-reported-trace qualification are preserved."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["Covering the new zone could take as long as a year"], "reason": "The new-zone duration is expressed as a possibility up to a year."}
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "O27",
+    "sentence_count": 3,
+    "wording_pass": false,
+    "wording_reason": "All three sentences are newly composed paraphrases or combinations, including 'Gwyneth Paltrow is taking part in the Food Bank for New York City's challenge' and 'hope it will build understanding'. They are not complete verbatim source sentences.",
+    "facts": [
+      {"id": "F1", "preserved": true, "summary_evidence": ["Gwyneth Paltrow is taking part in the Food Bank for New York City's challenge"], "reason": "Her current participation in the named organization's challenge is explicit; the hashtag itself is not necessary to identify it."},
+      {"id": "F2", "preserved": true, "summary_evidence": ["challenge to spend just $29 on food for one week, or about $1.38 per meal"], "reason": "The week-long total food budget is conveyed. In this context 'just $29 on food for one week' expresses the whole food allowance, not a partial purchase."},
+      {"id": "F3", "preserved": true, "summary_evidence": ["to raise awareness of the difficulties faced by people receiving food stamps", "Organizers launched the challenge in response to food stamp cuts", "hope it will build understanding of families' struggles to afford food"], "reason": "The organizers' awareness goal and families' food-affordability struggle on food stamps are linked across the summary and retained as a hope, not a measured effect."}
+    ],
+    "issues": []
+  }
+]

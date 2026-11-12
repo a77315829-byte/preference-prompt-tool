@@ -1,0 +1,122 @@
+{
+  "R001": {
+    "arm": "general",
+    "task_id": "reservation_validation",
+    "profile_id": "P1"
+  },
+  "R002": {
+    "arm": "manual",
+    "task_id": "optimistic_favorite",
+    "profile_id": "P2"
+  },
+  "R003": {
+    "arm": "general",
+    "task_id": "undo_removal",
+    "profile_id": "P1"
+  },
+  "R004": {
+    "arm": "manual",
+    "task_id": "reservation_validation",
+    "profile_id": "P1"
+  },
+  "R005": {
+    "arm": "general",
+    "task_id": "queue_pagination",
+    "profile_id": "P2"
+  },
+  "R006": {
+    "arm": "general",
+    "task_id": "roster_selection",
+    "profile_id": "P1"
+  },
+  "R007": {
+    "arm": "manual",
+    "task_id": "queue_pagination",
+    "profile_id": "P2"
+  },
+  "R008": {
+    "arm": "product",
+    "task_id": "accordion_keyboard",
+    "profile_id": "P1"
+  },
+  "R009": {
+    "arm": "product",
+    "task_id": "queue_pagination",
+    "profile_id": "P2"
+  },
+  "R010": {
+    "arm": "manual",
+    "task_id": "undo_removal",
+    "profile_id": "P1"
+  },
+  "R011": {
+    "arm": "product",
+    "task_id": "roster_selection",
+    "profile_id": "P1"
+  },
+  "R012": {
+    "arm": "manual",
+    "task_id": "accordion_keyboard",
+    "profile_id": "P1"
+  },
+  "R013": {
+    "arm": "product",
+    "task_id": "draft_filters",
+    "profile_id": "P2"
+  },
+  "R014": {
+    "arm": "product",
+    "task_id": "optimistic_favorite",
+    "profile_id": "P2"
+  },
+  "R015": {
+    "arm": "general",
+    "task_id": "optimistic_favorite",
+    "profile_id": "P2"
+  },
+  "R016": {
+    "arm": "manual",
+    "task_id": "resource_union",
+    "profile_id": "P2"
+  },
+  "R017": {
+    "arm": "manual",
+    "task_id": "roster_selection",
+    "profile_id": "P1"
+  },
+  "R018": {
+    "arm": "product",
+    "task_id": "reservation_validation",
+    "profile_id": "P1"
+  },
+  "R019": {
+    "arm": "general",
+    "task_id": "accordion_keyboard",
+    "profile_id": "P1"
+  },
+  "R020": {
+    "arm": "general",
+    "task_id": "draft_filters",
+    "profile_id": "P2"
+  },
+  "R021": {
+    "arm": "manual",
+    "task_id": "draft_filters",
+    "profile_id": "P2"
+  },
+  "R022": {
+    "arm": "product",
+    "task_id": "undo_removal",
+    "profile_id": "P1"
+  },
+  "R023": {
+    "arm": "product",
+    "task_id": "resource_union",
+    "profile_id": "P2"
+  },
+  "R024": {
+    "arm": "general",
+    "task_id": "resource_union",
+    "profile_id": "P2"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import type { ReactElement } from 'react';\nimport { useFolderBrowser, type FolderBrowser } from './useFolderBrowser';\nimport { panelStyle } from './styles';\n\nexport type Folder = { id: string; name: string; children: Folder[] };\nexport type Props = { folders: Folder[]; onNavigate: (path: string[]) => void };\n\nexport function Component({ folders, onNavigate }: Props): ReactElement {\n  const browser: FolderBrowser = useFolderBrowser(folders, onNavigate);\n\n  return (\n    <section data-testid=\"panel\" style={panelStyle}>\n      <output aria-label=\"Current path\">{browser.currentPath}</output>\n      <button type=\"button\" disabled={browser.path.length === 0} onClick={browser.back}>Back</button>\n      <ul aria-label=\"Folders\">\n        {browser.children.map((folder: Folder): ReactElement => (\n          <li key={folder.id}>\n            <button type=\"button\" onClick={(): void => browser.enter(folder.id)}>\n              {`Enter ${folder.name}`}\n            </button>\n          </li>\n        ))}\n      </ul>\n      {browser.children.length === 0 && <p role=\"status\">No folders</p>}\n    </section>\n  );\n}\n",
+    "useFolderBrowser.ts": "import { useState } from 'react';\nimport type { Folder, Props } from './Component';\n\nexport type FolderBrowser = {\n  path: string[];\n  currentPath: string;\n  children: Folder[];\n  enter: (id: string) => void;\n  back: () => void;\n};\n\nexport function useFolderBrowser(folders: Folder[], onNavigate: Props['onNavigate']): FolderBrowser {\n  const [path, setPath] = useState<string[]>([]);\n  const names: string[] = [];\n  let children: Folder[] = folders;\n\n  for (const id of path) {\n    const folder: Folder | undefined = children.find((item: Folder): boolean => item.id === id);\n    if (!folder) break;\n    names.push(folder.name);\n    children = folder.children;\n  }\n\n  function enter(id: string): void {\n    const nextPath: string[] = [...path, id];\n    setPath(nextPath);\n    onNavigate([...nextPath]);\n  }\n\n  function back(): void {\n    if (path.length === 0) return;\n    const nextPath: string[] = path.slice(0, -1);\n    setPath(nextPath);\n    onNavigate([...nextPath]);\n  }\n\n  return { path, currentPath: '/' + names.join('/'), children, enter, back };\n}\n",
+    "theme.ts": "export type Theme = {\n  colors: { panel: string; text: string };\n  spacing: { panel: number; gap: number };\n};\n\nexport const theme: Theme = {\n  colors: { panel: '#f2f6fc', text: '#1d3150' },\n  spacing: { panel: 16, gap: 8 },\n};\n",
+    "styles.ts": "import type { CSSProperties } from 'react';\nimport { theme } from './theme';\n\nexport const panelStyle: CSSProperties = {\n  backgroundColor: theme.colors.panel,\n  color: theme.colors.text,\n  padding: theme.spacing.panel,\n  display: 'grid',\n  gap: theme.spacing.gap,\n};\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 1123
+    },
+    {
+      "path": "useFolderBrowser.ts",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: useFolderBrowser.ts",
+      "start": 1154,
+      "end": 2212
+    },
+    {
+      "path": "theme.ts",
+      "block": 2,
+      "reason": "Standalone filename before the complete fenced block: theme.ts",
+      "start": 2232,
+      "end": 2460
+    },
+    {
+      "path": "styles.ts",
+      "block": 3,
+      "reason": "Standalone filename before the complete fenced block: styles.ts",
+      "start": 2481,
+      "end": 2749
+    }
+  ]
+}

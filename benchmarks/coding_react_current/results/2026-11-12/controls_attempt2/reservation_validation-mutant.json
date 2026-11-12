@@ -1,0 +1,63 @@
+{
+  "evaluatorVersion": "coding-react-current-v1",
+  "taskId": "reservation_validation",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": false,
+    "checks": [
+      {
+        "name": "initial_fields_empty_and_no_callback",
+        "passed": true
+      },
+      {
+        "name": "empty_submit_marks_all_required_fields",
+        "passed": true
+      },
+      {
+        "name": "same_day_end_is_rejected",
+        "passed": false,
+        "error": "End date must be marked invalid\n\n'false' !== 'true'\n"
+      },
+      {
+        "name": "earlier_end_is_rejected",
+        "passed": true
+      },
+      {
+        "name": "zero_negative_and_fractional_guests_rejected",
+        "passed": true
+      },
+      {
+        "name": "over_capacity_rejected",
+        "passed": true
+      },
+      {
+        "name": "capacity_boundary_is_valid_and_payload_numeric",
+        "passed": true
+      },
+      {
+        "name": "latest_capacity_used_after_parent_update",
+        "passed": true
+      },
+      {
+        "name": "corrected_submission_clears_errors_and_keeps_fields",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0
+}

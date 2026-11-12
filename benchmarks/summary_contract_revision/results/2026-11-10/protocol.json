@@ -1,0 +1,22 @@
+{
+  "frozen_utc": "2026-11-10T09:26:47.979610+00:00",
+  "arms": [
+    "manual",
+    "current",
+    "revised"
+  ],
+  "sources": 9,
+  "first_outputs": 27,
+  "design": "Conflict-focused, previously unused MACSum original val sources (not official test results). Exclude all63 prior observed sources and quarantine one initial selection with substantial prior-source overlap, before outputs. Preserve the initial sample and replace it deterministically, requiring word5gram Jaccard<.1. Six short/fully conflicts, two per explicit resolution; three non-conflict controls. Source/annotation worker did not see prompts or outputs.",
+  "fairness": "All arms receive IDENTICAL source, user-selected priority sentences, coverage policy and effective conditions. Current uses unchanged v2 prompt export with those effective conditions. Revised is EXACT product contract task request. Manual is a deliberate strong source-faithful baseline written before generated outputs. Whole-prompt comparison, not a causal test of individual clauses.",
+  "conflict_evaluation": "Conflict detection, unconfirmed-output blocking, consent and effective conditions are tested deterministically. All generators receive already-resolved conditions; improvement from making a decision is NOT credited to the revised model arm.",
+  "content_scope": "Three private atomic core anchors per source. Three selected complete source sentences are SHARED model input and separately reviewed for their core information. Their overlap with anchors means this tests explicit-priority following, not unprompted core discovery or human preference inference.",
+  "metrics": "Report grammatical length, wording, joint conditions, core anchors, selected-passage information, whole-summary factual flags and clarification responses separately. Keep_limits permits omission; absent points remain visible but do not automatically imply a violated obligation or hallucination. Do not sum metrics into a ranking score.",
+  "review": "Two fresh blinded reviewers using source,target,shared priorities,private facts. No arm labels/prompts/automatic metrics/references/other reviews. Exact evidence required. Preserve original counts and audit disagreements/all factual flags.",
+  "diagnostic": "Preselected topic-free, resolved-length-matched human references when available, otherwise all topic-free; maximum word-token LCS F1 per case. References never given to generators/reviewers. Not official ROUGE or factuality.",
+  "generation": "Fresh independent agent per arm, inherited runtime, first response cached, no score-driven retries, no model API or dependencies. Codex usage consumed; exact model/decoding/token usage not exposed.",
+  "adoption": "Ship deterministic checker and explicit conflict control, keep original base instructions. This pilot cannot establish statistical equivalence, general quality superiority, human convenience or required GEPA. New contract instructions apply only via explicit checked task path.",
+  "stop": "One fixed three-arm comparison; no retuning/reselection/regeneration on these outputs. These9 sources become observed for all future runs.",
+  "paid_model_api_calls": 0,
+  "gepa_run": false
+}

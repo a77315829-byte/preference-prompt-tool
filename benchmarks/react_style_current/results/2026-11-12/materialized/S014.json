@@ -1,0 +1,15 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState, type CSSProperties, type ReactElement } from 'react';\n\nexport type Row = { id: string; label: string; score: number | null };\nexport type Props = { rows: Row[] };\n\ntype SortDirection = 'none' | 'ascending' | 'descending';\ntype IndexedRow = { row: Row; index: number };\n\nconst panelStyle: CSSProperties = {\n  backgroundColor: '#f2f6fc',\n  color: '#1d3150',\n  padding: 16,\n  display: 'grid',\n  gap: 8,\n};\n\nexport function Component({ rows }: Props): ReactElement {\n  const [direction, setDirection] = useState<SortDirection>('none');\n  const ordered: IndexedRow[] = rows.map((row: Row, index: number): IndexedRow => ({ row, index }));\n\n  if (direction !== 'none') {\n    ordered.sort((left: IndexedRow, right: IndexedRow): number => {\n      const a: number | null = left.row.score;\n      const b: number | null = right.row.score;\n      if (a === null && b === null) return left.index - right.index;\n      if (a === null) return 1;\n      if (b === null) return -1;\n      if (a === b) return left.index - right.index;\n      return direction === 'ascending' ? a - b : b - a;\n    });\n  }\n\n  function toggleSort(): void {\n    setDirection((current: SortDirection): SortDirection => current === 'ascending' ? 'descending' : 'ascending');\n  }\n\n  return (\n    <section data-testid=\"panel\" style={panelStyle}>\n      <button type=\"button\" onClick={toggleSort}>Sort score</button>\n      <table aria-label=\"Rows\">\n        <thead>\n          <tr>\n            <th scope=\"col\">Label</th>\n            <th scope=\"col\" aria-sort={direction}>Score</th>\n          </tr>\n        </thead>\n        <tbody>\n          {ordered.map(({ row }: IndexedRow): ReactElement => (\n            <tr key={row.id}>\n              <td>{row.label}</td>\n              <td>{row.score === null ? '—' : row.score}</td>\n            </tr>\n          ))}\n        </tbody>\n      </table>\n      {rows.length === 0 && <p role=\"status\">No rows</p>}\n    </section>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 1954
+    }
+  ]
+}

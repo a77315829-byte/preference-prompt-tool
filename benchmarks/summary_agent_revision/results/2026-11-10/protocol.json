@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "frozen_utc": "2026-11-10T06:10:12.458760+00:00",
+  "arms": [
+    "manual",
+    "previous",
+    "revised"
+  ],
+  "sources": 9,
+  "outputs": 27,
+  "external_paid_api_calls": 0,
+  "sampling": "Same MACSum news eligibility as pilot; exclude all 9 previous source hashes before seeded shuffle. One document per length/wording combination.",
+  "baselines": "Manual and previous-export prompt strings copied unchanged by profile from archived pilot. Revised arm uses actual new domain/export builder. Whole-prompt comparison, not identical-policy formatting comparison.",
+  "leakage_control": "Prompt/check developer instructed not to access these sources. Fact annotator sees sources/references but no generated outputs. Freeze prompts/anchors/rubric before generation; no retries or prompt tuning after heldout responses.",
+  "primary": [
+    "sentence-length compliance",
+    "blinded wording instruction compliance",
+    "coverage of three pre-frozen atomic central propositions",
+    "source-supported factuality audit over entire summary"
+  ],
+  "secondary": [
+    "legacy overlap proxy",
+    "revised overlap proxy",
+    "revised literal extraction check",
+    "automatic versus reviewed sentence count"
+  ],
+  "evaluation_changes": "Publisher prefix removal and whitespace normalization allowed explicitly in revised instructions/rubric. Existing overlap score is diagnostic, not a factuality/semantic preference score. Atomic anchors avoid making incidental detail mandatory. Compare all 3 arms under the SAME revised rubric, never compare absolute coverage directly against previous corpus.",
+  "generation": "Three fresh independent subagents, inherited same runtime model/settings, one arm with 9 tasks per context, no parent conversation. Read only assigned input and operational rules. First submissions cached; no paid API.",
+  "review": "Two fresh blinded same-runtime reviewers, no condition names/prompts/automatic metrics. Exact evidence validated; report disagreements and all factual-issue flags, retain ranges where ambiguous.",
+  "no_claims": [
+    "human preference recovery",
+    "optimal selection count",
+    "time saving",
+    "adoption",
+    "statistical superiority or equivalence",
+    "unseen in model training",
+    "Korean semantic accuracy"
+  ],
+  "gepa": "Not run. Fixing criteria precedes optimization. These new test sources must not be used for subsequent tuning and then reported as an independent test again."
+}

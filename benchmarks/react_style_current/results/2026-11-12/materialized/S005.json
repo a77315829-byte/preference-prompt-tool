@@ -1,0 +1,23 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\nimport './styles.css';\n\nexport type Unit = 'C' | 'F';\nexport type Props = {\n  initialValue: string;\n  initialUnit: Unit;\n};\n\nexport function Component({ initialValue, initialUnit }: Props) {\n  const [value, setValue] = useState(initialValue);\n  const [unit, setUnit] = useState(initialUnit);\n  const trimmedValue = value.trim();\n  const matchesDecimal = /^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)$/.test(trimmedValue);\n  const numericValue = Number(trimmedValue);\n  const converted = unit === 'C'\n    ? numericValue * 9 / 5 + 32\n    : (numericValue - 32) * 5 / 9;\n  const valid = matchesDecimal\n    && Number.isFinite(numericValue)\n    && Number.isFinite(converted);\n  const targetUnit = unit === 'C' ? 'F' : 'C';\n\n  return (\n    <div className=\"unit-converter\" data-testid=\"panel\">\n      <label>\n        Temperature\n        <input\n          type=\"text\"\n          value={value}\n          aria-invalid={!valid}\n          onChange={(event) => setValue(event.currentTarget.value)}\n        />\n      </label>\n      <label>\n        From unit\n        <select\n          value={unit}\n          onChange={(event) => setUnit(event.currentTarget.value === 'C' ? 'C' : 'F')}\n        >\n          <option value=\"C\">C</option>\n          <option value=\"F\">F</option>\n        </select>\n      </label>\n      <output aria-label=\"Converted\">\n        {valid ? converted.toFixed(2) + ' ' + targetUnit : 'Invalid temperature'}\n      </output>\n      <button\n        type=\"button\"\n        disabled={!valid}\n        onClick={() => {\n          if (!valid) return;\n          setValue(converted.toFixed(2));\n          setUnit(targetUnit);\n        }}\n      >\n        Swap\n      </button>\n    </div>\n  );\n}\n",
+    "styles.css": ".unit-converter {\n  display: grid;\n  gap: 8px;\n  padding: 16px;\n  background-color: #f2f6fc;\n  color: #1d3150;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 1718
+    },
+    {
+      "path": "styles.css",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 1741,
+      "end": 1854
+    }
+  ]
+}

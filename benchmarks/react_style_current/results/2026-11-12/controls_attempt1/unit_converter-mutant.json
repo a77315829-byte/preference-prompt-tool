@@ -1,0 +1,59 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "unit_converter",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": false,
+    "checks": [
+      {
+        "name": "initial_celsius_zero_converts_to_fahrenheit",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '30.00 F'\n- '32.00 F'\n"
+      },
+      {
+        "name": "decimal_sign_and_whitespace_preserve_raw_input",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n\n'7.50 F' !== '9.50 F'\n"
+      },
+      {
+        "name": "fahrenheit_and_select_change_use_current_raw_value",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '411.60 F'\n- '413.60 F'\n     ^\n"
+      },
+      {
+        "name": "invalid_formats_disable_swap_then_recover",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '-42.00 F'\n- '-40.00 F'\n     ^\n"
+      },
+      {
+        "name": "swap_moves_calculated_value_and_reverses_unit_twice",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n\n'210.00' !== '212.00'\n"
+      },
+      {
+        "name": "rerender_does_not_reset_local_temperature_or_unit",
+        "passed": true
+      },
+      {
+        "name": "overflow_input_and_result_are_invalid",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0
+}

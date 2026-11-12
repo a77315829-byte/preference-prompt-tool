@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-10",
+  "branch": "microstone",
+  "execution": "Codex collaboration agents, local cached JSON files; no model API client or paid model endpoint",
+  "paid_model_api_calls": 0,
+  "gepa_run": false,
+  "new_dependencies": [],
+  "source_preparation": "Source-only annotation before response generation. Initial sources/annotations retained. One overlap-contaminated source replaced deterministically before freezing and generation; eight original source/annotation records preserved unchanged.",
+  "generation": {
+    "workers": "One fresh isolated-context agent per arm; shared inherited runtime, no model override",
+    "arms": ["manual", "current", "revised"],
+    "responses_per_arm": 9,
+    "response_policy": "First output only, UTF-8 pending file then atomic rename without overwrite; no quality retries",
+    "revised_product_identity": "Every revised input is asserted byte-for-byte equal to prepare_summary_contract(...).task_requests.en during freeze",
+    "exact_runtime_model_and_decoding": "Not independently exposed; do not infer a paid-API model identity from an agent nickname"
+  },
+  "review": {
+    "workers": ["/root/contract_review_a", "/root/contract_review_b"],
+    "fork_turns": "none",
+    "inputs": ["rubric.json", "results/2026-11-10/blind_packet.json"],
+    "responses_per_worker": 27,
+    "hidden": ["arm names", "prompts", "other review", "automatic metrics", "human reference summaries"],
+    "validation": "Schema, IDs, exact quote evidence and identical-output consistency; no feedback-driven regrading"
+  },
+  "root_audit": "After both saved reviews, aggregate scores and source-audit omissions plus lexical/semantic discrepancies. Preserve original grades.",
+  "cost_scope": "No paid model API charges were incurred by this run. Codex usage was consumed; this is not a claim of cost-free production inference.",
+  "future_use": "These nine evaluation sources are now observed and must be excluded from any later claimed fresh final evaluation."
+}

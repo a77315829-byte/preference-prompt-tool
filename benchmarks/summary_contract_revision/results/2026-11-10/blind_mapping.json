@@ -1,0 +1,110 @@
+{
+  "B001": {
+    "arm": "revised",
+    "case_id": "C07"
+  },
+  "B002": {
+    "arm": "revised",
+    "case_id": "C02"
+  },
+  "B003": {
+    "arm": "manual",
+    "case_id": "C08"
+  },
+  "B004": {
+    "arm": "revised",
+    "case_id": "C08"
+  },
+  "B005": {
+    "arm": "current",
+    "case_id": "C03"
+  },
+  "B006": {
+    "arm": "current",
+    "case_id": "C08"
+  },
+  "B007": {
+    "arm": "manual",
+    "case_id": "C01"
+  },
+  "B008": {
+    "arm": "current",
+    "case_id": "C09"
+  },
+  "B009": {
+    "arm": "manual",
+    "case_id": "C05"
+  },
+  "B010": {
+    "arm": "revised",
+    "case_id": "C03"
+  },
+  "B011": {
+    "arm": "manual",
+    "case_id": "C04"
+  },
+  "B012": {
+    "arm": "manual",
+    "case_id": "C09"
+  },
+  "B013": {
+    "arm": "manual",
+    "case_id": "C03"
+  },
+  "B014": {
+    "arm": "revised",
+    "case_id": "C04"
+  },
+  "B015": {
+    "arm": "current",
+    "case_id": "C02"
+  },
+  "B016": {
+    "arm": "revised",
+    "case_id": "C09"
+  },
+  "B017": {
+    "arm": "current",
+    "case_id": "C07"
+  },
+  "B018": {
+    "arm": "manual",
+    "case_id": "C02"
+  },
+  "B019": {
+    "arm": "revised",
+    "case_id": "C01"
+  },
+  "B020": {
+    "arm": "current",
+    "case_id": "C05"
+  },
+  "B021": {
+    "arm": "current",
+    "case_id": "C01"
+  },
+  "B022": {
+    "arm": "manual",
+    "case_id": "C06"
+  },
+  "B023": {
+    "arm": "revised",
+    "case_id": "C05"
+  },
+  "B024": {
+    "arm": "current",
+    "case_id": "C06"
+  },
+  "B025": {
+    "arm": "revised",
+    "case_id": "C06"
+  },
+  "B026": {
+    "arm": "manual",
+    "case_id": "C07"
+  },
+  "B027": {
+    "arm": "current",
+    "case_id": "C04"
+  }
+}

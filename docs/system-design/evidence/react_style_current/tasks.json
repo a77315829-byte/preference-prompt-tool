@@ -1,0 +1,143 @@
+{
+  "version": "react-style-current-v1",
+  "provenance": "Eight new synthetic feature tasks for separate React behavior and three-axis code-style evaluation. Not production tasks or human preference evidence. Reference controls and runtime assertions are withheld from generators.",
+  "tasks": [
+    {
+      "id": "tag_editor",
+      "kind": "feature",
+      "title": "중복을 막는 태그 편집기",
+      "contract_types": "export type ExpectedProps = { initialTags: string[]; onChange: (tags: string[]) => void };",
+      "requirements": [
+        "initialTags는 이미 양끝 공백이 없고 대소문자를 무시해 고유한 태그들이다. 마운트 때만 초기 태그로 사용한다. 원본 배열을 변경하지 않는다. 이후 initialTags 변경은 로컬 편집값을 초기화하지 않는다.",
+        "Tag editor라는 이름의 form, Add tag라는 이름의 text 입력, Add 제출 버튼을 둔다. 초기 입력은 빈 문자열이다. Tags라는 이름의 ul에 현재 순서대로 li를 만들고 각 태그 원문을 span에 표시한다. 각 li에는 Remove {tag} 버튼이 있다.",
+        "form 제출은 페이지 이동을 막는다. 입력 양끝 공백을 제거한 값이 비면 role=alert에 Empty tag, 기존 태그와 대소문자를 무시해 같으면 Duplicate tag를 표시한다. 잘못된 추가는 목록/입력/콜백을 바꾸지 않는다.",
+        "유효한 추가는 대소문자를 유지한 정리된 값을 마지막에 넣고 입력과 지난 오류를 지운다. onChange에 새 전체 배열을 정확히 한 번 전달한다. Remove는 해당 태그만 제거하고 지난 오류를 지우며 새 전체 배열로 정확히 한 번 호출한다. 초기 마운트, 입력 편집, props 변경은 호출하지 않는다. 콜백 prop 교체 후에는 최신 콜백을 쓴다.",
+        "실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 새 합성 컴포넌트를 구현한다. 환경: React 19.3.0, TypeScript 5.9.3 strict, react-dom/client, JSDOM 20.0.3. Component.tsx에서 Component와 Props를 named export한다. 공개 Props 계약은 공통 필수이며, 로컬 변수·도우미·반환 타입 표기 수준은 별도로 제공된 스타일 지침을 따른다. React 및 상대 경로 .ts/.tsx와 일반 CSS side-effect import만 허용한다. 새 패키지, 명시적 any, .d.ts, CSS Modules, CSS @import/url(), 네트워크, 타이머, 저장소, 외부 경로를 사용하지 않는다. 추가 파일은 파일명을 식별해 전체 내용을 제공한다. 표시 문자열과 접근 가능한 이름은 영문 그대로 쓴다.\n\n과제: 중복을 막는 태그 편집기\n\n공개 계약:\nexport type Props = { initialTags: string[]; onChange: (tags: string[]) => void };\n\n요구사항:\n1. initialTags는 이미 양끝 공백이 없고 대소문자를 무시해 고유한 태그들이다. 마운트 때만 초기 태그로 사용한다. 원본 배열을 변경하지 않는다. 이후 initialTags 변경은 로컬 편집값을 초기화하지 않는다.\n2. Tag editor라는 이름의 form, Add tag라는 이름의 text 입력, Add 제출 버튼을 둔다. 초기 입력은 빈 문자열이다. Tags라는 이름의 ul에 현재 순서대로 li를 만들고 각 태그 원문을 span에 표시한다. 각 li에는 Remove {tag} 버튼이 있다.\n3. form 제출은 페이지 이동을 막는다. 입력 양끝 공백을 제거한 값이 비면 role=alert에 Empty tag, 기존 태그와 대소문자를 무시해 같으면 Duplicate tag를 표시한다. 잘못된 추가는 목록/입력/콜백을 바꾸지 않는다.\n4. 유효한 추가는 대소문자를 유지한 정리된 값을 마지막에 넣고 입력과 지난 오류를 지운다. onChange에 새 전체 배열을 정확히 한 번 전달한다. Remove는 해당 태그만 제거하고 지난 오류를 지우며 새 전체 배열로 정확히 한 번 호출한다. 초기 마운트, 입력 편집, props 변경은 호출하지 않는다. 콜백 prop 교체 후에는 최신 콜백을 쓴다.\n5. 실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다.\n\n기존 파일은 없다."
+    },
+    {
+      "id": "sortable_table",
+      "kind": "feature",
+      "title": "빈 값을 뒤로 보내는 숫자 정렬 표",
+      "contract_types": "export type Row = { id: string; label: string; score: number | null };\nexport type ExpectedProps = { rows: Row[] };",
+      "requirements": [
+        "rows의 id는 고유하고 score는 유한수 또는 null이다. Rows라는 이름의 table에 Label과 Score 두 열을 두고 tbody 각 행에 label과 score를 표시한다. null 표시는 —이다. 초기 순서는 rows 순서다. 원본 배열과 객체를 변경하지 않는다.",
+        "Sort score 버튼을 클릭하면 처음 오름차순, 다음 내림차순, 이후 두 방향을 반복한다. Score th의 aria-sort는 초기 none, 오름차순 ascending, 내림차순 descending이다.",
+        "숫자는 수치로 비교한다. null은 양 방향 모두 마지막이다. 같은 수치끼리와 null끼리는 현재 props의 원래 순서를 유지하는 안정 정렬이다.",
+        "새 rows가 오면 선택한 정렬 방향을 유지해 다시 정렬한다. 빈 rows에서도 표와 정렬 버튼을 유지하고 role=status의 No rows를 보인다. 값이 있으면 그 상태 메시지를 제거한다.",
+        "실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 새 합성 컴포넌트를 구현한다. 환경: React 19.3.0, TypeScript 5.9.3 strict, react-dom/client, JSDOM 20.0.3. Component.tsx에서 Component와 Props를 named export한다. 공개 Props 계약은 공통 필수이며, 로컬 변수·도우미·반환 타입 표기 수준은 별도로 제공된 스타일 지침을 따른다. React 및 상대 경로 .ts/.tsx와 일반 CSS side-effect import만 허용한다. 새 패키지, 명시적 any, .d.ts, CSS Modules, CSS @import/url(), 네트워크, 타이머, 저장소, 외부 경로를 사용하지 않는다. 추가 파일은 파일명을 식별해 전체 내용을 제공한다. 표시 문자열과 접근 가능한 이름은 영문 그대로 쓴다.\n\n과제: 빈 값을 뒤로 보내는 숫자 정렬 표\n\n공개 계약:\nexport type Row = { id: string; label: string; score: number | null };\nexport type Props = { rows: Row[] };\n\n요구사항:\n1. rows의 id는 고유하고 score는 유한수 또는 null이다. Rows라는 이름의 table에 Label과 Score 두 열을 두고 tbody 각 행에 label과 score를 표시한다. null 표시는 —이다. 초기 순서는 rows 순서다. 원본 배열과 객체를 변경하지 않는다.\n2. Sort score 버튼을 클릭하면 처음 오름차순, 다음 내림차순, 이후 두 방향을 반복한다. Score th의 aria-sort는 초기 none, 오름차순 ascending, 내림차순 descending이다.\n3. 숫자는 수치로 비교한다. null은 양 방향 모두 마지막이다. 같은 수치끼리와 null끼리는 현재 props의 원래 순서를 유지하는 안정 정렬이다.\n4. 새 rows가 오면 선택한 정렬 방향을 유지해 다시 정렬한다. 빈 rows에서도 표와 정렬 버튼을 유지하고 role=status의 No rows를 보인다. 값이 있으면 그 상태 메시지를 제거한다.\n5. 실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다.\n\n기존 파일은 없다."
+    },
+    {
+      "id": "step_wizard",
+      "kind": "feature",
+      "title": "이름을 검토하고 제출하는 두 단계 폼",
+      "contract_types": "export type ExpectedProps = { initialName: string; onSubmit: (name: string) => void };",
+      "requirements": [
+        "첫 단계는 Name wizard라는 이름의 form이며 Name이라는 이름의 text 입력과 Next 제출 버튼을 보여 준다. initialName은 마운트 초기값에만 사용한다. 초기에는 검토 output, Back, Submit 버튼을 표시하지 않는다.",
+        "Next의 form 제출은 페이지 이동을 막는다. 입력 양끝 공백을 제거한 값이 비면 첫 단계에 머물고 role=alert에 Name required, Name 입력에 aria-invalid=true를 표시한다. onSubmit은 호출하지 않는다.",
+        "유효한 Next는 공백을 제거한 이름을 보존하고 오류를 지우며 검토 단계로 이동한다. 검토 단계에는 Review name이라는 이름의 output에 정리된 이름, Back 버튼, Submit 버튼을 표시하고 Name 입력과 Next는 표시하지 않는다.",
+        "Back은 첫 단계로 돌아가 정리된 이름을 입력에 보존한다. 이름을 고쳐 다시 Next로 가면 새 이름을 검토한다. 검토의 Submit 클릭마다 최신 onSubmit을 정확히 한 번 호출하며 검토 단계에 그대로 머문다. 초기화/입력/Next/Back/props 변경은 콜백을 호출하지 않는다. 이름은 HTML로 해석하지 않고 텍스트로 표시한다.",
+        "실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 새 합성 컴포넌트를 구현한다. 환경: React 19.3.0, TypeScript 5.9.3 strict, react-dom/client, JSDOM 20.0.3. Component.tsx에서 Component와 Props를 named export한다. 공개 Props 계약은 공통 필수이며, 로컬 변수·도우미·반환 타입 표기 수준은 별도로 제공된 스타일 지침을 따른다. React 및 상대 경로 .ts/.tsx와 일반 CSS side-effect import만 허용한다. 새 패키지, 명시적 any, .d.ts, CSS Modules, CSS @import/url(), 네트워크, 타이머, 저장소, 외부 경로를 사용하지 않는다. 추가 파일은 파일명을 식별해 전체 내용을 제공한다. 표시 문자열과 접근 가능한 이름은 영문 그대로 쓴다.\n\n과제: 이름을 검토하고 제출하는 두 단계 폼\n\n공개 계약:\nexport type Props = { initialName: string; onSubmit: (name: string) => void };\n\n요구사항:\n1. 첫 단계는 Name wizard라는 이름의 form이며 Name이라는 이름의 text 입력과 Next 제출 버튼을 보여 준다. initialName은 마운트 초기값에만 사용한다. 초기에는 검토 output, Back, Submit 버튼을 표시하지 않는다.\n2. Next의 form 제출은 페이지 이동을 막는다. 입력 양끝 공백을 제거한 값이 비면 첫 단계에 머물고 role=alert에 Name required, Name 입력에 aria-invalid=true를 표시한다. onSubmit은 호출하지 않는다.\n3. 유효한 Next는 공백을 제거한 이름을 보존하고 오류를 지우며 검토 단계로 이동한다. 검토 단계에는 Review name이라는 이름의 output에 정리된 이름, Back 버튼, Submit 버튼을 표시하고 Name 입력과 Next는 표시하지 않는다.\n4. Back은 첫 단계로 돌아가 정리된 이름을 입력에 보존한다. 이름을 고쳐 다시 Next로 가면 새 이름을 검토한다. 검토의 Submit 클릭마다 최신 onSubmit을 정확히 한 번 호출하며 검토 단계에 그대로 머문다. 초기화/입력/Next/Back/props 변경은 콜백을 호출하지 않는다. 이름은 HTML로 해석하지 않고 텍스트로 표시한다.\n5. 실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다.\n\n기존 파일은 없다."
+    },
+    {
+      "id": "unit_converter",
+      "kind": "feature",
+      "title": "입력을 보존하는 섭씨 화씨 변환기",
+      "contract_types": "export type Unit = 'C' | 'F';\nexport type ExpectedProps = { initialValue: string; initialUnit: Unit };",
+      "requirements": [
+        "Temperature라는 이름의 text 입력, From unit이라는 이름의 select(C와 F 옵션), Converted라는 이름의 output, Swap 버튼을 둔다. initialValue와 initialUnit은 마운트 초기값이며 이후 props 변경으로 로컬 입력/단위를 초기화하지 않는다.",
+        "Temperature 원문 문자열은 편집 때 보존한다. 유효값은 양끝 공백을 제외한 유한한 십진수다. 부호 +/-와 소수점은 허용하고 .5와 1.도 허용한다. 빈 값, 공백뿐인 값, 지수 표기, 16진수, Infinity, 글자가 섞인 값은 거절한다.",
+        "C에서 F는 value * 9 / 5 + 32, F에서 C는 (value - 32) * 5 / 9다. 유효할 때 Converted에 결과를 toFixed(2) 한 문자열, 공백 하나, 반대 단위(C/F)를 표시한다. 입력이나 단위 변경 즉시 다시 계산하고 입력 문자열은 덮어쓰지 않는다.",
+        "잘못된 값은 Converted에 Invalid temperature, Temperature에 aria-invalid=true를 표시하고 Swap을 비활성화한다. 유효한 값으로 고치면 오류 표시를 해제한다. Swap은 현재 변환 결과를 소수 두 자리 문자열로 입력에 넣고 단위를 반대로 바꾼다. 변환 결과 자체가 유한하지 않은 경우도 잘못된 값으로 처리한다.",
+        "실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 새 합성 컴포넌트를 구현한다. 환경: React 19.3.0, TypeScript 5.9.3 strict, react-dom/client, JSDOM 20.0.3. Component.tsx에서 Component와 Props를 named export한다. 공개 Props 계약은 공통 필수이며, 로컬 변수·도우미·반환 타입 표기 수준은 별도로 제공된 스타일 지침을 따른다. React 및 상대 경로 .ts/.tsx와 일반 CSS side-effect import만 허용한다. 새 패키지, 명시적 any, .d.ts, CSS Modules, CSS @import/url(), 네트워크, 타이머, 저장소, 외부 경로를 사용하지 않는다. 추가 파일은 파일명을 식별해 전체 내용을 제공한다. 표시 문자열과 접근 가능한 이름은 영문 그대로 쓴다.\n\n과제: 입력을 보존하는 섭씨 화씨 변환기\n\n공개 계약:\nexport type Unit = 'C' | 'F';\nexport type Props = { initialValue: string; initialUnit: Unit };\n\n요구사항:\n1. Temperature라는 이름의 text 입력, From unit이라는 이름의 select(C와 F 옵션), Converted라는 이름의 output, Swap 버튼을 둔다. initialValue와 initialUnit은 마운트 초기값이며 이후 props 변경으로 로컬 입력/단위를 초기화하지 않는다.\n2. Temperature 원문 문자열은 편집 때 보존한다. 유효값은 양끝 공백을 제외한 유한한 십진수다. 부호 +/-와 소수점은 허용하고 .5와 1.도 허용한다. 빈 값, 공백뿐인 값, 지수 표기, 16진수, Infinity, 글자가 섞인 값은 거절한다.\n3. C에서 F는 value * 9 / 5 + 32, F에서 C는 (value - 32) * 5 / 9다. 유효할 때 Converted에 결과를 toFixed(2) 한 문자열, 공백 하나, 반대 단위(C/F)를 표시한다. 입력이나 단위 변경 즉시 다시 계산하고 입력 문자열은 덮어쓰지 않는다.\n4. 잘못된 값은 Converted에 Invalid temperature, Temperature에 aria-invalid=true를 표시하고 Swap을 비활성화한다. 유효한 값으로 고치면 오류 표시를 해제한다. Swap은 현재 변환 결과를 소수 두 자리 문자열로 입력에 넣고 단위를 반대로 바꾼다. 변환 결과 자체가 유한하지 않은 경우도 잘못된 값으로 처리한다.\n5. 실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다.\n\n기존 파일은 없다."
+    },
+    {
+      "id": "password_visibility",
+      "kind": "feature",
+      "title": "입력을 유지하는 비밀번호 표시 전환",
+      "contract_types": "export type ExpectedProps = { initialValue: string; onChange: (value: string) => void };",
+      "requirements": [
+        "Password라는 이름의 입력과 Toggle visibility 버튼을 둔다. 값은 로컬 상태로 관리하고 initialValue는 마운트 초기값에만 사용한다. 초기 type은 password이며 버튼 aria-pressed는 false다.",
+        "Toggle visibility 클릭마다 입력 type을 text/password로 전환하고 aria-pressed를 true/false로 갱신한다. 전환은 입력 문자열을 정확히 유지한다. 빈 값도 지원한다.",
+        "사용자가 Password를 편집할 때 각 변경 값 그대로 최신 onChange에 정확히 한 번 전달한다. 공백이나 기호를 정리하지 않는다. 초기 마운트, 표시 전환, props 변경은 콜백을 호출하지 않는다.",
+        "부모가 initialValue나 콜백을 교체해도 현재 입력값과 표시 상태를 보존한다. 같은 세션에서 편집과 여러 차례 전환을 계속할 수 있다. 입력값을 HTML로 삽입하지 않는다.",
+        "실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 새 합성 컴포넌트를 구현한다. 환경: React 19.3.0, TypeScript 5.9.3 strict, react-dom/client, JSDOM 20.0.3. Component.tsx에서 Component와 Props를 named export한다. 공개 Props 계약은 공통 필수이며, 로컬 변수·도우미·반환 타입 표기 수준은 별도로 제공된 스타일 지침을 따른다. React 및 상대 경로 .ts/.tsx와 일반 CSS side-effect import만 허용한다. 새 패키지, 명시적 any, .d.ts, CSS Modules, CSS @import/url(), 네트워크, 타이머, 저장소, 외부 경로를 사용하지 않는다. 추가 파일은 파일명을 식별해 전체 내용을 제공한다. 표시 문자열과 접근 가능한 이름은 영문 그대로 쓴다.\n\n과제: 입력을 유지하는 비밀번호 표시 전환\n\n공개 계약:\nexport type Props = { initialValue: string; onChange: (value: string) => void };\n\n요구사항:\n1. Password라는 이름의 입력과 Toggle visibility 버튼을 둔다. 값은 로컬 상태로 관리하고 initialValue는 마운트 초기값에만 사용한다. 초기 type은 password이며 버튼 aria-pressed는 false다.\n2. Toggle visibility 클릭마다 입력 type을 text/password로 전환하고 aria-pressed를 true/false로 갱신한다. 전환은 입력 문자열을 정확히 유지한다. 빈 값도 지원한다.\n3. 사용자가 Password를 편집할 때 각 변경 값 그대로 최신 onChange에 정확히 한 번 전달한다. 공백이나 기호를 정리하지 않는다. 초기 마운트, 표시 전환, props 변경은 콜백을 호출하지 않는다.\n4. 부모가 initialValue나 콜백을 교체해도 현재 입력값과 표시 상태를 보존한다. 같은 세션에서 편집과 여러 차례 전환을 계속할 수 있다. 입력값을 HTML로 삽입하지 않는다.\n5. 실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다.\n\n기존 파일은 없다."
+    },
+    {
+      "id": "text_expander",
+      "kind": "feature",
+      "title": "긴 텍스트 펼치기와 접기",
+      "contract_types": "export type ExpectedProps = { text: string; maxChars: number };",
+      "requirements": [
+        "maxChars는 0 이상의 정수다. Preview라는 이름의 output에 텍스트를 표시한다. 처음은 접힌 상태다. text.length가 maxChars보다 크면 text.slice(0, maxChars) 뒤에 … 문자 하나를 붙인다. 길이와 slice는 JavaScript 문자열 기준이다.",
+        "긴 텍스트의 접힌 상태에는 Show more 버튼만 표시한다. 클릭하면 전체 text와 Show less 버튼을 표시한다. 다시 클릭하면 접힌 미리 보기로 돌아간다. 원문 공백/줄바꿈을 output의 textContent에서 보존한다.",
+        "text.length가 maxChars 이하면 전체 텍스트만 표시하고 펼치기/접기 버튼은 표시하지 않는다. 빈 텍스트, 길이가 정확히 maxChars인 텍스트, maxChars=0도 같은 규칙을 따른다.",
+        "text 또는 maxChars prop 값이 변경되면 새 값으로 접힌 상태부터 시작한다. 값이 같은 props 재렌더링은 현재 펼침 상태를 유지한다. HTML처럼 보이는 문자열은 안전한 텍스트로 표시한다.",
+        "실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 새 합성 컴포넌트를 구현한다. 환경: React 19.3.0, TypeScript 5.9.3 strict, react-dom/client, JSDOM 20.0.3. Component.tsx에서 Component와 Props를 named export한다. 공개 Props 계약은 공통 필수이며, 로컬 변수·도우미·반환 타입 표기 수준은 별도로 제공된 스타일 지침을 따른다. React 및 상대 경로 .ts/.tsx와 일반 CSS side-effect import만 허용한다. 새 패키지, 명시적 any, .d.ts, CSS Modules, CSS @import/url(), 네트워크, 타이머, 저장소, 외부 경로를 사용하지 않는다. 추가 파일은 파일명을 식별해 전체 내용을 제공한다. 표시 문자열과 접근 가능한 이름은 영문 그대로 쓴다.\n\n과제: 긴 텍스트 펼치기와 접기\n\n공개 계약:\nexport type Props = { text: string; maxChars: number };\n\n요구사항:\n1. maxChars는 0 이상의 정수다. Preview라는 이름의 output에 텍스트를 표시한다. 처음은 접힌 상태다. text.length가 maxChars보다 크면 text.slice(0, maxChars) 뒤에 … 문자 하나를 붙인다. 길이와 slice는 JavaScript 문자열 기준이다.\n2. 긴 텍스트의 접힌 상태에는 Show more 버튼만 표시한다. 클릭하면 전체 text와 Show less 버튼을 표시한다. 다시 클릭하면 접힌 미리 보기로 돌아간다. 원문 공백/줄바꿈을 output의 textContent에서 보존한다.\n3. text.length가 maxChars 이하면 전체 텍스트만 표시하고 펼치기/접기 버튼은 표시하지 않는다. 빈 텍스트, 길이가 정확히 maxChars인 텍스트, maxChars=0도 같은 규칙을 따른다.\n4. text 또는 maxChars prop 값이 변경되면 새 값으로 접힌 상태부터 시작한다. 값이 같은 props 재렌더링은 현재 펼침 상태를 유지한다. HTML처럼 보이는 문자열은 안전한 텍스트로 표시한다.\n5. 실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다.\n\n기존 파일은 없다."
+    },
+    {
+      "id": "range_pair",
+      "kind": "feature",
+      "title": "두 정수 선택값의 순서 검증",
+      "contract_types": "export type Range = { start: number; end: number };\nexport type ExpectedProps = { min: number; max: number; onApply: (range: Range) => void };",
+      "requirements": [
+        "min과 max는 유한한 정수이며 min <= max이고 옵션이 과도하게 많지 않다. 이 과제에서 마운트 후 min/max는 변경하지 않는다. Range pair라는 이름의 form, Start와 End라는 이름의 select, Apply 제출 버튼을 둔다.",
+        "두 select는 처음 빈 문자열을 선택한다. 첫 옵션은 value=\"\"이고 표시명은 Choose다. 이어서 min부터 max까지 모든 정수를 작은 순서로 표시하며 옵션 value는 해당 정수의 문자열이다. 음수와 0도 지원한다.",
+        "제출은 페이지 이동을 막고 두 선택이 모두 있으며 start <= end인지 검사한다. 빈 필드에는 aria-invalid=true를 표시하고 role=alert에 Choose both values를 표시한다. 둘 다 있지만 start > end이면 End에 aria-invalid=true, role=alert에 Range order를 표시한다.",
+        "실패한 제출은 onApply를 호출하지 않는다. 유효한 제출은 숫자로 바꾼 {start,end}로 최신 onApply를 정확히 한 번 호출하고 지난 오류와 aria-invalid를 지운다. 입력값은 유지한다. 같은 값의 양 끝도 유효하다. 초기 마운트/선택 변경/props 재렌더링은 콜백을 호출하지 않는다. 오류 검사는 제출 때만 요구한다.",
+        "실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 새 합성 컴포넌트를 구현한다. 환경: React 19.3.0, TypeScript 5.9.3 strict, react-dom/client, JSDOM 20.0.3. Component.tsx에서 Component와 Props를 named export한다. 공개 Props 계약은 공통 필수이며, 로컬 변수·도우미·반환 타입 표기 수준은 별도로 제공된 스타일 지침을 따른다. React 및 상대 경로 .ts/.tsx와 일반 CSS side-effect import만 허용한다. 새 패키지, 명시적 any, .d.ts, CSS Modules, CSS @import/url(), 네트워크, 타이머, 저장소, 외부 경로를 사용하지 않는다. 추가 파일은 파일명을 식별해 전체 내용을 제공한다. 표시 문자열과 접근 가능한 이름은 영문 그대로 쓴다.\n\n과제: 두 정수 선택값의 순서 검증\n\n공개 계약:\nexport type Range = { start: number; end: number };\nexport type Props = { min: number; max: number; onApply: (range: Range) => void };\n\n요구사항:\n1. min과 max는 유한한 정수이며 min <= max이고 옵션이 과도하게 많지 않다. 이 과제에서 마운트 후 min/max는 변경하지 않는다. Range pair라는 이름의 form, Start와 End라는 이름의 select, Apply 제출 버튼을 둔다.\n2. 두 select는 처음 빈 문자열을 선택한다. 첫 옵션은 value=\"\"이고 표시명은 Choose다. 이어서 min부터 max까지 모든 정수를 작은 순서로 표시하며 옵션 value는 해당 정수의 문자열이다. 음수와 0도 지원한다.\n3. 제출은 페이지 이동을 막고 두 선택이 모두 있으며 start <= end인지 검사한다. 빈 필드에는 aria-invalid=true를 표시하고 role=alert에 Choose both values를 표시한다. 둘 다 있지만 start > end이면 End에 aria-invalid=true, role=alert에 Range order를 표시한다.\n4. 실패한 제출은 onApply를 호출하지 않는다. 유효한 제출은 숫자로 바꾼 {start,end}로 최신 onApply를 정확히 한 번 호출하고 지난 오류와 aria-invalid를 지운다. 입력값은 유지한다. 같은 값의 양 끝도 유효하다. 초기 마운트/선택 변경/props 재렌더링은 콜백을 호출하지 않는다. 오류 검사는 제출 때만 요구한다.\n5. 실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다.\n\n기존 파일은 없다."
+    },
+    {
+      "id": "breadcrumb_browser",
+      "kind": "feature",
+      "title": "중첩 폴더를 탐색하는 경로 브라우저",
+      "contract_types": "export type Folder = { id: string; name: string; children: Folder[] };\nexport type ExpectedProps = { folders: Folder[]; onNavigate: (path: string[]) => void };",
+      "requirements": [
+        "folders는 순환이 없는 중첩 트리다. id는 트리 전체에서 고유하며 name은 /를 포함하지 않고 같은 형제 안에서 고유하다. 초기 위치는 루트다. 파일 시스템/URL/history를 사용하지 않고 props만 탐색한다.",
+        "Current path라는 이름의 output에 루트는 /, 하위는 / 다음에 현재 경로 폴더들의 name을 /로 이어 표시한다. Folders라는 이름의 ul에 현재 폴더의 직계 자식만 전달 순서대로 li와 Enter {name} 버튼으로 표시한다.",
+        "Enter는 해당 폴더로 한 단계 들어가고 최신 onNavigate에 루트부터 현재 폴더까지의 id 배열을 정확히 한 번 전달한다. 이름이 HTML처럼 보여도 일반 텍스트다. 하위 폴더가 없으면 빈 ul과 role=status의 No folders를 표시한다.",
+        "Back 버튼은 루트에서 비활성화한다. 하위에서 누르면 정확히 한 단계 올라가며 새 id 경로로 정확히 한 번 호출한다. 초기 마운트/루트의 비활성 Back/props 재렌더링은 호출하지 않는다.",
+        "부모는 동일한 id 트리의 새 객체를 줄 수 있고 name을 바꿀 수 있다. 현재 위치를 id로 유지하고 최신 이름/직계 자식 목록을 표시한다. 마운트 후 id 트리 구조 변경은 범위 밖이다. 원본 props 배열이나 객체를 변경하지 않는다.",
+        "실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다."
+      ],
+      "entry": "Component.tsx",
+      "export_name": "Component",
+      "starter_files": {},
+      "prompt": "TypeScript/React 새 합성 컴포넌트를 구현한다. 환경: React 19.3.0, TypeScript 5.9.3 strict, react-dom/client, JSDOM 20.0.3. Component.tsx에서 Component와 Props를 named export한다. 공개 Props 계약은 공통 필수이며, 로컬 변수·도우미·반환 타입 표기 수준은 별도로 제공된 스타일 지침을 따른다. React 및 상대 경로 .ts/.tsx와 일반 CSS side-effect import만 허용한다. 새 패키지, 명시적 any, .d.ts, CSS Modules, CSS @import/url(), 네트워크, 타이머, 저장소, 외부 경로를 사용하지 않는다. 추가 파일은 파일명을 식별해 전체 내용을 제공한다. 표시 문자열과 접근 가능한 이름은 영문 그대로 쓴다.\n\n과제: 중첩 폴더를 탐색하는 경로 브라우저\n\n공개 계약:\nexport type Folder = { id: string; name: string; children: Folder[] };\nexport type Props = { folders: Folder[]; onNavigate: (path: string[]) => void };\n\n요구사항:\n1. folders는 순환이 없는 중첩 트리다. id는 트리 전체에서 고유하며 name은 /를 포함하지 않고 같은 형제 안에서 고유하다. 초기 위치는 루트다. 파일 시스템/URL/history를 사용하지 않고 props만 탐색한다.\n2. Current path라는 이름의 output에 루트는 /, 하위는 / 다음에 현재 경로 폴더들의 name을 /로 이어 표시한다. Folders라는 이름의 ul에 현재 폴더의 직계 자식만 전달 순서대로 li와 Enter {name} 버튼으로 표시한다.\n3. Enter는 해당 폴더로 한 단계 들어가고 최신 onNavigate에 루트부터 현재 폴더까지의 id 배열을 정확히 한 번 전달한다. 이름이 HTML처럼 보여도 일반 텍스트다. 하위 폴더가 없으면 빈 ul과 role=status의 No folders를 표시한다.\n4. Back 버튼은 루트에서 비활성화한다. 하위에서 누르면 정확히 한 단계 올라가며 새 id 경로로 정확히 한 번 호출한다. 초기 마운트/루트의 비활성 Back/props 재렌더링은 호출하지 않는다.\n5. 부모는 동일한 id 트리의 새 객체를 줄 수 있고 name을 바꿀 수 있다. 현재 위치를 id로 유지하고 최신 이름/직계 자식 목록을 표시한다. 마운트 후 id 트리 구조 변경은 범위 밖이다. 원본 props 배열이나 객체를 변경하지 않는다.\n6. 실제 최상위 패널 하나에 data-testid=\"panel\"을 붙이고 배경색 #f2f6fc, 글자색 #1d3150, padding 16px, 자식 간 gap 8px을 적용한다. gap이 작동하도록 flex 또는 grid를 쓴다. 값의 직접 지정/토큰 사용과 구성/타입 표기 방식은 별도로 제공된 코드 스타일 지침을 따른다.\n\n기존 파일은 없다."
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+[
+  {
+    "id": "H01",
+    "policy": "topic-free, requested-length match if available; otherwise all topic-free",
+    "length_matched": true,
+    "references": [
+      {
+        "text": "The Channel of E!, announced a new transmission, a series documentary about Bruce Jenner's transition from male to female. Bruce Jenners is known as the father of the Kardashian family, in the reality show \"Keeping Up with the Kardashians,\" ex-husband of the family matriarch Kris Jenner. The pair announced the filing for the divorce in September 2014 after a few years of life separated, despite this, his sons and fans support the transition, according to E! The series will premiere in July and will show Bruce's point of view as the man enters the unknown territory.",
+        "control": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "H02",
+    "policy": "topic-free, requested-length match if available; otherwise all topic-free",
+    "length_matched": true,
+    "references": [
+      {
+        "text": "Maysak, a tropical storm, could still cause problems such as flooding and landslides in the Philippines.",
+        "control": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "H03",
+    "policy": "topic-free, requested-length match if available; otherwise all topic-free",
+    "length_matched": true,
+    "references": [
+      {
+        "text": "Many prisoners were freed after Al Qaeda members attacked a prison and other government facilities.",
+        "control": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "H04",
+    "policy": "topic-free, requested-length match if available; otherwise all topic-free",
+    "length_matched": true,
+    "references": [
+      {
+        "text": "In light of a security threat in December involving a Delta Air Lines ramp worker and passenger at Hartsfield-Jackson Atlanta International Airport allegedly smuggling guns through flights, TSA conducted a study to find out how best to mitigate such risks. The study conducted by various representatives of TSA found that screening all employees was not the one-stop cure for aviation security problems as one cannot see the attitudes and intentions of another to cause harm through that method. Rep. Kathleen Rice urged TSA to do more and prevent security breaches. The report also recommended increased surveillance of employees who work inside baggage rooms and cargo areas. Stover agreed with the findings in the report.",
+        "control": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "H05",
+    "policy": "topic-free, requested-length match if available; otherwise all topic-free",
+    "length_matched": true,
+    "references": [
+      {
+        "text": "Since Chokal's grades weren't going to be good enough to secure an admission into medical school, Chokal-Ingam, a man of Indian descent, decided to go undercover as a student of black descent, and applied to several medical schools.",
+        "control": {
+          "length": "short",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "H06",
+    "policy": "topic-free, requested-length match if available; otherwise all topic-free",
+    "length_matched": true,
+    "references": [
+      {
+        "text": "Earlier in the evening, the CNN team joins the Finance Police's ship, the Calabrese, in Lampedusa harbor. The Calabrese patrols the Mediterranean near Lampedusa, which has been the first port of entry into Europe for migrants coming from Africa and the Middle East. In 2013, Cortese, along with other shipmates, participated in a rescue effort that resulted in 350 deaths. Four of the survivors were rescued by Calabrese's crew. The crew recalls some traumatic experiences during the 2013 migrant rescue mission.",
+        "control": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "H07",
+    "policy": "topic-free, requested-length match if available; otherwise all topic-free",
+    "length_matched": true,
+    "references": [
+      {
+        "text": "Ronen Ziv from native Israel had a 15-month-old daughter in Nepal where earth quick that claimed many lives had occurred. Ziv had to wait for news from home as his tickets to Nepal for his child's birth couldn't be used.",
+        "control": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "H08",
+    "policy": "topic-free, requested-length match if available; otherwise all topic-free",
+    "length_matched": true,
+    "references": [
+      {
+        "text": "A day after Clinton announced to be running for president, Upright a devoted Republican died Monday at a North Carolina hospital. Others say they'll still vote for Clinton even after the family requested that people send memorial flowers to a children's hospital at Shriners and not to vote for Clinton in 2016.",
+        "control": {
+          "length": "long",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "H09",
+    "policy": "topic-free, requested-length match if available; otherwise all topic-free",
+    "length_matched": true,
+    "references": [
+      {
+        "text": "New movies sci-fi and superhero trailers were released this weekend. Twitter fans had mixed reactions to \"Fantastic Four\" trailer, and Twitter found the \"Jurassic World\" trailer pretty good.",
+        "control": {
+          "length": "normal",
+          "extractiveness": "normal",
+          "specificity": "normal",
+          "topic": ""
+        }
+      }
+    ]
+  }
+]

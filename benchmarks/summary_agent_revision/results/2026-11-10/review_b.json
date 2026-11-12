@@ -1,0 +1,877 @@
+[
+  {
+    "output_id": "R01",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses distinctive source wording, including 'ISIS claimed responsibility for a suicide car bomb attack Friday' and the complete personnel-safety sentence.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group."
+        ],
+        "reason": "The bombing location and ISIS's attributed claim are conveyed."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "At least four people were killed and 18 injured, police said"
+        ],
+        "reason": "Retains the minimum death toll and police attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "All U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said."
+        ],
+        "reason": "Retains all-personnel safety and State Department attribution."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R02",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Most wording is reused directly, such as 'suicide car bomb attack Friday near the U.S. Consulate' and the complete personnel-safety sentence.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group."
+        ],
+        "reason": "The bombing location and ISIS's attributed claim are conveyed."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "At least four people were killed and 18 injured, police said"
+        ],
+        "reason": "Retains the minimum death toll and police attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "All U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said."
+        ],
+        "reason": "Retains all-personnel safety and State Department attribution."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R03",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses source sentences, including 'Security personnel fired at the car, which exploded but did not reach the consulate' and the personnel-safety sentence.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "ISIS claimed responsibility for a suicide car bomb attack Friday near the U.S. Consulate in the Kurdish Iraqi city of Irbil, according to several Twitter accounts linked to the terror group."
+        ],
+        "reason": "The bombing location and ISIS's attributed claim are conveyed."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "At least four people were killed and 18 injured, police said"
+        ],
+        "reason": "Retains the minimum death toll and police attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "All U.S. Consulate personnel were safe and accounted for following the explosion, U.S. State Department spokeswoman Marie Harf said."
+        ],
+        "reason": "Retains all-personnel safety and State Department attribution."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R04",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Reuses distinctive phrases including 'Hundreds of decomposed corpses', 'residents who participated in the exhumations put the figure at more than 400', and the complete victims sentence.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Hundreds of decomposed corpses were discovered in shallow graves and on the streets of Damasak after the town was freed from Boko Haram in a joint Nigerian-Chadian military operation; residents who participated in the exhumations put the figure at more than 400."
+        ],
+        "reason": "Conveys the core discovery in Damasak and explicitly attributes the count to residents. Ambiguity: the anchor includes both official and resident reporting; the summary retains resident reporting but does not repeat the official source category for the discovery."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "after the town was freed from Boko Haram in a joint Nigerian-Chadian military operation"
+        ],
+        "reason": "The joint recapture is explicitly linked to Damasak and precedes the discovery."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The victims included men, women and children murdered by Boko Haram when they seized the area in November, said Abubakar Kyari, a senator-elect for the region."
+        ],
+        "reason": "Preserves the senator-elect's attribution of the murders to Boko Haram's seizure."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R05",
+    "sentence_count": 10,
+    "wording_pass": true,
+    "wording_reason": "Mostly reformulates and combines the source, for example 'subsequently releasing three pending further inquiries' and 'supported them through funding and recruitment'; retained names and charge terminology do not dominate the prose.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Australian police arrested five men aged 18 or 19 in Melbourne on Saturday in a counterterrorism operation"
+        ],
+        "reason": "Conveys all five arrests, their youth, the location and counterterrorism context."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Authorities said the suspects intended to attack police at an Anzac Day ceremony on April 25"
+        ],
+        "reason": "Retains the official allegation, police target and Anzac Day ceremony."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sevdet Besim, 18, was charged with conspiring to commit a terrorist act"
+        ],
+        "reason": "Identifies one suspect's conspiracy charge without treating the allegation as guilt."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R06",
+    "sentence_count": 10,
+    "wording_pass": true,
+    "wording_reason": "Mostly recasts source clauses, such as 'then released three while inquiries continued', 'urged earlier community efforts to identify such behavior' and 'attend Anzac Day commemorations in large numbers'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Australian police arrested five men aged 18 or 19 in Melbourne on Saturday in a major counterterrorism operation"
+        ],
+        "reason": "Conveys all five arrests, their youth, the location and counterterrorism context."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Authorities alleged that the suspects planned to attack police at an April 25 Anzac Day ceremony"
+        ],
+        "reason": "Explicitly marks the planned attack as the authorities' allegation and retains its targets."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sevdet Besim, 18, was charged with conspiring to commit a terrorist act"
+        ],
+        "reason": "Preserves one suspect's conspiracy charge."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R07",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Recombines the shooting and legal outcome into a new sentence and recasts the witness accounts as 'observations that differ from Slager's account and a police report, respectively'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Feidin Santana's video of North Charleston officer Michael Slager firing eight times at the fleeing, unarmed Walter Scott led to Slager's dismissal and arrest on a murder charge."
+        ],
+        "reason": "Identifies Santana's recording, Slager and the fleeing unarmed Scott; the directly linked murder charge supplies the fatal-shooting context."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Feidin Santana's video of North Charleston officer Michael Slager firing eight times at the fleeing, unarmed Walter Scott led to Slager's dismissal and arrest on a murder charge."
+        ],
+        "reason": "Explicitly links the recording to Slager's murder charge."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Santana told CNN another officer ordered him to stop recording"
+        ],
+        "reason": "Preserves the attributed account of another officer telling him to stop."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R08",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "Mostly reformulates and consolidates the article, including 'over an alleged plan', 'A second detainee' and 'providing financial or recruitment support'; names and legal terminology are retained appropriately.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Australian police arrested five men aged 18 or 19 Saturday in Melbourne over an alleged plan to attack police",
+          "Investigators said evidence suggested ISIS had inspired the alleged plot"
+        ],
+        "reason": "Conveys the five young men's arrests in Melbourne; the alleged police attack and ISIS context unambiguously convey the counterterrorism nature of the operation."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Australian police arrested five men aged 18 or 19 Saturday in Melbourne over an alleged plan to attack police during the April 25 Anzac Day commemoration of the Gallipoli campaign's centennial."
+        ],
+        "reason": "Preserves the allegation as the basis of the police action and identifies the police target and Anzac Day event."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Sevdet Besim, 18, was charged with conspiring to commit a terrorist act"
+        ],
+        "reason": "Preserves the conspiracy charge against one suspect."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R09",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete source sentences with unchanged wording and punctuation, beginning 'The latest high-profile digital incursion' and 'Codes used in the attack'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Reports only the nuclear-operator incident and code similarities, without explicitly attributing responsibility to North Korea. Ambiguity: the anchor bundles bank/media and nuclear attacks; the bank/media attacks are also absent. The attribution itself is not preserved even for the included nuclear incident."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Omits Dark Seoul and the estimated 48,000 disabled computers."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Describes attempted theft but omits investigators' statement that no critical data was stolen."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R10",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "All nine sentences are complete unchanged source sentences, including the full death-toll, EU-official and mayor statements.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "in the past 10 days, with as many as 1,600 deaths in the Mediterranean"
+        ],
+        "reason": "Preserves the ten-day period and upper-bound death toll within the migrant-crisis context."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "this year alone as many as a million migrants could arrive in Europe, according to one European Union official."
+        ],
+        "reason": "Retains the possible upper-bound inflow, destination, year and EU-official attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers."
+        ],
+        "reason": "Preserves the mayor's attributed assessment of Catania and Sicily's capacity."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R11",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Mostly reformulates the narrative, with phrases such as 'escaped their home', 'a crowded boat carrying 25 people' and 'the lasting effect of the bombardment on her infant granddaughter'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Amina Ali Qassim and her family escaped their home on Yemen's Birim island just before missiles destroyed it, then crossed to Djibouti the next morning.",
+          "They joined three other families in a crowded boat carrying 25 people"
+        ],
+        "reason": "Together these sentences unambiguously convey the family's boat escape from bombing in Yemen to Djibouti."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Describes staying at the orphanage before moving to tents, but omits the government's provision of that temporary shelter."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "the United Nations expects thousands more refugees."
+        ],
+        "reason": "Retains both the UN attribution and the forecast rather than an established arrival count."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R12",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete source sentences with unchanged wording and punctuation, beginning 'The latest high-profile digital incursion' and 'Codes used in the attack'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Reports only the nuclear-operator incident and code similarities, without explicitly attributing responsibility to North Korea. Ambiguity: the anchor bundles bank/media and nuclear attacks; the bank/media attacks are also absent. The attribution itself is not preserved even for the included nuclear incident."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Omits Dark Seoul and the estimated 48,000 disabled computers."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Describes attempted theft but omits investigators' statement that no critical data was stolen."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R13",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Recasts the lead and legal consequence in a new combined sentence and compresses the witness's observations into 'never saw Scott grab the Taser or receive CPR'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "he witnessed North Charleston officer Michael Slager fatally shoot Walter Scott, who was unarmed and fleeing; Santana's recording"
+        ],
+        "reason": "Identifies the recorded fatal shooting, officer and victim, including flight and unarmed status."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "Santana's recording led to Slager's dismissal and arrest on a murder charge."
+        ],
+        "reason": "Explicitly connects the recording with the murder charge."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Feidin Santana said another officer ordered him to stop filming"
+        ],
+        "reason": "Retains Santana's attribution for the order from another officer."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R14",
+    "sentence_count": 10,
+    "wording_pass": true,
+    "wording_reason": "All ten sentences reproduce complete source sentences unchanged, including the concluding sentence beginning 'But now, today, Italians are grappling'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "in the past 10 days, with as many as 1,600 deaths in the Mediterranean"
+        ],
+        "reason": "Preserves the ten-day period and upper-bound death toll within the migrant-crisis context."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "this year alone as many as a million migrants could arrive in Europe, according to one European Union official."
+        ],
+        "reason": "Retains the possible upper-bound inflow, destination, year and EU-official attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers."
+        ],
+        "reason": "Preserves the mayor's attributed assessment of Catania and Sicily's capacity."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R15",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences substantially reuse source language, including 'Hundreds of decomposed corpses were discovered buried in shallow graves' and the entire senator-elect statement.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Hundreds of decomposed corpses were discovered buried in shallow graves in the streets of the northeastern Nigerian town of Damasak this past weekend, according to local officials and a resident."
+        ],
+        "reason": "Preserves the discovery, quantity, location and reporting attribution."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Omits the joint operation's recent recapture of Damasak."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The victims included men, women and children murdered by Boko Haram when they seized the area in November, said Abubakar Kyari, a senator-elect for the region."
+        ],
+        "reason": "Preserves the senator-elect's attribution of the murders to Boko Haram's seizure."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R16",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "Reuses nearly all source wording, including complete sentences about the pneumonia complications, seven seasons and earlier acting credits; the first sentence only folds in the age.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness at 88."
+        ],
+        "reason": "Conveys the actor's death at age 88."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\""
+        ],
+        "reason": "Preserves his defining Sheriff Rosco role and program."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Best died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague."
+        ],
+        "reason": "Preserves the attributed pneumonia-complication cause and the speaker's relationship."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R17",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete source sentences; the extra space in '70 million adults  with' is normalized, which is permitted. The abbreviation 'i.e.' does not add a sentence.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Koch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions"
+        ],
+        "reason": "Preserves the company's announced removal of the convictions checkbox."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process."
+        ],
+        "reason": "Explicitly preserves postponement rather than prohibition."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Now it's time for President Obama to lead the way and embrace fair-chance hiring of people with records."
+        ],
+        "reason": "Preserves the author's direct call to Obama; the exhortation is clearly advocacy, not a claim that policy was enacted."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R18",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Reformulates and joins material from several source sentences, including 'fear for his safety nearly kept him from releasing the video' and 'accounts conflicted over whether Scott received CPR'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Feidin Santana said an officer ordered him to stop filming the fatal shooting of unarmed Walter Scott by North Charleston officer Michael Slager",
+          "The recording showed Slager firing at Scott as he fled"
+        ],
+        "reason": "Across the linked sentences, preserves Santana's recording, the fatal shooting, unarmed status and flight."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "The recording showed Slager firing at Scott as he fled and led to Slager's dismissal and arrest on a murder charge"
+        ],
+        "reason": "Explicitly links the recording to the murder charge."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Feidin Santana said an officer ordered him to stop filming the fatal shooting of unarmed Walter Scott by North Charleston officer Michael Slager"
+        ],
+        "reason": "Preserves Santana's account of being told to stop filming; the unnamed ordering officer is distinguished in context from the named shooter."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R19",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Mostly reformulates the source using 'crowded into a boat', 'made a five-hour crossing' and 'temporarily housing them', while retaining names, locations and numbers.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Amina Ali Qassim says her family escaped their home on Yemen's Birim island just before missiles destroyed it during the Saudi aerial bombardment",
+          "At first light, 25 people from four families crowded into a boat and made a five-hour crossing of the Bab al-Mandab Strait to Djibouti."
+        ],
+        "reason": "The consecutive sentences unambiguously link Qassim's family to the boat escape from bombing to Djibouti."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "The government is temporarily housing them in an unfinished orphanage in Obock before they move to tents outside town"
+        ],
+        "reason": "The government refers clearly to Djibouti in the preceding sentence and temporary shelter is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "the United Nations expects thousands more refugees."
+        ],
+        "reason": "Retains the UN's attributed expectation of thousands more refugees."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R20",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses source language, including complete sentences about his earlier career and John Schneider's tribute; the opening combines the original death and age sentences.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness at 88."
+        ],
+        "reason": "Conveys the actor's death at age 88."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\""
+        ],
+        "reason": "Preserves his defining Sheriff Rosco role and program."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Best died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague."
+        ],
+        "reason": "Preserves the attributed pneumonia-complication cause and the speaker's relationship."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R21",
+    "sentence_count": 10,
+    "wording_pass": true,
+    "wording_reason": "Reuses complete source sentences throughout, including 'He was 88' and the sentences on pneumonia, Hazzard and earlier credits.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\" died Monday after a brief illness. He was 88."
+        ],
+        "reason": "Explicitly conveys Best's death and age."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "James Best, best known for his portrayal of bumbling sheriff Rosco P. Coltrane on TV's \"The Dukes of Hazzard,\""
+        ],
+        "reason": "Preserves his defining Sheriff Rosco role and program."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Best died in hospice in Hickory, North Carolina, of complications from pneumonia, said Steve Latshaw, a longtime friend and Hollywood colleague."
+        ],
+        "reason": "Preserves the attributed pneumonia-complication cause and the speaker's relationship."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R22",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete, unchanged source sentences, including the 16-state adoption statement. The abbreviation 'i.e.' does not add a sentence.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Koch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions"
+        ],
+        "reason": "Preserves the company's announced removal of the convictions checkbox."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process."
+        ],
+        "reason": "Explicitly preserves postponement rather than prohibition."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Now it's time for President Obama to lead the way and embrace fair-chance hiring of people with records."
+        ],
+        "reason": "Preserves the author's direct call to Obama; the exhortation is clearly advocacy, not a claim that policy was enacted."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R23",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Both sentences are complete source sentences with unchanged wording and punctuation, beginning 'The latest high-profile digital incursion' and 'Codes used in the attack'.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Reports only the nuclear-operator incident and code similarities, without explicitly attributing responsibility to North Korea. Ambiguity: the anchor bundles bank/media and nuclear attacks; the bank/media attacks are also absent. The attribution itself is not preserved even for the included nuclear incident."
+      },
+      {
+        "id": "F2",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Omits Dark Seoul and the estimated 48,000 disabled computers."
+      },
+      {
+        "id": "F3",
+        "preserved": false,
+        "summary_evidence": [],
+        "reason": "Describes attempted theft but omits investigators' statement that no critical data was stolen."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R24",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "Mostly reformulates the source, including 'narrowly escaped', 'endured a five-hour crossing' and 'Having lost nearly everything', while retaining names and factual quantities.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Amina Ali Qassim says her family narrowly escaped their home on Yemen's Birim island before missiles destroyed it during the Saudi aerial bombardment.",
+          "At dawn, they joined three other families in a boat carrying 25 people and endured a five-hour crossing to Djibouti."
+        ],
+        "reason": "The linked sentences preserve the family's boat escape from bombing in Yemen to Djibouti."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "The government is temporarily housing them in an unfinished orphanage in Obock before they move to tents"
+        ],
+        "reason": "The government refers unambiguously to Djibouti and its temporary shelter is explicit."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "the United Nations expects thousands more refugees."
+        ],
+        "reason": "Retains the UN's attributed expectation of thousands more refugees."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R25",
+    "sentence_count": 10,
+    "wording_pass": true,
+    "wording_reason": "All ten sentences are complete unchanged source sentences, including the two final sentences about earlier Italian emigration.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "in the past 10 days, with as many as 1,600 deaths in the Mediterranean"
+        ],
+        "reason": "Preserves the ten-day period and upper-bound death toll within the migrant-crisis context."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "this year alone as many as a million migrants could arrive in Europe, according to one European Union official."
+        ],
+        "reason": "Retains the possible upper-bound inflow, destination, year and EU-official attribution."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "The city's mayor, Enzo Bianco, insists city residents bear no ill will toward the migrants, but says Catania, and Sicily cannot absorb the ever-growing numbers."
+        ],
+        "reason": "Preserves the mayor's attributed assessment of Catania and Sicily's capacity."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R26",
+    "sentence_count": 4,
+    "wording_pass": true,
+    "wording_reason": "All four sentences are complete, unchanged source sentences, including the 16-state adoption statement. The abbreviation 'i.e.' does not add a sentence.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Koch Industries' recent announcement that it will \"ban the box\" -- i.e., remove from its job applications the check-box that asks about convictions"
+        ],
+        "reason": "Preserves the company's announced removal of the convictions checkbox."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "\"Ban the box\" doesn't prohibit background checks, it only postpones them until later in the hiring process."
+        ],
+        "reason": "Explicitly preserves postponement rather than prohibition."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Now it's time for President Obama to lead the way and embrace fair-chance hiring of people with records."
+        ],
+        "reason": "Preserves the author's direct call to Obama; the exhortation is clearly advocacy, not a claim that policy was enacted."
+      }
+    ],
+    "issues": []
+  },
+  {
+    "output_id": "R27",
+    "sentence_count": 2,
+    "wording_pass": true,
+    "wording_reason": "Substantially reuses distinctive wording, including 'Hundreds of decomposed corpses were discovered buried in shallow graves', 'joint Nigerian-Chadian military operation' and the victims description, while combining clauses.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Hundreds of decomposed corpses were discovered buried in shallow graves in the streets of the northeastern Nigerian town of Damasak this past weekend, according to local officials and a resident"
+        ],
+        "reason": "Preserves the discovery, quantity, location and reporting attribution."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "after the town had recently been freed from the Boko Haram terror group in a joint Nigerian-Chadian military operation."
+        ],
+        "reason": "Explicitly conveys the recent joint recapture and links it to Damasak."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "Abubakar Kyari, a senator-elect for the region, said the victims included men, women and children murdered by Boko Haram when they seized the area in November."
+        ],
+        "reason": "Preserves the senator-elect's attribution of the murders to Boko Haram's seizure."
+      }
+    ],
+    "issues": []
+  }
+]
+

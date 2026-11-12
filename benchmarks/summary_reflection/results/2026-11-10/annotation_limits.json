@@ -1,0 +1,48 @@
+{
+  "stage": "source-only annotation before seeing generated summaries",
+  "scope": "Exactly three selected atomic central propositions per article. These are AI-assisted source-grounded anchors, not human preference labels, an exhaustive inventory of article content, or a percentage denominator for all content.",
+  "inputs_seen": [
+    "CLAUDE.md",
+    "benchmarks/summary_reflection/rubric.json",
+    "benchmarks/summary_reflection/results/2026-11-10/selection/cases.json",
+    "benchmarks/summary_reflection/results/2026-11-10/final/cases.json"
+  ],
+  "excluded_inputs": "No candidate instructions, training evidence, generation prompts, generated summaries, automatic output scores, or other agents' work were read.",
+  "feasibility_limits": [
+    {
+      "split": "selection",
+      "id": "D01",
+      "condition": "short, fully extractive",
+      "finding": "The three anchors require at least three distinct original sentences: the tentative natural-cause assessment, the absence of a criminal investigation, and the planned autopsy. No one- or two-sentence fully extractive selection can cover all three.",
+      "interpretation": "Keep all three fixed anchors. A coverage loss under this condition is partly a format/content feasibility tradeoff and is not itself a hallucination or a defect unique to a generation method."
+    }
+  ],
+  "source_qualifications": [
+    {
+      "ids": ["D01"],
+      "finding": "The cause-of-death assessment is preliminary; an autopsy was still planned. Apparent natural causes must not become a confirmed medical determination."
+    },
+    {
+      "ids": ["D04", "D06", "T06", "T09"],
+      "finding": "Relevant suspected acts, charges or causal findings are attributed to authorities. These anchors do not establish a conviction or independent proof beyond the source's stated account."
+    },
+    {
+      "ids": ["T05"],
+      "finding": "Officials give conflicting exact release counts of 217 and 228. F1 therefore fixes the shared claim of more than 200; the motive for release remains unknown."
+    },
+    {
+      "ids": ["T07"],
+      "finding": "The research proposes an earlier death period, but the source explicitly leaves the exact death dates unclear. The anchors preserve that distinction."
+    },
+    {
+      "ids": ["T10", "T18"],
+      "finding": "These articles contain evaluative political or security commentary. The central evaluative anchors are the article's assessments, not independently verified facts or human preference judgments."
+    },
+    {
+      "ids": ["T12", "T14", "T16", "T17"],
+      "finding": "The relevant claims remain respectively a pending policy decision, an uncertain threat, box-office projections, and suspected pesticide causation. Evidence of a process, forecast or chemical presence does not establish its completed outcome or cause."
+    }
+  ],
+  "validation": "Selection: 6 cases and 18 facts. Final: 18 cases and 54 facts. Every evidence string was checked as an exact substring of its own article. No external information or paid model API was used.",
+  "feasibility_review_scope": "The short fully-extractive cases in the supplied profiles were D01, T08 and T16. Only D01 had an identified incompatibility between all three fixed anchors and the one- or two-sentence limit. This is a pre-output source review, not a guarantee of any output's coverage or readability."
+}

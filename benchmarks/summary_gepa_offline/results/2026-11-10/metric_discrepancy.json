@@ -1,0 +1,14 @@
+{
+  "detected_stage": "After baseline validation, before first reflection; no evaluation or prompt changes applied.",
+  "case_id": "V05",
+  "supplement": "",
+  "automatic": {
+    "score": 0.7,
+    "feedback": "길이 위반: 5문장, 최대 4문장."
+  },
+  "reviewed_sentence_count": 4,
+  "specific_issue": "Gov. David Ige is a name/title abbreviation, not a sentence boundary. Grounded_v2 incorrectly counts five rather than four sentences.",
+  "impact": "Baseline gated validation score is zero for this output although its reviewed length/wording and all three facts pass. The validation mean 0.7778 is sensitive to a heuristic false negative.",
+  "handling": "Keep frozen optimization unchanged; report auto/review disagreement and content separately in heldout analysis. Do not interpret higher GEPA validation score as content improvement. No final data used to alter criteria.",
+  "future_fix": "Version the abbreviation checker and test known titles; do not rewrite frozen results. New checker efficacy would need a separately declared run."
+}

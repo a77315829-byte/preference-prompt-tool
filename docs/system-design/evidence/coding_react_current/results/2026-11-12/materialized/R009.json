@@ -1,0 +1,16 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useEffect, useState } from 'react';\n\nexport type Item = { id: string; label: string };\nexport type Props = { items: Item[]; pageSize: number };\n\nexport function Component({ items, pageSize }: Props) {\n  const [page, setPage] = useState(1);\n  const total = Math.max(1, Math.ceil(items.length / pageSize));\n\n  // 효과가 실행되기 전에도 범위를 벗어난 페이지를 표시하지 않습니다.\n  const current = Math.min(page, total);\n\n  useEffect(() => {\n    // 표시값뿐 아니라 상태도 보정해야 목록이 늘어날 때 되돌아가지 않습니다.\n    setPage(previous => Math.min(previous, total));\n  }, [total]);\n\n  const visible = items.slice(\n    (current - 1) * pageSize,\n    current * pageSize,\n  );\n\n  return (\n    <section aria-label=\"Review queue\">\n      <ul aria-label=\"Queue items\">\n        {visible.map(item => (\n          <li key={item.id}>{item.label}</li>\n        ))}\n      </ul>\n      {items.length === 0 && <p role=\"status\">No items</p>}\n      <output aria-label=\"Page\">{current} / {total}</output>\n      <button\n        type=\"button\"\n        disabled={current === 1}\n        onClick={() => setPage(current - 1)}\n      >\n        Previous\n      </button>\n      <button\n        type=\"button\"\n        disabled={current === total}\n        onClick={() => setPage(current + 1)}\n      >\n        Next\n      </button>\n    </section>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_file",
+      "block": 0,
+      "reason": "코드 앞 지시: \"기존 `Component.tsx` 전체를 다음 코드로 교체하세요.\"",
+      "answer_start": 278,
+      "answer_end": 1544
+    }
+  ]
+}

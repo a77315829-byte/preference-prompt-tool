@@ -1,0 +1,95 @@
+{
+  "by_reviewer": {
+    "a": {
+      "manual": {
+        "outputs": 18,
+        "length_pass": 18,
+        "wording_pass": 18,
+        "joint_pass": 18,
+        "facts_preserved": 49,
+        "facts_total": 54,
+        "factual_issue_outputs": 0
+      },
+      "current": {
+        "outputs": 18,
+        "length_pass": 18,
+        "wording_pass": 18,
+        "joint_pass": 18,
+        "facts_preserved": 50,
+        "facts_total": 54,
+        "factual_issue_outputs": 0
+      },
+      "candidate": {
+        "outputs": 18,
+        "length_pass": 18,
+        "wording_pass": 18,
+        "joint_pass": 18,
+        "facts_preserved": 51,
+        "facts_total": 54,
+        "factual_issue_outputs": 0
+      }
+    },
+    "b": {
+      "manual": {
+        "outputs": 18,
+        "length_pass": 18,
+        "wording_pass": 18,
+        "joint_pass": 18,
+        "facts_preserved": 51,
+        "facts_total": 54,
+        "factual_issue_outputs": 0
+      },
+      "current": {
+        "outputs": 18,
+        "length_pass": 18,
+        "wording_pass": 18,
+        "joint_pass": 18,
+        "facts_preserved": 51,
+        "facts_total": 54,
+        "factual_issue_outputs": 0
+      },
+      "candidate": {
+        "outputs": 18,
+        "length_pass": 18,
+        "wording_pass": 18,
+        "joint_pass": 18,
+        "facts_preserved": 52,
+        "facts_total": 54,
+        "factual_issue_outputs": 0
+      }
+    }
+  },
+  "paired_document_coverage": {
+    "a": {
+      "manual": {
+        "wins": 2,
+        "ties": 16,
+        "losses": 0
+      },
+      "current": {
+        "wins": 1,
+        "ties": 17,
+        "losses": 0
+      }
+    },
+    "b": {
+      "manual": {
+        "wins": 1,
+        "ties": 17,
+        "losses": 0
+      },
+      "current": {
+        "wins": 1,
+        "ties": 17,
+        "losses": 0
+      }
+    }
+  },
+  "disagreements": [
+    "B007",
+    "B008",
+    "B034",
+    "B039"
+  ],
+  "all_factual_flag_ids": []
+}

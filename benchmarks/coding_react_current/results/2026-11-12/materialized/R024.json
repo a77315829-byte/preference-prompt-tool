@@ -1,0 +1,16 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "export type Resource =\n  | { status: 'idle' }\n  | { status: 'loading' }\n  | { status: 'error'; message: string }\n  | { status: 'ready'; title: string; members: string[] };\n\nexport type Props = {\n  resource: Resource;\n  onRetry: () => void;\n};\n\nexport function Component({ resource, onRetry }: Props) {\n  switch (resource.status) {\n    case 'idle':\n      return <p role=\"status\">Choose a project</p>;\n\n    case 'loading':\n      return <p role=\"status\">Loading project</p>;\n\n    case 'error':\n      return (\n        <section>\n          <p role=\"alert\">{resource.message}</p>\n          <button type=\"button\" onClick={() => onRetry()}>\n            Retry\n          </button>\n        </section>\n      );\n\n    case 'ready':\n      return (\n        <section>\n          <h2>{resource.title}</h2>\n          {resource.members.length > 0 ? (\n            <ul aria-label=\"Members\">\n              {resource.members.map((member, index) => (\n                <li key={index}>{member}</li>\n              ))}\n            </ul>\n          ) : (\n            <p role=\"status\">No members</p>\n          )}\n        </section>\n      );\n  }\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_file",
+      "block": 0,
+      "reason": "답변 첫 문장: \"Component.tsx를 아래 내용으로 새로 만드세요.\"",
+      "answer_start": 105,
+      "answer_end": 1218
+    }
+  ]
+}

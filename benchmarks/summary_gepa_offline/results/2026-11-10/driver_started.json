@@ -1,0 +1,9 @@
+{
+  "utc": "2026-11-10T07:23:11.808976+00:00",
+  "gepa_version": "0.1.4",
+  "final_data_loaded": false,
+  "network_connections_disabled": true,
+  "max_reflections": 2,
+  "max_unique_evaluations": 30,
+  "framework": "installed gepa.optimize, custom offline adapter and callable reflection"
+}

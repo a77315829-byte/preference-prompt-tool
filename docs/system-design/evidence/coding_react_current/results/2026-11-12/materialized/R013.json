@@ -1,0 +1,16 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\n\nexport type Filters = { query: string; onlyOpen: boolean };\nexport type Item = { id: string; title: string; open: boolean };\nexport type Props = {\n  items: Item[];\n  onApply: (filters: Filters) => void;\n};\n\nexport function Component({ items, onApply }: Props) {\n  const empty: Filters = { query: '', onlyOpen: false };\n  const [draft, setDraft] = useState<Filters>(empty);\n  const [applied, setApplied] = useState<Filters>(empty);\n\n  // 변경 여부는 공백만 정리하여 비교하고, 대소문자는 구분합니다.\n  const dirty =\n    draft.query.trim() !== applied.query ||\n    draft.onlyOpen !== applied.onlyOpen;\n\n  function apply() {\n    const next: Filters = {\n      query: draft.query.trim(),\n      onlyOpen: draft.onlyOpen,\n    };\n    setDraft(next);\n    setApplied(next);\n    onApply(next);\n  }\n\n  function reset() {\n    setDraft(empty);\n    setApplied(empty);\n    onApply(empty);\n  }\n\n  // 결과는 임시 입력이 아닌 적용된 값으로만 계산합니다.\n  const query = applied.query.toLowerCase();\n  const visible = items.filter(\n    item =>\n      item.title.toLowerCase().includes(query) &&\n      (!applied.onlyOpen || item.open),\n  );\n\n  return (\n    <section aria-label=\"Issue filters\">\n      <label>\n        Search issues\n        <input\n          value={draft.query}\n          onChange={event =>\n            setDraft({ ...draft, query: event.currentTarget.value })\n          }\n        />\n      </label>\n      <label>\n        <input\n          type=\"checkbox\"\n          checked={draft.onlyOpen}\n          onChange={event =>\n            setDraft({ ...draft, onlyOpen: event.currentTarget.checked })\n          }\n        />\n        Only open\n      </label>\n      <button type=\"button\" disabled={!dirty} onClick={apply}>\n        Apply\n      </button>\n      <button type=\"button\" onClick={reset}>\n        Reset\n      </button>\n      <ul aria-label=\"Issues\">\n        {visible.map(item => (\n          <li key={item.id}>{item.title}</li>\n        ))}\n      </ul>\n      {visible.length === 0 && <p role=\"status\">No issues</p>}\n    </section>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_file",
+      "block": 0,
+      "reason": "코드 앞 지시: \"기존 `Component.tsx` 전체를 다음 코드로 교체하세요.\"",
+      "answer_start": 297,
+      "answer_end": 2306
+    }
+  ]
+}

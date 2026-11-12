@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-12",
+  "backend": {
+    "passed": 1355,
+    "skipped": 1,
+    "deselected": 16,
+    "failed": 0,
+    "seconds": 422.41,
+    "skip_reasons": [
+      "Host does not permit creating symlinks"
+    ]
+  },
+  "backend_before_fix": {
+    "passed": 1353,
+    "failed": 4,
+    "skipped": 1,
+    "deselected": 16
+  },
+  "frontend": {
+    "passed": 123,
+    "failed": 0
+  },
+  "build": {
+    "passed": true,
+    "large_chunk_warning": true
+  },
+  "integration": {
+    "passed": 18,
+    "failed": 0,
+    "browser": "151.0.7922.34",
+    "http_and_ui": true,
+    "real_human_study": false
+  },
+  "paid_model_api_calls": 0,
+  "external_python_connections": 0,
+  "fixes": [
+    "권한 회수 확인 후 인수인계 화면·초안 정리; 버전 충돌/일시 장애의 입력은 보존",
+    "보조 요약 설정과 엔진 도메인의 테스트 수집 분리; 영어·한국어 보조 설정 형식 검사 추가"
+  ],
+  "source_files_checked": 342,
+  "evidence": {
+    "backend-final.log": "fd071af65743e7fbd3b87666b0f5f9624ea56e9cb4ccee1c7ff62d59e96c3c8d",
+    "backend-before-fix.log": "a37ae0224dc6ce1cefd36e5ac36c948d8287ba21d2a5b674a21eddb0aef00583",
+    "frontend-final.log": "eba95c5b2c2aa1dde23045631baa26ac4b9775e04f6d96526fb0552080892f66",
+    "frontend-focused.log": "5c59ffc9e6359d8cecd4058017cbdb9d00d375519895a168027e365c6a8d07fa",
+    "domain-focused.log": "4a230b3d55239696cb16f2aca6afc7fdd38a7903b021bd319677c9d1420c98d4",
+    "build.log": "732458c29b5f397e05174c763e20f93d98d85f055c1eeda9953f1c7513fc9729",
+    "browser.json": "06cc87586db7c4058bf532a670bb87c6376327dc6d93ca69d61584503c83617b",
+    "browser-before-fix.json": "f5f837ad53410d3fa6368604cc3ce77431e367cde3010d6a074327a96ccd0dad",
+    "source-hashes.json": "7c6e6350aaa5902dbe973164a0444d577c3e96084c4c242f1725d4d8fc2f605a",
+    "offline-guard.json": "95eaae0e039da2a2982bdc4ca808b17c4e2f97316767bff0d5dd93034537c96d"
+  },
+  "limits": [
+    "합성 계정·자료의 로컬 Chromium/HTTP 검증으로 실사용자 효과나 공개 배포 검증이 아님",
+    "Windows 심볼릭 링크 생성 권한이 없어 관련 1검사 건너뜀",
+    "실제 모델 API 검사 16개는 비용 금지 조건에 따라 제외",
+    "기존 비교 메모리 세션의 계정 접근 정책은 별도 개선 범위",
+    "이미 다운로드한 파일이나 클립보드 사본을 회수하는 기능은 아님"
+  ]
+}

@@ -1,0 +1,92 @@
+# Versioned product instructions/checks. Historical summarization.yaml stays fixed.
+extends: summarization.yaml
+domain: summarization
+checks_module: checks.summarization_grounded
+task_description: >-
+  아래 원문을 영어(English)로 요약하라. 사실 관계와 불확실성을 먼저 보존하라.
+  작성 전에 요청한 초점에서 핵심 주체·사건, 주요 결과나 목적, 중요한 수치·단위·기간,
+  주장 주체와 조건을 파악하라. 정한 분량과 표현 방식 안에서 이 내용을 가장 잘 담고
+  도입부·장식적 문장·주변 배경은 먼저 줄여라. 부족한 연결이나 사실을 만들어 넣지 마라.
+
+axes:
+  - name: extractiveness
+    type: enum
+    description: 원문 표현을 유지하는 방식 (겹침은 참고 지표, 완전 발췌는 문장 일치 검사)
+    values:
+      - value: normal
+        prompt: 대부분은 새로운 표현으로 바꿔 쓰되, 의미·수치·주장 주체를 유지하고 필요한 원문 표현은 써도 좋다.
+        check:
+          fn: lexical_overlap
+          target: { max_overlap: 0.5 }
+      - value: high
+        prompt: 가능한 한 원문의 단어와 구절을 그대로 사용해 요약하라. 그대로 가져온 비율에 상한은 없다.
+        check:
+          fn: lexical_overlap
+          target: { min_overlap: 0.5 }
+      - value: fully
+        prompt: >-
+          원문의 완전한 문장을 그대로 골라 요약하라. 단어와 문장부호를 고치거나 새 문장을 쓰지 마라.
+          공백 정리와 문서 맨 앞의 (CNN) 또는 (The Hollywood Reporter) 매체 태그 생략만 허용한다.
+          매체 태그의 대소문자는 구분하지 않는다. 문장 중간의 출처·주장 주체는 생략하지 마라.
+        check:
+          fn: verbatim_sentences
+          target: {}
+
+final_prompt:
+  role: 당신은 요청한 조건에 맞추되 원문에 근거해 영어 글을 요약하는 도우미다.
+  preference_note: 아래는 이번 요약에 적용할 조건이다.
+  preference_heading: 이번 요약의 조건
+  team_role: 당신은 팀의 요약 조건에 맞추되 원문에 근거해 영어 글을 요약하는 도우미다.
+  team_preference_note: 아래는 이번 팀 작업에 적용할 요약 조건이다.
+  team_preference_heading: 이번 팀 요약의 조건
+  rules_heading: 사실과 핵심 내용 보존
+  rules:
+    - 사실 관계가 표현 선호보다 우선이다. 길이나 표현 조건을 맞추려고 사실을 바꾸거나 없는 연결·인과를 만들지 마라.
+    - 작성 전에 요청한 초점의 핵심 주체·사건, 주요 결과나 의도한 목적, 중요한 수치·단위·기간, 필수 조건과 불확실성을 파악하라.
+    - 누가 무엇을 주장했는지 유지하라. 혐의·계획·예상·미확인 사항을 확정 사실로 바꾸지 마라. 수치·날짜·고유명사를 정확히 옮겨라.
+    - 정한 문장 수 안에서 핵심 정보를 가장 많이 담는 표현이나 원문 문장을 선택하라. 장식적 도입부·주변 배경·반복을 먼저 줄여라.
+    - 완전 발췌에서는 핵심 정보가 든 원문 문장을 선택하라. 대명사나 사건 연결이 불분명해지면 분량 안에서 필요한 앞뒤 문장을 함께 고르거나 더 명확한 문장으로 교체하라. 연결 설명을 새로 만들지 마라.
+    - 모든 내용을 담을 수 없으면 정한 분량과 표현 방식 안에서 가장 중요한 원문 근거를 남겨라. 분량을 조용히 넘기거나 전체 내용을 보존했다고 주장하지 마라.
+    - 제출 전에 핵심 사건·결과나 목적·중요 수치와 조건의 누락, 추가 사실, 주장 주체 변경을 원문과 대조하라. 이 점검 과정은 출력하지 마라.
+  output_heading: 출력 형식
+  output: 요약문만 영어로 출력하라. 머리말, 제목, 점검표, 설명, 맺음말을 붙이지 마라.
+  axis_labels:
+    length: 분량
+    extractiveness: 원문 표현 방식
+    topic: 초점
+
+final_prompt_translations:
+  en:
+    role: "You summarize English text according to the requested conditions while staying grounded in the source."
+    preference_note: "These are the conditions for this summary."
+    team_role: "You summarize English text according to the team's requested conditions while staying grounded in the source."
+    team_preference_note: "These are the summary conditions for this team task."
+    task: "Summarize the source text below in English according to these instructions."
+    preference_heading: "Conditions for this summary"
+    team_preference_heading: "Conditions for this team summary"
+    rules_heading: "Preserve source facts and central information"
+    rules:
+      - "Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition."
+      - "Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus."
+      - "Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately."
+      - "Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first."
+      - "For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text."
+      - "If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage."
+      - "Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check."
+    output_heading: "Output format"
+    output: "Output only the summary, in English. No preamble, title, checklist, explanation, or closing."
+    axis_labels:
+      length: "Length"
+      extractiveness: "Use of source wording"
+      topic: "Focus"
+    instructions:
+      length:
+        short: "Keep it very short: two sentences or fewer."
+        normal: "Write three to four sentences."
+        long: "Write five or more sentences, in detail."
+      extractiveness:
+        normal: "Mostly rephrase in your own words while preserving meaning, quantities and attribution; retain source expressions where helpful."
+        high: "Reuse the source's words and phrases as much as possible. There is no upper limit on the amount reused."
+        fully: "Select complete sentences verbatim from the source. Do not change words or punctuation or write new sentences. Only whitespace normalization and omission of a leading document publisher tag (CNN) or (The Hollywood Reporter), case-insensitively, are allowed. Do not remove attribution inside a sentence."
+    freeform_templates:
+      topic: 'Focus the summary on "{value}". You may leave out other parts of the source.'

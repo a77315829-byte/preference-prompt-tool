@@ -7,8 +7,9 @@ import pytest
 import exporters
 import service
 from engine.domain_loader import load_domain
+from tests.domain_inventory import ENGINE_DOMAINS
 
-DOMAINS = sorted(Path("domains").glob("*.yaml"))
+DOMAINS = ENGINE_DOMAINS
 PROMPT = "당신은 요약 도우미다.\n\n## 이 사용자의 선호\n- 분량: 2문장 이내로 요약하라."
 
 

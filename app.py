@@ -109,7 +109,7 @@ DOMAIN_OPTIONS = {
     },
     "summarization": {
         "label": "문서 요약 (영어)",
-        "path": "domains/summarization.yaml",
+        "path": "domains/summarization_grounded_v3.yaml",
         "intro": (
             f"영어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 최대 {N_ROUNDS}회 골라주세요. "
             "요약은 영어로 나옵니다."
@@ -119,12 +119,11 @@ DOMAIN_OPTIONS = {
         "demo_info": "API 없이 규칙 기반 요약 예시로 전체 흐름을 시험합니다.",
         "compare_help": "내용보다 길이와 표현 방식이 마음에 드는 쪽을 골라주세요.",
     },
-    # 한국어 요약은 영어와 축 구성(length/extractiveness/topic)이 같고
-    # checks 모듈만 다르다 - 한국어는 조사 때문에 표면형 어휘 겹침이
-    # 겹침을 과소평가하므로 checks/summarization_ko.py 를 쓴다.
+    # 기본 요약은 버전별 사실 보존 지침/발췌 검사를 쓴다.
+    # 한국어의 표현 겹침 참고 지표는 기존 형태소/문자 검사에 위임한다.
     "summarization_ko": {
         "label": "문서 요약 (한국어)",
-        "path": "domains/summarization_ko.yaml",
+        "path": "domains/summarization_ko_grounded_v3.yaml",
         "intro": (
             f"한국어 원문을 붙여넣고, 두 요약 중 마음에 드는 쪽을 최대 {N_ROUNDS}회 골라주세요. "
             "요약은 한국어로 나옵니다."

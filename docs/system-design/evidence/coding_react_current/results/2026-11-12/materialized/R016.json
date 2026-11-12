@@ -1,0 +1,16 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "export type Resource =\n  | { status: 'idle' }\n  | { status: 'loading' }\n  | { status: 'error'; message: string }\n  | { status: 'ready'; title: string; members: string[] };\n\nexport type Props = { resource: Resource; onRetry: () => void };\n\nexport function Component({ resource, onRetry }: Props) {\n  // status 분기 안에서만 상태별 속성에 접근해 유니언의 타입 좁히기를 유지한다.\n  switch (resource.status) {\n    case 'idle':\n      return <p role=\"status\">Choose a project</p>;\n\n    case 'loading':\n      return <p role=\"status\">Loading project</p>;\n\n    case 'error':\n      return (\n        <section>\n          <p role=\"alert\">{resource.message}</p>\n          <button type=\"button\" onClick={() => onRetry()}>\n            Retry\n          </button>\n        </section>\n      );\n\n    case 'ready':\n      return (\n        <section>\n          <h2>{resource.title}</h2>\n          {resource.members.length === 0 ? (\n            <p role=\"status\">No members</p>\n          ) : (\n            <ul aria-label=\"Members\">\n              {resource.members.map((member, index) => (\n                // 이름 중복을 허용하며 각 항목은 별도 상태가 없는 텍스트다.\n                <li key={index}>{member}</li>\n              ))}\n            </ul>\n          )}\n        </section>\n      );\n  }\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_file",
+      "block": 0,
+      "reason": "답변 3번 지시에서 새 `Component.tsx` 파일에 아래 전체 코드를 넣으라고 명시하고 추가 파일은 필요 없다고 안내한다.",
+      "answer_start": 311,
+      "answer_end": 1525
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "request_path": "queue\\0008_generate\\request.json",
+  "response_path": "queue\\0008_generate\\response.json",
+  "request_sha256": "d4a6eee3dc3e309fa783d016e9ad717d899b0f4794df9ac2ceff45718509ddf5",
+  "response_sha256": "d631005a7c1cb7d3e91b0682d68658d078c9dd82b151ee96c7a9ac53ebee497e"
+}

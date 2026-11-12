@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-12",
+  "paid_model_api_calls": 0,
+  "new_packages_installed": 0,
+  "runtime": "Independent Codex agents, inherited runtime; no model override or external API. Exact model revision and decoding parameters unavailable as experiment metadata.",
+  "generation_workers": {
+    "general": "/root/react_generate_general",
+    "manual": "/root/react_generate_manual",
+    "product": "/root/react_generate_product"
+  },
+  "generation_context": "Fresh fork_turns=none per arm; CLAUDE.md and own eight requests only; shared filesystem but instructed read boundary, not OS isolation. Eight answers within each worker may be correlated.",
+  "generation": {
+    "arms": 3,
+    "paired_tasks": 8,
+    "first_answers": 24,
+    "quality_retries": 0,
+    "candidate_execution_by_generators": false,
+    "format_only_validation": true
+  },
+  "storage_event": "General worker reported first save failed because output directory did not exist; wrote identical answers after creating directory. No candidate regeneration.",
+  "review_workers": [
+    "/root/react_review_a",
+    "/root/react_review_b"
+  ],
+  "literal_application_worker": "/root/react_literal_application",
+  "review_access": "CLAUDE.md, frozen rubric and anonymous packet only; no mapping, prompts, execution scores or other review. Exact quotation and schema checks allowed, no score-driven regrading.",
+  "cost_notice": "No paid model API used; Codex usage is consumed. Token usage and monetary quota cost are not exposed by these agent tools.",
+  "timing": "No human editing-time measurement. Worker wall time is not presented as developer time savings.",
+  "human_data": false
+}

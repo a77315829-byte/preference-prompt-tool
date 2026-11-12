@@ -1,0 +1,76 @@
+{
+  "candidates": [
+    {
+      "candidate_index": 0,
+      "supplement_words": 0,
+      "gepa_validation_score": 0.7777777777777778,
+      "review_only_diagnostic_score": 0.9444444444444445,
+      "facts_preserved": 17,
+      "facts_total": 18,
+      "factual_issue_outputs": 0,
+      "auto_review_disagreements": [
+        {
+          "id": "V05",
+          "automatic_sentence_count": 5,
+          "reviewed_sentence_count": 4,
+          "automatic_length_pass": false,
+          "reviewed_length_pass": true,
+          "automatic_wording_pass": true,
+          "reviewed_wording_pass": true
+        }
+      ]
+    },
+    {
+      "candidate_index": 1,
+      "supplement_words": 166,
+      "gepa_validation_score": 0.7222222222222222,
+      "review_only_diagnostic_score": 0.8888888888888888,
+      "facts_preserved": 16,
+      "facts_total": 18,
+      "factual_issue_outputs": 0,
+      "auto_review_disagreements": [
+        {
+          "id": "V05",
+          "automatic_sentence_count": 5,
+          "reviewed_sentence_count": 4,
+          "automatic_length_pass": false,
+          "reviewed_length_pass": true,
+          "automatic_wording_pass": true,
+          "reviewed_wording_pass": true
+        },
+        {
+          "id": "V03",
+          "automatic_sentence_count": 8,
+          "reviewed_sentence_count": 7,
+          "automatic_length_pass": true,
+          "reviewed_length_pass": true,
+          "automatic_wording_pass": true,
+          "reviewed_wording_pass": true
+        }
+      ]
+    },
+    {
+      "candidate_index": 2,
+      "supplement_words": 138,
+      "gepa_validation_score": 0.6666666666666666,
+      "review_only_diagnostic_score": 0.8333333333333334,
+      "facts_preserved": 15,
+      "facts_total": 18,
+      "factual_issue_outputs": 0,
+      "auto_review_disagreements": [
+        {
+          "id": "V05",
+          "automatic_sentence_count": 5,
+          "reviewed_sentence_count": 4,
+          "automatic_length_pass": false,
+          "reviewed_length_pass": true,
+          "automatic_wording_pass": true,
+          "reviewed_wording_pass": true
+        }
+      ]
+    }
+  ],
+  "not_used_for_selection": true,
+  "interpretation": "Recomputes diagnostics from the original optimization reviews after the search. No new grading, no changed GEPA winner, no heldout evidence used. These are validation statistics, not final quality.",
+  "limitation": "Review-only score is itself AI judgement; removing automatic gates retrospectively is diagnostic, not a new validated metric."
+}

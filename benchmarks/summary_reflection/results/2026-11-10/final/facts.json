@@ -1,0 +1,416 @@
+[
+  {
+    "id": "T01",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "The Italian navy retook a fishing boat that gunmen had seized.",
+        "evidence": ["The Italian navy has boarded and retaken control of a fishing boat that had been seized hours earlier by gunmen off the coast of Sicily, the Italian military said Friday."],
+        "rationale": "The recovery of the seized boat is the central event; the boat's name and exact location are incidental."
+      },
+      {
+        "id": "F2",
+        "proposition": "The Italian navy detained a Libyan soldier aboard the boat.",
+        "evidence": ["An Italian naval unit boarded the fishing boat and took custody of a Libyan soldier on the vessel, according to a statement by the Italian Navy."],
+        "rationale": "The detention is a principal outcome of the recovery operation; the source does not establish a broader motive for the seizure."
+      },
+      {
+        "id": "F3",
+        "proposition": "One fisherman was slightly injured during the recovery operation.",
+        "evidence": ["It said during the operation, rifle shots were accidentally fired, and one of the seven fisherman on board was slightly injured."],
+        "rationale": "This is the immediate human consequence; the total crew size and separate detail about accidental gunfire are not additional requirements."
+      }
+    ]
+  },
+  {
+    "id": "T02",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Novak Djokovic won the Monte Carlo Masters final against Berdych.",
+        "evidence": ["Novak Djokovic extended his current winning streak to 17 matches after beating Thomas Berdych 7-5, 4-6, 6-3 in the rain-interrupted final of the Monte Carlo Masters."],
+        "rationale": "The tournament victory is the central result; individual set scores are not necessary."
+      },
+      {
+        "id": "F2",
+        "proposition": "The victory extended Djokovic's winning streak to 17 matches.",
+        "evidence": ["Novak Djokovic extended his current winning streak to 17 matches after beating Thomas Berdych 7-5, 4-6, 6-3 in the rain-interrupted final of the Monte Carlo Masters."],
+        "rationale": "The streak is the principal measure of his current run of success and is separable from winning this final."
+      },
+      {
+        "id": "F3",
+        "proposition": "Djokovic became the first man to win a season's opening three Masters tournaments.",
+        "evidence": ["Sunday's victory over Berdych means he becomes the first man to win the opening three Masters tournaments of the season."],
+        "rationale": "This is the historic distinction attached to the victory; naming the other tournaments is unnecessary."
+      }
+    ]
+  },
+  {
+    "id": "T03",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Former Satyam chairman Ramalinga Raju and nine others were sentenced to seven years in prison over the corporate fraud scandal.",
+        "evidence": ["An Indian software pioneer and nine others have been sentenced to seven years in jail for their role in what has been dubbed India's biggest corporate scandal in memory, police said.", "Ramalinga Raju, the former chairman of software services exporter Satyam Computers Services, was also fined $804,000, R.K. Gaur, a spokesman for India's Central Bureau of Investigation, told CNN."],
+        "rationale": "The sentence imposed on the defendants is the central legal outcome; the fine and exact list of charges are separate details."
+      },
+      {
+        "id": "F2",
+        "proposition": "Raju admitted inflating Satyam's profits through fictitious assets and cash.",
+        "evidence": ["In 2009, Satyam Computers Services was at the center of a massive $1.6 billion fraud case after its then-chairman Raju admitted inflating profits with fictitious assets and nonexistent cash."],
+        "rationale": "This explains the central accounting misconduct without requiring its date or monetary scale."
+      },
+      {
+        "id": "F3",
+        "proposition": "Tech Mahindra bought Satyam after the scandal.",
+        "evidence": ["After Raju's shock disclosures six years ago, the Indian government fired Satyam's board.", "In a subsequent state-backed auction, the company was bought by Tech Mahindra, part of the country's Mahindra Group."],
+        "rationale": "The acquisition gives the company's resulting status; the preceding dismissal of the board and auction mechanics are not extra required claims."
+      }
+    ]
+  },
+  {
+    "id": "T04",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Photographer Johan Bavman documented fathers caring for their children while taking Sweden's parental leave.",
+        "evidence": ["When photographer Johan Bavman became a father for the first time, he took more than a passing wonder about how his native Sweden is said to be the most generous nation on Earth for parental leave.", "He used his photography to document the real-life experience of other fathers taking full advantage of Sweden's extraordinary program, which allows mothers and fathers to take long, long leaves from their careers so they can care for their newborns."],
+        "rationale": "The photographic project is the central activity; its subject and purpose matter more than the photographer's biography."
+      },
+      {
+        "id": "F2",
+        "proposition": "Sweden offers parents a combined 480 days of parental leave.",
+        "evidence": ["Sweden grants a total of 480 calendar days of parental leave, with 390 of them paid at 80% of income, with a maximum of 3,160 euros a month or $3,474.", "Fathers have to share that leave with mothers."],
+        "rationale": "The unusually large shared leave entitlement is the project's central policy context; pay rates and benefit caps are not required."
+      },
+      {
+        "id": "F3",
+        "proposition": "According to Bavman, only a small minority of Swedish couples divide parental leave equally.",
+        "evidence": ["In reality, only 12% of Swedish couples equally share the 480 days of leave, Bavman said, with women continuing to lead the way as the stay-at-home parent and men as the careerist."],
+        "rationale": "Limited equal uptake is the key qualification to the generous policy; the proposition does not demand the exact percentage."
+      }
+    ]
+  },
+  {
+    "id": "T05",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "ISIS released more than 200 Yazidi captives.",
+        "evidence": ["ISIS on Wednesday released more than 200 Yazidis, a minority group whose members were killed, captured and displaced when the Islamist terror organization overtook their towns in northern Iraq last summer, officials said."],
+        "rationale": "The release and approximate scale are the central news; the article reports conflicting precise counts, so neither exact count is required."
+      },
+      {
+        "id": "F2",
+        "proposition": "Most of the freed Yazidis were women and children.",
+        "evidence": ["Most of those released were women and children; the rest were ill or elderly, said Rassol Omar, a commander in the Peshmerga force that defends  northern Iraq's semi-autonomous Kurdish region."],
+        "rationale": "This identifies the main group released; the composition of the remainder is a separate supporting detail."
+      },
+      {
+        "id": "F3",
+        "proposition": "The reason for the release was not immediately clear.",
+        "evidence": ["It wasn't immediately clear what motivated Wednesday's release, Osman said."],
+        "rationale": "The unknown motive is an essential limit on what the report establishes; mediation does not by itself establish a motive."
+      }
+    ]
+  },
+  {
+    "id": "T06",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Police added an attempted-murder charge against Nyia Parler.",
+        "evidence": ["Police added attempted murder to the list of charges against the mother of a quadriplegic man who was left in the woods for days, Philadelphia police spokeswoman Christine O'Brien said Tuesday.", "Nyia Parler cannot be extradited to face the charges in Philadelphia until she completes an unspecified \"treatment,\" Maryland police said Monday."],
+        "rationale": "The newly added charge is the main legal development; it is a charge, not a conviction."
+      },
+      {
+        "id": "F2",
+        "proposition": "Police said Parler abandoned her quadriplegic son in the woods for several days.",
+        "evidence": ["The Montgomery County (Maryland) Department of Police took Parler, 41, into custody Sunday after Philadelphia police reported that she left her 21-year-old son in the woods while she hopped a bus to see her boyfriend in Maryland.", "For more than four days, police say, the quadriplegic man, who also suffers from cerebral palsy, was left lying in the woods of Philadelphia's Cobbs Creek Park."],
+        "rationale": "This is the alleged conduct underlying the charge; the son's disability and prolonged abandonment are central, but exact ages and dates are not."
+      },
+      {
+        "id": "F3",
+        "proposition": "Parler's extradition had to wait until she completed unspecified treatment.",
+        "evidence": ["Nyia Parler cannot be extradited to face the charges in Philadelphia until she completes an unspecified \"treatment,\" Maryland police said Monday."],
+        "rationale": "This is the immediate procedural limitation; the source does not identify the treatment or establish its cause."
+      }
+    ]
+  },
+  {
+    "id": "T07",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "New Anne Frank House research concluded that Anne and Margot Frank probably died at least a month earlier than previously thought.",
+        "evidence": ["But new research released by the Anne Frank House shows that Anne and her older sister, Margot Frank, died at least a month earlier than previously thought.", "They concluded that Anne and Margot probably did not survive to March 1945 -- contradicting the date of death which had previously been determined by Dutch authorities."],
+        "rationale": "The revised death chronology is the central finding; its probabilistic status must remain clear."
+      },
+      {
+        "id": "F2",
+        "proposition": "Witness accounts of the sisters' early typhus symptoms supported the researchers' earlier-death conclusion.",
+        "evidence": ["They concluded that it's unlikely the sisters survived until March, because witnesses at the camp said the sisters both had symptoms before February 7.", "\"Most deaths caused by typhus occur around twelve days after the first symptoms appear,\" wrote  authors Erika Prins and Gertjan Broek."],
+        "rationale": "This is the source's central evidentiary reason for revising the chronology; exact symptom dates and survival intervals are not required."
+      },
+      {
+        "id": "F3",
+        "proposition": "The exact dates of Anne and Margot Frank's deaths remain unknown.",
+        "evidence": ["The exact dates of death for Anne and Margot remain unclear."],
+        "rationale": "This explicit limitation prevents the revised estimate from being mistaken for an established exact date."
+      }
+    ]
+  },
+  {
+    "id": "T08",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Gisele Bundchen made her final runway appearance as she retired from the catwalk.",
+        "evidence": ["Bundchen walked the runway for the last time Wednesday, and the New England Patriots quarterback wasn't just there to support her in person, he expressed his emotions to the world on Facebook.", "Bundchen, 34, announced her retirement from the catwalk last weekend."],
+        "rationale": "The final runway appearance is the central event; the day and her age are incidental."
+      },
+      {
+        "id": "F2",
+        "proposition": "Her husband Tom Brady publicly praised her in a Facebook tribute.",
+        "evidence": ["It's obvious that Tom Brady's love for his wife, model Gisele Bundchen, will never go out of fashion.", "Bundchen walked the runway for the last time Wednesday, and the New England Patriots quarterback wasn't just there to support her in person, he expressed his emotions to the world on Facebook.", "\"Congratulations Love of my Life,\" Brady wrote.", "I am so proud of you and everything you have accomplished on the runway."],
+        "rationale": "Brady's public response is the article's principal focus alongside the retirement; quoting the full tribute is unnecessary."
+      },
+      {
+        "id": "F3",
+        "proposition": "Bundchen was continuing to work in other parts of the fashion business.",
+        "evidence": ["Today after 20 years in the industry, it is a privilege to be doing my last fashion show by choice and yet still be working in other facets of the business,\" the Brazilian-born model wrote on Instagram."],
+        "rationale": "This limits the retirement to runway work and avoids implying that she was leaving the entire industry."
+      }
+    ]
+  },
+  {
+    "id": "T09",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Investigators had collected all the main evidence from the Germanwings crash site.",
+        "evidence": ["Investigators have collected all the main evidence from the site where Germanwings Flight 9525 crashed, a French national police official told CNN on Saturday."],
+        "rationale": "Completion of the main site evidence collection is the reported development; it does not mean all analysis was finished."
+      },
+      {
+        "id": "F2",
+        "proposition": "The crash killed all 150 people aboard.",
+        "evidence": ["The crash killed all 150 people on board."],
+        "rationale": "The total loss of life is the central scale of the disaster."
+      },
+      {
+        "id": "F3",
+        "proposition": "Authorities said the co-pilot intentionally caused the plane to crash.",
+        "evidence": ["Authorities say the flight's co-pilot, Andreas Lubitz, locked the captain out of the cockpit and engineered the plane's demise.", "Initial tests on the flight data recorder show that Lubitz purposely used the controls to speed up the plane's descent, according to the French air accident investigation agency, the BEA."],
+        "rationale": "The authorities' account of deliberate causation is the central investigative finding; the co-pilot's name and each individual cockpit action are not required."
+      }
+    ]
+  },
+  {
+    "id": "T10",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Marco Rubio announced that he was seeking the Republican presidential nomination.",
+        "evidence": ["The Republican senator from Florida has announced that he is seeking the Republican presidential nomination, running on an optimistic message that he embodies the promise of the American Dream."],
+        "rationale": "The candidacy is the event prompting the commentary; its campaign slogan is incidental."
+      },
+      {
+        "id": "F2",
+        "proposition": "The article argues that Rubio has limited appeal to Latino voters despite his Hispanic background.",
+        "evidence": ["With his youthful energy and Hispanic roots, it's tempting to see Rubio as the new blood that the GOP needs in order to compete against Hillary Clinton in 2016.", "He holds little appeal to Latino voters.", "So, if Rubio is counting on his ethnicity and personal history as the son of immigrants to win over fellow Hispanics, he is mistaken."],
+        "rationale": "This is the commentary's central assessment; it must remain the article's argument rather than an independently established prediction."
+      },
+      {
+        "id": "F3",
+        "proposition": "Rubio backed away from the comprehensive immigration reform bill he had helped develop.",
+        "evidence": ["Back in 2013, Rubio was a member of the Senate \"Gang of 8\" that crafted a bipartisan proposal for comprehensive reform, including a path to citizenship for the nation's estimated 11 million undocumented immigrants.", "He later distanced himself from the bill after it ran into resistance from House Republicans, and now says he favors a piecemeal approach, starting with securing the border."],
+        "rationale": "The immigration reversal is a central policy example supporting the article's argument; bill dates, committee labels and population estimates are not required."
+      }
+    ]
+  },
+  {
+    "id": "T11",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Sudan was the world's last known male northern white rhino.",
+        "evidence": ["But Sudan is not just any rhino.", "He's the last known male northern white rhino left in the entire world."],
+        "rationale": "The animal's unique reproductive significance is the central premise; 'known' and the subspecies distinction matter."
+      },
+      {
+        "id": "F2",
+        "proposition": "Mating attempts among the conservancy's northern white rhinos had not produced a conception.",
+        "evidence": ["\"There has been recorded mating between different pairs over the last few years, but not conceptions,\" Paul says.", "\"Based on  a recent health examination conducted, both animals have a regular estrus cycle, but no conception has been recorded.\""],
+        "rationale": "The lack of reproductive success is the immediate obstacle to sustaining the subspecies; individual animals' ages and medical details are separable."
+      },
+      {
+        "id": "F3",
+        "proposition": "Experts were exploring assisted reproduction to try to preserve the northern white rhino.",
+        "evidence": ["In a race against time, international experts are resorting to science to try to sustain the subspecies.", "A committee at the conservancy is also looking at various alternative reproduction techniques, including in vitro fertilization."],
+        "rationale": "This is the principal conservation response; it is exploratory and not an established successful rescue."
+      }
+    ]
+  },
+  {
+    "id": "T12",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Barack Obama and Raul Castro met and shook hands at the Summit of the Americas.",
+        "evidence": ["President Obama briefly met his Cuban counterpart, Raul Castro, on Friday night at a dinner for the dozens of Latin American leaders convening in Panama City for the Summit of the Americas.", "At the Summit of the Americas this evening, President Obama and President Castro greeted each other and shook hands."],
+        "rationale": "The leaders' encounter is the central event; the dinner timing and host city are not additional requirements."
+      },
+      {
+        "id": "F2",
+        "proposition": "The United States and Cuba were working toward normalizing their relations.",
+        "evidence": ["During their phone call Wednesday, Obama and Castro discussed the ongoing process of normalizing relations between the United States and Cuba, according to Deputy National Security Adviser Ben Rhodes."],
+        "rationale": "The ongoing diplomatic process gives the encounter its significance and should not be described as completed normalization."
+      },
+      {
+        "id": "F3",
+        "proposition": "Obama had not yet made a final decision on removing Cuba from the U.S. state sponsors of terrorism list.",
+        "evidence": ["In Panama, Obama is expected to announce he's removing Cuba from the United States' list of countries that sponsor terrorism, a major advance in building diplomatic ties between the two countries.", "The State Department delivered its report on the designation to the White House on Wednesday; Obama said on Thursday a panel of experts was reviewing it before he makes a final determination."],
+        "rationale": "The pending designation decision is a central limit on the reported diplomatic advance; an anticipated announcement is not a completed removal."
+      }
+    ]
+  },
+  {
+    "id": "T13",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Family members said U.S. citizen Jamal al-Labani was killed in a mortar strike in Yemen.",
+        "evidence": ["Family members have identified him as a victim killed in mortar strike last week in the southern Yemeni city of Aden.", "He is believed to be the first U.S. citizen killed in the current violence in Yemen."],
+        "rationale": "The citizen's death is the central event; the claim that he was the first is uncertain and is not required."
+      },
+      {
+        "id": "F2",
+        "proposition": "Al-Labani had been unable to evacuate Yemen before he was killed.",
+        "evidence": ["For the past three weeks, al-Labani had told family members he was concerned about not being able to evacuate as the situation deteriorated in the country, according to his cousin.", "Two days before al-Labani was killed, he told his family the last option was to try to cross the border into Oman and fly to Egypt, but he never made it."],
+        "rationale": "His inability to escape connects the death to the evacuation issue; exact routes and timing are supporting details."
+      },
+      {
+        "id": "F3",
+        "proposition": "The U.S. State Department said it had no current plans to evacuate private U.S. citizens from Yemen.",
+        "evidence": ["Responding to the criticism, the U.S. State Department told CNN that there are no current plans to evacuate private U.S. citizens from Yemen."],
+        "rationale": "This is the government's central response to evacuation demands; the temporal and private-citizen scope must be retained."
+      }
+    ]
+  },
+  {
+    "id": "T14",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "The FBI was investigating a possible ISIS-inspired terrorist threat in the United States.",
+        "evidence": ["The FBI is investigating a possible ISIS-inspired terrorist threat in the United States, law enforcement officials said Saturday."],
+        "rationale": "The investigation is the central event; a possible inspired threat must not become a confirmed ISIS-directed plot."
+      },
+      {
+        "id": "F2",
+        "proposition": "Officials did not know whether the threat represented a real plot or only an aspiration.",
+        "evidence": ["It's not clear whether the threat is real or aspirational."],
+        "rationale": "This is the report's central uncertainty, beyond the mere existence of an investigation."
+      },
+      {
+        "id": "F3",
+        "proposition": "Some U.S. cities increased security as a precaution.",
+        "evidence": ["Some cities around the United States have increased their security as a precaution."],
+        "rationale": "This is the immediate response; the source does not establish that all cities or aviation specifically were targets."
+      }
+    ]
+  },
+  {
+    "id": "T15",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Lewis Hamilton won the Chinese Grand Prix.",
+        "evidence": ["Lewis Hamilton took victory for the Silver Arrows at the Chinese Grand Prix -- only for his teammate Nico Rosberg to later claim he had ruined his race by driving slowly."],
+        "rationale": "The race victory is the central result; career totals and championship standings are secondary."
+      },
+      {
+        "id": "F2",
+        "proposition": "Nico Rosberg complained that Hamilton's slow driving compromised his race.",
+        "evidence": ["Lewis Hamilton took victory for the Silver Arrows at the Chinese Grand Prix -- only for his teammate Nico Rosberg to later claim he had ruined his race by driving slowly.", "Rosberg complained after the race that Hamilton's lackadaisical Sunday driving was holding him up, pushing him back into Vettel's thrall and taking life out of his tyres."],
+        "rationale": "The teammate's accusation is the article's principal conflict; it must remain Rosberg's claim rather than an independently established intention."
+      },
+      {
+        "id": "F3",
+        "proposition": "Hamilton denied intentionally slowing the cars behind him.",
+        "evidence": ["Hamilton responded: \"It's not my job to look after Nico's race.", "\"I didn't do anything intentionally to slow the cars down."],
+        "rationale": "The denial is the opposing account of the central dispute; it does not establish that Rosberg experienced no delay."
+      }
+    ]
+  },
+  {
+    "id": "T16",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Furious 7 was projected to open with roughly $135 million to $138 million in North America.",
+        "evidence": ["Universal's \"Furious 7\" continues to build momentum at the Friday box office for a weekend debut in the $135 million-$138 million range, the largest opening in North America since fall 2013."],
+        "rationale": "The large domestic opening forecast is the main business news; it is not a final realized total."
+      },
+      {
+        "id": "F2",
+        "proposition": "The film's worldwide debut could approach or exceed $300 million.",
+        "evidence": ["The final film featuring the late Paul Walker, \"Furious 7\" is opening around the globe this weekend and earned a record-breaking $60 million internationally on Wednesday and Thursday for a possible worldwide debut approaching or crossing $300 million by the end of Easter Sunday."],
+        "rationale": "The global projection is the distinct international scale of the opening; uncertainty and its worldwide scope matter."
+      },
+      {
+        "id": "F3",
+        "proposition": "Furious 7 was the final film featuring the late Paul Walker.",
+        "evidence": ["The final film featuring the late Paul Walker, \"Furious 7\" is opening around the globe this weekend and earned a record-breaking $60 million internationally on Wednesday and Thursday for a possible worldwide debut approaching or crossing $300 million by the end of Easter Sunday."],
+        "rationale": "Walker's final appearance is the central production context behind the interest in the film; technical completion methods are secondary."
+      }
+    ]
+  },
+  {
+    "id": "T17",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "A vacationing family became ill in the U.S. Virgin Islands, possibly from pesticide exposure.",
+        "evidence": ["A Delaware father is in stable condition and improving as his two boys remain in critical condition after they became sick -- perhaps from pesticide exposure, federal officials say -- during a trip to the U.S. Virgin Islands.", "Steve Esmond, his teenage sons and the teens' mother fell ill more than two weeks ago in St. John, where they were renting a villa at the Sirenusa resort."],
+        "rationale": "The family's illness and suspected exposure are the central incident; the cause remains provisional."
+      },
+      {
+        "id": "F2",
+        "proposition": "The family's two sons remained in critical condition.",
+        "evidence": ["A Delaware father is in stable condition and improving as his two boys remain in critical condition after they became sick -- perhaps from pesticide exposure, federal officials say -- during a trip to the U.S. Virgin Islands."],
+        "rationale": "The sons' continuing critical condition is the main unresolved health outcome; their parents' separate statuses are not bundled into this anchor."
+      },
+      {
+        "id": "F3",
+        "proposition": "Preliminary EPA testing detected methyl bromide in the family's rental unit.",
+        "evidence": ["Elias Rodriguez, an EPA spokesman, said the agency's preliminary test results \"do show that there was a presence of methyl bromide in the unit where the family was staying.\""],
+        "rationale": "This is the concrete evidence behind the pesticide suspicion, distinct from a definitive conclusion about causation or legal responsibility."
+      }
+    ]
+  },
+  {
+    "id": "T18",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Al Qaeda confirmed that two of its leaders had been killed in CIA drone strikes.",
+        "evidence": ["In an audio message released Sunday, al Qaeda confirmed that two of its leaders, known as Ustad Ahmad Farooq and Qari Abdullah Mansur, were killed in CIA drone strikes in January in North Waziristan, near the Afghan-Pakistan border."],
+        "rationale": "The reported leadership deaths are the central new evidence; individual names, aliases and the exact month are incidental."
+      },
+      {
+        "id": "F2",
+        "proposition": "The article assesses core al Qaeda as having virtually no capacity to attack the West.",
+        "evidence": ["Indeed, al Qaeda has virtually no capacity to carry out attacks in the West.", "Meanwhile, ISIS continues to attract Western recruits and also inspire \"homegrown\" terrorists in the West, but the core al Qaeda organization that killed almost 3,000 men, women and children on 9/11 is on life support."],
+        "rationale": "This is the article's central assessment of deterioration, limited to the core organization and presented as the article's assessment."
+      },
+      {
+        "id": "F3",
+        "proposition": "The article says al Qaeda's Yemen-based affiliate still poses a threat to American aviation.",
+        "evidence": ["To be sure, al Qaeda's Yemen-based affiliate, al Qaeda in the Arabian Peninsula, or AQAP, continues to pose a threat to American aviation."],
+        "rationale": "This is the key qualification to the assessment of core al Qaeda's weakness; the affiliate must not be conflated with the weakened core."
+      }
+    ]
+  }
+]

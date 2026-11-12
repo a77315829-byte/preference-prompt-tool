@@ -285,8 +285,8 @@ def _domain_path(domain_key: str) -> str:
         "coding": ROOT / "domains" / "coding.yaml",
         "review": ROOT / "domains" / "review.yaml",
         "email": ROOT / "domains" / "email.yaml",
-        "summarization": ROOT / "domains" / "summarization.yaml",
-        "summarization_ko": ROOT / "domains" / "summarization_ko.yaml",
+        "summarization": ROOT / "domains" / "summarization_grounded_v3.yaml",
+        "summarization_ko": ROOT / "domains" / "summarization_ko_grounded_v3.yaml",
         "summarization_hybrid": ROOT / "domains" / "summarization_hybrid.yaml",
         "macsum_eval_agent": ROOT / "domains" / "macsum_eval_agent.yaml",
     }
@@ -783,6 +783,11 @@ class ApiHandler(BaseHTTPRequestHandler):
                 self._send(401, {"error": "파일을 첨부하려면 로그인해 주세요."})
                 return
             body = self._read_json(MAX_UPLOAD_JSON if uploading else 256_000)
+            if path == "/api/summary-contract":
+                from summary_contracts import prepare_summary_contract
+
+                self._send(200, prepare_summary_contract(body))
+                return
             if path.startswith("/api/auth/"):
                 self._auth_route(path, body)
                 return

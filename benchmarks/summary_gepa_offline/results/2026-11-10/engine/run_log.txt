@@ -1,0 +1,55 @@
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0001_generate\request.json
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0002_review\request.json
+Iteration 0: Base program full valset score: 0.7777777777777778 over 6 / 6 examples
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0003_generate\request.json
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0004_review\request.json
+Iteration 1: Selected program 0 score: 0.7777777777777778
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0005_reflection\request.json
+Iteration 1: Proposed new text for supplement: Read through the whole source before selecting material; the opening event can supply context while later passages carry the article's distinctive focus. Give sentence space to distinct central developments or perspectives, rather than repeated setup, vivid scene-setting, or several details about the same event. A prominent response or conclusion can be central even when it contains no numerical result. For strict extraction, consider candidate sentence combinations as a whole: prefer those that jointly retain the main event and another central aspect with clear referents and intact attribution. Do not automatically copy an opening sentence merely to introduce a name. Keep context necessary to understand selected sentences; when that context would consume the available budget, choose a clearer combination. When rewriting is permitted, combine compatible source clauses only when their subjects, status, and attribution remain clear. Use additional permitted space to preserve substantive distinctions, not repetition. Apply all base constraints throughout; do not lengthen a short extractive summary or alter copied sentences to force in every point.
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0006_generate\request.json
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0007_review\request.json
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0008_generate\request.json
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0009_review\request.json
+Iteration 1: Accepted candidate (subsample score 2.3333333333333335 -> 2.3333333333333335); running full eval.
+Iteration 1: Valset score for new program: 0.7222222222222222 (coverage 6 / 6)
+Iteration 1: Val aggregate for new program: 0.7222222222222222
+Iteration 1: Individual valset scores for new program: {0: 0.3333333333333333, 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.0, 5: 1.0}
+Iteration 1: Objective aggregate scores for new program: {'coverage': 0.8888888888888888, 'conditions': 0.8333333333333334, 'no_factual_flags': 1.0}
+Iteration 1: New valset pareto front scores: {0: 0.6666666666666666, 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.0, 5: 1.0}
+Iteration 1: Objective pareto front scores: {'coverage': 0.9444444444444443, 'conditions': 0.8333333333333334, 'no_factual_flags': 1.0}
+Iteration 1: Valset pareto front aggregate score: 0.7777777777777778
+Iteration 1: Updated valset pareto front programs: {0: {0}, 1: {0, 1}, 2: {0, 1}, 3: {0, 1}, 4: {0, 1}, 5: {0, 1}}
+Iteration 1: Updated objective pareto front programs: {'coverage': {0}, 'conditions': {0, 1}, 'no_factual_flags': {0, 1}}
+Iteration 1: Best valset aggregate score so far: 0.7777777777777778
+Iteration 1: Best program as per aggregate score on valset: 0
+Iteration 1: Best score on valset: 0.7777777777777778
+Iteration 1: Linear pareto front program index: 0
+Iteration 1: New program candidate index: 1
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0010_generate\request.json
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0011_review\request.json
+Iteration 2: Selected program 0 score: 0.7777777777777778
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0012_reflection\request.json
+Iteration 2: Proposed new text for supplement: Use only information stated in the supplied text, including in brief descriptive modifiers and appositives. Familiarity with a subject does not license adding a category, property, setting or explanation. Remove any unsupported embellishment rather than relying on outside knowledge.
+
+When the source presents a dispute, prioritize the main event, the participants' attributed positions and the source-supported basis of the disagreement over secondary chronology or procedural details. A criticism of a position does not by itself communicate who holds that position. Select complementary content rather than several passages serving the same role.
+
+For exact extraction, preserve the context needed to identify a quotation's speaker and the referents of dependent sentences. Choose a feasible set of complete source sentences within the existing budget; if necessary, prefer a clearer self-contained alternative. Do not rewrite, combine or add attribution to extracted sentences.
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0013_generate\request.json
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0014_review\request.json
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0015_generate\request.json
+PENDING C:\Users\Laptop_PC\preference-prompt-tool\benchmarks\summary_gepa_offline\results\2026-11-10\queue\0016_review\request.json
+Iteration 2: Accepted candidate (subsample score 1.3333333333333333 -> 2.6666666666666665); running full eval.
+Iteration 2: Valset score for new program: 0.6666666666666666 (coverage 6 / 6)
+Iteration 2: Val aggregate for new program: 0.6666666666666666
+Iteration 2: Individual valset scores for new program: {0: 0.3333333333333333, 1: 0.6666666666666666, 2: 1.0, 3: 1.0, 4: 0.0, 5: 1.0}
+Iteration 2: Objective aggregate scores for new program: {'coverage': 0.8333333333333334, 'conditions': 0.8333333333333334, 'no_factual_flags': 1.0}
+Iteration 2: New valset pareto front scores: {0: 0.6666666666666666, 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.0, 5: 1.0}
+Iteration 2: Objective pareto front scores: {'coverage': 0.9444444444444443, 'conditions': 0.8333333333333334, 'no_factual_flags': 1.0}
+Iteration 2: Valset pareto front aggregate score: 0.7777777777777778
+Iteration 2: Updated valset pareto front programs: {0: {0}, 1: {0, 1}, 2: {0, 1, 2}, 3: {0, 1, 2}, 4: {0, 1, 2}, 5: {0, 1, 2}}
+Iteration 2: Updated objective pareto front programs: {'coverage': {0}, 'conditions': {0, 1, 2}, 'no_factual_flags': {0, 1, 2}}
+Iteration 2: Best valset aggregate score so far: 0.7777777777777778
+Iteration 2: Best program as per aggregate score on valset: 0
+Iteration 2: Best score on valset: 0.7777777777777778
+Iteration 2: Linear pareto front program index: 0
+Iteration 2: New program candidate index: 2

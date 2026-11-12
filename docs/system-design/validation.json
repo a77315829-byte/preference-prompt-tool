@@ -1,0 +1,72 @@
+{
+  "date": "2026-11-12",
+  "status": "reviewed_for_documentation_publication",
+  "scope": "Whole-system analysis/design documentation and read-only experiment evidence. Application code was not modified or deployed by this documentation work.",
+  "pdf": {
+    "file": "Revealed_Analysis_Design_v1.0.pdf",
+    "pages": 97,
+    "sha256": "c97097e4175f5fa12a51a6d4596b0fdf0ad7f6cb5c63e30e0c02506d2fde3fd4",
+    "all_pages_rendered": true,
+    "all_pages_contact_sheets_visually_checked": true,
+    "independent_full_page_checks": [
+      9,
+      22,
+      37,
+      44,
+      67,
+      73,
+      94,
+      97
+    ],
+    "headings_tables_images_pagination": "Reviewed; isolated figure/table headings and an almost-empty continuation page corrected before final render."
+  },
+  "inventory": {
+    "chapters": 11,
+    "use_cases": 24,
+    "logical_screens": 18,
+    "get_post_routes": 90,
+    "tables": 16,
+    "migrations": 14,
+    "diagrams": 21,
+    "public_evidence_copies": 288,
+    "source_files_sha256_verified": 22
+  },
+  "review": {
+    "independent_code_document_audit": true,
+    "findings_corrected": [
+      "GitHub relative image paths",
+      "Saved-prompt server AI run branch",
+      "Live candidate generation fallback to demo",
+      "Two timer phases setup/edit",
+      "Scope of account and revision invariants",
+      "Recipient-deletion recovery transition",
+      "Cursor existing-content merge rejection",
+      "HostedHandler origin check override"
+    ],
+    "test_file_references_exist": true,
+    "evidence_copy_sha256_matches_originals": true,
+    "original_completion_seals_verified": {
+      "coding_react_current": 157,
+      "react_style_current": 126
+    },
+    "model_api_calls_this_task": 0,
+    "new_dependencies": 0,
+    "production_database_read": false,
+    "reference_pdf_republished": false,
+    "whole_application_regression_suite_rerun": false
+  },
+  "publication": {
+    "branch": "codex/system-design-2026-11-12",
+    "allowed_prefix": "docs/system-design/",
+    "baseline_commit": "a2f12928717c11555c7376d0efdd27e0b0703b51",
+    "byte_preservation": ".gitattributes disables text conversion; staged blob hashes must match local bytes.",
+    "excluded": [
+      ".env",
+      "user databases",
+      "reference project PDF",
+      "source dataset corpus",
+      "__pycache__",
+      "unrelated app changes"
+    ]
+  }
+}

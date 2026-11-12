@@ -1,0 +1,16 @@
+# Keep new frozen experiment inputs/results and published evidence byte-for-byte.
+/benchmarks/coding_react_current/** -text
+/benchmarks/react_style_current/** -text
+/benchmarks/summary_agent_pilot/** -text
+/benchmarks/summary_agent_revision/** -text
+/benchmarks/summary_contract_revision/** -text
+/benchmarks/summary_gepa_offline/** -text
+/benchmarks/summary_reflection/** -text
+/docs/verification/** -text
+/docs/weekly_reports/** -text
+/checks/summarization_grounded*.py -text
+/domains/summarization_grounded*.yaml -text
+/domains/summarization_ko_grounded*.yaml -text
+/domains/summary_contract.yaml -text
+/summary_contracts.py -text
+/output/pdf/*.pdf -text

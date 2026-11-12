@@ -1,0 +1,77 @@
+{
+  "seed": 20261114,
+  "previously_observed_sources": 42,
+  "excluded_source_sha256": [
+    "0201176fe19c7738a2aae78ca085bfc7c505be119418d448e5a4a2b5b7ede10b",
+    "0bc001a23501f2067838f3d9dd777a99118d812b1e70f0a30755bbfd8e36c05a",
+    "1dbb118f6d61328d46f565732cc691c8b04b5013c5c875d1de27176c2c40cbe8",
+    "22804c6993ae16fee51b24ffb2ae6b8220e4bd31317f925964c6686a8070430f",
+    "22d3ef93a7347812725f95dfc650773c82cbef275bd00fde3be99af267e13f6d",
+    "293c30a4f8bdf8ff4ce7fa022ac2b83cb04254a648d08435a9f136659b0db451",
+    "2d1ee92efaf7624a3a41dc8cab6eb1ff0a32f651c8785b685c7afec667ab481c",
+    "31aa149c47ee13d78150cc1883aab9427e9def5ca801a336b17ef135b1dde005",
+    "3b1963b9e5d3e9ce1630c2379931938a435f3c1c035f8bb40e2a8fb14d39b96e",
+    "57a6cbed45f9e3be91914b7cadf61f2eb04f8d1842c2e1055acb230e5de4504a",
+    "5bf1c650e7da8c67c261d2bff79b09bc58495885300d9420a59d37f8e05aaa5b",
+    "5f2d7b4cdd547c2f5321d4ce3a81d8462c25e7f4edbc6a711743a9f580e70df8",
+    "60a8c3f0b0c6c161c840343ce021e109e18348976bbd93b3d1ca6e7c4364c314",
+    "7487aadb622d8e34c7216d74d8bf015e1898042092ba4c7d5fc38d44e93fe10e",
+    "771c65bedc73d556636e1f65fe65bbea6670755f9a0d30cb0452c36431cbf59b",
+    "7b0c98b90fb4a91fa94c69070528215f5a00cb2c3cad605dedce5ef56f704a3d",
+    "7bf4e54b8d2e58597ba760e122df22b0b29ddf258747398f15a7cadc3e0dfbd1",
+    "7db5d478b702a49473668ddcc6d00aa6ac600b7bb28e32888b8bab102f330511",
+    "7e1e9a8551a882cbbc0561aca2896e56439988f636bcc07fe620303e844a829f",
+    "7eb382171de145543189105186acd53390c876d6390b43b270fad2b9ec59962e",
+    "841a789041f46a0b7a2d960059293c8c50a57f987b55589dce3f91f22462d5db",
+    "860babc3281c6df343b38bab21ba25f99910d4209e1a285fa6dc32bee6639462",
+    "888425ff7d237eb1dae16481c3f235720ac6436290d34b27f8132a8f04f539c1",
+    "8909046042d649935c1bb4a0b27b355d804694826bb1eec4fd18ba67b21290a6",
+    "9b96824a91316c674b7fe69e27d899cf0d720eb6d8375cf834874a9470f8634d",
+    "9e39ae3fe26fa00ef9d117b5092f4134a52781d8c22381ec3418ace7687877e8",
+    "b19a6d1457a0feee00bed0961a82a480d450efb159bd11fcf253d4b6994030e2",
+    "b3eed4fbbef7d43317ab218975cfa09687d5b5e84af237054319973ecf681e00",
+    "c57a7e56a8486366fdd2eb3d412c83e857496d397b99fbf0b92f2651a2d4b1bc",
+    "c7c7c66cbecc8669fe490cde28264adc52c51fd21e76833d8561d67212a9e98a",
+    "cbfa2b4270e642f20abd83ded057bca88045a3e5e30a481c5efea0963574e442",
+    "cdb5d7137490980a3695b24a492f9ccada23f4aa83851fb5c3ca489cbd702aff",
+    "cffdaa8101f480dc44d50960ac1a066deb17642ba301ff616cba425a331027e8",
+    "d55e31f8ee34a3ad4b81233ab09193244746ae5453e9bd216bce2ccb0ebc63f9",
+    "da5087b228813d1188b49878b8b9e75b59736c513075cf4ad30cfafe8df98225",
+    "db61c8a4b26d85cf26f580264426ab41e2dfd887c739795f8ea85e06c09e0620",
+    "deeaee78023ae567990f7473e0284331aec87b6f726e7147cbd494ebc8c0627c",
+    "f1d946facca4b8ac4e4439e36b68e7611d947423d475314ccccae286b3960894",
+    "f47fb2d9f9da4852564818d1d4dba9d1e50d4fddebe951448bc79921efe03a3d",
+    "fab3804254f1f469e495cd060ac5034a3bfc8615e766f45ac2f775e15ecb8139",
+    "fd92d24bb17b439176e4cd2b4f94d333421b5cee17013875c6c670dcf0759cf3",
+    "ff956ad1504df063854ff66e2bae9d90c849f9a03faa52119bfec98f1be186eb"
+  ],
+  "inventory": {
+    "train": {
+      "eligible_pool": 447,
+      "sampled": 6,
+      "dataset_split": "train"
+    },
+    "validation": {
+      "eligible_pool": 58,
+      "sampled": 6,
+      "dataset_split": "val"
+    },
+    "final": {
+      "eligible_pool": 10,
+      "sampled": 9,
+      "dataset_split": "test"
+    }
+  },
+  "dataset_hashes": {
+    "data\\macsum\\dataset\\macdoc\\train.json": "35eaad7c14f85ff259326b84ae30ecebcbd33518068515e53b1efc62b6786d10",
+    "data\\macsum\\dataset\\macdoc\\val.json": "728d3d952736f09b06503602e87a4f2292d4bee512f4ba55934c819a374cf1d6",
+    "data\\macsum\\dataset\\macdoc\\test.json": "f1b08ef9c17d1fac94d395b5881fd038c1229f3d937b6052acce989070b9dbe9"
+  },
+  "prior_cases_hashes": {
+    "benchmarks\\summary_agent_pilot\\results\\2026-11-10\\cases.json": "98f4b95d05988c8e1aafb1c7cff6683242ceb737172ea869453cd9cee1373690",
+    "benchmarks\\summary_agent_revision\\results\\2026-11-10\\cases.json": "1332ff3a02d780432aae74b66eaaf6af183f6222b71bdc8e34182302765b6d10",
+    "benchmarks\\summary_reflection\\results\\2026-11-10\\selection\\cases.json": "8afa0a428c0d37bd808aa7d8b2713913001c059f7fdbd7bfda3cd8ff0955ec69",
+    "benchmarks\\summary_reflection\\results\\2026-11-10\\final\\cases.json": "1d0f43651843f49f6cff9e526bce043c87e77d8f57ad4febd098958e104f11c4"
+  },
+  "scope": "All 21 sources distinct from the 42 sources in previous three summary studies; pretraining novelty not asserted."
+}

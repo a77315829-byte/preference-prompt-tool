@@ -1,0 +1,16 @@
+{
+  "scope": "Root source/evidence audit of all reviewer disagreements and factual flags; none were present. Reviewed the one paired coverage difference separately.",
+  "reviewer_agreement": {
+    "outputs": 12,
+    "fact_decisions": 36,
+    "all_agree": true
+  },
+  "case_note": {
+    "case_id": "D04",
+    "finding": "Candidate replaces the explicit statement that the suspected planner was Kenyan with a sentence that one gunman was also Kenyan. The planner nationality becomes an ambiguous implicit comparison, so both reviewers omit F2 credit. This is lost explicit linkage, not a factual falsehood finding.",
+    "score_adjustment": false
+  },
+  "feasibility": "D01 cannot preserve all three chosen anchors within two complete unchanged source sentences. Both arms face the same restriction.",
+  "decision": "Keep current. Original independent scores remain unchanged; no candidate retuning follows selection.",
+  "not_a_general_claim": "One paired loss does not establish the supplement is generally harmful."
+}

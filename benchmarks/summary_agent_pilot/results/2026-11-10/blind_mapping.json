@@ -1,0 +1,110 @@
+{
+  "O01": {
+    "arm": "general",
+    "case_id": "S02"
+  },
+  "O02": {
+    "arm": "manual",
+    "case_id": "S02"
+  },
+  "O03": {
+    "arm": "manual",
+    "case_id": "S07"
+  },
+  "O04": {
+    "arm": "manual",
+    "case_id": "S01"
+  },
+  "O05": {
+    "arm": "general",
+    "case_id": "S03"
+  },
+  "O06": {
+    "arm": "general",
+    "case_id": "S05"
+  },
+  "O07": {
+    "arm": "general",
+    "case_id": "S01"
+  },
+  "O08": {
+    "arm": "manual",
+    "case_id": "S06"
+  },
+  "O09": {
+    "arm": "assembled",
+    "case_id": "S06"
+  },
+  "O10": {
+    "arm": "manual",
+    "case_id": "S09"
+  },
+  "O11": {
+    "arm": "assembled",
+    "case_id": "S07"
+  },
+  "O12": {
+    "arm": "assembled",
+    "case_id": "S03"
+  },
+  "O13": {
+    "arm": "general",
+    "case_id": "S09"
+  },
+  "O14": {
+    "arm": "assembled",
+    "case_id": "S01"
+  },
+  "O15": {
+    "arm": "assembled",
+    "case_id": "S05"
+  },
+  "O16": {
+    "arm": "general",
+    "case_id": "S06"
+  },
+  "O17": {
+    "arm": "manual",
+    "case_id": "S03"
+  },
+  "O18": {
+    "arm": "manual",
+    "case_id": "S05"
+  },
+  "O19": {
+    "arm": "assembled",
+    "case_id": "S04"
+  },
+  "O20": {
+    "arm": "general",
+    "case_id": "S04"
+  },
+  "O21": {
+    "arm": "assembled",
+    "case_id": "S02"
+  },
+  "O22": {
+    "arm": "general",
+    "case_id": "S08"
+  },
+  "O23": {
+    "arm": "manual",
+    "case_id": "S04"
+  },
+  "O24": {
+    "arm": "assembled",
+    "case_id": "S09"
+  },
+  "O25": {
+    "arm": "manual",
+    "case_id": "S08"
+  },
+  "O26": {
+    "arm": "assembled",
+    "case_id": "S08"
+  },
+  "O27": {
+    "arm": "general",
+    "case_id": "S07"
+  }
+}

@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import SavePreferencePanel from '../preferences/SavePreferencePanel';
+import SummaryContractPanel from './SummaryContractPanel';
 import { fetchHealth, fetchSession, startOptimization, startPreferenceSession, submitPreferenceChoice, undoPreferenceChoice } from './codingApi';
 import ExportPanel from '../../shared/components/ExportPanel';
 import TeamPanel from '../../shared/components/TeamPanel';
@@ -419,6 +420,11 @@ function ComparisonSection({
                       ? `이번 비교 상한인 ${remoteSession.answered}회에 도달해 마쳤어요. 횟수를 채웠다는 뜻이며 모든 선호가 확정됐다는 뜻은 아니에요.`
                       : `${remoteSession.answered}회에서 고른 내용을 반영했어요.`}
               </p>
+              {!template && !remoteSession.template_id && ['summarization', 'summarization_ko'].includes(domainKey) && (
+                <SummaryContractPanel key={`${remoteSession.session_id}-${domainKey}`}
+                  domainKey={domainKey} initialSource={remoteSession.source_text}
+                  initialProfile={Object.fromEntries((remoteSession.axes || []).map((axis) => [axis.name, axis.estimate]))} />
+              )}
               {teamCode && (
                 <TeamPanel sessionId={remoteSession.session_id} initialCode={teamCode} teamName={teamName} domainKey={domainKey}
                   onOpenTeam={onOpenTeam} valueLabel={(axis, value) => remoteAxisLabels[axis]?.options?.[value] || value} />

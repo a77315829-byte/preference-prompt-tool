@@ -1,0 +1,16 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useId, useRef, useState, type KeyboardEvent } from 'react';\n\nexport type Item = {\n  id: string;\n  title: string;\n  body: string;\n  disabled?: boolean;\n};\nexport type Props = { items: Item[] };\n\nexport function Component({ items }: Props) {\n  const prefix = useId();\n  const [openId, setOpenId] = useState<string | null>(null);\n  const buttons = useRef(new Map<string, HTMLButtonElement>());\n  const enabled = items.filter(item => !item.disabled);\n\n  function moveFocus(event: KeyboardEvent<HTMLButtonElement>, id: string) {\n    if (\n      event.key !== 'ArrowDown' &&\n      event.key !== 'ArrowUp' &&\n      event.key !== 'Home' &&\n      event.key !== 'End'\n    ) {\n      return;\n    }\n\n    event.preventDefault();\n    if (enabled.length === 0) return;\n\n    const index = enabled.findIndex(item => item.id === id);\n    if (index < 0) return;\n\n    let targetIndex: number;\n    switch (event.key) {\n      case 'ArrowDown':\n        targetIndex = (index + 1) % enabled.length;\n        break;\n      case 'ArrowUp':\n        targetIndex = (index - 1 + enabled.length) % enabled.length;\n        break;\n      case 'Home':\n        targetIndex = 0;\n        break;\n      default:\n        targetIndex = enabled.length - 1;\n    }\n\n    const target = enabled[targetIndex];\n    if (target) buttons.current.get(target.id)?.focus();\n  }\n\n  return (\n    <div>\n      {items.map((item, index) => {\n        const buttonId = `${prefix}-button-${index}`;\n        const panelId = `${prefix}-panel-${index}`;\n        const expanded = openId === item.id && !item.disabled;\n\n        return (\n          <div key={item.id}>\n            <h3>\n              <button\n                ref={node => {\n                  if (node) buttons.current.set(item.id, node);\n                  else buttons.current.delete(item.id);\n                }}\n                id={buttonId}\n                type=\"button\"\n                disabled={item.disabled}\n                aria-expanded={expanded}\n                aria-controls={panelId}\n                onKeyDown={event => moveFocus(event, item.id)}\n                onClick={() => {\n                  if (item.disabled) return;\n                  setOpenId(current => current === item.id ? null : item.id);\n                }}\n              >\n                {item.title}\n              </button>\n            </h3>\n            {expanded && (\n              <div id={panelId} role=\"region\" aria-labelledby={buttonId}>\n                {item.body}\n              </div>\n            )}\n          </div>\n        );\n      })}\n    </div>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_file",
+      "block": 0,
+      "reason": "답변 첫 문장: \"Component.tsx를 아래 내용으로 새로 만드세요.\"",
+      "answer_start": 122,
+      "answer_end": 2661
+    }
+  ]
+}

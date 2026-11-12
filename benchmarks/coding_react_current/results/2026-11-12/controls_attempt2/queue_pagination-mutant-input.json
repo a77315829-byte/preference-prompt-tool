@@ -1,0 +1,5 @@
+{
+  "files": {
+    "Component.tsx": "import { useEffect, useState } from 'react';\n\nexport type Item = { id: string; label: string };\nexport type Props = { items: Item[]; pageSize: number };\n\nexport function Component({ items, pageSize }: Props) {\n  const [page, setPage] = useState(1);\n  const total = Math.max(1, Math.ceil(items.length / pageSize));\n  const current = page;\n  useEffect(() => {}, [total]);\n  const visible = items.slice((current - 1) * pageSize, current * pageSize);\n  return <section aria-label=\"Review queue\">\n    <ul aria-label=\"Queue items\">{visible.map(item => <li key={item.id}>{item.label}</li>)}</ul>\n    {items.length === 0 && <p role=\"status\">No items</p>}\n    <output aria-label=\"Page\">{current} / {total}</output>\n    <button type=\"button\" disabled={current === 1} onClick={() => setPage(current - 1)}>Previous</button>\n    <button type=\"button\" disabled={current === total} onClick={() => setPage(current + 1)}>Next</button>\n  </section>;\n}\n"
+  }
+}

@@ -1,0 +1,548 @@
+{
+  "schema_version": 2,
+  "design": "New preregistered holdout of previously unused original MACSum val sources; not official test results.",
+  "seed": 20261115,
+  "algorithm": "Original seed-20261115 eligible pool and shuffle are preserved. Keep eight original cases; quarantine original C03. Starting at shuffle position 10, select the first exact-new eligible source with lowercase regex \\w+ word-5gram-set Jaccard strictly below 0.1 against all 63 prior sources and the eight retained cases. Verify all nine final cases against all prior sources and each other.",
+  "source_reconstruction": "Join original source units using one newline, without other text normalization.",
+  "eligibility": {
+    "min_whitespace_words": 250,
+    "max_whitespace_words": 800,
+    "min_original_source_units": 8,
+    "requires_topic_free_human_reference": true,
+    "reference_use": "Only control_attribute.topic is used for eligibility; summary bodies are not displayed or used in annotation."
+  },
+  "dataset": {
+    "path": "data/macsum/dataset/macdoc/val.json",
+    "file_sha256": "728d3d952736f09b06503602e87a4f2292d4bee512f4ba55934c819a374cf1d6",
+    "record_count": 94,
+    "eligible_count": 58,
+    "excluded_eligible_count": 7,
+    "unseen_eligible_count": 51
+  },
+  "official_test_context": {
+    "path": "data/macsum/dataset/macdoc/test.json",
+    "file_sha256": "f1b08ef9c17d1fac94d395b5881fd038c1229f3d937b6052acce989070b9dbe9",
+    "record_count": 94,
+    "eligible_count": 52,
+    "excluded_eligible_count": 51,
+    "unseen_eligible_count": 1
+  },
+  "exclusion_unique_source_count": 64,
+  "exclusion_source_sha256": [
+    "0201176fe19c7738a2aae78ca085bfc7c505be119418d448e5a4a2b5b7ede10b",
+    "0bc001a23501f2067838f3d9dd777a99118d812b1e70f0a30755bbfd8e36c05a",
+    "12437e634b55910521dfee45e5de9d34e7ee5fb9d1d4e12173b0dcb46a9c29a1",
+    "16ef8f6889df94535689edee4e98d30baed7ddfe262b15815a68ce543d9e28e4",
+    "1a1141eb607b017d7403e79f44379c2b53b722e4777c7c801e2813eb4ea3654d",
+    "1dbb118f6d61328d46f565732cc691c8b04b5013c5c875d1de27176c2c40cbe8",
+    "2073cc88986db4db56ff004716a1c13eb56310455137f58cdd0ab86c0b44125c",
+    "22804c6993ae16fee51b24ffb2ae6b8220e4bd31317f925964c6686a8070430f",
+    "22d3ef93a7347812725f95dfc650773c82cbef275bd00fde3be99af267e13f6d",
+    "293c30a4f8bdf8ff4ce7fa022ac2b83cb04254a648d08435a9f136659b0db451",
+    "2d1ee92efaf7624a3a41dc8cab6eb1ff0a32f651c8785b685c7afec667ab481c",
+    "30c614bcb09c7e393f86a7284d0f337d70505a7a9240f6c55e5d47027d789f8b",
+    "31aa149c47ee13d78150cc1883aab9427e9def5ca801a336b17ef135b1dde005",
+    "3727e6e13861bb15df7fbd04b702f4ce91844b62de85a59c0a7885d51bb64367",
+    "3b1963b9e5d3e9ce1630c2379931938a435f3c1c035f8bb40e2a8fb14d39b96e",
+    "3b7e7614acd3a625a7e29992bca37a212200976483f93cb497e37aa371263cec",
+    "432b66e6bcfdbfff8fe50a050f87b080b87c4f24ef83bf3938cef5f18ef4fcc4",
+    "57a6cbed45f9e3be91914b7cadf61f2eb04f8d1842c2e1055acb230e5de4504a",
+    "5bf1c650e7da8c67c261d2bff79b09bc58495885300d9420a59d37f8e05aaa5b",
+    "5f2d7b4cdd547c2f5321d4ce3a81d8462c25e7f4edbc6a711743a9f580e70df8",
+    "60a8c3f0b0c6c161c840343ce021e109e18348976bbd93b3d1ca6e7c4364c314",
+    "62e4388c7ac578e5b255fe8e9f1229a736538720e890a8ac7f8fd187553a3b86",
+    "640d7cae44f7a4eff224ffb0b484bf6ada7998eeb07bb0bd833781cb68c05380",
+    "6988727e89aca434181e8c3f9b96cc5616588e90c4e15c9c22d4a564fe5fd4a1",
+    "7487aadb622d8e34c7216d74d8bf015e1898042092ba4c7d5fc38d44e93fe10e",
+    "771c65bedc73d556636e1f65fe65bbea6670755f9a0d30cb0452c36431cbf59b",
+    "7997f44b26506acc8b8f9e729134e57f9afcebfe8fd3e5f3d0871169aa5b09e8",
+    "7b0c98b90fb4a91fa94c69070528215f5a00cb2c3cad605dedce5ef56f704a3d",
+    "7bf4e54b8d2e58597ba760e122df22b0b29ddf258747398f15a7cadc3e0dfbd1",
+    "7db5d478b702a49473668ddcc6d00aa6ac600b7bb28e32888b8bab102f330511",
+    "7e1e9a8551a882cbbc0561aca2896e56439988f636bcc07fe620303e844a829f",
+    "7eb382171de145543189105186acd53390c876d6390b43b270fad2b9ec59962e",
+    "841a789041f46a0b7a2d960059293c8c50a57f987b55589dce3f91f22462d5db",
+    "8433a5e312d045408cbbf9d7ab87ffcf17126dd261ff6141fc5307b34d558e66",
+    "860babc3281c6df343b38bab21ba25f99910d4209e1a285fa6dc32bee6639462",
+    "888425ff7d237eb1dae16481c3f235720ac6436290d34b27f8132a8f04f539c1",
+    "8909046042d649935c1bb4a0b27b355d804694826bb1eec4fd18ba67b21290a6",
+    "94e2e8ef53f4f90ae96fb7fa7d9f78b77a43c37b5b4c4f2fda0b6cebf4bfd98d",
+    "9b96824a91316c674b7fe69e27d899cf0d720eb6d8375cf834874a9470f8634d",
+    "9cdac7a68f23c53e00226d3474931e5d44fd56bce3a17a8ad65e6ed84a436907",
+    "9e39ae3fe26fa00ef9d117b5092f4134a52781d8c22381ec3418ace7687877e8",
+    "a442660bb499fac2a236eb984cf9b883a94cc94926143c14737eccf01c84602a",
+    "a595ebb0823e24fed666eaf5da75d7a2a18ab18e9e684b15913d9c475ef702ef",
+    "accd73f4f7cf67d3c8f46139168d847dd4ef0f6fd2b28dcce1cbd7c65240adc3",
+    "b19a6d1457a0feee00bed0961a82a480d450efb159bd11fcf253d4b6994030e2",
+    "b3eed4fbbef7d43317ab218975cfa09687d5b5e84af237054319973ecf681e00",
+    "bf01d617709dddb91730a48e8b523392359a7352b96d6408dca24fab4e41a272",
+    "c57a7e56a8486366fdd2eb3d412c83e857496d397b99fbf0b92f2651a2d4b1bc",
+    "c7c7c66cbecc8669fe490cde28264adc52c51fd21e76833d8561d67212a9e98a",
+    "cbfa2b4270e642f20abd83ded057bca88045a3e5e30a481c5efea0963574e442",
+    "cdb5d7137490980a3695b24a492f9ccada23f4aa83851fb5c3ca489cbd702aff",
+    "cef85d9b601ed5f85af3bc733f5c9a4aad488e0b0bbd9316359592924945109a",
+    "cffdaa8101f480dc44d50960ac1a066deb17642ba301ff616cba425a331027e8",
+    "d362b6ecbe114d48d2cfcdf3f0120cc1b252926c2a35efc8401ce046ef08820c",
+    "d55e31f8ee34a3ad4b81233ab09193244746ae5453e9bd216bce2ccb0ebc63f9",
+    "da5087b228813d1188b49878b8b9e75b59736c513075cf4ad30cfafe8df98225",
+    "db61c8a4b26d85cf26f580264426ab41e2dfd887c739795f8ea85e06c09e0620",
+    "deeaee78023ae567990f7473e0284331aec87b6f726e7147cbd494ebc8c0627c",
+    "ee969075dcb7f965ea2a3bcd87a99b30d9969de783f637960a02b28beeb10d29",
+    "f1d946facca4b8ac4e4439e36b68e7611d947423d475314ccccae286b3960894",
+    "f47fb2d9f9da4852564818d1d4dba9d1e50d4fddebe951448bc79921efe03a3d",
+    "fab3804254f1f469e495cd060ac5034a3bfc8615e766f45ac2f775e15ecb8139",
+    "fd92d24bb17b439176e4cd2b4f94d333421b5cee17013875c6c670dcf0759cf3",
+    "ff956ad1504df063854ff66e2bae9d90c849f9a03faa52119bfec98f1be186eb"
+  ],
+  "prior_case_files": [
+    {
+      "path": "benchmarks/summary_agent_pilot/results/2026-11-10/cases.json",
+      "file_sha256": "98f4b95d05988c8e1aafb1c7cff6683242ceb737172ea869453cd9cee1373690",
+      "cases": [
+        {
+          "id": "S01",
+          "source_sha256": "0bc001a23501f2067838f3d9dd777a99118d812b1e70f0a30755bbfd8e36c05a"
+        },
+        {
+          "id": "S02",
+          "source_sha256": "5f2d7b4cdd547c2f5321d4ce3a81d8462c25e7f4edbc6a711743a9f580e70df8"
+        },
+        {
+          "id": "S03",
+          "source_sha256": "7bf4e54b8d2e58597ba760e122df22b0b29ddf258747398f15a7cadc3e0dfbd1"
+        },
+        {
+          "id": "S04",
+          "source_sha256": "888425ff7d237eb1dae16481c3f235720ac6436290d34b27f8132a8f04f539c1"
+        },
+        {
+          "id": "S05",
+          "source_sha256": "db61c8a4b26d85cf26f580264426ab41e2dfd887c739795f8ea85e06c09e0620"
+        },
+        {
+          "id": "S06",
+          "source_sha256": "7487aadb622d8e34c7216d74d8bf015e1898042092ba4c7d5fc38d44e93fe10e"
+        },
+        {
+          "id": "S07",
+          "source_sha256": "841a789041f46a0b7a2d960059293c8c50a57f987b55589dce3f91f22462d5db"
+        },
+        {
+          "id": "S08",
+          "source_sha256": "deeaee78023ae567990f7473e0284331aec87b6f726e7147cbd494ebc8c0627c"
+        },
+        {
+          "id": "S09",
+          "source_sha256": "1dbb118f6d61328d46f565732cc691c8b04b5013c5c875d1de27176c2c40cbe8"
+        }
+      ]
+    },
+    {
+      "path": "benchmarks/summary_agent_revision/results/2026-11-10/cases.json",
+      "file_sha256": "1332ff3a02d780432aae74b66eaaf6af183f6222b71bdc8e34182302765b6d10",
+      "cases": [
+        {
+          "id": "N01",
+          "source_sha256": "293c30a4f8bdf8ff4ce7fa022ac2b83cb04254a648d08435a9f136659b0db451"
+        },
+        {
+          "id": "N02",
+          "source_sha256": "f47fb2d9f9da4852564818d1d4dba9d1e50d4fddebe951448bc79921efe03a3d"
+        },
+        {
+          "id": "N03",
+          "source_sha256": "31aa149c47ee13d78150cc1883aab9427e9def5ca801a336b17ef135b1dde005"
+        },
+        {
+          "id": "N04",
+          "source_sha256": "7b0c98b90fb4a91fa94c69070528215f5a00cb2c3cad605dedce5ef56f704a3d"
+        },
+        {
+          "id": "N05",
+          "source_sha256": "7db5d478b702a49473668ddcc6d00aa6ac600b7bb28e32888b8bab102f330511"
+        },
+        {
+          "id": "N06",
+          "source_sha256": "cdb5d7137490980a3695b24a492f9ccada23f4aa83851fb5c3ca489cbd702aff"
+        },
+        {
+          "id": "N07",
+          "source_sha256": "860babc3281c6df343b38bab21ba25f99910d4209e1a285fa6dc32bee6639462"
+        },
+        {
+          "id": "N08",
+          "source_sha256": "8909046042d649935c1bb4a0b27b355d804694826bb1eec4fd18ba67b21290a6"
+        },
+        {
+          "id": "N09",
+          "source_sha256": "22d3ef93a7347812725f95dfc650773c82cbef275bd00fde3be99af267e13f6d"
+        }
+      ]
+    },
+    {
+      "path": "benchmarks/summary_reflection/results/2026-11-10/selection/cases.json",
+      "file_sha256": "8afa0a428c0d37bd808aa7d8b2713913001c059f7fdbd7bfda3cd8ff0955ec69",
+      "cases": [
+        {
+          "id": "D01",
+          "source_sha256": "0201176fe19c7738a2aae78ca085bfc7c505be119418d448e5a4a2b5b7ede10b"
+        },
+        {
+          "id": "D02",
+          "source_sha256": "5bf1c650e7da8c67c261d2bff79b09bc58495885300d9420a59d37f8e05aaa5b"
+        },
+        {
+          "id": "D03",
+          "source_sha256": "57a6cbed45f9e3be91914b7cadf61f2eb04f8d1842c2e1055acb230e5de4504a"
+        },
+        {
+          "id": "D04",
+          "source_sha256": "2d1ee92efaf7624a3a41dc8cab6eb1ff0a32f651c8785b685c7afec667ab481c"
+        },
+        {
+          "id": "D05",
+          "source_sha256": "771c65bedc73d556636e1f65fe65bbea6670755f9a0d30cb0452c36431cbf59b"
+        },
+        {
+          "id": "D06",
+          "source_sha256": "22804c6993ae16fee51b24ffb2ae6b8220e4bd31317f925964c6686a8070430f"
+        }
+      ]
+    },
+    {
+      "path": "benchmarks/summary_reflection/results/2026-11-10/final/cases.json",
+      "file_sha256": "1d0f43651843f49f6cff9e526bce043c87e77d8f57ad4febd098958e104f11c4",
+      "cases": [
+        {
+          "id": "T01",
+          "source_sha256": "c57a7e56a8486366fdd2eb3d412c83e857496d397b99fbf0b92f2651a2d4b1bc"
+        },
+        {
+          "id": "T02",
+          "source_sha256": "f1d946facca4b8ac4e4439e36b68e7611d947423d475314ccccae286b3960894"
+        },
+        {
+          "id": "T03",
+          "source_sha256": "cbfa2b4270e642f20abd83ded057bca88045a3e5e30a481c5efea0963574e442"
+        },
+        {
+          "id": "T04",
+          "source_sha256": "ff956ad1504df063854ff66e2bae9d90c849f9a03faa52119bfec98f1be186eb"
+        },
+        {
+          "id": "T05",
+          "source_sha256": "60a8c3f0b0c6c161c840343ce021e109e18348976bbd93b3d1ca6e7c4364c314"
+        },
+        {
+          "id": "T06",
+          "source_sha256": "d55e31f8ee34a3ad4b81233ab09193244746ae5453e9bd216bce2ccb0ebc63f9"
+        },
+        {
+          "id": "T07",
+          "source_sha256": "da5087b228813d1188b49878b8b9e75b59736c513075cf4ad30cfafe8df98225"
+        },
+        {
+          "id": "T08",
+          "source_sha256": "c7c7c66cbecc8669fe490cde28264adc52c51fd21e76833d8561d67212a9e98a"
+        },
+        {
+          "id": "T09",
+          "source_sha256": "9e39ae3fe26fa00ef9d117b5092f4134a52781d8c22381ec3418ace7687877e8"
+        },
+        {
+          "id": "T10",
+          "source_sha256": "fd92d24bb17b439176e4cd2b4f94d333421b5cee17013875c6c670dcf0759cf3"
+        },
+        {
+          "id": "T11",
+          "source_sha256": "b19a6d1457a0feee00bed0961a82a480d450efb159bd11fcf253d4b6994030e2"
+        },
+        {
+          "id": "T12",
+          "source_sha256": "3b1963b9e5d3e9ce1630c2379931938a435f3c1c035f8bb40e2a8fb14d39b96e"
+        },
+        {
+          "id": "T13",
+          "source_sha256": "fab3804254f1f469e495cd060ac5034a3bfc8615e766f45ac2f775e15ecb8139"
+        },
+        {
+          "id": "T14",
+          "source_sha256": "cffdaa8101f480dc44d50960ac1a066deb17642ba301ff616cba425a331027e8"
+        },
+        {
+          "id": "T15",
+          "source_sha256": "b3eed4fbbef7d43317ab218975cfa09687d5b5e84af237054319973ecf681e00"
+        },
+        {
+          "id": "T16",
+          "source_sha256": "7e1e9a8551a882cbbc0561aca2896e56439988f636bcc07fe620303e844a829f"
+        },
+        {
+          "id": "T17",
+          "source_sha256": "9b96824a91316c674b7fe69e27d899cf0d720eb6d8375cf834874a9470f8634d"
+        },
+        {
+          "id": "T18",
+          "source_sha256": "7eb382171de145543189105186acd53390c876d6390b43b270fad2b9ec59962e"
+        }
+      ]
+    },
+    {
+      "path": "benchmarks/summary_gepa_offline/results/2026-11-10/train/cases.json",
+      "file_sha256": "d601ebaa87ce72317f7d1868202e47d20a1529207e55f2dcfd1964e6d74bd83a",
+      "cases": [
+        {
+          "id": "G01",
+          "source_sha256": "ee969075dcb7f965ea2a3bcd87a99b30d9969de783f637960a02b28beeb10d29"
+        },
+        {
+          "id": "G02",
+          "source_sha256": "1a1141eb607b017d7403e79f44379c2b53b722e4777c7c801e2813eb4ea3654d"
+        },
+        {
+          "id": "G03",
+          "source_sha256": "8433a5e312d045408cbbf9d7ab87ffcf17126dd261ff6141fc5307b34d558e66"
+        },
+        {
+          "id": "G04",
+          "source_sha256": "3727e6e13861bb15df7fbd04b702f4ce91844b62de85a59c0a7885d51bb64367"
+        },
+        {
+          "id": "G05",
+          "source_sha256": "a442660bb499fac2a236eb984cf9b883a94cc94926143c14737eccf01c84602a"
+        },
+        {
+          "id": "G06",
+          "source_sha256": "cef85d9b601ed5f85af3bc733f5c9a4aad488e0b0bbd9316359592924945109a"
+        }
+      ]
+    },
+    {
+      "path": "benchmarks/summary_gepa_offline/results/2026-11-10/validation/cases.json",
+      "file_sha256": "53f90928b0fc6059c6e3f60ec2d4806963fafb2897a3f6de0d9f3683a93a27e5",
+      "cases": [
+        {
+          "id": "V01",
+          "source_sha256": "7997f44b26506acc8b8f9e729134e57f9afcebfe8fd3e5f3d0871169aa5b09e8"
+        },
+        {
+          "id": "V02",
+          "source_sha256": "a595ebb0823e24fed666eaf5da75d7a2a18ab18e9e684b15913d9c475ef702ef"
+        },
+        {
+          "id": "V03",
+          "source_sha256": "30c614bcb09c7e393f86a7284d0f337d70505a7a9240f6c55e5d47027d789f8b"
+        },
+        {
+          "id": "V04",
+          "source_sha256": "2073cc88986db4db56ff004716a1c13eb56310455137f58cdd0ab86c0b44125c"
+        },
+        {
+          "id": "V05",
+          "source_sha256": "3b7e7614acd3a625a7e29992bca37a212200976483f93cb497e37aa371263cec"
+        },
+        {
+          "id": "V06",
+          "source_sha256": "6988727e89aca434181e8c3f9b96cc5616588e90c4e15c9c22d4a564fe5fd4a1"
+        }
+      ]
+    },
+    {
+      "path": "benchmarks/summary_gepa_offline/results/2026-11-10/final/cases.json",
+      "file_sha256": "4a863e7cee9ecea3c1b73e2e8653474459d111a4e211328bf19c07789781e2f6",
+      "cases": [
+        {
+          "id": "H01",
+          "source_sha256": "9cdac7a68f23c53e00226d3474931e5d44fd56bce3a17a8ad65e6ed84a436907"
+        },
+        {
+          "id": "H02",
+          "source_sha256": "accd73f4f7cf67d3c8f46139168d847dd4ef0f6fd2b28dcce1cbd7c65240adc3"
+        },
+        {
+          "id": "H03",
+          "source_sha256": "16ef8f6889df94535689edee4e98d30baed7ddfe262b15815a68ce543d9e28e4"
+        },
+        {
+          "id": "H04",
+          "source_sha256": "bf01d617709dddb91730a48e8b523392359a7352b96d6408dca24fab4e41a272"
+        },
+        {
+          "id": "H05",
+          "source_sha256": "d362b6ecbe114d48d2cfcdf3f0120cc1b252926c2a35efc8401ce046ef08820c"
+        },
+        {
+          "id": "H06",
+          "source_sha256": "62e4388c7ac578e5b255fe8e9f1229a736538720e890a8ac7f8fd187553a3b86"
+        },
+        {
+          "id": "H07",
+          "source_sha256": "432b66e6bcfdbfff8fe50a050f87b080b87c4f24ef83bf3938cef5f18ef4fcc4"
+        },
+        {
+          "id": "H08",
+          "source_sha256": "12437e634b55910521dfee45e5de9d34e7ee5fb9d1d4e12173b0dcb46a9c29a1"
+        },
+        {
+          "id": "H09",
+          "source_sha256": "94e2e8ef53f4f90ae96fb7fa7d9f78b77a43c37b5b4c4f2fda0b6cebf4bfd98d"
+        }
+      ]
+    }
+  ],
+  "selected_count": 9,
+  "selected": [
+    {
+      "id": "C01",
+      "record_index": 6,
+      "source_sha256": "d3ad33977c6f0e62cc886fcfe560b0d69ed8ed43596ea6a2149d0be368b354d6"
+    },
+    {
+      "id": "C02",
+      "record_index": 75,
+      "source_sha256": "d1786ecfd194e3fdfe11254e44305115b57fabca010605a65f2c59fd41fc1fc4"
+    },
+    {
+      "id": "C03",
+      "record_index": 67,
+      "source_sha256": "2bb248d0fa80602687e641ac81da924bdb0932b7fa328c50ae6ed86acd237f54"
+    },
+    {
+      "id": "C04",
+      "record_index": 77,
+      "source_sha256": "dbcb1d9570142390f73410b50163dad9115331a31c4069fd020d85237ffa8b6c"
+    },
+    {
+      "id": "C05",
+      "record_index": 93,
+      "source_sha256": "01233d56b4a88bdd03f17953eea4d98e98ff123cf1a0e8d34e35892f28bcec3e"
+    },
+    {
+      "id": "C06",
+      "record_index": 69,
+      "source_sha256": "11ecf46ece1a9b660f8e41eec3b9d1e67df955d9fca7d3e19f7ec3d2c86151c7"
+    },
+    {
+      "id": "C07",
+      "record_index": 17,
+      "source_sha256": "c938f8199aac9efb7470ec6f3fed8ed8c0af9be2c2e084f90f7a5b0a995e6373"
+    },
+    {
+      "id": "C08",
+      "record_index": 87,
+      "source_sha256": "08947559210c0e9f6b6cf88731d0e213c897e5e4c6b74e6a48dd08a46304c3f8"
+    },
+    {
+      "id": "C09",
+      "record_index": 58,
+      "source_sha256": "c842a05fbdbdd94ab54ac6319c660dbb7c6ad13604c2529ea49a550272896095"
+    }
+  ],
+  "profile_assignment": "Conflict-focused: two expand, two rephrase, two keep_limits under short/fully; plus short/normal, normal/high, long/fully. This is not the earlier nine-profile grid.",
+  "annotation_protocol": "evaluation_sources.json fixes the repaired final sample before replacement annotation. Eight source/annotation records remain identical to the original artifacts; C03 alone receives new source-only priorities and atomic fact anchors. Exactly three distinct complete v3-normalized priority sentences are shared across arms per case; three fact anchors remain private. This measures explicit-source-priority following, not unprompted discovery.",
+  "blinding": {
+    "generated_summaries_seen": false,
+    "candidate_prompts_seen": false,
+    "old_reviews_or_scores_seen": false,
+    "human_reference_summary_bodies_seen": false,
+    "metadata_exposure": "Initial schema inspection accidentally displayed human-reference titles for val record 0; no summary bodies. Sampling was not changed because of this exposure.",
+    "exposed_record_selected": false,
+    "replacement_selected_before_generation": true,
+    "replacement_performance_criteria_used": false
+  },
+  "original_selection_note": "Original four artifacts are quarantined provenance, preserved byte-for-byte. Original C03 was replaced before any model output or candidate-prompt/performance review. Selection is based only on source overlap, not outcome scores.",
+  "original_artifact_sha256": {
+    "sources.json": "ff470dcc013d26b81094ae26dd2437f4f5d49511bee498399671fb438cb9e13b",
+    "sampling.json": "99ca7cc9718fcdd8bc87e440f71f32d1d31e6e6ca8d901a5e69f7ada6676b356",
+    "source_annotations.json": "ac874d13063d0004fda36c26c5d4dba846e16a1d1488af1f72e9dcd8a28aa65e",
+    "source_annotation_validation.json": "69b83d2cb1acab0d0bb265ada803bc9194a6597d29e12b4933b9e3d76d2377f0"
+  },
+  "original_selected": [
+    {
+      "id": "C01",
+      "record_index": 6,
+      "source_sha256": "d3ad33977c6f0e62cc886fcfe560b0d69ed8ed43596ea6a2149d0be368b354d6"
+    },
+    {
+      "id": "C02",
+      "record_index": 75,
+      "source_sha256": "d1786ecfd194e3fdfe11254e44305115b57fabca010605a65f2c59fd41fc1fc4"
+    },
+    {
+      "id": "C03",
+      "record_index": 32,
+      "source_sha256": "640d7cae44f7a4eff224ffb0b484bf6ada7998eeb07bb0bd833781cb68c05380"
+    },
+    {
+      "id": "C04",
+      "record_index": 77,
+      "source_sha256": "dbcb1d9570142390f73410b50163dad9115331a31c4069fd020d85237ffa8b6c"
+    },
+    {
+      "id": "C05",
+      "record_index": 93,
+      "source_sha256": "01233d56b4a88bdd03f17953eea4d98e98ff123cf1a0e8d34e35892f28bcec3e"
+    },
+    {
+      "id": "C06",
+      "record_index": 69,
+      "source_sha256": "11ecf46ece1a9b660f8e41eec3b9d1e67df955d9fca7d3e19f7ec3d2c86151c7"
+    },
+    {
+      "id": "C07",
+      "record_index": 17,
+      "source_sha256": "c938f8199aac9efb7470ec6f3fed8ed8c0af9be2c2e084f90f7a5b0a995e6373"
+    },
+    {
+      "id": "C08",
+      "record_index": 87,
+      "source_sha256": "08947559210c0e9f6b6cf88731d0e213c897e5e4c6b74e6a48dd08a46304c3f8"
+    },
+    {
+      "id": "C09",
+      "record_index": 58,
+      "source_sha256": "c842a05fbdbdd94ab54ac6319c660dbb7c6ad13604c2529ea49a550272896095"
+    }
+  ],
+  "quarantined_original_case": {
+    "id": "C03",
+    "record_index": 32,
+    "source_sha256": "640d7cae44f7a4eff224ffb0b484bf6ada7998eeb07bb0bd833781cb68c05380",
+    "max_word_5gram_jaccard": 0.18216682646212848,
+    "shared_5grams": 190,
+    "nearest_prior_id": "T17",
+    "nearest_prior_case_file": "benchmarks/summary_reflection/results/2026-11-10/final/cases.json",
+    "reason": "Pre-generation source contamination audit exceeded the conservative Jaccard threshold."
+  },
+  "replacement": {
+    "id": "C03",
+    "record_index": 67,
+    "source_sha256": "2bb248d0fa80602687e641ac81da924bdb0932b7fa328c50ae6ed86acd237f54",
+    "candidates_examined": [
+      {
+        "shuffle_position_one_based": 10,
+        "record_index": 67,
+        "max_jaccard": 0.0,
+        "nearest_id": "S01",
+        "accepted": true
+      }
+    ],
+    "profile_and_resolution_unchanged": true
+  },
+  "overlap_audit": {
+    "tokenization": "re.findall(r'\\w+', text.lower())",
+    "ngram_size": 5,
+    "measure": "set intersection / set union",
+    "acceptance": "strictly < 0.1",
+    "threshold": 0.1,
+    "prior_unique_source_count": 63,
+    "prior_pair_count": 567,
+    "selected_pair_count": 36,
+    "final_max_jaccard": 0.025974025974025976,
+    "final_max_pair": {
+      "left": "C02",
+      "right": "T01",
+      "kind": "prior"
+    }
+  }
+}

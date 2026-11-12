@@ -1,0 +1,140 @@
+[
+  {
+    "id": "D01",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Police said Andrew Getty appeared to have died of natural causes.",
+        "evidence": ["Andrew Getty, one of the heirs to billions of oil money, appears to have died of natural causes, a Los Angeles Police Department spokesman said."],
+        "rationale": "The death and its tentative explanation are the central news; the assessment must not be presented as a confirmed cause."
+      },
+      {
+        "id": "F2",
+        "proposition": "No criminal investigation into Getty's death was underway.",
+        "evidence": ["There is no criminal investigation underway, he said."],
+        "rationale": "This is the reported investigative status, distinct from the tentative medical explanation."
+      },
+      {
+        "id": "F3",
+        "proposition": "An autopsy on Getty was planned.",
+        "evidence": ["Andrew Getty, 47, had \"several health issues,\" Aguilar said, adding that an autopsy will be conducted."],
+        "rationale": "The planned examination is central to the unresolved medical determination; age and unspecified health issues are not additional required facts."
+      }
+    ]
+  },
+  {
+    "id": "D02",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Felix, a passenger's pet cat, went missing at New York's Kennedy Airport after an Etihad flight.",
+        "evidence": ["American Jennifer Stewart says she was devastated to learn that Etihad Airways lost her most important baggage following a recent trip from Abu Dhabi to New York City: her 2-year-old pet cat, Felix.", "Shortly after the plane arrived in New York that evening, Felix went missing somewhere on the grounds of Kennedy Airport, according to Etihad Airways."],
+        "rationale": "This identifies the central loss and the air-travel context; the owner's name, exact travel date and cat's age are incidental."
+      },
+      {
+        "id": "F2",
+        "proposition": "Felix had still not been found at the time of the report.",
+        "evidence": ["Nearly one week later, Felix remains missing."],
+        "rationale": "The unresolved outcome is essential; the exact number of elapsed days is not required."
+      },
+      {
+        "id": "F3",
+        "proposition": "Etihad was helping search for Felix.",
+        "evidence": ["Etihad Airways is investigating the incident and is working with ground handlers at the New York airport to help locate the missing cat.", "The Abu Dhabi-based carrier also said it hired \"third-party specialists\" to help in the hunt for Felix."],
+        "rationale": "The airline's active response is central to the ongoing search; the distinct investigation and individual search methods are not additional requirements."
+      }
+    ]
+  },
+  {
+    "id": "D03",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Shanghai restricts the supply of vehicle license plates.",
+        "evidence": ["The 26-year old has his eye on a Volkswagen Tiguan but Shanghai, like many large Chinese cities, rations license plates as it looks for a solution to its gridlocked roads and polluted skies."],
+        "rationale": "Plate rationing is the central obstacle to conventional car ownership; particular buyers and car brands are examples."
+      },
+      {
+        "id": "F2",
+        "proposition": "Buying a hybrid vehicle offers an automatic qualification for a license plate.",
+        "evidence": ["Another option would be to buy a hybrid vehicle that automatically qualifies for a license plate -- a selling point not lost on the car manufacturers showing their latest models and concepts at the Shanghai Auto Show this week."],
+        "rationale": "This is the article's principal alternative to the restricted plate auctions; no particular manufacturer is required."
+      },
+      {
+        "id": "F3",
+        "proposition": "The difficulties of car ownership are leading some affluent Chinese city residents to forgo cars.",
+        "evidence": ["For others, the hassles of buying and owning a car have become too much and some affluent city dwellers are spurning cars."],
+        "rationale": "This captures the central countertrend without generalizing it to all Chinese consumers or demanding the incidental survey figures."
+      }
+    ]
+  },
+  {
+    "id": "D04",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "An Al-Shabaab attack on a university in Garissa killed 147 people.",
+        "evidence": ["Only a few kilometers away, 147 people -- mostly students -- were brutally massacred when Al-Shabaab militants invaded the campus in Garissa, a town in northeastern Kenya."],
+        "rationale": "The event and death toll establish the central incident and its scale; the victim breakdown is not an additional requirement."
+      },
+      {
+        "id": "F2",
+        "proposition": "The man Kenyan authorities suspected of masterminding the attack was Kenyan.",
+        "evidence": ["We've come to this particular Islamic religious school because the man suspected by Kenyan authorities of being the \"mastermind\" behind the atrocity -- Mohamed Mohamud -- once taught here.", "What worries authorities here is exactly that -- Mohamud was Kenyan."],
+        "rationale": "The suspected planner's domestic origin drives the article's focus; his alleged role must remain an allegation and his name or former workplace need not be repeated."
+      },
+      {
+        "id": "F3",
+        "proposition": "The Kenyan government was concerned that Al-Shabaab was recruiting young people within Kenya.",
+        "evidence": ["The Kenyan government is concerned that Al-Shabaab is recruiting disaffected youth from inside the country."],
+        "rationale": "Domestic recruitment is the principal security concern drawn from the attack; the proposition preserves the government's stated concern."
+      }
+    ]
+  },
+  {
+    "id": "D05",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "The character Derek Shepherd died on Grey's Anatomy.",
+        "evidence": ["On Thursday night's \"Grey's Anatomy,\" Dr. Derek Shepherd -- the hunky character played by Patrick Dempsey -- died."],
+        "rationale": "The fictional character's death is the central news and must not be confused with the actor's death."
+      },
+      {
+        "id": "F2",
+        "proposition": "Shepherd died following a car crash.",
+        "evidence": ["Instead, he died following a car crash -- after helping victims of another accident."],
+        "rationale": "The crash explains the character's departure; his earlier assistance to other victims is a separable detail."
+      },
+      {
+        "id": "F3",
+        "proposition": "Grey's Anatomy would continue after Shepherd's death.",
+        "evidence": ["But the show will very much continue -- not only does it have a few weeks before the 11th season is over, Pompeo is also signed through season 12."],
+        "rationale": "The continuing status of the series is the central consequence; exact season numbers and contract details are supporting evidence."
+      }
+    ]
+  },
+  {
+    "id": "D06",
+    "facts": [
+      {
+        "id": "F1",
+        "proposition": "Police linked Ebony Dickens to a Facebook post threatening to shoot white police officers.",
+        "evidence": ["Ebony Dickens of East Point, Georgia, posted her Facebook rant under the name Tiffany Milan, police said.", "\"All Black ppl should rise up and shoot at every white cop in the nation starting NOW,\" said the post made on Monday.", "After connecting Dickens to the Facebook post, authorities obtained a search warrant for her residence."],
+        "rationale": "This states the central alleged conduct and its attribution; the alias, exact date and threatened count are not required."
+      },
+      {
+        "id": "F2",
+        "proposition": "Dickens faced a charge of disseminating information related to terrorist acts.",
+        "evidence": ["Dickens, 33, appeared in court Wednesday on a charge of disseminating information related to terrorist acts."],
+        "rationale": "The charge is the principal legal consequence and must not be described as a conviction."
+      },
+      {
+        "id": "F3",
+        "proposition": "A judge banned Dickens from social media.",
+        "evidence": ["A judge set a $10,000 bond for her and banned her from social media."],
+        "rationale": "This restriction directly responds to the alleged online conduct; the bond amount is a separate detail."
+      }
+    ]
+  }
+]

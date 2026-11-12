@@ -1,0 +1,20 @@
+{
+  "completed_utc": "2026-11-12T10:16:37.321940+00:00",
+  "references_pass": 8,
+  "typed_behavior_mutants_detected": 8,
+  "behavior_checks_per_arm": 56,
+  "evaluator_development_tests_passed": 22,
+  "earlier_20_test_run_overlaps": true,
+  "source_review": "Driver read all eight reference sources, exact mutant replacements and runtime/evaluator before control execution. Executor separately reviewed evaluator/development fixtures before tests. No control safety violations found.",
+  "pre_generation_fixes": [
+    "Plain side-effect CSS support and common disclosed CSS subset",
+    "Local parent/top identifier false positive removed; window parent/top direct access blocked",
+    "Common task type sentence delegates local annotation level to supplied style",
+    "Manual inferred only aligned; identical strict-required annotation exception for all arms",
+    "Select accessible labels exclude embedded option text"
+  ],
+  "product_prompt_identity": true,
+  "language": "en default UI",
+  "paid_model_api_calls": 0,
+  "candidate_generation_started": false
+}

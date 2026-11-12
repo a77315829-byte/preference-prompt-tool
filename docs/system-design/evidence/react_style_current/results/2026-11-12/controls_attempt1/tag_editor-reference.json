@@ -1,0 +1,54 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "tag_editor",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_tags_order_and_no_callback",
+        "passed": true
+      },
+      {
+        "name": "blank_submission_preserves_draft_and_tags",
+        "passed": true
+      },
+      {
+        "name": "duplicate_comparison_trims_and_ignores_case",
+        "passed": true
+      },
+      {
+        "name": "valid_add_trims_preserves_case_and_clears_error",
+        "passed": true
+      },
+      {
+        "name": "remove_exact_tag_and_clear_error",
+        "passed": true
+      },
+      {
+        "name": "rerender_preserves_local_values_and_uses_new_callback",
+        "passed": true
+      },
+      {
+        "name": "new_tag_is_text_and_can_be_removed",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0
+}

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "prepared_utc": "2026-11-10T05:40:18.780823+00:00",
+  "git_head": "43024129a480c1fecb1c8013af5717b7003e3e34",
+  "dataset": "MACSum macdoc/test.json",
+  "dataset_sha256": "f1b08ef9c17d1fac94d395b5881fd038c1229f3d937b6052acce989070b9dbe9",
+  "sampling": "Seeded shuffle; 250-800 whitespace words, >=8 source units, at least one no-topic reference; first 9 distinct records",
+  "seed": 20261110,
+  "eligible_records": 52,
+  "cases": 9,
+  "outputs": 27,
+  "profiles": "All 3 length x 3 extractiveness combinations, one document per combination; no topic",
+  "generator": "Three independent Codex subagents with no parent conversation, same inherited model/settings, one arm each; each arm receives all 9 tasks",
+  "external_model_api_calls": 0,
+  "selection_rounds": null,
+  "selection_scope": "Confirmed target profiles injected into the actual export builder. No user selection, inference, GEPA, or prompt optimization in this pilot.",
+  "manual_baseline": "Investigator-authored strong instructions, not written by recruited users; same target constraints and fidelity rules",
+  "primary": [
+    "requested sentence-length compliance",
+    "blind wording-instruction review",
+    "coverage of 3 pre-frozen source-grounded key facts",
+    "blind audit of unsupported or distorted summary claims"
+  ],
+  "secondary": [
+    "current app bigram-overlap proxy with frozen YAML thresholds",
+    "strict verbatim source-unit extraction",
+    "summary/source word ratio",
+    "novel digit tokens as flags only"
+  ],
+  "reporting": "Separate length, wording, key-fact coverage, and factual problems; no combined score, significance claim, or human usability inference",
+  "blind_review": "Two fresh independent reviewers see randomized output IDs, sources, frozen facts and target conditions; no arm names or generation prompts. Different wording may still reveal strategy. Root adjudicates disagreements with evidence.",
+  "stop_rule": "One first submission per arm, no regeneration or prompt tuning after outputs. Keep failures. Reviewer amendments only for missing schema/evidence, never desired scores.",
+  "limitations": [
+    "9 news documents, one output per condition, profile and document confounded",
+    "Within-arm shared context; instruction isolation not OS isolation",
+    "Public corpus may be in model training and was examined in prior project work",
+    "MACSum labels do not validate app sentence-count thresholds",
+    "Content anchors and semantic judgments are AI-assisted, not human gold",
+    "No Korean, dialogue, personal preference, time saving, or adoption claim"
+  ],
+  "code_hashes": {
+    "domains/summarization.yaml": "06cf0b59279f0f12c1985f2b4d55536001ba293b5c3e54ff2ffa510691470671",
+    "engine/generator.py": "6e6d3d96792b1ff7f603c65e5287a591823340cbee65dbce523e73c57f0f9f62",
+    "checks/summarization.py": "2da4a1b92bcad670547aa3b8bf6f7e883c181c225999d0849c25afe23485f82b",
+    "benchmarks/summary_agent_pilot/prepare.py": "2df0ef3f832bbbcf0ce40dfe7bea807a7b151c75b3f8faf72eb3f3efda28e057"
+  }
+}

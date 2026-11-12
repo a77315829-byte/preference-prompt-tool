@@ -1,0 +1,108 @@
+{
+  "phase": "source-only, pre-output annotation",
+  "rubric_version": 2,
+  "status": "frozen before this annotator inspected any generated summaries",
+  "outputs_seen": false,
+  "prompts_seen": false,
+  "permitted_inputs": [
+    "CLAUDE.md",
+    "benchmarks/summary_gepa_offline/rubric.json",
+    "train/cases.json: id, source, profile only",
+    "validation/cases.json: id, source, profile only",
+    "final/cases.json: id, source, profile only"
+  ],
+  "excluded_inputs": [
+    "base_prompt fields",
+    "proposals",
+    "queue contents",
+    "generated outputs",
+    "prior studies"
+  ],
+  "scope": [
+    "These are AI-authored source-grounded anchors, not independent human gold labels.",
+    "Each case has exactly three selected central propositions. They are not a comprehensive inventory of everything a good summary might preserve.",
+    "Anchors were selected for centrality, not to make the assigned sentence-count and extraction profile easy. Use the same frozen anchors for all compared conditions.",
+    "Evidence is an exact source substring and may contain context beyond the proposition. Coverage must not silently require that incidental context.",
+    "Accurate paraphrase and unambiguous contextual reference count. Names, dates, quantities and conditions stated in a proposition identify its scope; details present only in evidence are not extra requirements.",
+    "A statement attributed to a speaker, report or organization must retain an appropriate evidential status. Predictions, allegations, fears and plans must not become completed or proven events.",
+    "Coverage is separate from factual accuracy. Omitting an anchor is not itself a hallucination; every summary claim still requires a full-source factual audit.",
+    "No external facts were consulted to correct or supplement these historical sources. Exact evidence matching establishes provenance, not human agreement about centrality."
+  ],
+  "pre_output_ambiguities": [
+    {
+      "case_id": "G03",
+      "fact_id": "F2",
+      "limit": "The torture-based divorce-coercion scheme is described as alleged. The conspiracy conviction in F1 does not automatically establish every alleged act or instrument of torture. The proposition requires the coercive purpose, not a list of implements or payment amounts."
+    },
+    {
+      "case_id": "G06",
+      "fact_id": "F2",
+      "limit": "Champion of family is treated as a figurative description of devotion to family. It is not a literal title or proof of specific skills. Athletic ability, humor and work ethic in the same evidence sentence are not additional anchor requirements."
+    },
+    {
+      "case_id": "V01",
+      "fact_id": "F2",
+      "limit": "The anchor concerns others' interpretation of Drake's visible reaction, not proof of his inner dislike. An appearance-based account and an explicit statement that observers speculated are closely related but not word-for-word identical; record this ambiguity if it affects a judgment rather than silently demanding or dropping a separate audience reaction."
+    },
+    {
+      "case_id": "V03",
+      "fact_id": "F2",
+      "limit": "The officials' confirmation is bounded: death was confirmed, cause was not specified. This is intentionally one epistemically limited confirmation claim. Do not turn it into confirmation of an airstrike or a U.S. strike, and do not require incidental surrounding civil-war context."
+    },
+    {
+      "case_id": "H04",
+      "fact_id": "F1",
+      "limit": "The conclusion concerns an appreciable overall system-wide protection gain from universal employee screening. It is not a claim that physical screening is entirely useless or that every existing screening program should end."
+    },
+    {
+      "case_id": "H06",
+      "fact_id": "F3",
+      "limit": "The source supports the crew's reported recurring memories. It does not support a clinical diagnosis, a quantified psychological effect, or a claim that all rescue workers experience the same thing."
+    },
+    {
+      "case_id": "H09",
+      "fact_id": "F3",
+      "limit": "The frozen proposition is the character's containment mission. The surrounding description that he knows dinosaurs better than anyone is not a separate exact-capability requirement. Genetic modification and the park setting are also outside this proposition."
+    }
+  ],
+  "short_fully_feasibility": {
+    "definition": "Short permits one or two grammatical sentences; fully requires complete unchanged source sentences subject only to the rubric's stated whitespace and initial-publisher-label exceptions.",
+    "general_limit": "Three central claims can occupy three or more separate source sentences. In such cases full anchor coverage and both requested format constraints may be jointly impossible. This is a task-constraint limitation, not automatically a weakness of a prompt.",
+    "cases": [
+      {
+        "case_id": "G06",
+        "assessment": "Joint full coverage is infeasible within two unchanged source sentences for the frozen three anchors.",
+        "source_only_reason": "The sentencing outcome, family-devotion remembrance and forgiveness statement occur in separate source sentences, with no one sentence conveying two of these three central propositions.",
+        "coverage_upper_bound_from_sentence_limit": "At most two of three anchors; identifying referents or preserving attribution could require additional context, so this is an upper bound rather than a guarantee of attainability."
+      },
+      {
+        "case_id": "V01",
+        "assessment": "Joint feasibility is not certified; sentence selection, quotation context and the declared F2 scope ambiguity matter.",
+        "source_only_reason": "The source contains a kiss-and-apparent-reaction sentence, a separate public-speculation sentence and a clarification spread across quoted sentences. A two-sentence extraction can be judged differently depending on whether the apparent reaction conveys the frozen public-interpretation claim and whether the positive clarification remains unambiguously attributed.",
+        "coverage_upper_bound_from_sentence_limit": "No numeric structural ceiling is claimed without resolving this predeclared ambiguity."
+      },
+      {
+        "case_id": "H05",
+        "assessment": "Joint full coverage is infeasible within two unchanged source sentences for the frozen three anchors.",
+        "source_only_reason": "The applicant's account of posing as black, the university's denial that race affected admission and the single-school acceptance outcome appear in separate source sentences. No complete source sentence conveys two of those three propositions.",
+        "coverage_upper_bound_from_sentence_limit": "At most two of three anchors; attribution and referents must still be checked."
+      }
+    ],
+    "reporting_implication": "Report length compliance, extraction compliance, anchor coverage and factual issues separately. Do not label a two-sentence fully extractive summary deficient merely because it cannot attain an infeasible joint target, and do not relax frozen anchors after viewing outputs to manufacture feasibility."
+  },
+  "sentence_and_reference_limits": [
+    "Source line breaks are not reliable sentence boundaries. Abbreviations, quoted multi-sentence speech and publisher or dateline text require the grammatical sentence rules in the rubric.",
+    "Exact extraction can leave pronouns or quotations without a clear antecedent. Exact copying alone does not guarantee that a central attribution or identity is recoverable from the summary.",
+    "Normal or long fully extractive profiles were not proved jointly feasible by an exhaustive sentence-combination search. The known short-profile conflicts are explicit source-only observations, not a general guarantee for the remaining cases."
+  ],
+  "validation": {
+    "train_cases": 6,
+    "validation_cases": 6,
+    "final_cases": 9,
+    "facts_per_case": 3,
+    "total_facts": 63,
+    "exact_source_substring_check": "passed for every evidence string in all three stage files",
+    "paid_api_calls": 0,
+    "network_calls": 0
+  }
+}

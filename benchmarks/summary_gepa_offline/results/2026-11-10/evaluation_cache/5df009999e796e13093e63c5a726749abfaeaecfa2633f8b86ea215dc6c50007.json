@@ -1,0 +1,69 @@
+{
+  "cache_key": "5df009999e796e13093e63c5a726749abfaeaecfa2633f8b86ea215dc6c50007",
+  "case": {
+    "record_index": 5,
+    "dataset_split": "val",
+    "source": "(CNN)Sophisticated, glamorous and spacious -- when the super-rich go house-hunting they are searching for something special.\nReal estate in London's swankier suburbs can catch a buyers' eye.\nMayfair, Kensington and Chelsea have long been the stomping ground of the elite -- and are now welcoming a new wave of African investors.\n\"The Africans who are coming into London now are Africans who themselves have worked for their money,\" explains Bimpe Nkontchou, a British-Nigerian wealth manager based in London.\n\"They have grown in industry and are actually part of the exciting story of the African renaissance,\" she continues.\n\"It's bringing to London the best of the continent.\"\nThese investors are having a considerable impact on London's property market and they mainly come from just six countries: Nigeria, Ghana, Congo, Gabon, Cameroon and Senegal.\nOf these, Nigerians are splashing out the most cash when it comes to bricks and mortar in the British capital -- typically spending between $22 and $37 million on securing a property, according to luxury property agents Beauchamp Estates.\nTheir research shows that over the past three years Africans have spent over $900 million on luxury residential property in London.\n\"The new international African is very well-traveled,\" explains Nkontchou.\n\"Educated in the U.S., UK and different parts of Europe their taste is definitely more modern and clean.\"\n'Safe-Haven' Owning a home in post codes like W1 or W8 -- around the corner from Kensington Palace -- means more than having a place to lay your head.\nThese buildings are investments which are expected to gain even bigger value in the coming years.\nHigh-end auction house Sotheby's says that foreign investors see London as a \"safe haven\"  for prime property investments, and ranks the city as the second most important hub for ultra high-net-worth homes.\nThe only spot more important on the planet is New York City.\nFor evidence that London still attracts high-end buyers, look no further than the sale of a penthouse in Mayfair which fetched $40 million earlier this year.\nEducated thinking .\nAs well as an intelligent investment, many of the African buyers see these houses as a way of maintaining long standing cultural ties with London -- and it's here they want to send their children to school.\nHarrow, Eton, Cheltenham Ladies College are all among the list of respected institutions that teach the offspring of wealthy Africans.\nThe Nigerian Embassy in London calculates that Nigerian nationals now spend over $446 million per year on fees, tutoring and accommodation at British schools and university.\n\"West African clients are very much driven by the need to educate their children,\" says Nkontchou.\n\"Education usually means putting the children on an international stage, and that's one reason why this is feeding into the demand for property in London.\"\nIndeed, education industry experts ICEF Monitor say there were over 17,500 Nigerians studying in British universities in 2012  -- about 1,000 more than the 2009/10 academic session.\nAnd experts are expecting this trend to continue.\n\"Virtually all the transactions are for end use, not rental investment, which indicates that the African buyer market in London has significant room for growth,\" says Gary Hersham, director at Beauchamp Estates.\n\"African buyers or luxury tenants in London are currently where the Russians and Ukrainians were five years ago.\nThey have the resources and desire to purchase or rental luxury homes in Prime Central London,\" he adds.\n\"It is going to be the African century.\n\"More from Marketplace Africa .\nRead this: Africa's green lean speed machines .\nRead this: African designs rocking art world .\nEditor's Note: CNN Marketplace Africa covers the macro trends impacting the region and also focuses on the continent's key industries and corporations .",
+    "source_sha256": "a595ebb0823e24fed666eaf5da75d7a2a18ab18e9e684b15913d9c475ef702ef",
+    "source_words": 616,
+    "id": "V02",
+    "profile": {
+      "length": "long",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "base_prompt": "You summarize English text according to the requested conditions while staying grounded in the source.\n\nSummarize the source text below in English according to these instructions.\n\n## Conditions for this summary\nThese are the conditions for this summary.\n- Length: Write five or more sentences, in detail.\n- Use of source wording: Reuse the source's words and phrases as much as possible. There is no upper limit on the amount reused.\n\n## Preserve source facts and central information\n- Source fidelity takes priority over stylistic preferences. Never change a fact or invent a connection or cause to meet a length or wording condition.\n- Before drafting, identify the central subject and event, main outcome or intended goal, decisive amounts with units and time windows, and essential qualifications or uncertainty within the requested focus.\n- Preserve who made each claim. Keep allegations, plans, estimates and unknowns distinct from confirmed facts. Copy numbers, dates and names accurately.\n- Within the requested sentence count, choose wording or source sentences that preserve the most central information. Remove decorative openings, peripheral background and repetition first.\n- For verbatim extraction, choose source sentences carrying central information. If a pronoun or event link would be unclear, include its necessary context within the sentence limit or choose a clearer sentence. Do not invent connecting text.\n- If everything cannot fit, retain the most important source-supported information within the requested length and wording mode. Do not silently exceed the length or claim complete coverage.\n- Before submitting, compare the summary with the source for missing central events, outcomes or goals, decisive quantities and qualifications, added facts, and altered attribution. Do not output this check.\n\n## Output format\nOutput only the summary, in English. No preamble, title, checklist, explanation, or closing."
+  },
+  "supplement": "",
+  "summary": "Mayfair, Kensington and Chelsea have long been the stomping ground of the elite -- and are now welcoming a new wave of African investors. These investors mainly come from just six countries: Nigeria, Ghana, Congo, Gabon, Cameroon and Senegal. Nigerians are splashing out the most cash -- typically spending between $22 and $37 million on securing a property, according to luxury property agents Beauchamp Estates. Their research shows that over the past three years Africans have spent over $900 million on luxury residential property in London. High-end auction house Sotheby's says that foreign investors see London as a \"safe haven\" for prime property investments, and ranks the city as the second most important hub for ultra high-net-worth homes, behind New York City. As well as an intelligent investment, many of the African buyers see these houses as a way of maintaining long standing cultural ties with London -- and it's here they want to send their children to school. The Nigerian Embassy in London calculates that Nigerian nationals now spend over $446 million per year on fees, tutoring and accommodation at British schools and university. Education industry experts ICEF Monitor say there were over 17,500 Nigerians studying in British universities in 2012 -- about 1,000 more than the 2009/10 academic session. \"Virtually all the transactions are for end use, not rental investment, which indicates that the African buyer market in London has significant room for growth,\" says Gary Hersham, director at Beauchamp Estates.",
+  "score": 1.0,
+  "feedback": "{\"preserved_facts\": [{\"id\": \"F1\", \"preserved\": true, \"summary_evidence\": [\"Mayfair, Kensington and Chelsea have long been the stomping ground of the elite -- and are now welcoming a new wave of African investors.\"], \"reason\": \"The new wave of African investment in London's luxury property market is explicit, with the following sentences establishing the London luxury-property context.\"}, {\"id\": \"F2\", \"preserved\": true, \"summary_evidence\": [\"according to luxury property agents Beauchamp Estates. Their research shows that over the past three years Africans have spent over $900 million on luxury residential property in London.\"], \"reason\": \"The attribution, spending amount greater than $900 million, three-year period and London luxury residential market are all preserved.\"}, {\"id\": \"F3\", \"preserved\": true, \"summary_evidence\": [\"As well as an intelligent investment, many of the African buyers see these houses as a way of maintaining long standing cultural ties with London -- and it's here they want to send their children to school.\"], \"reason\": \"Children's education in London is retained as one property-buying motive alongside investment and cultural ties for many African buyers. This preserves the core motivation, which the source also states in its own narrative, without making it the sole motive or applying it to every buyer.\"}], \"factual_issues\": [], \"reviewed_wording\": \"The output substantially reuses source sentences and distinctive phrases, including 'the stomping ground of the elite', the research sentence about over $900 million, and the complete quotation beginning 'Virtually all the transactions'. Shortenings and combinations retain this extensive source wording.\", \"automatic\": {\"length\": {\"score\": 1.0, \"feedback\": \"문장 구분 휴리스틱 v2 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다.\"}, \"extractiveness\": {\"score\": 1.0, \"feedback\": \"표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 96%.\"}}, \"score_rule\": \"coverage only when all condition checks pass and no factual issue is flagged\"}",
+  "review": {
+    "output_id": "Q5df009999e796e13",
+    "sentence_count": 9,
+    "wording_pass": true,
+    "wording_reason": "The output substantially reuses source sentences and distinctive phrases, including 'the stomping ground of the elite', the research sentence about over $900 million, and the complete quotation beginning 'Virtually all the transactions'. Shortenings and combinations retain this extensive source wording.",
+    "facts": [
+      {
+        "id": "F1",
+        "preserved": true,
+        "summary_evidence": [
+          "Mayfair, Kensington and Chelsea have long been the stomping ground of the elite -- and are now welcoming a new wave of African investors."
+        ],
+        "reason": "The new wave of African investment in London's luxury property market is explicit, with the following sentences establishing the London luxury-property context."
+      },
+      {
+        "id": "F2",
+        "preserved": true,
+        "summary_evidence": [
+          "according to luxury property agents Beauchamp Estates. Their research shows that over the past three years Africans have spent over $900 million on luxury residential property in London."
+        ],
+        "reason": "The attribution, spending amount greater than $900 million, three-year period and London luxury residential market are all preserved."
+      },
+      {
+        "id": "F3",
+        "preserved": true,
+        "summary_evidence": [
+          "As well as an intelligent investment, many of the African buyers see these houses as a way of maintaining long standing cultural ties with London -- and it's here they want to send their children to school."
+        ],
+        "reason": "Children's education in London is retained as one property-buying motive alongside investment and cultural ties for many African buyers. This preserves the core motivation, which the source also states in its own narrative, without making it the sole motive or applying it to every buyer."
+      }
+    ],
+    "issues": []
+  },
+  "automatic": {
+    "length": {
+      "score": 1.0,
+      "feedback": "문장 구분 휴리스틱 v2 기준 길이 충족: 9문장. 내용 보존은 별도 확인한다."
+    },
+    "extractiveness": {
+      "score": 1.0,
+      "feedback": "표현 겹침 참고 지표(의미·사실성 판정 아님): 추출성 충족: 원문과의 표현 겹침 96%."
+    }
+  },
+  "objective_scores": {
+    "coverage": 1.0,
+    "conditions": 1.0,
+    "no_factual_flags": 1.0
+  }
+}

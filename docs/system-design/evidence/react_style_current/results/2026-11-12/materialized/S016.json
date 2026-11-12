@@ -1,0 +1,23 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\nimport './styles.css';\n\nexport type Range = {\n  start: number;\n  end: number;\n};\n\nexport type Props = {\n  min: number;\n  max: number;\n  onApply: (range: Range) => void;\n};\n\nexport function Component({ min, max, onApply }: Props) {\n  const [start, setStart] = useState('');\n  const [end, setEnd] = useState('');\n  const [error, setError] = useState({\n    message: '',\n    startInvalid: false,\n    endInvalid: false,\n  });\n  const options = Array.from(\n    { length: max - min + 1 },\n    (_, index) => min + index,\n  );\n\n  return (\n    <form\n      aria-label=\"Range pair\"\n      className=\"range-pair\"\n      data-testid=\"panel\"\n      onSubmit={(event) => {\n        event.preventDefault();\n\n        if (start === '' || end === '') {\n          setError({\n            message: 'Choose both values',\n            startInvalid: start === '',\n            endInvalid: end === '',\n          });\n          return;\n        }\n\n        const startValue = Number(start);\n        const endValue = Number(end);\n        if (startValue > endValue) {\n          setError({\n            message: 'Range order',\n            startInvalid: false,\n            endInvalid: true,\n          });\n          return;\n        }\n\n        setError({\n          message: '',\n          startInvalid: false,\n          endInvalid: false,\n        });\n        onApply({ start: startValue, end: endValue });\n      }}\n    >\n      <label>\n        Start\n        <select\n          value={start}\n          aria-invalid={error.startInvalid}\n          onChange={(event) => setStart(event.currentTarget.value)}\n        >\n          <option value=\"\">Choose</option>\n          {options.map((option) => (\n            <option key={option} value={String(option)}>{option}</option>\n          ))}\n        </select>\n      </label>\n      <label>\n        End\n        <select\n          value={end}\n          aria-invalid={error.endInvalid}\n          onChange={(event) => setEnd(event.currentTarget.value)}\n        >\n          <option value=\"\">Choose</option>\n          {options.map((option) => (\n            <option key={option} value={String(option)}>{option}</option>\n          ))}\n        </select>\n      </label>\n      {error.message && <p role=\"alert\">{error.message}</p>}\n      <button type=\"submit\">Apply</button>\n    </form>\n  );\n}\n",
+    "styles.css": ".range-pair {\n  display: grid;\n  gap: 8px;\n  padding: 16px;\n  background-color: #f2f6fc;\n  color: #1d3150;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 21,
+      "end": 2328
+    },
+    {
+      "path": "styles.css",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 2351,
+      "end": 2460
+    }
+  ]
+}

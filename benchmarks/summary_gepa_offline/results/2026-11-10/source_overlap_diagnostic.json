@@ -1,0 +1,32 @@
+{
+  "method": "lowercase word5gramJaccard across splits; noresampling",
+  "top_pairs": [
+    {
+      "left": "final:H03",
+      "right": "validation:V03",
+      "word_5gram_jaccard": 0.005681818181818182
+    },
+    {
+      "left": "final:H03",
+      "right": "prior:T18",
+      "word_5gram_jaccard": 0.004784688995215311
+    },
+    {
+      "left": "final:H01",
+      "right": "prior:T07",
+      "word_5gram_jaccard": 0.00272975432211101
+    },
+    {
+      "left": "final:H06",
+      "right": "prior:N09",
+      "word_5gram_jaccard": 0.002181818181818182
+    },
+    {
+      "left": "validation:V03",
+      "right": "prior:T18",
+      "word_5gram_jaccard": 0.00205761316872428
+    }
+  ],
+  "pairs_at_least_point8": 0,
+  "limit": "Doesnotexclude sharedtopics or modelpretraining."
+}

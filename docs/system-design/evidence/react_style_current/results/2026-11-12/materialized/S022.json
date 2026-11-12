@@ -1,0 +1,31 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useId, type ReactElement } from 'react';\nimport { useTextExpander, type TextExpanderModel } from './useTextExpander';\nimport './styles.css';\n\nexport type Props = { text: string; maxChars: number };\n\nexport function Component({ text, maxChars }: Props): ReactElement {\n  const previewId: string = useId();\n  const model: TextExpanderModel = useTextExpander(text, maxChars);\n\n  return (\n    <div data-testid=\"panel\" className=\"expander-panel\">\n      <output id={previewId} aria-label=\"Preview\" className=\"expander-preview\">{model.preview}</output>\n      {model.canToggle && (\n        <button\n          type=\"button\"\n          aria-expanded={model.expanded}\n          aria-controls={previewId}\n          onClick={model.toggle}\n        >\n          {model.expanded ? 'Show less' : 'Show more'}\n        </button>\n      )}\n    </div>\n  );\n}\n",
+    "useTextExpander.ts": "import { useState } from 'react';\n\ntype ExpansionState = {\n  text: string;\n  maxChars: number;\n  expanded: boolean;\n};\n\nexport type TextExpanderModel = {\n  preview: string;\n  canToggle: boolean;\n  expanded: boolean;\n  toggle: () => void;\n};\n\nexport function useTextExpander(text: string, maxChars: number): TextExpanderModel {\n  const [state, setState] = useState<ExpansionState>({\n    text,\n    maxChars,\n    expanded: false,\n  });\n  const sameInput: boolean = state.text === text && state.maxChars === maxChars;\n\n  if (!sameInput) {\n    setState({ text, maxChars, expanded: false });\n  }\n\n  const expanded: boolean = sameInput && state.expanded;\n  const canToggle: boolean = text.length > maxChars;\n  const preview: string = canToggle && !expanded\n    ? text.slice(0, maxChars) + '…'\n    : text;\n\n  function toggle(): void {\n    setState({ text, maxChars, expanded: !expanded });\n  }\n\n  return { preview, canToggle, expanded, toggle };\n}\n",
+    "styles.css": ".expander-panel {\n  display: flex;\n  flex-direction: column;\n  background-color: #f2f6fc;\n  color: #1d3150;\n  padding: 16px;\n  gap: 8px;\n}\n\n.expander-preview {\n  white-space: pre-wrap;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 22,
+      "end": 865
+    },
+    {
+      "path": "useTextExpander.ts",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: useTextExpander.ts",
+      "start": 896,
+      "end": 1836
+    },
+    {
+      "path": "styles.css",
+      "block": 2,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 1860,
+      "end": 2047
+    }
+  ]
+}

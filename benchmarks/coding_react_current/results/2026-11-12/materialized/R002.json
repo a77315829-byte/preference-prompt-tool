@@ -1,0 +1,16 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { useRef, useState } from 'react';\n\nexport type Props = {\n  initialValue: boolean;\n  save: (next: boolean) => Promise<void>;\n};\n\nexport function Component({ initialValue, save }: Props) {\n  const [value, setValue] = useState(initialValue);\n  const [saving, setSaving] = useState(false);\n  const [failed, setFailed] = useState(false);\n  const inFlight = useRef(false);\n\n  async function toggle() {\n    if (inFlight.current) return;\n\n    const previous = value;\n    const next = !previous;\n    // disabled가 DOM에 반영되기 전에도 같은 요청이 겹치지 않게 한다.\n    inFlight.current = true;\n    setValue(next);\n    setSaving(true);\n    setFailed(false);\n\n    try {\n      await save(next);\n    } catch {\n      // 저장에 실패한 변경만 되돌릴 수 있도록 클릭 직전 값을 보관한다.\n      setValue(previous);\n      setFailed(true);\n    } finally {\n      inFlight.current = false;\n      setSaving(false);\n    }\n  }\n\n  return (\n    <div>\n      <button\n        type=\"button\"\n        aria-pressed={value}\n        disabled={saving}\n        onClick={() => { void toggle(); }}\n      >\n        Favorite\n      </button>\n      {saving && <p role=\"status\">Saving</p>}\n      {failed && <p role=\"alert\">Save failed</p>}\n    </div>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_file",
+      "block": 0,
+      "reason": "답변의 위치 지시: \"새 `Component.tsx` 파일의 전체 코드입니다. 추가 파일은 필요 없습니다.\"",
+      "answer_start": 302,
+      "answer_end": 1475
+    }
+  ]
+}

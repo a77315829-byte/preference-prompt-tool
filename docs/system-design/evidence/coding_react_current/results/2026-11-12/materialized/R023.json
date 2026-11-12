@@ -1,0 +1,16 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "export type Resource =\n  | { status: 'idle' }\n  | { status: 'loading' }\n  | { status: 'error'; message: string }\n  | { status: 'ready'; title: string; members: string[] };\n\nexport type Props = {\n  resource: Resource;\n  onRetry: () => void;\n};\n\nexport function Component({ resource, onRetry }: Props) {\n  // 판별자를 기준으로 좁혀 해당 상태에 존재하는 속성만 사용합니다.\n  switch (resource.status) {\n    case 'idle':\n      return <p role=\"status\">Choose a project</p>;\n\n    case 'loading':\n      return <p role=\"status\">Loading project</p>;\n\n    case 'error':\n      return (\n        <section>\n          <p role=\"alert\">{resource.message}</p>\n          <button type=\"button\" onClick={() => onRetry()}>\n            Retry\n          </button>\n        </section>\n      );\n\n    case 'ready':\n      return (\n        <section>\n          <h2>{resource.title}</h2>\n          {resource.members.length === 0 ? (\n            <p role=\"status\">No members</p>\n          ) : (\n            <ul aria-label=\"Members\">\n              {/* 이름이 중복될 수 있고 행별 상태가 없어 위치를 키로 사용합니다. */}\n              {resource.members.map((member, index) => (\n                <li key={index}>{member}</li>\n              ))}\n            </ul>\n          )}\n        </section>\n      );\n  }\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "mode": "replace_file",
+      "block": 0,
+      "reason": "코드 앞 지시: \"`Component.tsx`를 다음 전체 코드로 만드세요.\"",
+      "answer_start": 260,
+      "answer_end": 1475
+    }
+  ]
+}

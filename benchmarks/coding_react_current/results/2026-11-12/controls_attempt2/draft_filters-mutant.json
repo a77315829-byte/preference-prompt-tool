@@ -1,0 +1,65 @@
+{
+  "evaluatorVersion": "coding-react-current-v1",
+  "taskId": "draft_filters",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": false,
+    "checks": [
+      {
+        "name": "initial_all_items_and_clean_draft",
+        "passed": true
+      },
+      {
+        "name": "typing_draft_does_not_filter_or_call_owner",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'Login problem',\n    'Login documentation',\n-   'Export crash'\n  ]\n"
+      },
+      {
+        "name": "draft_checkbox_does_not_filter_or_call_owner",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'Login problem',\n-   'Login documentation',\n    'Export crash'\n  ]\n"
+      },
+      {
+        "name": "apply_trims_query_and_combines_filters",
+        "passed": true
+      },
+      {
+        "name": "dirty_comparison_trims_but_preserves_case",
+        "passed": true
+      },
+      {
+        "name": "reset_clears_applied_and_unapplied_draft_once",
+        "passed": true
+      },
+      {
+        "name": "new_items_use_applied_filters_while_draft_is_pending",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'Export crash'\n-   'Login problem',\n-   'Login documentation',\n-   'Login timeout'\n  ]\n"
+      },
+      {
+        "name": "no_match_after_apply_shows_empty_state",
+        "passed": true
+      },
+      {
+        "name": "reset_from_clean_state_is_explicit_callback",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0
+}

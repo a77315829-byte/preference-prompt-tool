@@ -1,0 +1,204 @@
+{
+  "request_sha256": "9a53950e8919dbd9f46b9876d56b288f3c5eb428f98487aebb0eec37feb55ed3",
+  "rows": [
+    {
+      "output_id": "Q0eaf76e401048853",
+      "sentence_count": 2,
+      "wording_pass": true,
+      "wording_reason": "Both grammatical sentences are copied from the source without word or punctuation changes. The second ends after the first sentence of the source's multi-sentence quotation; its quoted exclamation is a sentence ending.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "Drake appeared less than enthused after Madonna's prolonged smooch onstage at the Coachella music festival in California on Sunday."
+          ],
+          "reason": "The onstage kiss between Madonna and Drake at Coachella is explicit."
+        },
+        {
+          "id": "F2",
+          "preserved": false,
+          "summary_evidence": [],
+          "reason": "The summary retains an appearance of displeasure, but does not convey the central public response: that his visible reaction led people to speculate that he disliked the kiss."
+        },
+        {
+          "id": "F3",
+          "preserved": false,
+          "summary_evidence": [],
+          "reason": "It identifies an Instagram clarification and quotes a request not to misinterpret his shock, but omits his positive assessment of kissing Madonna. That positive assessment cannot be recovered from the quoted request alone."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Qb3d4c44a200148b9",
+      "sentence_count": 10,
+      "wording_pass": true,
+      "wording_reason": "Most sentences substantially reproduce distinctive source phrasing, including 'the stomping ground of the elite', 'splashing out the most cash', and the full spending-research sentence. The few combined or paraphrased passages do not change the predominance of source wording.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "Mayfair, Kensington and Chelsea have long been the stomping ground of the elite -- and are now welcoming a new wave of African investors.",
+            "These investors are having a considerable impact on London's property market"
+          ],
+          "reason": "The arrival of African investors in London's luxury property market is explicit."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "according to luxury property agents Beauchamp Estates.",
+            "Their research shows that over the past three years Africans have spent over $900 million on luxury residential property in London."
+          ],
+          "reason": "The adjacent sentences preserve Beauchamp Estates attribution, spending above $900 million, the three-year period, and London luxury residential property."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": [
+            "As well as an intelligent investment, many of the African buyers see these houses as a way of maintaining long standing cultural ties with London -- and it's here they want to send their children to school."
+          ],
+          "reason": "Children's schooling is conveyed as one of several property-buying motives for many buyers. The anchor additionally specifies Nkontchou's attribution and West African clients, which this sentence does not repeat; the core motive and its non-universal scope are preserved, and the source itself also gives this broader formulation."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Qb3cc1ad776a7b785",
+      "sentence_count": 7,
+      "wording_pass": true,
+      "wording_reason": "The clauses are mostly reformulated, for example 'joined a legal challenge to his detention', 'continued to assert his legitimacy', and 'withdrew its remaining special operations forces'. Retained names, numbers, and institutional terms do not make the prose mostly copied.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "Al Qaeda in the Arabian Peninsula said senior leader Ibrahim al-Rubaish was one of five people killed in an airstrike in Yemen on Monday night."
+          ],
+          "reason": "The death in an airstrike in Yemen is explicitly attributed to AQAP."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "A Yemeni Defense Ministry official and two national security officials confirmed his death but could not establish how he died."
+          ],
+          "reason": "The officials' confirmation remains bounded to the death, with its mechanism explicitly unconfirmed."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": [
+            "Al-Rubaish had been imprisoned at Guantanamo Bay"
+          ],
+          "reason": "His previous detention at Guantanamo is directly conveyed; the reference unambiguously identifies the detention described in the source."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Q6ca154ce23547c80",
+      "sentence_count": 4,
+      "wording_pass": true,
+      "wording_reason": "All four sentences are complete source sentences with only whitespace normalized. The initial 'London (CNN)' is retained, and the quotation containing 'Mr. Farage' is one grammatical sentence rather than splitting at the abbreviation.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "London (CNN)A Polish Prince has challenged populist British politician Nigel Farage to a duel in London's Hyde Park over his immigration policy.",
+            "In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain.",
+            "said he did not intend to cross swords with the prince."
+          ],
+          "reason": "The first two sentences identify Zylinski's Hyde Park challenge, and the reference to crossing swords establishes the physical sword duel."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "In a video posted on YouTube, Prince Jan Zylinski said he was fed up with discrimination against Poles living in Britain."
+          ],
+          "reason": "The objection to discrimination against Poles is explicit and attributed to Zylinski."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": [
+            "Farage -- who is on the campaign trail ahead of Britain's general elections on May 7 -- said he did not intend to cross swords with the prince."
+          ],
+          "reason": "Farage's refusal is expressly about the sword duel; the separately quoted television alternative is not presented as accepted or rejected."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Q8ba7c3025749a332",
+      "sentence_count": 4,
+      "wording_pass": true,
+      "wording_reason": "The summary substantially reuses source clauses, including 'Hawaii is poised to become the first state in the nation', 'nearly a quarter-million fewer premature deaths', and the complete sentence about fines. Joining clauses and supplying attribution leaves most distinctive wording intact.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "Hawaii is poised to become the first state in the nation to prohibit the sale of cigarettes and other tobacco products to anybody under age 21 after the state's legislature on Friday passed a bill raising the minimum legal age -- currently 18 -- to buy tobacco or e-cigarettes."
+          ],
+          "reason": "The legislature's passage of a bill raising the purchase age from 18 to 21 is preserved without presenting it as already enacted."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "Gov. David Ige's signature would make it law in Hawaii as of January 1, 2016, but it was not clear Monday whether he would sign the bill, and a spokeswoman said he would need some time to review it."
+          ],
+          "reason": "The governor's decision remains explicitly uncertain and subject to review."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": [
+            "An Institute of Medicine report estimated that setting the minimum age at 21 nationwide would result in nearly a quarter-million fewer premature deaths and 50,000 fewer deaths from lung cancer among people born between 2000 and 2019."
+          ],
+          "reason": "The report attribution, estimated nature, national age-21 condition, approximate 250,000 scale, and 2000-2019 birth cohort are all present."
+        }
+      ],
+      "issues": []
+    },
+    {
+      "output_id": "Qe2b71fd4cc248d7d",
+      "sentence_count": 2,
+      "wording_pass": true,
+      "wording_reason": "Both sentences restructure and condense the source in new wording, such as 'agreed to questioning', 'British and Ecuadorian permission would be needed', and 'reversed their refusal to travel'. Shared names and necessary legal terms are retained.",
+      "facts": [
+        {
+          "id": "F1",
+          "preserved": true,
+          "summary_evidence": [
+            "Julian Assange's Swedish lawyer said the WikiLeaks founder agreed to questioning by Swedish prosecutors at London's Ecuadorian Embassy",
+            "His lawyer said British and Ecuadorian permission would be needed"
+          ],
+          "reason": "His agreement to questioning in London is attributed to his lawyer, and the outstanding permissions are preserved rather than implying a completed interview."
+        },
+        {
+          "id": "F2",
+          "preserved": true,
+          "summary_evidence": [
+            "about allegations of rape and sexual molestation from 2010; Assange has not been charged and denies the claims."
+          ],
+          "reason": "The purpose of questioning is clear, and the alleged offenses are not represented as proven acts or filed charges."
+        },
+        {
+          "id": "F3",
+          "preserved": true,
+          "summary_evidence": [
+            "the limitation period for some alleged crimes expires in August 2015."
+          ],
+          "reason": "The August 2015 deadline and the essential restriction to some alleged offenses are explicit."
+        }
+      ],
+      "issues": []
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "benchmarks\\summary_agent_revision\\results\\2026-11-10\\cases.json": "1332ff3a02d780432aae74b66eaaf6af183f6222b71bdc8e34182302765b6d10",
+  "benchmarks\\summary_agent_revision\\results\\2026-11-10\\facts.json": "7493b83ab5534f4a920e4e49c1204f0becef42a0d53ac92f76ad6c6a2fa7eeeb",
+  "benchmarks\\summary_agent_revision\\results\\2026-11-10\\sampling.json": "5a6972d726eb692380bf16ff868d0ea76a55a6f8c909e20f5069b9c6e0acdaa7",
+  "benchmarks\\summary_agent_revision\\results\\2026-11-10\\protocol.json": "36d9bb556bccc623adeafdc3ba54bd2494eb91cb44730d63dc83647035515da5",
+  "benchmarks\\summary_agent_revision\\results\\2026-11-10\\inputs\\manual.json": "0f6a6f514a0d600a9d367f000697b6c5d8a4cf5c15c720c8d19486f70b5c3f0b",
+  "benchmarks\\summary_agent_revision\\results\\2026-11-10\\inputs\\previous.json": "ec6cf21870d93212b2cf79f9b099987acb92b0711af311f5963db5dce3255fbf",
+  "benchmarks\\summary_agent_revision\\results\\2026-11-10\\inputs\\revised.json": "6d7c77bd0ad1d776729358e2711fc8390aaf32d16ad081975c8c0382527f1f58",
+  "benchmarks\\summary_agent_revision\\rubric.json": "51cb0c596b0a539f6a62309b5cb3081d26ebe77ac856aa7662818e4c84ca932a",
+  "benchmarks\\summary_agent_revision\\run.py": "92fec4e673f68b333a1b8ebd622031609c979116aa9c2002c3085b91af1898fb",
+  "domains\\summarization_grounded.yaml": "a869034640d01b6f1fe7bc83595ca6620bf28bb0faedee1e19d3f4e40220f4a5",
+  "checks\\summarization_grounded.py": "91d143b1e078fbbae2b296286a5d534f3a53e9dbca80edea1c14ef60e8a2f557",
+  "engine\\generator.py": "6e6d3d96792b1ff7f603c65e5287a591823340cbee65dbce523e73c57f0f9f62",
+  "benchmarks\\summary_agent_pilot\\evaluate.py": "c48c8b865dbf07382e19087c4b00cf46f125cb9ded23d8be80b0fcb14f13c3a4"
+}

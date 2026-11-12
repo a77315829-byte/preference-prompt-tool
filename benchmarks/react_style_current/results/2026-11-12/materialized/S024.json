@@ -1,0 +1,31 @@
+{
+  "status": "ready",
+  "files": {
+    "Component.tsx": "import { usePasswordVisibility } from './usePasswordVisibility';\nimport './styles.css';\n\nexport type Props = {\n  initialValue: string;\n  onChange: (value: string) => void;\n};\n\nexport function Component({ initialValue, onChange }: Props) {\n  const { value, visible, updateValue, toggleVisibility } =\n    usePasswordVisibility(initialValue, onChange);\n\n  return (\n    <div data-testid=\"panel\" className=\"password-panel\">\n      <label>\n        Password\n        <input\n          type={visible ? 'text' : 'password'}\n          value={value}\n          onChange={(event) => updateValue(event.currentTarget.value)}\n        />\n      </label>\n      <button\n          type=\"button\"\n          aria-pressed={visible}\n          onClick={toggleVisibility}\n      >\n        Toggle visibility\n      </button>\n    </div>\n  );\n}\n",
+    "usePasswordVisibility.ts": "import { useState } from 'react';\n\nexport function usePasswordVisibility(\n  initialValue: string,\n  onChange: (value: string) => void,\n) {\n  const [value, setValue] = useState(initialValue);\n  const [visible, setVisible] = useState(false);\n\n  function updateValue(nextValue: string) {\n    setValue(nextValue);\n    onChange(nextValue);\n  }\n\n  function toggleVisibility() {\n    setVisible((current) => !current);\n  }\n\n  return { value, visible, updateValue, toggleVisibility };\n}\n",
+    "styles.css": ".password-panel {\n  display: flex;\n  flex-direction: column;\n  background-color: #f2f6fc;\n  color: #1d3150;\n  padding: 16px;\n  gap: 8px;\n}\n"
+  },
+  "provenance": [
+    {
+      "path": "Component.tsx",
+      "block": 0,
+      "reason": "Standalone filename before the complete fenced block: Component.tsx",
+      "start": 22,
+      "end": 831
+    },
+    {
+      "path": "usePasswordVisibility.ts",
+      "block": 1,
+      "reason": "Standalone filename before the complete fenced block: usePasswordVisibility.ts",
+      "start": 868,
+      "end": 1346
+    },
+    {
+      "path": "styles.css",
+      "block": 2,
+      "reason": "Standalone filename before the complete fenced block: styles.css",
+      "start": 1370,
+      "end": 1509
+    }
+  ]
+}
