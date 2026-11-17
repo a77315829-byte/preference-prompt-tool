@@ -494,6 +494,7 @@ function ComparisonSection({
               {!template && !remoteSession.template_id && ['summarization', 'summarization_ko'].includes(domainKey) && (
                 <SummaryContractPanel key={`${remoteSession.session_id}-${domainKey}`}
                   domainKey={domainKey} initialSource={remoteSession.source_text}
+                  user={user} signupOpen={signupOpen} onLogin={onLogin} onOpenLibrary={onOpenLibrary}
                   initialProfile={Object.fromEntries((remoteSession.axes || []).map((axis) => [axis.name, axis.estimate]))} />
               )}
               {teamCode && (
@@ -528,6 +529,9 @@ function ComparisonSection({
                   {remoteSession.undecided_axes.map((a) => a.label).join(', ')}은(는) "비슷해요"만 골라 선호를 정하지 못해
                   프롬프트에 넣지 않았습니다. 넣고 싶으면 "마지막 선택 수정"으로 돌아가 한쪽을 골라 주세요.
                 </p>
+              )}
+              {!template && !remoteSession.template_id && ['summarization', 'summarization_ko'].includes(domainKey) && (
+                <p className="connection-note">아래는 예시 비교에서 만든 기본 지침입니다. 위에서 조건을 바꿨다면 ‘조건을 확인한 작업용 지침’ 안의 저장·복사를 사용해 주세요.</p>
               )}
               <pre className="prompt-box"><code>{prompt}</code></pre>
               {optimizeStatus !== 'running' && (

@@ -1,0 +1,50 @@
+{
+  "results": [
+    {
+      "name": "01 summary comparison completes and conflicting conditions block output",
+      "pass": true
+    },
+    {
+      "name": "02 explicit resolution saves the new instructions, excluding source and selected passages",
+      "pass": true
+    },
+    {
+      "name": "03 saved instructions combine with a new task without changing stored content",
+      "pass": true
+    },
+    {
+      "name": "04 AI answer settings still generate and save a separate TypeScript React profile",
+      "pass": true
+    },
+    {
+      "name": "05 React style comparison retains v2 and both prompt languages",
+      "pass": true
+    },
+    {
+      "name": "06 mobile layout and logout keep private results inaccessible",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "posts": [
+    "/api/sessions",
+    "/api/sessions/1423a5213d06/choices",
+    "/api/sessions/1423a5213d06/choices",
+    "/api/sessions/1423a5213d06/choices",
+    "/api/sessions/1423a5213d06/choices",
+    "/api/sessions/1423a5213d06/choices",
+    "/api/summary-contract",
+    "/api/summary-contract",
+    "/api/summary-contract",
+    "/api/preferences",
+    "/api/coding-instructions/preview",
+    "/api/coding-work/resolve",
+    "/api/preferences",
+    "/api/sessions",
+    "/api/sessions/1b9a0f044941/choices",
+    "/api/sessions/1b9a0f044941/choices",
+    "/api/sessions/1b9a0f044941/choices"
+  ],
+  "paid_model_api_calls": 0
+}

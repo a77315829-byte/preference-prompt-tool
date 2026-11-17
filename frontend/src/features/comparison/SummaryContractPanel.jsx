@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import SavePreferencePanel from '../preferences/SavePreferencePanel';
 import { characterCount, MAX_SOURCE_CHARS, MAX_TOPIC_CHARS } from './summaryInputPolicy';
 import './SummaryContractPanel.css';
 
@@ -15,7 +16,7 @@ function describe(profile) {
   return `${LENGTHS[profile?.length] || '분량 미정'} / ${WORDING[profile?.extractiveness] || '표현 방식 미정'}`;
 }
 
-export default function SummaryContractPanel({ domainKey, initialSource = '', initialProfile = {} }) {
+export default function SummaryContractPanel({ domainKey, initialSource = '', initialProfile = {}, user, signupOpen, onLogin, onOpenLibrary }) {
   const id = useId();
   const [source, setSource] = useState(initialSource);
   const [length, setLength] = useState(initialProfile.length || '');
@@ -227,6 +228,10 @@ export default function SummaryContractPanel({ domainKey, initialSource = '', in
             </button>
           </div>
           <p className="summary-contract-help">재사용 지침에는 원문과 선택 문장을 넣지 않습니다. ‘함께 복사’에는 이번 원문과 남길 내용이 포함됩니다.</p>
+          <p className="summary-contract-help">아래 저장은 방금 확인한 조건의 재사용 지침에 적용됩니다. 새 원문의 남길 내용과 분량 충돌은 다시 확인해 주세요.</p>
+          <SavePreferencePanel domainKey={domainKey} prompt={prompt} user={user} signupOpen={signupOpen}
+            onLogin={onLogin} onOpenLibrary={onOpenLibrary} titleInputId={`${id}-save-title`}
+            initialTitle="조건을 확인한 요약 방식" />
         </div>
       )}
     </section>

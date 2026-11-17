@@ -1,0 +1,13 @@
+Hosted page, login, preference, handoff, attachment, templates and both demo domains: passed
+PASS empty storage creates account, preference, handoff and attachment
+PASS another account cannot read the saved preference
+PASS another account cannot read the comparison
+PASS online SQLite backup and optional cache pass integrity checks
+After restart: session, saved preference, handoff and attachment persisted
+PASS restart keeps login, saved preference, handoff and binary file
+PASS restart discards the unsaved comparison
+After restart: session, saved preference, handoff and attachment persisted
+PASS restored storage preserves login, saved preference, handoff and file
+PASS restored owner can read only the snapshot state
+PASS restored account boundary still denies another account
+Evidence: C:\Users\Laptop_PC\preference-prompt-tool\tmp\readiness-20261117\storage-e8b02d45\results.json

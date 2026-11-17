@@ -29,9 +29,14 @@ async function mount(handler = (body) => response(ready(body)), props = {}) {
   Object.assign(globalThis, { window: dom.window, document: dom.window.document,
     HTMLElement: dom.window.HTMLElement, IS_REACT_ACT_ENVIRONMENT: true });
   Object.defineProperty(globalThis, 'navigator', { configurable: true, value: dom.window.navigator });
-  const state = { requests: [], copied: [] };
+  const state = { requests: [], copied: [], saved: [] };
   Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async (text) => state.copied.push(text) } });
   globalThis.fetch = async (path, options) => {
+    if (path === '/api/preferences' && options.method === 'POST') {
+      const body = JSON.parse(options.body);
+      state.saved.push(body);
+      return { ok: true, status: 201, json: async () => ({ preference: { id: 'saved-contract', ...body } }) };
+    }
     assert.equal(path, '/api/summary-contract');
     assert.equal(options.method, 'POST');
     assert.equal(options.headers['Content-Type'], 'application/json');
@@ -64,6 +69,29 @@ async function mount(handler = (body) => response(ready(body)), props = {}) {
     await React.act(async () => root.unmount()); dom.window.close();
   } };
 }
+
+test('조건 확인 후 현재 언어의 재사용 지침만 저장하고 변경 시 이전 저장 UI를 숨긴다', async () => {
+  const opened = [];
+  const ui = await mount(undefined, { user: { id: 'local-user' }, onOpenLibrary: id => opened.push(id) });
+  try {
+    assert.equal(ui.findButton('내 선호 보관함에 저장'), undefined);
+    await ui.click('조건 확인');
+    assert.equal(ui.state.saved.length, 0, 'Condition inspection must not automatically save');
+    await ui.click('내 선호 보관함에 저장');
+    assert.equal(ui.state.saved[0].prompt, '확인된 재사용 지침');
+    assert.equal(ui.state.saved[0].domainKey, 'summarization');
+    assert.ok(!JSON.stringify(ui.state.saved[0]).includes(SOURCE));
+    assert.ok(SENTENCES.every(sentence => !JSON.stringify(ui.state.saved[0]).includes(sentence)));
+    await ui.click('저장한 지침 열기');
+    assert.deepEqual(opened, ['saved-contract']);
+    await ui.fill('[aria-label="조건 확인 지침 언어"]', 'en');
+    await ui.click('내 선호 보관함에 저장');
+    assert.equal(ui.state.saved[1].prompt, 'Reusable instructions');
+    await ui.fill('.summary-contract-source', 'A different source.');
+    assert.equal(document.querySelector('.summary-contract .preference-save'), null);
+    assert.equal(ui.state.saved.length, 2);
+  } finally { await ui.close(); }
+});
 
 test('미정 조건을 기본값으로 채우거나 자동 요청하지 않는다', async () => {
   const ui = await mount(undefined, { initialProfile: {} });

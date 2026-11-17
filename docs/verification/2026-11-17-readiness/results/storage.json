@@ -1,0 +1,47 @@
+{
+  "results": [
+    {
+      "name": "empty storage creates account, preference, handoff and attachment",
+      "pass": true
+    },
+    {
+      "name": "another account cannot read the saved preference",
+      "pass": true
+    },
+    {
+      "name": "another account cannot read the comparison",
+      "pass": true
+    },
+    {
+      "name": "online SQLite backup and optional cache pass integrity checks",
+      "pass": true
+    },
+    {
+      "name": "restart keeps login, saved preference, handoff and binary file",
+      "pass": true
+    },
+    {
+      "name": "restart discards the unsaved comparison",
+      "pass": true
+    },
+    {
+      "name": "restored storage preserves login, saved preference, handoff and file",
+      "pass": true
+    },
+    {
+      "name": "restored owner can read only the snapshot state",
+      "pass": true
+    },
+    {
+      "name": "restored account boundary still denies another account",
+      "pass": true
+    },
+    {
+      "name": "cache restored byte for byte without regeneration",
+      "pass": true
+    }
+  ],
+  "complete": true,
+  "paid_model_api_calls": 0,
+  "real_user_data_used": false
+}

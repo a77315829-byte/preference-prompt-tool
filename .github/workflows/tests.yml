@@ -42,7 +42,7 @@ jobs:
         run: npm ci --prefix frontend
 
       - name: Run tests without API
-        run: python -m pytest -m "not api" -q
+        run: python -m pytest -m "not api" -q -rs
 
   frontend-build:
     # React 화면이 빌드되는지. 파이썬 테스트만으로는 프론트가 깨져도 초록이다.
