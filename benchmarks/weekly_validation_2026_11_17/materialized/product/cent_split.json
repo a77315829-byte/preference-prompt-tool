@@ -1,0 +1,14 @@
+{
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\nimport type { ChangeEvent, CSSProperties, ReactElement } from 'react';\n\nexport type Props = { initialCents: string; initialPeople: string };\n\nconst panelStyle: CSSProperties = {\n  display: 'grid',\n  background: '#eef4ff',\n  color: '#17345c',\n  padding: 12,\n  gap: 6,\n};\n\nfunction parseUnsignedInteger(input: string): number | null {\n  const trimmed: string = input.trim();\n  if (!/^\\d+$/.test(trimmed)) return null;\n  const value: number = Number(trimmed);\n  return Number.isSafeInteger(value) && value >= 0 ? value : null;\n}\n\nfunction allocate(centsInput: string, peopleInput: string): string {\n  const cents: number | null = parseUnsignedInteger(centsInput);\n  const people: number | null = parseUnsignedInteger(peopleInput);\n  if (cents === null || people === null || people < 1 || people > 20) {\n    return 'Invalid allocation';\n  }\n\n  const base: number = Math.floor(cents / people);\n  const remainder: number = cents % people;\n  const allocations: number[] = [];\n  for (let index: number = 0; index < people; index += 1) {\n    allocations.push(base + (index < remainder ? 1 : 0));\n  }\n  return allocations.join(', ');\n}\n\nexport function Component({ initialCents, initialPeople }: Props): ReactElement {\n  const [cents, setCents] = useState<string>(initialCents);\n  const [people, setPeople] = useState<string>(initialPeople);\n  const allocation: string = allocate(cents, people);\n\n  return (\n    <div data-testid=\"panel\" style={panelStyle}>\n      <label>\n        Cents\n        <input\n          type=\"text\"\n          value={cents}\n          onChange={(event: ChangeEvent<HTMLInputElement>): void => {\n            setCents(event.target.value);\n          }}\n        />\n      </label>\n      <label>\n        People\n        <input\n          type=\"text\"\n          value={people}\n          onChange={(event: ChangeEvent<HTMLInputElement>): void => {\n            setPeople(event.target.value);\n          }}\n        />\n      </label>\n      <output aria-label=\"Allocation\">{allocation}</output>\n    </div>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "filename": "Component.tsx",
+      "block_index": 0,
+      "start": 21,
+      "end": 2063,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    }
+  ]
+}

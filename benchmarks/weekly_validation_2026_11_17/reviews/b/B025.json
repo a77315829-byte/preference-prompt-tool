@@ -1,0 +1,65 @@
+{
+  "output_id": "B025",
+  "kind": "summary",
+  "response_kind": "summary",
+  "sentence_count": 2,
+  "length_pass": true,
+  "wording_pass": true,
+  "wording_reason": "원문 여러 문장의 내용을 두 새 문장으로 재구성한 재서술이다.",
+  "facts": [
+    {
+      "id": "F1",
+      "preserved": true,
+      "evidence": [
+        "Dave Poulin apologized for its disturbing appearance in a Monday letter to The Hollywood Reporter"
+      ],
+      "reason": "앞서 지칭한 Lucille Ball 조각상에 대해 매체에 보낸 공개 사과를 유지한다."
+    },
+    {
+      "id": "F2",
+      "preserved": true,
+      "evidence": [
+        "offered his own time and money to remake it"
+      ],
+      "reason": "자신의 시간과 돈으로 재제작하겠다는 제안이 명시된다."
+    },
+    {
+      "id": "F3",
+      "preserved": true,
+      "evidence": [
+        "Mayor Scott Schrecengost rejected the offer as too late and said the town was seeking another sculptor to rework the head, neck and shoulders."
+      ],
+      "reason": "시장 거절과 다른 조각가를 찾는 계획 모두 보존한다."
+    }
+  ],
+  "priorities": [
+    {
+      "id": "P1",
+      "preserved": true,
+      "evidence": [
+        "After his Lucille Ball statue in Celoron, New York, drew widespread online attention over the weekend, Dave Poulin apologized for its disturbing appearance in a Monday letter to The Hollywood Reporter"
+      ],
+      "reason": "주말 관심, 월요일, 작가의 사과, 매체에 보낸 편지와 조각상의 불편한 외형 평가를 유지한다."
+    },
+    {
+      "id": "P2",
+      "preserved": true,
+      "evidence": [
+        "offered his own time and money to remake it, expressing confidence he could do better after ten years."
+      ],
+      "reason": "자기 시간과 비용, 재제작, 10년 이후의 자신감을 보존한다."
+    },
+    {
+      "id": "P3",
+      "preserved": true,
+      "evidence": [
+        "Mayor Scott Schrecengost rejected the offer as too late and said the town was seeking another sculptor to rework the head, neck and shoulders."
+      ],
+      "reason": "시장이 다른 조각가를 찾는다는 정보를 유지하며 수정 부위는 원문에 근거한다."
+    }
+  ],
+  "issues": [],
+  "ambiguities": [
+    "P1의 ‘most unsettling’은 ‘disturbing appearance’로 약화되었다. 사과 대상과 평가를 보존한 의미상 축약으로 판단하여 true로 남겼으며 원문의 최상급 강도가 그대로 유지된 것은 아니다."
+  ]
+}

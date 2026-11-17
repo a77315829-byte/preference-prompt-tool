@@ -1,0 +1,37 @@
+{
+  "output_id": "B020",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "import './Component.css';",
+        "<div data-testid=\"panel\" className=\"question-deck-panel\">",
+        ".question-deck-panel {"
+      ],
+      "reason": "컴포넌트와 실제 사용되는 CSS 파일을 분리했으므로 separated 기준을 충족한다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "background: #eef4ff;\n  color: #17345c;\n  padding: 12px;\n  gap: 6px;"
+      ],
+      "reason": "적용 CSS에 디자인 리터럴을 직접 사용한다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "export type Props = { cards: Card[]; onFinish: (ids: string[]) => void };",
+        "const [deck] = useState(() => [...cards]);",
+        "const [completed, setCompleted] = useState(0);",
+        "const current = deck[completed];"
+      ],
+      "reason": "공개 계약은 타입을 명시하고 추론 가능한 상태·지역 값·함수 반환 및 콜백은 추론한다."
+    }
+  },
+  "other_observations": [
+    "코드 뒤 설명 첫 단어 “表示”는 일본어이다. 이후 문장은 한국어이므로 설명 언어의 작은 혼입을 기록하며 세 축 판정에는 반영하지 않았다."
+  ],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

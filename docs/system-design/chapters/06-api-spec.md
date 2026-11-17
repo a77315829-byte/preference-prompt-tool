@@ -4,6 +4,8 @@
 
 ## 6.1 공통 전송 규칙
 
+11/17 개정 원고에서는 비교 API-009~013과 팀 반영 API의 접근 전제에 소유권·만료 정책을 추가했다. 경로 수와 원자료의 줄 번호는 위 11/12 스냅샷이며 다시 추출한 전체 API inventory가 아니다. [정책과 실제 검증](../../verification/2026-11-17/README.md)을 함께 확인한다.
+
 | 항목 | 현재 규약 | 클라이언트 책임 |
 |---|---|---|
 | 기본 경로 | 동일 출처의 /api, 개발 시 Vite 프록시 | 서버 키나 모델 이름을 프론트에 넣지 않음 |
@@ -62,11 +64,11 @@
 
 | ID·방식·경로 | 요청 핵심 | 응답 | 접근·모델 호출 |
 |---|---|---|---|
-| API-009 · POST /api/sessions | domainKey,sourceText,totalRounds?,templateId? | session | 공개; 실제 모드에서 호출 가능 |
-| API-010 · GET /api/sessions/{id} | 경로 id | session | 세션 ID; 계정소유검사 없음; 모델 없음 |
-| API-011 · POST /api/sessions/{id}/choices | pairId,chosen | session | 세션 ID; 실제 모드에서 호출 가능 |
-| API-012 · POST /api/sessions/{id}/undo | {} | session | 세션 ID; 캐시 재사용 |
-| API-013 · POST /api/sessions/{id}/optimize | {} | 202 session | 끝난 실제 비교 세션; 실제 모드에서 호출 가능 |
+| API-009 · POST /api/sessions | domainKey,sourceText,totalRounds?,templateId? | session, 필요 시 익명 HttpOnly 쿠키 | 해당 로그인 세션 또는 익명 브라우저에 귀속; 실제 모드에서 호출 가능 |
+| API-010 · GET /api/sessions/{id} | 경로 id | session | 소유권·TTL 확인; 모델 없음 |
+| API-011 · POST /api/sessions/{id}/choices | pairId,chosen | session | 소유권·TTL·쌍 확인; 계산 후 상태 재확인; 실제 모드에서 호출 가능 |
+| API-012 · POST /api/sessions/{id}/undo | {} | session | 소유권·TTL·현재 상태 확인; 캐시 재사용 |
+| API-013 · POST /api/sessions/{id}/optimize | {} | 202 session | 본인 소유의 유효한 완료 세션; 실제 모드에서 호출 가능 |
 | API-014 · POST /api/summary-contract | domainKey,profile,sourceText,requiredSentences?,resolution? | status,profiles,conflict,prompts,task_requests,notices | 공개; 모델 없음 |
 
 ### 코딩 지침·GEPA
@@ -90,7 +92,7 @@
 | API-024 · GET /api/teams/{code} | code | team | 계정 팀은 참여 범위; 익명 체험 공개; 모델 없음 |
 | API-025 · POST /api/teams | name,domainKey? | 201 team | 쿠키 선택; 모델 없음 |
 | API-026 · POST /api/teams/{code}/invitation | enabled:boolean | team | 로그인 팀장; 모델 없음 |
-| API-027 · POST /api/teams/{code}/members | sessionId,name?,requireExisting? | team | 계정 팀 로그인·열린 초대; 익명 체험 별도; 모델 없음 |
+| API-027 · POST /api/teams/{code}/members | sessionId,name?,requireExisting? | team | 본인 소유·미만료 완료 비교; 계정 팀 로그인·열린 초대; 익명 체험 별도; 모델 없음 |
 
 ### 개인 보관함·재조합
 

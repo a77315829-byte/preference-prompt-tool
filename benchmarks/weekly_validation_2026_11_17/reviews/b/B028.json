@@ -1,0 +1,39 @@
+{
+  "output_id": "B028",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "import { panelStyle } from './Component.styles';",
+        "<div data-testid=\"panel\" style={panelStyle}>",
+        "Component.styles.ts"
+      ],
+      "reason": "적용 패널 스타일과 컴포넌트가 다른 파일로 분리되어 실제로 연결된다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "colors: { panel: '#eef4ff', text: '#17345c' },",
+        "spacing: { padding: 12, gap: 6 },",
+        "background: theme.colors.panel,",
+        "gap: theme.spacing.gap,"
+      ],
+      "reason": "중앙 색상·간격 토큰을 별도 스타일 규칙에서 참조한다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "const [items, setItems] = useState<Item[]>((): Item[] => [...initialItems]);",
+        "function move(index: number, direction: -1 | 1): void {",
+        "const nextItems: Item[] = [...items];",
+        "const ids: string[] = nextItems.map((item: Item): string => item.id);",
+        "{items.map((item: Item, index: number): ReactElement => ("
+      ],
+      "reason": "공개 Props·컴포넌트 반환·상태·주 함수·데이터 및 주요 콜백까지 명시적으로 타입화했다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

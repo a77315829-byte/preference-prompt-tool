@@ -1,0 +1,59 @@
+{
+  "output_id": "B019",
+  "kind": "summary",
+  "response_kind": "summary",
+  "sentence_count": 2,
+  "length_pass": true,
+  "wording_pass": true,
+  "wording_reason": "매체 표기를 제외한 원문 첫 두 문장을 온전히 발췌하며 중복이 없다.",
+  "facts": [
+    {
+      "id": "F1",
+      "preserved": true,
+      "evidence": [
+        "Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died."
+      ],
+      "reason": "배우 Geoffrey Lewis 사망 사실을 명시한다."
+    },
+    {
+      "id": "F2",
+      "preserved": true,
+      "evidence": [
+        "He was 79."
+      ],
+      "reason": "나이 79세를 보존한다."
+    },
+    {
+      "id": "F3",
+      "preserved": false,
+      "evidence": [],
+      "reason": "화요일 사망과 Michael Henderson의 전언은 생략되었다. 일부 생략을 허용하는 정책에 따른 허용된 누락이다."
+    }
+  ],
+  "priorities": [
+    {
+      "id": "P1",
+      "preserved": true,
+      "evidence": [
+        "Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died."
+      ],
+      "reason": "선택 문장을 그대로 보존한다."
+    },
+    {
+      "id": "P2",
+      "preserved": true,
+      "evidence": [
+        "He was 79."
+      ],
+      "reason": "선택 문장을 그대로 보존한다."
+    },
+    {
+      "id": "P3",
+      "preserved": false,
+      "evidence": [],
+      "reason": "Juliette Lewis의 아버지라는 관계, 사망 요일, 가족 친구 전언을 생략했다. prioritize_with_omission에서는 누락을 기록하되 전체 보존 위반으로 보지 않는다."
+    }
+  ],
+  "issues": [],
+  "ambiguities": []
+}

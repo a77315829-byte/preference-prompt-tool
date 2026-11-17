@@ -1,0 +1,63 @@
+{
+  "output_id": "B007",
+  "kind": "summary",
+  "response_kind": "summary",
+  "sentence_count": 4,
+  "length_pass": true,
+  "wording_pass": true,
+  "wording_reason": "원문 특유의 인물명과 핵심 표현 일부를 유지하지만 전체는 제삼자 관점의 새 문장으로 재서술되어 normal에 부합한다.",
+  "facts": [
+    {
+      "id": "F1",
+      "preserved": true,
+      "evidence": [
+        "In the third installment of a series about reading the Bible, a Catholic writer describes being horrified by the story of Lot and the destruction of Sodom and Gomorrah in Genesis."
+      ],
+      "reason": "창세기 롯 이야기에 충격을 받은 주체가 글쓴이임을 유지한다."
+    },
+    {
+      "id": "F2",
+      "preserved": true,
+      "evidence": [
+        "Unsure how to interpret the account, the writer says their faith does not embrace such a punitive God."
+      ],
+      "reason": "징벌적 신이 자신의 신앙과 맞지 않는다는 글쓴이의 입장이다."
+    },
+    {
+      "id": "F3",
+      "preserved": true,
+      "evidence": [
+        "Despite these unresolved questions, they intend to continue reading."
+      ],
+      "reason": "앞 문장들의 고통과 해석의 불확실성에도 읽기를 계속할 의향을 밝힌다."
+    }
+  ],
+  "priorities": [
+    {
+      "id": "P1",
+      "preserved": true,
+      "evidence": [
+        "In the third installment of a series about reading the Bible, a Catholic writer describes being horrified by the story of Lot and the destruction of Sodom and Gomorrah in Genesis."
+      ],
+      "reason": "해당 이야기와 글쓴이의 감정을 모두 보존한다."
+    },
+    {
+      "id": "P2",
+      "preserved": true,
+      "evidence": [
+        "Unsure how to interpret the account, the writer says their faith does not embrace such a punitive God."
+      ],
+      "reason": "개인 신앙의 관점과 징벌적 신에 대한 거부를 보존한다."
+    },
+    {
+      "id": "P3",
+      "preserved": true,
+      "evidence": [
+        "Despite these unresolved questions, they intend to continue reading."
+      ],
+      "reason": "앞으로 계속 읽겠다는 결심을 보존한다."
+    }
+  ],
+  "issues": [],
+  "ambiguities": []
+}

@@ -1,0 +1,22 @@
+{
+  "files": {
+    "Component.tsx": "import { useState } from \"react\";\nimport type { ReactElement } from \"react\";\nimport \"./Component.css\";\n\nexport type Props = {\n  initialValue: number;\n  step: number;\n  onChange: (value: number) => void;\n};\n\nexport function Component({ initialValue, step, onChange }: Props): ReactElement {\n  const [baseline] = useState<number>(initialValue);\n  const [value, setValue] = useState<number>(initialValue);\n  const isAtBaseline: boolean = value === baseline;\n\n  function changeBy(delta: number): void {\n    const nextValue: number = value + delta;\n    setValue(nextValue);\n    onChange(nextValue);\n  }\n\n  function reset(): void {\n    if (value === baseline) return;\n    setValue(baseline);\n    onChange(baseline);\n  }\n\n  return (\n    <div data-testid=\"panel\" className=\"weighted-counter-panel\">\n      <output aria-label=\"Value\">{value}</output>\n      <button type=\"button\" onClick={() => changeBy(step)}>Add</button>\n      <button type=\"button\" onClick={() => changeBy(-step)}>Subtract</button>\n      <button type=\"button\" onClick={reset} disabled={isAtBaseline}>\n        Reset\n      </button>\n    </div>\n  );\n}\n",
+    "Component.css": ".weighted-counter-panel {\n  display: grid;\n  background: #eef4ff;\n  color: #17345c;\n  padding: 12px;\n  gap: 6px;\n}\n"
+  },
+  "provenance": [
+    {
+      "filename": "Component.tsx",
+      "block_index": 0,
+      "start": 21,
+      "end": 1129,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    },
+    {
+      "filename": "Component.css",
+      "block_index": 1,
+      "start": 1155,
+      "end": 1270,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "output_id": "B021",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "import './Component.css';",
+        "<div data-testid=\"panel\" className=\"weighted-counter-panel\">",
+        ".weighted-counter-panel {"
+      ],
+      "reason": "필요한 스타일을 별도 CSS 파일로 분리하고 클래스·import로 연결한다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "background: #eef4ff;\n  color: #17345c;\n  padding: 12px;\n  gap: 6px;"
+      ],
+      "reason": "패널 규칙에 실제 디자인 값을 직접 지정하여 direct이다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "export function Component({ initialValue, step, onChange }: Props): ReactElement {",
+        "const [baseline] = useState<number>(initialValue);",
+        "const [value, setValue] = useState<number>(initialValue);",
+        "function changeValue(nextValue: number): void {",
+        "function reset(): void {",
+        "onClick={(): void => changeValue(value + step)}"
+      ],
+      "reason": "공개 계약·상태·주 함수/반환·불리언 파생 값·클릭 콜백 반환까지 명시적으로 타입화했다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

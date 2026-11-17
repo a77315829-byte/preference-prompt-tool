@@ -97,7 +97,7 @@ MAX_SOURCE_CHARS = 12000
 DOMAIN_OPTIONS = {
     "coding": {
         "label": "코딩 도움",
-        "path": "domains/coding.yaml",
+        "path": "domains/coding/v2.yaml",
         "intro": (
             "만들고 싶은 기능을 적고, 작성 방식이 다른 TypeScript/React 코드 중 "
             f"마음에 드는 쪽을 최대 {N_ROUNDS}회 골라주세요."

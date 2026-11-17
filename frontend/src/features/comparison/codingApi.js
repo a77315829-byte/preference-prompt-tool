@@ -7,7 +7,10 @@ async function request(path, options = {}) {
   });
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(body.error || `API 요청에 실패했습니다 (${response.status})`);
+    const error = new Error(body.error || `API 요청에 실패했습니다 (${response.status})`);
+    error.status = response.status;
+    error.code = body.code;
+    throw error;
   }
   return body;
 }

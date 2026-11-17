@@ -1,0 +1,604 @@
+[
+  {
+    "output_id": "B003",
+    "kind": "summary",
+    "source": "(CNN)A freshly fallen tree in the roadway was Jason Warnock's first clue.\nWarnock was driving through a canyon in Lewiston, Idaho, on Wednesday when he saw the tree, then looked up to see an SUV dangling over the edge of a cliff.\nThe only thing holding the GMC Yukon and its terrified driver from a 30-foot drop was a crumpled chain-link fence, still clinging to the earth above Bryden Canyon Road.\n\"I seen that guy hanging there and he was trying to beat the window out or the door open and I was like 'Oh man,' 'cause only like five links were hanging there,\" Warnock told KXLY, a CNN affiliate.\n\"I was like, I gotta do something and no one was doing anything.\"\nWhat Warnock did next, captured in a dramatic photo by Lewiston Tribune photographer Barry Kough, made headlines around the world.\nWarnock dashed from his car and scrambled up a hill to the Yukon and its driver, 23-year-old Matthew Sitko, who appeared to be in shock.\n\"I got up there and I was like, 'Are you alright man?'\nHe shook his head, yeah.\nI grabbed my Snap-on multi-tool and it had jagged edges on each end.\nI hit the window three times and it didn't break.\nEvery time I hit it, the thing rocked like it was going to fall off,\" Warnock told KXLY.\nSitko was finally able to get the passenger-side window down.\nWarnock then reached in and pulled Sitko out to safety -- a moment recorded by Kough's camera.\nThen Warnock disappeared.\n\"I left and got out of there before anyone knew who I was,\" he said.\nHe remained an unknown good Samaritan, his identity a mystery, until Kough's picture of the daring rescue appeared in the Lewiston paper and spread across the Internet.\n\"I don't feel like I deserve any credit or anything,\" Warnock said.\n\"I just did what anyone would do, went right back to work.\"\nThanks to Warnock, Sitko went to the hospital with just minor injuries.\n\"The Lewiston Police Department would like to thank Jason Warnock for his quick and decisive actions in helping Mr. Sitko and preventing the situation from worsening,\" said Roger Lanier, the interim police chief.\nWarnock told KXLY he didn't want or expect all the attention and would rather be fishing in the mountains than reading about himself.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "coverage_policy": "all_required",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "Warnock found an SUV dangling over a cliff in Lewiston, Idaho.",
+        "source_evidence": [
+          "Warnock was driving through a canyon in Lewiston, Idaho, on Wednesday when he saw the tree, then looked up to see an SUV dangling over the edge of a cliff."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "Warnock pulled Sitko out to safety.",
+        "source_evidence": [
+          "Warnock then reached in and pulled Sitko out to safety -- a moment recorded by Kough's camera."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "Sitko went to hospital with only minor injuries.",
+        "source_evidence": [
+          "Thanks to Warnock, Sitko went to the hospital with just minor injuries."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "Warnock was driving through a canyon in Lewiston, Idaho, on Wednesday when he saw the tree, then looked up to see an SUV dangling over the edge of a cliff."
+      },
+      {
+        "id": "P2",
+        "text": "Warnock then reached in and pulled Sitko out to safety -- a moment recorded by Kough's camera."
+      },
+      {
+        "id": "P3",
+        "text": "Thanks to Warnock, Sitko went to the hospital with just minor injuries."
+      }
+    ],
+    "answer": "Warnock was driving through a canyon in Lewiston, Idaho, on Wednesday when he saw the tree, then looked up to see an SUV dangling over the edge of a cliff. Warnock dashed from his car and scrambled up a hill to the Yukon and its driver, 23-year-old Matthew Sitko, who appeared to be in shock. Warnock then reached in and pulled Sitko out to safety -- a moment recorded by Kough's camera. Thanks to Warnock, Sitko went to the hospital with just minor injuries."
+  },
+  {
+    "output_id": "B006",
+    "kind": "summary",
+    "source": "(The Hollywood Reporter)Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died.\nHe was 79.\nLewis, the father of Oscar-nominated actress Juliette Lewis, died Tuesday, family friend Michael Henderson said.\nNo other details were immediately available.\nLewis began his long association with Eastwood in \"High Plains Drifter\" (1973).\nHe also appeared with the actor in \"Thunderbolt and Lightfoot\" (1974), \"Bronco Billy\" (1980), \"Pink Cadillac\" (1989) and \"Midnight in the Garden of Good and Evil\" (1997).\nLewis scored a Golden Globe nomination for playing bartender Earl Tucker on the 1980s CBS sitcom \"Flo,\" the spinoff of \"Alice\" that starred Polly Holliday, and he had recurring roles on such series as \"Falcon Crest\" and the syndicated \"Land's End.\"\nHollywood Reporter: \"Fast 8\" nowhere near starting line .\nLewis portrayed real-life Prohibition-era gangster Harry Pierpont in \"Dillinger\" (1973), and his résumé also includes such notable films as \"The Great Waldo Pepper\" (1975), \"The Wind and the Lion\" (1975), \"Lucky Lady\" (1975), \"The Return of a Man Called Horse\" (1976), \"Heaven's Gate\" (1980), \"Catch Me If You Can\" (1989), \"The Lawnmower Man\" (1992), \"The Man Without a Face\" (1993), \"Maverick\" (1994) and \"The Devil's Rejects\" (2005).\nHollywood Reporter: Acclaimed satirist Stan Freberg dies .\nThe actor also stood out as a gravedigger turned vampire in the 1979 Tobe Hooper CBS miniseries \"Salem's Lot,\" an adaptation of the Stephen King novel.\nLewis had appeared on such 1970s TV shows as \"Then Came Bronson,\" \"Bonanza\" and \"The Name of the Game\" before scoring a minor role as a cowhand in \"The Culpepper Cattle Co.\" (1972).\nLater, he showed up on such series as \"Mod Squad,\" \"The Waltons,\" \"Police Woman,\" \"Mork & Mindy,\" \"Lou Grant,\" \"Gun Shy,\" \"Magnum, P.I.\"\nand \"The X-Files.\"\nLewis was a co-founder of the spoken-word performance group Celestial Navigations, working with musician and songwriter Geoff Levin.\nPeople we've lost in 2015 .\n©2015 The Hollywood Reporter.\nAll rights reserved.",
+    "target": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "coverage_policy": "prioritize_with_omission",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "Actor Geoffrey Lewis died.",
+        "source_evidence": [
+          "Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "He was 79.",
+        "source_evidence": [
+          "He was 79."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "Family friend Michael Henderson reported he died Tuesday.",
+        "source_evidence": [
+          "Lewis, the father of Oscar-nominated actress Juliette Lewis, died Tuesday, family friend Michael Henderson said."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died."
+      },
+      {
+        "id": "P2",
+        "text": "He was 79."
+      },
+      {
+        "id": "P3",
+        "text": "Lewis, the father of Oscar-nominated actress Juliette Lewis, died Tuesday, family friend Michael Henderson said."
+      }
+    ],
+    "answer": "Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died. He was 79."
+  },
+  {
+    "output_id": "B007",
+    "kind": "summary",
+    "source": "(CNN)This is week three of an ongoing series: A Catholic Reads the Bible.\nRead week one and week two.\nWhen I started this project, my brother texted me, \"Wait until you get to Lot.\"\nBy Sunday afternoon, I understood what he meant.\nI am horrified by the story of Lot in Genesis.\nLot and the destruction of Sodom and Gomorrah was new to me.\nI actually hadn't put two and two together that Sodom is the origin of the word sodomy.\n(Feel free to call me dense as you read this).\nLot is the central character in the grim story of Sodom and Gomorrah's demise in Chapter 19.\nYou are introduced to the city by Abraham who tries to save the town.\nIn the preceding chapter, Abraham asks God to agree that if he can find 10 good people in the town, God won't smite it.\nGod agrees.\nLot is visited by divine emissaries to investigate if there are indeed enough good people to save the town.\nThe men of the town come to seek out the new visitors for \"intimacies.\"\nAhem.\nYeah.\nHospitable bunch, huh?\nThose \"intimacies,\" we are meant to understand, account for Sodom's wickedness.\nAnd I guess meant that the town was doomed.\n(\"Intimacies\" is the term used in my 1991 edition of the New American Bible.\nThe revised edition refers to \"sexual relations.\")\nTo protect the emissaries from the mob, Lot offers up his virginal daughters.\nWhich.\nUgh.\nAnyway, it doesn't work.\nThere apparently aren't enough good men to save Sodom, which leads to God destroying yet another population in Genesis.\nOh, and while Lot's chosen family members flee the destruction, Lot's wife turns around and is turned to salt.\nShe had been warned not to look back.\nAfter God destroys Sodom, Lot's daughters worry that there aren't any men left, so they get their father good and drunk and have sex with him.\nThey need to have children to keep the human race going, the logic goes, I guess.\nAfter reading that section, I put my Bible down.\nI couldn't read anymore.\nThen I read it again.\nWhat was I reading?\nWhat are the morals, the meaning, I'm supposed to get from these ghastly stories?\nThis is not the God that I have known for nearly 42 years.\nIt's not the version of the God I pray to daily.\nI truly don't believe in a God that wipes out a town in general because of sexuality.\nWhy are they wicked?\nI don't believe that my God that would go after one group -- any group.\nThe God that I pray to doesn't punish the \"wicked\" like this.\nI can't comprehend this version of God.\nI can't believe in that kind of God.\nThere were much easier things to write about this week in the pages that I read.\nBut, I want to be truthful with you, my readers.\nThe Lot story struck me -- hard.\nI wish that I had answers for you as to why this happened or how it was written many years ago.\nBut I don't.\nIt could be that it was a tale told to make sure that people only had sex to have children.\nOr it could be a morality tale for the times.\nThe truth is: I don't really know.\nI just know that my faith doesn't include the idea of such a punitive God.\nI now fully understand how you could devote your life to reading and analyzing the Bible.\nAnd when I read this rough draft to my brother, he said to me, \"You have just hit the tip of the iceberg.\"\nSo, I will continue reading.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "coverage_policy": "all_required",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "The writer is horrified by the Genesis story of Lot.",
+        "source_evidence": [
+          "I am horrified by the story of Lot in Genesis."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "The writer says their faith does not include such a punitive God.",
+        "source_evidence": [
+          "I just know that my faith doesn't include the idea of such a punitive God."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "Despite uncertainty and distress the writer will continue reading.",
+        "source_evidence": [
+          "I wish that I had answers for you as to why this happened or how it was written many years ago.",
+          "But I don't.",
+          "The truth is: I don't really know.",
+          "So, I will continue reading."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "I am horrified by the story of Lot in Genesis."
+      },
+      {
+        "id": "P2",
+        "text": "I just know that my faith doesn't include the idea of such a punitive God."
+      },
+      {
+        "id": "P3",
+        "text": "So, I will continue reading."
+      }
+    ],
+    "answer": "In the third installment of a series about reading the Bible, a Catholic writer describes being horrified by the story of Lot and the destruction of Sodom and Gomorrah in Genesis. The writer struggles to reconcile the story's violence and punishment with the God they have known and prayed to for nearly 42 years. Unsure how to interpret the account, the writer says their faith does not embrace such a punitive God. Despite these unresolved questions, they intend to continue reading."
+  },
+  {
+    "output_id": "B009",
+    "kind": "summary",
+    "source": "(CNN)This is week three of an ongoing series: A Catholic Reads the Bible.\nRead week one and week two.\nWhen I started this project, my brother texted me, \"Wait until you get to Lot.\"\nBy Sunday afternoon, I understood what he meant.\nI am horrified by the story of Lot in Genesis.\nLot and the destruction of Sodom and Gomorrah was new to me.\nI actually hadn't put two and two together that Sodom is the origin of the word sodomy.\n(Feel free to call me dense as you read this).\nLot is the central character in the grim story of Sodom and Gomorrah's demise in Chapter 19.\nYou are introduced to the city by Abraham who tries to save the town.\nIn the preceding chapter, Abraham asks God to agree that if he can find 10 good people in the town, God won't smite it.\nGod agrees.\nLot is visited by divine emissaries to investigate if there are indeed enough good people to save the town.\nThe men of the town come to seek out the new visitors for \"intimacies.\"\nAhem.\nYeah.\nHospitable bunch, huh?\nThose \"intimacies,\" we are meant to understand, account for Sodom's wickedness.\nAnd I guess meant that the town was doomed.\n(\"Intimacies\" is the term used in my 1991 edition of the New American Bible.\nThe revised edition refers to \"sexual relations.\")\nTo protect the emissaries from the mob, Lot offers up his virginal daughters.\nWhich.\nUgh.\nAnyway, it doesn't work.\nThere apparently aren't enough good men to save Sodom, which leads to God destroying yet another population in Genesis.\nOh, and while Lot's chosen family members flee the destruction, Lot's wife turns around and is turned to salt.\nShe had been warned not to look back.\nAfter God destroys Sodom, Lot's daughters worry that there aren't any men left, so they get their father good and drunk and have sex with him.\nThey need to have children to keep the human race going, the logic goes, I guess.\nAfter reading that section, I put my Bible down.\nI couldn't read anymore.\nThen I read it again.\nWhat was I reading?\nWhat are the morals, the meaning, I'm supposed to get from these ghastly stories?\nThis is not the God that I have known for nearly 42 years.\nIt's not the version of the God I pray to daily.\nI truly don't believe in a God that wipes out a town in general because of sexuality.\nWhy are they wicked?\nI don't believe that my God that would go after one group -- any group.\nThe God that I pray to doesn't punish the \"wicked\" like this.\nI can't comprehend this version of God.\nI can't believe in that kind of God.\nThere were much easier things to write about this week in the pages that I read.\nBut, I want to be truthful with you, my readers.\nThe Lot story struck me -- hard.\nI wish that I had answers for you as to why this happened or how it was written many years ago.\nBut I don't.\nIt could be that it was a tale told to make sure that people only had sex to have children.\nOr it could be a morality tale for the times.\nThe truth is: I don't really know.\nI just know that my faith doesn't include the idea of such a punitive God.\nI now fully understand how you could devote your life to reading and analyzing the Bible.\nAnd when I read this rough draft to my brother, he said to me, \"You have just hit the tip of the iceberg.\"\nSo, I will continue reading.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "coverage_policy": "all_required",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "The writer is horrified by the Genesis story of Lot.",
+        "source_evidence": [
+          "I am horrified by the story of Lot in Genesis."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "The writer says their faith does not include such a punitive God.",
+        "source_evidence": [
+          "I just know that my faith doesn't include the idea of such a punitive God."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "Despite uncertainty and distress the writer will continue reading.",
+        "source_evidence": [
+          "I wish that I had answers for you as to why this happened or how it was written many years ago.",
+          "But I don't.",
+          "The truth is: I don't really know.",
+          "So, I will continue reading."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "I am horrified by the story of Lot in Genesis."
+      },
+      {
+        "id": "P2",
+        "text": "I just know that my faith doesn't include the idea of such a punitive God."
+      },
+      {
+        "id": "P3",
+        "text": "So, I will continue reading."
+      }
+    ],
+    "answer": "In the third installment of a Catholic's Bible-reading series, the author is horrified by the story of Lot and the destruction of Sodom and Gomorrah in Genesis. The violence and sexual abuse in the story challenge the author's understanding of a loving God, and the author rejects such a punitive conception of God as incompatible with their faith. Although the author considers possible historical meanings, they acknowledge that they do not know what lesson the story intends to convey. They nevertheless resolve to continue reading the Bible."
+  },
+  {
+    "output_id": "B010",
+    "kind": "summary",
+    "source": "(CNN)Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said.\nHere's how police say the scheme worked: When the male TSA officer noticed a man he found attractive, he would alert a female TSA officer.\nThe female officer would then tell the screening machine that a female passenger -- not a male -- was walking through.\nAnd that information would trigger a machine to register an anomaly in the groin area, prompting the male TSA officer to pat down the passenger, police said, citing a TSA investigation.\nBut during the patdown, the male TSA officer used the palms of his hands to touch the passenger's front groin area and buttocks, which violates TSA policy.\nFormer TSA agent sentenced for recording coworker .\nAll this came to light after an anonymous tip from a TSA employee in November.\nThe agency launched an investigation, and investigator Chris Higgins monitored the two TSA officers in question, Denver police said in a report.\nHiggins watched the plan being carried out on February 9.\nHe interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said.\nBoth of the TSA officers investigated have been fired, TSA special agent Charles Stone told police.\nAuthorities did not release their names.\nGiant security gap at airports: Lack of criminal background checks .\nThe TSA called the incident deplorable.\n\"These alleged acts are egregious and intolerable,\" the agency said in a written statement to CNN.\n\"All allegations of misconduct are thoroughly investigated by the agency.\nAnd when substantiated, employees are held accountable.\"\nBut it's unlikely criminal charges will be filed because there is no identifiable victim.\nThe TSA said it has been trying to identify the passenger in the February incident but to no avail.\nThe TSA said no passengers have come forward with similar cases so far at the Denver airport.\nHidden cameras reveal airport workers stealing from luggage .\nCNN's Tony Marco contributed to this report.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "coverage_policy": "all_required",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "Two Denver TSA screeners were fired over the alleged groping scheme, according to police.",
+        "source_evidence": [
+          "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "According to police the female screener admitted doing it at least 10 other times.",
+        "source_evidence": [
+          "He interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "Charges were described as unlikely because no victim had been identified.",
+        "source_evidence": [
+          "But it's unlikely criminal charges will be filed because there is no identifiable victim.",
+          "The TSA said it has been trying to identify the passenger in the February incident but to no avail."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said."
+      },
+      {
+        "id": "P2",
+        "text": "He interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said."
+      },
+      {
+        "id": "P3",
+        "text": "But it's unlikely criminal charges will be filed because there is no identifiable victim."
+      }
+    ],
+    "answer": "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said. Police said the female officer would tell the screening machine that a female passenger -- not a male -- was walking through, triggering an anomaly in the groin area and prompting the male TSA officer to pat down the passenger. Investigator Chris Higgins interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said. But it's unlikely criminal charges will be filed because there is no identifiable victim."
+  },
+  {
+    "output_id": "B012",
+    "kind": "summary",
+    "source": "(CNN)A freshly fallen tree in the roadway was Jason Warnock's first clue.\nWarnock was driving through a canyon in Lewiston, Idaho, on Wednesday when he saw the tree, then looked up to see an SUV dangling over the edge of a cliff.\nThe only thing holding the GMC Yukon and its terrified driver from a 30-foot drop was a crumpled chain-link fence, still clinging to the earth above Bryden Canyon Road.\n\"I seen that guy hanging there and he was trying to beat the window out or the door open and I was like 'Oh man,' 'cause only like five links were hanging there,\" Warnock told KXLY, a CNN affiliate.\n\"I was like, I gotta do something and no one was doing anything.\"\nWhat Warnock did next, captured in a dramatic photo by Lewiston Tribune photographer Barry Kough, made headlines around the world.\nWarnock dashed from his car and scrambled up a hill to the Yukon and its driver, 23-year-old Matthew Sitko, who appeared to be in shock.\n\"I got up there and I was like, 'Are you alright man?'\nHe shook his head, yeah.\nI grabbed my Snap-on multi-tool and it had jagged edges on each end.\nI hit the window three times and it didn't break.\nEvery time I hit it, the thing rocked like it was going to fall off,\" Warnock told KXLY.\nSitko was finally able to get the passenger-side window down.\nWarnock then reached in and pulled Sitko out to safety -- a moment recorded by Kough's camera.\nThen Warnock disappeared.\n\"I left and got out of there before anyone knew who I was,\" he said.\nHe remained an unknown good Samaritan, his identity a mystery, until Kough's picture of the daring rescue appeared in the Lewiston paper and spread across the Internet.\n\"I don't feel like I deserve any credit or anything,\" Warnock said.\n\"I just did what anyone would do, went right back to work.\"\nThanks to Warnock, Sitko went to the hospital with just minor injuries.\n\"The Lewiston Police Department would like to thank Jason Warnock for his quick and decisive actions in helping Mr. Sitko and preventing the situation from worsening,\" said Roger Lanier, the interim police chief.\nWarnock told KXLY he didn't want or expect all the attention and would rather be fishing in the mountains than reading about himself.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "coverage_policy": "all_required",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "Warnock found an SUV dangling over a cliff in Lewiston, Idaho.",
+        "source_evidence": [
+          "Warnock was driving through a canyon in Lewiston, Idaho, on Wednesday when he saw the tree, then looked up to see an SUV dangling over the edge of a cliff."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "Warnock pulled Sitko out to safety.",
+        "source_evidence": [
+          "Warnock then reached in and pulled Sitko out to safety -- a moment recorded by Kough's camera."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "Sitko went to hospital with only minor injuries.",
+        "source_evidence": [
+          "Thanks to Warnock, Sitko went to the hospital with just minor injuries."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "Warnock was driving through a canyon in Lewiston, Idaho, on Wednesday when he saw the tree, then looked up to see an SUV dangling over the edge of a cliff."
+      },
+      {
+        "id": "P2",
+        "text": "Warnock then reached in and pulled Sitko out to safety -- a moment recorded by Kough's camera."
+      },
+      {
+        "id": "P3",
+        "text": "Thanks to Warnock, Sitko went to the hospital with just minor injuries."
+      }
+    ],
+    "answer": "Warnock was driving through a canyon in Lewiston, Idaho, on Wednesday when he saw the tree, then looked up to see an SUV dangling over the edge of a cliff. Warnock dashed from his car and scrambled up a hill to the Yukon and its driver, 23-year-old Matthew Sitko, who appeared to be in shock. Warnock then reached in and pulled Sitko out to safety -- a moment recorded by Kough's camera. Thanks to Warnock, Sitko went to the hospital with just minor injuries."
+  },
+  {
+    "output_id": "B013",
+    "kind": "summary",
+    "source": "(CNN)Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said.\nHere's how police say the scheme worked: When the male TSA officer noticed a man he found attractive, he would alert a female TSA officer.\nThe female officer would then tell the screening machine that a female passenger -- not a male -- was walking through.\nAnd that information would trigger a machine to register an anomaly in the groin area, prompting the male TSA officer to pat down the passenger, police said, citing a TSA investigation.\nBut during the patdown, the male TSA officer used the palms of his hands to touch the passenger's front groin area and buttocks, which violates TSA policy.\nFormer TSA agent sentenced for recording coworker .\nAll this came to light after an anonymous tip from a TSA employee in November.\nThe agency launched an investigation, and investigator Chris Higgins monitored the two TSA officers in question, Denver police said in a report.\nHiggins watched the plan being carried out on February 9.\nHe interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said.\nBoth of the TSA officers investigated have been fired, TSA special agent Charles Stone told police.\nAuthorities did not release their names.\nGiant security gap at airports: Lack of criminal background checks .\nThe TSA called the incident deplorable.\n\"These alleged acts are egregious and intolerable,\" the agency said in a written statement to CNN.\n\"All allegations of misconduct are thoroughly investigated by the agency.\nAnd when substantiated, employees are held accountable.\"\nBut it's unlikely criminal charges will be filed because there is no identifiable victim.\nThe TSA said it has been trying to identify the passenger in the February incident but to no avail.\nThe TSA said no passengers have come forward with similar cases so far at the Denver airport.\nHidden cameras reveal airport workers stealing from luggage .\nCNN's Tony Marco contributed to this report.",
+    "target": {
+      "length": "normal",
+      "extractiveness": "high",
+      "topic": ""
+    },
+    "coverage_policy": "all_required",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "Two Denver TSA screeners were fired over the alleged groping scheme, according to police.",
+        "source_evidence": [
+          "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "According to police the female screener admitted doing it at least 10 other times.",
+        "source_evidence": [
+          "He interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "Charges were described as unlikely because no victim had been identified.",
+        "source_evidence": [
+          "But it's unlikely criminal charges will be filed because there is no identifiable victim.",
+          "The TSA said it has been trying to identify the passenger in the February incident but to no avail."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said."
+      },
+      {
+        "id": "P2",
+        "text": "He interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said."
+      },
+      {
+        "id": "P3",
+        "text": "But it's unlikely criminal charges will be filed because there is no identifiable victim."
+      }
+    ],
+    "answer": "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said. Police say the female officer would tell the screening machine that a female passenger -- not a male -- was walking through, triggering an anomaly in the groin area and prompting the male officer to pat down the passenger. Investigator Chris Higgins watched the plan being carried out on February 9 and interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said. But it's unlikely criminal charges will be filed because there is no identifiable victim."
+  },
+  {
+    "output_id": "B016",
+    "kind": "summary",
+    "source": "(CNN)Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle.\nFollowing a recent state-wide ban on the sale and consumption of beef, authorities in the city have asked residents to take a 'mugshot' of their cattle and submit it to the police.\nAlong with the photograph, the residents have to give information about their animal's 'unique features,' such as the coloring and age of the cow, along with the length of its tail and other distinctive characteristics.\nPolice officials believe this is the only way to solve cow slaughter cases and enforce the law.\nCows are considered holy and revered by that state's majority Hindu population.\n\"We are creating a database.\nIf we get an information of a cow slaughter, we can quickly go to the resident's place and check whether it is there or not\", Mahesh Sawai, Deputy Superintendent of Malegaon Police told CNN.\n\"I believe this will be very effective\" So far over 100 owners have complied with the police order and more are lining up outside police stations across the city to get their livestock photographed.\nThe ruling came in the wake of a recent case of cow slaughter in Malegaon, where two men have been charged for killing the animal and and selling its meat.\nThe Maharashtra Animal Preservation Bill now includes bans on the killing of bulls and bullocks in its list of non-bailable offenses.\nEven the consumption or sale of beef could now land you in prison for five years.\nThe slaughter of buffaloes, however, is still permissible.\nHowever, beef traders in the country strongly reacted to the decision and called a month-long strike, which ended Wednesday.\nThe traders refused to even slaughter buffaloes and deprive the state of all bovine meat.\nThey have now vowed to file a case in the state's high court.\nRed meat lovers weren't too delighted either, arguing the government doesn't have a right to interfere in an individual's personal preference.\nMaharashtra is not the only Indian state to tighten its laws on cow slaughter.\nHaryana state has implemented a maximum punishment of 10 years in prison, the toughest penalty in the country.\nRajnath Singh, India's Home Minister has promised that he would do all to devise a country-wide law against cow slaughter.",
+    "target": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "coverage_policy": "all_required",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "Malegaon police require cattle identification/photos after the Maharashtra beef ban.",
+        "source_evidence": [
+          "Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle.",
+          "Following a recent state-wide ban on the sale and consumption of beef, authorities in the city have asked residents to take a 'mugshot' of their cattle and submit it to the police."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "Sale or consumption of beef may bring five years in prison.",
+        "source_evidence": [
+          "Even the consumption or sale of beef could now land you in prison for five years."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "Buffalo slaughter remains permissible.",
+        "source_evidence": [
+          "The slaughter of buffaloes, however, is still permissible."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle."
+      },
+      {
+        "id": "P2",
+        "text": "Even the consumption or sale of beef could now land you in prison for five years."
+      },
+      {
+        "id": "P3",
+        "text": "The slaughter of buffaloes, however, is still permissible."
+      }
+    ],
+    "answer": "Police in Malegaon, in India's Maharashtra state, are requiring cattle identity cards with photographs and identifying details to help enforce the state's beef ban. Selling or consuming beef can bring a five-year prison sentence, but slaughtering buffaloes remains legal."
+  },
+  {
+    "output_id": "B019",
+    "kind": "summary",
+    "source": "(The Hollywood Reporter)Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died.\nHe was 79.\nLewis, the father of Oscar-nominated actress Juliette Lewis, died Tuesday, family friend Michael Henderson said.\nNo other details were immediately available.\nLewis began his long association with Eastwood in \"High Plains Drifter\" (1973).\nHe also appeared with the actor in \"Thunderbolt and Lightfoot\" (1974), \"Bronco Billy\" (1980), \"Pink Cadillac\" (1989) and \"Midnight in the Garden of Good and Evil\" (1997).\nLewis scored a Golden Globe nomination for playing bartender Earl Tucker on the 1980s CBS sitcom \"Flo,\" the spinoff of \"Alice\" that starred Polly Holliday, and he had recurring roles on such series as \"Falcon Crest\" and the syndicated \"Land's End.\"\nHollywood Reporter: \"Fast 8\" nowhere near starting line .\nLewis portrayed real-life Prohibition-era gangster Harry Pierpont in \"Dillinger\" (1973), and his résumé also includes such notable films as \"The Great Waldo Pepper\" (1975), \"The Wind and the Lion\" (1975), \"Lucky Lady\" (1975), \"The Return of a Man Called Horse\" (1976), \"Heaven's Gate\" (1980), \"Catch Me If You Can\" (1989), \"The Lawnmower Man\" (1992), \"The Man Without a Face\" (1993), \"Maverick\" (1994) and \"The Devil's Rejects\" (2005).\nHollywood Reporter: Acclaimed satirist Stan Freberg dies .\nThe actor also stood out as a gravedigger turned vampire in the 1979 Tobe Hooper CBS miniseries \"Salem's Lot,\" an adaptation of the Stephen King novel.\nLewis had appeared on such 1970s TV shows as \"Then Came Bronson,\" \"Bonanza\" and \"The Name of the Game\" before scoring a minor role as a cowhand in \"The Culpepper Cattle Co.\" (1972).\nLater, he showed up on such series as \"Mod Squad,\" \"The Waltons,\" \"Police Woman,\" \"Mork & Mindy,\" \"Lou Grant,\" \"Gun Shy,\" \"Magnum, P.I.\"\nand \"The X-Files.\"\nLewis was a co-founder of the spoken-word performance group Celestial Navigations, working with musician and songwriter Geoff Levin.\nPeople we've lost in 2015 .\n©2015 The Hollywood Reporter.\nAll rights reserved.",
+    "target": {
+      "length": "short",
+      "extractiveness": "fully",
+      "topic": ""
+    },
+    "coverage_policy": "prioritize_with_omission",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "Actor Geoffrey Lewis died.",
+        "source_evidence": [
+          "Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "He was 79.",
+        "source_evidence": [
+          "He was 79."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "Family friend Michael Henderson reported he died Tuesday.",
+        "source_evidence": [
+          "Lewis, the father of Oscar-nominated actress Juliette Lewis, died Tuesday, family friend Michael Henderson said."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died."
+      },
+      {
+        "id": "P2",
+        "text": "He was 79."
+      },
+      {
+        "id": "P3",
+        "text": "Lewis, the father of Oscar-nominated actress Juliette Lewis, died Tuesday, family friend Michael Henderson said."
+      }
+    ],
+    "answer": "Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died. He was 79."
+  },
+  {
+    "output_id": "B023",
+    "kind": "summary",
+    "source": "(CNN)Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle.\nFollowing a recent state-wide ban on the sale and consumption of beef, authorities in the city have asked residents to take a 'mugshot' of their cattle and submit it to the police.\nAlong with the photograph, the residents have to give information about their animal's 'unique features,' such as the coloring and age of the cow, along with the length of its tail and other distinctive characteristics.\nPolice officials believe this is the only way to solve cow slaughter cases and enforce the law.\nCows are considered holy and revered by that state's majority Hindu population.\n\"We are creating a database.\nIf we get an information of a cow slaughter, we can quickly go to the resident's place and check whether it is there or not\", Mahesh Sawai, Deputy Superintendent of Malegaon Police told CNN.\n\"I believe this will be very effective\" So far over 100 owners have complied with the police order and more are lining up outside police stations across the city to get their livestock photographed.\nThe ruling came in the wake of a recent case of cow slaughter in Malegaon, where two men have been charged for killing the animal and and selling its meat.\nThe Maharashtra Animal Preservation Bill now includes bans on the killing of bulls and bullocks in its list of non-bailable offenses.\nEven the consumption or sale of beef could now land you in prison for five years.\nThe slaughter of buffaloes, however, is still permissible.\nHowever, beef traders in the country strongly reacted to the decision and called a month-long strike, which ended Wednesday.\nThe traders refused to even slaughter buffaloes and deprive the state of all bovine meat.\nThey have now vowed to file a case in the state's high court.\nRed meat lovers weren't too delighted either, arguing the government doesn't have a right to interfere in an individual's personal preference.\nMaharashtra is not the only Indian state to tighten its laws on cow slaughter.\nHaryana state has implemented a maximum punishment of 10 years in prison, the toughest penalty in the country.\nRajnath Singh, India's Home Minister has promised that he would do all to devise a country-wide law against cow slaughter.",
+    "target": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "coverage_policy": "all_required",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "Malegaon police require cattle identification/photos after the Maharashtra beef ban.",
+        "source_evidence": [
+          "Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle.",
+          "Following a recent state-wide ban on the sale and consumption of beef, authorities in the city have asked residents to take a 'mugshot' of their cattle and submit it to the police."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "Sale or consumption of beef may bring five years in prison.",
+        "source_evidence": [
+          "Even the consumption or sale of beef could now land you in prison for five years."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "Buffalo slaughter remains permissible.",
+        "source_evidence": [
+          "The slaughter of buffaloes, however, is still permissible."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle."
+      },
+      {
+        "id": "P2",
+        "text": "Even the consumption or sale of beef could now land you in prison for five years."
+      },
+      {
+        "id": "P3",
+        "text": "The slaughter of buffaloes, however, is still permissible."
+      }
+    ],
+    "answer": "Police in Malegaon, in India's Maharashtra state, are requiring cattle identity cards with photographs and identifying details to help enforce the state's beef ban. Consuming or selling beef could bring five years in prison, although buffalo slaughter remains legal."
+  },
+  {
+    "output_id": "B024",
+    "kind": "summary",
+    "source": "(CNN)Too little, too late.\nThat's the mayor's response to an artist's apology and offer to cover the cost of fixing the \"Scary Lucy\" statue that has put the New York town of Celoron in the spotlight this week.\nThe bronze figure of comedian and area native Lucille Ball has elicited comparisons to a \"Walking Dead\" zombie and inspired the Facebook campaign \"We Love Lucy!\nGet Rid of this Statue.\"\nThe sculpture, a gift to the town from its original owners, has been on display since 2009.\nArtist Dave Poulin has \"had plenty of opportunity to step forward, and our last conversation he wanted $8,000 to $10,000,\" Celoron Mayor Scott Schrecengost said.\n\"And then he stated that if we didn't have the funds and we didn't like the statue, we should take it down and put it in storage.\"\nAfter the story of the statue caught fire online this weekend, Poulin publicly apologized Monday for his \"most unsettling sculpture\" in a letter to The Hollywood Reporter.\n\"I take full responsibility for 'Scary Lucy,' though by no means was that my intent or did I wish to disparage in any way the memories of the iconic Lucy image,\" Poulin wrote in the letter (PDF).\n\"From the day of its installation, I have shared my disappointment in the final outcome and have always believed it to be by far my most unsettling sculpture, not befitting of Lucy's beauty or my ability as a sculptor.\"\nPoulin said he has been talking to Celoron officials for several years about removing and redoing the sculpture.\nIt seems that cost has been the chief barrier.\n\"It puzzles me when an art work is donated to a community, they accept it, and then get angry and insist you redo the art work at your own expense.\"\nPoulin wrote in the letter.\nBut the recent media attention to the sculpture seems to have changed his mind.\n\"I am willing to put my time and money into redoing the Lucy sculpture and feel confident after ten years I can do a much better job,\" Poulin wrote.\nNo thanks, Schrecengost said.\nHe said the town is looking for a new sculptor to fix the statue.\n\"It would be reworked from the shoulders up -- the entire head, neck and shoulders, not just the face,\" Schrecengost said in a news release Tuesday.\nThe town has set up a post office box for donations, which can also be made through Kickstarter.\nBut the controversy may not be over.\nIt seems that nearby Jamestown, New York, also has ties to Lucille Ball's early years and might be interested in its own tribute to the comedic legend.\nSchrecengost's Tuesday statement referred to an anonymous Facebook campaign that he claims is aimed at raising Jamestown's Lucille Ball profile at the expense of the Celoron statue.\n\"The best place for a life size statue of Lucy is right where it is now -- in Lucille Ball Memorial Park in her hometown, in the Village of Celoron, NY,\" he said.\nCNN's Emanuella Grinberg contributed to this story.",
+    "target": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "coverage_policy": "all_required",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "Poulin publicly apologized for his Scary Lucy sculpture.",
+        "source_evidence": [
+          "After the story of the statue caught fire online this weekend, Poulin publicly apologized Monday for his \"most unsettling sculpture\" in a letter to The Hollywood Reporter.",
+          "\"I take full responsibility for 'Scary Lucy,' though by no means was that my intent or did I wish to disparage in any way the memories of the iconic Lucy image,\" Poulin wrote in the letter (PDF)."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "Poulin offered his own time and money to redo it.",
+        "source_evidence": [
+          "\"I am willing to put my time and money into redoing the Lucy sculpture and feel confident after ten years I can do a much better job,\" Poulin wrote."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "The mayor refused and said the town wanted a different sculptor.",
+        "source_evidence": [
+          "No thanks, Schrecengost said.",
+          "He said the town is looking for a new sculptor to fix the statue."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "After the story of the statue caught fire online this weekend, Poulin publicly apologized Monday for his \"most unsettling sculpture\" in a letter to The Hollywood Reporter."
+      },
+      {
+        "id": "P2",
+        "text": "\"I am willing to put my time and money into redoing the Lucy sculpture and feel confident after ten years I can do a much better job,\" Poulin wrote."
+      },
+      {
+        "id": "P3",
+        "text": "He said the town is looking for a new sculptor to fix the statue."
+      }
+    ],
+    "answer": "After Celoron's “Scary Lucy” statue drew widespread online attention over the weekend, sculptor Dave Poulin publicly apologized Monday in The Hollywood Reporter for the disturbing sculpture and offered his time and money to remake it, expressing confidence that he could do much better after ten years. Celoron Mayor Scott Schrecengost rejected the offer and said the town was seeking a different sculptor to repair the Lucille Ball statue."
+  },
+  {
+    "output_id": "B025",
+    "kind": "summary",
+    "source": "(CNN)Too little, too late.\nThat's the mayor's response to an artist's apology and offer to cover the cost of fixing the \"Scary Lucy\" statue that has put the New York town of Celoron in the spotlight this week.\nThe bronze figure of comedian and area native Lucille Ball has elicited comparisons to a \"Walking Dead\" zombie and inspired the Facebook campaign \"We Love Lucy!\nGet Rid of this Statue.\"\nThe sculpture, a gift to the town from its original owners, has been on display since 2009.\nArtist Dave Poulin has \"had plenty of opportunity to step forward, and our last conversation he wanted $8,000 to $10,000,\" Celoron Mayor Scott Schrecengost said.\n\"And then he stated that if we didn't have the funds and we didn't like the statue, we should take it down and put it in storage.\"\nAfter the story of the statue caught fire online this weekend, Poulin publicly apologized Monday for his \"most unsettling sculpture\" in a letter to The Hollywood Reporter.\n\"I take full responsibility for 'Scary Lucy,' though by no means was that my intent or did I wish to disparage in any way the memories of the iconic Lucy image,\" Poulin wrote in the letter (PDF).\n\"From the day of its installation, I have shared my disappointment in the final outcome and have always believed it to be by far my most unsettling sculpture, not befitting of Lucy's beauty or my ability as a sculptor.\"\nPoulin said he has been talking to Celoron officials for several years about removing and redoing the sculpture.\nIt seems that cost has been the chief barrier.\n\"It puzzles me when an art work is donated to a community, they accept it, and then get angry and insist you redo the art work at your own expense.\"\nPoulin wrote in the letter.\nBut the recent media attention to the sculpture seems to have changed his mind.\n\"I am willing to put my time and money into redoing the Lucy sculpture and feel confident after ten years I can do a much better job,\" Poulin wrote.\nNo thanks, Schrecengost said.\nHe said the town is looking for a new sculptor to fix the statue.\n\"It would be reworked from the shoulders up -- the entire head, neck and shoulders, not just the face,\" Schrecengost said in a news release Tuesday.\nThe town has set up a post office box for donations, which can also be made through Kickstarter.\nBut the controversy may not be over.\nIt seems that nearby Jamestown, New York, also has ties to Lucille Ball's early years and might be interested in its own tribute to the comedic legend.\nSchrecengost's Tuesday statement referred to an anonymous Facebook campaign that he claims is aimed at raising Jamestown's Lucille Ball profile at the expense of the Celoron statue.\n\"The best place for a life size statue of Lucy is right where it is now -- in Lucille Ball Memorial Park in her hometown, in the Village of Celoron, NY,\" he said.\nCNN's Emanuella Grinberg contributed to this story.",
+    "target": {
+      "length": "short",
+      "extractiveness": "normal",
+      "topic": ""
+    },
+    "coverage_policy": "all_required",
+    "facts": [
+      {
+        "id": "F1",
+        "claim": "Poulin publicly apologized for his Scary Lucy sculpture.",
+        "source_evidence": [
+          "After the story of the statue caught fire online this weekend, Poulin publicly apologized Monday for his \"most unsettling sculpture\" in a letter to The Hollywood Reporter.",
+          "\"I take full responsibility for 'Scary Lucy,' though by no means was that my intent or did I wish to disparage in any way the memories of the iconic Lucy image,\" Poulin wrote in the letter (PDF)."
+        ]
+      },
+      {
+        "id": "F2",
+        "claim": "Poulin offered his own time and money to redo it.",
+        "source_evidence": [
+          "\"I am willing to put my time and money into redoing the Lucy sculpture and feel confident after ten years I can do a much better job,\" Poulin wrote."
+        ]
+      },
+      {
+        "id": "F3",
+        "claim": "The mayor refused and said the town wanted a different sculptor.",
+        "source_evidence": [
+          "No thanks, Schrecengost said.",
+          "He said the town is looking for a new sculptor to fix the statue."
+        ]
+      }
+    ],
+    "required_passages": [
+      {
+        "id": "P1",
+        "text": "After the story of the statue caught fire online this weekend, Poulin publicly apologized Monday for his \"most unsettling sculpture\" in a letter to The Hollywood Reporter."
+      },
+      {
+        "id": "P2",
+        "text": "\"I am willing to put my time and money into redoing the Lucy sculpture and feel confident after ten years I can do a much better job,\" Poulin wrote."
+      },
+      {
+        "id": "P3",
+        "text": "He said the town is looking for a new sculptor to fix the statue."
+      }
+    ],
+    "answer": "After his Lucille Ball statue in Celoron, New York, drew widespread online attention over the weekend, Dave Poulin apologized for its disturbing appearance in a Monday letter to The Hollywood Reporter and offered his own time and money to remake it, expressing confidence he could do better after ten years. Mayor Scott Schrecengost rejected the offer as too late and said the town was seeking another sculptor to rework the head, neck and shoulders."
+  }
+]

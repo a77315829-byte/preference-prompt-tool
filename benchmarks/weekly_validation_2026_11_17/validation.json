@@ -1,0 +1,23 @@
+{
+  "validated_utc": "2026-11-17T06:33:41.407240+00:00",
+  "seals_checked": [
+    "frozen.json",
+    "blind_seal.json",
+    "generation_seal.json",
+    "review_extension_seal.json",
+    "review_seal.json"
+  ],
+  "sealed_hash_entries_checked": 125,
+  "prior_json_files_unchanged": 566,
+  "original_dataset_identity": true,
+  "new_sources": 6,
+  "first_responses": 28,
+  "literal_applied_source_files": 24,
+  "react_evaluations_completed": 16,
+  "react_behavior_checks_completed": 80,
+  "independent_review_files": 56,
+  "all_review_evidence_substrings_valid": true,
+  "saved_scores_equal_recomputed": true,
+  "paid_model_api_calls": 0,
+  "original_experiment_artifacts_preserved": true
+}

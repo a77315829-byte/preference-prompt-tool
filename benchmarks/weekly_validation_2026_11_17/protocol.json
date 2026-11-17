@@ -1,0 +1,24 @@
+{
+  "prepared_utc": "2026-11-17T06:11:56.743481+00:00",
+  "arms": [
+    "manual",
+    "product"
+  ],
+  "summary_sources": 6,
+  "react_tasks": 8,
+  "first_responses": 28,
+  "design": "Strong investigator-written manual versus exact product builder requests. Targets already confirmed; whole-prompt comparison, not preference inference or causal attribution to one edited clause.",
+  "newness": "Source scan in source_sampling.json. Eight new synthetic React tasks differ from both previous eight-task sets. Public corpus may be in training.",
+  "generation": "Two fresh fork_turns=none Codex agents, inherited model/settings, each gets only its arm. Same task order. No tests/other arm/reference controls/old outputs. First response written once; no code execution; no paid API. One arm per conversation creates within-arm dependence.",
+  "controls": "Pre-generation reference positive and behavior-mutant controls for each new React task; old inspected evaluator reused, new JSDOM suites. Every candidate reviewed before execution.",
+  "evaluation": "TypeScript strict/public interface/any/suppression checks; 5 real React-JSDOM behavior checks per task; independent from 3-axis qualitative judgments. Summary automatic format plus evidence-based content review. Report failures and interpretation limits.",
+  "limitations": [
+    "Small convenience pilot; task/profile confounded; no significance, superiority or statistical equivalence claim.",
+    "No Korean summaries, actual human preferences, UI convenience, adoption, or human time saving measured.",
+    "No actual browser/layout/security/server coverage; code review/VM is not an OS sandbox.",
+    "Exact Codex model version, sampling configuration, token cost not exposed. Agent elapsed time is not human time.",
+    "No GEPA execution or evidence for GEPA necessity."
+  ],
+  "paid_model_api_calls": 0,
+  "stop": "Freeze inputs/rubric/tests and hashes before generation; seal outputs before evaluation; never tune/regenerate on results."
+}

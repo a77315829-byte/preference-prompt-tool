@@ -237,16 +237,21 @@ def test_recorded_gepa_seed_p_values_are_unchanged() -> None:
 
 
 def test_refused_optimisation_does_not_spend_the_caps(monkeypatch) -> None:
+    import hashlib
+    import time
     monkeypatch.setattr(api_server, "DAILY_OPTIMIZATIONS", DailyBudget(3))
     state = replace(_session("tie"), demo_mode=False)  # 실제 생성 세션, 전부 비슷해요
+    token = "test-comparison-owner"
+    digest = hashlib.sha256(token.encode()).hexdigest()
     with api_server.SESSIONS_LOCK:
-        api_server.SESSIONS[state.session_id] = state
+        api_server.COMPARISON_GUESTS[digest] = time.monotonic()
+        api_server._remember_session(state, owner=f"guest:{digest}")
     srv = ThreadingHTTPServer(("127.0.0.1", 0), api_server.ApiHandler)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     try:
         req = urllib.request.Request(
             f"http://127.0.0.1:{srv.server_address[1]}/api/sessions/{state.session_id}/optimize",
-            b"{}", {"Content-Type": "application/json"},
+            b"{}", {"Content-Type": "application/json", "Cookie": f"{api_server.COMPARISON_COOKIE}={token}"},
         )
         with pytest.raises(urllib.error.HTTPError) as err:
             urllib.request.urlopen(req)
@@ -257,4 +262,5 @@ def test_refused_optimisation_does_not_spend_the_caps(monkeypatch) -> None:
     finally:
         srv.shutdown()
         with api_server.SESSIONS_LOCK:
-            api_server.SESSIONS.pop(state.session_id, None)
+            api_server._drop_session(state.session_id)
+            api_server.COMPARISON_GUESTS.pop(digest, None)

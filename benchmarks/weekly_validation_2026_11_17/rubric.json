@@ -1,0 +1,16 @@
+{
+  "summary": {
+    "length": "Grammatical sentence count: short 1-2, normal 3-4, long >=5; automatic v3 count reported separately if disagreement.",
+    "wording": "normal is predominantly paraphrase allowing names/numbers/necessary expressions; high substantially reuses phrases with no upper bound; fully uses only complete source sentences unchanged except publisher/whitespace allowance, without duplicate padding.",
+    "content": "Review each frozen atomic fact against exact output evidence; separately review all three selected passages and every unsupported/distorted claim. Missing facts are not hallucinations. Keep_limits explicitly permits omission and does not require all selected facts.",
+    "priority": "Semantic information, not exact copying, unless fully. Attribution, qualifiers, uncertainty and the author perspective must remain clear.",
+    "no_composite_score": true
+  },
+  "react": {
+    "code_structure": "compact: all needed code/styles in one TSX; separated: meaningful connected component/style OR component/state boundary; style-only split is sufficient, no three-file quota.",
+    "style_management": "direct: literal design values in applied styles; theme: centralized semantic color/spacing tokens referenced by applied styles. A plain CSSProperties rule object is direct, not automatically theme.",
+    "type_detail": "inferred: omit inferable local/return/primitive state annotations, permit necessary public/empty/null/union/CSS/event types. explicit: type props, principal functions/returns/state/data; contextual concise inline callbacks allowed, explain ambiguous cases.",
+    "supporting": "Exact required panel values and unsubstantiated execution claims are checked separately. Do not count behavior bugs as style bugs automatically."
+  },
+  "review": "One investigator qualitative review, explicitly not a blinded independent human gold evaluation. Preserve evidence/uncertainty. Type and behavior measured separately. No response repair or retries."
+}

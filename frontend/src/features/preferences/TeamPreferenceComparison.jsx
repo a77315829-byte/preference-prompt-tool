@@ -74,6 +74,7 @@ function TeamPreferenceComparison({ item, disabled, onChange }) {
         <p className="ws-help">{comparison.personal_recognized
           ? `기본 지침에서 확인한 선호 중 ${different}개가 달라요. 미정 항목과 팀의 합의 상태도 확인하세요.`
           : '직접 수정·추가하거나 최적화한 지침은 선호 값을 확정하지 않습니다. 아래 본문 차이에서 내용을 확인해 주세요.'}</p>
+        {comparison.personal_prompt_legacy && <p className="ws-help">이전 버전의 기본 지침에서 선택을 확인했습니다. 저장한 원문은 유지되며, 새로 조합할 때는 현재 지침을 사용하므로 아래 본문 차이와 미리 보기를 확인하세요.</p>}
         <div className="preference-comparison-table"><table>
           <caption>보관한 내 선호와 현재 팀 기준</caption>
           <thead><tr><th scope="col">비교 항목</th><th scope="col">개인용</th><th scope="col">팀용</th><th scope="col">차이</th></tr></thead>

@@ -1,0 +1,16 @@
+{
+  "first_responses": 28,
+  "generators": {
+    "manual": "/root/weekly_output_validation/manual_generator",
+    "product": "/root/weekly_output_validation/product_generator"
+  },
+  "fork_turns": "none",
+  "both_completed": true,
+  "source_read_policy": "Assigned arm input and worker protocol only; no tests, references, rubric, prior results or other arm.",
+  "responded_once_no_regeneration": true,
+  "code_execution_by_generators": false,
+  "paid_model_api_calls": 0,
+  "model_identity": "Inherited runtime; exact model/decoding/token cost unavailable.",
+  "time_claim": "No human time, correction-time saving or productivity estimate is reported.",
+  "recorded_utc": "2026-11-17T06:25:44.209945+00:00"
+}

@@ -1,0 +1,172 @@
+# Final prompt alignment v2 (2026-11-17). Legacy coding.yaml remains frozen.
+# TypeScript/React 코딩 스타일 개인화 도메인
+
+domain: coding
+
+task_description: >-
+  아래 개발 요청을 해결하는 TypeScript/React 코드를 작성하라.
+  요청된 기능과 동작을 빠짐없이 구현하되, 요청에 없는 기능은 추가하지 마라.
+  비교 후보 사이에서 달라질 수 있는 것은 코드 구조, 스타일 관리 방식,
+  타입 작성 방식뿐이다. 이 스타일 지시가 기능 요구와 충돌하면 기능을 우선하라.
+  개발 요청에 명시된 데이터, 화면 문구, 입력·출력 동작을 그대로 사용하라.
+  임의의 데이터 모델, 기능, 라이브러리, 실행 진입점 파일을 덧붙이지 마라.
+  컴포넌트의 접근성 레이블과 키보드 조작을 챙겨라.
+  TypeScript/React에서 그대로 사용할 수 있는 유효한 코드만 제시하라.
+  실행에 필요한 모든 파일의 이름과 전체 코드를 제시하고 생략하지 마라.
+  사용자가 선호하는 코드 구성, 스타일 관리, 타입 작성 방식을
+  일관되게 적용하라.
+
+checks_module: checks.coding
+
+# 후보 하나의 출력 토큰 상한. 파일 여러 개의 전체 코드를 돌려주면 기본값(2,048)에서
+# 끊겨 코드가 없는 응답이 났다 (benchmarks/coding_ai_quality 의 signup_validation).
+max_output_tokens: 8192
+
+axes:
+  - name: code_structure
+    type: enum
+    description: 코드와 관련 로직을 나누는 방식
+
+    values:
+      - value: compact
+        prompt: >-
+          작은 기능은 한 파일 안에 컴포넌트, 상태 로직, 스타일을
+          함께 두어 간결하게 작성하라. 별도 CSS 파일도 만들지 말고
+          TSX 파일의 인라인 스타일 또는 스타일 객체를 사용하라.
+        check:
+          fn: file_structure
+          target:
+            max_files: 1
+
+      - value: separated
+        prompt: >-
+          컴포넌트와 스타일 또는 상태 로직을 역할별 파일로 분리하라.
+          필요 없는 하위 컴포넌트와 타입 전용 파일을 억지로
+          만들지 말고, 각 파일의 이름과 전체 코드를 명확히 제시하라.
+        check:
+          fn: file_structure
+          target:
+            min_files: 2
+
+  - name: style_management
+    type: enum
+    description: 색상, 간격, 글꼴 같은 디자인 값을 관리하는 방식
+
+    values:
+      - value: direct
+        prompt: >-
+          색상, 간격, 크기 같은 스타일 값은 스타일 파일이나
+          컴포넌트에 직접 작성하여 바로 확인할 수 있게 하라.
+        check:
+          fn: theme_usage
+          target:
+            max_theme_signals: 0
+
+      - value: theme
+        prompt: >-
+          색상, 간격, 글꼴 같은 디자인 값은 theme 또는
+          디자인 토큰으로 모아서 관리하라. 컴포넌트에서는
+          해당 값을 참조하여 전체 디자인을 쉽게 수정할 수 있게 하라.
+        check:
+          fn: theme_usage
+          target:
+            min_theme_signals: 2
+  - name: type_detail
+    type: enum
+    description: TypeScript 타입을 명시하는 정도
+
+    values:
+      - value: inferred
+        prompt: >-
+          타입 추론 중심으로 작성하라. React.FC와 단순한 변수·함수의
+          반환 타입처럼 추론 가능한 타입은 반복해서 쓰지 마라.
+          숫자·문자열·불리언 초기값의 useState<number>(0) 같은
+          불필요한 제네릭도 쓰지 마라.
+          단, 빈 배열이나 null로 시작하는 상태처럼 요소 타입을 추론할 수
+          없는 곳에는 useState<Item[]>([])처럼 필요한 타입을 명시하라.
+          의도한 유니언이나 CSS 값 제약을 추론할 수 없는 곳에도 필요한 타입을 명시하라.
+          이벤트 매개변수는 가능하면 인라인 핸들러로
+          추론하게 하고, 별도 함수가 필요하면 이벤트 타입만 명시하라.
+          Props처럼 TypeScript가 추론할 수 없는 공개 경계에도 타입을 작성하라.
+        check:
+          fn: type_explicitness
+          target:
+            max_signals: 3
+
+      - value: explicit
+        prompt: >-
+          Props, 함수 매개변수, 반환값, 상태와 주요 데이터 구조의
+          타입을 꼼꼼하게 명시하라.
+        check:
+          fn: type_explicitness
+          target:
+            min_signals: 5
+
+# 만든 프롬프트를 내보낼 곳 (exporters.py). 코딩 도구는 저장소 안의 파일을
+# 자동으로 읽으므로 채팅 서비스 복사에 더해 저장소용 파일을 준다.
+export_targets: [copilot, cursor, agents_md, chatgpt, claude, gemini]
+
+# 사용자에게 건네는 최종 프롬프트의 틀 (engine/generator.py 의
+# build_final_prompt). 후보를 만들 때 쓰는 문구와는 따로 둔다.
+final_prompt:
+  role: 당신은 이 사용자의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.
+  preference_note: 아래 선호는 사용자가 여러 코드 예시를 직접 비교하며 고른 결과에서 추정한 것이다.
+  preference_heading: 이 사용자의 선호
+  # 팀 모드(여러 사람의 선택을 합친 프롬프트)에서 쓰는 문구.
+  team_role: 당신은 이 팀의 코딩 취향에 맞춰 TypeScript/React 코드를 작성하는 페어 프로그래머다.
+  team_preference_note: 아래 선호는 팀원들이 각자 여러 코드 예시를 직접 비교하며 고른 결과를 합쳐 추정한 것이다.
+  team_preference_heading: 이 팀의 선호
+  rules_heading: 항상 지킬 것
+  output_heading: 출력 형식
+  rules:
+  - 그대로 붙여 넣어 실행할 수 있는 완성된 코드를 작성하라. 생략 표시(...)로 건너뛰지 마라.
+  - 요청에 없는 라이브러리를 새로 들이지 마라. 꼭 필요하면 이유를 한 줄로 밝혀라.
+  - 선호한 구조와 스타일을 예시 전체에 일관되게 적용하라.
+  - 접근성(레이블, 키보드 조작)을 기본으로 챙겨라.
+  output: 코드를 먼저 보여 주고, 그 방식을 고른 이유를 두세 문장으로 덧붙여라.
+  axis_labels:
+    code_structure: 코드 구성
+    style_management: 스타일 관리
+    type_detail: 타입 작성
+
+# 최적화 평가용 예시 입력 (새로 쓴 가상의 내용). 최적화가 사용자 원문
+# 하나에 맞춰 그 내용을 프롬프트에 박아 넣지 않도록, 후보를 고를 때
+# 이 입력들로 채점한다.
+example_sources:
+- A search input that filters a list of product names as the user types.
+- A modal dialog component with a title, body text, and confirm and cancel buttons.
+- A hook that fetches a user's profile from an API and exposes loading and error states.
+
+# 최종 프롬프트의 영어판 (화면 기본값). 후보 생성 지시문은 위 한국어 그대로다 -
+# 캐시 키와 실험 결과가 그 문구에 묶여 있다.
+final_prompt_translations:
+  en:
+    role: "You are a pair programmer who writes TypeScript/React code in this user's preferred style."
+    preference_note: "The preferences below were inferred from code examples the user picked while comparing several options."
+    team_role: "You are a pair programmer who writes TypeScript/React code in this team's preferred style."
+    team_preference_note: "The preferences below were inferred by combining the code examples each team member picked while comparing several options."
+    task: "Write TypeScript/React code that solves the development request below. Implement all requested behavior without adding unrequested features. Only code structure, style management, and typing may vary. If style preferences conflict with functional requirements, prioritize functionality. Preserve the specified data, UI text, and input/output behavior. Do not invent data models, features, libraries, or entry-point files. Cover accessible labels and keyboard interaction. Provide valid TypeScript/React code with every required file name and its complete code. Apply the chosen structure, style management, and typing consistently."
+    preference_heading: "This user's preferences"
+    team_preference_heading: "This team's preferences"
+    rules_heading: "Always"
+    rules:
+      - "Write complete code that can be pasted in and run as is. Do not skip parts with ellipses (...)."
+      - "Do not introduce libraries the request does not mention. If one is truly needed, say why in one line."
+      - "Apply the preferred structure and style consistently across the whole example."
+      - "Cover accessibility basics (labels, keyboard interaction) by default."
+    output_heading: "Output format"
+    output: "Show the code first, then add two or three sentences on why you chose that approach."
+    axis_labels:
+      code_structure: "Code structure"
+      style_management: "Style management"
+      type_detail: "Typing"
+    instructions:
+      code_structure:
+        compact: "For small features, keep the component, state logic, and styles together in one file. Do not create a separate CSS file; use inline styles or style objects inside the TSX file."
+        separated: "Separate the component from styles or state logic into files by responsibility. Do not force unnecessary child components or type-only files. Clearly present every file name and its complete code."
+      style_management:
+        direct: "Write style values such as colors, spacing, and sizes directly in the style file or component so they are visible right away."
+        theme: "Collect design values such as colors, spacing, and fonts in a theme or design tokens, and reference them from components so the whole design is easy to change."
+      type_detail:
+        inferred: "Favor type inference. Do not repeat inferable types, including React.FC, simple variable or return types, and redundant generics such as useState<number>(0) for primitive initial values. Add necessary types where inference cannot determine the intended type, including empty arrays, null-initialized state, unions, and constrained CSS values. Prefer inline event handlers for contextual inference; annotate the event parameter when a separate handler is needed. Type public boundaries such as props that TypeScript cannot infer."
+        explicit: "Explicitly type props, function parameters, return values, state, and the main data structures."

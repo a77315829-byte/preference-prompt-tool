@@ -1,0 +1,22 @@
+{
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\nimport { panelStyle } from './Component.styles';\n\nexport type Relation = 'less' | 'equal' | 'greater';\nexport type Props = { onCompare: (relation: Relation) => void };\n\nfunction parseInteger(input: string) {\n  const trimmed = input.trim();\n  if (!/^-?\\d+$/.test(trimmed)) return null;\n  const value = Number(trimmed);\n  return Number.isSafeInteger(value) ? value : null;\n}\n\nexport function Component({ onCompare }: Props) {\n  const [left, setLeft] = useState('');\n  const [right, setRight] = useState('');\n  const [result, setResult] = useState<Relation | null>(null);\n  const [hasError, setHasError] = useState(false);\n\n  return (\n    <div data-testid=\"panel\" style={panelStyle}>\n      <label>\n        Left\n        <input\n          type=\"text\"\n          value={left}\n          onChange={(event) => setLeft(event.target.value)}\n        />\n      </label>\n      <label>\n        Right\n        <input\n          type=\"text\"\n          value={right}\n          onChange={(event) => setRight(event.target.value)}\n        />\n      </label>\n      <button\n        type=\"button\"\n        onClick={() => {\n          const leftValue = parseInteger(left);\n          const rightValue = parseInteger(right);\n          if (leftValue === null || rightValue === null) {\n            setHasError(true);\n            return;\n          }\n          const relation = leftValue < rightValue\n            ? 'less'\n            : leftValue > rightValue\n              ? 'greater'\n              : 'equal';\n          setResult(relation);\n          setHasError(false);\n          onCompare(relation);\n        }}\n      >\n        Compare\n      </button>\n      {hasError && <div role=\"alert\">Invalid integers</div>}\n      <output aria-label=\"Result\">{result ?? 'Not compared'}</output>\n    </div>\n  );\n}\n",
+    "Component.styles.ts": "import type { CSSProperties } from 'react';\n\nconst theme = {\n  colors: { panel: '#eef4ff', text: '#17345c' },\n  spacing: { padding: 12, gap: 6 },\n};\n\nexport const panelStyle = {\n  display: 'grid',\n  background: theme.colors.panel,\n  color: theme.colors.text,\n  padding: theme.spacing.padding,\n  gap: theme.spacing.gap,\n} satisfies CSSProperties;\n"
+  },
+  "provenance": [
+    {
+      "filename": "Component.tsx",
+      "block_index": 0,
+      "start": 21,
+      "end": 1817,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    },
+    {
+      "filename": "Component.styles.ts",
+      "block_index": 1,
+      "start": 1848,
+      "end": 2194,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "output_id": "B001",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "import \"./Component.css\";",
+        "<div data-testid=\"panel\" className=\"question-deck-panel\">",
+        ".question-deck-panel {"
+      ],
+      "reason": "컴포넌트가 별도 제공된 CSS 파일의 클래스 규칙을 실제로 사용하여 의미 있는 스타일 경계가 있다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "background: #eef4ff;\n  color: #17345c;\n  padding: 12px;\n  gap: 6px;"
+      ],
+      "reason": "적용된 CSS 규칙에 색상과 간격을 리터럴 값으로 직접 지정한다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "export type Props = { cards: Card[]; onFinish: (ids: string[]) => void };",
+        "const [deck] = useState(() => [...cards]);",
+        "const [completed, setCompleted] = useState(0);",
+        "function next() {"
+      ],
+      "reason": "공개 props/data 타입을 명시하고 지역 상태·반환 타입·지역 계산은 추론한다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

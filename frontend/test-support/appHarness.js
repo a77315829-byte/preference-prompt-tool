@@ -54,8 +54,12 @@ export async function mount(url, invitedDomain = 'coding', overrideFetch = null)
       state.sessions += 1;
       assert.equal(body.domainKey, state.team.domain_key);
       data = { session };
+      state.comparisonSession = session;
     } else if (path === '/api/sessions/s1/choices') {
       data = { session: { ...session, answered: 1, done: true, pair: null, prompt: '개인 지침', prompts: { ko: '개인 지침' }, prompt_language: 'ko', exports: [] } };
+      state.comparisonSession = data.session;
+    } else if (path === '/api/sessions/s1') {
+      data = { session: state.comparisonSession || session };
     } else if (path === `/api/teams/${state.team.code}/members`) {
       assert.equal(body.requireExisting, true);
       assert.equal(body.sessionId, 's1');

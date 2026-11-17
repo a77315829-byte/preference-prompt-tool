@@ -1,0 +1,142 @@
+{
+  "B001": {
+    "id": "question_deck",
+    "arm": "manual",
+    "kind": "react"
+  },
+  "B002": {
+    "id": "reading_history",
+    "arm": "manual",
+    "kind": "react"
+  },
+  "B003": {
+    "id": "S03",
+    "arm": "manual",
+    "kind": "summary"
+  },
+  "B004": {
+    "id": "comparison_snapshot",
+    "arm": "manual",
+    "kind": "react"
+  },
+  "B005": {
+    "id": "text_normalizer",
+    "arm": "manual",
+    "kind": "react"
+  },
+  "B006": {
+    "id": "S05",
+    "arm": "product",
+    "kind": "summary"
+  },
+  "B007": {
+    "id": "S02",
+    "arm": "manual",
+    "kind": "summary"
+  },
+  "B008": {
+    "id": "reading_history",
+    "arm": "product",
+    "kind": "react"
+  },
+  "B009": {
+    "id": "S02",
+    "arm": "product",
+    "kind": "summary"
+  },
+  "B010": {
+    "id": "S06",
+    "arm": "product",
+    "kind": "summary"
+  },
+  "B011": {
+    "id": "cent_split",
+    "arm": "product",
+    "kind": "react"
+  },
+  "B012": {
+    "id": "S03",
+    "arm": "product",
+    "kind": "summary"
+  },
+  "B013": {
+    "id": "S06",
+    "arm": "manual",
+    "kind": "summary"
+  },
+  "B014": {
+    "id": "text_normalizer",
+    "arm": "product",
+    "kind": "react"
+  },
+  "B015": {
+    "id": "signal_cycle",
+    "arm": "manual",
+    "kind": "react"
+  },
+  "B016": {
+    "id": "S01",
+    "arm": "manual",
+    "kind": "summary"
+  },
+  "B017": {
+    "id": "item_reorder",
+    "arm": "manual",
+    "kind": "react"
+  },
+  "B018": {
+    "id": "weighted_counter",
+    "arm": "manual",
+    "kind": "react"
+  },
+  "B019": {
+    "id": "S05",
+    "arm": "manual",
+    "kind": "summary"
+  },
+  "B020": {
+    "id": "question_deck",
+    "arm": "product",
+    "kind": "react"
+  },
+  "B021": {
+    "id": "weighted_counter",
+    "arm": "product",
+    "kind": "react"
+  },
+  "B022": {
+    "id": "signal_cycle",
+    "arm": "product",
+    "kind": "react"
+  },
+  "B023": {
+    "id": "S01",
+    "arm": "product",
+    "kind": "summary"
+  },
+  "B024": {
+    "id": "S04",
+    "arm": "product",
+    "kind": "summary"
+  },
+  "B025": {
+    "id": "S04",
+    "arm": "manual",
+    "kind": "summary"
+  },
+  "B026": {
+    "id": "comparison_snapshot",
+    "arm": "product",
+    "kind": "react"
+  },
+  "B027": {
+    "id": "cent_split",
+    "arm": "manual",
+    "kind": "react"
+  },
+  "B028": {
+    "id": "item_reorder",
+    "arm": "product",
+    "kind": "react"
+  }
+}

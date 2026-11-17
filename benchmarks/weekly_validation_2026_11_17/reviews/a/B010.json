@@ -1,0 +1,63 @@
+{
+  "output_id": "B010",
+  "kind": "summary",
+  "response_kind": "summary",
+  "sentence_count": 4,
+  "length_pass": true,
+  "wording_pass": true,
+  "wording_reason": "첫째와 마지막 문장을 그대로 쓰고 가운데도 원문의 상당한 구절을 유지하여 high에 부합한다.",
+  "facts": [
+    {
+      "id": "F1",
+      "preserved": true,
+      "evidence": [
+        "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said."
+      ],
+      "reason": "두 직원 해고와 경찰 귀속을 보존한다."
+    },
+    {
+      "id": "F2",
+      "preserved": true,
+      "evidence": [
+        "Investigator Chris Higgins interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said."
+      ],
+      "reason": "동료와 최소 10회 더 했다는 여성 직원 전언 및 경찰 귀속을 보존한다."
+    },
+    {
+      "id": "F3",
+      "preserved": true,
+      "evidence": [
+        "But it's unlikely criminal charges will be filed because there is no identifiable victim."
+      ],
+      "reason": "기소 가능성이 낮다는 불확실성과 피해자 식별 불가라는 이유를 보존한다."
+    }
+  ],
+  "priorities": [
+    {
+      "id": "P1",
+      "preserved": true,
+      "evidence": [
+        "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said."
+      ],
+      "reason": "선택 문장 전체가 있다."
+    },
+    {
+      "id": "P2",
+      "preserved": true,
+      "evidence": [
+        "Investigator Chris Higgins interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said."
+      ],
+      "reason": "대명사를 조사관 이름으로 명확히 하면서 면담과 진술 정보를 보존한다."
+    },
+    {
+      "id": "P3",
+      "preserved": true,
+      "evidence": [
+        "But it's unlikely criminal charges will be filed because there is no identifiable victim."
+      ],
+      "reason": "선택 문장 전체가 있다."
+    }
+  ],
+  "issues": [],
+  "ambiguities": []
+}

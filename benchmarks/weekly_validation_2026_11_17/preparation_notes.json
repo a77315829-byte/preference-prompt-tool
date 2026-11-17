@@ -1,0 +1,5 @@
+{
+  "controls_initial_failure": "Six assertions on correct reference controls failed because strict deep equality compared callback arrays across VM realms. Before generation, callbacks in the two affected suites were normalized with array spread. No requested behavior or expected value changed. Initial results are preserved.",
+  "controls_final": "8/8 references pass strict types and 40/40 behavior checks; 8/8 type-valid behavior mutants detected.",
+  "freeze_rule": "No generated answers existed before inputs and evaluator were sealed."
+}

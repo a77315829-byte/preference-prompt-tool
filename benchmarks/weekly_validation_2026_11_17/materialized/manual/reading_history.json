@@ -1,0 +1,14 @@
+{
+  "files": {
+    "Component.tsx": "import { useState } from \"react\";\n\nexport type Props = { onRecord: (value: number) => void };\n\nexport function Component({ onRecord }: Props) {\n  const [reading, setReading] = useState(\"\");\n  const [history, setHistory] = useState<number[]>([]);\n  const [hasError, setHasError] = useState(false);\n\n  function record() {\n    const text = reading.trim();\n    const value = Number(text);\n    if (!/^-?[0-9]+$/.test(text) || !Number.isSafeInteger(value)) {\n      setHasError(true);\n      return;\n    }\n    setHistory((previous) => [...previous, value]);\n    setReading(\"\");\n    setHasError(false);\n    onRecord(value);\n  }\n\n  function clear() {\n    setHistory([]);\n    setReading(\"\");\n    setHasError(false);\n  }\n\n  return (\n    <div\n      data-testid=\"panel\"\n      style={{\n        background: \"#eef4ff\",\n        color: \"#17345c\",\n        padding: \"12px\",\n        gap: \"6px\",\n        display: \"grid\",\n      }}\n    >\n      <label>\n        Reading\n        <input\n          type=\"text\"\n          value={reading}\n          onChange={(event) => setReading(event.currentTarget.value)}\n        />\n      </label>\n      <button type=\"button\" onClick={record}>Record</button>\n      <button type=\"button\" onClick={clear}>Clear</button>\n      {hasError && <p role=\"alert\">Invalid reading</p>}\n      <output aria-label=\"Latest\">\n        {history.length === 0 ? \"None\" : history[history.length - 1]}\n      </output>\n      <ul aria-label=\"History\">\n        {history.map((value, index) => <li key={index}>{value}</li>)}\n      </ul>\n    </div>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "filename": "Component.tsx",
+      "block_index": 0,
+      "start": 21,
+      "end": 1552,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    }
+  ]
+}

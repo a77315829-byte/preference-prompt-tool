@@ -5,7 +5,9 @@ from dataclasses import asdict
 import hashlib
 from itertools import product
 import json
+from pathlib import Path
 
+from engine.domain_loader import load_domain
 from engine.generator import build_final_prompt
 import service
 import team
@@ -21,6 +23,20 @@ def _task_wording(domain, prompt: str, language: str) -> str:
 
 def recognize_standard_prompt(domain, prompt: str):
     """기본 생성문 전체가 일치할 때만 축을 확인한다. 수정·최적화 문구는 추측하지 않는다."""
+    found = _recognize_exact_prompt(domain, prompt)
+    if found is not None:
+        return found
+    if domain.name == "coding":
+        # v2 must not make unedited v1 saved instructions look like user edits.
+        # Match the entire frozen v1 body; never infer axes from isolated phrases.
+        legacy = load_domain(Path(__file__).resolve().parent / "domains/coding.yaml")
+        found = _recognize_exact_prompt(legacy, prompt)
+        if found is not None:
+            return {**found, "legacy": True}
+    return None
+
+
+def _recognize_exact_prompt(domain, prompt: str):
     options = [["", *[v.value for v in a.values]] if a.type == "enum" else [""] for a in domain.axes]
     count = 1
     for values in options:
@@ -73,6 +89,7 @@ def compare_preferences(item: dict, domain, code: str, name: str, members: list,
     comparison_prompt = build_final_prompt(domain, basis["combo"], language=None if language == "ko" else language)
     return {"preference_id": item["id"], "revision": item["revision"], "team_code": code, "team_name": name,
             "domain_key": domain.name, "team_members": len(members), "personal_recognized": personal is not None,
+            "personal_prompt_legacy": bool(personal and personal.get("legacy")),
             "axes": axes, "team_prompt": basis["prompt"], "team_snapshot": basis["snapshot"],
             "comparison_prompt": comparison_prompt, "team_language": language, "languages": languages}
 

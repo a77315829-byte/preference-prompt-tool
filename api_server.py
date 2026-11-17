@@ -8,8 +8,10 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 import os
+import secrets
 import threading
 import time
 from dataclasses import asdict, replace
@@ -141,32 +143,40 @@ ALLOWED_ORIGINS = frozenset(
 # 비교 세션은 메모리에만 있다. 데모 세션은 하루 상한 없이 만들 수 있어서 지우지 않으면
 # 방문할 때마다 쌓인다 (원문 12,000자에 코딩 후보 코드까지, 한 세션에 수십 KB). 새 세션을
 # 만들 때 만든 지 SESSION_TTL_SECONDS 가 지난 세션과, MAX_SESSIONS 를 넘는 가장 오래된
-# 세션을 지운다. 최적화가 돌고 있는 세션은 남긴다.
+# 세션을 지운다. 용량 정리에서는 최적화 중인 세션을 남기지만 TTL은 항상 적용한다.
 MAX_SESSIONS = int(os.environ.get("PPT_MAX_SESSIONS", "500"))
 SESSION_TTL_SECONDS = int(float(os.environ.get("PPT_SESSION_TTL_HOURS", "12")) * 3600)
 SESSIONS: dict[str, service.SessionState] = {}
 # 세션을 만든 시각(time.monotonic). 만든 순서대로 들어간다.
 SESSION_STARTED: dict[str, float] = {}
+SESSION_OWNERS: dict[str, str] = {}
+COMPARISON_GUESTS: dict[str, float] = {}
+COMPARISON_COOKIE = "ppt_comparison"
 SESSIONS_LOCK = threading.Lock()
 
 
-def _remember_session(state: service.SessionState, now: float | None = None) -> None:
+def _drop_session(session_id: str) -> None:
+    """Call with SESSIONS_LOCK held; remove results and access metadata together."""
+    for store in (SESSIONS, SESSION_STARTED, SESSION_OWNERS, OPTIMIZE_RUNS, OPTIMIZE_REPORTS):
+        store.pop(session_id, None)
+
+
+def _remember_session(state: service.SessionState, now: float | None = None, *, owner: str | None = None) -> None:
     """새 세션을 넣기 전에 오래된 세션을 지운다. SESSIONS_LOCK 을 잡은 채로 부른다."""
     now = time.monotonic() if now is None else now
     removable = [sid for sid in SESSION_STARTED
                  if getattr(SESSIONS.get(sid), "optimize_status", None) != "running"]
-    stale = [sid for sid in removable if now - SESSION_STARTED[sid] > SESSION_TTL_SECONDS]
+    stale = [sid for sid in SESSION_STARTED if now >= SESSION_STARTED[sid] + SESSION_TTL_SECONDS]
     overflow = len(SESSION_STARTED) - len(stale) - (MAX_SESSIONS - 1)
     if overflow > 0:
         stale_set = set(stale)
         stale += [sid for sid in removable if sid not in stale_set][:overflow]
     for sid in stale:
-        SESSIONS.pop(sid, None)
-        SESSION_STARTED.pop(sid, None)
-        OPTIMIZE_RUNS.pop(sid, None)
-        OPTIMIZE_REPORTS.pop(sid, None)
+        _drop_session(sid)
     SESSIONS[state.session_id] = state
     SESSION_STARTED[state.session_id] = now
+    if owner:
+        SESSION_OWNERS[state.session_id] = owner
 
 
 def _jsonable(value: Any) -> Any:
@@ -190,6 +200,9 @@ def _prompt_languages(domain, template_id: str | None) -> list[str]:
 
 def _state_payload(state: service.SessionState) -> dict[str, Any]:
     payload = _jsonable(state)
+    started = SESSION_STARTED.get(state.session_id)
+    if started is not None:
+        payload["expires_in_seconds"] = max(0, SESSION_TTL_SECONDS - (time.monotonic() - started))
     payload["round"] = state.round
     payload["answered"] = state.answered
     if state.domain_key == "coding" and state.demo_mode:
@@ -282,7 +295,7 @@ def _team_payload(code: str, user_id: int | None = None) -> dict[str, Any]:
 
 def _domain_path(domain_key: str) -> str:
     allowed = {
-        "coding": ROOT / "domains" / "coding.yaml",
+        "coding": ROOT / "domains" / "coding" / "v2.yaml",
         "review": ROOT / "domains" / "review.yaml",
         "email": ROOT / "domains" / "email.yaml",
         "summarization": ROOT / "domains" / "summarization_grounded_v3.yaml",
@@ -623,6 +636,96 @@ class ApiHandler(BaseHTTPRequestHandler):
             self._user_cache = AUTH.user_for(self._session_token())
         return self._user_cache
 
+    def _comparison_guest(self) -> str | None:
+        try:
+            cookie = SimpleCookie(self.headers.get("Cookie", "")).get(COMPARISON_COOKIE)
+        except CookieError:
+            return None
+        return hashlib.sha256(cookie.value.encode()).hexdigest() if cookie else None
+
+    def _comparison_owner(self) -> str | None:
+        # Revalidate after slow generation too: a cached user may have logged out.
+        token = self._session_token()
+        if token:
+            user = AUTH.user_for(token)
+            return f"user:{user.id}:{hashlib.sha256(token.encode()).hexdigest()}" if user else None
+        guest = self._comparison_guest()
+        issued = COMPARISON_GUESTS.get(guest)
+        if issued is not None and time.monotonic() < issued + SESSION_TTL_SECONDS:
+            return f"guest:{guest}"
+        return None
+
+    def _comparison_start_owner(self) -> tuple[str, list[str]]:
+        """Called under SESSIONS_LOCK. Guests receive a server-created HttpOnly secret."""
+        owner = self._comparison_owner()
+        if self._session_token():
+            if owner is None:
+                raise AuthError("로그인이 만료되었습니다. 다시 로그인해 주세요.")
+            return owner, []
+        now = time.monotonic()
+        for digest, issued in list(COMPARISON_GUESTS.items()):
+            if now >= issued + SESSION_TTL_SECONDS:
+                COMPARISON_GUESTS.pop(digest, None)
+        if owner:
+            token = SimpleCookie(self.headers.get("Cookie", ""))[COMPARISON_COOKIE].value
+            digest = owner.removeprefix("guest:")
+        else:
+            token = secrets.token_urlsafe(32)
+            digest = hashlib.sha256(token.encode()).hexdigest()
+            while len(COMPARISON_GUESTS) >= max(1, MAX_SESSIONS):
+                COMPARISON_GUESTS.pop(next(iter(COMPARISON_GUESTS)))
+            self._new_comparison_owner = f"guest:{digest}"
+        COMPARISON_GUESTS[digest] = now
+        cookie = (f"{COMPARISON_COOKIE}={token}; Path=/; HttpOnly; SameSite=Lax; "
+                  f"Max-Age={SESSION_TTL_SECONDS}" + ("; Secure" if COOKIE_SECURE else ""))
+        return f"guest:{digest}", [cookie]
+
+    def _comparison_state(self, session_id: str) -> service.SessionState | None:
+        """Called under SESSIONS_LOCK. Unknown/foreign/expired sessions look identical."""
+        started = SESSION_STARTED.get(session_id)
+        if started is None:
+            return None
+        if started is not None and time.monotonic() >= started + SESSION_TTL_SECONDS:
+            _drop_session(session_id)
+        owner = self._comparison_owner()
+        if not owner or SESSION_OWNERS.get(session_id) != owner:
+            return None
+        return SESSIONS.get(session_id)
+
+    def _comparison_missing(self) -> None:
+        self._send(404, {"error": "비교 세션이 만료되었거나 접근할 수 없습니다. 다시 시작해 주세요.",
+                         "code": "comparison_unavailable"})
+
+    def _comparison_save(self, original: service.SessionState, updated: service.SessionState) -> bool:
+        with SESSIONS_LOCK:
+            current = self._comparison_state(original.session_id)
+            if current is None:
+                self._comparison_missing()
+                return False
+            if current is not original or current.optimize_status == "running":
+                raise service.StaleChoiceError("비교 상태가 변경되었습니다. 현재 화면을 다시 확인해 주세요.")
+            SESSIONS[original.session_id] = updated
+        return True
+
+    def _comparison_auth_transition(self, token: str | None = None, user: User | None = None) -> str:
+        """Login promotes this guest's sessions; account changes/logout revoke old access."""
+        with SESSIONS_LOCK:
+            old = self._comparison_owner()
+            auth_token = self._session_token()
+            auth_suffix = f":{hashlib.sha256(auth_token.encode()).hexdigest()}" if auth_token else None
+            guest = self._comparison_guest()
+            guest_owner = f"guest:{guest}" if guest else None
+            new = f"user:{user.id}:{hashlib.sha256(token.encode()).hexdigest()}" if token and user else None
+            for sid, owner in list(SESSION_OWNERS.items()):
+                if new and old == guest_owner and owner == old:
+                    SESSION_OWNERS[sid] = new
+                elif owner and (owner in (old, guest_owner) or (auth_suffix and owner.endswith(auth_suffix))):
+                    _drop_session(sid)
+            if guest:
+                COMPARISON_GUESTS.pop(guest, None)
+        return (f"{COMPARISON_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0"
+                + ("; Secure" if COOKIE_SECURE else ""))
+
     def _client_address(self) -> str:
         """로그인 실패를 셀 방문자 주소.
 
@@ -664,7 +767,8 @@ class ApiHandler(BaseHTTPRequestHandler):
                 self._send(429, {"error": str(exc)})
                 return
             print(f"[auth] 가입 {user.username}", flush=True)
-            self._send(200, {"user": _user_payload(user)}, cookies=[_session_cookie(token)])
+            cleared = self._comparison_auth_transition(token, user)
+            self._send(200, {"user": _user_payload(user)}, cookies=[_session_cookie(token), cleared])
             return
         if path == "/api/auth/login":
             try:
@@ -673,11 +777,13 @@ class ApiHandler(BaseHTTPRequestHandler):
             except TooManyAttempts as exc:
                 self._send(429, {"error": str(exc)})
                 return
-            self._send(200, {"user": _user_payload(user)}, cookies=[_session_cookie(token)])
+            cleared = self._comparison_auth_transition(token, user)
+            self._send(200, {"user": _user_payload(user)}, cookies=[_session_cookie(token), cleared])
             return
         if path == "/api/auth/logout":
+            cleared = self._comparison_auth_transition()
             AUTH.logout(self._session_token())
-            self._send(200, {"user": None}, cookies=[_clear_cookie()])
+            self._send(200, {"user": None}, cookies=[_clear_cookie(), cleared])
             return
         if path in ("/api/auth/password", "/api/auth/delete"):
             user = self._current_user()
@@ -688,11 +794,13 @@ class ApiHandler(BaseHTTPRequestHandler):
                 if path == "/api/auth/password":
                     token = AUTH.change_password(user, str(body.get("current", "")), str(body.get("new", "")),
                                                  address=self._client_address())
-                    self._send(200, {"user": _user_payload(user)}, cookies=[_session_cookie(token)])
+                    cleared = self._comparison_auth_transition()
+                    self._send(200, {"user": _user_payload(user)}, cookies=[_session_cookie(token), cleared])
                 else:
                     AUTH.delete_account(user, str(body.get("password", "")), address=self._client_address())
                     print(f"[auth] 탈퇴 {user.username}", flush=True)
-                    self._send(200, {"user": None}, cookies=[_clear_cookie()])
+                    cleared = self._comparison_auth_transition()
+                    self._send(200, {"user": None}, cookies=[_clear_cookie(), cleared])
             except TooManyAttempts as exc:
                 self._send(429, {"error": str(exc)})
             return
@@ -762,9 +870,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         parts = path.split("/")
         if len(parts) == 4 and parts[:3] == ["", "api", "sessions"]:
             with SESSIONS_LOCK:
-                state = SESSIONS.get(parts[3])
+                state = self._comparison_state(parts[3])
             if state is None:
-                self._send(404, {"error": "세션을 찾을 수 없습니다."})
+                self._comparison_missing()
                 return
             self._send(200, {"session": _state_payload(state)})
             return
@@ -1229,6 +1337,12 @@ class ApiHandler(BaseHTTPRequestHandler):
                        else str(body.get("sourceText", "")).strip()[:12_000])
         if not source_text:
             raise ValueError("sourceText가 필요합니다.")
+        with SESSIONS_LOCK:
+            if self._session_token() and self._comparison_owner() is None:
+                self._send(401, {"error": "로그인이 만료되었습니다. 다시 로그인해 주세요.",
+                                 "code": "comparison_unavailable"})
+                return
+            owner, cookies = self._comparison_start_owner()
         demo_mode = True
         demo_reason = "live_disabled" if not LIVE else None
         if LIVE:
@@ -1265,17 +1379,25 @@ class ApiHandler(BaseHTTPRequestHandler):
             state.demo_reason = demo_reason
         print(f"[session] {domain_key} mode={'demo' if state.demo_mode else 'live'}", flush=True)
         with SESSIONS_LOCK:
-            _remember_session(state)
-        self._send(201, {"session": _state_payload(state)})
+            new_guest = getattr(self, "_new_comparison_owner", None)
+            owner_valid = self._comparison_owner() == owner or (
+                new_guest == owner and owner.removeprefix("guest:") in COMPARISON_GUESTS)
+            if not owner_valid:
+                self._comparison_missing()
+                return
+            _remember_session(state, owner=owner)
+        self._send(201, {"session": _state_payload(state)}, cookies=cookies)
 
     def _submit_choice(self, session_id: str, body: dict[str, Any]) -> None:
         chosen = str(body.get("chosen", ""))
         pair_id = str(body.get("pairId", ""))
         with SESSIONS_LOCK:
-            state = SESSIONS.get(session_id)
+            state = self._comparison_state(session_id)
         if state is None:
-            self._send(404, {"error": "세션을 찾을 수 없습니다."})
+            self._comparison_missing()
             return
+        if state.optimize_status == "running":
+            raise service.StaleChoiceError("최적화 중에는 선택을 변경할 수 없습니다.")
         try:
             updated = service.submit_choice(state, pair_id, chosen)
         except service.StaleChoiceError:
@@ -1288,38 +1410,41 @@ class ApiHandler(BaseHTTPRequestHandler):
             updated = service.submit_choice(
                 replace(state, demo_mode=True, demo_reason="generation_failed"), pair_id, chosen
             )
-        with SESSIONS_LOCK:
-            SESSIONS[session_id] = updated
+        if not self._comparison_save(state, updated):
+            return
         self._send(200, {"session": _state_payload(updated)})
 
     def _undo_choice(self, session_id: str) -> None:
         """마지막 선택을 되돌린다. 후보는 캐시에 있으므로 모델을 다시 부르지 않는다
         (실제 생성 모드에서도 같은 프롬프트·원문이라 캐시를 탄다)."""
         with SESSIONS_LOCK:
-            state = SESSIONS.get(session_id)
+            state = self._comparison_state(session_id)
         if state is None:
-            self._send(404, {"error": "세션을 찾을 수 없습니다."})
+            self._comparison_missing()
             return
+        if state.optimize_status == "running":
+            raise service.StaleChoiceError("최적화 중에는 선택을 변경할 수 없습니다.")
         updated = service.undo_choice(state)
+        if not self._comparison_save(state, updated):
+            return
         with SESSIONS_LOCK:
-            SESSIONS[session_id] = updated
             OPTIMIZE_REPORTS.pop(session_id, None)
         self._send(200, {"session": _state_payload(updated)})
 
     def _join_team(self, code: str, body: dict[str, Any]) -> None:
         """끝난 세션의 선택 기록을 팀에 더한다. 원문은 넘기지 않는다."""
         with SESSIONS_LOCK:
-            state = SESSIONS.get(str(body.get("sessionId", "")))
-        if state is None:
-            self._send(404, {"error": "세션을 찾을 수 없습니다."})
-            return
-        if not state.done:
-            raise ValueError("선택을 모두 마친 뒤에 팀에 더할 수 있습니다.")
-        # 로그인했으면 이름 칸은 무시하고 아이디로 참여한다.
-        user = self._current_user()
-        TEAMS.add(code, state.domain_key, str(body.get("name", "")), state.history,
-                  user_id=user.id if user else None, username=user.username if user else None,
-                  require_existing=body.get("requireExisting") is True)
+            state = self._comparison_state(str(body.get("sessionId", "")))
+            if state is None:
+                self._comparison_missing()
+                return
+            if not state.done:
+                raise ValueError("선택을 모두 마친 뒤에 팀에 더할 수 있습니다.")
+            # Keep authorization and team mutation atomic against logout/expiry cleanup.
+            user = self._current_user()
+            TEAMS.add(code, state.domain_key, str(body.get("name", "")), state.history,
+                      user_id=user.id if user else None, username=user.username if user else None,
+                      require_existing=body.get("requireExisting") is True)
         self._send(200, {"team": _team_payload(code, user.id if user else None)})
 
     def _start_optimize(self, session_id: str) -> None:
@@ -1332,9 +1457,9 @@ class ApiHandler(BaseHTTPRequestHandler):
         축 문구를 이어 붙인 시드 프롬프트에서 끝난다.
         """
         with SESSIONS_LOCK:
-            state = SESSIONS.get(session_id)
+            state = self._comparison_state(session_id)
             if state is None:
-                self._send(404, {"error": "세션을 찾을 수 없습니다."})
+                self._comparison_missing()
                 return
             if not state.done:
                 raise ValueError("선택을 모두 마친 뒤에 최적화할 수 있습니다.")
@@ -1363,9 +1488,16 @@ class ApiHandler(BaseHTTPRequestHandler):
                 # 화면 기본값과 같은 언어의 프롬프트에서 출발한다.
                 language = _prompt_languages(domain, state.template_id)[0]
                 optimized = service.optimize(state, on_progress=progress, report=report, language=language)
-                OPTIMIZE_REPORTS[state.session_id] = report
-                state.prompt = optimized
-                state.optimize_status = "done"
+                with SESSIONS_LOCK:
+                    # An expired/logged-out session must never be resurrected by a worker.
+                    if SESSIONS.get(session_id) is not state:
+                        return
+                    if time.monotonic() >= SESSION_STARTED[session_id] + SESSION_TTL_SECONDS:
+                        _drop_session(session_id)
+                        return
+                    OPTIMIZE_REPORTS[state.session_id] = report
+                    state.prompt = optimized
+                    state.optimize_status = "done"
                 print(f"[optimize] {state.domain_key} 완료 ({len(optimized)}자)", flush=True)
             except Exception as exc:  # noqa: BLE001 - 실패해도 시드 프롬프트는 남는다
                 state.optimize_status = "error"

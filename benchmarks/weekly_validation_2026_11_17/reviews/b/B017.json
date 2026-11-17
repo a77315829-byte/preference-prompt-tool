@@ -1,0 +1,39 @@
+{
+  "output_id": "B017",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "import { panelStyle } from \"./Component.styles\";",
+        "<div data-testid=\"panel\" style={panelStyle}>",
+        "Component.styles.ts"
+      ],
+      "reason": "별도 스타일 파일과 컴포넌트가 실제로 연결되어 separated 기준을 충족한다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "colors: { panel: \"#eef4ff\", text: \"#17345c\" },",
+        "spacing: { panelPadding: 12, controlGap: 6 },",
+        "background: tokens.colors.panel,",
+        "padding: tokens.spacing.panelPadding,"
+      ],
+      "reason": "색상과 간격의 중앙 의미 토큰을 적용 규칙에서 사용한다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "export function Component({ initialItems, onChange }: Props): ReactElement {",
+        "const [items, setItems] = useState<Item[]>((): Item[] => [...initialItems]);",
+        "function move(index: number, direction: -1 | 1): void {",
+        "const nextItems: Item[] = [...items];",
+        "const ids: string[] = nextItems.map((entry): string => entry.id);"
+      ],
+      "reason": "공개 계약·컴포넌트 반환·상태·주 이동 함수와 주요 데이터의 타입이 명시된다. 간단한 map 및 클릭 콜백의 문맥 추론은 explicit 허용 범위다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

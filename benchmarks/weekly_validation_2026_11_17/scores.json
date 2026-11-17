@@ -1,0 +1,130 @@
+{
+  "scope": "Descriptive fixed pilot counts; not statistical superiority/equivalence or human benefit. No composite score across summary content/conditions or React function/style. Two independent anonymous AI reviews; originals and disagreements retained.",
+  "by_reviewer": {
+    "a": {
+      "manual": {
+        "summary": {
+          "outputs": 6,
+          "length_pass": 6,
+          "wording_pass": 6,
+          "joint_conditions": 6,
+          "core_facts_preserved": 17,
+          "core_facts_total": 18,
+          "selected_passages_preserved": 17,
+          "selected_passages_total": 18,
+          "all_required_policy_cases": 5,
+          "all_required_policy_met": 5,
+          "factual_issue_outputs": 0,
+          "non_summary_responses": 0
+        },
+        "react": {
+          "outputs": 8,
+          "type_pass": 8,
+          "all_behavior_pass": 8,
+          "behavior_checks_pass": 40,
+          "behavior_checks_total": 40,
+          "style_axis_matches": {
+            "code_structure": 8,
+            "style_management": 8,
+            "type_detail": 8
+          },
+          "all_three_style_match": 8,
+          "type_behavior_and_three_style": 8
+        }
+      },
+      "product": {
+        "summary": {
+          "outputs": 6,
+          "length_pass": 6,
+          "wording_pass": 6,
+          "joint_conditions": 6,
+          "core_facts_preserved": 17,
+          "core_facts_total": 18,
+          "selected_passages_preserved": 17,
+          "selected_passages_total": 18,
+          "all_required_policy_cases": 5,
+          "all_required_policy_met": 5,
+          "factual_issue_outputs": 0,
+          "non_summary_responses": 0
+        },
+        "react": {
+          "outputs": 8,
+          "type_pass": 8,
+          "all_behavior_pass": 8,
+          "behavior_checks_pass": 40,
+          "behavior_checks_total": 40,
+          "style_axis_matches": {
+            "code_structure": 8,
+            "style_management": 8,
+            "type_detail": 8
+          },
+          "all_three_style_match": 8,
+          "type_behavior_and_three_style": 8
+        }
+      }
+    },
+    "b": {
+      "manual": {
+        "summary": {
+          "outputs": 6,
+          "length_pass": 6,
+          "wording_pass": 6,
+          "joint_conditions": 6,
+          "core_facts_preserved": 17,
+          "core_facts_total": 18,
+          "selected_passages_preserved": 17,
+          "selected_passages_total": 18,
+          "all_required_policy_cases": 5,
+          "all_required_policy_met": 5,
+          "factual_issue_outputs": 0,
+          "non_summary_responses": 0
+        },
+        "react": {
+          "outputs": 8,
+          "type_pass": 8,
+          "all_behavior_pass": 8,
+          "behavior_checks_pass": 40,
+          "behavior_checks_total": 40,
+          "style_axis_matches": {
+            "code_structure": 8,
+            "style_management": 8,
+            "type_detail": 8
+          },
+          "all_three_style_match": 8,
+          "type_behavior_and_three_style": 8
+        }
+      },
+      "product": {
+        "summary": {
+          "outputs": 6,
+          "length_pass": 6,
+          "wording_pass": 6,
+          "joint_conditions": 6,
+          "core_facts_preserved": 17,
+          "core_facts_total": 18,
+          "selected_passages_preserved": 17,
+          "selected_passages_total": 18,
+          "all_required_policy_cases": 5,
+          "all_required_policy_met": 5,
+          "factual_issue_outputs": 0,
+          "non_summary_responses": 0
+        },
+        "react": {
+          "outputs": 8,
+          "type_pass": 8,
+          "all_behavior_pass": 8,
+          "behavior_checks_pass": 40,
+          "behavior_checks_total": 40,
+          "style_axis_matches": {
+            "code_structure": 8,
+            "style_management": 8,
+            "type_detail": 8
+          },
+          "all_three_style_match": 8,
+          "type_behavior_and_three_style": 8
+        }
+      }
+    }
+  },
+  "disagreements": []
+}

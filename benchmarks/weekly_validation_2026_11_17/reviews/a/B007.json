@@ -1,0 +1,64 @@
+{
+  "output_id": "B007",
+  "kind": "summary",
+  "response_kind": "summary",
+  "sentence_count": 4,
+  "length_pass": true,
+  "wording_pass": true,
+  "wording_reason": "고유명사와 핵심 표현 일부를 유지하면서 서술 구조와 대부분의 문장을 재서술했다.",
+  "facts": [
+    {
+      "id": "F1",
+      "preserved": true,
+      "evidence": [
+        "a Catholic writer describes being horrified by the story of Lot and the destruction of Sodom and Gomorrah in Genesis."
+      ],
+      "reason": "창세기 Lot 이야기와 저자의 공포 반응을 귀속시킨다."
+    },
+    {
+      "id": "F2",
+      "preserved": true,
+      "evidence": [
+        "the writer says their faith does not embrace such a punitive God."
+      ],
+      "reason": "징벌적인 신 관념이 자신의 신앙과 맞지 않는다는 저자의 입장이다."
+    },
+    {
+      "id": "F3",
+      "preserved": true,
+      "evidence": [
+        "Unsure how to interpret the account,",
+        "Despite these unresolved questions, they intend to continue reading."
+      ],
+      "reason": "해석의 불확실성을 남기면서 계속 읽겠다는 결심을 보존한다."
+    }
+  ],
+  "priorities": [
+    {
+      "id": "P1",
+      "preserved": true,
+      "evidence": [
+        "a Catholic writer describes being horrified by the story of Lot and the destruction of Sodom and Gomorrah in Genesis."
+      ],
+      "reason": "반응과 대상이 분명하다."
+    },
+    {
+      "id": "P2",
+      "preserved": true,
+      "evidence": [
+        "the writer says their faith does not embrace such a punitive God."
+      ],
+      "reason": "자신의 신앙에 대한 저자 관점을 보존한다."
+    },
+    {
+      "id": "P3",
+      "preserved": true,
+      "evidence": [
+        "Despite these unresolved questions, they intend to continue reading."
+      ],
+      "reason": "계속 읽겠다는 의도를 보존한다."
+    }
+  ],
+  "issues": [],
+  "ambiguities": []
+}

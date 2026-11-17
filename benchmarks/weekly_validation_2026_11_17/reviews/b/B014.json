@@ -1,0 +1,39 @@
+{
+  "output_id": "B014",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "Component.tsx",
+        "const theme: Theme = {",
+        "export function Component({ initialText }: Props): ReactElement {"
+      ],
+      "reason": "테마와 스타일, 변환 로직·상태·화면이 모두 하나의 TSX에 포함된다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "colors: { panel: '#eef4ff', text: '#17345c' },",
+        "spacing: { padding: 12, gap: 6 },",
+        "background: theme.colors.panel,",
+        "gap: theme.spacing.gap,"
+      ],
+      "reason": "색상과 간격을 의미 있는 중앙 테마에서 정의하고 적용 스타일이 참조한다. 출력의 whiteSpace 지정은 이 디자인 토큰 기준을 훼손하지 않는다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "function normalize(text: string, trim: boolean, mode: CaseMode): string {",
+        "const [text, setText] = useState<string>(initialText);",
+        "const [trim, setTrim] = useState<boolean>(false);",
+        "const result: string = normalize(text, trim, mode);",
+        "onChange={(event: ChangeEvent<HTMLSelectElement>): void => {"
+      ],
+      "reason": "주 함수·반환·공개 계약·상태·주요 값·이벤트 타입 모두 명시한다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

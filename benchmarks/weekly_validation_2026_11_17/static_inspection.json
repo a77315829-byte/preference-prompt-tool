@@ -1,0 +1,178 @@
+[
+  {
+    "arm": "manual",
+    "id": "reading_history",
+    "candidate_sha256": "ef74b98c687094194daf5d587cca4e67096d9ec8976bdc9d3c0cd0cff9fcdafa",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "manual",
+    "id": "cent_split",
+    "candidate_sha256": "bdf674ea850eb82c5a7861528210330248a585ce1b34c09bd90751a91cfdc68a",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "manual",
+    "id": "signal_cycle",
+    "candidate_sha256": "195e0e94163c49ba1f955b182557c591ef26b84c2a16cca1407235fd34fbf760",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "manual",
+    "id": "text_normalizer",
+    "candidate_sha256": "acefc173b4726e50ec9945496cdbabd155d4f4f141f8510394bb249ab80b226a",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "manual",
+    "id": "question_deck",
+    "candidate_sha256": "fd2a35653ac7be49cb6b29f969f4d194e3ce6b2f650e88ed545f45e2b954b744",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "manual",
+    "id": "weighted_counter",
+    "candidate_sha256": "7834a7e61ee78537ed6a393e2a80e3c9c89536930ad3b19745afc8ebc8f04d05",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "manual",
+    "id": "comparison_snapshot",
+    "candidate_sha256": "b0c2c368c3dde9859d2e342e117910804624c4207cacec185274304c5ec2abcc",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "manual",
+    "id": "item_reorder",
+    "candidate_sha256": "d236e11d789bf5961a7007ca9396a07bbd20da7e19909f6bccf1e6d0d861150a",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "product",
+    "id": "reading_history",
+    "candidate_sha256": "cb213e6c86f8b72575b4ed2e93e0e8cc5beb8ca7cfdb7649401f8043601d21fb",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "product",
+    "id": "cent_split",
+    "candidate_sha256": "986b05482870a445b5e45f0954124d5aff3d0b3a9de56dd44f050420e4d0ccc9",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "product",
+    "id": "signal_cycle",
+    "candidate_sha256": "2fd2498c3598c789ba33c988047fe6858c0714e8edd5c8f9202fd427db916f99",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "product",
+    "id": "text_normalizer",
+    "candidate_sha256": "adf6aae5c70ce18143c2f43a579539cd86d112aeeda68bc23763132c6097e749",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "product",
+    "id": "question_deck",
+    "candidate_sha256": "27a90582ee141d46f0e6a17e8c5f3dfb60bd3d207a1afc3585ef68797409543c",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "product",
+    "id": "weighted_counter",
+    "candidate_sha256": "111d6e55c15fb787960757b1edb46d091d749fcd26382bc86821270089d12ae4",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "product",
+    "id": "comparison_snapshot",
+    "candidate_sha256": "2c0b7756e824e9e0b1685ec16f1b5aa163eac95c25467ee97b591047ef5752d5",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  },
+  {
+    "arm": "product",
+    "id": "item_reorder",
+    "candidate_sha256": "85df5f88ff9dda3206742d76373053aa106c4122aff9819174b50b7192bc86ee",
+    "inspection": {
+      "passed": true,
+      "errors": [],
+      "explicitAny": [],
+      "typeSuppressions": []
+    }
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\nimport type { ReactElement } from 'react';\nimport { panelStyle } from './Component.styles';\n\nexport type Item = { id: string; label: string };\nexport type Props = {\n  initialItems: Item[];\n  onChange: (ids: string[]) => void;\n};\n\nexport function Component({ initialItems, onChange }: Props): ReactElement {\n  const [items, setItems] = useState<Item[]>((): Item[] => [...initialItems]);\n\n  function move(index: number, direction: -1 | 1): void {\n    const target: number = index + direction;\n    if (index < 0 || index >= items.length || target < 0 || target >= items.length) {\n      return;\n    }\n    const current: Item | undefined = items[index];\n    const neighbor: Item | undefined = items[target];\n    if (current === undefined || neighbor === undefined) return;\n\n    const nextItems: Item[] = [...items];\n    nextItems[index] = neighbor;\n    nextItems[target] = current;\n    const ids: string[] = nextItems.map((item: Item): string => item.id);\n    setItems(nextItems);\n    onChange(ids);\n  }\n\n  return (\n    <div data-testid=\"panel\" style={panelStyle}>\n      {items.length === 0 && <div role=\"status\">No items</div>}\n      <ul aria-label=\"Items\">\n        {items.map((item: Item, index: number): ReactElement => (\n          <li key={item.id}>\n            <span>{item.label}</span>\n            <button\n              type=\"button\"\n              disabled={index === 0}\n              onClick={(): void => move(index, -1)}\n            >\n              Up {item.id}\n            </button>\n            <button\n              type=\"button\"\n              disabled={index === items.length - 1}\n              onClick={(): void => move(index, 1)}\n            >\n              Down {item.id}\n            </button>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n",
+    "Component.styles.ts": "import type { CSSProperties } from 'react';\n\ntype Theme = {\n  colors: { panel: string; text: string };\n  spacing: { padding: number; gap: number };\n};\n\nconst theme: Theme = {\n  colors: { panel: '#eef4ff', text: '#17345c' },\n  spacing: { padding: 12, gap: 6 },\n};\n\nexport const panelStyle: CSSProperties = {\n  display: 'grid',\n  background: theme.colors.panel,\n  color: theme.colors.text,\n  padding: theme.spacing.padding,\n  gap: theme.spacing.gap,\n};\n"
+  },
+  "provenance": [
+    {
+      "filename": "Component.tsx",
+      "block_index": 0,
+      "start": 21,
+      "end": 1816,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    },
+    {
+      "filename": "Component.styles.ts",
+      "block_index": 1,
+      "start": 1847,
+      "end": 2298,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    }
+  ]
+}

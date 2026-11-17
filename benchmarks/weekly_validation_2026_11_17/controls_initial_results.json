@@ -1,0 +1,764 @@
+{
+  "review": "Investigator manually reviewed all source strings and one-line mutations; candidate code uses only React state, local arithmetic, array/text processing and event callbacks.",
+  "all_references_pass": false,
+  "all_mutants_detected": true,
+  "rows": [
+    {
+      "id": "reading_history",
+      "reference": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": true,
+          "checks": [
+            {
+              "name": "initial_empty_null_and_no_callback",
+              "passed": true
+            },
+            {
+              "name": "valid_signed_duplicate_readings_and_clear_input",
+              "passed": true
+            },
+            {
+              "name": "invalid_integer_strings_preserve_state",
+              "passed": true
+            },
+            {
+              "name": "clear_removes_history_latest_error_without_callback",
+              "passed": true
+            },
+            {
+              "name": "new_callback_retains_state_and_success_clears_error",
+              "passed": true
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutant": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": false,
+          "checks": [
+            {
+              "name": "initial_empty_null_and_no_callback",
+              "passed": true
+            },
+            {
+              "name": "valid_signed_duplicate_readings_and_clear_input",
+              "passed": false,
+              "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ []\n- [\n-   '-12',\n-   '0',\n-   '0'\n- ]\n"
+            },
+            {
+              "name": "invalid_integer_strings_preserve_state",
+              "passed": false,
+              "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ []\n- [\n-   '7'\n- ]\n"
+            },
+            {
+              "name": "clear_removes_history_latest_error_without_callback",
+              "passed": true
+            },
+            {
+              "name": "new_callback_retains_state_and_success_clears_error",
+              "passed": false,
+              "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ []\n- [\n-   '4',\n-   '9'\n- ]\n"
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutation": {
+        "from": "setHistory([...history,n])",
+        "to": "setHistory(history)"
+      }
+    },
+    {
+      "id": "cent_split",
+      "reference": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": true,
+          "checks": [
+            {
+              "name": "initial_remainder_allocation",
+              "passed": true
+            },
+            {
+              "name": "zero_and_more_people_than_cents",
+              "passed": true
+            },
+            {
+              "name": "invalid_values_and_bounds",
+              "passed": true
+            },
+            {
+              "name": "trim_only_for_calculation_and_live_people_change",
+              "passed": true
+            },
+            {
+              "name": "prop_updates_preserve_edited_values",
+              "passed": true
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutant": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": false,
+          "checks": [
+            {
+              "name": "initial_remainder_allocation",
+              "passed": false,
+              "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '3, 3, 3'\n- '4, 3, 3'\n"
+            },
+            {
+              "name": "zero_and_more_people_than_cents",
+              "passed": false,
+              "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '0, 0, 0, 0'\n- '1, 1, 0, 0'\n"
+            },
+            {
+              "name": "invalid_values_and_bounds",
+              "passed": true
+            },
+            {
+              "name": "trim_only_for_calculation_and_live_people_change",
+              "passed": false,
+              "error": "Expected values to be strictly equal:\n\n'4, 4' !== '5, 4'\n"
+            },
+            {
+              "name": "prop_updates_preserve_edited_values",
+              "passed": false,
+              "error": "Expected values to be strictly equal:\n\n'5, 5' !== '6, 5'\n"
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutation": {
+        "from": "(i<n%k?1:0)",
+        "to": "0"
+      }
+    },
+    {
+      "id": "signal_cycle",
+      "reference": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": true,
+          "checks": [
+            {
+              "name": "initial_stop_reset_disabled_no_callback",
+              "passed": true
+            },
+            {
+              "name": "three_steps_cycle_in_order",
+              "passed": true
+            },
+            {
+              "name": "reset_from_ready_calls_once",
+              "passed": true
+            },
+            {
+              "name": "reset_from_go_restores_cycle",
+              "passed": true
+            },
+            {
+              "name": "new_callback_preserves_state",
+              "passed": true
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutant": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": false,
+          "checks": [
+            {
+              "name": "initial_stop_reset_disabled_no_callback",
+              "passed": true
+            },
+            {
+              "name": "three_steps_cycle_in_order",
+              "passed": false,
+              "error": "Expected values to be strictly equal:\n\n'ready' !== 'go'\n"
+            },
+            {
+              "name": "reset_from_ready_calls_once",
+              "passed": true
+            },
+            {
+              "name": "reset_from_go_restores_cycle",
+              "passed": false,
+              "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'ready',\n+   'ready',\n-   'go',\n    'stop',\n    'ready'\n  ]\n"
+            },
+            {
+              "name": "new_callback_preserves_state",
+              "passed": false,
+              "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'ready'\n-   'go'\n  ]\n"
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutation": {
+        "from": "signal==='stop'?'ready':signal==='ready'?'go':'stop'",
+        "to": "'ready'"
+      }
+    },
+    {
+      "id": "text_normalizer",
+      "reference": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": true,
+          "checks": [
+            {
+              "name": "initial_whitespace_preserved",
+              "passed": true
+            },
+            {
+              "name": "case_conversion_does_not_overwrite_input",
+              "passed": true
+            },
+            {
+              "name": "trim_and_unicode_string_length",
+              "passed": true
+            },
+            {
+              "name": "props_do_not_reset_options_or_local_text",
+              "passed": true
+            },
+            {
+              "name": "markup_is_safe_text_and_keep_reverses_case_mode",
+              "passed": true
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutant": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": false,
+          "checks": [
+            {
+              "name": "initial_whitespace_preserved",
+              "passed": true
+            },
+            {
+              "name": "case_conversion_does_not_overwrite_input",
+              "passed": false,
+              "error": "Expected values to be strictly equal:\n\n'hello' !== 'HELLO'\n"
+            },
+            {
+              "name": "trim_and_unicode_string_length",
+              "passed": true
+            },
+            {
+              "name": "props_do_not_reset_options_or_local_text",
+              "passed": false,
+              "error": "Expected values to be strictly equal:\n\n'two' !== 'TWO'\n"
+            },
+            {
+              "name": "markup_is_safe_text_and_keep_reverses_case_mode",
+              "passed": true
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutation": {
+        "from": "raw.toUpperCase()",
+        "to": "raw.toLowerCase()"
+      }
+    },
+    {
+      "id": "question_deck",
+      "reference": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": false,
+          "checks": [
+            {
+              "name": "initial_card_and_zero_completed",
+              "passed": true
+            },
+            {
+              "name": "complete_exactly_once_at_end",
+              "passed": false,
+              "error": "Values have same structure but are not reference-equal:\n\n[\n  [\n    'a',\n    'b'\n  ]\n]\n"
+            },
+            {
+              "name": "restart_and_second_completion",
+              "passed": false,
+              "error": "Values have same structure but are not reference-equal:\n\n[\n  [\n    'a',\n    'b'\n  ],\n  [\n    'a',\n    'b'\n  ]\n]\n"
+            },
+            {
+              "name": "empty_deck_never_finishes",
+              "passed": true
+            },
+            {
+              "name": "prop_snapshot_latest_callback_and_safe_text",
+              "passed": false,
+              "error": "Values have same structure but are not reference-equal:\n\n[\n  [\n    'q'\n  ]\n]\n"
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutant": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": false,
+          "checks": [
+            {
+              "name": "initial_card_and_zero_completed",
+              "passed": true
+            },
+            {
+              "name": "complete_exactly_once_at_end",
+              "passed": false,
+              "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   [\n+     'a',\n+     'b'\n+   ]\n+ ]\n- []\n"
+            },
+            {
+              "name": "restart_and_second_completion",
+              "passed": false,
+              "error": "Values have same structure but are not reference-equal:\n\n[\n  [\n    'a',\n    'b'\n  ],\n  [\n    'a',\n    'b'\n  ]\n]\n"
+            },
+            {
+              "name": "empty_deck_never_finishes",
+              "passed": true
+            },
+            {
+              "name": "prop_snapshot_latest_callback_and_safe_text",
+              "passed": false,
+              "error": "Values have same structure but are not reference-equal:\n\n[\n  [\n    'q'\n  ]\n]\n"
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutation": {
+        "from": "if(n===deck.length)",
+        "to": "if(n===1)"
+      }
+    },
+    {
+      "id": "weighted_counter",
+      "reference": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": true,
+          "checks": [
+            {
+              "name": "initial_value_and_reset_disabled",
+              "passed": true
+            },
+            {
+              "name": "add_subtract_and_negative_values",
+              "passed": true
+            },
+            {
+              "name": "reset_once_to_mounted_baseline",
+              "passed": true
+            },
+            {
+              "name": "latest_step_callback_preserved_baseline",
+              "passed": true
+            },
+            {
+              "name": "return_by_arithmetic_disables_reset",
+              "passed": true
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutant": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": false,
+          "checks": [
+            {
+              "name": "initial_value_and_reset_disabled",
+              "passed": true
+            },
+            {
+              "name": "add_subtract_and_negative_values",
+              "passed": false,
+              "error": "Expected values to be strictly equal:\n\n'-1' !== '1'\n"
+            },
+            {
+              "name": "reset_once_to_mounted_baseline",
+              "passed": false,
+              "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   5,\n    6,\n-   8,\n    4\n  ]\n"
+            },
+            {
+              "name": "latest_step_callback_preserved_baseline",
+              "passed": false,
+              "error": "Expected values to be strictly equal:\n\n'5' !== '6'\n"
+            },
+            {
+              "name": "return_by_arithmetic_disables_reset",
+              "passed": false,
+              "error": "Expected values to be strictly equal:\n\nfalse !== true\n"
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutation": {
+        "from": "value+props.step",
+        "to": "value+1"
+      }
+    },
+    {
+      "id": "comparison_snapshot",
+      "reference": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": true,
+          "checks": [
+            {
+              "name": "initial_no_comparison",
+              "passed": true
+            },
+            {
+              "name": "compare_numeric_less_equal_greater",
+              "passed": true
+            },
+            {
+              "name": "editing_preserves_committed_result",
+              "passed": true
+            },
+            {
+              "name": "invalid_attempts_preserve_result_and_success_clears_error",
+              "passed": true
+            },
+            {
+              "name": "new_callback_preserves_inputs_and_rejects_invalid_right",
+              "passed": true
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutant": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": false,
+          "checks": [
+            {
+              "name": "initial_no_comparison",
+              "passed": true
+            },
+            {
+              "name": "compare_numeric_less_equal_greater",
+              "passed": false,
+              "error": "Expected values to be strictly equal:\n\n'greater' !== 'less'\n"
+            },
+            {
+              "name": "editing_preserves_committed_result",
+              "passed": true
+            },
+            {
+              "name": "invalid_attempts_preserve_result_and_success_clears_error",
+              "passed": true
+            },
+            {
+              "name": "new_callback_preserves_inputs_and_rejects_invalid_right",
+              "passed": true
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutation": {
+        "from": "a<b?'less':a>b?'greater'",
+        "to": "left<right?'less':left>right?'greater'"
+      }
+    },
+    {
+      "id": "item_reorder",
+      "reference": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": false,
+          "checks": [
+            {
+              "name": "initial_order_boundaries_no_callback",
+              "passed": true
+            },
+            {
+              "name": "move_up_then_down_exact_order",
+              "passed": false,
+              "error": "Values have same structure but are not reference-equal:\n\n[\n  [\n    'b',\n    'a',\n    'c'\n  ],\n  [\n    'a',\n    'b',\n    'c'\n  ]\n]\n"
+            },
+            {
+              "name": "move_to_boundary_and_preserve_input",
+              "passed": false,
+              "error": "Values have same structure but are not reference-equal:\n\n[\n  [\n    'a',\n    'c',\n    'b'\n  ],\n  [\n    'c',\n    'a',\n    'b'\n  ]\n]\n"
+            },
+            {
+              "name": "empty_and_single_item_are_inert",
+              "passed": true
+            },
+            {
+              "name": "props_preserve_items_latest_callback_and_markup_text",
+              "passed": false,
+              "error": "Values have same structure but are not reference-equal:\n\n[\n  [\n    'y',\n    'x'\n  ]\n]\n"
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutant": {
+        "types": {
+          "status": "completed",
+          "compilerPassed": true,
+          "passed": true,
+          "diagnostics": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        },
+        "runtime": {
+          "status": "completed",
+          "passed": false,
+          "checks": [
+            {
+              "name": "initial_order_boundaries_no_callback",
+              "passed": true
+            },
+            {
+              "name": "move_up_then_down_exact_order",
+              "passed": false,
+              "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'A',\n    'B',\n-   'A',\n    'C'\n  ]\n"
+            },
+            {
+              "name": "move_to_boundary_and_preserve_input",
+              "passed": false,
+              "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n-   'C',\n    'A',\n    'B',\n+   'C'\n  ]\n"
+            },
+            {
+              "name": "empty_and_single_item_are_inert",
+              "passed": true
+            },
+            {
+              "name": "props_preserve_items_latest_callback_and_markup_text",
+              "passed": false,
+              "error": "Values have same structure but are not reference-equal:\n\n[\n  [\n    'y',\n    'x'\n  ]\n]\n"
+            }
+          ]
+        },
+        "safety": {
+          "passed": true,
+          "errors": [],
+          "explicitAny": [],
+          "typeSuppressions": []
+        }
+      },
+      "mutation": {
+        "from": "setItems(next)",
+        "to": "setItems(items)"
+      }
+    }
+  ]
+}

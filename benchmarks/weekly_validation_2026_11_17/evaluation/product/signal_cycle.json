@@ -1,0 +1,47 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "signal_cycle",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_stop_reset_disabled_no_callback",
+        "passed": true
+      },
+      {
+        "name": "three_steps_cycle_in_order",
+        "passed": true
+      },
+      {
+        "name": "reset_from_ready_calls_once",
+        "passed": true
+      },
+      {
+        "name": "reset_from_go_restores_cycle",
+        "passed": true
+      },
+      {
+        "name": "new_callback_preserves_state",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

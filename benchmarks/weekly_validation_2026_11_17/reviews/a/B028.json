@@ -1,0 +1,39 @@
+{
+  "output_id": "B028",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "import { panelStyle } from './Component.styles';",
+        "<div data-testid=\"panel\" style={panelStyle}>",
+        "Component.styles.ts"
+      ],
+      "reason": "컴포넌트가 별도 스타일 파일을 실제로 사용하며 그 파일 전체가 제공됐다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "const theme: Theme = {",
+        "colors: { panel: '#eef4ff', text: '#17345c' },",
+        "spacing: { padding: 12, gap: 6 },",
+        "background: theme.colors.panel,\n  color: theme.colors.text,\n  padding: theme.spacing.padding,\n  gap: theme.spacing.gap,"
+      ],
+      "reason": "색상과 간격을 중앙 의미 토큰으로 묶고 실제 규칙에서 사용한다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "export function Component({ initialItems, onChange }: Props): ReactElement {",
+        "const [items, setItems] = useState<Item[]>((): Item[] => [...initialItems]);",
+        "function move(index: number, direction: -1 | 1): void {",
+        "const ids: string[] = nextItems.map((item: Item): string => item.id);",
+        "items.map((item: Item, index: number): ReactElement => ("
+      ],
+      "reason": "공개 자료/props, 상태, 주요 함수·반환과 데이터, 렌더 콜백까지 타입을 명시한다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

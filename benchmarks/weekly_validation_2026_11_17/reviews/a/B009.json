@@ -1,0 +1,66 @@
+{
+  "output_id": "B009",
+  "kind": "summary",
+  "response_kind": "summary",
+  "sentence_count": 4,
+  "length_pass": true,
+  "wording_pass": true,
+  "wording_reason": "원문 핵심어를 일부 쓰되 세부 서술을 묶어 주로 새 문장으로 재서술한다.",
+  "facts": [
+    {
+      "id": "F1",
+      "preserved": true,
+      "evidence": [
+        "the author is horrified by the story of Lot and the destruction of Sodom and Gomorrah in Genesis."
+      ],
+      "reason": "저자의 반응과 이야기 대상을 보존한다."
+    },
+    {
+      "id": "F2",
+      "preserved": true,
+      "evidence": [
+        "the author rejects such a punitive conception of God as incompatible with their faith."
+      ],
+      "reason": "신앙에 징벌적인 신 관념이 포함되지 않는다는 입장을 보존한다."
+    },
+    {
+      "id": "F3",
+      "preserved": true,
+      "evidence": [
+        "they acknowledge that they do not know what lesson the story intends to convey.",
+        "They nevertheless resolve to continue reading the Bible."
+      ],
+      "reason": "의미에 대한 불확실성과 독서 지속 의지를 모두 보존한다."
+    }
+  ],
+  "priorities": [
+    {
+      "id": "P1",
+      "preserved": true,
+      "evidence": [
+        "the author is horrified by the story of Lot and the destruction of Sodom and Gomorrah in Genesis."
+      ],
+      "reason": "저자 관점에서 공포를 설명한다."
+    },
+    {
+      "id": "P2",
+      "preserved": true,
+      "evidence": [
+        "the author rejects such a punitive conception of God as incompatible with their faith."
+      ],
+      "reason": "선택 문장의 신앙적 입장을 재서술한다."
+    },
+    {
+      "id": "P3",
+      "preserved": true,
+      "evidence": [
+        "They nevertheless resolve to continue reading the Bible."
+      ],
+      "reason": "계속 읽겠다는 결심을 보존한다."
+    }
+  ],
+  "issues": [],
+  "ambiguities": [
+    "\"a loving God\"라는 표현은 원문에 직접 없지만 저자가 기도하는 신은 이렇게 벌하지 않는다는 서술의 해석으로 보았다. 저자의 신앙 해석이라는 귀속이 유지되어 사실 오류로 판정하지 않았다."
+  ]
+}

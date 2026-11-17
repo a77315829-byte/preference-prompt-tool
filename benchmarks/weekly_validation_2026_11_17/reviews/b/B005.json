@@ -1,0 +1,39 @@
+{
+  "output_id": "B005",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "Component.tsx",
+        "const panelStyle: CSSProperties = {",
+        "export function Component({ initialText }: Props): ReactElement {"
+      ],
+      "reason": "토큰·스타일·변환 함수·상태·화면이 단일 TSX에 완결된다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "const tokens: DesignTokens = {",
+        "colors: { panel: \"#eef4ff\", text: \"#17345c\" },",
+        "spacing: { panelPadding: 12, controlGap: 6 },",
+        "padding: tokens.spacing.panelPadding,"
+      ],
+      "reason": "중앙 의미 토큰을 적용 스타일에서 사용하여 theme에 해당한다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "function transform(text: string, mode: CaseMode, shouldTrim: boolean): string {",
+        "export function Component({ initialText }: Props): ReactElement {",
+        "const [text, setText] = useState<string>(initialText);",
+        "const [shouldTrim, setShouldTrim] = useState<boolean>(false);",
+        "function changeCase(event: ChangeEvent<HTMLSelectElement>): void {"
+      ],
+      "reason": "공개 계약, 주 함수와 반환, 모든 상태·주요 데이터·핸들러가 명시적으로 타입화되어 있다. 간단한 인라인 onChange의 문맥 추론은 explicit에서 허용된다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

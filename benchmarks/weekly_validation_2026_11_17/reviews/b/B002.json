@@ -1,0 +1,35 @@
+{
+  "output_id": "B002",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "Component.tsx",
+        "export function Component({ onRecord }: Props) {",
+        "background: \"#eef4ff\","
+      ],
+      "reason": "기능과 적용 스타일이 단일 TSX에 완결되어 compact에 해당한다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "background: \"#eef4ff\",\n        color: \"#17345c\",\n        padding: \"12px\",\n        gap: \"6px\",\n        display: \"grid\","
+      ],
+      "reason": "패널에 적용하는 인라인 스타일에 디자인 리터럴을 직접 넣었다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "const [reading, setReading] = useState(\"\");",
+        "const [history, setHistory] = useState<number[]>([]);",
+        "const [hasError, setHasError] = useState(false);",
+        "function record() {"
+      ],
+      "reason": "공개 Props와 빈 배열의 원소형만 필요한 타입을 제공한다. 원시 상태·지역 값·함수 반환은 추론한다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

@@ -1,0 +1,36 @@
+{
+  "output_id": "B018",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "import \"./Component.css\";",
+        "<div data-testid=\"panel\" className=\"weighted-counter-panel\">",
+        ".weighted-counter-panel {"
+      ],
+      "reason": "컴포넌트에서 실제 사용하는 패널 클래스를 별도 CSS로 제공해 의미 있는 스타일 분리가 있다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "background: #eef4ff;\n  color: #17345c;\n  padding: 12px;\n  gap: 6px;"
+      ],
+      "reason": "적용 규칙에 디자인 값이 직접 들어 있다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "export function Component({ initialValue, step, onChange }: Props): ReactElement {",
+        "const [baseline] = useState<number>(initialValue);",
+        "const [value, setValue] = useState<number>(initialValue);",
+        "function changeBy(delta: number): void {",
+        "function reset(): void {"
+      ],
+      "reason": "공개 props, 상태, 주요 계산과 함수 반환/인자를 명시한다. 간결한 버튼 콜백의 문맥 추론은 허용한다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}
