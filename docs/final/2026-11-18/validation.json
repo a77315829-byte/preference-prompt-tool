@@ -1,0 +1,87 @@
+{
+  "date": "2026-11-18",
+  "code_basis": "0bbff8021717e22e2e9a204d70e02e0948803b76",
+  "pdfs": {
+    "design": {
+      "path": "docs/system-design/Revealed_Analysis_Design_v1.3.pdf",
+      "pages": 154,
+      "page_bounds_checked": true,
+      "rendered_pages": 154,
+      "sha256": "fe903eb8d4156c341b019fdc3b7c63fac5817d8f024551cbc7fa7de3cda0d82a"
+    },
+    "report": {
+      "path": "output/pdf/Revealed_최종보고서_준비본_v0.1.pdf",
+      "pages": 18,
+      "page_bounds_checked": true,
+      "rendered_pages": 18,
+      "sha256": "0133f1eaaa6d75c52dc3c81472938eb59bc7b6ed86e825c5984d4475853218ee"
+    },
+    "wbs": {
+      "path": "output/pdf/Revealed_WBS_v3.4_보고서형.pdf",
+      "pages": 3,
+      "page_bounds_checked": true,
+      "rendered_pages": 3,
+      "sha256": "6047204853eb434a410bcdfe3996767de9a2d02beff1632af1aa2ea299afbff8"
+    },
+    "traceability": {
+      "parent_uc": 24,
+      "child_uc": 79,
+      "phases": 5,
+      "tasks": 16,
+      "schedule_names_preserved": true
+    }
+  },
+  "workbook": {
+    "datesPreserved": true,
+    "formulasPreserved": true,
+    "statusesVerified": 16,
+    "editPropagationVerified": true,
+    "errorScan": "{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}"
+  },
+  "presentation": {
+    "page_id": "page_d4414f0a4c6081919fe25f6a2dde5a19",
+    "state_version": 5,
+    "slides": 16,
+    "all_slides_rendered_and_visually_reviewed": true,
+    "native_tables": 4,
+    "speaker_notes": 16
+  },
+  "video": {
+    "seconds": 79.4,
+    "resolution": [
+      1440,
+      1080
+    ],
+    "audio": false,
+    "synthetic_only": true,
+    "full_decode_exit_code": 0,
+    "sample_frames_seconds": [
+      20,
+      60
+    ]
+  },
+  "demo": {
+    "passed": 6,
+    "errors": 0,
+    "external_requests": 0
+  },
+  "paid_model_api_calls": 0,
+  "new_dependencies": 0,
+  "preserved_legacy_sha256": {
+    "docs/system-design/Revealed_Analysis_Design_v1.2.pdf": "313c25805b3870b030721b2ae18c8e403f6274743ee537d4351dc3bb61d7c2eb",
+    "output/pdf/Revealed_WBS_v3.3_보고서형.pdf": "e5f22a90bdd604f6e77775dbea0b481c63c3264a57cd4f59d33f724a05727770",
+    "outputs/wbs-20261112/Revealed_WBS_v3.3_보고서형.xlsx": "c9461040b9fc8bb36d104ddae64a7b91ddd0a8a3beaeb48c2b0f47fd3da87ee4",
+    "output/pdf/Revealed_진행현황_주간보고서_v0.10.pdf": "1b17e3107da2bad4d6f25644fcfdf1736d55667de4b86ecc4b641dc428aacb91"
+  },
+  "limitations": [
+    "팀원 PC·참석 리허설 미완료",
+    "공식 제출 조건 미확인",
+    "실사용자 효과 미측정",
+    "발표자료는 사용자 Spaces 권한 범위"
+  ],
+  "manual_visual_review": "PDF 전체 연락 인화지·개정 상세 페이지, WBS 세 시트, 발표 16장, 영상 구간 프레임 확인",
+  "relative_markdown_links": {
+    "checked_files": 7,
+    "broken": []
+  }
+}

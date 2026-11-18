@@ -1,0 +1,20 @@
+{
+  "path": "docs/system-design/Revealed_Analysis_Design_v1.3.pdf",
+  "pages": 154,
+  "page_bounds_checked": true,
+  "rendered_pages": 154,
+  "sha256": "fe903eb8d4156c341b019fdc3b7c63fac5817d8f024551cbc7fa7de3cda0d82a",
+  "date": "2026-11-18",
+  "code_basis": "0bbff8021717e22e2e9a204d70e02e0948803b76",
+  "traceability": {
+    "parent_uc": 24,
+    "child_uc": 79,
+    "phases": 5,
+    "tasks": 16,
+    "schedule_names_preserved": true
+  },
+  "diagrams_preserved": 77,
+  "visual_review": "전체 154쪽 렌더를 연락 인화지로 점검하고 개정·표·그림 페이지를 확대 확인",
+  "old_versions_preserved": true,
+  "scope": "문서·추적 관계 검사; 새 모델 실험 또는 사람 평가 아님"
+}

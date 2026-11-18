@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-18",
+  "code_basis": "0bbff8021717e22e2e9a204d70e02e0948803b76",
+  "status": "준비본; 팀 리허설·공식 제출 요건 확인 필요",
+  "paid_model_api_calls": 0,
+  "presentation": {
+    "page_id": "page_d4414f0a4c6081919fe25f6a2dde5a19",
+    "artifact_ref": "artifact_external_1c3c9020-a13a-49f5-be8b-38e187bf12fd",
+    "slides": 16,
+    "access": "사용자 Spaces; 팀 공유 권한 별도 확인"
+  },
+  "files": [
+    {
+      "title": "전체 분석·설계서 v1.3 · 154쪽",
+      "source": "docs/system-design/Revealed_Analysis_Design_v1.3.pdf",
+      "file": "Revealed_Analysis_Design_v1.3.pdf",
+      "bytes": 10256597,
+      "sha256": "fe903eb8d4156c341b019fdc3b7c63fac5817d8f024551cbc7fa7de3cda0d82a"
+    },
+    {
+      "title": "WBS v3.4 · PDF 3쪽",
+      "source": "output/pdf/Revealed_WBS_v3.4_보고서형.pdf",
+      "file": "Revealed_WBS_v3.4_보고서형.pdf",
+      "bytes": 127588,
+      "sha256": "6047204853eb434a410bcdfe3996767de9a2d02beff1632af1aa2ea299afbff8"
+    },
+    {
+      "title": "WBS v3.4 · Excel 3개 시트",
+      "source": "outputs/wbs-20261118/Revealed_WBS_v3.4_보고서형.xlsx",
+      "file": "Revealed_WBS_v3.4_보고서형.xlsx",
+      "bytes": 17364,
+      "sha256": "160721d302f52c899cda433f1705271ecbb827371d610fab269a9c4ed75c547e"
+    },
+    {
+      "title": "최종 보고서 준비본 v0.1 · 18쪽",
+      "source": "output/pdf/Revealed_최종보고서_준비본_v0.1.pdf",
+      "file": "Revealed_최종보고서_준비본_v0.1.pdf",
+      "bytes": 505556,
+      "sha256": "0133f1eaaa6d75c52dc3c81472938eb59bc7b6ed86e825c5984d4475853218ee"
+    },
+    {
+      "title": "실제 화면 시연 · 1분 19.4초",
+      "source": "outputs/final-20261118/Revealed_demo_20261118.webm",
+      "file": "Revealed_demo_20261118.webm",
+      "bytes": 7887288,
+      "sha256": "d09d14ceb0c7890a2da19e273ba42a03a247a450deade909d3ccb6bacf642db7"
+    },
+    {
+      "title": "발표 대본·Q&A",
+      "source": "docs/final/2026-11-18/presenter-notes.md",
+      "file": "presenter-notes.md",
+      "bytes": 9660,
+      "sha256": "e2dabff3aa97c9398cbdeb3eed00d0f704249ce13eedd377c1c86556fbb80288"
+    },
+    {
+      "title": "직접 시연·실행·복구 안내",
+      "source": "docs/verification/2026-11-17-readiness/DEMO.md",
+      "file": "DEMO.md",
+      "bytes": 6248,
+      "sha256": "9ce47607c9d9160f151d7a78e857b030d56e744755cc475318dfe2ba5fcc8ea8"
+    },
+    {
+      "title": "최신 주간보고서 v0.10 · 기존 판본",
+      "source": "output/pdf/Revealed_진행현황_주간보고서_v0.10.pdf",
+      "file": "Revealed_진행현황_주간보고서_v0.10.pdf",
+      "bytes": 799267,
+      "sha256": "1b17e3107da2bad4d6f25644fcfdf1736d55667de4b86ecc4b641dc428aacb91"
+    }
+  ]
+}

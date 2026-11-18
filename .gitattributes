@@ -16,3 +16,8 @@
 /domains/summary_contract.yaml -text
 /summary_contracts.py -text
 /output/pdf/*.pdf -text
+
+# Published document/video files are binary, including ASCII-encoded PDFs.
+*.pdf binary
+*.xlsx binary
+*.webm binary
