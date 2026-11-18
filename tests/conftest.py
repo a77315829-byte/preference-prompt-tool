@@ -61,3 +61,26 @@ def macsum_record() -> dict:
 @pytest.fixture(scope="session")
 def macsum_source(macsum_record) -> str:
     return " ".join(macsum_record["source"])
+
+
+@pytest.fixture(autouse=True)
+def comparison_browser_cookies(request, monkeypatch):
+    """Keep guest comparison cookies; explicit auth headers identify other clients.
+
+    These older tests deliberately omit auth headers to test anonymous access.
+    Do not implicitly carry a signup token into those requests. Security tests
+    separately use complete, independent browser jars.
+    """
+    modules = {"test_api_server", "test_team", "test_team_invitations", "test_tie_and_undo",
+               "test_undecided_axes", "test_template_library"}
+    if request.module.__name__.split(".")[-1] not in modules:
+        return
+    import http.cookiejar
+    import urllib.request
+    class ComparisonCookiePolicy(http.cookiejar.DefaultCookiePolicy):
+        def set_ok(self, cookie, request):
+            return cookie.name == "ppt_comparison" and super().set_ok(cookie, request)
+
+    jar = http.cookiejar.CookieJar(policy=ComparisonCookiePolicy())
+    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+    monkeypatch.setattr(urllib.request, "urlopen", opener.open)

@@ -1,0 +1,59 @@
+{
+  "output_id": "B019",
+  "kind": "summary",
+  "response_kind": "summary",
+  "sentence_count": 2,
+  "length_pass": true,
+  "wording_pass": true,
+  "wording_reason": "출판사 머리표기만 제외하고 원문의 첫 문장과 다음 문장을 그대로 발췌했다.",
+  "facts": [
+    {
+      "id": "F1",
+      "preserved": true,
+      "evidence": [
+        "Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died."
+      ],
+      "reason": "배우 Lewis의 사망을 보존한다."
+    },
+    {
+      "id": "F2",
+      "preserved": true,
+      "evidence": [
+        "He was 79."
+      ],
+      "reason": "Lewis를 가리키는 대명사와 향년 79세가 명확하다."
+    },
+    {
+      "id": "F3",
+      "preserved": false,
+      "evidence": [],
+      "reason": "화요일 사망과 가족 친구 Michael Henderson의 전언은 빠졌다. 이 케이스는 일부 생략이 허용된다."
+    }
+  ],
+  "priorities": [
+    {
+      "id": "P1",
+      "preserved": true,
+      "evidence": [
+        "Geoffrey Lewis, a prolific character actor who appeared opposite frequent collaborator Clint Eastwood as his pal Orville Boggs in \"Every Which Way But Loose\" and its sequel, has died."
+      ],
+      "reason": "선택 문장을 완전히 보존한다."
+    },
+    {
+      "id": "P2",
+      "preserved": true,
+      "evidence": [
+        "He was 79."
+      ],
+      "reason": "선택 문장을 완전히 보존한다."
+    },
+    {
+      "id": "P3",
+      "preserved": false,
+      "evidence": [],
+      "reason": "딸에 관한 정보와 화요일 사망 및 전달자를 담은 선택 문장이 없다. prioritize_with_omission에 따른 허용 생략으로 구분한다."
+    }
+  ],
+  "issues": [],
+  "ambiguities": []
+}

@@ -1,0 +1,47 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "cent_split",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_remainder_allocation",
+        "passed": true
+      },
+      {
+        "name": "zero_and_more_people_than_cents",
+        "passed": true
+      },
+      {
+        "name": "invalid_values_and_bounds",
+        "passed": true
+      },
+      {
+        "name": "trim_only_for_calculation_and_live_people_change",
+        "passed": true
+      },
+      {
+        "name": "prop_updates_preserve_edited_values",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

@@ -1,0 +1,22 @@
+{
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\nimport './Component.css';\n\nexport type Card = { id: string; text: string };\nexport type Props = { cards: Card[]; onFinish: (ids: string[]) => void };\n\nexport function Component({ cards, onFinish }: Props) {\n  const [deck] = useState(() => [...cards]);\n  const [completed, setCompleted] = useState(0);\n  const done = completed >= deck.length;\n  const current = deck[completed];\n\n  return (\n    <div data-testid=\"panel\" className=\"question-deck-panel\">\n      <output aria-label=\"Current\">{current?.text ?? 'Done'}</output>\n      <output aria-label=\"Completed\">{String(completed)}</output>\n      <button\n        type=\"button\"\n        disabled={done}\n        onClick={() => {\n          if (done) return;\n          const nextCompleted = completed + 1;\n          setCompleted(nextCompleted);\n          if (nextCompleted === deck.length) {\n            onFinish(deck.map((card) => card.id));\n          }\n        }}\n      >\n        Next\n      </button>\n      <button type=\"button\" onClick={() => setCompleted(0)}>\n        Restart\n      </button>\n    </div>\n  );\n}\n",
+    "Component.css": ".question-deck-panel {\n  display: grid;\n  background: #eef4ff;\n  color: #17345c;\n  padding: 12px;\n  gap: 6px;\n}\n"
+  },
+  "provenance": [
+    {
+      "filename": "Component.tsx",
+      "block_index": 0,
+      "start": 21,
+      "end": 1110,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    },
+    {
+      "filename": "Component.css",
+      "block_index": 1,
+      "start": 1136,
+      "end": 1248,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    }
+  ]
+}

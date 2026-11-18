@@ -99,7 +99,7 @@ def test_private_team_http_access_and_owner_invitation_controls(server):
         assert not preview['members'] and not preview['prompt']
         assert request(server, path + '/invitation', {'enabled': False}, cookie)[0] in (400, 401)
     assert request(server, path + '/invitation', {'enabled': False}, alice)[1]['team']['invite_open'] is False
-    participation = {'sessionId': _finished_session(server, 'a'), 'requireExisting': True}
+    participation = {'sessionId': _finished_session(server, 'a', bob), 'requireExisting': True}
     assert request(server, path + '/members', participation, bob)[0] == 400
     assert request(server, path + '/invitation', {'enabled': True}, alice)[1]['team']['invite_open'] is True
     assert request(server, path + '/members', participation, bob)[0] == 200

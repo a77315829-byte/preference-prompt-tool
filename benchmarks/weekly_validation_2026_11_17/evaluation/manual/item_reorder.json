@@ -1,0 +1,47 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "item_reorder",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_order_boundaries_no_callback",
+        "passed": true
+      },
+      {
+        "name": "move_up_then_down_exact_order",
+        "passed": true
+      },
+      {
+        "name": "move_to_boundary_and_preserve_input",
+        "passed": true
+      },
+      {
+        "name": "empty_list_is_inert",
+        "passed": true
+      },
+      {
+        "name": "props_preserve_items_latest_callback_and_markup_text",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

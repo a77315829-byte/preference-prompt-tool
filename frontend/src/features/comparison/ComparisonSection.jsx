@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import SavePreferencePanel from '../preferences/SavePreferencePanel';
 import SummaryContractPanel from './SummaryContractPanel';
@@ -78,9 +78,9 @@ function ComparisonSection({
   }[domainKey] || {};
   const [copied, setCopied] = useState(false);
   const [copiedWithTask, setCopiedWithTask] = useState(false);
-  const [taskDescription, setTaskDescription] = useState(initialDraft?.taskDescription || domainCopy.task);
-  const [remoteSession, setRemoteSession] = useState(initialDraft?.session || null);
-  const [connection, setConnection] = useState(initialDraft?.session ? 'connected' : 'checking');
+  const [taskDescription, setTaskDescription] = useState(initialDraft?.session ? '' : domainCopy.task);
+  const [remoteSession, setRemoteSession] = useState(null);
+  const [connection, setConnection] = useState('checking');
   const [sessionError, setSessionError] = useState('');
   const [optimizeError, setOptimizeError] = useState('');
   // 사용자가 고른 프롬프트 언어. 고르기 전에는 서버의 기본값을 쓴다.
@@ -88,6 +88,25 @@ function ComparisonSection({
   const [previewOption, setPreviewOption] = useState(null);
   const isSummary = isSummaryDomain(domainKey);
   const summaryOverLimit = isSummary && sourceTooLong(taskDescription);
+  const mounted = useRef(false);
+  const restoreSessionId = useRef(initialDraft?.session?.session_id);
+  const sessionEpoch = useRef(0);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+  const clearUnavailableSession = useCallback((error) => {
+    if (![401, 403, 404].includes(error.status)) return false;
+    sessionEpoch.current += 1;
+    setRemoteSession(null);
+    setTaskDescription('');
+    setPreviewOption(null);
+    setPromptLanguage(null);
+    setCopied(false);
+    setCopiedWithTask(false);
+    setOptimizeError('');
+    setConnection('demo-ready');
+    setSessionError('비교 세션이 만료되었거나 접근할 수 없습니다. 내용을 입력하고 다시 시작해 주세요.');
+    onDraftChange?.(null);
+    return true;
+  }, [onDraftChange]);
 
   useEffect(() => {
     if (!previewOption) return undefined;
@@ -105,6 +124,7 @@ function ComparisonSection({
 
   const requestRemoteSession = async (sourceText) => {
     if (isSummary && (!sourceText.trim() || sourceTooLong(sourceText))) return;
+    const epoch = ++sessionEpoch.current;
     setConnection('connecting');
     setSessionError('');
     setCopied(false);
@@ -112,9 +132,11 @@ function ComparisonSection({
     try {
       const { session } = await startPreferenceSession(domainKey,
         isSummary ? sourceText : sourceText.trim() || domainCopy.task, 8, template?.id);
+      if (!mounted.current || sessionEpoch.current !== epoch) return;
       setRemoteSession(session);
       setConnection('connected');
     } catch (error) {
+      if (!mounted.current || sessionEpoch.current !== epoch || clearUnavailableSession(error)) return;
       setConnection('offline');
       setSessionError(error.message || '예시를 불러오지 못했습니다. 서버 연결을 확인해 주세요.');
     }
@@ -123,8 +145,18 @@ function ComparisonSection({
   // 방문만으로 세션을 만들지 않는다. 사용자가 원문을 확인하고 시작해야
   // 데모/실제 모드 모두 자기 입력으로 생성하며, 실 API 쿼터도 낭비하지 않는다.
   useEffect(() => {
-    if (initialDraft?.session) return undefined;
     let cancelled = false;
+    if (restoreSessionId.current) {
+      fetchSession(restoreSessionId.current).then(({ session }) => {
+        if (!cancelled) { setRemoteSession(session); setTaskDescription(session.source_text); setConnection('connected'); }
+      }).catch(error => {
+        if (!cancelled && !clearUnavailableSession(error)) {
+          setConnection('offline');
+          setSessionError('저장된 비교를 확인하지 못했습니다. 서버 연결 후 다시 열어 주세요.');
+        }
+      });
+      return () => { cancelled = true; };
+    }
     fetchHealth()
       .then((health) => {
         if (!cancelled) setConnection(health.liveConfigured ? 'live-ready' : 'demo-ready');
@@ -138,7 +170,7 @@ function ComparisonSection({
     return () => {
       cancelled = true;
     };
-  }, [domainKey, initialDraft?.session]);
+  }, [domainKey, clearUnavailableSession]);
 
   const isRemote = Boolean(remoteSession);
   const isComplete = Boolean(remoteSession?.done);
@@ -160,6 +192,7 @@ function ComparisonSection({
   const progress = isRemote ? (remoteSession.answered / remoteSession.total_rounds) * 100 : 0;
 
   const handleOptionSelect = async (optionId) => {
+    const epoch = sessionEpoch.current;
     setCopied(false);
     setCopiedWithTask(false);
     setSessionError('');
@@ -171,9 +204,11 @@ function ComparisonSection({
           remoteSession.pair.pair_id,
           optionId,
         );
+        if (!mounted.current || sessionEpoch.current !== epoch) return;
         setRemoteSession(session);
         setConnection('connected');
       } catch (error) {
+        if (!mounted.current || sessionEpoch.current !== epoch || clearUnavailableSession(error)) return;
         setConnection('connected');
         setSessionError(error.message || '선택을 저장하지 못했습니다. 다시 시도해 주세요.');
       }
@@ -183,16 +218,19 @@ function ComparisonSection({
 
   // 마지막 선택 되돌리기. 결과 화면에서 누르면 프롬프트가 사라지고 마지막 질문으로 돌아간다.
   const handleUndo = async () => {
+    const epoch = sessionEpoch.current;
     setSessionError('');
     setConnection('submitting');
     try {
       const { session } = await undoPreferenceChoice(remoteSession.session_id);
+      if (!mounted.current || sessionEpoch.current !== epoch) return;
       setRemoteSession(session);
       setCopied(false);
       setCopiedWithTask(false);
       setPromptLanguage(null);
       setConnection('connected');
     } catch (error) {
+      if (!mounted.current || sessionEpoch.current !== epoch || clearUnavailableSession(error)) return;
       setConnection('connected');
       setSessionError(error.message || '선택을 되돌리지 못했습니다. 다시 시도해 주세요.');
     }
@@ -205,20 +243,39 @@ function ComparisonSection({
   // session.prompt 가 최적화된 프롬프트로 바뀌어 있다.
   useEffect(() => {
     if (!remoteSession || optimizeStatus !== 'running') return undefined;
+    let cancelled = false;
     const timer = setInterval(() => {
       fetchSession(remoteSession.session_id)
-        .then(({ session }) => setRemoteSession(session))
-        .catch(() => {});
+        .then(({ session }) => { if (!cancelled) setRemoteSession(session); })
+        .catch(error => { if (!cancelled) clearUnavailableSession(error); });
     }, 1000);
-    return () => clearInterval(timer);
-  }, [remoteSession?.session_id, optimizeStatus]);
+    return () => { cancelled = true; clearInterval(timer); };
+  }, [remoteSession?.session_id, optimizeStatus, clearUnavailableSession]);
+
+  // Validate on focus, and clear locally at the server's fixed expiry even without a click.
+  useEffect(() => {
+    if (!remoteSession) return undefined;
+    let cancelled = false;
+    const check = () => fetchSession(remoteSession.session_id).then(({ session }) => {
+      if (!cancelled) setRemoteSession(session);
+    }).catch(error => { if (!cancelled) clearUnavailableSession(error); });
+    window.addEventListener('focus', check);
+    const seconds = remoteSession.expires_in_seconds;
+    const timer = Number.isFinite(seconds)
+      ? setTimeout(() => clearUnavailableSession({ status: 404 }), Math.max(0, seconds) * 1000)
+      : null;
+    return () => { cancelled = true; window.removeEventListener('focus', check); if (timer !== null) clearTimeout(timer); };
+  }, [remoteSession, clearUnavailableSession]);
 
   const handleOptimize = async () => {
+    const epoch = sessionEpoch.current;
     setOptimizeError('');
     try {
       const { session } = await startOptimization(remoteSession.session_id);
+      if (!mounted.current || sessionEpoch.current !== epoch) return;
       setRemoteSession(session);
     } catch (error) {
+      if (!mounted.current || sessionEpoch.current !== epoch || clearUnavailableSession(error)) return;
       setOptimizeError(error.message);
     }
   };
@@ -437,6 +494,7 @@ function ComparisonSection({
               {!template && !remoteSession.template_id && ['summarization', 'summarization_ko'].includes(domainKey) && (
                 <SummaryContractPanel key={`${remoteSession.session_id}-${domainKey}`}
                   domainKey={domainKey} initialSource={remoteSession.source_text}
+                  user={user} signupOpen={signupOpen} onLogin={onLogin} onOpenLibrary={onOpenLibrary}
                   initialProfile={Object.fromEntries((remoteSession.axes || []).map((axis) => [axis.name, axis.estimate]))} />
               )}
               {teamCode && (
@@ -471,6 +529,9 @@ function ComparisonSection({
                   {remoteSession.undecided_axes.map((a) => a.label).join(', ')}은(는) "비슷해요"만 골라 선호를 정하지 못해
                   프롬프트에 넣지 않았습니다. 넣고 싶으면 "마지막 선택 수정"으로 돌아가 한쪽을 골라 주세요.
                 </p>
+              )}
+              {!template && !remoteSession.template_id && ['summarization', 'summarization_ko'].includes(domainKey) && (
+                <p className="connection-note">아래는 예시 비교에서 만든 기본 지침입니다. 위에서 조건을 바꿨다면 ‘조건을 확인한 작업용 지침’ 안의 저장·복사를 사용해 주세요.</p>
               )}
               <pre className="prompt-box"><code>{prompt}</code></pre>
               {optimizeStatus !== 'running' && (

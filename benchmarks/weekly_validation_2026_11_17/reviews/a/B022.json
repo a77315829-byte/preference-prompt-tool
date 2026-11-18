@@ -1,0 +1,38 @@
+{
+  "output_id": "B022",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "Component.tsx",
+        "const theme = {",
+        "const nextSignals = {",
+        "export function Component({ onChange }: Props) {"
+      ],
+      "reason": "테마와 전이 데이터, 컴포넌트·상태·핸들러·스타일이 한 TSX 안에 있다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "colors: { panel: '#eef4ff', text: '#17345c' },",
+        "spacing: { padding: 12, gap: 6 },",
+        "background: theme.colors.panel,\n        color: theme.colors.text,\n        padding: theme.spacing.padding,\n        gap: theme.spacing.gap,"
+      ],
+      "reason": "의미별 디자인 값을 중앙에 정의하고 적용 인라인 스타일이 참조한다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "export type Signal = 'stop' | 'ready' | 'go';",
+        "const [signal, setSignal] = useState<Signal>('stop');",
+        "const next = nextSignals[signal];",
+        "} as const;"
+      ],
+      "reason": "공개 계약과 필요한 union 상태를 명시하며 지역 값·컴포넌트 반환은 추론한다. 전이표의 as const는 리터럴 union을 유지하기 위한 표기다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

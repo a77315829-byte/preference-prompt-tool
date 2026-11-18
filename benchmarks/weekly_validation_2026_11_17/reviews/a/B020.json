@@ -1,0 +1,40 @@
+{
+  "output_id": "B020",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "import './Component.css';",
+        "<div data-testid=\"panel\" className=\"question-deck-panel\">",
+        ".question-deck-panel {"
+      ],
+      "reason": "제공된 별도 CSS와 실제 컴포넌트 클래스가 연결돼 분리를 충족한다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "background: #eef4ff;\n  color: #17345c;\n  padding: 12px;\n  gap: 6px;"
+      ],
+      "reason": "실제 패널 CSS에 색상과 간격을 직접 선언한다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "export type Props = { cards: Card[]; onFinish: (ids: string[]) => void };",
+        "const [deck] = useState(() => [...cards]);",
+        "const [completed, setCompleted] = useState(0);",
+        "const done = completed >= deck.length;\n  const current = deck[completed];"
+      ],
+      "reason": "공개 계약만 명시하며 지역 상태·값·콜백 반환은 추론한다."
+    }
+  },
+  "other_observations": [
+    {
+      "evidence": "表示 로직과 스타일을 파일로 분리하고 공개 타입 외의 상태·변수 타입은 추론하도록 했습니다.",
+      "reason": "설명은 코드 뒤에 있으나 첫 단어가 일본어 '表示'여서 한국어 설명 요구에 일부 언어 혼입이 있다. 세 스타일 축 판정과 분리해 기록한다."
+    }
+  ],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

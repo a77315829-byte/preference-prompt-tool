@@ -127,7 +127,7 @@ def test_save_task_creates_independent_named_item_for_reuse(server, monkeypatch)
     assert request(server, path + "/save-task", save, cookie)[0] == 409
     status, data, _ = request(server, f"/preferences/{saved['id']}", cookie=cookie)
     assert status == 200 and data["preference"] == saved
-    assert recognize_standard_prompt(load_domain("domains/coding.yaml"), saved["prompt"])["combo"]["code_structure"] == "separated"
+    assert recognize_standard_prompt(load_domain(api_server._domain_path("coding")), saved["prompt"])["combo"]["code_structure"] == "separated"
     seen = []
     monkeypatch.setattr(api_server, "LIVE", True)
     monkeypatch.setattr(api_server, "_live_key_available", lambda _: True)

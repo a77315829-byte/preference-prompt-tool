@@ -36,7 +36,7 @@ def test_legacy_export_still_available_and_coding_route_unchanged():
     revised = build_final_prompt(load_domain(api_server._domain_path("summarization")), combo, language="en")
     assert "Follow the preferences above" in original
     assert "Source fidelity takes priority" in revised
-    assert Path(api_server._domain_path("coding")).name == "coding.yaml"
+    assert Path(api_server._domain_path("coding")).as_posix().endswith("domains/coding/v2.yaml")
 
 
 def test_new_checks_do_not_accept_near_copy_with_reversed_fact():

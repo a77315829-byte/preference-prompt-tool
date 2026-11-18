@@ -212,9 +212,12 @@ def server(monkeypatch, tmp_path):
     srv.shutdown()
 
 
-def _call(base, path, body=None):
+def _call(base, path, body=None, cookie=None):
+    headers = {"Content-Type": "application/json"}
+    if cookie:
+        headers["Cookie"] = cookie
     req = urllib.request.Request(base + path, None if body is None else json.dumps(body).encode(),
-                                 {"Content-Type": "application/json"})
+                                 headers)
     try:
         with urllib.request.urlopen(req) as resp:
             return resp.status, json.loads(resp.read().decode("utf-8"))
@@ -222,12 +225,12 @@ def _call(base, path, body=None):
         return err.code, json.loads(err.read().decode("utf-8"))
 
 
-def _finished_session(base, pick):
-    _, data = _call(base, "/sessions", {"domainKey": "coding", "sourceText": SECRET_SOURCE})
+def _finished_session(base, pick, cookie=None):
+    _, data = _call(base, "/sessions", {"domainKey": "coding", "sourceText": SECRET_SOURCE}, cookie)
     session = data["session"]
     while not session["done"]:
         _, data = _call(base, f"/sessions/{session['session_id']}/choices",
-                        {"pairId": session["pair"]["pair_id"], "chosen": pick})
+                        {"pairId": session["pair"]["pair_id"], "chosen": pick}, cookie)
         session = data["session"]
     return session["session_id"]
 
@@ -266,7 +269,7 @@ def test_api_team_uses_the_signed_in_name(server) -> None:
                                  {"Content-Type": "application/json"})
     with urllib.request.urlopen(req) as resp:
         cookie = resp.headers["Set-Cookie"].split(";")[0]
-    session_id = _finished_session(server, "a")
+    session_id = _finished_session(server, "a", cookie)
     req = urllib.request.Request(server + "/teams/devteam/members",
                                  json.dumps({"sessionId": session_id, "name": "가짜 이름"}).encode(),
                                  {"Content-Type": "application/json", "Cookie": cookie})
@@ -285,7 +288,7 @@ def test_api_my_teams_needs_login_and_shows_joined_teams(server) -> None:
     with urllib.request.urlopen(req) as resp:
         cookie = resp.headers["Set-Cookie"].split(";")[0]
     req = urllib.request.Request(server + "/teams/devteam/members",
-                                 json.dumps({"sessionId": _finished_session(server, "a")}).encode(),
+                                 json.dumps({"sessionId": _finished_session(server, "a", cookie)}).encode(),
                                  {"Content-Type": "application/json", "Cookie": cookie})
     urllib.request.urlopen(req).close()
     assert _call(server, "/teams/devteam/members", {"sessionId": _finished_session(server, "b"), "name": "민수"})[0] == 400

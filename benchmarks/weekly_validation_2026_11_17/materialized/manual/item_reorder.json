@@ -1,0 +1,22 @@
+{
+  "files": {
+    "Component.tsx": "import { useState } from \"react\";\nimport type { ReactElement } from \"react\";\nimport { panelStyle } from \"./Component.styles\";\n\nexport type Item = { id: string; label: string };\nexport type Props = {\n  initialItems: Item[];\n  onChange: (ids: string[]) => void;\n};\n\nexport function Component({ initialItems, onChange }: Props): ReactElement {\n  const [items, setItems] = useState<Item[]>((): Item[] => [...initialItems]);\n\n  function move(index: number, direction: -1 | 1): void {\n    const target: number = index + direction;\n    if (index < 0 || index >= items.length || target < 0 || target >= items.length) {\n      return;\n    }\n    const item: Item | undefined = items[index];\n    const neighbor: Item | undefined = items[target];\n    if (item === undefined || neighbor === undefined) return;\n\n    const nextItems: Item[] = [...items];\n    nextItems[index] = neighbor;\n    nextItems[target] = item;\n    const ids: string[] = nextItems.map((entry): string => entry.id);\n    setItems(nextItems);\n    onChange(ids);\n  }\n\n  return (\n    <div data-testid=\"panel\" style={panelStyle}>\n      {items.length === 0 && <p role=\"status\">No items</p>}\n      <ul aria-label=\"Items\">\n        {items.map((item, index) => (\n          <li key={item.id}>\n            <span>{item.label}</span>\n            <button\n              type=\"button\"\n              onClick={() => move(index, -1)}\n              disabled={index === 0}\n            >\n              Up {item.id}\n            </button>\n            <button\n              type=\"button\"\n              onClick={() => move(index, 1)}\n              disabled={index === items.length - 1}\n            >\n              Down {item.id}\n            </button>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n",
+    "Component.styles.ts": "import type { CSSProperties } from \"react\";\n\ntype DesignTokens = {\n  colors: { panel: string; text: string };\n  spacing: { panelPadding: number; controlGap: number };\n};\n\nconst tokens: DesignTokens = {\n  colors: { panel: \"#eef4ff\", text: \"#17345c\" },\n  spacing: { panelPadding: 12, controlGap: 6 },\n};\n\nexport const panelStyle: CSSProperties = {\n  background: tokens.colors.panel,\n  color: tokens.colors.text,\n  padding: tokens.spacing.panelPadding,\n  gap: tokens.spacing.controlGap,\n  display: \"grid\",\n};\n"
+  },
+  "provenance": [
+    {
+      "filename": "Component.tsx",
+      "block_index": 0,
+      "start": 21,
+      "end": 1759,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    },
+    {
+      "filename": "Component.styles.ts",
+      "block_index": 1,
+      "start": 1790,
+      "end": 2296,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    }
+  ]
+}

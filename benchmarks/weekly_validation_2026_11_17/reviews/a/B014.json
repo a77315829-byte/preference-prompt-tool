@@ -1,0 +1,38 @@
+{
+  "output_id": "B014",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "Component.tsx",
+        "const theme: Theme = {",
+        "function normalize(text: string, trim: boolean, mode: CaseMode): string {",
+        "export function Component({ initialText }: Props): ReactElement {"
+      ],
+      "reason": "테마·스타일·변환 함수·컴포넌트와 상태가 한 TSX에 있다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "colors: { panel: '#eef4ff', text: '#17345c' },",
+        "spacing: { padding: 12, gap: 6 },",
+        "background: theme.colors.panel,\n  color: theme.colors.text,\n  padding: theme.spacing.padding,\n  gap: theme.spacing.gap,"
+      ],
+      "reason": "색상·간격 의미 토큰을 모으고 적용 스타일에서 참조한다. whiteSpace는 별도 비토큰 표현이지만 색상·간격 중앙화 조건에는 영향이 없다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "function normalize(text: string, trim: boolean, mode: CaseMode): string {",
+        "const [text, setText] = useState<string>(initialText);",
+        "const [trim, setTrim] = useState<boolean>(false);",
+        "onChange={(event: ChangeEvent<HTMLSelectElement>): void => {"
+      ],
+      "reason": "공개 props, 주요 함수 인자/반환, 상태, 테마 데이터와 이벤트가 명시적으로 타입화됐다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

@@ -1,0 +1,37 @@
+{
+  "output_id": "B027",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "Component.tsx",
+        "const panelStyle: CSSProperties = {",
+        "function allocate(centsText: string, peopleText: string): string {",
+        "export function Component({ initialCents, initialPeople }: Props): ReactElement {"
+      ],
+      "reason": "계산 함수·상태·렌더링·모든 스타일을 한 TSX 안에서 제공한다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "background: \"#eef4ff\",\n  color: \"#17345c\",\n  padding: \"12px\",\n  gap: \"6px\",\n  display: \"grid\","
+      ],
+      "reason": "CSSProperties 객체에 리터럴 디자인 값을 직접 정의하며 중앙 토큰을 사용하지 않는다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "function parseUnsignedInteger(input: string): number | null {",
+        "function allocate(centsText: string, peopleText: string): string {",
+        "const amounts: number[] = Array.from(",
+        "const [cents, setCents] = useState<string>(initialCents);",
+        "const allocation: string = allocate(cents, people);"
+      ],
+      "reason": "props, 주요 함수의 인자/반환, 상태, 계산 중간값과 자료 구조 타입을 명시했다. 짧은 인라인 이벤트 콜백과 Array.from 인자의 문맥 추론은 허용 범위다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

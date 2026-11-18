@@ -1,0 +1,14 @@
+{
+  "files": {
+    "Component.tsx": "import { useState } from 'react';\n\nexport type Props = { onRecord: (value: number) => void };\n\nexport function Component({ onRecord }: Props) {\n  const [reading, setReading] = useState('');\n  const [history, setHistory] = useState<number[]>([]);\n  const [hasError, setHasError] = useState(false);\n\n  return (\n    <div\n      data-testid=\"panel\"\n      style={{\n        display: 'grid',\n        background: '#eef4ff',\n        color: '#17345c',\n        padding: 12,\n        gap: 6,\n      }}\n    >\n      <label>\n        Reading\n        <input\n          type=\"text\"\n          value={reading}\n          onChange={(event) => setReading(event.target.value)}\n        />\n      </label>\n      <button\n        type=\"button\"\n        onClick={() => {\n          const text = reading.trim();\n          const value = Number(text);\n          if (!/^-?\\d+$/.test(text) || !Number.isSafeInteger(value)) {\n            setHasError(true);\n            return;\n          }\n          setHistory((previous) => [...previous, value]);\n          setReading('');\n          setHasError(false);\n          onRecord(value);\n        }}\n      >\n        Record\n      </button>\n      <button\n        type=\"button\"\n        onClick={() => {\n          setHistory([]);\n          setReading('');\n          setHasError(false);\n        }}\n      >\n        Clear\n      </button>\n      {hasError && <div role=\"alert\">Invalid reading</div>}\n      <output aria-label=\"Latest\">\n        {history.length === 0 ? 'None' : String(history[history.length - 1])}\n      </output>\n      <ul aria-label=\"History\">\n        {history.map((value, index) => (\n          <li key={index}>{String(value)}</li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "filename": "Component.tsx",
+      "block_index": 0,
+      "start": 21,
+      "end": 1702,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    }
+  ]
+}

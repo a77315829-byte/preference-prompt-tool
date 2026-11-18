@@ -1,0 +1,37 @@
+{
+  "timing": "Post-generation audit only; no source replacement or retuning allowed. Pre-generation JSON scan remains the selection basis.",
+  "scope": "All preserved benchmark/experiment jsonl/csv/tsv/txt/md/yaml/yml/py text files besides this run; no environment/personal files.",
+  "files_scanned": 123,
+  "rows": [
+    {
+      "id": "S01",
+      "full_source_matches": [],
+      "word5gram_jaccard_at_least_point_one": []
+    },
+    {
+      "id": "S02",
+      "full_source_matches": [],
+      "word5gram_jaccard_at_least_point_one": []
+    },
+    {
+      "id": "S03",
+      "full_source_matches": [],
+      "word5gram_jaccard_at_least_point_one": []
+    },
+    {
+      "id": "S04",
+      "full_source_matches": [],
+      "word5gram_jaccard_at_least_point_one": []
+    },
+    {
+      "id": "S05",
+      "full_source_matches": [],
+      "word5gram_jaccard_at_least_point_one": []
+    },
+    {
+      "id": "S06",
+      "full_source_matches": [],
+      "word5gram_jaccard_at_least_point_one": []
+    }
+  ]
+}

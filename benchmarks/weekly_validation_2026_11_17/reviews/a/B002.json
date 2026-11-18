@@ -1,0 +1,35 @@
+{
+  "output_id": "B002",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "Component.tsx",
+        "export function Component({ onRecord }: Props) {",
+        "style={{\n        background: \"#eef4ff\","
+      ],
+      "reason": "필요한 컴포넌트·상태·이벤트·스타일이 한 TSX 안에 있다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "background: \"#eef4ff\",\n        color: \"#17345c\",\n        padding: \"12px\",\n        gap: \"6px\",\n        display: \"grid\","
+      ],
+      "reason": "패널에 적용한 인라인 스타일에 디자인 값을 직접 쓴다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "const [reading, setReading] = useState(\"\");",
+        "const [history, setHistory] = useState<number[]>([]);",
+        "const [hasError, setHasError] = useState(false);",
+        "function record() {"
+      ],
+      "reason": "추론 가능한 문자열·불리언 상태와 함수 반환은 생략했고 빈 배열에 필요한 원소 타입만 명시했다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

@@ -1,0 +1,42 @@
+{
+  "version": "0.7",
+  "report_date": "2026-11-13",
+  "actual_period": [
+    "2026-11-06",
+    "2026-11-12"
+  ],
+  "plan_period": [
+    "2026-11-13",
+    "2026-11-19"
+  ],
+  "pages": 11,
+  "main_pages": [
+    1,
+    2,
+    3
+  ],
+  "backup_pages": [
+    4,
+    11
+  ],
+  "historical_backup_pages": 0,
+  "previous_pdf_preserved": true,
+  "previous_pdf_sha256": "eaa7d2641735c39ca423bdc2a72d0b531f79c2af5d7bb910028db162d56e9112",
+  "output": "output/pdf/Revealed_진행현황_주간보고서_v0.7.pdf",
+  "sha256": "2360084d088e4815e1d192374e7c6c5b321a79c28ee5b39c13b4f2777027fc40",
+  "paid_model_api_calls": 0,
+  "visual_review": "completed",
+  "all_pages_rendered": true,
+  "previous_week_backup_removed": true,
+  "period_and_deadlines_checked": true,
+  "wbs_task_names_and_ids_match": true,
+  "reported_metrics_match_evidence": true,
+  "post_cutoff_updates_not_counted_as_weekly_work": true,
+  "github_links_on_last_page": [
+    "https://github.com/a77315829-byte/preference-prompt-tool",
+    "https://github.com/a77315829-byte/preference-prompt-tool/blob/docs/wbs-v3.2/docs/system-design/README.md",
+    "https://github.com/a77315829-byte/preference-prompt-tool/blob/docs/wbs-v3.2/docs/system-design/Revealed_Analysis_Design_v1.2.pdf",
+    "https://github.com/a77315829-byte/preference-prompt-tool/blob/docs/wbs-v3.2/docs/wbs/2026-11-12/README.md"
+  ],
+  "text_overflows": 0
+}

@@ -1,10 +1,20 @@
 # Revealed 전체 분석·설계서
 
-AI/SW융합프로젝트 · 윤정우, 고차원 · v1.0 · 기준일 2026-11-12
+AI/SW융합프로젝트 · 윤정우, 고차원 · v1.3 · 문서 수정일 2026-11-18
 
-**[전체 분석·설계서 PDF 내려받기 — 97쪽](Revealed_Analysis_Design_v1.0.pdf)**
+**[전체 분석·설계서 PDF 내려받기](Revealed_Analysis_Design_v1.3.pdf)**
 
-Revealed의 전체 분석·설계 기준서입니다. 문제 정의와 요구사항부터 유즈케이스, 화면, 처리 흐름, 클래스·함수, HTTP API, 데이터, 권한·운영, 검증까지 연결합니다. **주간보고는 10장의 부록**이며 본 문서를 주간보고용 요약으로 제한하지 않습니다.
+11/17 개정 원고의 비교 세션 소유권·고정 TTL, React v2 한·영 정렬, 조건 확인 결과 저장→새 작업 재사용, 온라인 백업·새 저장소 복원 및 새 원문 비교 결과를 이번 발행본에 반영했습니다. 코드 기준은 `0bbff80`입니다. 기존 PDF와 고정 실험 결과는 보존합니다.
+
+[최종 제출 준비 자료](../final/2026-11-18/README.md) · [최신 운영·시연 검증](../verification/2026-11-17-readiness/README.md) · [기술 완료 기준](../history/2026-11-17_weekly_completion.md)
+
+**UC-01~UC-24 / 하위 UC-01-01 방식의 숫자 ID**를 유지합니다. 영역별 8개 그림, 각 UC의 하위 기능 그림 24개와 처리 흐름 24개, 하위 목표 79개의 설명을 포함합니다. 기능마다 개요·액터·사전/사후조건·기본/대안/예외 흐름·입력·검사 기준을 표와 본문으로 제공합니다.
+
+**[보고서형 WBS v3.4](../wbs/2026-11-18/README.md)**과 주 구현·관련 작업을 맞췄습니다. UC-02·03의 주 구현은 3.1, 구현·검증된 세션 정책은 3.3이며 UC-03은 3.2에서도 공통 사용합니다. 기존 5단계·16개 작업과 일정은 유지하고, 11/18 상태와 팀 확인 대기를 구분합니다.
+
+WBS는 프로젝트 작업, UC는 사용자 목표이므로 모든 이름이 같아야 한다고 해석하지 않습니다. 공통 기능명은 일치시키고 ID로 추적합니다. 근거는 [PMI WBS 소개](https://www.pmi.org/standards/work-breakdown-structures-third-edition)와 [OMG UML 2.5.1, 18장](https://www.omg.org/spec/UML/2.5.1)이며 적용 판단은 본문 2.11절에 설명했습니다. '저장소 최초 추가일'은 최초 추가 커밋 작성일로, GitHub 업로드 시점이나 작업의 실제 시작·완료일을 뜻하지 않습니다.
+
+Revealed의 전체 분석·설계 기준서입니다. 문제 정의와 요구사항부터 유즈케이스, 화면, 처리 흐름, 클래스·함수, HTTP API, 데이터, 권한·운영, 검증까지 연결합니다. **보고·인계 설명은 10장의 부록**이며 본 문서를 주간보고용 요약으로 제한하지 않습니다.
 
 현재 검증의 중심은 문서 요약의 명시 조건 전달과 내용 보존입니다. 코딩의 두 경로, 개인 보관함, 팀 기준, 인수인계, 템플릿·작업 공간도 전체 기능으로 명세합니다. 구현·기술 검증·사람의 미측정 효과를 구별합니다.
 
@@ -14,7 +24,7 @@ Revealed의 전체 분석·설계 기준서입니다. 문제 정의와 요구사
 |---|---|---|
 | [0. 시스템 전체도](chapters/00-system-overview.md) | 전체 유즈케이스·구조·클래스·상태·화면 이동 | 일곱 개요 그림과 문서 안내 |
 | [1. 시스템 분석](chapters/01-analysis.md) | 문제·업무 흐름·이해관계자·범위·용어 | 상세 기능 요구사항·12개 비기능 요구·사업 규칙 |
-| [2. 유즈케이스 상세](chapters/02-usecases.md) | 사전조건·정상 흐름·대안·예외·종료·검사 | UC-01~24 |
+| [2. 유즈케이스 상세](chapters/02-usecases.md) | 영역별·하위 기능 그림, 명세표, 처리 흐름, WBS 대응 | 상위 UC-01~24·하위 79개 |
 | [3. 화면 설계](chapters/03-ui-design.md) | 화면별 입력·상태·행동·실패·복귀 | UI-01~18, 논리 와이어프레임 4개 |
 | [4. 처리·알고리즘](chapters/04-processing-design.md) | 추정·질문 선택·조건 충돌·조립·버전·개선 | 시퀀스·활동 흐름과 불변조건 |
 | [5. 구성요소](chapters/05-components.md) | 실제 클래스·함수·내부 인터페이스 | 백엔드·프론트의 책임과 협력 |
@@ -24,9 +34,11 @@ Revealed의 전체 분석·설계 기준서입니다. 문제 정의와 요구사
 | [9. 검증](chapters/09-verification.md) | 요약·GEPA·코딩 4항목·React 3축 | 비교 설계·실측·불일치·한계 |
 | [10. 관리·보고 부록](chapters/10-appendices.md) | 문서 기준·금주 실적·차주 계획·Q&A·시연 | 전체 문서에서 보고 내용 발췌 |
 
-총 **21개 그림**을 PNG와 벡터 PDF로 제공합니다. 논리 와이어프레임은 실제 화면 캡처가 아니며 상세 픽셀 배치를 보장하지 않습니다. 전체 이미지와 생성 소스는 [diagrams](diagrams/)에 연결돼 있습니다.
+총 **77개 그림**을 PNG와 벡터 PDF로 제공합니다. 변경 없는 그림의 v1.1 표시는 그림의 작성 판본이며 이번 v1.3에서는 연결표·명세·부록을 갱신했습니다. 논리 와이어프레임은 실제 화면 캡처가 아니며 상세 픽셀 배치를 보장하지 않습니다. 전체 이미지와 생성 소스는 [diagrams](diagrams/)에 연결돼 있습니다.
 
-## 이번 React 코드 스타일 비교 결과
+현재 정책과 검증 범위는 `0bbff80` 및 [11/17 새 6원문·8과제 비교](../../benchmarks/weekly_validation_2026_11_17/README.md)에 맞췄습니다. 아래 표는 과거 React 3축 실험의 고정 결과이며 최신 v2 지침 재비교와 합산하지 않습니다.
+
+## 보존한 React 코드 스타일 비교 결과 (11/12)
 
 새 합성 기능 과제 8개씩, 일반·수동·제품의 독립 첫 답변 24개를 비교했습니다. 제품의 현재 기본 영어 최종 지침을 수정 없이 사용했습니다.
 
@@ -44,8 +56,12 @@ Revealed의 전체 분석·설계 기준서입니다. 문제 정의와 요구사
 
 - [검증 원자료 안내](evidence/README.md) · [공개 사본 해시](evidence/publication-manifest.json)
 - [API 90개 원자료](api-inventory.json) · [기준 코드·DB 스키마](source-evidence.json) · [간편 데이터 사전](data-dictionary.md)
-- [개요 그림 생성](build_diagrams.py) · [상세 그림 생성](build_detailed_diagrams.py) · [데이터 장 생성](build_data_chapter.py) · [PDF 생성](build_pdf.py)
-- [PDF 생성 정보](pdf-build.json) · [문서 확인 기록](validation.json)
+- [개요 그림 생성](build_diagrams.py) · [상세 그림 생성](build_detailed_diagrams.py) · [데이터 장 생성](build_data_chapter.py) · [현행 PDF 생성](build_v1_3.py)
+- [UC 구조화 명세](usecase-catalog.json) · [과거 UC 원자료 생성](build_usecase_catalog.py) · [하위 그림·명세 생성](build_usecase_details.py)
+- [현행 PDF 생성 정보](pdf-build-v1.3.json) · [v1.3 확인 기록](validation-v1.3.json) · [v1.2 확인 기록](validation-v1.2.json) · [v1.1 확인 기록](validation-v1.1.json) · [v1.0 확인 기록](validation.json)
+- [이전 v1.2 PDF — 151쪽](Revealed_Analysis_Design_v1.2.pdf): 11/13 발행본 보존.
+- [이전 v1.1 PDF — 151쪽](Revealed_Analysis_Design_v1.1.pdf): WBS v3.1 연결 기준의 이전 판본 보존.
+- [이전 v1.0 PDF — 97쪽](Revealed_Analysis_Design_v1.0.pdf): 기존 판본 보존. source-evidence.json과 API 원자료의 소스 위치는 이 기준 시점의 기록입니다.
 
 본문은 편집 가능한 Markdown입니다. 기존 번들 Python의 ReportLab·Pillow·pypdf와 로컬 pdftoppm을 사용했고 새 라이브러리나 유료 이미지/모델 API를 사용하지 않았습니다. 이 문서는 현재 로컬 개발본을 설명합니다. 문서 전용 브랜치 게시가 실행 코드 병합·배포를 의미하지 않습니다. 기준 소스와 원격 기준의 차이는 [10장](chapters/10-appendices.md)에 기록했습니다.
 

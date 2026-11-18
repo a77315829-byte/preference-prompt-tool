@@ -1,0 +1,63 @@
+{
+  "output_id": "B012",
+  "kind": "summary",
+  "response_kind": "summary",
+  "sentence_count": 4,
+  "length_pass": true,
+  "wording_pass": true,
+  "wording_reason": "원문에서 네 완전한 문장을 변경이나 중복 없이 선택했다.",
+  "facts": [
+    {
+      "id": "F1",
+      "preserved": true,
+      "evidence": [
+        "Warnock was driving through a canyon in Lewiston, Idaho, on Wednesday when he saw the tree, then looked up to see an SUV dangling over the edge of a cliff."
+      ],
+      "reason": "Lewiston에서 절벽에 매달린 SUV를 발견했다는 사실을 유지한다."
+    },
+    {
+      "id": "F2",
+      "preserved": true,
+      "evidence": [
+        "Warnock then reached in and pulled Sitko out to safety -- a moment recorded by Kough's camera."
+      ],
+      "reason": "Warnock이 Sitko를 안전하게 끌어낸 구조 사실을 보존한다."
+    },
+    {
+      "id": "F3",
+      "preserved": true,
+      "evidence": [
+        "Thanks to Warnock, Sitko went to the hospital with just minor injuries."
+      ],
+      "reason": "병원에 간 점과 경상만 입었다는 제한을 모두 보존한다."
+    }
+  ],
+  "priorities": [
+    {
+      "id": "P1",
+      "preserved": true,
+      "evidence": [
+        "Warnock was driving through a canyon in Lewiston, Idaho, on Wednesday when he saw the tree, then looked up to see an SUV dangling over the edge of a cliff."
+      ],
+      "reason": "날짜·장소·발견 계기를 포함한 전체 선택 문장을 보존한다."
+    },
+    {
+      "id": "P2",
+      "preserved": true,
+      "evidence": [
+        "Warnock then reached in and pulled Sitko out to safety -- a moment recorded by Kough's camera."
+      ],
+      "reason": "구조 및 사진 기록을 포함한 전체 문장을 보존한다."
+    },
+    {
+      "id": "P3",
+      "preserved": true,
+      "evidence": [
+        "Thanks to Warnock, Sitko went to the hospital with just minor injuries."
+      ],
+      "reason": "전체 선택 문장을 그대로 포함한다."
+    }
+  ],
+  "issues": [],
+  "ambiguities": []
+}

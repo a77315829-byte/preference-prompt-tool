@@ -1,0 +1,37 @@
+{
+  "output_id": "B022",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "Component.tsx",
+        "const theme = {",
+        "export function Component({ onChange }: Props) {"
+      ],
+      "reason": "전체 테마·전이 정보·상태·화면 처리가 단일 TSX에서 완결된다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "colors: { panel: '#eef4ff', text: '#17345c' },",
+        "spacing: { padding: 12, gap: 6 },",
+        "background: theme.colors.panel,",
+        "gap: theme.spacing.gap,"
+      ],
+      "reason": "중앙 테마의 의미 있는 색상과 간격 토큰이 적용 스타일에 연결된다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "const [signal, setSignal] = useState<Signal>('stop');",
+        "const nextSignals = {\n  stop: 'ready',\n  ready: 'go',\n  go: 'stop',\n} as const;",
+        "const next = nextSignals[signal];"
+      ],
+      "reason": "공개 Props와 필요한 union 상태만 타입을 지정한다. as const는 전이 값을 리터럴 union으로 유지하며 추론 가능한 지역 값·반환 타입은 생략했다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

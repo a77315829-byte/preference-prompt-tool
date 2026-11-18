@@ -40,7 +40,7 @@ function App() {
   const consumeCodingProfile = useCallback(() => setCodingProfileDraft(null), []);
   const consumeHandoffDraft = useCallback(() => setHandoffDraft(null), []);
   const handleDraftChange = useCallback((draft) => {
-    setComparisonDraft({ domainKey: activeFlow, ...draft });
+    setComparisonDraft(draft ? { domainKey: activeFlow, ...draft } : null);
   }, [activeFlow]);
   // 로그인 상태. undefined = 아직 모름, null = 로그인 안 함. 세션은 HttpOnly 쿠키라
   // 화면은 서버에 물어서만 안다.
@@ -51,6 +51,17 @@ function App() {
   const [authReason, setAuthReason] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [draftGeneration, setDraftGeneration] = useState(0);
+  const comparisonAccount = useRef(undefined);
+  useEffect(() => {
+    const previous = comparisonAccount.current;
+    comparisonAccount.current = user?.id;
+    // Guest -> login is an explicit server-side promotion; preserve the entered
+    // save title too. Account switches must discard the old component and draft.
+    if (previous != null && previous !== user?.id) {
+      setComparisonDraft(null);
+      setDraftGeneration(value => value + 1);
+    }
+  }, [user?.id]);
   const navigationRisk = useRef('');
   const setNavigationRisk = useCallback(message => { navigationRisk.current = message; }, []);
   const handleLogin = next => { if (!user) moveAnonymousDrafts(next); setUser(next); };
@@ -239,7 +250,7 @@ function App() {
             exit={{ opacity: 0, y: -24, scale: 0.99 }}
             transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
           >
-            <ComparisonSection onBack={teamCodeDraft ? openTeams : handleComparisonBack} domainKey={activeFlow}
+            <ComparisonSection key={`${activeFlow}:${draftGeneration}`} onBack={teamCodeDraft ? openTeams : handleComparisonBack} domainKey={activeFlow}
               onSwitchDomain={(domain) => { setComparisonDraft(null); setActiveFlow(domain); }}
               template={template} initialDraft={comparisonDraft?.domainKey === activeFlow ? comparisonDraft : null}
               onDraftChange={handleDraftChange} teamCode={teamCodeDraft} teamName={teamNameDraft} onOpenTeam={showTeam}

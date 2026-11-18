@@ -1,0 +1,47 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "comparison_snapshot",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_no_comparison",
+        "passed": true
+      },
+      {
+        "name": "compare_numeric_less_equal_greater",
+        "passed": true
+      },
+      {
+        "name": "editing_preserves_committed_result",
+        "passed": true
+      },
+      {
+        "name": "invalid_attempts_preserve_result_and_success_clears_error",
+        "passed": true
+      },
+      {
+        "name": "new_callback_preserves_inputs_and_rejects_invalid_right",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

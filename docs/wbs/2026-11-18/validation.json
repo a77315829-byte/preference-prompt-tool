@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-18",
+  "pdf": {
+    "path": "output/pdf/Revealed_WBS_v3.4_보고서형.pdf",
+    "pages": 3,
+    "page_bounds_checked": true,
+    "rendered_pages": 3,
+    "sha256": "6047204853eb434a410bcdfe3996767de9a2d02beff1632af1aa2ea299afbff8"
+  },
+  "traceability": {
+    "parent_uc": 24,
+    "child_uc": 79,
+    "phases": 5,
+    "tasks": 16,
+    "schedule_names_preserved": true
+  },
+  "workbook": {
+    "datesPreserved": true,
+    "formulasPreserved": true,
+    "statusesVerified": 16,
+    "editPropagationVerified": true,
+    "errorScan": "{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}"
+  },
+  "xlsx_sha256": "160721d302f52c899cda433f1705271ecbb827371d610fab269a9c4ed75c547e",
+  "visual_review": "PDF 3쪽·Excel 세 시트 및 수정한 비고 확인"
+}

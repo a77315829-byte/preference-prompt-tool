@@ -1,0 +1,39 @@
+{
+  "output_id": "B015",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "Component.tsx",
+        "const tokens = {",
+        "const followingSignal: Record<Signal, Signal> = {",
+        "export function Component({ onChange }: Props) {"
+      ],
+      "reason": "타입·토큰·스타일·상태 전이·컴포넌트가 한 TSX로 완결된다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "colors: { panel: \"#eef4ff\", text: \"#17345c\" },",
+        "spacing: { panelPadding: 12, controlGap: 6 },",
+        "background: tokens.colors.panel,",
+        "gap: tokens.spacing.controlGap,"
+      ],
+      "reason": "중앙의 의미 있는 색상·간격 토큰을 적용 스타일에서 참조한다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "const [signal, setSignal] = useState<Signal>(\"stop\");",
+        "const followingSignal: Record<Signal, Signal> = {",
+        "function next() {",
+        "const value = followingSignal[signal];"
+      ],
+      "reason": "공개 계약, union 상태, CSS 및 전이 맵의 union 값 제약을 위한 타입을 명시한다. 추론 가능한 지역 값·반환은 생략했다. 전이 맵 타입은 값을 일반 string으로 넓히지 않기 위한 필요 타입으로 판단했다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

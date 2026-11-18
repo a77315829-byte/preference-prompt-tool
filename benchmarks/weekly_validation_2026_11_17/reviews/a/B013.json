@@ -1,0 +1,63 @@
+{
+  "output_id": "B013",
+  "kind": "summary",
+  "response_kind": "summary",
+  "sentence_count": 4,
+  "length_pass": true,
+  "wording_pass": true,
+  "wording_reason": "양 끝 문장은 그대로 발췌했고 중간 문장도 긴 원문 구절들을 연결하여 high 재사용 조건을 충족한다.",
+  "facts": [
+    {
+      "id": "F1",
+      "preserved": true,
+      "evidence": [
+        "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said."
+      ],
+      "reason": "사건과 해고를 경찰 발언으로 전달한다."
+    },
+    {
+      "id": "F2",
+      "preserved": true,
+      "evidence": [
+        "the female TSA officer, who said she had done this with her colleague at least 10 other times, police said."
+      ],
+      "reason": "최소 10회 추가라는 수량 및 진술과 경찰 귀속을 유지한다."
+    },
+    {
+      "id": "F3",
+      "preserved": true,
+      "evidence": [
+        "But it's unlikely criminal charges will be filed because there is no identifiable victim."
+      ],
+      "reason": "기소가 불가능하다고 단정하지 않고 낮은 가능성과 원인을 보존한다."
+    }
+  ],
+  "priorities": [
+    {
+      "id": "P1",
+      "preserved": true,
+      "evidence": [
+        "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said."
+      ],
+      "reason": "선택 문장 정보 전체를 보존했다."
+    },
+    {
+      "id": "P2",
+      "preserved": true,
+      "evidence": [
+        "Investigator Chris Higgins watched the plan being carried out on February 9 and interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said."
+      ],
+      "reason": "Higgins 면담, 여성 직원의 동료와의 반복, 최소 횟수, 경찰 귀속이 모두 있다."
+    },
+    {
+      "id": "P3",
+      "preserved": true,
+      "evidence": [
+        "But it's unlikely criminal charges will be filed because there is no identifiable victim."
+      ],
+      "reason": "선택 문장 전체를 보존한다."
+    }
+  ],
+  "issues": [],
+  "ambiguities": []
+}

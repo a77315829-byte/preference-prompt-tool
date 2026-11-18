@@ -1,0 +1,9 @@
+{
+  "recorded_utc": "2026-11-17T06:18:56.438872+00:00",
+  "reason": "Coordinator requested two fresh independent AI reviewers instead of the planned single investigator review.",
+  "timing": "Added after input freeze and generation launch, before coordinator read any generated answer; only output file counts were inspected.",
+  "unchanged": "All pre-frozen semantic/style criteria, tasks, core anchors, inputs and runtime checks remain unchanged.",
+  "review": "Two new fork_turns=none agents, neither a generator, independently receive anonymous answers and source/task, target conditions and frozen facts only. No arm, generation prompt, automatic score, references, execution results or other review. Original judgments retained; disagreements reported, not reconciled to improve scores.",
+  "limitation": "AI-assisted qualitative judgments, not human gold. Wording/code may reveal a strategy despite arm anonymization.",
+  "frozen_rubric_sha256": "36fd3d04ba3ef83712dd1a181e549cac18231fbf399b698e99cf3cff4935ede8"
+}

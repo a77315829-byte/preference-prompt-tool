@@ -1,0 +1,88 @@
+{
+  "date": "2026-11-17",
+  "baseline_commit": "4b40d115141709f8aeb7840a301e02fc206c408a",
+  "scope": "comparison ownership/expiry and React prompt language alignment; local synthetic verification",
+  "python": {
+    "passed": 1433,
+    "skipped": 1,
+    "api_deselected": 16,
+    "skip_details": [
+      {
+        "name": "test_symlink_outside_build_is_not_served",
+        "reason": "Host does not permit creating symlinks"
+      }
+    ]
+  },
+  "frontend": {
+    "passed": 136,
+    "failed": 0
+  },
+  "build_passed": true,
+  "browser": {
+    "passed": 6,
+    "failed": 0,
+    "page_errors": [],
+    "external_requests": []
+  },
+  "paid_model_api_calls": 0,
+  "legacy_domain_preserved": true,
+  "source_sha256": {
+    "api_server.py": "e06abf8aa06a3870123fd8b6400ed6cdae375efc8223334f10d20c5b3b0f2f1c",
+    "app.py": "29f5fdd8fbc55f6a14af64722edfb6e01998dc56de6cf851096c1f704028b4eb",
+    "preference_comparison.py": "ff9a060304c1ae6f2dcf624d8e6d32498a5f369a37141ec10c95f7ddae8f728a",
+    "domains/coding.yaml": "8bda3ae9b07029f86e586da50664060b588b5aa272d55afe3af0053f78aba734",
+    "domains/coding/v2.yaml": "5ec6e99453647a582f46a7f483e593bd245db58b64bef80569053246aac38296",
+    "CLAUDE.md": "0712242bb1af0da003ccc73a8e9b6c70ae2d3087ea90fd7cfb83ef4c0cd2f75f",
+    "frontend/src/app/App.jsx": "4f665d60ad095c0b08580c688c62d25646396384975c2d0fd028363b1aec94b2",
+    "frontend/src/features/comparison/ComparisonSection.jsx": "c1ea37c9dd878c31029a63cbe1085351a3398ea814e3b819d9bdc6c266ce97e5",
+    "frontend/src/features/comparison/codingApi.js": "d1743108ffe8f81661f4e1543663a876bb47d13e0bc3df7d29ccd2519646600a",
+    "frontend/src/features/comparison/comparisonAccess.test.js": "5562bfa13d986f0f96ed5daa71f2ce251952da4d9b41149f3267f737466df5bb",
+    "frontend/src/features/preferences/TeamPreferenceComparison.jsx": "75ab9c3f4bb54228883d99f012c75381601836e624dd3f62ef022e4a09c3f7d4",
+    "frontend/test-support/appHarness.js": "d3495785100604df836b5f4b4f4e5118794ff4ef21843669eebfb8dedf52936f",
+    "tests/conftest.py": "989cb88eda6a9d1f8b629d5c6519a407b899133b9d50c2158c1e0d3c77f78037",
+    "tests/test_comparison_access.py": "eb9ec0f6fe7b7a04ea26fd171fdce170bc6ff81eb05be462e629fb30be0c8205",
+    "tests/test_coding_prompt_alignment_v2.py": "3423bacc30c74d9fcdda1a26af1eea305b235e4059bbd40468aa0c885265938f",
+    "tests/test_review_fixes.py": "f180322cb23f979c9c691135cebe45be036ef8a04a35cccec39891108e47b7b8",
+    "tests/test_summary_grounded_integration.py": "004f757304566d3348ac79f80ce47ddd518571bcbcdfc066f582802b3eda0f99",
+    "tests/test_server_exposure.py": "66d1abc8fe40f72375e983f699a0d38fae719ee60c73abb959d9294afce84886",
+    "tests/test_task_preferences.py": "fdbbaeef6dbcd46a42a9f3f8b465690e6f5bd84d5f4dda7c48a0c5a6e5005280",
+    "tests/test_team.py": "1c419116ac3378ad5d8efc44745cb5643a7c77b596bd8a1e63a9676cc00bd0c6",
+    "tests/test_team_invitations.py": "284cfb4cbd58817058ccfcff634a9b17bef19c9951361b7b3e1549bb2c8b1686"
+  },
+  "source_lf_normalized_sha256": {
+    "api_server.py": "e06abf8aa06a3870123fd8b6400ed6cdae375efc8223334f10d20c5b3b0f2f1c",
+    "app.py": "0cafa0768680aafd812b91b99dff89cebbe16131f3482dcd87414bb86d2f524c",
+    "preference_comparison.py": "ff9a060304c1ae6f2dcf624d8e6d32498a5f369a37141ec10c95f7ddae8f728a",
+    "domains/coding.yaml": "f00d59923761141b53d0bac83b2b289c8c8e8211ee290ff8074adc0bb2808e1d",
+    "domains/coding/v2.yaml": "5ec6e99453647a582f46a7f483e593bd245db58b64bef80569053246aac38296",
+    "CLAUDE.md": "8aec6b9f556115be71c2aaf674c51b39d442809dd0712ff1fbb8cdd2c8143d0d",
+    "frontend/src/app/App.jsx": "d4453e8049f3cacf94e45843542fbb5af5e3a081dac320e7dc7ac07846d33219",
+    "frontend/src/features/comparison/ComparisonSection.jsx": "532d0aa54fa8b72617f13b8452e28bbaa18a8a4761573d0df9d4c7b930d6905c",
+    "frontend/src/features/comparison/codingApi.js": "d1743108ffe8f81661f4e1543663a876bb47d13e0bc3df7d29ccd2519646600a",
+    "frontend/src/features/comparison/comparisonAccess.test.js": "5562bfa13d986f0f96ed5daa71f2ce251952da4d9b41149f3267f737466df5bb",
+    "frontend/src/features/preferences/TeamPreferenceComparison.jsx": "75ab9c3f4bb54228883d99f012c75381601836e624dd3f62ef022e4a09c3f7d4",
+    "frontend/test-support/appHarness.js": "d3495785100604df836b5f4b4f4e5118794ff4ef21843669eebfb8dedf52936f",
+    "tests/conftest.py": "e369ef26748eca9704e7f925725abcafe101a88002f4975b54bdb1403539a487",
+    "tests/test_comparison_access.py": "eb9ec0f6fe7b7a04ea26fd171fdce170bc6ff81eb05be462e629fb30be0c8205",
+    "tests/test_coding_prompt_alignment_v2.py": "3423bacc30c74d9fcdda1a26af1eea305b235e4059bbd40468aa0c885265938f",
+    "tests/test_review_fixes.py": "06207873c62eda87b1d30f6e6e2f7e192270561a4373f3e76980da596d67d8a5",
+    "tests/test_summary_grounded_integration.py": "004f757304566d3348ac79f80ce47ddd518571bcbcdfc066f582802b3eda0f99",
+    "tests/test_server_exposure.py": "66d1abc8fe40f72375e983f699a0d38fae719ee60c73abb959d9294afce84886",
+    "tests/test_task_preferences.py": "fdbbaeef6dbcd46a42a9f3f8b465690e6f5bd84d5f4dda7c48a0c5a6e5005280",
+    "tests/test_team.py": "7d69a2c14cf9f9f6fa3a5d934d730243c05a9377dbb42557f81c4b3d162570a0",
+    "tests/test_team_invitations.py": "284cfb4cbd58817058ccfcff634a9b17bef19c9951361b7b3e1549bb2c8b1686"
+  },
+  "documents": {
+    "checked_markdown_files": 13,
+    "missing_local_links": [],
+    "wbs_ids_names_plan_dates_preserved": true,
+    "wbs_tasks": 16
+  },
+  "limitations": [
+    "No human preference, usability, time saving, or adoption measurement",
+    "Windows-specific skip is retained; real model API tests excluded",
+    "Existing bundle size warning remains; no production deployment or complete security audit",
+    "Initial network-restricted run and an interrupted diagnostic run are not counted as passed",
+    "Published design/WBS PDFs remain prior snapshots; edited source and dated update are separate"
+  ]
+}

@@ -1,6 +1,8 @@
 # Keep new frozen experiment inputs/results and published evidence byte-for-byte.
 /benchmarks/coding_react_current/** -text
 /benchmarks/react_style_current/** -text
+/benchmarks/weekly_validation_2026_11_17/** -text
+/domains/coding/v2.yaml -text
 /benchmarks/summary_agent_pilot/** -text
 /benchmarks/summary_agent_revision/** -text
 /benchmarks/summary_contract_revision/** -text
@@ -14,3 +16,8 @@
 /domains/summary_contract.yaml -text
 /summary_contracts.py -text
 /output/pdf/*.pdf -text
+
+# Published document/video files are binary, including ASCII-encoded PDFs.
+*.pdf binary
+*.xlsx binary
+*.webm binary

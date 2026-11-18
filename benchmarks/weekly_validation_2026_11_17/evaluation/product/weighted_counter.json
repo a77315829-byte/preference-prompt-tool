@@ -1,0 +1,47 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "weighted_counter",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_value_and_reset_disabled",
+        "passed": true
+      },
+      {
+        "name": "add_subtract_and_negative_values",
+        "passed": true
+      },
+      {
+        "name": "reset_once_to_mounted_baseline",
+        "passed": true
+      },
+      {
+        "name": "latest_step_callback_preserved_baseline",
+        "passed": true
+      },
+      {
+        "name": "return_by_arithmetic_disables_reset",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

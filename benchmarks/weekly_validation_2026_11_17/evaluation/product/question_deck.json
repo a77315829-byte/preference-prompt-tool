@@ -1,0 +1,47 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "question_deck",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_card_and_zero_completed",
+        "passed": true
+      },
+      {
+        "name": "complete_exactly_once_at_end",
+        "passed": true
+      },
+      {
+        "name": "restart_and_second_completion",
+        "passed": true
+      },
+      {
+        "name": "empty_deck_never_finishes",
+        "passed": true
+      },
+      {
+        "name": "prop_snapshot_latest_callback_and_safe_text",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

@@ -45,9 +45,19 @@ jobs:
         run: |
           docker restart microstone-smoke
           python scripts/smoke_hosting.py --state-file "$RUNNER_TEMP/hosting-smoke.json" --phase verify
+      - name: Back up and restore into separate storage
+        run: |
+          docker exec microstone-smoke python scripts/storage_snapshot.py backup --database /var/data/data/app.db --destination /var/data/snapshot --cache /var/data/cache
+          docker exec microstone-smoke python scripts/storage_snapshot.py verify --snapshot /var/data/snapshot
+          docker exec microstone-smoke python scripts/storage_snapshot.py restore --snapshot /var/data/snapshot --destination /var/data/restored
+          docker stop microstone-smoke
+          docker run -d --name microstone-restored -p 127.0.0.1:18081:8000 -v microstone-smoke-data:/var/data -e PPT_DB_PATH=/var/data/restored/data/app.db -e PPT_COOKIE_SECURE=0 -e PPT_LIVE=0 -e PPT_FASTAPI_GEPA_LIVE=0 -e PPT_SPRING_BOOT_GEPA_LIVE=0 -e PPT_WEB_GEPA_LIVE=0 -e PPT_PYTHON_WEB_GEPA_LIVE=0 microstone:test
+          python scripts/smoke_hosting.py --base-url http://127.0.0.1:18081 --state-file "$RUNNER_TEMP/hosting-smoke.json" --phase verify
       - name: Diagnostics and cleanup
         if: always()
         run: |
           docker logs microstone-smoke 2>&1 || true
+          docker logs microstone-restored 2>&1 || true
+          docker rm -f microstone-restored 2>/dev/null || true
           docker rm -f microstone-smoke 2>/dev/null || true
           docker volume rm microstone-smoke-data 2>/dev/null || true

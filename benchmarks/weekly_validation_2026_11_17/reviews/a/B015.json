@@ -1,0 +1,38 @@
+{
+  "output_id": "B015",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "Component.tsx",
+        "const tokens = {",
+        "const followingSignal: Record<Signal, Signal> = {",
+        "export function Component({ onChange }: Props) {"
+      ],
+      "reason": "전이표, 상태, 이벤트, 토큰 및 스타일을 단일 TSX 안에서 제공한다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "colors: { panel: \"#eef4ff\", text: \"#17345c\" },",
+        "spacing: { panelPadding: 12, controlGap: 6 },",
+        "background: tokens.colors.panel,\n  color: tokens.colors.text,\n  padding: tokens.spacing.panelPadding,\n  gap: tokens.spacing.controlGap,"
+      ],
+      "reason": "의미별 중앙 토큰을 실제 패널 규칙이 사용한다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "export type Signal = \"stop\" | \"ready\" | \"go\";",
+        "const followingSignal: Record<Signal, Signal> = {",
+        "const [signal, setSignal] = useState<Signal>(\"stop\");",
+        "function next() {\n    const value = followingSignal[signal];"
+      ],
+      "reason": "공개 계약과 union 상태/전이표 값의 좁은 타입에 필요한 표기는 유지하고 주요 지역 값 및 함수 반환은 추론한다. Record는 전이 값이 string으로 넓어지는 것을 막는 의미 있는 타입이다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

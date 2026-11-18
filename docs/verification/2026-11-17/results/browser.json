@@ -1,0 +1,31 @@
+{
+  "results": [
+    {
+      "name": "01 guest summary comparison completes through the real UI",
+      "pass": true
+    },
+    {
+      "name": "02 another guest cannot read or mutate a known session ID",
+      "pass": true
+    },
+    {
+      "name": "03 signing in promotes only the same guest browser session",
+      "pass": true
+    },
+    {
+      "name": "04 logout revokes session and focus removes the result and source",
+      "pass": true
+    },
+    {
+      "name": "05 fixed TTL clears the active UI without a user action",
+      "pass": true
+    },
+    {
+      "name": "06 React style API uses v2 and preserves both final languages",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "paid_model_api_calls": 0
+}

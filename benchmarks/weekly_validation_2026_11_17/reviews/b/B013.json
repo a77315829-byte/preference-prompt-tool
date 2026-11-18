@@ -1,0 +1,63 @@
+{
+  "output_id": "B013",
+  "kind": "summary",
+  "response_kind": "summary",
+  "sentence_count": 4,
+  "length_pass": true,
+  "wording_pass": true,
+  "wording_reason": "원문 완전 문장 두 개와 상당수 긴 구절을 재사용하여 high 기준에 부합한다.",
+  "facts": [
+    {
+      "id": "F1",
+      "preserved": true,
+      "evidence": [
+        "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said."
+      ],
+      "reason": "경찰에 따른 두 직원 해고와 성추행 계획을 유지한다."
+    },
+    {
+      "id": "F2",
+      "preserved": true,
+      "evidence": [
+        "who said she had done this with her colleague at least 10 other times, police said."
+      ],
+      "reason": "여성 직원의 진술이라는 앞선 문맥과 경찰 전언, 최소 열 번의 추가 반복이 유지된다."
+    },
+    {
+      "id": "F3",
+      "preserved": true,
+      "evidence": [
+        "But it's unlikely criminal charges will be filed because there is no identifiable victim."
+      ],
+      "reason": "피해자 미확인 때문에 기소가 어려울 가능성을 보존한다."
+    }
+  ],
+  "priorities": [
+    {
+      "id": "P1",
+      "preserved": true,
+      "evidence": [
+        "Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said."
+      ],
+      "reason": "전체 문장을 보존한다."
+    },
+    {
+      "id": "P2",
+      "preserved": true,
+      "evidence": [
+        "Investigator Chris Higgins watched the plan being carried out on February 9 and interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said."
+      ],
+      "reason": "면담 당사자, 반복 진술, 최소 수량, 경찰 출처를 보존한다."
+    },
+    {
+      "id": "P3",
+      "preserved": true,
+      "evidence": [
+        "But it's unlikely criminal charges will be filed because there is no identifiable victim."
+      ],
+      "reason": "선택 문장 전체를 보존한다."
+    }
+  ],
+  "issues": [],
+  "ambiguities": []
+}

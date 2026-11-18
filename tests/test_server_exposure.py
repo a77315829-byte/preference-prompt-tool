@@ -9,7 +9,7 @@ import api_server
 
 @pytest.fixture
 def empty_sessions(monkeypatch):
-    for name in ("SESSIONS", "SESSION_STARTED", "OPTIMIZE_RUNS", "OPTIMIZE_REPORTS"):
+    for name in ("SESSIONS", "SESSION_STARTED", "SESSION_OWNERS", "COMPARISON_GUESTS", "OPTIMIZE_RUNS", "OPTIMIZE_REPORTS"):
         monkeypatch.setattr(api_server, name, {})
 
 

@@ -1,0 +1,31 @@
+{
+  "pdf_pages": 26,
+  "tasks_present": 77,
+  "functional_leaves_present": 54,
+  "cached_summary": [
+    73,
+    50,
+    23,
+    4,
+    64
+  ],
+  "formula_errors": [],
+  "actual_dates_blank": true,
+  "freeze_panes_valid": true,
+  "dropdowns_present": true,
+  "rendered_pages": 26,
+  "files": {
+    "output/pdf/Revealed_전체상세_WBS_v1.0.pdf": {
+      "bytes": 257854,
+      "sha256": "af1a861c3b17b5614f82fff52a6aabb242541f45e563473bb0150c1128cd65b4"
+    },
+    "outputs/wbs-20261112/Revealed_전체상세_WBS_v1.0.xlsx": {
+      "bytes": 36486,
+      "sha256": "ba07e310879ba533af2bc717283ade124a39bbd50a667dda10654efd7bc42dfc"
+    }
+  },
+  "visual_review": "PDF 26 pages and all 3 workbook sheets reviewed; no clipped text or table overlap observed.",
+  "dependency_graph": "All predecessor IDs exist; no cycles.",
+  "interactive_formula_checks": "Status edit changes completion count; date edit changes duration; restored original values.",
+  "paid_model_api_calls": 0
+}

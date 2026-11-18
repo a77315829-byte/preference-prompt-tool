@@ -1,0 +1,38 @@
+{
+  "output_id": "B026",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "import { panelStyle } from './Component.styles';",
+        "<div data-testid=\"panel\" style={panelStyle}>",
+        "Component.styles.ts"
+      ],
+      "reason": "별도 스타일 파일의 패널 규칙을 실제 컴포넌트에서 사용하여 separated에 해당한다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "colors: { panel: '#eef4ff', text: '#17345c' },",
+        "spacing: { padding: 12, gap: 6 },",
+        "background: theme.colors.panel,",
+        "padding: theme.spacing.padding,"
+      ],
+      "reason": "색상·간격 중앙 토큰을 적용 규칙에서 참조한다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "function parseInteger(input: string) {",
+        "const [left, setLeft] = useState('');",
+        "const [result, setResult] = useState<Relation | null>(null);",
+        "} satisfies CSSProperties;"
+      ],
+      "reason": "공개 계약, 문맥 없는 함수 인수, null·union 상태, CSS 호환성만 필요 타입을 제공한다. 지역 값·일반 상태·반환·이벤트는 추론한다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

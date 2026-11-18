@@ -1,0 +1,47 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "text_normalizer",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_whitespace_preserved",
+        "passed": true
+      },
+      {
+        "name": "case_conversion_does_not_overwrite_input",
+        "passed": true
+      },
+      {
+        "name": "trim_and_unicode_string_length",
+        "passed": true
+      },
+      {
+        "name": "props_do_not_reset_options_or_local_text",
+        "passed": true
+      },
+      {
+        "name": "markup_is_safe_text_and_keep_reverses_case_mode",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

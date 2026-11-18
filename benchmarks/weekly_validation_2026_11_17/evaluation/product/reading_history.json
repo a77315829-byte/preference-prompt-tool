@@ -1,0 +1,47 @@
+{
+  "evaluatorVersion": "react-style-current-v1",
+  "taskId": "reading_history",
+  "safety": {
+    "passed": true,
+    "errors": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "types": {
+    "status": "completed",
+    "compilerPassed": true,
+    "passed": true,
+    "diagnostics": [],
+    "explicitAny": [],
+    "typeSuppressions": []
+  },
+  "runtime": {
+    "status": "completed",
+    "passed": true,
+    "checks": [
+      {
+        "name": "initial_empty_null_and_no_callback",
+        "passed": true
+      },
+      {
+        "name": "valid_signed_duplicate_readings_and_clear_input",
+        "passed": true
+      },
+      {
+        "name": "invalid_integer_strings_preserve_state",
+        "passed": true
+      },
+      {
+        "name": "clear_removes_history_latest_error_without_callback",
+        "passed": true
+      },
+      {
+        "name": "new_callback_retains_state_and_success_clears_error",
+        "passed": true
+      }
+    ]
+  },
+  "console": [],
+  "process_returncode": 0,
+  "process_stderr": ""
+}

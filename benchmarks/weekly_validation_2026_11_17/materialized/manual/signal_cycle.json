@@ -1,0 +1,14 @@
+{
+  "files": {
+    "Component.tsx": "import { useState } from \"react\";\nimport type { CSSProperties } from \"react\";\n\nexport type Signal = \"stop\" | \"ready\" | \"go\";\nexport type Props = { onChange: (signal: Signal) => void };\n\nconst tokens = {\n  colors: { panel: \"#eef4ff\", text: \"#17345c\" },\n  spacing: { panelPadding: 12, controlGap: 6 },\n};\n\nconst panelStyle: CSSProperties = {\n  background: tokens.colors.panel,\n  color: tokens.colors.text,\n  padding: tokens.spacing.panelPadding,\n  gap: tokens.spacing.controlGap,\n  display: \"grid\",\n};\n\nconst followingSignal: Record<Signal, Signal> = {\n  stop: \"ready\",\n  ready: \"go\",\n  go: \"stop\",\n};\n\nexport function Component({ onChange }: Props) {\n  const [signal, setSignal] = useState<Signal>(\"stop\");\n\n  function next() {\n    const value = followingSignal[signal];\n    setSignal(value);\n    onChange(value);\n  }\n\n  function reset() {\n    if (signal === \"stop\") return;\n    setSignal(\"stop\");\n    onChange(\"stop\");\n  }\n\n  return (\n    <div data-testid=\"panel\" style={panelStyle}>\n      <output aria-label=\"Signal\">{signal}</output>\n      <button type=\"button\" onClick={next}>Next</button>\n      <button type=\"button\" onClick={reset} disabled={signal === \"stop\"}>\n        Reset\n      </button>\n    </div>\n  );\n}\n"
+  },
+  "provenance": [
+    {
+      "filename": "Component.tsx",
+      "block_index": 0,
+      "start": 21,
+      "end": 1236,
+      "reason": "Explicit nearest filename label; code copied byte-for-byte after line-ending normalization."
+    }
+  ]
+}

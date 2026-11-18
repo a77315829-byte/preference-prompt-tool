@@ -1,0 +1,65 @@
+{
+  "date": "2026-11-17",
+  "baseline_commit": "2484d157991c4f890a4300e9af54406abe4ff9ce",
+  "tested_tree": "baseline plus source files identified below; not an already published commit",
+  "previous_local_three_passed": true,
+  "three_current_recheck_passed": true,
+  "rechecked_tests": [
+    "tests.test_checks_vs_labels::test_recompute_matches_saved",
+    "tests.test_coding_public::test_full_cached_audit_is_offline_and_preserves_unknown_outcomes",
+    "tests.test_persona::test_personas_come_from_real_macsum_attributes"
+  ],
+  "snapshot_tests_passed": 7,
+  "python": {
+    "passed": 1440,
+    "skipped": 1,
+    "api_excluded": 16
+  },
+  "frontend_passed": 137,
+  "build_passed": true,
+  "browser_passed": 6,
+  "storage_rehearsal_passed": 10,
+  "paid_model_api_calls": 0,
+  "real_user_data_used": false,
+  "source_lf_sha256": {
+    "scripts/storage_snapshot.py": "8242980cce20c618585b9d43d2cd0f7792facd1b829252cb2059aab286504b6d",
+    "tests/test_storage_snapshot.py": "d260c69e5266f0acefb26fd7818d81b76631d102ca962980b3db360c68f556c5",
+    "api_server.py": "e06abf8aa06a3870123fd8b6400ed6cdae375efc8223334f10d20c5b3b0f2f1c",
+    "summary_contracts_v2.py": "5d6f133fd92e04ae5af0d1f9153d373b4d2e777c8ce1420219ca233b012ba20f",
+    "frontend/src/features/comparison/ComparisonSection.jsx": "89273c7409efc2724066742bbb968017f55540cc6a286edd044430d2cb51763a",
+    "frontend/src/features/comparison/SummaryContractPanel.jsx": "98673faa9ce931648a0e6465af31f050d604b04e75413754507f18fa5241c08a",
+    "frontend/src/features/comparison/summaryContract.test.js": "a4e8ba2a1c72688419edbffca27d9cd6cc247010d549230de4e2cbc4d59086f2",
+    "frontend/src/features/preferences/SavePreferencePanel.jsx": "4295657b347926b25e02764911b997d3cab23c3d259a8c8353ec168d70b3d708",
+    ".github/workflows/tests.yml": "0e9f1a5196da984b4dda06e5e728b14e884ce73b5c77880039541038fd110ade",
+    ".github/workflows/hosting.yml": "d94d7c82df8b6c017ca3aa6e0be88c0f968a10b48c05157bb5d514572b4a36e9",
+    "requirements.txt": "dea6ca779bedaeae77242fce7d2186ab6299b1873ff114b1a4a4b22d70936cbb",
+    "requirements-dev.txt": "67775a7290ae20f640456b11ff9097331d628c8ff74e1770ecea0539e533348b",
+    "frontend/package-lock.json": "f3b468af2c2585f3b6fc53fdfd3d35cca1376b84c1b21dda42b5504da6845a4b"
+  },
+  "artifact_sha256": {
+    "skipped-recheck.log": "525a8bdb50c948d3e15da386a44a6d027be325b9f5bacd8ed677e1692dd15042",
+    "skipped-recheck.xml": "95245f00b66acb54c783c32286df3acdfe985c3c254cc2fe730dc73bd7cbc225",
+    "snapshot.xml": "24d15f46b0bf7ae42e751e4e23168e1af7477b9fe7fdb19ac5c2fdef37da692d",
+    "full.xml": "5d5d6a335e5727a4696250b5801b9877c75c58986ce06b9a455ffc6ee0fd9bf5",
+    "full.log": "a7a0444215693376d951775602eae6497af6585b9378c2b8f642840da5b0cf64",
+    "frontend.log": "e50b6243993a67779e2777e10b9c025a4bde5b2e02bb66d81462f5b08d9f256a",
+    "build.log": "1738188041e68609c111e98694d18267a43eba26c134ff43c35c5cdbd86d6f51",
+    "browser.json": "d33ab93abcb04a4613c58705ea4645d673e3b3d9d8b4a47e71e45270f8866088",
+    "storage.json": "4c05106c68444b4655d7c465c6781f8c8a8924a3a9f51dad68bde0d10760677f",
+    "storage.log": "72ecb3d33f45ee3237f7e80f26111eb129cca57aa2cd9c1be29730c8784ee59a",
+    "offline-guard.json": "2b19e04d198eeffb2fae2ceabc2a99a8cbafebd63be565cc4e8aa472c377ac5e",
+    "01-summary-conflict.png": "9cd086845e0870ec0a02a4d98a78cdc411685582789ef85c2dc0febab629abab",
+    "02-summary-saved.png": "4d4d6a8bfb01bf0e2b2a2a18d29acb580e5bb5110c7986f685a33c0a8dc872ec",
+    "03-new-task-reuse.png": "61579f960df1e820d26d94f3a86c3e6e658c9b978d12eed6622c009bcfabe836",
+    "04-coding-answer.png": "516eaae9326be109c5f8807f094aadc1f2aee046c4a893531a27fc200ac00261",
+    "05-react-style.png": "53e5d964e502c939c56c7a125cca3b83702318b7054aa36e502ea118ccea6ad4",
+    "06-logout-mobile.png": "6ddf15eba6002a6725be694aa2e0a7426634f9e30cc669b0959df9820d4a4d8b"
+  },
+  "limitations": [
+    "No human/team rehearsal or usability study",
+    "No paid/live model calls or public deployment",
+    "Existing PDFs and frozen experiments unchanged",
+    "Windows clipboard comparison normalizes CRLF to LF",
+    "Clean-container installation is recorded separately by exact-commit GitHub Actions"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "output_id": "B008",
+  "kind": "react",
+  "dimensions": {
+    "code_structure": {
+      "match": true,
+      "evidence": [
+        "Component.tsx",
+        "export function Component({ onRecord }: Props) {",
+        "style={{"
+      ],
+      "reason": "상태와 모든 UI 처리 및 스타일이 하나의 TSX 안에 있어 compact이다."
+    },
+    "style_management": {
+      "match": true,
+      "evidence": [
+        "background: '#eef4ff',\n        color: '#17345c',\n        padding: 12,\n        gap: 6,"
+      ],
+      "reason": "패널 스타일에 색상·간격 리터럴을 직접 지정했다."
+    },
+    "type_detail": {
+      "match": true,
+      "evidence": [
+        "const [reading, setReading] = useState('');",
+        "const [history, setHistory] = useState<number[]>([]);",
+        "const [hasError, setHasError] = useState(false);",
+        "const value = Number(text);"
+      ],
+      "reason": "공개 Props와 빈 배열의 원소 타입 외에는 상태·값·함수·콜백 추론을 사용한다. number[]는 필요한 타입으로 inferred와 양립한다."
+    }
+  },
+  "other_observations": [],
+  "unsupported_execution_claims": [],
+  "ambiguities": []
+}

@@ -1,0 +1,15 @@
+{
+  "recorded_utc": "2026-11-17T06:16:59.425528+00:00",
+  "git_head": "4b40d115141709f8aeb7840a301e02fc206c408a",
+  "python": "Python 3.12.10",
+  "node": "v22.23.2",
+  "packages": {
+    "typescript": "5.9.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "jsdom": "20.0.3",
+    "@types/react": "19.2.18"
+  },
+  "paid_model_api_calls": 0,
+  "model_metadata": "Inherited Codex runtime; exact model build/decoding/token usage not exposed."
+}

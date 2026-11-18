@@ -36,18 +36,21 @@ UncertaintySelector는 상대 지표가 낮은 축에서 효용이 가까운 두
 
 입력은 분류, 원래 분량/원문 표현/초점, 원문, 선택 문장, 선택적 해결값이다. profile의 허용 키와 값, 원문 길이, 선택 개수·문자열·중복·원문 일치를 먼저 검사한다. 선택 문장은 클릭 순서가 아니라 원문 순서로 정규화한다.
 
-충돌 판정은 `extractiveness == fully`이고, 도메인 길이 검사에 문장 수 상한이 있으며, 서로 다른 선택 문장 수가 그 상한보다 큰 경우다. 이 경우 해결값이 없으면 `needs_resolution`, prompts와 task_requests는 빈 객체다. 이는 완전 발췌의 명시적 수량 충돌만 판별한다. 재서술의 의미상 압축 가능성은 판별하지 않는다.
+현재 `summary_contracts_v2.py`는 `extractiveness == fully`일 때 두 충돌을 검사한다. 고른 문장 수가 분량 상한보다 크면 required_over_budget, 사용 가능한 서로 다른 완전 원문 문장 수가 분량 하한보다 적으면 source_under_minimum이다. 해결값이 없으면 needs_resolution이며 prompts와 task_requests는 빈 객체다. 문장 반복이나 새 문장 추가로 하한을 채우지 않는다. 재서술의 의미상 압축·분량 충족 가능성은 판별하지 않는다.
 
 | 조건 | 결과 상태 | 적용 변경 | 후속 확인 |
 |---|---|---|---|
 | 충돌 없음·해결값 없음 | ready | 원래 조건 유지 | 출력의 실제 내용·형식 |
 | 충돌 있음·해결값 없음 | needs_resolution | 지침 제공 보류 | 사용자의 해결 선택 |
-| 충돌 있음·expand | ready | 4문장 이하면 normal, 그 이상 long | 선택 내용 전체 보존 |
+| 상한 초과·expand | ready | 원문 문장 수와 선택 문장 수를 모두 만족하는 최소 분량 단계 | 선택 내용 전체 보존 |
+| 하한 부족·shorten | ready | 원문에서 가능한 최대 분량 단계로 축소 | 발췌·선택 문장 보존 요청 유지 |
 | 충돌 있음·rephrase | ready | extractiveness를 normal로 변경 | 원래 길이에서 의미 보존 가능성 |
-| 충돌 있음·keep_limits | ready | 일부 생략 허용 정책 | 보존율과 실제 생략 내용 |
+| 상한 초과·keep_limits | ready | 일부 생략 허용 정책 | 보존율과 실제 생략 내용 |
 | 충돌 없음·해결값 있음 | 입력 오류 | 적용하지 않음 | 과거 해결값 초기화 |
 
 task_data_block은 source·required_passages·coverage_policy를 데이터 블록으로 구분한다. 재사용 지침에는 source가 없고 작업용 요청에만 포함된다. 원문 속 명령문은 자료로 취급한다. 이 구조가 모든 모델의 프롬프트 주입을 방어한다는 보장은 아니다.
+
+사용 가능 원문 문장이 0개면 shorten을 제공하지 않고 재서술 또는 입력 보완을 안내한다. available_resolutions에 없는 해결값과 충돌이 사라진 뒤의 과거 해결값은 거절한다. 입력 길이는 공백 포함 Unicode 코드 포인트로 세며 비교 시작과 조건 확인 모두 12,000자 초과 시 원문을 그대로 유지한다. 상세 사용자 흐름은 UC-02·UC-04·UC-05를 따른다.
 
 ## 4.6 네 항목 코딩 조립과 예시 비교
 

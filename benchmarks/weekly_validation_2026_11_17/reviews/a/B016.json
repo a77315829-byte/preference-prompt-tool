@@ -1,0 +1,63 @@
+{
+  "output_id": "B016",
+  "kind": "summary",
+  "response_kind": "summary",
+  "sentence_count": 2,
+  "length_pass": true,
+  "wording_pass": true,
+  "wording_reason": "필수 고유명사와 법적 대상을 유지하면서 두 문장으로 주로 재서술했다.",
+  "facts": [
+    {
+      "id": "F1",
+      "preserved": true,
+      "evidence": [
+        "Police in Malegaon, in India's Maharashtra state, are requiring cattle identity cards with photographs and identifying details to help enforce the state's beef ban."
+      ],
+      "reason": "Malegaon과 Maharashtra, 신분증/사진, 쇠고기 금지 집행의 맥락을 보존한다."
+    },
+    {
+      "id": "F2",
+      "preserved": true,
+      "evidence": [
+        "Selling or consuming beef can bring a five-year prison sentence"
+      ],
+      "reason": "판매 또는 소비와 5년형 가능성 모두 보존한다."
+    },
+    {
+      "id": "F3",
+      "preserved": true,
+      "evidence": [
+        "but slaughtering buffaloes remains legal."
+      ],
+      "reason": "물소 도축 허용의 예외를 유지한다."
+    }
+  ],
+  "priorities": [
+    {
+      "id": "P1",
+      "preserved": true,
+      "evidence": [
+        "Police in Malegaon, in India's Maharashtra state, are requiring cattle identity cards with photographs and identifying details"
+      ],
+      "reason": "인도 Maharashtra의 Malegaon 경찰이 소 신분증을 요구한다는 선택 문장의 핵심 정보를 보존한다. 서부라는 부수적 지리 설명은 생략됐다."
+    },
+    {
+      "id": "P2",
+      "preserved": true,
+      "evidence": [
+        "Selling or consuming beef can bring a five-year prison sentence"
+      ],
+      "reason": "행위, 형량, 가능성을 보존한다."
+    },
+    {
+      "id": "P3",
+      "preserved": true,
+      "evidence": [
+        "but slaughtering buffaloes remains legal."
+      ],
+      "reason": "물소 도축은 여전히 허용된다는 정보를 보존한다."
+    }
+  ],
+  "issues": [],
+  "ambiguities": []
+}
