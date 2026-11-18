@@ -16,7 +16,7 @@ FILES=[
  ('실제 화면 시연 · 1분 19.4초','outputs/final-20261118/Revealed_demo_20261118.webm'),
  ('발표 대본·Q&A','docs/final/2026-11-18/presenter-notes.md'),
  ('직접 시연·실행·복구 안내','docs/verification/2026-11-17-readiness/DEMO.md'),
- ('최신 주간보고서 v0.10 · 기존 판본','output/pdf/Revealed_진행현황_주간보고서_v0.10.pdf'),
+ ('최신 주간보고서 v0.11 · 11/20 발표 · 13쪽','output/pdf/Revealed_진행현황_주간보고서_v0.11.pdf'),
 ]
 
 def main():

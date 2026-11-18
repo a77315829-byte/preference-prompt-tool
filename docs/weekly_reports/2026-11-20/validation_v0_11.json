@@ -1,0 +1,79 @@
+{
+  "version": "0.11",
+  "report_date": "2026-11-20",
+  "semester_week": 11,
+  "actual_period": [
+    "2026-11-13",
+    "2026-11-19"
+  ],
+  "plan_period": [
+    "2026-11-20",
+    "2026-11-26"
+  ],
+  "evidence_cutoff": "2026-11-18",
+  "pages": 13,
+  "main_pages": [
+    1,
+    2,
+    3
+  ],
+  "backup_pages": [
+    4,
+    13
+  ],
+  "achievement_groups": [
+    "기능 개선",
+    "프롬프트 검증",
+    "팀 공유·권한 보완",
+    "분석·설계서 작성"
+  ],
+  "issue_and_request_fields": "blank",
+  "historical_backup_pages": 0,
+  "text_overflows": 0,
+  "wbs_tasks": 16,
+  "activity_week": 10,
+  "highlighted_wbs_ids": [
+    "1.3",
+    "2.1",
+    "2.2",
+    "2.3",
+    "3.1",
+    "3.2",
+    "3.3",
+    "4.1",
+    "4.2",
+    "4.3",
+    "5.1",
+    "5.2"
+  ],
+  "previous_pdf_preserved": true,
+  "previous_pdf_sha256": "1b17e3107da2bad4d6f25644fcfdf1736d55667de4b86ecc4b641dc428aacb91",
+  "output": "output/pdf/Revealed_진행현황_주간보고서_v0.11.pdf",
+  "copy": "outputs/Revealed_최종제출_준비본_2026-11-18/Revealed_진행현황_주간보고서_v0.11.pdf",
+  "sha256": "03a3f6d044875ff206ecf9984aa70ba1bdfe87f2d9799f007e3b8c9ddcb79239",
+  "paid_model_api_calls": 0,
+  "source_commit": "0bbff80",
+  "published_document_commit": "636a766f717f398951fb5e693d0e29b97ea95585",
+  "prior_ci_run_ids": [
+    44226960086,
+    44226966256
+  ],
+  "new_work_remote_published": true,
+  "this_report_remote_published_at_build": false,
+  "visual_review": "completed",
+  "additional_copy": "outputs/Revealed_설계서_v1.2_WBS_v3.3/Revealed_진행현황_주간보고서_v0.11.pdf",
+  "dates_and_cutoff_verified": true,
+  "four_groups_verified": true,
+  "blank_fields_verified_by_coordinates": true,
+  "wbs_names_and_activity_column_verified": true,
+  "evidence_counts_verified": true,
+  "content_within_page_bounds": true,
+  "links": [
+    "https://github.com/a77315829-byte/preference-prompt-tool",
+    "https://github.com/a77315829-byte/preference-prompt-tool/blob/636a766f717f398951fb5e693d0e29b97ea95585/docs/system-design/README.md",
+    "https://github.com/a77315829-byte/preference-prompt-tool/blob/636a766f717f398951fb5e693d0e29b97ea95585/docs/wbs/2026-11-18/README.md",
+    "https://github.com/a77315829-byte/preference-prompt-tool/blob/636a766f717f398951fb5e693d0e29b97ea95585/docs/final/2026-11-18/README.md"
+  ],
+  "copy_identical": true,
+  "all_pages_rendered": true
+}

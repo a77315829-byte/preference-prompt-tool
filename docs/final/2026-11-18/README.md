@@ -11,7 +11,7 @@
 | 발표 대본·Q&A | [presenter-notes.md](presenter-notes.md) | 슬라이드별 설명·출처, GitHub에서 팀원 열람 가능 |
 | 실제 화면 시연 | [WebM 영상](../../../outputs/final-20261118/Revealed_demo_20261118.webm) | 1분 19.4초, 무음, 합성 계정·무료 데모 |
 | 직접 시연·복구 안내 | [5~7분 대본과 실행 명령](../../verification/2026-11-17-readiness/DEMO.md) | 라이브 모델 실행 없음 |
-| 최신 주간보고서 | [v0.10](../../../output/pdf/Revealed_진행현황_주간보고서_v0.10.pdf) | 기존 기간·실적 그대로 보존 |
+| 최신 주간보고서 | [v0.11](../../../output/pdf/Revealed_진행현황_주간보고서_v0.11.pdf) | 11/20 발표, 기존 양식·기간 유지, 이번 준비 내용 추가 |
 
 발표자료는 사용자 Spaces에 저장했다. Page ID: `page_d4414f0a4c6081919fe25f6a2dde5a19`. 이 저장소 링크를 읽는 팀원이 해당 Spaces에 접근할 권한까지 자동으로 얻는 것은 아니다. 공유 전 사용자 계정에서 권한을 확인하거나 뷰어의 PPTX 내보내기를 이용한다. [슬라이드 내용·발표 대본](presenter-notes.md)은 저장소에서 별도로 읽을 수 있다.
 

@@ -60,11 +60,11 @@
       "sha256": "9ce47607c9d9160f151d7a78e857b030d56e744755cc475318dfe2ba5fcc8ea8"
     },
     {
-      "title": "최신 주간보고서 v0.10 · 기존 판본",
-      "source": "output/pdf/Revealed_진행현황_주간보고서_v0.10.pdf",
-      "file": "Revealed_진행현황_주간보고서_v0.10.pdf",
-      "bytes": 799267,
-      "sha256": "1b17e3107da2bad4d6f25644fcfdf1736d55667de4b86ecc4b641dc428aacb91"
+      "title": "최신 주간보고서 v0.11 · 11/20 발표 · 13쪽",
+      "source": "output/pdf/Revealed_진행현황_주간보고서_v0.11.pdf",
+      "file": "Revealed_진행현황_주간보고서_v0.11.pdf",
+      "bytes": 947279,
+      "sha256": "03a3f6d044875ff206ecf9984aa70ba1bdfe87f2d9799f007e3b8c9ddcb79239"
     }
   ]
 }
