@@ -6,7 +6,7 @@ API 없이 돈다 - demos/idle_tracker.py 는 결정적 생성기라 실제 API 
 
 from __future__ import annotations
 
-from checks.idle_tracker import format as check_format
+from checks.idle_tracker import report_format as check_format
 from checks.idle_tracker import no_fabrication, scope, total_cost_accuracy
 from demos.idle_tracker import generate_demo
 

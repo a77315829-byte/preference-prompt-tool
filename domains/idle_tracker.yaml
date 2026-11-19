@@ -29,7 +29,7 @@ axes:
           마크다운 표(|)나 구분선(| --- |)은 절대 사용하지 마라.
           각 항목은 '- **[서비스명]:** [청구 금액] ([비중]%)' 형식을 기본으로 깔끔하게 나열하라.
         check:
-          fn: format
+          fn: report_format
           target:
             style: bullet_list
             allow_table: false
@@ -39,7 +39,7 @@ axes:
           개조식 불릿(- ) 나열을 금지하며, 표의 헤더와 정렬 구분선(| :--- | :---: |)을 명확히 출력하고
           마지막 행에는 반드시 전체 비용을 합산한 '| **합계** |' 행을 배치하라.
         check:
-          fn: format
+          fn: report_format
           target:
             style: markdown_table
             require_total_row: true
