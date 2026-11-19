@@ -270,50 +270,85 @@ def _report_source_text(report: dict[str, Any]) -> str:
     그 문장만 생성기에 들어가면 실제 금액·리소스ID를 하나도 못 받은
     채로 "요약"을 만드는 셈이라, 출력에 나오는 구체적인 숫자는 전부
     모델이 지어낸 것일 수밖에 없다(사용자에게 보여주는 카드에는 진짜
-    데이터가 있는데, 그걸 요약하는 모델만 못 보고 있었다). 개인화(상세도
-    ·강조점)와 정확성(금액·리소스ID가 실제와 일치)을 따로 검증하려면
+    데이터가 있는데, 그걸 요약하는 모델만 못 보고 있었다). 개인화(형식
+    ·범위)와 정확성(금액·리소스ID가 실제와 일치)을 따로 검증하려면
     검증 대상 자체가 먼저 정확해야 한다."""
     period = report.get("period", {})
+    currency = report.get("currency", "USD")
     lines = [
-        f"조회 기간: {period.get('start', '?')} ~ {period.get('end', '?')}",
-        f"총 예상 비용: {report.get('totalCost', '?')}",
+        "[메타데이터]",
+        f"- 조회 기간: {period.get('start', '?')} ~ {period.get('end', '?')}",
+        f"- 통화 및 기준: {currency} / 세금 및 크레딧 제외 (UnblendedCost)",
+        "",
+        "[사전 연산 요약]",
+        f"- 총 청구 금액: {report.get('totalCost', '?')}",
     ]
+    if report.get("momComparison"):
+        lines.append(f"- 전월 동기간 대비: {report['momComparison']}")
+    if report.get("topSummary"):
+        lines.append(f"- 핵심 상위 2개 서비스 합계: {report['topSummary']}")
+    if report.get("otherSummary"):
+        lines.append(f"- 기타 서비스 합계: {report['otherSummary']}")
+
+    lines.append("")
+    lines.append("[서비스 및 Usage Type 상세 내역]")
     for finding in report.get("findings", []):
         lines.append(
             f"- {finding.get('service', '?')} ({finding.get('resourceId', '?')}): "
             f"{finding.get('cost', '?')} - {finding.get('reason', '')} "
-            f"해결: {finding.get('resolution', '')}"
+            f"확인 안내: {finding.get('resolution', '')}"
         )
     return "\n".join(lines)
 
 
 def _demo_aws_cost_report(lookback_days: int = 30) -> dict[str, Any]:
-    """API 키 없이도 항상 같은 화면을 보여주는 AWS 비용 점검 결과."""
+    """API 키 없이도 항상 같은 화면을 보여주는 AWS 비용 분석 데모 결과($45.20 표준 데이터)."""
     end = date.today()
     start = end - timedelta(days=lookback_days)
     report: dict[str, Any] = {
         "mode": "demo",
         "period": {"start": start.isoformat(), "end": end.isoformat()},
-        "totalCost": "₩16,800",
-        "currency": "KRW",
+        "totalCost": "$45.20",
+        "currency": "USD",
+        "momComparison": "$40.00 -> $45.20 (+$5.20, +13.0%)",
+        "topSummary": "$40.00 (88.5%) - Amazon EC2, Amazon RDS",
+        "otherSummary": "$5.20 (11.5%, 2건) - Amazon S3, Amazon Route53",
         "findings": [
             {
-                "id": "eip",
-                "service": "EC2 탄력적 IP",
-                "resourceId": "eipalloc-0a12bc34de56f7890",
-                "cost": "₩10,000",
+                "id": "ec2",
+                "service": "Amazon EC2",
+                "resourceId": "APN2-BoxUsage:t2.micro ($20.00), APN2-EBS:VolumeUsage.gp2 ($5.00)",
+                "cost": "$25.00",
                 "severity": "high",
-                "reason": "연결되지 않은 탄력적 IP가 계속 과금되고 있습니다.",
-                "resolution": "AWS 콘솔 > EC2 > 탄력적 IP 메뉴에서 릴리스하세요.",
+                "reason": "주요 리전: ap-northeast-2 · 전체 비중 55.3%",
+                "resolution": "AWS 콘솔(CloudWatch 지표 등)에서 실제 인스턴스·볼륨 이용률을 확인하세요.",
             },
             {
-                "id": "snapshot",
-                "service": "EBS 스냅샷",
-                "resourceId": "snap-0f1234567890abcd1",
-                "cost": "₩6,800",
+                "id": "rds",
+                "service": "Amazon RDS",
+                "resourceId": "APN2-InstanceUsage:db.t2.micro ($12.00), APN2-RDS:GP2-Storage ($3.00)",
+                "cost": "$15.00",
+                "severity": "high",
+                "reason": "주요 리전: ap-northeast-2 · 전체 비중 33.2%",
+                "resolution": "AWS 콘솔(CloudWatch 지표 등)에서 DB 연결 및 스토리지 사용률을 확인하세요.",
+            },
+            {
+                "id": "s3",
+                "service": "Amazon S3",
+                "resourceId": "APN2-TimedStorage-ByteHrs ($4.50), APN2-DataTransfer-Out-Bytes ($0.50)",
+                "cost": "$5.00",
                 "severity": "medium",
-                "reason": "오래된 스냅샷이 남아 있어 저장 비용이 발생합니다.",
-                "resolution": "AWS 콘솔 > EC2 > 스냅샷에서 필요 없는 항목을 확인 후 삭제하세요.",
+                "reason": "주요 리전: ap-northeast-2 · 전체 비중 11.1%",
+                "resolution": "AWS 콘솔에서 버킷 스토리지 클래스와 데이터 전송 내역을 확인하세요.",
+            },
+            {
+                "id": "route53",
+                "service": "Amazon Route53",
+                "resourceId": "HostedZone ($0.20)",
+                "cost": "$0.20",
+                "severity": "low",
+                "reason": "리전: Global · 전체 비중 0.4%",
+                "resolution": "AWS 콘솔에서 호스팅 영역 사용 여부를 확인하세요.",
             },
         ],
     }
@@ -385,8 +420,13 @@ def _aws_cost_report(body: dict[str, Any]) -> dict[str, Any]:
             }
             for index, item in enumerate(groups[:4])
         ]
-        report = _demo_aws_cost_report(lookback_days)
-        report.update({"mode": "aws", "currency": "USD", "totalCost": f"${total:.2f}", "findings": findings})
+        report = {
+            "mode": "aws",
+            "period": {"start": start.isoformat(), "end": end.isoformat()},
+            "currency": "USD",
+            "totalCost": f"${total:.2f}",
+            "findings": findings,
+        }
         report["sourceText"] = _report_source_text(report)
         return report
     except Exception:  # noqa: BLE001 - 자격 증명/SDK/권한 오류를 비밀 없이 처리
