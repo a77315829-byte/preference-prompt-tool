@@ -17,6 +17,16 @@ export const categoryLabel = (domainKey) => CATEGORY_LABEL[domainKey] || domainK
 export const flowOfDomain = (domainKey) => (domainKey === 'idle_tracker' ? 'idleTracker' : domainKey);
 
 export const AXIS_LABELS = {
+  format: {
+    eyebrow: '출력 형식',
+    question: 'AWS 비용 내역을 어떤 형식으로 볼까요?',
+    options: { bullet_list: '개조식 요약 (불릿)', markdown_table: '마크다운 표 (테이블)' },
+  },
+  scope: {
+    eyebrow: '보고 범위',
+    question: '비용 데이터를 어디까지 자세히 볼까요?',
+    options: { summary_brief: '상위 핵심만 요약', deep_dive: '전체 서비스·Usage Type 상세' },
+  },
   code_structure: {
     eyebrow: '코드 구조',
     question: '작은 기능을 어떤 구성으로 만들까요?',

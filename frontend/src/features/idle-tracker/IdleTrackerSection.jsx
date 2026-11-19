@@ -5,24 +5,58 @@ import ExportPanel from '../../shared/components/ExportPanel';
 
 const FALLBACK_PAIRS = [
   {
-    axis: 'detail_level',
-    question: 'AWS 비용 결과를 어느 정도로 알려드릴까요?',
+    axis: 'format',
+    question: 'AWS 비용 내역을 어떤 형식으로 볼까요?',
     options: [
-      { id: 'a', value: 'summary', title: '핵심만 요약', description: '문제와 절약 금액을 빠르게 확인합니다.', code: '탄력적 IP 1개에서 월 ₩10,000이 낭비되고 있습니다.' },
-      { id: 'b', value: 'detailed', title: '리소스와 해결 방법까지 자세히', description: '리소스 ID와 콘솔에서 할 일을 함께 확인합니다.', code: 'eipalloc-0a12bc34de56f7890\n→ EC2 > 탄력적 IP에서 릴리스하세요.' },
+      {
+        id: 'a',
+        value: 'bullet_list',
+        title: '개조식 요약 (불릿)',
+        description: '항목별 금액과 비중을 불릿 리스트로 빠르게 확인합니다.',
+        code: '- **Amazon EC2:** $25.00 (55.3%) — 주요 리전: ap-northeast-2\n- **Amazon RDS:** $15.00 (33.2%) — 주요 리전: ap-northeast-2\n- **기타 서비스 합계 (2건):** $5.20 (11.5%)',
+      },
+      {
+        id: 'b',
+        value: 'markdown_table',
+        title: '마크다운 표 (테이블)',
+        description: '서비스·리전·금액·비중을 표와 합계 행으로 정리합니다.',
+        code: '| 서비스명 | 청구 금액 | 비중 |\n| :--- | :---: | :---: |\n| **Amazon EC2** | $25.00 | 55.3% |\n| **Amazon RDS** | $15.00 | 33.2% |\n| **합계** | **$45.20** | **100.0%** |',
+      },
     ],
   },
   {
-    axis: 'focus',
-    question: '무엇을 먼저 볼까요?',
+    axis: 'scope',
+    question: '비용 데이터를 어디까지 자세히 볼까요?',
     options: [
-      { id: 'a', value: 'cost', title: '낭비 비용 중심', description: '가장 큰 금액부터 보여드립니다.', code: '이번 달 예상 낭비 비용\n₩16,800' },
-      { id: 'b', value: 'resource', title: '리소스 중심', description: '정리할 리소스와 상태를 먼저 보여드립니다.', code: '정리할 리소스 2개\n탄력적 IP · EBS 스냅샷' },
+      {
+        id: 'a',
+        value: 'summary_brief',
+        title: '상위 핵심만 요약',
+        description: '핵심 상위 2개 서비스만 보여주고 나머지는 기타 합계로 묶습니다.',
+        code: '## 2. 핵심 과금 내역 (요약)\n- Amazon EC2: $25.00 (55.3%)\n- Amazon RDS: $15.00 (33.2%)\n- 기타 서비스 합계 (2건): $5.20 (11.5%)',
+      },
+      {
+        id: 'b',
+        value: 'deep_dive',
+        title: '전체 서비스·Usage Type 상세',
+        description: '소액 서비스와 세부 Usage Type 코드·리전까지 빠짐없이 나열합니다.',
+        code: '## 2. 전체 과금 상세 내역 (Usage Type 기준)\n- Amazon EC2: $25.00\n  - [ap-northeast-2] APN2-BoxUsage:t2.micro: $20.00\n  - [ap-northeast-2] APN2-EBS:VolumeUsage.gp2: $5.00',
+      },
     ],
   },
 ];
 
 const AXIS_COPY = {
+  format: {
+    eyebrow: '출력 형식',
+    question: 'AWS 비용 내역을 어떤 형식으로 볼까요?',
+    options: { bullet_list: '개조식 요약 (불릿)', markdown_table: '마크다운 표 (테이블)' },
+  },
+  scope: {
+    eyebrow: '보고 범위',
+    question: '비용 데이터를 어디까지 자세히 볼까요?',
+    options: { summary_brief: '상위 핵심만 요약', deep_dive: '전체 서비스·Usage Type 상세' },
+  },
   detail_level: {
     eyebrow: '상세도',
     question: 'AWS 비용 결과를 어느 정도로 알려드릴까요?',
@@ -36,7 +70,7 @@ const AXIS_COPY = {
 };
 
 function remotePairToQuestion(pair) {
-  const axis = Object.keys(AXIS_COPY).find((name) => pair?.a?.combo?.[name] !== pair?.b?.combo?.[name]) || 'detail_level';
+  const axis = Object.keys(AXIS_COPY).find((name) => pair?.a?.combo?.[name] !== pair?.b?.combo?.[name]) || 'format';
   const copy = AXIS_COPY[axis];
   return {
     id: `${pair.pair_id}-${axis}`,
@@ -47,7 +81,7 @@ function remotePairToQuestion(pair) {
       id: index === 0 ? 'a' : 'b',
       value: candidate.combo?.[axis],
       title: copy.options[candidate.combo?.[axis]] || `예시 ${index === 0 ? 'A' : 'B'}`,
-      description: axis === 'focus' ? '비용 점검 결과를 이 기준으로 정리합니다.' : '원하는 정보량에 맞춰 결과를 정리합니다.',
+      description: axis === 'scope' ? '원하는 정보 밀도에 맞춰 비용 내역을 정리합니다.' : '원하는 시각적 형식으로 비용 내역을 정리합니다.',
       code: candidate.text,
     })),
   };
@@ -70,7 +104,7 @@ function IdleTrackerSection({ onBack, template = null }) {
         setReportState(nextReport.mode === 'aws' ? 'live' : 'demo');
       })
       .catch(() => {
-        setReport({ mode: 'demo', totalCost: '₩16,800', findings: [] });
+        setReport({ mode: 'demo', totalCost: '$45.20', findings: [] });
         setReportState('demo');
       });
   };
@@ -86,7 +120,7 @@ function IdleTrackerSection({ onBack, template = null }) {
       })
       .catch(() => {
         if (!cancelled) {
-          setReport({ mode: 'demo', totalCost: '₩16,800', findings: [] });
+          setReport({ mode: 'demo', totalCost: '$45.20', findings: [] });
           setReportState('demo');
         }
       });
@@ -97,7 +131,7 @@ function IdleTrackerSection({ onBack, template = null }) {
     setPhase('compare');
     setConnection('connecting');
     try {
-      const sourceText = report?.sourceText || 'AWS 비용 점검 결과에서 낭비되는 리소스와 해결 방법을 찾아주세요.';
+      const sourceText = report?.sourceText || '제공된 AWS 최신 가용 비용 데이터를 바탕으로 비용 분석 리포트를 한국어로 작성해 주세요.';
       const { session: nextSession } = await startPreferenceSession('idle_tracker', sourceText, 2, template?.id);
       setSession(nextSession);
       setConnection('connected');
@@ -111,9 +145,13 @@ function IdleTrackerSection({ onBack, template = null }) {
   const prompt = useMemo(() => {
     if (!isComplete) return '';
     if (session?.prompt) return session.prompt;
-    const detail = answers.detail_level === 'detailed' ? '리소스 ID와 콘솔에서 실행할 해결 방법을 함께 제시' : '핵심 문제와 절약 금액을 먼저 요약';
-    const focus = answers.focus === 'resource' ? '정리할 AWS 리소스를 중심으로 구성' : '낭비되는 비용을 금액 순서로 강조';
-    return `AWS 비용 점검 결과를 ${detail}하고, ${focus}하여 한국어로 안내하세요.\n발견한 리소스마다 비용·원인·해결 방법을 포함하세요.`;
+    const formatRule = answers.format === 'markdown_table'
+      ? '과금 내역을 마크다운 표(|)와 합계 행으로 정리'
+      : '과금 내역을 마크다운 불릿 리스트(- )로만 정리';
+    const scopeRule = answers.scope === 'deep_dive'
+      ? '소액 서비스와 리전·세부 Usage Type 코드까지 누락 없이 전부 표시'
+      : '상위 2개 핵심 서비스만 개별 표시하고 나머지는 기타 서비스 합계로 통합';
+    return `제공된 AWS 최신 가용 비용 데이터를 바탕으로 ${formatRule}하고, ${scopeRule}하여 4단 마크다운 리포트를 한국어로 작성하세요.\n데이터에 없는 유휴 상태나 금액은 절대 추측하지 마세요.`;
   }, [answers, isComplete, session]);
 
   const choose = async (option) => {
