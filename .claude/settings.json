@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "ask": [
+      "Edit(requirements*.txt)",
+      "Edit(frontend/package.json)",
+      "Edit(frontend/package-lock.json)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.local)",
+      "Edit(.env)",
+      "Edit(.env.local)"
+    ]
+  }
+}
