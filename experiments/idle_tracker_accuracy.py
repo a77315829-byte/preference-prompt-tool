@@ -20,7 +20,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from api_server import _demo_aws_cost_report
-from checks.idle_tracker import format as check_format
+from checks.idle_tracker import report_format as check_format
 from checks.idle_tracker import no_fabrication, scope, total_cost_accuracy
 from engine.domain_loader import load_domain
 from engine.generator import generate

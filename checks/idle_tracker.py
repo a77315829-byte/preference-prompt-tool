@@ -1,6 +1,6 @@
 """AWS 비용 현황 리포트(idle_tracker) 도메인 채점표 및 팩트 정확성 검사.
 
-`format`·`scope`는 축 검사(취향 - A/B 비교로 학습)이며, GEPA 성찰에 쓰이는
+`report_format`·`scope`는 축 검사(취향 - A/B 비교로 학습)이며, GEPA 성찰에 쓰이는
 점수(0.0~1.0)와 구체적인 위반 피드백 문자열을 반환한다.
 `total_cost_accuracy`·`no_fabrication`은 취향이 아닌 필수 불변 조건(금액·리소스ID
 일치 및 추측 금지)을 검증한다.
@@ -122,7 +122,7 @@ def no_fabrication(output: str, report: dict) -> tuple[float, str]:
     return 1.0, "출력의 모든 금액·리소스ID가 원본 조회 데이터와 일치한다."
 
 
-def format(output: str, source: str, value: str, target: dict) -> tuple[float, str]:
+def report_format(output: str, source: str, value: str, target: dict) -> tuple[float, str]:
     """출력 형식(format) 축 채점표: bullet_list vs markdown_table."""
     del source
     style = target.get("style", value or "bullet_list")
